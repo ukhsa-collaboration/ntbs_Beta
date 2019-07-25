@@ -15,18 +15,14 @@ namespace ntbs_service.Models
         {
         }
 
-        public virtual DbSet<CohortReview> CohortReview { get; set; }
         public virtual DbSet<DrugResistence> DrugResistence { get; set; }
         public virtual DbSet<Episode> Episode { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
-        public virtual DbSet<LabObversation> LabObversation { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Patient> Patient { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<ResistentDrug> ResistentDrug { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
-        public virtual DbSet<TreatmentOutcome> TreatmentOutcome { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -38,59 +34,6 @@ namespace ntbs_service.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
-
-            modelBuilder.Entity<CohortReview>(entity =>
-            {
-                entity.Property(e => e.CscassessedAdult).HasColumnName("CSCAssessedAdult");
-
-                entity.Property(e => e.CscassessedChild).HasColumnName("CSCAssessedChild");
-
-                entity.Property(e => e.CscdiscontinuedLtbiadverseReactionAdult).HasColumnName("CSCDiscontinuedLTBIAdverseReactionAdult");
-
-                entity.Property(e => e.CscdiscontinuedLtbiadverseReactionChild).HasColumnName("CSCDiscontinuedLTBIAdverseReactionChild");
-
-                entity.Property(e => e.CscdiscontinuedLtbideathAdult).HasColumnName("CSCDiscontinuedLTBIDeathAdult");
-
-                entity.Property(e => e.CscdiscontinuedLtbideathChild).HasColumnName("CSCDiscontinuedLTBIDeathChild");
-
-                entity.Property(e => e.CscdiscontinuedLtbimovedAdult).HasColumnName("CSCDiscontinuedLTBIMovedAdult");
-
-                entity.Property(e => e.CscdiscontinuedLtbimovedChild).HasColumnName("CSCDiscontinuedLTBIMovedChild");
-
-                entity.Property(e => e.CscdiscontinuedLtbirefusedAdult).HasColumnName("CSCDiscontinuedLTBIRefusedAdult");
-
-                entity.Property(e => e.CscdiscontinuedLtbirefusedChild).HasColumnName("CSCDiscontinuedLTBIRefusedChild");
-
-                entity.Property(e => e.CscidentifiedAdult).HasColumnName("CSCIdentifiedAdult");
-
-                entity.Property(e => e.CscidentifiedChild).HasColumnName("CSCIdentifiedChild");
-
-                entity.Property(e => e.CscnumCompletedLtbitreamentAdult).HasColumnName("CSCNumCompletedLTBITreamentAdult");
-
-                entity.Property(e => e.CscnumCompletedLtbitreamentChild).HasColumnName("CSCNumCompletedLTBITreamentChild");
-
-                entity.Property(e => e.CscnumStartedLtbitreatmentAdult).HasColumnName("CSCNumStartedLTBITreatmentAdult");
-
-                entity.Property(e => e.CscnumStartedLtbitreatmentChild).HasColumnName("CSCNumStartedLTBITreatmentChild");
-
-                entity.Property(e => e.CscnumWithActiveDiseaseAdult).HasColumnName("CSCNumWithActiveDiseaseAdult");
-
-                entity.Property(e => e.CscnumWithActiveDiseaseChild).HasColumnName("CSCNumWithActiveDiseaseChild");
-
-                entity.Property(e => e.CscnumWithLtbiadult).HasColumnName("CSCNumWithLTBIAdult");
-
-                entity.Property(e => e.CscnumWithLtbichild).HasColumnName("CSCNumWithLTBIChild");
-
-                entity.Property(e => e.CscunderInvestigationAdult).HasColumnName("CSCUnderInvestigationAdult");
-
-                entity.Property(e => e.CscunderInvestigationChild).HasColumnName("CSCUnderInvestigationChild");
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.CohortReview)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CohortReview_Notification");
-            });
 
             modelBuilder.Entity<DrugResistence>(entity =>
             {
@@ -123,17 +66,6 @@ namespace ntbs_service.Models
             modelBuilder.Entity<Hospital>(entity =>
             {
                 entity.Property(e => e.Label).HasMaxLength(200);
-            });
-
-            modelBuilder.Entity<LabObversation>(entity =>
-            {
-                entity.Property(e => e.CxrctatDiagnosis).HasColumnName("CXRCTAtDiagnosis");
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.LabObversation)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LabObversation_Notification");
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -195,17 +127,6 @@ namespace ntbs_service.Models
                 entity.Property(e => e.SexId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Label).HasMaxLength(200);
-            });
-
-            modelBuilder.Entity<TreatmentOutcome>(entity =>
-            {
-                entity.Property(e => e.EndDate).HasColumnType("date");
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.TreatmentOutcome)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TreatmentOutcome_Notification");
             });
         }
     }
