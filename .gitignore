@@ -1,15 +1,5 @@
-# Created by https://www.gitignore.io/api/dotnetcore,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=dotnetcore,visualstudiocode
-
-### DotnetCore ###
-# .NET Core build folders
-/bin
-/obj
-
-# Common node modules locations
-/node_modules
-/wwwroot/node_modules
-
+# Created by https://www.gitignore.io/api/visualstudiocode
+# Edit at https://www.gitignore.io/?templates=visualstudiocode
 
 ### VisualStudioCode ###
 .vscode/*
@@ -22,4 +12,4 @@
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/dotnetcore,visualstudiocode
+# End of https://www.gitignore.io/api/visualstudiocode
