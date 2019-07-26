@@ -1,0 +1,84 @@
+@page
+@model ntbs_service.Pages_Patients.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].Forename)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].NhsNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].Dob)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].UkBorn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].EtsId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].LtbrId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].Region)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patient[0].Sex)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Patient) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Forename)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NhsNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dob)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UkBorn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EtsId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LtbrId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Region.RegionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sex.SexId)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.PatientId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.PatientId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.PatientId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

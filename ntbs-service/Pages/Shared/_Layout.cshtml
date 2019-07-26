@@ -19,20 +19,21 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <!-- TODO remove these colour hacks -->
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: #822433">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">ntbs_service</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index" style="color: white">NTBS</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation" style="color: white">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-page="/Patients/Index" style="color: white">Patient Search</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-page="/Patients/Create" style="color: white">Notify</a>
                         </li>
                     </ul>
                 </div>
@@ -48,7 +49,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - ntbs_service - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2019 - Public Health England - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 
