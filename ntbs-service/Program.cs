@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ntbs_service.Models;
 
 namespace ntbs_service
 {
@@ -24,8 +25,8 @@ namespace ntbs_service
 
                 try
                 {
-                    // var context = services.GetRequiredService<NtbsContext>();
-                    // context.Database.Migrate();
+                    var context = services.GetRequiredService<NtbsContext>();
+                    context.Database.Migrate();
                 }
                 catch (Exception ex)
                 {

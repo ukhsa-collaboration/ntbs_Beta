@@ -11,9 +11,9 @@ namespace ntbs_service.Pages_Patients
 {
     public class CreateModel : PageModel
     {
-        private readonly ntbs_service.Models.NtbsContext _context;
+        private readonly NtbsContext _context;
 
-        public CreateModel(ntbs_service.Models.NtbsContext context)
+        public CreateModel(NtbsContext context)
         {
             _context = context;
         }
