@@ -1,0 +1,24 @@
+{
+  "name": "ntbs-service",
+  "version": "1.0.0",
+  "description": "The NTBS web server is the main interaction point with the NTBS system for most users. It provides an interface to create and update TB Notification records.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "wbp": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nhsuk-frontend": "2.3.0"
+  },
+  "devDependencies": {
+    "css-loader": "3.2.0",
+    "node-sass": "4.12.0",
+    "sass-loader": "7.2.0",
+    "style-loader": "1.0.0",
+    "webpack": "4.39.1",
+    "webpack-cli": "3.3.6"
+  }
+}
