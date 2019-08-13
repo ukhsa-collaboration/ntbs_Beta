@@ -1,8 +1,9 @@
 const path = require('path');
 module.exports = {
-  entry: './wwwroot/source/app.ts',
+  entry: { 'main': './wwwroot/source/app.js'},
   output: {
-    path: path.resolve(__dirname, 'wwwroot/js'),
+    path: path.resolve(__dirname, 'wwwroot/dist'),
+    publicPath: 'dist/',
     filename: 'bundle.js'
   },
   mode: 'development',
