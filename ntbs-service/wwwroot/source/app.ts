@@ -3,7 +3,7 @@ import 'nhsuk-frontend/packages/nhsuk.scss'
 import '../css/site.css'
 
 
-const thing = document.getElementById('testButton');
+const thing = document.getElementById('testButton') as HTMLAnchorElement;
 thing.innerText = 'Notify';
 
 // Enables ASP hot relaod

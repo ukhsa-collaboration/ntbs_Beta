@@ -1,6 +1,7 @@
 const path = require('path');
 module.exports = {
-  entry: { 'main': './wwwroot/source/app.js'},
+  entry: { 'main': './wwwroot/source/app.ts'},
+  devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'wwwroot/dist'),
     publicPath: 'dist/',
@@ -8,7 +9,13 @@ module.exports = {
   },
   mode: 'development',
   module: {
-    rules: [{
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
       test: /\.css$/,
       use: [
         {
