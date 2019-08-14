@@ -5,17 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Data;
 using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Patients
 {
     public class DetailsModel : PageModel
     {
-        private readonly ntbs_service.Models.NtbsContext _context;
+        private readonly IPatientRepository _repository;
 
-        public DetailsModel(ntbs_service.Models.NtbsContext context)
+        public DetailsModel(IPatientRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         public Patient Patient { get; set; }
@@ -27,9 +28,7 @@ namespace ntbs_service.Pages_Patients
                 return NotFound();
             }
 
-            Patient = await _context.Patient
-                .Include(p => p.Region)
-                .Include(p => p.Sex).FirstOrDefaultAsync(m => m.PatientId == id);
+            Patient = await _repository.GetPatientAsync(id);
 
             if (Patient == null)
             {

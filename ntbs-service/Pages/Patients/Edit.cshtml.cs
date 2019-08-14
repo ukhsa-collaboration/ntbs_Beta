@@ -6,17 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Data;
 using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Patients
 {
     public class EditModel : PageModel
     {
-        private readonly ntbs_service.Models.NtbsContext _context;
+        private readonly NtbsContext _context;
+        private readonly IPatientRepository _repository;
 
-        public EditModel(ntbs_service.Models.NtbsContext context)
+        public EditModel(NtbsContext context, PatientRepository repository)
         {
             _context = context;
+            _repository = repository;
         }
 
         [BindProperty]
@@ -29,9 +32,7 @@ namespace ntbs_service.Pages_Patients
                 return NotFound();
             }
 
-            Patient = await _context.Patient
-                .Include(p => p.Region)
-                .Include(p => p.Sex).FirstOrDefaultAsync(m => m.PatientId == id);
+            Patient = await _repository.GetPatientAsync(id);
 
             if (Patient == null)
             {
@@ -49,15 +50,13 @@ namespace ntbs_service.Pages_Patients
                 return Page();
             }
 
-            _context.Attach(Patient).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.UpdatePatientAsync(Patient);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PatientExists(Patient.PatientId))
+                if (!_repository.PatientExists(Patient.PatientId))
                 {
                     return NotFound();
                 }
@@ -68,11 +67,6 @@ namespace ntbs_service.Pages_Patients
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool PatientExists(int id)
-        {
-            return _context.Patient.Any(e => e.PatientId == id);
         }
     }
 }

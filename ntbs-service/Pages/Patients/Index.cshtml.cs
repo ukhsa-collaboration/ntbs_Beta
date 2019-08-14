@@ -1,30 +1,25 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
+using ntbs_service.Data;
 
 namespace ntbs_service.Pages_Patients
 {
     public class IndexModel : PageModel
     {
-        private readonly ntbs_service.Models.NtbsContext _context;
+        private readonly IPatientRepository _repository;
 
-        public IndexModel(ntbs_service.Models.NtbsContext context)
+        public IndexModel(IPatientRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        public IList<Patient> Patient { get;set; }
+        public IList<Patient> Patients { get;set; }
 
         public async Task OnGetAsync()
         {
-            Patient = await _context.Patient
-                .Include(p => p.Region)
-                .Include(p => p.Sex).ToListAsync();
+            Patients = await _repository.GetPatientsAsync();
         }
     }
 }
