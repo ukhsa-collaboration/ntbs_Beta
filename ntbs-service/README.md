@@ -18,3 +18,6 @@ The frontend assets are compiled through Webpack, with hot-reload enabled automa
 
 ### Debugging
 VS Code should pick up the debugging configuration automtically. Open the debugging panel and launch the debug configuration available. Note that this launches the web app itself, so there's no need to run `dotnet` commands directly - but it is *not* compatible with hot relaoding!
+
+## Testing
+We are using the [xunit](https://xunit.net/) frameworkTo run unit tests. To run tests, cd into the ntbs-service-tests project and run "dotnet test".

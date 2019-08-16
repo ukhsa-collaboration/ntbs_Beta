@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ntbs_service.Data;
 using ntbs_service.Models;
 
 namespace ntbs_service
@@ -40,6 +41,8 @@ namespace ntbs_service
             services.AddDbContext<NtbsContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
+
+            services.AddScoped<IPatientRepository, PatientRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

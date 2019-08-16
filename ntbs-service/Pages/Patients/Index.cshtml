@@ -14,37 +14,37 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].Surname)
+                @Html.DisplayNameFor(model => model.Patients[0].Surname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].Forename)
+                @Html.DisplayNameFor(model => model.Patients[0].Forename)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].NhsNumber)
+                @Html.DisplayNameFor(model => model.Patients[0].NhsNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].Dob)
+                @Html.DisplayNameFor(model => model.Patients[0].Dob)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].UkBorn)
+                @Html.DisplayNameFor(model => model.Patients[0].UkBorn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].EtsId)
+                @Html.DisplayNameFor(model => model.Patients[0].EtsId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].LtbrId)
+                @Html.DisplayNameFor(model => model.Patients[0].LtbrId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].Region)
+                @Html.DisplayNameFor(model => model.Patients[0].Region)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient[0].Sex)
+                @Html.DisplayNameFor(model => model.Patients[0].Sex)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Patient) {
+@foreach (var item in Model.Patients) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Surname)
