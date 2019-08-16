@@ -39,5 +39,13 @@ module.exports = {
         }
       ]
     }]
+  },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },
+  watchOptions: {
+    aggregateTimeout: 300
   }
 };

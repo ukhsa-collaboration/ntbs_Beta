@@ -6,7 +6,9 @@
 
 <div class="text-center">
     <h1 class="display-4">National TB Surveillance</h1>
-    <a id="testButton" href="/Patients/Create" role="button" draggable="false" class="nhsuk-button">
-        Do
-    </a>
+    <test-button inline-template>
+        <a v-on:blur="onBlur" href="/Patients/Create" role="button" draggable="false" class="nhsuk-button">
+            Do
+        </a>
+    </test-button>
 </div>
