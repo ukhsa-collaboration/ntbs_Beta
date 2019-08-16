@@ -43,7 +43,8 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
-    }
+    },
+    extensions: [".ts", ".js"]
   },
   watchOptions: {
     aggregateTimeout: 300
