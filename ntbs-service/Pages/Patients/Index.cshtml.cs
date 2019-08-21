@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Models;
-using ntbs_service.Data;
+using ntbs_service.DataAccess;
 
 namespace ntbs_service.Pages_Patients
 {

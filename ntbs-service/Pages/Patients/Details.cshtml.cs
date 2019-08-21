@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Data;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Patients

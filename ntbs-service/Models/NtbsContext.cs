@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -15,19 +17,34 @@ namespace ntbs_service.Models
         {
         }
 
-        public virtual DbSet<DrugResistence> DrugResistence { get; set; }
-        public virtual DbSet<Episode> Episode { get; set; }
+        public virtual DbSet<Country> Country { get; set; }
+        public virtual DbSet<Ethnicity> Ethnicity { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Patient> Patient { get; set; }
         public virtual DbSet<Region> Region { get; set; }
-        public virtual DbSet<ResistentDrug> ResistentDrug { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
+
+        public async Task<IList<Country>> GetAllCountriesAsync()
+        {
+            return await Country.ToListAsync();
+        }
+
+        public async Task<IList<Sex>> GetAllSexesAsync()
+        {
+            return await Sex.ToListAsync();
+        }
+
+        public async Task<IList<Ethnicity>> GetAllEthnicitiesAsync()
+        {
+            return await Ethnicity.ToListAsync();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("name=ntbsContext");
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("name=ntbsContext");
             }
         }
 
@@ -35,33 +52,43 @@ namespace ntbs_service.Models
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
-            modelBuilder.Entity<DrugResistence>(entity =>
+            modelBuilder.Entity<Country>(entity =>
             {
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.DrugResistence)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DrugResistence_Notification");
-
-                entity.HasOne(d => d.ResistentDrug)
-                    .WithMany(p => p.DrugResistence)
-                    .HasForeignKey(d => d.ResistentDrugId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ResistentDrug_Notification");
+                entity.Property(e => e.Name).HasMaxLength(200);
             });
 
-            modelBuilder.Entity<Episode>(entity =>
+            modelBuilder.Entity<Country>().HasData(
+                new Country { CountryId = (int)CountryCode.UK, Name = "United Kingdom" },
+                new Country { CountryId = (int)CountryCode.UNKNOWN, Name = "Unknown" },
+                new Country { CountryId = 3, Name = "Other" }
+            );
+
+            modelBuilder.Entity<Ethnicity>(entity =>
             {
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
+                entity.Property(e => e.Code).HasMaxLength(50);
 
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.Episode)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Episode_Notification");
+                entity.Property(e => e.Label).HasMaxLength(200);
             });
+
+            modelBuilder.Entity<Ethnicity>().HasData(
+                new Ethnicity { EthnicityId = 1, Code = "A", Label = "White British", Order = 16 },
+                new Ethnicity { EthnicityId = 2, Code = "B", Label = "White Irish", Order = 17 },
+                new Ethnicity { EthnicityId = 3, Code = "C", Label = "Any other White background", Order = 3 },
+                new Ethnicity { EthnicityId = 4, Code = "D", Label = "Mixed - White and Black Caribbean", Order = 14 },
+                new Ethnicity { EthnicityId = 5, Code = "E", Label = "Mixed - White and Black African", Order = 13 },
+                new Ethnicity { EthnicityId = 6, Code = "F", Label = "Mixed - White and Asian", Order = 12 },
+                new Ethnicity { EthnicityId = 7, Code = "G", Label = "Any other mixed background", Order = 9 },
+                new Ethnicity { EthnicityId = 8, Code = "H", Label = "Indian", Order = 1 },
+                new Ethnicity { EthnicityId = 9, Code = "J", Label = "Pakistani", Order = 2 },
+                new Ethnicity { EthnicityId = 10, Code = "K", Label = "Bangladeshi", Order = 10 },
+                new Ethnicity { EthnicityId = 11, Code = "L", Label = "Any other Asian background", Order = 6 },
+                new Ethnicity { EthnicityId = 12, Code = "M", Label = "Black Caribbean", Order = 11 },
+                new Ethnicity { EthnicityId = 13, Code = "N", Label = "Black African", Order = 5 },
+                new Ethnicity { EthnicityId = 14, Code = "P", Label = "Any other Black Background", Order = 7 },
+                new Ethnicity { EthnicityId = 15, Code = "S", Label = "Any other ethnic group", Order = 8 },
+                new Ethnicity { EthnicityId = 16, Code = "R", Label = "Chinese", Order = 4 },
+                new Ethnicity { EthnicityId = 17, Code = "Z", Label = "Not stated", Order = 15 }
+            );
 
             modelBuilder.Entity<Hospital>(entity =>
             {
@@ -71,14 +98,12 @@ namespace ntbs_service.Models
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.HasOne(d => d.Hospital)
-                    .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.HospitalId)
+                    .WithMany()
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notification_Hospital");
 
                 entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.PatientId)
+                    .WithMany(p => p.Notifications)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notification_Patient");
             });
@@ -87,47 +112,46 @@ namespace ntbs_service.Models
             {
                 entity.Property(e => e.Dob).HasColumnType("date");
 
-                entity.Property(e => e.Forename).HasMaxLength(200);
+                entity.Property(e => e.GivenName).HasMaxLength(35);
 
-                entity.Property(e => e.NhsNumber).HasMaxLength(50);
+                entity.Property(e => e.NhsNumber).HasMaxLength(10);
 
-                entity.Property(e => e.Surname).HasMaxLength(200);
+                entity.Property(e => e.FamilyName).HasMaxLength(35);
 
-                entity.HasOne(d => d.Region)
-                    .WithMany(p => p.Patient)
-                    .HasForeignKey(d => d.RegionId)
+                entity.Property(e => e.Postcode).HasMaxLength(50);
+
+                entity.HasOne(d => d.Ethnicity)
+                    .WithMany()
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Region");
+                    .HasConstraintName("FK_Patient_Ethnicity");
+
+                entity.HasOne(d => d.Country)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Patient_Country");
 
                 entity.HasOne(d => d.Sex)
-                    .WithMany(p => p.Patient)
-                    .HasForeignKey(d => d.SexId)
+                    .WithMany()
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Patient_Sex");
             });
 
             modelBuilder.Entity<Region>(entity =>
             {
-                entity.Property(e => e.RegionId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.Label).HasMaxLength(200);
             });
 
-            modelBuilder.Entity<ResistentDrug>(entity =>
-            {
-                entity.Property(e => e.ResistentDrugId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Code).HasMaxLength(50);
-
-                entity.Property(e => e.Label).HasMaxLength(200);
-            });
 
             modelBuilder.Entity<Sex>(entity =>
             {
-                entity.Property(e => e.SexId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.Label).HasMaxLength(200);
             });
+
+            modelBuilder.Entity<Sex>().HasData(
+                new Sex { SexId = 1, Label = "Male" },
+                new Sex { SexId = 2, Label = "Female" },
+                new Sex { SexId = 3, Label = "Unknown" }
+            );
         }
     }
 }

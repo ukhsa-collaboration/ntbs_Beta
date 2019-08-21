@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 
-namespace ntbs_service.Data
+namespace ntbs_service.DataAccess
 {
     public interface IPatientRepository
     {
@@ -28,7 +28,8 @@ namespace ntbs_service.Data
         public async Task<IList<Patient>> GetPatientsAsync() 
         {
             return await _context.Patient
-                .Include(p => p.Region)
+                .Include(p => p.Country)
+                .Include(p => p.Ethnicity)
                 .Include(p => p.Sex).ToListAsync();
         }
 
@@ -53,7 +54,8 @@ namespace ntbs_service.Data
         public async Task<Patient> GetPatientAsync(int? patientId)
         {
             return await _context.Patient
-                .Include(p => p.Region)
+                .Include(p => p.Country)
+                .Include(p => p.Ethnicity)
                 .Include(p => p.Sex).FirstOrDefaultAsync(m => m.PatientId == patientId);
         }
 
