@@ -58,6 +58,18 @@ namespace ntbs_service.Pages_Patients
             return RedirectToPage("./Index");
         }
 
+        public ContentResult OnPostValidateProperty(string key, string value)
+        {
+            Patient.GetType().GetProperty(key).SetValue(Patient, value);
+            if (TryValidateModel(Patient)) {
+                return Content("");
+            } else {
+                var model = ModelState[key];
+                return Content(ModelState[key].Errors[0].ErrorMessage);
+            }
+        }
+
+
         public bool IsValid(string key)
         {
             return ModelState[key] == null ? true : ModelState[key].Errors.Count == 0;
@@ -73,24 +85,13 @@ namespace ntbs_service.Pages_Patients
             DateTime? convertedDob;
 
             if (FormattedDob.TryConvertToDateTime(out convertedDob)) {
-                // ModelState.SetModelValue(patientKey, 
-                //     new ValueProviderResult(
-                //         convertedDob.ToString()
-                //         )
-                //     );
-                // TryValidateModel(Patient, "Patient.Dob");
-
                 Patient.Dob = convertedDob;
+                TryValidateModel(Patient, "Patient");
             }
             else
             {
                 ModelState.AddModelError(patientKey, "Please enter a valid date");
                 return;
-            }
-            
-            if (!DateValidationHelper.IsValidDate(Patient.Dob.Value))
-            {
-                ModelState.AddModelError(patientKey, DateValidationHelper.ErrorMessage);
             }
         }
     }

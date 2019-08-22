@@ -1,4 +1,4 @@
-@page
+@page "{handler?}"
 @model ntbs_service.Pages_Patients.CreateModel
 
 @{
@@ -12,15 +12,22 @@
     <div class="col-md-5">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="nhsuk-form-group @(!Model.IsValid("Patient.GivenName") ? errorClassName : "")" aria-describedby="given-name-error">
-                <label asp-for="Patient.GivenName" class="nhsuk-label">
-                    Given name
-                </label>
-                 <span class="nhsuk-error-message" id="given-name-error">
-                    <span asp-validation-for="Patient.GivenName"></span>
-                </span>
-                <input asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text">
-            </div>
+            <auto-save-input property="GivenName" inline-template>
+                 @Html.AntiForgeryToken()
+                <div>
+                    <div class="nhsuk-form-group @(!Model.IsValid("Patient.GivenName") ? errorClassName : "")" 
+                        v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}"
+                        aria-describedby="given-name-error">
+                    <label asp-for="Patient.GivenName" class="nhsuk-label">
+                        Given name
+                    </label>
+                    <span class="nhsuk-error-message" id="given-name-error">
+                        <span asp-validation-for="Patient.GivenName"></span>
+                        <span>{{errorMessage}}</span>
+                    </span>
+                    <input v-on:blur="validate" asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text" v-model="value">
+                </div>
+            </auto-save-input>
             <div class="nhsuk-form-group @(!Model.IsValid("Patient.FamilyName") ? errorClassName : "")" aria-describedby="family-name-error">
                 <label class="nhsuk-label" asp-for="Patient.FamilyName">
                     Family name
