@@ -13,13 +13,17 @@ namespace ntbs_service.Services
     {
         public void UpdateUkBorn(Patient patient)
         {
-            switch (patient.CountryId) 
+            if (patient.Country == null) {
+                patient.UkBorn = null;
+                return;
+            }
+
+            switch (patient.Country.IsoCode)
             {
-                case (int)CountryCode.UK:
+                case Countries.UkCode:
                     patient.UkBorn = true;
                     break;
-                case null:
-                case (int)CountryCode.UNKNOWN:
+                case Countries.UnknownCode:
                     patient.UkBorn = null;
                     break;
                 default:

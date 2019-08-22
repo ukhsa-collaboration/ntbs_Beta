@@ -88,9 +88,9 @@ namespace ntbs_service.Pages_Patients
                 return;
             }
             
-            if (!ValidationHelper.IsValidDate(Patient.Dob.Value))
+            if (!DateValidationHelper.IsValidDate(Patient.Dob.Value))
             {
-                ModelState.AddModelError(patientKey, ValidationHelper.ErrorMessage);
+                ModelState.AddModelError(patientKey, DateValidationHelper.ErrorMessage);
             }
         }
     }

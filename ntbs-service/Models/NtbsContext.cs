@@ -58,9 +58,7 @@ namespace ntbs_service.Models
             });
 
             modelBuilder.Entity<Country>().HasData(
-                new Country { CountryId = (int)CountryCode.UK, Name = "United Kingdom" },
-                new Country { CountryId = (int)CountryCode.UNKNOWN, Name = "Unknown" },
-                new Country { CountryId = 3, Name = "Other" }
+                Countries.GetCountriesArray()
             );
 
             modelBuilder.Entity<Ethnicity>(entity =>

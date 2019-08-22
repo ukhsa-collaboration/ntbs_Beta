@@ -24,7 +24,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
         public void DatesWithinValidityRange_AreValid(DateTime dateTime)
         {
             // Act
-            var isValid = ValidationHelper.IsValidDate(dateTime);
+            var isValid = DateValidationHelper.IsValidDate(dateTime);
 
             // Assert
             Assert.True(isValid);
@@ -34,11 +34,10 @@ namespace ntbs_service_tests.UnitTests.Helpers
         public void DatesOutsideValidityRange_AreInvalid(DateTime dateTime)
         {
             // Act
-            var isValid = ValidationHelper.IsValidDate(dateTime);
+            var isValid = DateValidationHelper.IsValidDate(dateTime);
 
             // Assert
             Assert.False(isValid);
         }
     }
-    
 }
