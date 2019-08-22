@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Data;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Patients
@@ -16,7 +16,7 @@ namespace ntbs_service.Pages_Patients
         private readonly NtbsContext _context;
         private readonly IPatientRepository _repository;
 
-        public EditModel(NtbsContext context, PatientRepository repository)
+        public EditModel(NtbsContext context, IPatientRepository repository)
         {
             _context = context;
             _repository = repository;
@@ -38,7 +38,7 @@ namespace ntbs_service.Pages_Patients
             {
                 return NotFound();
             }
-            ViewData["RegionId"] = new SelectList(_context.Region, "RegionId", "Label");
+            // ViewData["RegionId"] = new SelectList(_context.Region, "RegionId", "Label");
             ViewData["SexId"] = new SelectList(_context.Sex, "SexId", "Label");
             return Page();
         }

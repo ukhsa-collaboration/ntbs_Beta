@@ -10,7 +10,7 @@ Make sure you have the following tools isntalled locally:
   * IDE of choice (eg [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
 
 In this dirctory, run:
-- `dotnet restore` to pull in dependencies
+- `dotnet restore` and `npm install` to pull in dependencies
 - `dotnet run` to launch the webserver locally
 - `dotnet watch run` to launch the webserver locally with hot-reloading enabled
 
