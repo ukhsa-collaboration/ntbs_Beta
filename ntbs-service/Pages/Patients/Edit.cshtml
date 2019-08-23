@@ -18,31 +18,36 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <validate-input property="GivenName" inline-template>
                 <div>
-                    @{var errorClass = !Model.IsValid("Patient.GivenName") ? errorClassName : ""; }
-                    <div class="nhsuk-form-group @errorClass" v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}"
+                    @{var givenNameErrorClass = !Model.IsValid("Patient.GivenName") ? errorClassName : ""; }
+                    <div class="nhsuk-form-group @givenNameErrorClass" v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}"
                         aria-describedby="given-name-error">
                     <label asp-for="Patient.GivenName" class="nhsuk-label">
                         Given name
                     </label>
                     <span class="nhsuk-error-message" id="given-name-error">
-                        <span asp-validation-for="Patient.GivenName"></span>
+                        <span v-show="errorMessage == ''" asp-validation-for="Patient.GivenName"></span>
                         <span>{{errorMessage}}</span>
                     </span>
                     <input v-on:blur="validate" asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text">
                 </div>
             </validate-input>
 
-            <div class="nhsuk-form-group @(!Model.IsValid("Patient.FamilyName") ? errorClassName : "")" aria-describedby="family-name-error">
-                <label class="nhsuk-label" asp-for="Patient.FamilyName">
-                    Family name
-                </label>
-                <span class="nhsuk-error-message" id="family-name-error">
-                    <span asp-validation-for="Patient.FamilyName"></span>
-                </span>
-                <input asp-for="Patient.FamilyName" class="nhsuk-input nhsuk-input--width-10" type="text">
-            </div>
-            <br/>
+            <validate-input property="FamilyName" inline-template>
+                @{var familyNameErrorClass = !Model.IsValid("Patient.FamilyName") ? errorClassName : ""; }
+                <div class="nhsuk-form-group @familyNameErrorClass" aria-describedby="family-name-error" v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}">
+                    <label class="nhsuk-label" asp-for="Patient.FamilyName">
+                        Family name
+                    </label>
+                    <span class="nhsuk-error-message" id="family-name-error">
+                        <span v-show="errorMessage == ''" asp-validation-for="Patient.FamilyName"></span>
+                        <span>{{errorMessage}}</span>
+                    </span>
+                    <input v-on:blur="validate" asp-for="Patient.FamilyName" class="nhsuk-input nhsuk-input--width-10" type="text">
+                </div>
+                <br/>
+            </validate-input>
         
+            <!-- TODO NTBS-87 Dynamic validation for dates -->
             <div class="nhsuk-form-group @(!Model.IsValid("Patient.Dob") ? errorClassName : "")">
                 <fieldset class="nhsuk-fieldset" aria-describedby="dob-error" role="group">
                     <legend class="nhsuk-fieldset__legend">
@@ -79,8 +84,8 @@
                     </div>
                 </fieldset>
             </div>
-            <br/>
 
+            <!-- TODO NTBS-87 Dynamic validation for nhs number and postcode (including explicit confirmation of has / doesn't have) -->
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset">
                     <legend class="nhsuk-fieldset__legend">
