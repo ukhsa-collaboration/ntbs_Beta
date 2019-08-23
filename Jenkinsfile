@@ -33,7 +33,13 @@ pipeline {
                 scp -rp -o StrictHostKeyChecking=no -i "$env:ssh_key_file" ./ntbs-service/bin/Release/netcoreapp2.2/ softwire@ntbs-int.uksouth.cloudapp.azure.com:C:/NTBS/stage
                 Write-Output "Shutting down app"
                 ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell New-Item -Path 'C:/NTBS/netcoreapp2.2/publish/app_offline.htm' -ItemType File
-                Write-Output "Replacing app files"
+                Write-Output "Remove old backups"
+                ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Remove-Item -Path 'C:/NTBS/backup' -Recurse
+                Write-Output "Make a backup"
+                ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Copy-Item -Path 'C:/NTBS/netcoreapp2.2/' -Destination 'C:/NTBS/backup/' -Recurse
+                Write-Output "Remove old files"
+                ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Remove-Item -Path 'C:/NTBS/netcoreapp2.2/publish' -Recurse -Exclude 'app_offline.htm'
+                Write-Output "Copy over new files"
                 ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Copy-Item -Path 'C:/NTBS/stage/publish' -Destination 'C:/NTBS/netcoreapp2.2/' -Recurse
                 Write-Output "Restarting app"
                 ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Remove-Item -Path 'C:/NTBS/netcoreapp2.2/publish/app_offline.htm'
