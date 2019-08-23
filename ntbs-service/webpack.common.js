@@ -1,13 +1,11 @@
 const path = require('path');
 module.exports = {
   entry: { 'main': './wwwroot/source/app.ts'},
-  devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'wwwroot/dist'),
     publicPath: 'dist/',
     filename: 'bundle.js'
   },
-  mode: 'development',
   module: {
     rules: [
       {
@@ -45,8 +43,5 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: [".ts", ".js"]
-  },
-  watchOptions: {
-    aggregateTimeout: 300
   }
 };
