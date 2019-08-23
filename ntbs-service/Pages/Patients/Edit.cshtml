@@ -6,18 +6,20 @@
 }
 @{string errorClassName = "nhsuk-form-group--error";}
 
-<h2>Add personal details</h1>
+<div><a asp-page="Index">Back to List</a></div>
+
+<h2>Personal details</h1>
 
 <div class="row">
     <div class="col-md-5">
         <form method="post">
+            @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Patient.PatientId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <auto-save-input property="GivenName" inline-template>
-                 @Html.AntiForgeryToken()
+            <validate-input property="GivenName" inline-template>
                 <div>
-                    <div class="nhsuk-form-group @(!Model.IsValid("Patient.GivenName") ? errorClassName : "")" 
-                        v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}"
+                    @{var errorClass = !Model.IsValid("Patient.GivenName") ? errorClassName : ""; }
+                    <div class="nhsuk-form-group @errorClass" v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}"
                         aria-describedby="given-name-error">
                     <label asp-for="Patient.GivenName" class="nhsuk-label">
                         Given name
@@ -26,9 +28,10 @@
                         <span asp-validation-for="Patient.GivenName"></span>
                         <span>{{errorMessage}}</span>
                     </span>
-                    <input v-on:blur="validate" asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text" v-model="value">
+                    <input v-on:blur="validate" asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text">
                 </div>
-            </auto-save-input>
+            </validate-input>
+
             <div class="nhsuk-form-group @(!Model.IsValid("Patient.FamilyName") ? errorClassName : "")" aria-describedby="family-name-error">
                 <label class="nhsuk-label" asp-for="Patient.FamilyName">
                     Family name
@@ -180,11 +183,3 @@
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

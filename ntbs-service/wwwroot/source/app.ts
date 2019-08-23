@@ -3,11 +3,11 @@ import 'nhsuk-frontend/packages/nhsuk.scss'
 import '../css/site.css'
 import Vue from 'vue';
 import { TestButton } from './Components/TestButton';
-import { AutoSaveInput } from './Components/AutoSaveInput';
+import { ValidateInput } from './Components/ValidateInput';
 
 // register Vue components
 Vue.component('test-button', TestButton);
-Vue.component('auto-save-input', AutoSaveInput);
+Vue.component('validate-input', ValidateInput);
 
 new Vue({
   el: '#app',
