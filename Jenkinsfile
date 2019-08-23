@@ -16,7 +16,15 @@ pipeline {
           Push-Location ntbs-service
           Write-Output "Building frontend bundle"
           npm install
+          if ($LASTEXITCODE -ne 0) {
+            Write-Output "npm install failed - see output for details"
+            exit 1
+          }
           npm run build:prod
+          if ($LASTEXITCODE -ne 0) {
+            Write-Output "npm build failed - see output for details"
+            exit 1
+          }
           Write-Output "Building ntbs .net core application"
           dotnet publish -c Release
         ''')
@@ -67,6 +75,6 @@ pipeline {
 
 def notifySlack(message) {
     withCredentials([string(credentialsId: 'slack-token', variable: 'SLACKTOKEN')]) {
-        slackSend teamDomain: "phe-ntbs", channel: "#dev", token: "$SLACKTOKEN", message: "*${message}* - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        slackSend teamDomain: "phe-ntbs", channel: "#dev-ci", token: "$SLACKTOKEN", message: "*${message}* - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
 }
