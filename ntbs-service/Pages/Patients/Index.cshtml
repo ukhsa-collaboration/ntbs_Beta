@@ -26,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Patients[0].Dob)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].UkBorn)
+                @Html.DisplayNameFor(model => model.Patients[0].Country)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Patients[0].Sex)
@@ -50,7 +50,7 @@
                 @Html.DisplayFor(modelItem => item.Dob)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UkBorn)
+                @Html.DisplayFor(modelItem => item.Country.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Sex.SexId)

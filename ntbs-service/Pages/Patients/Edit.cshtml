@@ -1,44 +1,179 @@
-@page
+@page "{handler?}"
 @model ntbs_service.Pages_Patients.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Notification - Personal Details";
 }
+@{string errorClassName = "nhsuk-form-group--error";}
 
-<h1>Edit</h1>
+<h2>Add personal details</h1>
 
-<h4>Patient</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Patient.PatientId" />
-            <div class="form-group">
-                <label asp-for="Patient.FamilyName" class="control-label"></label>
-                <input asp-for="Patient.FamilyName" class="form-control" />
-                <span asp-validation-for="Patient.FamilyName" class="text-danger"></span>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <auto-save-input property="GivenName" inline-template>
+                 @Html.AntiForgeryToken()
+                <div>
+                    <div class="nhsuk-form-group @(!Model.IsValid("Patient.GivenName") ? errorClassName : "")" 
+                        v-bind:class="{ 'nhsuk-form-group--error': errorMessage != ''}"
+                        aria-describedby="given-name-error">
+                    <label asp-for="Patient.GivenName" class="nhsuk-label">
+                        Given name
+                    </label>
+                    <span class="nhsuk-error-message" id="given-name-error">
+                        <span asp-validation-for="Patient.GivenName"></span>
+                        <span>{{errorMessage}}</span>
+                    </span>
+                    <input v-on:blur="validate" asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text" v-model="value">
+                </div>
+            </auto-save-input>
+            <div class="nhsuk-form-group @(!Model.IsValid("Patient.FamilyName") ? errorClassName : "")" aria-describedby="family-name-error">
+                <label class="nhsuk-label" asp-for="Patient.FamilyName">
+                    Family name
+                </label>
+                <span class="nhsuk-error-message" id="family-name-error">
+                    <span asp-validation-for="Patient.FamilyName"></span>
+                </span>
+                <input asp-for="Patient.FamilyName" class="nhsuk-input nhsuk-input--width-10" type="text">
             </div>
-            <div class="form-group">
-                <label asp-for="Patient.GivenName" class="control-label"></label>
-                <input asp-for="Patient.GivenName" class="form-control" />
-                <span asp-validation-for="Patient.GivenName" class="text-danger"></span>
+            <br/>
+        
+            <div class="nhsuk-form-group @(!Model.IsValid("Patient.Dob") ? errorClassName : "")">
+                <fieldset class="nhsuk-fieldset" aria-describedby="dob-error" role="group">
+                    <legend class="nhsuk-fieldset__legend">
+                    Date of birth
+                    </legend>
+                    <span class="nhsuk-error-message" id="dob-error">
+                        <span asp-validation-for="Patient.Dob"></span>
+                    </span>
+                    <div class="nhsuk-date-input" id="dob">
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDob.Day">
+                            Day
+                        </label>
+                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDob.Day" type="number" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDob.Month">
+                            Month
+                        </label>
+                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDob.Month" type="number" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDob.Year">
+                            Year
+                        </label>
+                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedDob.Year" type="number" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    </div>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <label asp-for="Patient.NhsNumber" class="control-label"></label>
-                <input asp-for="Patient.NhsNumber" class="form-control" />
-                <span asp-validation-for="Patient.NhsNumber" class="text-danger"></span>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset">
+                    <legend class="nhsuk-fieldset__legend">
+                        Sex
+                    </legend>
+                    <div class="nhsuk-radios">
+                        @foreach (var sex in Model.Sexes)
+                        {
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="Patient.SexId" class="nhsuk-radios__input" type="radio" value="@sex.SexId">
+                                <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.SexId">
+                                    @sex.Label
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <label asp-for="Patient.SexId" class="control-label"></label>
-                <select asp-for="Patient.SexId" class="form-control" asp-items="ViewBag.SexId"></select>
-                <span asp-validation-for="Patient.SexId" class="text-danger"></span>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <label class="nhsuk-label" asp-for="Patient.EthnicityId">
+                    Ethnic group
+                </label>
+                <select class="nhsuk-select" asp-for="Patient.EthnicityId" asp-items="Model.Ethnicities">
+                    <option value="" selected>Select Ethnic group</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label asp-for="Patient.Dob" class="control-label"></label>
-                <input asp-for="Patient.Dob" class="form-control" />
-                <span asp-validation-for="Patient.Dob" class="text-danger"></span>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
+                    <div class="nhsuk-radios nhsuk-radios--conditional">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" name="nhsNumber" id="nhs-number-conditional" type="radio" value="yes" data-aria-controls="conditional-nhs-number-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" for="nhs-number-conditional">
+                                NHS Number
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-nhs-number-conditional">
+                            <div class="nhsuk-form-group @(!Model.IsValid("Patient.NhsNumber") ? errorClassName : "")" aria-describedby="nhs-number-error">
+                                <span class="nhsuk-error-message" id="nhs-number-error">
+                                    <span asp-validation-for="Patient.NhsNumber"></span>
+                                </span>
+                                <input class="nhsuk-input nhsuk-input--width-10" asp-for="Patient.NhsNumber" type="text">
+                            </div>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" name="nhsNumber" id="nhs-number-conditional-2" type="radio" value="no">
+                            <label class="nhsuk-label nhsuk-radios__label" for="nhs-number-conditional-2">
+                                NHS number is not known
+                            </label>
+                        </div>   
+                    </div>
+                </fieldset>
             </div>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <label class="nhsuk-label" asp-for="Patient.CountryId">
+                    Birth country
+                </label>
+                <select class="nhsuk-select" asp-for="Patient.CountryId" asp-items="Model.Countries">
+                    <option value="" selected>Select a Birth Country</option>
+                </select>
+            </div>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset" aria-describedby="postcode-error">
+                    <div class="nhsuk-radios nhsuk-radios--conditional">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" name="postcode" id="postcode-conditional" type="radio" value="yes" data-aria-controls="conditional-postcode-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" for="postcode-conditional">
+                                Postcode
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-postcode-conditional">
+                            <div class="nhsuk-form-group @(!Model.IsValid("Patient.Postcode") ? errorClassName : "")" aria-describedby="postcode-error">
+                                <span class="nhsuk-error-message" id="postcode-error">
+                                    <span asp-validation-for="Patient.Postcode"></span>
+                                </span>
+                                <input class="nhsuk-input nhsuk-input--width-10" asp-for="Patient.Postcode" type="text">
+                            </div>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" name="postcode" id="postcode-conditional-2" type="radio" value="no">
+                            <label class="nhsuk-label nhsuk-radios__label" for="postcode-conditional-2">
+                                No fixed abode
+                            </label>
+                        </div>   
+                    </div>
+                </fieldset>
+            </div>
+            <br/>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -47,7 +182,7 @@
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
