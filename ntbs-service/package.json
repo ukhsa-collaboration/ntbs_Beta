@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "wbp": "webpack"
+    "build": "webpack --config webpack.dev.js",
+    "build:prod": "webpack --config webpack.prod.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
     "webpack-dev-middleware": "3.7.0",
-    "webpack-hot-middleware": "2.25.0"
+    "webpack-hot-middleware": "2.25.0",
+    "webpack-merge": "4.2.1"
   }
 }

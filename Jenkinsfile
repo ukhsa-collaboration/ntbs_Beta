@@ -14,6 +14,9 @@ pipeline {
       steps {
         powershell(script: '''
           Push-Location ntbs-service
+          Write-Output "Building frontend bundle"
+          npm install
+          npm run build:prod
           Write-Output "Building ntbs .net core application"
           dotnet publish -c Release
         ''')
@@ -35,7 +38,7 @@ pipeline {
                 Write-Output "Restarting app"
                 ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Remove-Item -Path 'C:/NTBS/netcoreapp2.2/publish/app_offline.htm'
                 Write-Output "Removing stage files"
-                ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Remove-Item -Path 'C:/NTBS/stage'
+                ssh -i "$env:ssh_key_file" softwire@ntbs-int.uksouth.cloudapp.azure.com powershell Remove-Item -Path 'C:/NTBS/stage -Recurse'
                 Write-Output "Done!"
             ''')
         }
