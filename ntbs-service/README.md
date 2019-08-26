@@ -2,10 +2,10 @@
 The NTBS web server is the main interaction point with the NTBS system for most users. It provides an interface to create and update TB Notification records.
 
 ## Development setup (Z2H)
-Make sure you have the following tools isntalled locally:
+Make sure you have the following tools installed locally:
   * SQL Server 2016 (developer mode)
     * During installation make sure you install DB Engine.
-    * Once installed, use your preferred connection method to create a `ntbsDev` databse in the default instance.
+    * Once installed, use your preferred connection method to create a `ntbsDev` database in the default instance.
   * [.NET cli tools](https://dotnet.microsoft.com/download)
   * IDE of choice (eg [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
 
