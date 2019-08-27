@@ -118,15 +118,15 @@
 
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
-                    <div class="nhsuk-radios nhsuk-radios--conditional">
+                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" name="nhsNumber" id="nhs-number-conditional" type="radio" value="yes" data-aria-controls="conditional-nhs-number-conditional">
+                            <input class="nhsuk-radios__input" name="nhsNumber" id="nhs-number-conditional" type="radio" value="yes" data-aria-controls="conditional-nhs-number-conditional" checked>
                             <label class="nhsuk-label nhsuk-radios__label" for="nhs-number-conditional">
                                 NHS Number
                             </label>
                         </div>
                         <validate-input property="NhsNumber" inline-template>
-                            <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-nhs-number-conditional">
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-nhs-number-conditional">
                                 @{var nhsNumberErrorClass = !Model.IsValid("Patient.NhsNumber") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @nhsNumberErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="nhs-number-error">
                                     <span class="nhsuk-error-message" id="nhs-number-error">
@@ -159,15 +159,15 @@
 
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset" aria-describedby="postcode-error">
-                    <div class="nhsuk-radios nhsuk-radios--conditional">
+                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" name="postcode" id="postcode-conditional" type="radio" value="yes" data-aria-controls="conditional-postcode-conditional">
+                            <input class="nhsuk-radios__input" name="postcode" id="postcode-conditional" type="radio" value="yes" data-aria-controls="conditional-postcode-conditional" checked>
                             <label class="nhsuk-label nhsuk-radios__label" for="postcode-conditional">
                                 Postcode
                             </label>
                         </div>
                         <validate-input property="Postcode" inline-template>
-                            <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-postcode-conditional">
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">
                                 @{var postcodeErrorClass = !Model.IsValid("Patient.Postcode") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @postcodeErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="postcode-error">
                                     <span class="nhsuk-error-message" id="postcode-error">
