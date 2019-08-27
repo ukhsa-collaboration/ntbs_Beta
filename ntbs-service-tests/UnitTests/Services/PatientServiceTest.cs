@@ -29,7 +29,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             Assert.Equal(expectedResult, patient.UkBorn);
         }
 
-
+        [Fact]
         public void UkBorn_IsSetToNullIfCountryNotSet()
         {
             // Arrange

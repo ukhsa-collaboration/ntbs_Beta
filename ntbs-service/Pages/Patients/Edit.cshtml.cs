@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Helpers;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Patients
@@ -73,11 +71,33 @@ namespace ntbs_service.Pages_Patients
         public ContentResult OnPostValidateProperty(string key, string value)
         {
             Patient.GetType().GetProperty(key).SetValue(Patient, value);
-            if (TryValidateModel(Patient)) {
+            return GetValidationResult(key);
+        }
+
+        private ContentResult GetValidationResult(string key)
+        {
+            if (TryValidateModel(Patient))
+            {
                 return Content("");
-            } else {
+            }
+            else
+            {
                 var model = ModelState[key];
                 return Content(ModelState[key].Errors[0].ErrorMessage);
+            }
+        }
+
+        public ContentResult OnPostValidateDate(string key, string day, string month, string year)
+        {
+            DateTime? convertedDob;
+            var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
+            if (formattedDate.TryConvertToDateTime(out convertedDob)) {
+                Patient.GetType().GetProperty(key).SetValue(Patient, convertedDob);
+                return GetValidationResult(key);
+            }
+            else
+            {
+                return Content("Please enter a valid date");
             }
         }
 

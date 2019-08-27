@@ -20,8 +20,8 @@ namespace ntbs_service.Models
         [RegularExpression(NameRegex, ErrorMessage = NameErrorMessage)]
         public string GivenName { get; set; }
 
-        [StringLength(10, MinimumLength = 10, ErrorMessage="NHS Number needs to be 10 digits long")]
         [RegularExpression(@"[0-9]+", ErrorMessage = "NHS Number can only contain digits 0-9")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage="NHS Number needs to be 10 digits long")]
         public string NhsNumber { get; set; }
 
         [ValidDate]

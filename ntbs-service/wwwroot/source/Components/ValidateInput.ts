@@ -5,7 +5,7 @@ const ValidateInput = Vue.extend({
     props: ['property'],
     data: function() {
       return {
-        errorMessage: ''
+        hasError: false
       }},
   methods: {
     validate: function (event: FocusEvent) {
@@ -19,7 +19,9 @@ const ValidateInput = Vue.extend({
         axios.post('/Patients/Edit/ValidateProperty?key='+ this.$props.property + '&value=' + newValue, null, { headers: headers })
         .then((response: any) => {
             console.log(response);
-            this.errorMessage = response.data;
+              var errorMessage = response.data;
+              this.hasError = errorMessage != '';
+              this.$refs["errorField"].textContent = errorMessage;
           })
         .catch((error: any) => {
             console.log(error.response)
