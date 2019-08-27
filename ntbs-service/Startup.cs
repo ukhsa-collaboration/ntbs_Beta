@@ -44,6 +44,7 @@ namespace ntbs_service
             );
 
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IPatientService, PatientService>();
         }
 
