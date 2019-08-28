@@ -34,7 +34,7 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'int-db-connection-string', variable: 'INT_DB_CONNECTION_STRING')]) {
           powershell(script: '''
-            Push-Location ntbs-service/bin/Release/netcoreapp2.2 
+            Push-Location ntbs-service/bin/Release/netcoreapp2.2/publish
             Write-Output "Applying int secrets to configuration file"
             ((Get-Content -path ./appsettings.Production.json -Raw) -replace '<REPLACEME:ntbsContext>',"$env:INT_DB_CONNECTION_STRING") | Set-Content -Path ./appsettings.Production.json
           ''')
