@@ -25,17 +25,22 @@ namespace ntbs_service.Models
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
 
-        public async Task<IList<Country>> GetAllCountriesAsync()
+        public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
             return await Country.ToListAsync();
         }
 
-        public async Task<IList<Sex>> GetAllSexesAsync()
+        public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
+        {
+            return await Country.FindAsync(countryId);
+        }
+
+        public virtual async Task<IList<Sex>> GetAllSexesAsync()
         {
             return await Sex.ToListAsync();
         }
 
-        public async Task<IList<Ethnicity>> GetAllEthnicitiesAsync()
+        public virtual async Task<IList<Ethnicity>> GetAllEthnicitiesAsync()
         {
             return await Ethnicity.ToListAsync();
         }

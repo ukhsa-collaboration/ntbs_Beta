@@ -44,6 +44,7 @@
         <div class="container">
             <partial name="_CookieConsentPartial" />
             <main role="main" class="pb-3">
+                @Html.AntiForgeryToken()
                 @RenderBody()
             </main>
         </div>

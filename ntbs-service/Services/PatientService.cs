@@ -6,19 +6,53 @@ namespace ntbs_service.Services
 {
     public interface IPatientService
     {
-        void UpdateUkBorn(Patient patient);
+        Task<Patient> GetPatientAsync(int? id);
+        Task UpdatePatientAsync(Patient patient);
     }
 
     public class PatientService : IPatientService
     {
-        public void UpdateUkBorn(Patient patient)
+        private IPatientRepository repository;
+        private NtbsContext context;
+        public PatientService(IPatientRepository repository, NtbsContext context) {
+            this.repository = repository;
+            this.context = context;
+        }
+
+        public async Task<Patient> GetPatientAsync(int? id) {
+            return await repository.GetPatientAsync(id);
+        }
+
+        public async Task UpdatePatientAsync(Patient patient)
         {
-            if (patient.Country == null) {
+            await UpdatePatientFlags(patient);
+            await repository.UpdatePatientAsync(patient);
+        }
+
+        private async Task UpdatePatientFlags(Patient patient)
+        {
+            await UpdateUkBorn(patient);
+
+            if (patient.IsNhsNumberUnknown)
+            {
+                patient.NhsNumber = null;
+            }
+
+            if (patient.IsPostcodeUnknown)
+            {
+                patient.Postcode = null;
+            }
+        }
+
+        private async Task UpdateUkBorn(Patient patient)
+        {
+            var country = await context.GetCountryByIdAsync(patient.CountryId);
+            if (country == null) {
                 patient.UkBorn = null;
                 return;
             }
 
-            switch (patient.Country.IsoCode)
+            switch (country.IsoCode)
             {
                 case Countries.UkCode:
                     patient.UkBorn = true;

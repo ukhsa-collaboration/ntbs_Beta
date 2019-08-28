@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Patients
@@ -15,17 +16,15 @@ namespace ntbs_service.Pages_Patients
     {
         private readonly IPatientService service;
         private readonly NtbsContext _context;
-        private readonly IPatientRepository _repository;
 
         public SelectList Ethnicities { get; set;}
         public SelectList Countries { get; set; }
         public List<Sex> Sexes { get; set; }
 
-        public EditModel(IPatientService service, NtbsContext context, IPatientRepository repository)
+        public EditModel(IPatientService service, NtbsContext context)
         {
             this.service = service;
             _context = context;
-            _repository = repository;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -35,7 +34,7 @@ namespace ntbs_service.Pages_Patients
                 return NotFound();
             }
 
-            Patient = await _repository.GetPatientAsync(id);
+            Patient = await service.GetPatientAsync(id);
 
             if (Patient == null)
             {
@@ -62,8 +61,7 @@ namespace ntbs_service.Pages_Patients
                 return await OnGetAsync(id);
             }
 
-            service.UpdateUkBorn(Patient);
-            await _repository.UpdatePatientAsync(Patient);
+            await service.UpdatePatientAsync(Patient);
 
             return RedirectToPage("./Index");
         }
@@ -97,10 +95,9 @@ namespace ntbs_service.Pages_Patients
             }
             else
             {
-                return Content("Please enter a valid date");
+                return Content(ValidationMessage.ValidDate);
             }
         }
-
 
         public bool IsValid(string key)
         {
@@ -122,7 +119,7 @@ namespace ntbs_service.Pages_Patients
             }
             else
             {
-                ModelState.AddModelError(patientKey, "Please enter a valid date");
+                ModelState.AddModelError(patientKey, ValidationMessage.ValidDate);
                 return;
             }
         }

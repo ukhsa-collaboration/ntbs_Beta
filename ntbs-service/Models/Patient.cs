@@ -38,6 +38,8 @@ namespace ntbs_service.Models
 
         public int? SexId { get; set; }
         public virtual Sex Sex { get; set; }
+        public bool IsNhsNumberUnknown { get; set; }
+        public bool IsPostcodeUnknown { get; set; }
 
         public virtual ICollection<Notification> Notifications { get; set; }
     }
