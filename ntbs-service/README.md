@@ -21,3 +21,12 @@ VS Code should pick up the debugging configuration automtically. Open the debugg
 
 ## Testing
 We are using the [xunit](https://xunit.net/) frameworkTo run unit tests. To run tests, cd into the ntbs-service-tests project and run "dotnet test".
+
+## Database migrations
+To minimize friction in development and deployments, the app uses Entity Framework migrations.
+The simplest way to make a schema change is to make the appropriate changes in the model (e.g. [Notification](Models/Notification.cs) and the [database context](Models/NtbsContext.cs) and run
+```dotnet ef migrations add <NameOfMigration>```
+This will create a migration file, that can be edited further to match needs. It will be run at application startup, or can be envoked by hand using
+```dotnet ef database update```
+
+[See more information on migration](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/)
