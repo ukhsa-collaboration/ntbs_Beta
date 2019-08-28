@@ -14,10 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].Surname)
+                @Html.DisplayNameFor(model => model.Patients[0].FamilyName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].Forename)
+                @Html.DisplayNameFor(model => model.Patients[0].GivenName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Patients[0].NhsNumber)
@@ -26,16 +26,7 @@
                 @Html.DisplayNameFor(model => model.Patients[0].Dob)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].UkBorn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Patients[0].EtsId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Patients[0].LtbrId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Patients[0].Region)
+                @Html.DisplayNameFor(model => model.Patients[0].Country)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Patients[0].Sex)
@@ -47,10 +38,10 @@
 @foreach (var item in Model.Patients) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Surname)
+                @Html.DisplayFor(modelItem => item.FamilyName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Forename)
+                @Html.DisplayFor(modelItem => item.GivenName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NhsNumber)
@@ -59,24 +50,13 @@
                 @Html.DisplayFor(modelItem => item.Dob)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UkBorn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EtsId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LtbrId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Region.RegionId)
+                @Html.DisplayFor(modelItem => item.Country.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Sex.SexId)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.PatientId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.PatientId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.PatientId">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@item.PatientId">Edit</a>
             </td>
         </tr>
 }
