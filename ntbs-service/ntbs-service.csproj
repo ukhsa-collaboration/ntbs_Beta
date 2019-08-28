@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>ntbs_service</RootNamespace>
+    <UserSecretsId>3736039d-9d74-48f5-9007-015e53f0b2a1</UserSecretsId>
   </PropertyGroup>
 
 
