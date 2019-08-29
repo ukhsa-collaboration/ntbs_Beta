@@ -8,6 +8,8 @@ import Vue from 'vue';
 import { TestButton } from './Components/TestButton';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
+// @ts-ignore
+import config from './config/config-APP_TARGET';
 
 // Vue needs to be the firs thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
@@ -21,7 +23,10 @@ new Vue({
   el: '#app',
 });
 
-// Enables ASP hot relaod
-module.hot.accept()
+if (config.env === 'development') {
+  // Enables ASP hot relaod
+  console.log("RUNNING IN DEVELOPMENT MODE - Accepting hot reload")
+  module.hot.accept()
+}
 
 govUkJsInitAll()
