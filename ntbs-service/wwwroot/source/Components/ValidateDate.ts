@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import * as $ from 'jquery';
 const axios = require('axios');
 
 const ValidateDate = Vue.extend({
