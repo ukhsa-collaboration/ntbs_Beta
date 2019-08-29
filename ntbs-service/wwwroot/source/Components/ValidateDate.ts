@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import * as $ from 'jquery';
 const axios = require('axios');
 
 const ValidateDate = Vue.extend({
@@ -22,6 +23,7 @@ const ValidateDate = Vue.extend({
             return;
         }
 
+        // TODO - remove jquery and use a vue-way of getting this value.
         var headers = {
             "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
         }
