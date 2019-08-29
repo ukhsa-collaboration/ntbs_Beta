@@ -19,6 +19,7 @@ namespace ntbs_service.Models
 
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
+        public virtual DbSet<ClinicalTimeline> ClinicalTimelines { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Patient> Patient { get; set; }
@@ -109,6 +110,8 @@ namespace ntbs_service.Models
                     .WithMany(p => p.Notifications)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notification_Patient");
+
+                entity.OwnsOne(e => e.ClinicalTimeline).ToTable("ClinicalTimelines");
             });
 
             modelBuilder.Entity<Patient>(entity =>

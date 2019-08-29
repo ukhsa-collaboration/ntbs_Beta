@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import * as $ from 'jquery';
 const axios = require('axios');
 
 const ValidateDate = Vue.extend({
-    props: ['property'],
+    props: ['model', 'property'],
     data: function() {
       return {
         hasError: false,
@@ -28,7 +27,7 @@ const ValidateDate = Vue.extend({
             "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
         }
 
-        axios.post(`/Patients/Edit/ValidateDate?key=${this.$props.property}&day=${dayValue}&month=${monthValue}&year=${yearValue}`, 
+        axios.post(`/${this.$props.model}s/Edit/Validate${this.$props.model}Date?key=${this.$props.property}&day=${dayValue}&month=${monthValue}&year=${yearValue}`, 
                 null, { headers: headers })
             .then((response: any) => {
                 console.log(response);
@@ -46,3 +45,9 @@ const ValidateDate = Vue.extend({
 export {
     ValidateDate
 };
+
+
+// for validation between dates:
+// add a hidden input field that generates date from the three input fields (to make it simpler)
+// when validation passes, emit an event to the containing datecomparison component
+// this component then can fetch all the hidden input dates (how will it have access?) and compare them

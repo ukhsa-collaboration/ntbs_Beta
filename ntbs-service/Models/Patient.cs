@@ -20,10 +20,10 @@ namespace ntbs_service.Models
         public string GivenName { get; set; }
 
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NhsNumberFormat)]
-        [StringLength(10, MinimumLength = 10, ErrorMessage= ValidationMessages.NhsNumberLength)]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = ValidationMessages.NhsNumberLength)]
         public string NhsNumber { get; set; }
 
-        [ValidDate]
+        [ValidDate(ValidDates.EarliestBirthDate)]
         public DateTime? Dob { get; set; }
         public bool? UkBorn { get; set; }
 

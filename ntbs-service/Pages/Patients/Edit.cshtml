@@ -15,7 +15,7 @@
         <form method="post">
             <input type="hidden" asp-for="Patient.PatientId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <validate-input property="GivenName" inline-template>
+            <validate-input model="Patient" property="GivenName" inline-template>
                 <div>
                     @{var givenNameErrorClass = !Model.IsValid("Patient.GivenName") ? errorClassName : ""; }
                     <div class="nhsuk-form-group @givenNameErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}"
@@ -30,7 +30,7 @@
                 </div>
             </validate-input>
 
-            <validate-input property="FamilyName" inline-template>
+            <validate-input model="Patient" property="FamilyName" inline-template>
                 @{var familyNameErrorClass = !Model.IsValid("Patient.FamilyName") ? errorClassName : ""; }
                 <div class="nhsuk-form-group @familyNameErrorClass" aria-describedby="family-name-error" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                     <label class="nhsuk-label" asp-for="Patient.FamilyName">
@@ -44,7 +44,7 @@
             </validate-input>
             <br/>
         
-            <validate-date property="Dob" inline-template>
+            <validate-date model="Patient" property="Dob" inline-template>
                 @{var dobErrorClass = !Model.IsValid("Patient.Dob") ? errorClassName : ""; }
                 <div class="nhsuk-form-group @dobErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                     <fieldset class="nhsuk-fieldset" aria-describedby="dob-error" role="group">
@@ -124,7 +124,7 @@
                                 NHS Number
                             </label>
                         </div>
-                        <validate-input property="NhsNumber" inline-template>
+                        <validate-input model="Patient" property="NhsNumber" inline-template>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-nhs-number-conditional">
                                 @{var nhsNumberErrorClass = !Model.IsValid("Patient.NhsNumber") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @nhsNumberErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="nhs-number-error">
@@ -165,7 +165,7 @@
                                 Postcode
                             </label>
                         </div>
-                        <validate-input property="Postcode" inline-template>
+                        <validate-input model="Patient" property="Postcode" inline-template>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">
                                 @{var postcodeErrorClass = !Model.IsValid("Patient.Postcode") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @postcodeErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="postcode-error">

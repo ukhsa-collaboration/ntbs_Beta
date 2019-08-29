@@ -15,6 +15,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationAsync(int? NotificationId);
         Task<Notification> FindNotificationByIdAsync(int? NotificationId);
         bool NotificationExists(int NotificationId);
+        Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline);
     }
     
     public class NotificationRepository : INotificationRepository 
@@ -61,6 +62,15 @@ namespace ntbs_service.DataAccess
         public bool NotificationExists(int NotificationId)
         {
             return _context.Notification.Any(e => e.NotificationId == NotificationId);
+        }
+
+        // TODO: Add this to notification service, and also do validation of postmortem/treament flags there
+        public async Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline)
+        {
+             _context.Attach(notification);
+             notification.ClinicalTimeline = timeline;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
