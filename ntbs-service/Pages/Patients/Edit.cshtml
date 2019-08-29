@@ -119,8 +119,8 @@
                 <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.IsNhsNumberUnknown" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-nhs-number-conditional">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.IsNhsNumberUnknown">
+                            <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-nhs-number-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
                                 NHS Number
                             </label>
                         </div>
@@ -136,8 +136,8 @@
                             </div>
                         </validate-input>
                         <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.IsNhsNumberUnknown" class="nhsuk-radios__input" type="radio" value="true">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.IsNhsNumberUnknown">
+                            <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio" value="true">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
                                 NHS number is not known
                             </label>
                         </div>   
@@ -160,8 +160,8 @@
                 <fieldset class="nhsuk-fieldset" aria-describedby="postcode-error">
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.IsPostcodeUnknown" class="nhsuk-radios__input"type="radio" value="false" data-aria-controls="conditional-postcode-conditional">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.IsPostcodeUnknown">
+                            <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input"type="radio" value="false" data-aria-controls="conditional-postcode-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
                                 Postcode
                             </label>
                         </div>
@@ -177,8 +177,8 @@
                             </div>
                         </validate-input>
                         <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.IsPostcodeUnknown" class="nhsuk-radios__input" type="radio" value="true">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.IsPostcodeUnknown">
+                            <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="true">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
                                 No fixed abode
                             </label>
                         </div>   

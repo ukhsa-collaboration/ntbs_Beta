@@ -9,9 +9,9 @@ namespace ntbs_service.Models.Validations
         public ValidDateAttribute() : base(typeof(DateTime),
             new DateTime(1900, 1, 1).ToShortDateString(), DateTime.Now.ToShortDateString()) {}
 
-         public override string FormatErrorMessage(string name)
-         {
-             return $"Must be between {EarliestDate.ToShortDateString()} and {DateTime.Now.ToShortDateString()}";
-         }
+        public override string FormatErrorMessage(string name)
+        {
+            return ValidationMessages.DateValidityRange(EarliestDate.ToShortDateString());
+        }
     }
 }
