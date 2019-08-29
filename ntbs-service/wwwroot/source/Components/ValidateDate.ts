@@ -25,10 +25,10 @@ const ValidateDate = Vue.extend({
 
         // TODO - remove jquery and use a vue-way of getting this value.
         var headers = {
-            "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+            "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
         }
 
-        axios.post('/Patients/Edit/ValidateDate?key='+ this.$props.property + '&day=' + dayValue + '&month=' + monthValue + '&year=' + yearValue, 
+        axios.post(`/Patients/Edit/ValidateDate?key=${this.$props.property}&day=${dayValue}&month=${monthValue}&year=${yearValue}`, 
                 null, { headers: headers })
             .then((response: any) => {
                 console.log(response);

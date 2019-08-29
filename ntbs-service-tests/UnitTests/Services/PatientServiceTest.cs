@@ -62,7 +62,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         public void NhsNumber_IsSetToNullIfNhsNumberUnknownTrue()
         {
             // Arrange
-            var patient = new Patient() { NhsNumber = "1534645612", IsNhsNumberUnknown = true };
+            var patient = new Patient() { NhsNumber = "1534645612", NhsNumberNotKnown = true };
 
             // Act
             service.UpdatePatientAsync(patient);
@@ -75,7 +75,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         public void Postcode_IsSetToNullIfPostcodeUnknownTrue()
         {
             // Arrange
-            var patient = new Patient() { Postcode = "NW5 1TL", IsPostcodeUnknown = true };
+            var patient = new Patient() { Postcode = "NW5 1TL", NoFixedAbode = true };
 
             // Act
             service.UpdatePatientAsync(patient);
