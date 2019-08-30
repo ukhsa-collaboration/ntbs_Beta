@@ -16,18 +16,15 @@
             <input type="hidden" asp-for="Patient.PatientId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <validate-input property="GivenName" inline-template>
-                <div>
-                    @{var givenNameErrorClass = !Model.IsValid("Patient.GivenName") ? errorClassName : ""; }
-                    <div class="nhsuk-form-group @givenNameErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}"
-                        aria-describedby="given-name-error">
-                    <label asp-for="Patient.GivenName" class="nhsuk-label">
-                        Given name
-                    </label>
-                    <span class="nhsuk-error-message" id="given-name-error">
-                        <span ref="errorField" asp-validation-for="Patient.GivenName"></span>
-                    </span>
-                    <input v-on:blur="validate" asp-for="Patient.GivenName" class="nhsuk-input nhsuk-input--width-10" type="text">
-                </div>
+                @{
+                    var GivenNameError = !Model.IsValid("Patient.GivenName"); 
+                    var GivenNameGroupState = GivenNameError ? NHSUK.FrontEndLibrary.TagHelpers.FormGroupType.Error : NHSUK.FrontEndLibrary.TagHelpers.FormGroupType.Standard; 
+                }
+                <nhs-form-group nhs-form-group-type=@GivenNameGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <label nhs-label-type="Standard" asp-for="Patient.GivenName">Given name</label>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Patient.GivenName"></span>
+                    <input v-on:blur="validate" is-error-input=@GivenNameError nhs-input-type="Standard" asp-for="Patient.GivenName" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                </nhs-form-group>
             </validate-input>
 
             <validate-input property="FamilyName" inline-template>

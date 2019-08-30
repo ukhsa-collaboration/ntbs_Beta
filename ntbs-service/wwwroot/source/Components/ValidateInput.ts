@@ -19,9 +19,9 @@ const ValidateInput = Vue.extend({
         axios.post(`/Patients/Edit/ValidateProperty?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
         .then((response: any) => {
             console.log(response);
-              var errorMessage = response.data;
-              this.hasError = errorMessage != '';
-              this.$refs["errorField"].textContent = errorMessage;
+            var errorMessage = response.data;
+            this.hasError = errorMessage != '';
+            this.$refs["errorField"].textContent = errorMessage;
           })
         .catch((error: any) => {
             console.log(error.response)
