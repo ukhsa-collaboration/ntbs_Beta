@@ -75,24 +75,20 @@
             </validate-date>
             <br/>
 
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset">
-                    <legend class="nhsuk-fieldset__legend">
-                        Sex
-                    </legend>
-                    <div class="nhsuk-radios">
+            <nhs-form-group nhs-form-group-type="Standard">
+                <nhs-fieldset>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Sex</nhs-fieldset-legend>
+                    <nhs-radios nhs-radios-type="Standard">
                         @foreach (var sex in Model.Sexes)
                         {
-                            <div class="nhsuk-radios__item">
-                                <input asp-for="Patient.SexId" class="nhsuk-radios__input" type="radio" value="@sex.SexId">
-                                <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.SexId">
-                                    @sex.Label
-                                </label>
-                            </div>
+                            <nhs-radios-item>
+                                <input nhs-input-type="Radios" asp-for="Patient.SexId" type="radio" value="@sex.SexId" />
+                                <label nhs-label-type="Radios" asp-for="Patient.SexId">@sex.Label</label>
+                            </nhs-radios-item>
                         }
-                    </div>
-                </fieldset>
-            </div>
+                    </nhs-radios>
+                </nhs-fieldset>
+            </nhs-form-group>
             <br/>
 
             <div class="nhsuk-form-group">
