@@ -1,5 +1,6 @@
 @page "{handler?}"
 @model ntbs_service.Pages_Patients.EditModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     ViewData["Title"] = "Notification - Personal Details";
@@ -18,7 +19,7 @@
             <validate-input property="GivenName" inline-template>
                 @{
                     var GivenNameError = !Model.IsValid("Patient.GivenName"); 
-                    var GivenNameGroupState = GivenNameError ? NHSUK.FrontEndLibrary.TagHelpers.FormGroupType.Error : NHSUK.FrontEndLibrary.TagHelpers.FormGroupType.Standard; 
+                    var GivenNameGroupState = GivenNameError ? Error : Standard; 
                 }
                 <nhs-form-group nhs-form-group-type=@GivenNameGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                     <label nhs-label-type="Standard" asp-for="Patient.GivenName">Given name</label>
@@ -28,57 +29,49 @@
             </validate-input>
 
             <validate-input property="FamilyName" inline-template>
-                @{var familyNameErrorClass = !Model.IsValid("Patient.FamilyName") ? errorClassName : ""; }
-                <div class="nhsuk-form-group @familyNameErrorClass" aria-describedby="family-name-error" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <label class="nhsuk-label" asp-for="Patient.FamilyName">
-                        Family name
-                    </label>
-                    <span class="nhsuk-error-message" id="family-name-error">
-                        <span ref="errorField" asp-validation-for="Patient.FamilyName"></span>
-                    </span>
-                    <input v-on:blur="validate" asp-for="Patient.FamilyName" class="nhsuk-input nhsuk-input--width-10" type="text">
-                </div>
+                @{
+                    var FamilyNameError = !Model.IsValid("Patient.FamilyName"); 
+                    var FamilyNameGroupState = FamilyNameError ? Error : Standard; 
+                }
+                <nhs-form-group nhs-form-group-type=@FamilyNameGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <label nhs-label-type="Standard" asp-for="Patient.FamilyName">Family name</label>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="family-name-error" asp-validation-for="Patient.FamilyName"></span>
+                    <input v-on:blur="validate" is-error-input=@FamilyNameError nhs-input-type="Standard" asp-for="Patient.FamilyName" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                </nhs-form-group>
             </validate-input>
             <br/>
         
             <validate-date property="Dob" inline-template>
-                @{var dobErrorClass = !Model.IsValid("Patient.Dob") ? errorClassName : ""; }
-                <div class="nhsuk-form-group @dobErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-error" role="group">
-                        <legend class="nhsuk-fieldset__legend">
-                            Date of birth
-                        </legend>
-                        <span class="nhsuk-error-message" id="dob-error">
-                            <span ref="errorField" asp-validation-for="Patient.Dob"></span>
-                        </span>
-                        <div class="nhsuk-date-input" id="dob">
-                            <div class="nhsuk-date-input__item">
-                                <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDob.Day">
-                                        Day
-                                    </label>
-                                    <input v-on:blur="validate" ref="dayInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDob.Day" type="number" pattern="[0-9]*">
-                                </div>
-                            </div>
-                            <div class="nhsuk-date-input__item">
-                                <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDob.Month">
-                                        Month
-                                    </label>
-                                    <input v-on:blur="validate" ref="monthInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDob.Month" type="number" pattern="[0-9]*">
-                                </div>
-                            </div>
-                            <div class="nhsuk-date-input__item">
-                                <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDob.Year">
-                                        Year
-                                    </label>
-                                    <input v-on:blur="validate" ref="yearInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedDob.Year" type="number" pattern="[0-9]*">
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
+                @{
+                    var DobError = !Model.IsValid("Patient.Dob"); 
+                    var DobGroupState = DobError ? Error : Standard; 
+                }
+                <nhs-form-group nhs-form-group-type=@DobGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <nhs-fieldset aria-describedby="dob-error" role="group">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">Date of birth</nhs-fieldset-legend>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="Patient.Dob" id="dob-error"></span>
+                        <nhs-date-input id="dob">
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@DobGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedDob.Day">Day</label>
+                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DobError asp-for="FormattedDob.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@DobGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedDob.Month">Month</label>
+                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DobError asp-for="FormattedDob.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@DobGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedDob.Year">Year</label>
+                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@DobError asp-for="FormattedDob.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                    </nhs-fieldset>
+                </nhs-form-group>
             </validate-date>
             <br/>
 
