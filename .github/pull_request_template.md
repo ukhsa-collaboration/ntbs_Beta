@@ -11,4 +11,4 @@
 - [ ] Zoom page to 400% - content still visible?
 - [ ] Works with keyboard only
 - [ ] Tested with one screen reader
-- [ ] Passes automated checker (e.g. (WAVE)[https://chrome.google.com/webstore/detail/wave-evaluation-tool/jbbplnpkjmmeebjpijfedlgcdilocofh]
+- [ ] Passes automated checker (e.g. [WAVE](https://chrome.google.com/webstore/detail/wave-evaluation-tool/jbbplnpkjmmeebjpijfedlgcdilocofh))
