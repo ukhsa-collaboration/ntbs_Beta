@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.DataAccess;
+using ntbs_service.Data.Legacy;
 using ntbs_service.Models;
 using ntbs_service.Services;
 
@@ -39,13 +35,17 @@ namespace ntbs_service
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<NtbsContext>(options => 
+            services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
 
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IETSSearchService, ETSSearcher>();
+            services.AddScoped<ILTBRSearchService, LTBRSearcher>();
+            services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
+            services.AddScoped<ISearchService, SearchService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +54,8 @@ namespace ntbs_service
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
                     HotModuleReplacement = true,
                     ConfigFile = "webpack.dev.js"
                 });
