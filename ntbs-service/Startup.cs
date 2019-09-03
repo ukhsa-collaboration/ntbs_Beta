@@ -39,9 +39,8 @@ namespace ntbs_service
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
 
-            services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
-            services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IETSSearchService, ETSSearcher>();
             services.AddScoped<ILTBRSearchService, LTBRSearcher>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();

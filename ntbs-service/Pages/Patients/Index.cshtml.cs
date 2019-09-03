@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Models;
@@ -8,18 +9,18 @@ namespace ntbs_service.Pages_Patients
 {
     public class IndexModel : PageModel
     {
-        private readonly IPatientRepository _repository;
+        private readonly INotificationRepository _repository;
 
-        public IndexModel(IPatientRepository repository)
+        public IndexModel(INotificationRepository repository)
         {
             _repository = repository;
         }
 
-        public IList<Patient> Patients { get;set; }
+        public IList<Notification> Notifications { get;set; }
 
         public async Task OnGetAsync()
         {
-            Patients = await _repository.GetPatientsAsync();
+            Notifications = await _repository.GetNotificationsWithPatientsAsync();
         }
     }
 }

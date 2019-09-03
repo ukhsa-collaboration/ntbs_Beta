@@ -8,6 +8,7 @@ import Vue from 'vue';
 import { TestButton } from './Components/TestButton';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
+import { DateComparison } from './Components/DateComparison';
 // @ts-ignore
 import config from './config/config-APP_TARGET';
 
@@ -18,6 +19,7 @@ import config from './config/config-APP_TARGET';
 Vue.component('test-button', TestButton);
 Vue.component('validate-input', ValidateInput);
 Vue.component('validate-date', ValidateDate);
+Vue.component('date-comparison', DateComparison);
 
 new Vue({
   el: '#app',

@@ -21,7 +21,6 @@ namespace ntbs_service.Models
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<Patient> Patient { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
 
@@ -105,38 +104,9 @@ namespace ntbs_service.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notification_Hospital");
 
-                entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.Notifications)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notification_Patient");
-            });
+                entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
-            modelBuilder.Entity<Patient>(entity =>
-            {
-                entity.Property(e => e.Dob).HasColumnType("date");
-
-                entity.Property(e => e.GivenName).HasMaxLength(35);
-
-                entity.Property(e => e.NhsNumber).HasMaxLength(10);
-
-                entity.Property(e => e.FamilyName).HasMaxLength(35);
-
-                entity.Property(e => e.Postcode).HasMaxLength(50);
-
-                entity.HasOne(d => d.Ethnicity)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Ethnicity");
-
-                entity.HasOne(d => d.Country)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Country");
-
-                entity.HasOne(d => d.Sex)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Sex");
+                entity.OwnsOne(e => e.ClinicalTimeline).ToTable("ClinicalTimelines");
             });
 
             modelBuilder.Entity<Region>(entity =>
