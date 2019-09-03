@@ -8,20 +8,19 @@ namespace ntbs_service.Models
     public class Patient
     {
         private const string NameRegex = @"[a-zA-Z \-,.']+";
-        private const string NameErrorMessage = "Names can only contain letters and ' - . ,";
 
         public int PatientId { get; set; }
 
         [StringLength(35)]
-        [RegularExpression(NameRegex, ErrorMessage = NameErrorMessage)]
+        [RegularExpression(NameRegex, ErrorMessage = ValidationMessages.NameFormat)]
         public string FamilyName { get; set; }
 
         [StringLength(35)]
-        [RegularExpression(NameRegex, ErrorMessage = NameErrorMessage)]
+        [RegularExpression(NameRegex, ErrorMessage = ValidationMessages.NameFormat)]
         public string GivenName { get; set; }
 
-        [RegularExpression(@"[0-9]+", ErrorMessage = "NHS Number can only contain digits 0-9")]
-        [StringLength(10, MinimumLength = 10, ErrorMessage="NHS Number needs to be 10 digits long")]
+        [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NhsNumberFormat)]
+        [StringLength(10, MinimumLength = 10, ErrorMessage= ValidationMessages.NhsNumberLength)]
         public string NhsNumber { get; set; }
 
         [ValidDate]
@@ -38,8 +37,8 @@ namespace ntbs_service.Models
 
         public int? SexId { get; set; }
         public virtual Sex Sex { get; set; }
-        public bool IsNhsNumberUnknown { get; set; }
-        public bool IsPostcodeUnknown { get; set; }
+        public bool NhsNumberNotKnown { get; set; }
+        public bool NoFixedAbode { get; set; }
 
         public virtual ICollection<Notification> Notifications { get; set; }
     }

@@ -33,12 +33,12 @@ namespace ntbs_service.Services
         {
             await UpdateUkBorn(patient);
 
-            if (patient.IsNhsNumberUnknown)
+            if (patient.NhsNumberNotKnown)
             {
                 patient.NhsNumber = null;
             }
 
-            if (patient.IsPostcodeUnknown)
+            if (patient.NoFixedAbode)
             {
                 patient.Postcode = null;
             }

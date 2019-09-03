@@ -13,15 +13,15 @@ const ValidateInput = Vue.extend({
         const inputField = event.target as HTMLInputElement
         const newValue = inputField.value;
         var headers = {
-            "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+            "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
         }
 
-        axios.post('/Patients/Edit/ValidateProperty?key='+ this.$props.property + '&value=' + newValue, null, { headers: headers })
+        axios.post(`/Patients/Edit/ValidateProperty?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
         .then((response: any) => {
             console.log(response);
-              var errorMessage = response.data;
-              this.hasError = errorMessage != '';
-              this.$refs["errorField"].textContent = errorMessage;
+            var errorMessage = response.data;
+            this.hasError = errorMessage != '';
+            this.$refs["errorField"].textContent = errorMessage;
           })
         .catch((error: any) => {
             console.log(error.response)

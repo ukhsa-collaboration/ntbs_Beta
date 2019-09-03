@@ -95,7 +95,7 @@ namespace ntbs_service.Pages_Patients
             }
             else
             {
-                return Content(ValidationMessage.ValidDate);
+                return Content(ValidationMessages.ValidDate);
             }
         }
 
@@ -119,7 +119,7 @@ namespace ntbs_service.Pages_Patients
             }
             else
             {
-                ModelState.AddModelError(patientKey, ValidationMessage.ValidDate);
+                ModelState.AddModelError(patientKey, ValidationMessages.ValidDate);
                 return;
             }
         }

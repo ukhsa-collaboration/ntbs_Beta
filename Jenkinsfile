@@ -32,9 +32,13 @@ pipeline {
     }
     stage ('deploy to int') {
       steps {
-        powershell(script: '''
-          Write-Output "Releasing"
-        ''')
+        withCredentials([string(credentialsId: 'int-db-connection-string', variable: 'INT_DB_CONNECTION_STRING')]) {
+          powershell(script: '''
+            Push-Location ntbs-service/bin/Release/netcoreapp2.2/publish
+            Write-Output "Applying int secrets to configuration file"
+            ((Get-Content -path ./appsettings.Production.json -Raw) -replace '<REPLACEME:ntbsContext>',"$env:INT_DB_CONNECTION_STRING") | Set-Content -Path ./appsettings.Production.json
+          ''')
+        }
         withCredentials([sshUserPrivateKey(credentialsId: 'dcee242f-4428-47c3-b106-f85f2e6acc2d', keyFileVariable: 'ssh_key_file')]) {
           powershell(script: '''
             Write-Output "Uploading release files to server stage"
