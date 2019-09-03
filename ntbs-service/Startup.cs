@@ -46,6 +46,7 @@ namespace ntbs_service
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<INotificationService, NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

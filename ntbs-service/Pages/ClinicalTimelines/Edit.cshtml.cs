@@ -4,16 +4,17 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Pages;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages_ClinicalTimelines
 {
     public class EditModel : ValidationModel
     {
-        private readonly INotificationRepository _repository;
+        private readonly INotificationService service;
 
-        public EditModel(INotificationRepository repository)
+        public EditModel(INotificationService service)
         {
-            _repository = repository;
+            this.service = service;
         }
 
         [BindProperty]
@@ -34,7 +35,7 @@ namespace ntbs_service.Pages_ClinicalTimelines
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var notification = await _repository.GetNotificationAsync(1);
+            var notification = await service.GetNotificationAsync(1);
 
             ClinicalTimeline = notification.ClinicalTimeline;
             NotificationId = 1;
@@ -65,8 +66,8 @@ namespace ntbs_service.Pages_ClinicalTimelines
                 return Page();
             }
 
-            var notification = await _repository.GetNotificationAsync(NotificationId);
-            await _repository.UpdateTimelineAsync(notification, ClinicalTimeline);
+            var notification = await service.GetNotificationAsync(NotificationId);
+            await service.UpdateTimelineAsync(notification, ClinicalTimeline);
 
             return RedirectToPage("/Patients/Index");
         }
