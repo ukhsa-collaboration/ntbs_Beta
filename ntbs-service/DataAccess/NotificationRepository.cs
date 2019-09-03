@@ -9,6 +9,7 @@ namespace ntbs_service.DataAccess
     public interface INotificationRepository
     {
         Task<IList<Notification>> GetNotificationsAsync();
+        Task<IList<Notification>> GetNotificationsWithPatientsAsync();
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
         Task DeleteNotificationAsync(Notification Notification);
@@ -28,6 +29,15 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetNotificationsAsync() 
         {
             return await _context.Notification.ToListAsync();
+        }
+
+        public async Task<IList<Notification>> GetNotificationsWithPatientsAsync()
+        {
+            return await _context.Notification
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
+                .ToListAsync();
         }
 
         public async Task UpdateNotificationAsync(Notification Notification) 

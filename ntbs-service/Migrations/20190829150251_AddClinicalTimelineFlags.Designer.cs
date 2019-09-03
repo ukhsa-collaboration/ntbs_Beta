@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20190829150251_AddClinicalTimelineFlags")]
+    partial class AddClinicalTimelineFlags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1699,11 +1701,59 @@ namespace ntbs_service.Migrations
 
                     b.Property<int?>("HospitalId");
 
+                    b.Property<int?>("PatientId");
+
                     b.HasKey("NotificationId");
 
                     b.HasIndex("HospitalId");
 
+                    b.HasIndex("PatientId");
+
                     b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Patient", b =>
+                {
+                    b.Property<int>("PatientId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CountryId");
+
+                    b.Property<DateTime?>("Dob")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("EthnicityId");
+
+                    b.Property<string>("FamilyName")
+                        .HasMaxLength(35);
+
+                    b.Property<string>("GivenName")
+                        .HasMaxLength(35);
+
+                    b.Property<string>("NhsNumber")
+                        .HasMaxLength(10);
+
+                    b.Property<bool>("NhsNumberNotKnown");
+
+                    b.Property<bool>("NoFixedAbode");
+
+                    b.Property<string>("Postcode")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("SexId");
+
+                    b.Property<bool?>("UkBorn");
+
+                    b.HasKey("PatientId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("EthnicityId");
+
+                    b.HasIndex("SexId");
+
+                    b.ToTable("Patient");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Region", b =>
@@ -1758,6 +1808,11 @@ namespace ntbs_service.Migrations
                         .HasForeignKey("HospitalId")
                         .HasConstraintName("FK_Notification_Hospital");
 
+                    b.HasOne("ntbs_service.Models.Patient", "Patient")
+                        .WithMany("Notifications")
+                        .HasForeignKey("PatientId")
+                        .HasConstraintName("FK_Notification_Patient");
+
                     b.OwnsOne("ntbs_service.Models.ClinicalTimeline", "ClinicalTimeline", b1 =>
                         {
                             b1.Property<int>("NotificationId");
@@ -1785,63 +1840,24 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("ntbs_service.Models.ClinicalTimeline", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
+                });
 
-                    b.OwnsOne("ntbs_service.Models.PatientDetails", "PatientDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
+            modelBuilder.Entity("ntbs_service.Models.Patient", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("FK_Patient_Country");
 
-                            b1.Property<int?>("CountryId");
+                    b.HasOne("ntbs_service.Models.Ethnicity", "Ethnicity")
+                        .WithMany()
+                        .HasForeignKey("EthnicityId")
+                        .HasConstraintName("FK_Patient_Ethnicity");
 
-                            b1.Property<DateTime?>("Dob");
-
-                            b1.Property<int?>("EthnicityId");
-
-                            b1.Property<string>("FamilyName")
-                                .HasMaxLength(35);
-
-                            b1.Property<string>("GivenName")
-                                .HasMaxLength(35);
-
-                            b1.Property<string>("NhsNumber")
-                                .HasMaxLength(10);
-
-                            b1.Property<bool>("NhsNumberNotKnown");
-
-                            b1.Property<bool>("NoFixedAbode");
-
-                            b1.Property<string>("Postcode");
-
-                            b1.Property<int?>("SexId");
-
-                            b1.Property<bool?>("UkBorn");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.HasIndex("CountryId");
-
-                            b1.HasIndex("EthnicityId");
-
-                            b1.HasIndex("SexId");
-
-                            b1.ToTable("Patients");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country")
-                                .WithMany()
-                                .HasForeignKey("CountryId");
-
-                            b1.HasOne("ntbs_service.Models.Ethnicity", "Ethnicity")
-                                .WithMany()
-                                .HasForeignKey("EthnicityId");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("PatientDetails")
-                                .HasForeignKey("ntbs_service.Models.PatientDetails", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-
-                            b1.HasOne("ntbs_service.Models.Sex", "Sex")
-                                .WithMany()
-                                .HasForeignKey("SexId");
-                        });
+                    b.HasOne("ntbs_service.Models.Sex", "Sex")
+                        .WithMany()
+                        .HasForeignKey("SexId")
+                        .HasConstraintName("FK_Patient_Sex");
                 });
 #pragma warning restore 612, 618
         }

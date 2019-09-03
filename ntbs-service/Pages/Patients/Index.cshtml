@@ -5,58 +5,55 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Patient List</h2>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].FamilyName)
+                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.FamilyName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].GivenName)
+                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.GivenName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].NhsNumber)
+                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.NhsNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].Dob)
+                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.Dob)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].Country)
+                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.Country)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patients[0].Sex)
+                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.Sex)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Patients) {
+@foreach (var item in Model.Notifications) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FamilyName)
+                @Html.DisplayFor(modelItem => item.PatientDetails.FamilyName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GivenName)
+                @Html.DisplayFor(modelItem => item.PatientDetails.GivenName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NhsNumber)
+                @Html.DisplayFor(modelItem => item.PatientDetails.NhsNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Dob)
+                @Html.DisplayFor(modelItem => item.PatientDetails.Dob)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Country.Name)
+                @Html.DisplayFor(modelItem => item.PatientDetails.Country.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Sex.SexId)
+                @Html.DisplayFor(modelItem => item.PatientDetails.Sex.Label)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.PatientId">Edit</a>
+                <a asp-page="./Edit" asp-route-id="@item.NotificationId">Edit</a>
             </td>
         </tr>
 }
