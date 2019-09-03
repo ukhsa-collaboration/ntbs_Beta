@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Models.Validations;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 
@@ -16,7 +12,7 @@ namespace ntbs_service.Pages_Patients
 {
     public class EditModel : ValidationModel
     {
-        private readonly IPatientService service;
+        private readonly INotificationService service;
         private readonly NtbsContext _context;
 
         public SelectList Ethnicities { get; set;}
@@ -24,35 +20,39 @@ namespace ntbs_service.Pages_Patients
         public List<Sex> Sexes { get; set; }
 
 
-        public EditModel(IPatientService service, NtbsContext context)
+        public EditModel(INotificationService service, NtbsContext context)
         {
             this.service = service;
             _context = context;
         }
 
         [BindProperty]
-        public Patient Patient { get; set; }
+        public PatientDetails Patient { get; set; }
+        [BindProperty]
+        public int NotificationId { get; set; }
         [BindProperty]
         public FormattedDate FormattedDob { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            var notification = await service.GetNotificationAsync(id);
+            if (notification == null)
             {
                 return NotFound();
             }
 
-            Patient = await service.GetPatientAsync(id);
+            NotificationId = notification.NotificationId;
+            Patient = notification.PatientDetails;
 
-            if (Patient == null)
-            {
-                return NotFound();
+            if (Patient == null) {
+                Patient = new PatientDetails();
             }
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
             Ethnicities = new SelectList(_context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
             Countries = new SelectList(_context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = _context.GetAllSexesAsync().Result.ToList();
+
             return Page();
         }
 
@@ -65,9 +65,10 @@ namespace ntbs_service.Pages_Patients
                 return await OnGetAsync(id);
             }
 
-            await service.UpdatePatientAsync(Patient);
+            var notification = await service.GetNotificationAsync(id);
+            await service.UpdatePatientAsync(notification, Patient);
             
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ClinicalTimelines/Edit", new {id = notification.NotificationId});
         }
 
         public ContentResult OnPostValidatePatientProperty(string key, string value)

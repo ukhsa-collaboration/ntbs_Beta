@@ -8,12 +8,12 @@
 
 <div><a asp-page="Index">Back to List</a></div>
 
-<h2>Personal details</h1>
+<h2>Personal details</h2>
 
 <div class="row">
     <div class="col-md-5">
         <form method="post">
-            <input type="hidden" asp-for="Patient.PatientId" />
+            <input type="hidden" asp-for="NotificationId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <validate-input model="Patient" property="GivenName" inline-template>
                 <div>

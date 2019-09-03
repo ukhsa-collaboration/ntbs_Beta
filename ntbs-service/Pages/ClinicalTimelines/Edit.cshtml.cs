@@ -35,10 +35,14 @@ namespace ntbs_service.Pages_ClinicalTimelines
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var notification = await service.GetNotificationAsync(1);
+            var notification = await service.GetNotificationAsync(id);
+            if (notification == null)
+            {
+                return NotFound();
+            }
 
             ClinicalTimeline = notification.ClinicalTimeline;
-            NotificationId = 1;
+            NotificationId = notification.NotificationId;
 
             if (ClinicalTimeline == null) {
                 ClinicalTimeline = new ClinicalTimeline();
@@ -53,7 +57,7 @@ namespace ntbs_service.Pages_ClinicalTimelines
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.SymptomStartDate), FormattedSymptomDate);
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.PresentationDate), FormattedPresentationDate);
@@ -63,10 +67,10 @@ namespace ntbs_service.Pages_ClinicalTimelines
 
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await OnGetAsync(id);
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
+            var notification = await service.GetNotificationAsync(id);
             await service.UpdateTimelineAsync(notification, ClinicalTimeline);
 
             return RedirectToPage("/Patients/Index");

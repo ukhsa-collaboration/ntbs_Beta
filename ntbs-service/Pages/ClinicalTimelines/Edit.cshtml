@@ -5,6 +5,7 @@
     ViewData["Title"] = "Notification - Clinical Timeline";
 }
 @{string errorClassName = "nhsuk-form-group--error";}
+<div><a asp-page="/Patients/Index">Back to List</a></div>
 
 <h2>Clinical Timeline</h2>
 
@@ -12,7 +13,7 @@
     <date-comparison inline-template>
         <div class="col-md-5">
             <form method="post">
-                <h4 class="text-warning" v-if="error">{{dateComparisonError}}</h4>
+                <h4 class="text-warning" v-if="dateComparisonError">{{dateComparisonError}}</h4>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="NotificationId" />
                 <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalTimeline" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
@@ -260,10 +261,6 @@
             </form>
         </div>
     </date-comparison>
-</div>
-
-<div>
-    <a asp-page="./Index">Back to List</a>
 </div>
 
 @section Scripts {
