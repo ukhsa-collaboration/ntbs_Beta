@@ -1,6 +1,8 @@
 import Vue from 'vue';
 const axios = require('axios');
 
+type FormattedDate = { day: any, month: any, year: any };
+
 const ValidateDate = Vue.extend({
     props: ['model', 'property', 'name', 'rank'],
     data: function() {
@@ -12,12 +14,15 @@ const ValidateDate = Vue.extend({
         if (this.rank) {
             // v-model binds to the input event, so this gets picked up by the containing DateComparison component, if present
             // See https://vuejs.org/v2/guide/components.html#Using-v-model-on-Components
-            this.$emit('input', this.getDate());
+            var formattedDate: FormattedDate = this.getFormattedDate();
+            if (formattedDate) {
+                this.$emit('input', this.convertToDate(formattedDate));
+            }
         }
     },
     methods: {
         validate: function () {
-            var date = this.getDate();
+            var date: FormattedDate = this.getFormattedDate();
             if (!date) {
                 return;
             }
@@ -26,7 +31,7 @@ const ValidateDate = Vue.extend({
                 "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
             }
 
-            axios.post(`/${this.$props.model}s/Edit/Validate${this.$props.model}Date?key=${this.$props.property}&day=${date.getDate()}&month=${date.getMonth() + 1}&year=${date.getFullYear()}`, 
+            axios.post(`/${this.$props.model}s/Edit/Validate${this.$props.model}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
                     null, { headers: headers })
                 .then((response: any) => {
                     console.log(response);
@@ -34,7 +39,7 @@ const ValidateDate = Vue.extend({
                     this.hasError = errorMessage != '';
                     this.$refs["errorField"].textContent = errorMessage;
                     if (!this.hasError && this.rank) {
-                        this.$emit('input', date);
+                        this.$emit('input', this.convertToDate(date));
                         this.$parent.datechanged(this.rank);
                     }
                 })
@@ -42,7 +47,7 @@ const ValidateDate = Vue.extend({
                     console.log(error.response)
                 });
         },
-        getDate: function() {
+        getFormattedDate: function() {
             const dayInput = this.$refs["dayInput"];
             const monthInput = this.$refs["monthInput"];
             const yearInput = this.$refs["yearInput"];
@@ -55,7 +60,16 @@ const ValidateDate = Vue.extend({
                 return null;
             }
 
-            return new Date(yearValue, monthValue - 1, dayValue);
+            var formattedDate: FormattedDate = {
+                day: dayValue,
+                month: monthValue,
+                year: yearValue
+            }
+
+            return formattedDate;
+        },
+        convertToDate: function(date: FormattedDate) {
+            return new Date(date.year, date.month - 1, date.day)
         }
     }
 });

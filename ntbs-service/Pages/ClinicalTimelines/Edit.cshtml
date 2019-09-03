@@ -1,5 +1,6 @@
 @page "{handler?}"
 @model ntbs_service.Pages_ClinicalTimelines.EditModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     ViewData["Title"] = "Notification - Clinical Timeline";
@@ -17,125 +18,104 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="NotificationId" />
                 <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalTimeline" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
-                    @{var symptomErrorClass = !Model.IsValid("ClinicalTimeline.SymptomStartDate") ? errorClassName : ""; }
-                    <div class="nhsuk-form-group @symptomErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                        <fieldset class="nhsuk-fieldset" aria-describedby="symptom-error" role="group">
-                            <legend class="nhsuk-fieldset__legend">
-                                Symptom Onset Date
-                            </legend>
-                            <span class="nhsuk-error-message" id="symptom-error">
-                                <span ref="errorField" asp-validation-for="ClinicalTimeline.SymptomStartDate"></span>
-                            </span>
-                            <div class="nhsuk-date-input" id="symptom">
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedSymptomDate.Day">
-                                            Day
-                                        </label>
-                                        <input v-on:blur="validate" ref="dayInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedSymptomDate.Day" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedSymptomDate.Month">
-                                            Month
-                                        </label>
-                                        <input v-on:blur="validate" ref="monthInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedSymptomDate.Month" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedSymptomDate.Year">
-                                            Year
-                                        </label>
-                                        <input v-on:blur="validate" ref="yearInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedSymptomDate.Year" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+                    @{
+                        var SymptomError = !Model.IsValid("ClinicalTimeline.SymptomStartDate");
+                        var SymptomGroupState = SymptomError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@SymptomGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                        <nhs-fieldset aria-describedby="symptom-error" role="group">
+                            <nhs-fieldset-legend nhs-legend-size="Standard">Symptom Onset Date</nhs-fieldset-legend>
+                            <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalTimeline.SymptomStartDate" id="symptom-error"></span>
+                            <nhs-date-input id="symptom">
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@SymptomError asp-for="FormattedSymptomDate.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@SymptomError asp-for="FormattedSymptomDate.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@SymptomError asp-for="FormattedSymptomDate.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                            </nhs-date-input>
+                        </nhs-fieldset>
+                    </nhs-form-group>
                 </validate-date>
                 <br/>
 
                 <validate-date ref="date1" name="Presentation Date" model="ClinicalTimeline" property="PresentationDate" rank="1" v-model="dates[1]" inline-template>
-                    @{var presentationErrorClass = !Model.IsValid("ClinicalTimeline.PresentationDate") ? errorClassName : ""; }
-                    <div class="nhsuk-form-group @presentationErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                        <fieldset class="nhsuk-fieldset" aria-describedby="presentation-error" role="group">
-                            <legend class="nhsuk-fieldset__legend">
-                                Presentation Date
-                            </legend>
-                            <span class="nhsuk-error-message" id="presentation-error">
-                                <span ref="errorField" asp-validation-for="ClinicalTimeline.PresentationDate"></span>
-                            </span>
-                            <div class="nhsuk-date-input" id="presentation">
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedPresentationDate.Day">
-                                            Day
-                                        </label>
-                                        <input v-on:blur="validate" ref="dayInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedPresentationDate.Day" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedPresentationDate.Month">
-                                            Month
-                                        </label>
-                                        <input v-on:blur="validate" ref="monthInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedPresentationDate.Month" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedPresentationDate.Year">
-                                            Year
-                                        </label>
-                                        <input v-on:blur="validate" ref="yearInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedPresentationDate.Year" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+                    @{
+                        var PresentationError = !Model.IsValid("ClinicalTimeline.PresentationDate");
+                        var PresentationGroupState = PresentationError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@PresentationGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                        <nhs-fieldset aria-describedby="presentation-error" role="group">
+                            <nhs-fieldset-legend nhs-legend-size="Standard">Presentation Date</nhs-fieldset-legend>
+                            <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalTimeline.PresentationDate" id="presentation-error"></span>
+                            <nhs-date-input id="presentation">
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@PresentationGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@PresentationError asp-for="FormattedPresentationDate.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@PresentationGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@PresentationError asp-for="FormattedPresentationDate.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@PresentationGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@PresentationError asp-for="FormattedPresentationDate.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                            </nhs-date-input>
+                        </nhs-fieldset>
+                    </nhs-form-group>
                 </validate-date>
                 <br/>
 
                 <validate-date ref="date2" name="Diagnosis Date" model="ClinicalTimeline" property="DiagnosisDate" rank="2" v-model="dates[2]" inline-template>
-                    @{var diagnosisErrorClass = !Model.IsValid("ClinicalTimeline.DiagnosisDate") ? errorClassName : ""; }
-                    <div class="nhsuk-form-group @diagnosisErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                        <fieldset class="nhsuk-fieldset" aria-describedby="diagnosis-error" role="group">
-                            <legend class="nhsuk-fieldset__legend">
-                                Diagnosis Date
-                            </legend>
-                            <span class="nhsuk-error-message" id="diagnosis-error">
-                                <span ref="errorField" asp-validation-for="ClinicalTimeline.DiagnosisDate"></span>
-                            </span>
-                            <div class="nhsuk-date-input" id="diagnosis">
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDiagnosisDate.Day">
-                                            Day
-                                        </label>
-                                        <input v-on:blur="validate" ref="dayInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDiagnosisDate.Day" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDiagnosisDate.Month">
-                                            Month
-                                        </label>
-                                        <input v-on:blur="validate" ref="monthInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDiagnosisDate.Month" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDiagnosisDate.Year">
-                                            Year
-                                        </label>
-                                        <input v-on:blur="validate" ref="yearInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedDiagnosisDate.Year" type="number" pattern="[0-9]*">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+                    @{
+                        var DiagnosisError = !Model.IsValid("ClinicalTimeline.DiagnosisDate");
+                        var DiagnosisGroupState = DiagnosisError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@DiagnosisGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                        <nhs-fieldset aria-describedby="diagnosis-error" role="group">
+                            <nhs-fieldset-legend nhs-legend-size="Standard">Diagnosis Date</nhs-fieldset-legend>
+                            <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalTimeline.DiagnosisDate" id="diagnosis-error"></span>
+                            <nhs-date-input id="diagnosis">
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
+                                    <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                            </nhs-date-input>
+                        </nhs-fieldset>
+                    </nhs-form-group>
                 </validate-date>
                 <br/>
 
