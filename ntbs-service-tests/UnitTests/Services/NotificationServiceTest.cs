@@ -37,7 +37,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             Assert.Null(timeline.TreatmentStartDate);
         }
 
-         [Fact]
+        [Fact]
         public void DeathDate_IsSetToNullIfPostMortemFalse()
         {
             // Arrange
