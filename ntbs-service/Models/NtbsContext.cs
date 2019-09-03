@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using CsvHelper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Models
 {
@@ -19,11 +22,12 @@ namespace ntbs_service.Models
 
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
+        public virtual DbSet<TBService> TBService { get; set;}
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<Patient> Patient { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
+        public virtual DbSet<Episode> Episode { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -33,6 +37,24 @@ namespace ntbs_service.Models
         public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
         {
             return await Country.FindAsync(countryId);
+        }
+        
+        public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
+        {
+            return await TBService.ToListAsync();
+        }
+        
+        public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
+        {
+            return await Hospital.ToListAsync();
+        }
+
+        public virtual async Task<List<Hospital>> GetHospitalsByTBService(string tbServiceCode)
+        {
+            Console.WriteLine("CODE " + tbServiceCode);
+            return await Hospital
+                        .Where(x => x.TBServiceCode == tbServiceCode)
+                        .ToListAsync();
         }
 
         public virtual async Task<IList<Sex>> GetAllSexesAsync()
@@ -93,50 +115,17 @@ namespace ntbs_service.Models
                 new Ethnicity { EthnicityId = 17, Code = "Z", Label = "Not stated", Order = 15 }
             );
 
-            modelBuilder.Entity<Hospital>(entity =>
-            {
-                entity.Property(e => e.Label).HasMaxLength(200);
-            });
+            modelBuilder.Entity<TBService>().HasData(GetTBServicesList());
+
+            modelBuilder.Entity<Hospital>().HasData(GetHospitalsList());
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasOne(d => d.Hospital)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notification_Hospital");
+                entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
-                entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.Notifications)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notification_Patient");
-            });
+                entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
-            modelBuilder.Entity<Patient>(entity =>
-            {
-                entity.Property(e => e.Dob).HasColumnType("date");
-
-                entity.Property(e => e.GivenName).HasMaxLength(35);
-
-                entity.Property(e => e.NhsNumber).HasMaxLength(10);
-
-                entity.Property(e => e.FamilyName).HasMaxLength(35);
-
-                entity.Property(e => e.Postcode).HasMaxLength(50);
-
-                entity.HasOne(d => d.Ethnicity)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Ethnicity");
-
-                entity.HasOne(d => d.Country)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Country");
-
-                entity.HasOne(d => d.Sex)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Patient_Sex");
+                entity.OwnsOne(e => e.ClinicalTimeline).ToTable("ClinicalTimelines");
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -155,6 +144,39 @@ namespace ntbs_service.Models
                 new Sex { SexId = 2, Label = "Female" },
                 new Sex { SexId = 3, Label = "Unknown" }
             );
+        }
+
+        private List<Object> GetHospitalsList()
+        {
+            var filePath = Path.Combine(Environment.CurrentDirectory,"Models\\SeedData\\hospitals.csv");
+            var records = new List<Object>();
+            var anonymousTypeDefinition = new 
+            {
+                HospitalId = default(Guid),
+                Name = string.Empty,
+                CountryCode = string.Empty,
+                TBServiceCode = string.Empty
+            };
+            using (TextReader reader = File.OpenText(filePath)) {
+                CsvReader csv = new CsvReader(reader);
+                csv.Configuration.Delimiter = ",";
+                csv.Configuration.HasHeaderRecord = true;
+                csv.Configuration.HeaderValidated = null;
+                csv.Configuration.MissingFieldFound = null;
+
+                while (csv.Read())
+                {
+                    var record = csv.GetRecord(anonymousTypeDefinition);
+                    records.Add(record);
+                }
+
+            }
+            return records;
+        }
+
+        private List<TBService> GetTBServicesList()
+        {
+            return SeedingHelper.GetRecordsFromCSV<TBService>("tbservices.csv");           
         }
     }
 }

@@ -1,0 +1,91 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.EpisodeModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    ViewData["Title"] = "Notification - Hospital Details";
+}
+
+<h2>Hospital details</h1>
+
+<div class="row">
+    <div class="col-md-5">
+        <form method="post">
+            <input type="hidden" asp-for="NotificationId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <cascading-dropdowns inline-template>
+                <div>
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" asp-for="Episode.TBServiceCode">
+                            Notifying TB service
+                        </label>
+                        <select class="nhsuk-select"  asp-for="Episode.TBServiceCode" asp-items="Model.TBServices"  v-on:change="fetchHospitalList">
+                            <option value="" selected>Select TB Service</option>
+                        </select>
+                    </div>
+                    <br>
+
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" asp-for="Episode.HospitalId">
+                            Hospital
+                        </label>
+                        <select ref="hospitalDropdown" class="nhsuk-select" asp-for="Episode.HospitalId" asp-items="Model.Hospitals" >
+                            <option value="" selected></option>
+                        </select>
+                    </div>
+                    <br>
+                </div>
+            </cascading-dropdowns>
+
+            
+            <validate-input model="Episode" property="Consultant" inline-template>
+                @{
+                    var ConsultantError = !Model.IsValid("Episode.Consultant"); 
+                    var ConsultantGroupState = ConsultantError ? Error : Standard; 
+                }
+                <nhs-form-group nhs-form-group-type=@ConsultantGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <label nhs-label-type="Standard" asp-for="Episode.Consultant">Add details of consultant</label>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Episode.Consultant"></span>
+                    <input v-on:blur="validate" is-error-input=@ConsultantError nhs-input-type="Standard" asp-for="Episode.Consultant" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                </nhs-form-group>
+            </validate-input>
+            <br/>
+
+            <validate-input model="Episode" property="CaseManager" inline-template>
+                @{
+                    var CaseManagerError = !Model.IsValid("Episode.CaseManager"); 
+                    var CaseManagerGroupState = CaseManagerError ? Error : Standard; 
+                }
+                <nhs-form-group nhs-form-group-type=@CaseManagerGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <label nhs-label-type="Standard" asp-for="Episode.CaseManager">Add details of case manager</label>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Episode.CaseManager"></span>
+                    <input v-on:blur="validate" is-error-input=@CaseManagerError nhs-input-type="Standard" asp-for="Episode.CaseManager" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                </nhs-form-group>
+            </validate-input>
+            <br/>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+<script>
+    document.getElementById('TBService').addEventListener('change', (e) => {
+        document.getElementById('Hospital').innerHTML = "<option value=''>Select Hospital</option>";
+        fetch(`?handler=HospitalsByTBService&tbServiceCode=${e.target.value}`)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data)
+                Array.prototype.forEach.call(data, function (item, i) {
+                    document.getElementById('Hospital').innerHTML += `<option value="${item.hospitalId}">${item.name}</option>`
+                });
+            });
+    });
+</script>
+}

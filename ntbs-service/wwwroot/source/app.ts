@@ -8,8 +8,10 @@ import Vue from 'vue';
 import { TestButton } from './Components/TestButton';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
+import { DateComparison } from './Components/DateComparison';
 // @ts-ignore
 import config from './config/config-APP_TARGET';
+import { CascadingDropwdowns } from './Components/CascadingDropdowns';
 
 // Vue needs to be the firs thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
@@ -18,6 +20,8 @@ import config from './config/config-APP_TARGET';
 Vue.component('test-button', TestButton);
 Vue.component('validate-input', ValidateInput);
 Vue.component('validate-date', ValidateDate);
+Vue.component('date-comparison', DateComparison);
+Vue.component('cascading-dropdowns', CascadingDropwdowns);
 
 new Vue({
   el: '#app',

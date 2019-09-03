@@ -2,7 +2,7 @@ import Vue from 'vue';
 const axios = require('axios');
 
 const ValidateInput = Vue.extend({
-    props: ['property'],
+    props: ['model', 'property'],
     data: function() {
       return {
         hasError: false
@@ -16,9 +16,8 @@ const ValidateInput = Vue.extend({
             "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
         }
 
-        axios.post(`/Patients/Edit/ValidateProperty?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
+        axios.post(`${this.$props.model}/Validate${this.$props.model}Property?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
         .then((response: any) => {
-            console.log(response);
             var errorMessage = response.data;
             this.hasError = errorMessage != '';
             this.$refs["errorField"].textContent = errorMessage;

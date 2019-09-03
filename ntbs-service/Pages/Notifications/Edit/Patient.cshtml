@@ -1,5 +1,5 @@
 @page "{handler?}"
-@model ntbs_service.Pages_Patients.EditModel
+@model ntbs_service.Pages_Notifications.PatientModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -9,14 +9,14 @@
 
 <div><a asp-page="Index">Back to List</a></div>
 
-<h2>Personal details</h1>
+<h2>Personal details</h2>
 
 <div class="row">
     <div class="col-md-5">
         <form method="post">
-            <input type="hidden" asp-for="Patient.PatientId" />
+            <input type="hidden" asp-for="NotificationId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <validate-input property="GivenName" inline-template>
+            <validate-input model="Patient" property="GivenName" inline-template>
                 @{
                     var GivenNameError = !Model.IsValid("Patient.GivenName"); 
                     var GivenNameGroupState = GivenNameError ? Error : Standard; 
@@ -28,7 +28,7 @@
                 </nhs-form-group>
             </validate-input>
 
-            <validate-input property="FamilyName" inline-template>
+            <validate-input model="Patient" property="FamilyName" inline-template>
                 @{
                     var FamilyNameError = !Model.IsValid("Patient.FamilyName"); 
                     var FamilyNameGroupState = FamilyNameError ? Error : Standard; 
@@ -41,7 +41,7 @@
             </validate-input>
             <br/>
         
-            <validate-date property="Dob" inline-template>
+            <validate-date model="Patient" property="Dob" inline-template>
                 @{
                     var DobError = !Model.IsValid("Patient.Dob"); 
                     var DobGroupState = DobError ? Error : Standard; 
@@ -110,7 +110,7 @@
                                 NHS Number
                             </label>
                         </div>
-                        <validate-input property="NhsNumber" inline-template>
+                        <validate-input model="Patient" property="NhsNumber" inline-template>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-nhs-number-conditional">
                                 @{var nhsNumberErrorClass = !Model.IsValid("Patient.NhsNumber") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @nhsNumberErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="nhs-number-error">
@@ -151,7 +151,7 @@
                                 Postcode
                             </label>
                         </div>
-                        <validate-input property="Postcode" inline-template>
+                        <validate-input model="Patient" property="Postcode" inline-template>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">
                                 @{var postcodeErrorClass = !Model.IsValid("Patient.Postcode") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @postcodeErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="postcode-error">

@@ -5,42 +5,40 @@ using Moq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Pages_Patients;
+using ntbs_service.Pages_Notifications;
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.Patients
 {
     public class IndexPageTest
     {
-        private Mock<IPatientRepository> mockPatientRepository;
+        private Mock<INotificationRepository> mockRepository;
         public IndexPageTest() 
         {
-            mockPatientRepository = new Mock<IPatientRepository>();
+            mockRepository = new Mock<INotificationRepository>();
         }
 
         [Fact]
         public async Task OnGetAsync_PopulatesPageModel_WithPatients()
         {
             // Arrange
-            mockPatientRepository.Setup(rep => rep.GetPatientsAsync())
+            mockRepository.Setup(rep => rep.GetNotificationsWithPatientsAsync())
                                  .Returns(Task.FromResult(GetSamplePatients()));
 
-            var pageModel = new IndexModel(mockPatientRepository.Object);
+            var pageModel = new IndexModel(mockRepository.Object);
 
             // Act
             await pageModel.OnGetAsync();
-            var result = Assert.IsAssignableFrom<List<Patient>>(pageModel.Patients);
+            var result = Assert.IsAssignableFrom<List<Notification>>(pageModel.Notifications);
             Assert.True(result.Count == 1);
-            Assert.Equal("Bob", result[0].GivenName);
+            Assert.Equal("Bob", result[0].PatientDetails.GivenName);
         }
 
-        public IList<Patient> GetSamplePatients()
+        public IList<Notification> GetSamplePatients()
         {
-            var sampleSex = new Sex(){ SexId = 1, Label = "M" };
+            var patient = new PatientDetails() { GivenName = "Bob" };
 
-            var samplePatient = new Patient{ PatientId = 1, GivenName = "Bob", Sex = sampleSex };
-
-            return new List<Patient> { samplePatient };
+            return new List<Notification> { new Notification{ PatientDetails = patient } };
         }
     }
 }
