@@ -57,7 +57,7 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostNextPageAsync(int? id)
         {
             SetAndValidateDate(Patient, nameof(Patient.Dob), FormattedDob);
 
@@ -71,6 +71,21 @@ namespace ntbs_service.Pages_Notifications
             
             return RedirectToPage("./ClinicalTimelines", new {id = notification.NotificationId});
 
+        }
+
+        public async Task<IActionResult> OnPostPreviousPageAsync(int? id)
+        {
+            SetAndValidateBirthDate();
+
+            if (!ModelState.IsValid)
+            {
+                return await OnGetAsync(id);
+            }
+
+            var notification = await service.GetNotificationAsync(id);
+            await service.UpdatePatientAsync(Patient);
+
+            return RedirectToPage("/ClinicalTimelines/Edit", new {id = notification.NotificationId});
         }
 
         public ContentResult OnPostValidatePatientProperty(string key, string value)
