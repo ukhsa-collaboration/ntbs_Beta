@@ -7,11 +7,9 @@ namespace ntbs_service.Helpers
 {
     public static class SeedingHelper
     {
-        private const string PathToFolder = "Models\\SeedData\\"; 
-
-        public static List<T> GetRecordsFromCSV<T>(string fileName)
+        public static List<T> GetRecordsFromCSV<T>(string pathToFile)
         {
-            var filePath = Path.Combine(Environment.CurrentDirectory, PathToFolder, fileName);
+            var filePath = Path.Combine(Environment.CurrentDirectory, pathToFile);
 
             List<T> records = new List<T>();
             using (TextReader reader = File.OpenText(filePath)) {

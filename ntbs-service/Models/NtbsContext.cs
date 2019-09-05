@@ -51,7 +51,6 @@ namespace ntbs_service.Models
 
         public virtual async Task<List<Hospital>> GetHospitalsByTBService(string tbServiceCode)
         {
-            Console.WriteLine("CODE " + tbServiceCode);
             return await Hospital
                         .Where(x => x.TBServiceCode == tbServiceCode)
                         .ToListAsync();
@@ -176,7 +175,7 @@ namespace ntbs_service.Models
 
         private List<TBService> GetTBServicesList()
         {
-            return SeedingHelper.GetRecordsFromCSV<TBService>("tbservices.csv");           
+            return SeedingHelper.GetRecordsFromCSV<TBService>("Models\\SeedData\\tbservices.csv");           
         }
     }
 }

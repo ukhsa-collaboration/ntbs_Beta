@@ -61,7 +61,6 @@ namespace ntbs_service.Pages_Notifications
         public JsonResult OnGetHospitalsByTBService(string tbServiceCode) 
         {
             var tbServices = _context.GetHospitalsByTBService(tbServiceCode).Result;
-            Console.WriteLine(tbServices[0].Name);
             return new JsonResult(tbServices);
         }
 
