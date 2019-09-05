@@ -71,21 +71,3 @@
         </form>
     </div>
 </div>
-
-@section scripts{
-<script>
-    document.getElementById('TBService').addEventListener('change', (e) => {
-        document.getElementById('Hospital').innerHTML = "<option value=''>Select Hospital</option>";
-        fetch(`?handler=HospitalsByTBService&tbServiceCode=${e.target.value}`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data)
-                Array.prototype.forEach.call(data, function (item, i) {
-                    document.getElementById('Hospital').innerHTML += `<option value="${item.hospitalId}">${item.name}</option>`
-                });
-            });
-    });
-</script>
-}
