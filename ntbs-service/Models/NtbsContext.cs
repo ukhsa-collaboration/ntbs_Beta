@@ -125,6 +125,8 @@ namespace ntbs_service.Models
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
                 entity.OwnsOne(e => e.ClinicalTimeline).ToTable("ClinicalTimelines");
+
+                entity.OwnsOne(e => e.PatientTBHistory).ToTable("PatientTBHistories");
             });
 
             modelBuilder.Entity<Region>(entity =>

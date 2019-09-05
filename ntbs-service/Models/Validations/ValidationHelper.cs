@@ -14,6 +14,8 @@ namespace ntbs_service.Models.Validations
 
         public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
         public const string NhsNumberLength = "NHS Number needs to be 10 digits long";
+
+        public const string PreviousTBDiagnosisYear = "Please enter a valid year. Year of diagnosis cannot be after 2000";
     }
 
     public static class ValidDates
@@ -21,6 +23,7 @@ namespace ntbs_service.Models.Validations
         public const string EarliestBirthDate = "01/01/1900";
 
         public const string EarliestClinicalDate = "01/01/2010";
+
     }
 
     public static class ValidationRegexes
