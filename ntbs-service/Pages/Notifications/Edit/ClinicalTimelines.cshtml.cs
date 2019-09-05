@@ -6,13 +6,13 @@ using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_ClinicalTimelines
+namespace ntbs_service.Pages_Notifications
 {
-    public class EditModel : ValidationModel
+    public class ClinicalTimelineModel : ValidationModel
     {
         private readonly INotificationService service;
 
-        public EditModel(INotificationService service)
+        public ClinicalTimelineModel(INotificationService service)
         {
             this.service = service;
         }
@@ -73,7 +73,7 @@ namespace ntbs_service.Pages_ClinicalTimelines
             var notification = await service.GetNotificationAsync(id);
             await service.UpdateTimelineAsync(notification, ClinicalTimeline);
 
-            return RedirectToPage("/Patients/Index");
+            return RedirectToPage("./Episode", new {id = notification.NotificationId});
         }
 
         public ContentResult OnPostValidateClinicalTimelineDate(string key, string day, string month, string year)

@@ -5,7 +5,7 @@ using Moq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Pages_Patients;
+using ntbs_service.Pages_Notifications;
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.Patients

@@ -8,30 +8,31 @@ using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Patients
+namespace ntbs_service.Pages_Notifications
 {
-    public class EditModel : ValidationModel
+
+    public class PatientModel : ValidationModel
     {
         private readonly INotificationService service;
-        private readonly NtbsContext _context;
+        private readonly NtbsContext context;
 
         public SelectList Ethnicities { get; set;}
         public SelectList Countries { get; set; }
         public List<Sex> Sexes { get; set; }
-
-
-        public EditModel(INotificationService service, NtbsContext context)
-        {
-            this.service = service;
-            _context = context;
-        }
-
+        
         [BindProperty]
         public PatientDetails Patient { get; set; }
         [BindProperty]
-        public int NotificationId { get; set; }
-        [BindProperty]
         public FormattedDate FormattedDob { get; set; }
+        [BindProperty]
+        public int NotificationId { get; set; }
+
+
+        public PatientModel(INotificationService service, NtbsContext context)
+        {
+            this.service = service;
+            this.context = context;
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -49,9 +50,9 @@ namespace ntbs_service.Pages_Patients
             }
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
-            Ethnicities = new SelectList(_context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
-            Countries = new SelectList(_context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
-            Sexes = _context.GetAllSexesAsync().Result.ToList();
+            Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
+            Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
+            Sexes = context.GetAllSexesAsync().Result.ToList();
 
             return Page();
         }
@@ -68,7 +69,8 @@ namespace ntbs_service.Pages_Patients
             var notification = await service.GetNotificationAsync(id);
             await service.UpdatePatientAsync(notification, Patient);
             
-            return RedirectToPage("/ClinicalTimelines/Edit", new {id = notification.NotificationId});
+            return RedirectToPage("./ClinicalTimelines", new {id = notification.NotificationId});
+
         }
 
         public ContentResult OnPostValidatePatientProperty(string key, string value)

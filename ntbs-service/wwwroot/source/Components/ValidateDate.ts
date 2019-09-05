@@ -31,7 +31,7 @@ const ValidateDate = Vue.extend({
                 "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
             }
 
-            axios.post(`/${this.$props.model}s/Edit/Validate${this.$props.model}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
+            axios.post(`${this.$props.model}/Validate${this.$props.model}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
                     null, { headers: headers })
                 .then((response: any) => {
                     console.log(response);

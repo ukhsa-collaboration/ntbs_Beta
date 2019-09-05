@@ -8,19 +8,21 @@ namespace ntbs_service.Pages_Notifications
 {
     public class CreateModel : PageModel
     {
-        private readonly INotificationRepository _repository;
+        private readonly INotificationRepository repository;
 
         public CreateModel(INotificationRepository repository)
         {
-            _repository = repository;
+            this.repository = repository;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var Notification = new Notification();
-            Notification.PatientDetails = new PatientDetails();
-            await _repository.AddNotificationAsync(Notification);
-            return RedirectToPage("/Patients/Edit", new {id = Notification.NotificationId });
+            var notification = new Notification();
+            notification.PatientDetails = new PatientDetails();
+            notification.Episode = new Episode();
+            await repository.AddNotificationAsync(notification);
+
+            return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });
         }
 
     }

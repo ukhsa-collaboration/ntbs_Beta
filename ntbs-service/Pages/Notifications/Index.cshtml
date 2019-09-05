@@ -1,12 +1,15 @@
 @page
-@model ntbs_service.Pages_Patients.IndexModel
+@model ntbs_service.Pages_Notifications.IndexModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Patient List</h2>
+<h1>Index</h1>
 
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -50,10 +53,10 @@
                 @Html.DisplayFor(modelItem => item.PatientDetails.Country.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.Sex.Label)
+                @Html.DisplayFor(modelItem => item.PatientDetails.Sex.SexId)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.NotificationId">Edit</a>
+                <a asp-page="./Edit/Patient" asp-route-id="@item.NotificationId">Edit</a>
             </td>
         </tr>
 }

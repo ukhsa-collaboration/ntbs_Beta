@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using CsvHelper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Models
 {
@@ -19,10 +22,12 @@ namespace ntbs_service.Models
 
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
+        public virtual DbSet<TBService> TBService { get; set;}
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
+        public virtual DbSet<Episode> Episode { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -32,6 +37,23 @@ namespace ntbs_service.Models
         public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
         {
             return await Country.FindAsync(countryId);
+        }
+        
+        public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
+        {
+            return await TBService.ToListAsync();
+        }
+        
+        public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
+        {
+            return await Hospital.ToListAsync();
+        }
+
+        public virtual async Task<List<Hospital>> GetHospitalsByTBService(string tbServiceCode)
+        {
+            return await Hospital
+                        .Where(x => x.TBServiceCode == tbServiceCode)
+                        .ToListAsync();
         }
 
         public virtual async Task<IList<Sex>> GetAllSexesAsync()
@@ -92,17 +114,13 @@ namespace ntbs_service.Models
                 new Ethnicity { EthnicityId = 17, Code = "Z", Label = "Not stated", Order = 15 }
             );
 
-            modelBuilder.Entity<Hospital>(entity =>
-            {
-                entity.Property(e => e.Label).HasMaxLength(200);
-            });
+            modelBuilder.Entity<TBService>().HasData(GetTBServicesList());
+
+            modelBuilder.Entity<Hospital>().HasData(GetHospitalsList());
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasOne(d => d.Hospital)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notification_Hospital");
+                entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
@@ -125,6 +143,16 @@ namespace ntbs_service.Models
                 new Sex { SexId = 2, Label = "Female" },
                 new Sex { SexId = 3, Label = "Unknown" }
             );
+        }
+
+        private List<Object> GetHospitalsList()
+        {
+            return SeedingHelper.GetHospitalsList("Models\\SeedData\\hospitals.csv");
+        }
+
+        private List<TBService> GetTBServicesList()
+        {
+            return SeedingHelper.GetRecordsFromCSV<TBService>("Models\\SeedData\\tbservices.csv");
         }
     }
 }

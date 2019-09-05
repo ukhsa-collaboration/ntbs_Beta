@@ -9,6 +9,8 @@ namespace ntbs_service.Services
         Task<Notification> GetNotificationAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline);
+        Task UpdateEpisodeAsync(Notification notification, Episode episode);
+
     }
 
     public class NotificationService : INotificationService
@@ -89,6 +91,14 @@ namespace ntbs_service.Services
             {
                 timeline.DeathDate = null;
             }
+        }
+        
+        public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
+        {
+            context.Attach(notification);
+            notification.Episode = episode;
+
+            await context.SaveChangesAsync();
         }
     }
 }

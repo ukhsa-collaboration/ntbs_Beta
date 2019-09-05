@@ -22,4 +22,9 @@ namespace ntbs_service.Models.Validations
 
         public const string EarliestClinicalDate = "01/01/2010";
     }
+
+    public static class ValidationRegexes
+    {
+        public const string ValidCharactersForName = @"[a-zA-Z \-,.']+";
+    }
 }
