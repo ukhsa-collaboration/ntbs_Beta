@@ -14,7 +14,7 @@ namespace ntbs_service.Pages_Notifications
     public class PatientModel : ValidationModel
     {
         private readonly INotificationService service;
-        private readonly NtbsContext _context;
+        private readonly NtbsContext context;
 
         public SelectList Ethnicities { get; set;}
         public SelectList Countries { get; set; }
@@ -31,7 +31,7 @@ namespace ntbs_service.Pages_Notifications
         public PatientModel(INotificationService service, NtbsContext context)
         {
             this.service = service;
-            _context = context;
+            this.context = context;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -50,9 +50,9 @@ namespace ntbs_service.Pages_Notifications
             }
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
-            Ethnicities = new SelectList(_context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
-            Countries = new SelectList(_context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
-            Sexes = _context.GetAllSexesAsync().Result.ToList();
+            Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
+            Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
+            Sexes = context.GetAllSexesAsync().Result.ToList();
 
             return Page();
         }

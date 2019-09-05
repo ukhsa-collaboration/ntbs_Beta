@@ -4,7 +4,6 @@ const axios = require('axios');
 const CascadingDropwdowns = Vue.extend({
     methods: {
       fetchHospitalList: function (event: Event) {
-          console.log("triggered")
           const selectList = event.target as HTMLInputElement
           const tbService = selectList.value;
 

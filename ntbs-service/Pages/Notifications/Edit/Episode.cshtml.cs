@@ -12,7 +12,7 @@ namespace ntbs_service.Pages_Notifications
     public class EpisodeModel : ValidationModel
     {
         private readonly INotificationService service;
-        private readonly NtbsContext _context;
+        private readonly NtbsContext context;
         
         public SelectList TBServices { get; set; }
         public SelectList Hospitals { get; set; }
@@ -28,7 +28,7 @@ namespace ntbs_service.Pages_Notifications
         public EpisodeModel(INotificationService service, NtbsContext context)
         {
             this.service = service;
-            _context = context;
+            this.context = context;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -47,11 +47,11 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            TBServices = new SelectList(_context.GetAllTbServicesAsync().Result, 
+            TBServices = new SelectList(context.GetAllTbServicesAsync().Result, 
                                         nameof(TBService.Code), 
                                         nameof(TBService.Name));
 
-            Hospitals = new SelectList(_context.GetAllHospitalsAsync().Result, 
+            Hospitals = new SelectList(context.GetAllHospitalsAsync().Result, 
                                         nameof(Hospital.HospitalId), 
                                         nameof(Hospital.Name));
 
@@ -60,7 +60,7 @@ namespace ntbs_service.Pages_Notifications
 
         public JsonResult OnGetHospitalsByTBService(string tbServiceCode) 
         {
-            var tbServices = _context.GetHospitalsByTBService(tbServiceCode).Result;
+            var tbServices = context.GetHospitalsByTBService(tbServiceCode).Result;
             return new JsonResult(tbServices);
         }
 

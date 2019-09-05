@@ -19,7 +19,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
 
             Assert.Equal(results.Count, expectedCount);
             Assert.Equal(results[0].Code, firstEntryInTBServicesList.Code);
-            Assert.Equal(results[0].Code, firstEntryInTBServicesList.Code);
+            Assert.Equal(results[0].Name, firstEntryInTBServicesList.Name);
 
         }
 

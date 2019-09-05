@@ -16,28 +16,27 @@
 
             <cascading-dropdowns inline-template>
                 <div>
-                    <div class="nhsuk-form-group">
-                        <label class="nhsuk-label" asp-for="Episode.TBServiceCode">
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
                             Notifying TB service
                         </label>
-                        <select class="nhsuk-select"  asp-for="Episode.TBServiceCode" asp-items="Model.TBServices"  v-on:change="fetchHospitalList">
+                        <select nhs-select-type="Standard" asp-for="Episode.TBServiceCode" asp-items="Model.TBServices"  v-on:change="fetchHospitalList">
                             <option value="" selected>Select TB Service</option>
                         </select>
-                    </div>
-                    <br>
+                    </nhs-form-group>
 
-                    <div class="nhsuk-form-group">
-                        <label class="nhsuk-label" asp-for="Episode.HospitalId">
+                    <nhs-form-group class="nhsuk-form-group">
+                        <label nhs-label-type="Standard" asp-for="Episode.HospitalId">
                             Hospital
                         </label>
-                        <select ref="hospitalDropdown" class="nhsuk-select" asp-for="Episode.HospitalId" asp-items="Model.Hospitals" >
-                            <option value="" selected></option>
+                        <select nhs-select-type="Standard" ref="hospitalDropdown" asp-for="Episode.HospitalId" asp-items="Model.Hospitals" >
+                            <option value="" selected>Select Hospital</option>
                         </select>
-                    </div>
-                    <br>
+                    </nhs-form-group>
+                    <br/>
                 </div>
             </cascading-dropdowns>
-
+            <br/>
             
             <validate-input model="Episode" property="Consultant" inline-template>
                 @{
@@ -50,7 +49,6 @@
                     <input v-on:blur="validate" is-error-input=@ConsultantError nhs-input-type="Standard" asp-for="Episode.Consultant" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
                 </nhs-form-group>
             </validate-input>
-            <br/>
 
             <validate-input model="Episode" property="CaseManager" inline-template>
                 @{

@@ -147,35 +147,12 @@ namespace ntbs_service.Models
 
         private List<Object> GetHospitalsList()
         {
-            var filePath = Path.Combine(Environment.CurrentDirectory,"Models\\SeedData\\hospitals.csv");
-            var records = new List<Object>();
-            var anonymousTypeDefinition = new 
-            {
-                HospitalId = default(Guid),
-                Name = string.Empty,
-                CountryCode = string.Empty,
-                TBServiceCode = string.Empty
-            };
-            using (TextReader reader = File.OpenText(filePath)) {
-                CsvReader csv = new CsvReader(reader);
-                csv.Configuration.Delimiter = ",";
-                csv.Configuration.HasHeaderRecord = true;
-                csv.Configuration.HeaderValidated = null;
-                csv.Configuration.MissingFieldFound = null;
-
-                while (csv.Read())
-                {
-                    var record = csv.GetRecord(anonymousTypeDefinition);
-                    records.Add(record);
-                }
-
-            }
-            return records;
+            return SeedingHelper.GetHospitalsList("Models\\SeedData\\hospitals.csv");
         }
 
         private List<TBService> GetTBServicesList()
         {
-            return SeedingHelper.GetRecordsFromCSV<TBService>("Models\\SeedData\\tbservices.csv");           
+            return SeedingHelper.GetRecordsFromCSV<TBService>("Models\\SeedData\\tbservices.csv");
         }
     }
 }

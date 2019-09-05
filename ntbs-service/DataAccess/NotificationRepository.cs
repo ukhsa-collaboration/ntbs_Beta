@@ -20,15 +20,15 @@ namespace ntbs_service.DataAccess
     
     public class NotificationRepository : INotificationRepository 
     {
-        private readonly NtbsContext _context;
+        private readonly NtbsContext context;
         public NotificationRepository(NtbsContext context) 
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<IList<Notification>> GetNotificationsAsync() 
         {
-            return await _context.Notification.ToListAsync();
+            return await context.Notification.ToListAsync();
         }
 
         public async Task<IList<Notification>> GetNotificationsWithPatientsAsync()
@@ -36,7 +36,7 @@ namespace ntbs_service.DataAccess
             // This is to ensure all the relationships on patients are eagerly fetched
             // We are attempting to load these relationships lazily, but this does not currently seem to work -
             // Country, Sex and Ethnicity are always null. Might be related to PatientDetails being Owned?
-            return await _context.Notification
+            return await context.Notification
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
@@ -45,35 +45,35 @@ namespace ntbs_service.DataAccess
 
         public async Task UpdateNotificationAsync(Notification Notification) 
         {
-            _context.Attach(Notification).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            context.Attach(Notification).State = EntityState.Modified;
+            await context.SaveChangesAsync();
         }
 
         public async Task AddNotificationAsync(Notification Notification) 
         {
-            _context.Notification.Add(Notification);
-            await _context.SaveChangesAsync();
+            context.Notification.Add(Notification);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteNotificationAsync(Notification Notification)
         {
-            _context.Notification.Remove(Notification);
-            await _context.SaveChangesAsync();
+            context.Notification.Remove(Notification);
+            await context.SaveChangesAsync();
         }
 
         public async Task<Notification> GetNotificationAsync(int? NotificationId)
         {
-            return await _context.Notification.FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
+            return await context.Notification.FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
         public async Task<Notification> FindNotificationByIdAsync(int? NotificationId)
         {
-            return await _context.Notification.FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
+            return await context.Notification.FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
         public bool NotificationExists(int NotificationId)
         {
-            return _context.Notification.Any(e => e.NotificationId == NotificationId);
+            return context.Notification.Any(e => e.NotificationId == NotificationId);
         }
     }
 }
