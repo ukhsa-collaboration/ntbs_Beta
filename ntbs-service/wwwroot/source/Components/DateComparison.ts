@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+// Component to validate date order. Compares the members of the "dates" array, in ascending index order.
+// Bind dates using v-model, and have bound component emit a datechanged event when date changes.
 const DateComparison = Vue.extend({
     data: function() {
       return {

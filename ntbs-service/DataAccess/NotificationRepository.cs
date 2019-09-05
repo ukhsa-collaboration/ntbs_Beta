@@ -33,6 +33,9 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<Notification>> GetNotificationsWithPatientsAsync()
         {
+            // This is to ensure all the relationships on patients are eagerly fetched
+            // We are attempting to load these relationships lazily, but this does not currently seem to work -
+            // Country, Sex and Ethnicity are always null. Might be related to PatientDetails being Owned?
             return await _context.Notification
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
