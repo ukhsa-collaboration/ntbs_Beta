@@ -13,12 +13,12 @@ namespace ntbs_service.Pages_PatientTBHistory
     public class EditModel : ValidationModel
     {
         private readonly INotificationService service;
-        private readonly NtbsContext _context;
+        private readonly NtbsContext context;
 
         public EditModel(INotificationService service, NtbsContext context)
         {
             this.service = service;
-            _context = context;
+            this.context = context;
         }
 
         [BindProperty]
