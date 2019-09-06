@@ -81,11 +81,23 @@ body {
 
 .remove-button-styling-add-orange-hover {
     background: transparent;
-    padding: none;
+    padding: 0;
     outline: none;
-    border: none;
-    text-align: right;
+    border: 0;
     color: #1d70b8;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.remove-button-styling-add-orange-hover:focus {
+    background: #ffb81C;
+    color: #212b32;
 }
 
 .remove-button-styling-add-orange-hover:hover {

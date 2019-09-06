@@ -22,7 +22,7 @@
               <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Patients/Edit?id=@ViewData["PatientId"]">Hospital details</a>
             </li>
             <li class="@("contents-list-item " + (ViewData["PageType"].ToString() == "clinicalDetails" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Patients/Edit?id=@ViewData["PatientId"]">Clinical details</a>
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/ClinicalTimelines/Edit?id=@ViewData["PatientId"]">Clinical Timeline</a>
             </li>
             <li class="@("contents-list-item " + (ViewData["PageType"].ToString() == "contactTracing" ? "contents-list-item--current" : ""))">
               <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Patients/Edit?id=@ViewData["PatientId"]">Contact Tracing</a>
@@ -44,5 +44,6 @@
             @RenderBody()
         </div>
     </div>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
