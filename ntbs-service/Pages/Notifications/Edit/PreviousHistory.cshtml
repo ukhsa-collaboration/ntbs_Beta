@@ -1,5 +1,5 @@
 @page "{handler?}"
-@model ntbs_service.Pages_PatientTBHistory.EditModel
+@model ntbs_service.Pages_Notifications.PreviousHistoryModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -8,9 +8,8 @@
 @{string errorClassName = "nhsuk-form-group--error";}
 <div><a asp-page="/Patients/Index">Back to List</a></div>
 
-<h2>Previous History Details for New Patient</h2>
+<h2>Previous History for New Patient</h2>
 
-<div class="row">
     <date-comparison inline-template>
         <form method="post">
             <input type="hidden" asp-for="NotificationId" />
@@ -48,11 +47,8 @@
             </fieldset>
         </div>
         <br/>
-
         <div class="form-group">
             <input type="submit" value="Save" class="btn btn-primary" />
         </div>
-
         </form>
     </date-comparison>
-</div>

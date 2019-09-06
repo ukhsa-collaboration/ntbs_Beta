@@ -68,7 +68,7 @@ namespace ntbs_service.Pages_Notifications
         {
             await validateAndSave(NotificationId);
 
-            return RedirectToPage("../Index", new {id = NotificationId});
+            return RedirectToPage("./PreviousHistory", new {id = NotificationId});
         }
 
         public async Task validateAndSave(int? NotificationId) {

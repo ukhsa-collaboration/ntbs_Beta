@@ -8,14 +8,14 @@ using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_PatientTBHistory
+namespace ntbs_service.Pages_Notifications
 {
-    public class EditModel : ValidationModel
+    public class PreviousHistoryModel : ValidationModel
     {
         private readonly INotificationService service;
         private readonly NtbsContext context;
 
-        public EditModel(INotificationService service, NtbsContext context)
+        public PreviousHistoryModel(INotificationService service, NtbsContext context)
         {
             this.service = service;
             this.context = context;
@@ -55,7 +55,7 @@ namespace ntbs_service.Pages_PatientTBHistory
             var notification = await service.GetNotificationAsync(id);
             await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
             
-            return RedirectToPage("/Patients/Index");
+            return RedirectToPage("../Index");
         }
     }
 }
