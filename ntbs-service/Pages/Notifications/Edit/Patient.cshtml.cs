@@ -57,19 +57,19 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
             SetAndValidateDate(Patient, nameof(Patient.Dob), FormattedDob);
 
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(id);
+                return await OnGetAsync(NotificationId);
             }
 
-            var notification = await service.GetNotificationAsync(id);
+            var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdatePatientAsync(notification, Patient);
             
-            return RedirectToPage("./ClinicalTimelines", new {id = notification.NotificationId});
+            return RedirectToPage("./Episode", new {id = notification.NotificationId});
 
         }
 

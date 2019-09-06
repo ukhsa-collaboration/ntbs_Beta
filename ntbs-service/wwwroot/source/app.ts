@@ -1,5 +1,6 @@
 import { initAll as govUkJsInitAll } from 'govuk-frontend'
 // Govuk css - needed for things like conditionally revealed radios sections
+import "../css/reset.css"
 import 'govuk-frontend/govuk/all.scss';
 import 'nhsuk-frontend/packages/nhsuk'
 import 'nhsuk-frontend/packages/nhsuk.scss'
