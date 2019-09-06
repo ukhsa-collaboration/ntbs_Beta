@@ -3,9 +3,9 @@
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
-    Layout = "../Shared/_NotificationLayout.cshtml";
-    ViewData["Title"] = "Notification - Personal Details";
-    ViewData["PageType"] = "personDetails";
+Layout = "../Shared/_NotificationLayout.cshtml";
+ViewData["Title"] = "Notification - Personal Details";
+ViewData["PageType"] = "personDetails";
 }
 @{string errorClassName = "nhsuk-form-group--error";}
 
@@ -13,186 +13,208 @@
 
 <h2>Personal details</h2>
 
-<div class="row">
-        <!-- TODO style="width: 100%" is needed currently (possibly due to the use of col-md-5 div)  -->
-        <form method="post" style="width: 100%">
-            <div class="col-md-5">
-            <input type="hidden" asp-for="NotificationId" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <validate-input model="Patient" property="GivenName" inline-template>
-                @{
-                    var GivenNameError = !Model.IsValid("Patient.GivenName"); 
-                    var GivenNameGroupState = GivenNameError ? Error : Standard; 
+<form method="post">
+    <input type="hidden" asp-for="NotificationId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <validate-input model="Patient" property="GivenName" inline-template>
+        @{
+        var GivenNameError = !Model.IsValid("Patient.GivenName");
+        var GivenNameGroupState = GivenNameError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@GivenNameGroupState
+            v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <label nhs-label-type="Standard" asp-for="Patient.GivenName">Given name</label>
+            <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error"
+                asp-validation-for="Patient.GivenName"></span>
+            <input v-on:blur="validate" is-error-input=@GivenNameError nhs-input-type="Standard"
+                asp-for="Patient.GivenName" classes="nhsuk-input--width-10"
+                v-bind:class="{ 'nhsuk-input--error': hasError}" />
+        </nhs-form-group>
+    </validate-input>
+
+    <validate-input model="Patient" property="FamilyName" inline-template>
+        @{
+        var FamilyNameError = !Model.IsValid("Patient.FamilyName");
+        var FamilyNameGroupState = FamilyNameError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@FamilyNameGroupState
+            v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <label nhs-label-type="Standard" asp-for="Patient.FamilyName">Family name</label>
+            <span ref="errorField" nhs-span-type="ErrorMessage" id="family-name-error"
+                asp-validation-for="Patient.FamilyName"></span>
+            <input v-on:blur="validate" is-error-input=@FamilyNameError nhs-input-type="Standard"
+                asp-for="Patient.FamilyName" classes="nhsuk-input--width-10"
+                v-bind:class="{ 'nhsuk-input--error': hasError}" />
+        </nhs-form-group>
+    </validate-input>
+    <br />
+
+    <validate-date model="Patient" property="Dob" inline-template>
+        @{
+        var DobError = !Model.IsValid("Patient.Dob");
+        var DobGroupState = DobError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@DobGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <nhs-fieldset aria-describedby="dob-error" role="group">
+                <nhs-fieldset-legend nhs-legend-size="Standard">Date of birth</nhs-fieldset-legend>
+                <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="Patient.Dob"
+                    id="dob-error"></span>
+                <nhs-date-input id="dob">
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type=@DobGroupState>
+                            <label nhs-label-type="Date" asp-for="FormattedDob.Day">Day</label>
+                            <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@DobError asp-for="FormattedDob.Day"
+                                v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type=@DobGroupState>
+                            <label nhs-label-type="Date" asp-for="FormattedDob.Month">Month</label>
+                            <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@DobError asp-for="FormattedDob.Month"
+                                v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type=@DobGroupState>
+                            <label nhs-label-type="Date" asp-for="FormattedDob.Year">Year</label>
+                            <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                is-error-input=@DobError asp-for="FormattedDob.Year"
+                                v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-date>
+    <br />
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">Sex</nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var sex in Model.Sexes)
+                {
+                <nhs-radios-item>
+                    <input nhs-input-type="Radios" asp-for="Patient.SexId" type="radio" value="@sex.SexId" />
+                    <label nhs-label-type="Radios" asp-for="Patient.SexId">@sex.Label</label>
+                </nhs-radios-item>
                 }
-                <nhs-form-group nhs-form-group-type=@GivenNameGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <label nhs-label-type="Standard" asp-for="Patient.GivenName">Given name</label>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Patient.GivenName"></span>
-                    <input v-on:blur="validate" is-error-input=@GivenNameError nhs-input-type="Standard" asp-for="Patient.GivenName" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
-                </nhs-form-group>
-            </validate-input>
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+    <br />
 
-            <validate-input model="Patient" property="FamilyName" inline-template>
-                @{
-                    var FamilyNameError = !Model.IsValid("Patient.FamilyName"); 
-                    var FamilyNameGroupState = FamilyNameError ? Error : Standard; 
-                }
-                <nhs-form-group nhs-form-group-type=@FamilyNameGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <label nhs-label-type="Standard" asp-for="Patient.FamilyName">Family name</label>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="family-name-error" asp-validation-for="Patient.FamilyName"></span>
-                    <input v-on:blur="validate" is-error-input=@FamilyNameError nhs-input-type="Standard" asp-for="Patient.FamilyName" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
-                </nhs-form-group>
-            </validate-input>
-            <br/>
-        
-            <validate-date model="Patient" property="Dob" inline-template>
-                @{
-                    var DobError = !Model.IsValid("Patient.Dob"); 
-                    var DobGroupState = DobError ? Error : Standard; 
-                }
-                <nhs-form-group nhs-form-group-type=@DobGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <nhs-fieldset aria-describedby="dob-error" role="group">
-                        <nhs-fieldset-legend nhs-legend-size="Standard">Date of birth</nhs-fieldset-legend>
-                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="Patient.Dob" id="dob-error"></span>
-                        <nhs-date-input id="dob">
-                            <nhs-date-input-item>
-                                <nhs-form-group nhs-form-group-type=@DobGroupState>
-                                <label nhs-label-type="Date" asp-for="FormattedDob.Day">Day</label>
-                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DobError asp-for="FormattedDob.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
-                                </nhs-form-group>
-                            </nhs-date-input-item>
-                            <nhs-date-input-item>
-                                <nhs-form-group nhs-form-group-type=@DobGroupState>
-                                <label nhs-label-type="Date" asp-for="FormattedDob.Month">Month</label>
-                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DobError asp-for="FormattedDob.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
-                                </nhs-form-group>
-                            </nhs-date-input-item>
-                            <nhs-date-input-item>
-                                <nhs-form-group nhs-form-group-type=@DobGroupState>
-                                <label nhs-label-type="Date" asp-for="FormattedDob.Year">Year</label>
-                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@DobError asp-for="FormattedDob.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
-                                </nhs-form-group>
-                            </nhs-date-input-item>
-                        </nhs-date-input>
-                    </nhs-fieldset>
-                </nhs-form-group>
-            </validate-date>
-            <br/>
+    <div class="nhsuk-form-group">
+        <label class="nhsuk-label" asp-for="Patient.EthnicityId">
+            Ethnic group
+        </label>
+        <select class="nhsuk-select" asp-for="Patient.EthnicityId" asp-items="Model.Ethnicities">
+            <option value="" selected>Select Ethnic group</option>
+        </select>
+    </div>
+    <br />
 
-            <nhs-form-group nhs-form-group-type="Standard">
-                <nhs-fieldset>
-                    <nhs-fieldset-legend nhs-legend-size="Standard">Sex</nhs-fieldset-legend>
-                    <nhs-radios nhs-radios-type="Standard">
-                        @foreach (var sex in Model.Sexes)
-                        {
-                            <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="Patient.SexId" type="radio" value="@sex.SexId" />
-                                <label nhs-label-type="Radios" asp-for="Patient.SexId">@sex.Label</label>
-                            </nhs-radios-item>
-                        }
-                    </nhs-radios>
-                </nhs-fieldset>
-            </nhs-form-group>
-            <br/>
-
-            <div class="nhsuk-form-group">
-                <label class="nhsuk-label" asp-for="Patient.EthnicityId">
-                    Ethnic group
-                </label>
-                <select class="nhsuk-select" asp-for="Patient.EthnicityId" asp-items="Model.Ethnicities">
-                    <option value="" selected>Select Ethnic group</option>
-                </select>
-            </div>
-            <br/>
-
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
-                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                        <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-nhs-number-conditional">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
-                                NHS Number
-                            </label>
+    <div class="nhsuk-form-group">
+        <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
+                        value="false" data-aria-controls="conditional-nhs-number-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
+                        NHS Number
+                    </label>
+                </div>
+                <validate-input model="Patient" property="NhsNumber" inline-template>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                        id="conditional-nhs-number-conditional">
+                        @{var nhsNumberErrorClass = !Model.IsValid("Patient.NhsNumber") ? errorClassName : ""; }
+                        <div class="nhsuk-form-group @nhsNumberErrorClass"
+                            v-bind:class="{ 'nhsuk-form-group--error': hasError}"
+                            aria-describedby="nhs-number-error">
+                            <span class="nhsuk-error-message" id="nhs-number-error">
+                                <span ref="errorField" asp-validation-for="Patient.NhsNumber"></span>
+                            </span>
+                            <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10"
+                                asp-for="Patient.NhsNumber" type="text">
                         </div>
-                        <validate-input model="Patient" property="NhsNumber" inline-template>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-nhs-number-conditional">
-                                @{var nhsNumberErrorClass = !Model.IsValid("Patient.NhsNumber") ? errorClassName : ""; }
-                                <div class="nhsuk-form-group @nhsNumberErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="nhs-number-error">
-                                    <span class="nhsuk-error-message" id="nhs-number-error">
-                                        <span ref="errorField" asp-validation-for="Patient.NhsNumber"></span>
-                                    </span>
-                                    <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10" asp-for="Patient.NhsNumber" type="text">
-                                </div>
-                            </div>
-                        </validate-input>
-                        <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio" value="true">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
-                                NHS number is not known
-                            </label>
-                        </div>   
                     </div>
-                </fieldset>
+                </validate-input>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
+                        value="true">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
+                        NHS number is not known
+                    </label>
+                </div>
             </div>
-            <br/>
+        </fieldset>
+    </div>
+    <br />
 
-            <div class="nhsuk-form-group">
-                <label class="nhsuk-label" asp-for="Patient.CountryId">
-                    Birth country
-                </label>
-                <select class="nhsuk-select" asp-for="Patient.CountryId" asp-items="Model.Countries">
-                    <option value="" selected>Select a Birth Country</option>
-                </select>
-            </div>
-            <br/>
+    <div class="nhsuk-form-group">
+        <label class="nhsuk-label" asp-for="Patient.CountryId">
+            Birth country
+        </label>
+        <select class="nhsuk-select" asp-for="Patient.CountryId" asp-items="Model.Countries">
+            <option value="" selected>Select a Birth Country</option>
+        </select>
+    </div>
+    <br />
 
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="postcode-error">
-                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                        <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input"type="radio" value="false" data-aria-controls="conditional-postcode-conditional">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
-                                Postcode
-                            </label>
+    <div class="nhsuk-form-group">
+        <fieldset class="nhsuk-fieldset" aria-describedby="postcode-error">
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="false"
+                        data-aria-controls="conditional-postcode-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
+                        Postcode
+                    </label>
+                </div>
+                <validate-input model="Patient" property="Postcode" inline-template>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                        id="conditional-postcode-conditional">
+                        @{var postcodeErrorClass = !Model.IsValid("Patient.Postcode") ? errorClassName : ""; }
+                        <div class="nhsuk-form-group @postcodeErrorClass"
+                            v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="postcode-error">
+                            <span class="nhsuk-error-message" id="postcode-error">
+                                <span ref="errorField" asp-validation-for="Patient.Postcode"></span>
+                            </span>
+                            <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10"
+                                asp-for="Patient.Postcode" type="text">
                         </div>
-                        <validate-input model="Patient" property="Postcode" inline-template>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">
-                                @{var postcodeErrorClass = !Model.IsValid("Patient.Postcode") ? errorClassName : ""; }
-                                <div class="nhsuk-form-group @postcodeErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="postcode-error">
-                                    <span class="nhsuk-error-message" id="postcode-error">
-                                        <span ref="errorField" asp-validation-for="Patient.Postcode"></span>
-                                    </span>
-                                    <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10" asp-for="Patient.Postcode" type="text">
-                                </div>
-                            </div>
-                        </validate-input>
-                        <div class="nhsuk-radios__item">
-                            <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="true">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
-                                No fixed abode
-                            </label>
-                        </div>   
                     </div>
-                </fieldset>
+                </validate-input>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="true">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
+                        No fixed abode
+                    </label>
+                </div>
             </div>
-            <br/>
-            </div>
-            <div>
-                <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
-                <ul class="nhsuk-list nhsuk-pagination__list">
-                
-                    <li class="nhsuk-pagination-item--next">
-                    <button asp-page-handler="NextPage" type="submit" class="remove-button-styling-add-orange-hover nhsuk-pagination__link nhsuk-pagination__link--next text-align-right">
+            <br />
+    </div>
+    <div>
+        <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
+            <ul class="nhsuk-list nhsuk-pagination__list">
+
+                <li class="nhsuk-pagination-item--next">
+                    <button asp-page-handler="NextPage" type="submit"
+                        class="remove-button-styling-add-orange-hover nhsuk-pagination__link nhsuk-pagination__link--next text-align-right">
                         <span class="nhsuk-pagination__title">Next</span>
                         <span class="nhsuk-u-visually-hidden">:</span>
                         <span class="nhsuk-pagination__page">Clinical details</span>
-                        <svg class="nhsuk-icon nhsuk-icon__arrow-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M19.6 11.66l-2.73-3A.51.51 0 0 0 16 9v2H5a1 1 0 0 0 0 2h11v2a.5.5 0 0 0 .32.46.39.39 0 0 0 .18 0 .52.52 0 0 0 .37-.16l2.73-3a.5.5 0 0 0 0-.64z"></path>
+                        <svg class="nhsuk-icon nhsuk-icon__arrow-right" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M19.6 11.66l-2.73-3A.51.51 0 0 0 16 9v2H5a1 1 0 0 0 0 2h11v2a.5.5 0 0 0 .32.46.39.39 0 0 0 .18 0 .52.52 0 0 0 .37-.16l2.73-3a.5.5 0 0 0 0-.64z">
+                            </path>
                         </svg>
                     </button>
-                    </li>
-                </ul>
-                </nav>
-            </div>
-        </form>
-    
-</div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</form>

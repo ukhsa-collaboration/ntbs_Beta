@@ -4,46 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ntbs_service</title>
-    
-    <!-- TODO remove bootstrap! -->
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
-    </environment>
 </head>
 <body>
     <div id="app">
         <header>
             <!-- TODO remove these colour hacks -->
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: #822433">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index" style="color: white">NTBS</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation" style="color: white">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-page="/Notifications/Index" style="color: white">Patient Search</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-page="/Notifications/Create" style="color: white">Notify</a>
-                            </li>
-                        </ul>
-                    </div>
+            <nav style="background-color: #822433; height: 60px; padding: 20px;">
+                <div >
+                    <a asp-area="" asp-page="/Index" style="color: white">NTBS</a>
+                    <a asp-area="" asp-page="/Patients/Index" style="color: white">Patient Search</a>
+                    <a asp-area="" asp-page="/Notifications/Create" style="color: white">Notify</a>
                 </div>
             </nav>
         </header>
         <div class="container">
-            <partial name="_CookieConsentPartial" />
-            <main role="main" class="pb-3">
+            <main role="main" style="padding: 60px">
                 @Html.AntiForgeryToken()
                 @RenderBody()
             </main>
@@ -56,18 +31,6 @@
         </footer>
     </div>
 
-    <!-- TODO remove bootstrap! -->
-    <environment include="Development">
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
-        </script>
-    </environment>
     <!-- govuk requires elements that depend on js-usage require this calss to be set on the root of the document (e.g. conditionally revealling radios' sections) -->
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <script src="~/dist/bundle.js"></script>
