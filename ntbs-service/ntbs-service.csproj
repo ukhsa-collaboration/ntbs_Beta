@@ -19,4 +19,10 @@
     <PackageReference Include="NHSUK.FrontEndLibrary.TagHelpers" Version="1.1.3-alpha" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Models/SeedData/*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>  
+  </ItemGroup>
+
 </Project>
