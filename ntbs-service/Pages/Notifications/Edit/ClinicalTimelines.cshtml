@@ -15,7 +15,6 @@ ViewData["PreviousPage"] = "Hospital Details";
 
 <date-comparison inline-template>
     <form method="post">
-        <div class="col-md-5">
             <h4 class="text-warning" v-if="dateComparisonError">{{dateComparisonError}}</h4>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="NotificationId" />
@@ -301,9 +300,8 @@ ViewData["PreviousPage"] = "Hospital Details";
                     </div>
                 </fieldset>
                 </fieldset>
-            </div>
             <br />
         </div>
-        <partial name="./_PaginationPartial.cshtml" />
+        @Html.Partial("_PaginationPartial")
     </form>
 </date-comparison>

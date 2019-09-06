@@ -11,62 +11,58 @@ ViewData["PreviousPage"] = "Patient Details";
 
 <h2>Hospital details</h1>
 
-<div class="row">
-    <div class="col-md-5">
-        <form method="post">
-            <input type="hidden" asp-for="NotificationId" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post">
+    <input type="hidden" asp-for="NotificationId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <cascading-dropdowns inline-template>
-                <div>
-                    <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
-                            Notifying TB service
-                        </label>
-                        <select nhs-select-type="Standard" asp-for="Episode.TBServiceCode" asp-items="Model.TBServices"  v-on:change="fetchHospitalList">
-                            <option value="" selected>Select TB Service</option>
-                        </select>
-                    </nhs-form-group>
+    <cascading-dropdowns inline-template>
+        <div>
+            <nhs-form-group nhs-form-group-type="Standard">
+                <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
+                    Notifying TB service
+                </label>
+                <select nhs-select-type="Standard" asp-for="Episode.TBServiceCode" asp-items="Model.TBServices"  v-on:change="fetchHospitalList">
+                    <option value="" selected>Select TB Service</option>
+                </select>
+            </nhs-form-group>
 
-                    <nhs-form-group class="nhsuk-form-group">
-                        <label nhs-label-type="Standard" asp-for="Episode.HospitalId">
-                            Hospital
-                        </label>
-                        <select nhs-select-type="Standard" ref="hospitalDropdown" asp-for="Episode.HospitalId" asp-items="Model.Hospitals" >
-                            <option value="" selected>Select Hospital</option>
-                        </select>
-                    </nhs-form-group>
-                    <br/>
-                </div>
-            </cascading-dropdowns>
+            <nhs-form-group class="nhsuk-form-group">
+                <label nhs-label-type="Standard" asp-for="Episode.HospitalId">
+                    Hospital
+                </label>
+                <select nhs-select-type="Standard" ref="hospitalDropdown" asp-for="Episode.HospitalId" asp-items="Model.Hospitals" >
+                    <option value="" selected>Select Hospital</option>
+                </select>
+            </nhs-form-group>
             <br/>
-            
-            <validate-input model="Episode" property="Consultant" inline-template>
-                @{
-                    var ConsultantError = !Model.IsValid("Episode.Consultant"); 
-                    var ConsultantGroupState = ConsultantError ? Error : Standard; 
-                }
-                <nhs-form-group nhs-form-group-type=@ConsultantGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <label nhs-label-type="Standard" asp-for="Episode.Consultant">Add details of consultant</label>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Episode.Consultant"></span>
-                    <input v-on:blur="validate" is-error-input=@ConsultantError nhs-input-type="Standard" asp-for="Episode.Consultant" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
-                </nhs-form-group>
-            </validate-input>
+        </div>
+    </cascading-dropdowns>
+    <br/>
+    
+    <validate-input model="Episode" property="Consultant" inline-template>
+        @{
+            var ConsultantError = !Model.IsValid("Episode.Consultant"); 
+            var ConsultantGroupState = ConsultantError ? Error : Standard; 
+        }
+        <nhs-form-group nhs-form-group-type=@ConsultantGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <label nhs-label-type="Standard" asp-for="Episode.Consultant">Add details of consultant</label>
+            <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Episode.Consultant"></span>
+            <input v-on:blur="validate" is-error-input=@ConsultantError nhs-input-type="Standard" asp-for="Episode.Consultant" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
+        </nhs-form-group>
+    </validate-input>
 
-            <validate-input model="Episode" property="CaseManager" inline-template>
-                @{
-                    var CaseManagerError = !Model.IsValid("Episode.CaseManager"); 
-                    var CaseManagerGroupState = CaseManagerError ? Error : Standard; 
-                }
-                <nhs-form-group nhs-form-group-type=@CaseManagerGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
-                    <label nhs-label-type="Standard" asp-for="Episode.CaseManager">Add details of case manager</label>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Episode.CaseManager"></span>
-                    <input v-on:blur="validate" is-error-input=@CaseManagerError nhs-input-type="Standard" asp-for="Episode.CaseManager" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
-                </nhs-form-group>
-            </validate-input>
-            <br/>
+    <validate-input model="Episode" property="CaseManager" inline-template>
+        @{
+            var CaseManagerError = !Model.IsValid("Episode.CaseManager"); 
+            var CaseManagerGroupState = CaseManagerError ? Error : Standard; 
+        }
+        <nhs-form-group nhs-form-group-type=@CaseManagerGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <label nhs-label-type="Standard" asp-for="Episode.CaseManager">Add details of case manager</label>
+            <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error" asp-validation-for="Episode.CaseManager"></span>
+            <input v-on:blur="validate" is-error-input=@CaseManagerError nhs-input-type="Standard" asp-for="Episode.CaseManager" classes="nhsuk-input--width-10" v-bind:class="{ 'nhsuk-input--error': hasError}" />
+        </nhs-form-group>
+    </validate-input>
+    <br/>
 
-            <partial name="./_PaginationPartial.cshtml" />
-        </form>
-    </div>
-</div>
+    @Html.Partial("_PaginationPartial")
+</form>

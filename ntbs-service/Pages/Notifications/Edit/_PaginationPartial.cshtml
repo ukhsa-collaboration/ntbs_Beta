@@ -4,6 +4,8 @@
         @if (!(ViewData["FirstPage"] as bool?) ?? true) 
         {
         <li class="nhsuk-pagination-item--previous">
+            <!-- The inbuilt NHS pagination only supports an <a> tag but we need a button to submit the form, extra styling has been added to remove
+                the base html styling of the button element and match the NHS style with "remove-button-styling-add-orange-hover" -->
             <button asp-page-handler="PreviousPage" type="submit"
                 class="remove-button-styling-add-orange-hover nhsuk-pagination__link nhsuk-pagination__link--prev text-align-left">
                 <span class="nhsuk-pagination__title">Previous</span>
