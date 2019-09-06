@@ -64,17 +64,28 @@ namespace ntbs_service.Pages_Notifications
             return new JsonResult(tbServices);
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
         {
+            await validateAndSave(NotificationId);
+
+            return RedirectToPage("./Patient", new {id = NotificationId});
+        }
+
+        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
+        {
+            await validateAndSave(NotificationId);
+
+            return RedirectToPage("./ClinicalTimelines", new {id = NotificationId});
+        }
+
+        public async Task validateAndSave(int? NotificationId) {
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdateEpisodeAsync(notification, Episode);
 
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(id);
+                await OnGetAsync(NotificationId);
             }
-
-            return RedirectToPage("../Index");
         }
 
         public ContentResult OnPostValidateEpisodeProperty(string key, string value)

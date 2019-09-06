@@ -3,9 +3,10 @@
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
-Layout = "../Shared/_NotificationLayout.cshtml";
+Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Personal Details";
-ViewData["PageType"] = "personDetails";
+ViewData["NextPage"] = "Hospital Details";
+ViewData["FirstPage"] = true;
 }
 @{string errorClassName = "nhsuk-form-group--error";}
 

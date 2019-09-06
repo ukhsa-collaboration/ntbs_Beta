@@ -61,17 +61,17 @@ namespace ntbs_service.Pages_Notifications
         {
             await validateAndSave(NotificationId);
 
-            return RedirectToPage("/Patients/Edit", new {id = NotificationId});
+            return RedirectToPage("./Episode", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
             await validateAndSave(NotificationId);
 
-            return RedirectToPage("/ClinicalTimelines/Edit", new {id = NotificationId});
+            return RedirectToPage("../Index", new {id = NotificationId});
         }
 
-        public async Task<bool> validateAndSave(int? NotificationId) {
+        public async Task validateAndSave(int? NotificationId) {
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.SymptomStartDate), FormattedSymptomDate);
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.PresentationDate), FormattedPresentationDate);
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.DiagnosisDate), FormattedDiagnosisDate);
@@ -85,7 +85,6 @@ namespace ntbs_service.Pages_Notifications
 
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdateTimelineAsync(notification, ClinicalTimeline);
-            return true;
         }
 
         public ContentResult OnPostValidateClinicalTimelineDate(string key, string day, string month, string year)

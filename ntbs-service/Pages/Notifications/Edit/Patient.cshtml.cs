@@ -69,7 +69,7 @@ namespace ntbs_service.Pages_Notifications
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdatePatientAsync(notification, Patient);
             
-            return RedirectToPage("./ClinicalTimelines", new {id = notification.NotificationId});
+            return RedirectToPage("./Episode", new {id = notification.NotificationId});
 
         }
 
