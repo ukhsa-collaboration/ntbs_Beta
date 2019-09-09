@@ -44,18 +44,29 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
         {
+            await validateAndSave(NotificationId);
 
+            return RedirectToPage("./ClinicalTimelines", new {id = NotificationId});
+        }
+
+        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
+        {
+            await validateAndSave(NotificationId);
+
+            return RedirectToPage("../Index", new {id = NotificationId});
+        }
+
+        public async Task validateAndSave(int? NotificationId) {
+            
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(id);
+                await OnGetAsync(NotificationId);
             }
 
-            var notification = await service.GetNotificationAsync(id);
+            var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
-            
-            return RedirectToPage("../Index");
         }
     }
 }
