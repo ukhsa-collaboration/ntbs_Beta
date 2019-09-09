@@ -1,7 +1,7 @@
 <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
     <ul class="nhsuk-list nhsuk-pagination__list">
 
-        @if (!(ViewData["FirstPage"] as bool?) ?? true) 
+        @if (ViewData["PreviousPage"] != null )
         {
         <li class="nhsuk-pagination-item--previous">
             <!-- The inbuilt NHS pagination only supports an <a> tag but we need a button to submit the form, extra styling has been added to remove
@@ -21,7 +21,7 @@
         </li>
         }
 
-        @if (!(ViewData["LastPage"] as bool?) ?? true) 
+        @if (ViewData["NextPage"] != null)
         {
         <li class="nhsuk-pagination-item--next">
             <button asp-page-handler="NextPage" type="submit"

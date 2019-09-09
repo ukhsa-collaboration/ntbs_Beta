@@ -41,6 +41,9 @@
             <li class="@("contents-list-item " + (currentPage == "immunosupression" ? "contents-list-item--current" : ""))">
               <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@patientId">Immunosupression</a>
             </li>
+            <li class="@("contents-list-item " + (currentPage == "previousHistory" ? "contents-list-item--current" : ""))">
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/PreviousHistory?id=@patientId">Previous History</a>
+            </li>
         </div>
         <div style="width: 100%"> 
             @RenderBody()
