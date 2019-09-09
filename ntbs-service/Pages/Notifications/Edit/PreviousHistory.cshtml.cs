@@ -46,27 +46,36 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
         {
-            await validateAndSave(NotificationId);
+            bool validModel = await validateAndSave(NotificationId);
+
+            if(!validModel) {
+                return await OnGetAsync(NotificationId);
+            }
 
             return RedirectToPage("./ClinicalTimelines", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
-            await validateAndSave(NotificationId);
+            bool validModel = await validateAndSave(NotificationId);
+
+            if(!validModel) {
+                return await OnGetAsync(NotificationId);
+            }
 
             return RedirectToPage("../Index", new {id = NotificationId});
         }
 
-        public async Task validateAndSave(int? NotificationId) {
+        public async Task<bool> validateAndSave(int? NotificationId) {
             
             if (!ModelState.IsValid)
             {
-                await OnGetAsync(NotificationId);
+                return false;
             }
 
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
+            return true;
         }
     }
 }
