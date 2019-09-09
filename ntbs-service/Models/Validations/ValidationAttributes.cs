@@ -17,20 +17,4 @@ namespace ntbs_service.Models.Validations
             return ValidationMessages.DateValidityRange(StartDate);
         }
     }
-
-    public class ValidYearAttribute : RangeAttribute
-    {
-        private string StartYear;
-
-        public ValidYearAttribute(string startYear) : base(typeof(int),
-            startYear, DateTime.Now.Year.ToString())
-        {
-            StartYear = startYear;
-        }
-
-        public override string FormatErrorMessage(string name)
-        {
-            return ValidationMessages.YearValidityRange(StartYear);
-        }
-    }
 }

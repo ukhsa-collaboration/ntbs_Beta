@@ -51,6 +51,34 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             Assert.Null(timeline.DeathDate);
         }
 
+        [Fact]
+        public void BCGVaccinationYear_IsSetToNullIfVaccinationStateNo()
+        {
+            // Arrange
+            var notification = new Notification();
+            var timeline = new ClinicalDetails() { BCGVaccinationState = State.No, BCGVaccinationYear = "2000" };
+
+            // Act
+            service.UpdateTimelineAsync(notification, timeline);
+
+            // Assert
+            Assert.True(string.IsNullOrEmpty(timeline.BCGVaccinationYear));
+        }
+
+        [Fact]
+        public void BCGVaccinationYear_IsSetToNullIfVaccinationStateUnknown()
+        {
+            // Arrange
+            var notification = new Notification();
+            var timeline = new ClinicalDetails() { BCGVaccinationState = State.Unknown, BCGVaccinationYear = "2000" };
+
+            // Act
+            service.UpdateTimelineAsync(notification, timeline);
+
+            // Assert
+            Assert.True(string.IsNullOrEmpty(timeline.BCGVaccinationYear));
+        }
+
         public static IEnumerable<object[]> UkBornTestCases()
         {
             yield return new object[] { new Country() { CountryId = 1, IsoCode = Countries.UkCode}, true};

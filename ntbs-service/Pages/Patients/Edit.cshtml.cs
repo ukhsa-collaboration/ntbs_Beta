@@ -70,15 +70,5 @@ namespace ntbs_service.Pages_Patients
             
             return RedirectToPage("/ClinicalDetails/Edit", new {id = notification.NotificationId});
         }
-
-        public ContentResult OnPostValidatePatientProperty(string key, string value)
-        {
-            return OnPostValidateProperty(Patient, key, value);
-        }
-
-        public ContentResult OnPostValidatePatientDate(string key, string day, string month, string year)
-        {
-            return OnPostValidateDate(Patient, key, day, month, year);
-        }
     }
 }

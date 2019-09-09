@@ -1,14 +1,5 @@
-var pluraliseModelName = function (name: string) {
-    if (name.endsWith('s')) {
-        return name;
-    } else {
-        return `${name}s`;
-    }
-}
-
 var getValidationBaseBath = function(modelName: string) {
-    let modelNamePlural = pluraliseModelName(modelName);
-    return `/${modelNamePlural}/Edit/Validate${modelName}`;
+    return `/Validation/Validate${modelName}`;
 }
 
 type FormattedDate = { day: any, month: any, year: any };

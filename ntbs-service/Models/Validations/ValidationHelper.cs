@@ -5,15 +5,15 @@ namespace ntbs_service.Models.Validations
     public static class ValidationMessages
     {
         public const string ValidDate = "Please enter a valid date";
+        public const string ValidYear = "Please enter a valid year";
         public static string DateValidityRange(string startDate)
         {
             return $"Must be between {startDate} and {DateTime.Now.ToShortDateString()}";
         }
 
-        public const string ValidNumber = "Please enter a valid number";
-        public static string YearValidityRange(string startYear)
+        public static string ValidYearLaterThanBirthYear(int birthYear)
         {
-            return $"Must be between {startYear} and {DateTime.Now.Year}";
+            return $"Should be later than birth year ({birthYear})";
         }
 
         public const string NameFormat = "Names can only contain letters and ' - . ,";
@@ -26,8 +26,7 @@ namespace ntbs_service.Models.Validations
     {
         public const string EarliestBirthDate = "01/01/1900";
         public const string EarliestClinicalDate = "01/01/2010";
-
-        public const string EarliestYear = "1900";
+        public const int EarliestYear = 1900;
     }
 
     public static class ValidationRegex

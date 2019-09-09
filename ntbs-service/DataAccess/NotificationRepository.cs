@@ -60,7 +60,8 @@ namespace ntbs_service.DataAccess
 
         public async Task<Notification> GetNotificationAsync(int? NotificationId)
         {
-            return await _context.Notification.Include(n => n.NotificationSites)
+            return await _context.Notification
+                .Include(n => n.NotificationSites)
                 .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 

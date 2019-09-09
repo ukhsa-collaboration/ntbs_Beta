@@ -28,11 +28,14 @@ namespace ntbs_service.Pages_ClinicalDetails
         public int NotificationId { get; set; }
 
         [BindProperty]
-        public List<SiteId> IncludedSiteIds { get; set; }
+        public Dictionary<SiteId, bool> NotificationSiteMap { get; set; }
         [BindProperty]
         public List<Site> Sites { get; set; }
         [BindProperty]
         public NotificationSite OtherSite { get; set; }
+
+        [BindProperty]
+        public int? PatientBirthYear { get; set; }
 
         [BindProperty]
         public FormattedDate FormattedSymptomDate { get; set; }
@@ -61,9 +64,11 @@ namespace ntbs_service.Pages_ClinicalDetails
             }
 
             var notificationSites = notification.NotificationSites;
-            IncludedSiteIds = notificationSites.Select(ns => (SiteId)ns.SiteId).ToList();
             OtherSite = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER);
             Sites = (await _context.GetAllSitesAsync()).ToList();
+            NotificationSiteMap = CreateNotificationSiteMap(notificationSites, Sites);
+
+            PatientBirthYear = notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
             FormattedPresentationDate = ClinicalDetails.PresentationDate.ConvertToFormattedDate();
@@ -74,6 +79,16 @@ namespace ntbs_service.Pages_ClinicalDetails
             return Page();
         }
 
+        private Dictionary<SiteId, bool> CreateNotificationSiteMap(IEnumerable<NotificationSite> notificationSites, IEnumerable<Site> sites)
+        {
+            var dict = new Dictionary<SiteId, bool>();
+            foreach (var site in sites)
+            {
+                dict.Add((SiteId)site.SiteId, notificationSites.FirstOrDefault(ns => ns.SiteId == site.SiteId) != null);
+            }
+            return dict;
+        }
+
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
@@ -81,6 +96,7 @@ namespace ntbs_service.Pages_ClinicalDetails
             SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
             SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
+            ValidateYearAgainstOtherYear(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear), ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
 
             if (!ModelState.IsValid)
             {
@@ -94,24 +110,18 @@ namespace ntbs_service.Pages_ClinicalDetails
             return RedirectToPage("/Patients/Index");
         }
 
-        public ContentResult OnPostValidateClinicalDetailsProperty(string key, string value)
+        private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
         {
-            return OnPostValidateProperty(ClinicalDetails, key, value);
-        }
-        public ContentResult OnPostValidateClinicalDetailsDate(string key, string day, string month, string year)
-        {
-            return OnPostValidateDate(ClinicalDetails, key, day, month, year);
-        }
-
-        public IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
-        {
-            foreach (var siteId in IncludedSiteIds) {
-                yield return new NotificationSite
+            foreach (var item in NotificationSiteMap) {
+                if (item.Value) 
                 {
-                    NotificationId = notification.NotificationId,
-                    SiteId = (int)siteId,
-                    SiteDescription = siteId == SiteId.OTHER ? OtherSite.SiteDescription : null
-                };
+                    yield return new NotificationSite
+                    {
+                        NotificationId = notification.NotificationId,
+                        SiteId = (int)item.Key,
+                        SiteDescription = item.Key == SiteId.OTHER ? OtherSite.SiteDescription : null
+                    };
+                }
             }
         }
     }

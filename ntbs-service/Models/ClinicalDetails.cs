@@ -31,8 +31,6 @@ namespace ntbs_service.Models
 
         public State BCGVaccinationState { get; set; }
 
-        // TODO: change this to actual validation including patient year of birth once ValidationService has been refactored
-        [ValidYear(ValidDates.EarliestYear)]
         public string BCGVaccinationYear { get; set; }
     }
 }

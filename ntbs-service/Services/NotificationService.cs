@@ -92,6 +92,10 @@ namespace ntbs_service.Services
             {
                 timeline.DeathDate = null;
             }
+            if (!(timeline.BCGVaccinationState == State.Yes))
+            {
+                timeline.BCGVaccinationYear = null;
+            }
         }
 
         public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) {
@@ -99,14 +103,6 @@ namespace ntbs_service.Services
             context.NotificationSite.RemoveRange(currentSites);
             context.NotificationSite.AddRange(notificationSites);
             await context.SaveChangesAsync();
-
-            // foreach (int siteId in siteIds) {
-            //     notification.NotificationSites.Add(new NotificationSite
-            //     {
-            //         SiteId = siteId
-            //     });
-            // }
-            // await context.SaveChangesAsync();
         }
     }
 }
