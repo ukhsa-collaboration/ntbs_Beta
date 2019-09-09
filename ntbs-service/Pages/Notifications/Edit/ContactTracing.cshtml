@@ -1,0 +1,19 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.ContactTracingModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+Layout = "../../Shared/_NotificationLayout.cshtml";
+ViewData["Title"] = "Notification - Contact Tracing";
+ViewData["NextPage"] = "Previous History";
+ViewData["PreviousPage"] = "Clinical Details";
+}
+@{string errorClassName = "nhsuk-form-group--error";}
+
+<div><a asp-page="Index">Back to List</a></div>
+
+<h2>Contact Tracing</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="NotificationId" />
+</form>

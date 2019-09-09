@@ -13,12 +13,10 @@ namespace ntbs_service.Pages_Notifications
     public class PreviousHistoryModel : ValidationModel
     {
         private readonly INotificationService service;
-        private readonly NtbsContext context;
 
-        public PreviousHistoryModel(INotificationService service, NtbsContext context)
+        public PreviousHistoryModel(INotificationService service)
         {
             this.service = service;
-            this.context = context;
         }
 
         [BindProperty]

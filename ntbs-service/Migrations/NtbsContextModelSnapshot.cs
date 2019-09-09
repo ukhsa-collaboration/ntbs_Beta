@@ -11217,6 +11217,42 @@ namespace ntbs_service.Migrations
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
+                    b.OwnsOne("ntbs_service.Models.ContactTracing", "ContactTracing", b1 =>
+                        {
+                            b1.Property<int>("NotificationId");
+
+                            b1.Property<int>("AdultsActiveTB");
+
+                            b1.Property<int>("AdultsFinishedTreatment");
+
+                            b1.Property<int>("AdultsLatentTB");
+
+                            b1.Property<int>("AdultsScreened");
+
+                            b1.Property<int>("AdultsStartedTreatment");
+
+                            b1.Property<int>("ChildrenActiveTB");
+
+                            b1.Property<int>("ChildrenFinishedTreatment");
+
+                            b1.Property<int>("ChildrenIdentified");
+
+                            b1.Property<int>("ChildrenLatentTB");
+
+                            b1.Property<int>("ChildrenScreened");
+
+                            b1.Property<int>("ChildrenStartedTreatment");
+
+                            b1.HasKey("NotificationId");
+
+                            b1.ToTable("ContactTracing");
+
+                            b1.HasOne("ntbs_service.Models.Notification")
+                                .WithOne("ContactTracing")
+                                .HasForeignKey("ntbs_service.Models.ContactTracing", "NotificationId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
                     b.OwnsOne("ntbs_service.Models.Episode", "Episode", b1 =>
                         {
                             b1.Property<int>("NotificationId");
