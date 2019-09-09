@@ -10,7 +10,7 @@ namespace ntbs_service.Services
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
-
+        Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
     }
 
     public class NotificationService : INotificationService
@@ -99,6 +99,23 @@ namespace ntbs_service.Services
             notification.Episode = episode;
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory tBHistory)
+        {
+            UpdateTBHistoryFlags(tBHistory);
+            context.Attach(notification);
+            notification.PatientTBHistory = tBHistory;
+
+            await context.SaveChangesAsync();
+        }
+
+        private void UpdateTBHistoryFlags(PatientTBHistory tBHistory)
+        {
+            if (tBHistory.NotPreviouslyHadTB)
+            {
+                tBHistory.PreviousTBDiagnosisYear = null;
+            }
         }
     }
 }

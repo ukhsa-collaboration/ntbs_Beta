@@ -59,19 +59,27 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
         {
-            await validateAndSave(NotificationId);
+            bool validModel = await validateAndSave(NotificationId);
+
+            if(!validModel) {
+                return await OnGetAsync(NotificationId);
+            }
 
             return RedirectToPage("./Episode", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
-            await validateAndSave(NotificationId);
+            bool validModel = await validateAndSave(NotificationId);
 
-            return RedirectToPage("../Index", new {id = NotificationId});
+            if(!validModel) {
+                return await OnGetAsync(NotificationId);
+            }
+
+            return RedirectToPage("./PreviousHistory", new {id = NotificationId});
         }
 
-        public async Task validateAndSave(int? NotificationId) {
+        public async Task<bool> validateAndSave(int? NotificationId) {
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.SymptomStartDate), FormattedSymptomDate);
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.PresentationDate), FormattedPresentationDate);
             SetAndValidateDate(ClinicalTimeline, nameof(ClinicalTimeline.DiagnosisDate), FormattedDiagnosisDate);
@@ -80,11 +88,12 @@ namespace ntbs_service.Pages_Notifications
 
             if (!ModelState.IsValid)
             {
-                await OnGetAsync(NotificationId);
+                return false;
             }
 
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdateTimelineAsync(notification, ClinicalTimeline);
+            return true;
         }
 
         public ContentResult OnPostValidateClinicalTimelineDate(string key, string day, string month, string year)
