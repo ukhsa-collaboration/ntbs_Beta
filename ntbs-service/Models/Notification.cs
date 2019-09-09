@@ -9,6 +9,8 @@ namespace ntbs_service.Models
 
         public virtual Hospital Hospital { get; set; }
         public virtual PatientDetails PatientDetails { get; set; }
-        public virtual ClinicalTimeline ClinicalTimeline { get; set; }
+        public virtual ClinicalDetails ClinicalDetails { get; set; }
+
+        public virtual List<NotificationSite> NotificationSites { get; set; }
     }
 }

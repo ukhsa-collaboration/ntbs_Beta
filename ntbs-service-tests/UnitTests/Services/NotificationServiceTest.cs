@@ -28,7 +28,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalTimeline() { TreatmentStartDate = DateTime.Now, DidNotStartTreatment = true };
+            var timeline = new ClinicalDetails() { TreatmentStartDate = DateTime.Now, DidNotStartTreatment = true };
 
             // Act
             service.UpdateTimelineAsync(notification, timeline);
@@ -42,7 +42,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalTimeline() { DeathDate = DateTime.Now, IsPostMortem = false };
+            var timeline = new ClinicalDetails() { DeathDate = DateTime.Now, IsPostMortem = false };
 
             // Act
             service.UpdateTimelineAsync(notification, timeline);

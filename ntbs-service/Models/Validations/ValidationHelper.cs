@@ -10,6 +10,12 @@ namespace ntbs_service.Models.Validations
             return $"Must be between {startDate} and {DateTime.Now.ToShortDateString()}";
         }
 
+        public const string ValidNumber = "Please enter a valid number";
+        public static string YearValidityRange(string startYear)
+        {
+            return $"Must be between {startYear} and {DateTime.Now.Year}";
+        }
+
         public const string NameFormat = "Names can only contain letters and ' - . ,";
 
         public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
@@ -19,7 +25,13 @@ namespace ntbs_service.Models.Validations
     public static class ValidDates
     {
         public const string EarliestBirthDate = "01/01/1900";
-
         public const string EarliestClinicalDate = "01/01/2010";
+
+        public const string EarliestYear = "1900";
+    }
+
+    public static class ValidationRegex
+    {
+        public const string NameFormat = @"[a-zA-Z \-,.']+";
     }
 }

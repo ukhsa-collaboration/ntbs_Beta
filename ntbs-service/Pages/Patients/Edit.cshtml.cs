@@ -68,7 +68,7 @@ namespace ntbs_service.Pages_Patients
             var notification = await service.GetNotificationAsync(id);
             await service.UpdatePatientAsync(notification, Patient);
             
-            return RedirectToPage("/ClinicalTimelines/Edit", new {id = notification.NotificationId});
+            return RedirectToPage("/ClinicalDetails/Edit", new {id = notification.NotificationId});
         }
 
         public ContentResult OnPostValidatePatientProperty(string key, string value)

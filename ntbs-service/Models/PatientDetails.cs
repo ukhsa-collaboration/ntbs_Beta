@@ -9,14 +9,13 @@ namespace ntbs_service.Models
     [Owned]
     public class PatientDetails
     {
-        private const string NameRegex = @"[a-zA-Z \-,.']+";
 
         [StringLength(35)]
-        [RegularExpression(NameRegex, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.NameFormat)]
         public string FamilyName { get; set; }
 
         [StringLength(35)]
-        [RegularExpression(NameRegex, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.NameFormat)]
         public string GivenName { get; set; }
 
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NhsNumberFormat)]

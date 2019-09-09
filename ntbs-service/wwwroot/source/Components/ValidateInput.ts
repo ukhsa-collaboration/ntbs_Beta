@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { getValidationBaseBath } from '../helpers';
 const axios = require('axios');
 
 const ValidateInput = Vue.extend({
@@ -16,7 +17,7 @@ const ValidateInput = Vue.extend({
             "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
         }
 
-        axios.post(`/${this.$props.model}s/Edit/Validate${this.$props.model}Property?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
+        axios.post(`${getValidationBaseBath(this.$props.model)}Property?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
         .then((response: any) => {
             console.log(response);
             var errorMessage = response.data;

@@ -1,7 +1,6 @@
 import Vue from 'vue';
+import { getValidationBaseBath, FormattedDate, convertFormattedDateToDate } from '../helpers';
 const axios = require('axios');
-
-type FormattedDate = { day: any, month: any, year: any };
 
 const ValidateDate = Vue.extend({
     props: ['model', 'property', 'name', 'rank'],
@@ -16,7 +15,7 @@ const ValidateDate = Vue.extend({
             // See https://vuejs.org/v2/guide/components.html#Using-v-model-on-Components
             var formattedDate: FormattedDate = this.getFormattedDate();
             if (formattedDate) {
-                this.$emit('input', this.convertToDate(formattedDate));
+                this.$emit('input', convertFormattedDateToDate(formattedDate));
             }
         }
     },
@@ -31,7 +30,7 @@ const ValidateDate = Vue.extend({
                 "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
             }
 
-            axios.post(`/${this.$props.model}s/Edit/Validate${this.$props.model}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
+            axios.post(`${getValidationBaseBath(this.$props.model)}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
                     null, { headers: headers })
                 .then((response: any) => {
                     console.log(response);
@@ -39,7 +38,7 @@ const ValidateDate = Vue.extend({
                     this.hasError = errorMessage != '';
                     this.$refs["errorField"].textContent = errorMessage;
                     if (!this.hasError && this.rank) {
-                        this.$emit('input', this.convertToDate(date));
+                        this.$emit('input', convertFormattedDateToDate(date));
                         this.$parent.datechanged(this.rank);
                     }
                 })
@@ -67,9 +66,6 @@ const ValidateDate = Vue.extend({
             }
 
             return formattedDate;
-        },
-        convertToDate: function(date: FormattedDate) {
-            return new Date(date.year, date.month - 1, date.day)
         }
     }
 });
