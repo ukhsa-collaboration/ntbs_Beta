@@ -1,3 +1,8 @@
+@if(ViewData["NextPage"] != null && ViewData["PreviousPage"] != null)
+{
+    <!-- This is necessary so when you press enter on the form it finds the next page button instead of the previous page button first -->
+    <button asp-page-handler="NextPage" type="submit" style="position: absolute; display: none"> </button>
+}
 <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
     <ul class="nhsuk-list nhsuk-pagination__list">
 
