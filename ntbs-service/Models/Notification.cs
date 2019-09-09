@@ -8,5 +8,6 @@
         public virtual ClinicalTimeline ClinicalTimeline { get; set; }
         public virtual Episode Episode { get; set; }
         public virtual PatientTBHistory PatientTBHistory { get; set; }
+        public virtual ContactTracing ContactTracing { get; set; }
     }
 }

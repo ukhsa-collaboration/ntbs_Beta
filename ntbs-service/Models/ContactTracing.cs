@@ -23,10 +23,13 @@ namespace ntbs_service.Models
         [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsLatentTB")]        
         public int AdultsActiveTB { get; set; }
 
+        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenLatentTB")]
         public int ChildrenActiveTB { get; set; }
 
+        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "AdultsActiveTB")]
         public int AdultsLatentTB { get; set; }
 
+        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenActiveTB")]
         public int ChildrenLatentTB { get; set; }
     
         
