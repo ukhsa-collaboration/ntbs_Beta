@@ -8,10 +8,10 @@ namespace ntbs_service.Models
     [Owned]
     public class ContactTracing
     {
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
-        public static int AdultsIdentified { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive value")]
+        public int AdultsIdentified { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive value")]
         public int ChildrenIdentified { get; set; }
 
         [PositiveIntegerSmallerThanValue("AdultsIdentified")]
@@ -20,13 +20,13 @@ namespace ntbs_service.Models
         [PositiveIntegerSmallerThanValue("ChildrenIdentified")]
         public int ChildrenScreened { get; set; }
 
-        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsLatentTB")]        
+        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsLatentTB")]      
         public int AdultsActiveTB { get; set; }
 
         [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenLatentTB")]
         public int ChildrenActiveTB { get; set; }
 
-        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "AdultsActiveTB")]
+        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsActiveTB")]
         public int AdultsLatentTB { get; set; }
 
         [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenActiveTB")]

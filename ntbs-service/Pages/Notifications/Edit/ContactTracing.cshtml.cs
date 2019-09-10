@@ -43,5 +43,39 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
+        public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
+        {
+            bool validModel = await validateAndSave(NotificationId);
+
+            if(!validModel) {
+                return await OnGetAsync(NotificationId);
+            }
+
+            return RedirectToPage("./Episode", new {id = NotificationId});
+        }
+
+        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
+        {
+            bool validModel = await validateAndSave(NotificationId);
+
+            if(!validModel) {
+                return await OnGetAsync(NotificationId);
+            }
+
+            return RedirectToPage("./PreviousHistory", new {id = NotificationId});
+        }
+
+        public async Task<bool> validateAndSave(int? NotificationId) {
+
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var notification = await service.GetNotificationAsync(NotificationId);
+            await service.UpdateContactTracingAsync(notification, ContactTracing);
+            return true;
+        }
+
     }
 }

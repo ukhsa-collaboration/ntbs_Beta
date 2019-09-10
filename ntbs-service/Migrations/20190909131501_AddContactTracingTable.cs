@@ -11,6 +11,7 @@ namespace ntbs_service.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(nullable: false),
+                    AdultsIdentified = table.Column<int>(nullable: false),
                     ChildrenIdentified = table.Column<int>(nullable: false),
                     AdultsScreened = table.Column<int>(nullable: false),
                     ChildrenScreened = table.Column<int>(nullable: false),
