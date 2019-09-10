@@ -83,7 +83,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./ClinicalTimelines", new {id = NotificationId});
+            return RedirectToPage("./ClinicalTimeline", new {id = NotificationId});
         }
 
         public async Task<bool> validateAndSave(int? NotificationId) {

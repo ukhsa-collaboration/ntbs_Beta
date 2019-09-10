@@ -52,7 +52,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./ClinicalTimelines", new {id = NotificationId});
+            return RedirectToPage("./ClinicalTimeline", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
@@ -77,5 +77,11 @@ namespace ntbs_service.Pages_Notifications
             await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
             return true;
         }
+        
+        public ContentResult OnPostValidatePreviousHistoryProperty(string key, string value)
+        {
+            return OnPostValidateProperty(PatientTBHistory, key, value);
+        }
+
     }
 }

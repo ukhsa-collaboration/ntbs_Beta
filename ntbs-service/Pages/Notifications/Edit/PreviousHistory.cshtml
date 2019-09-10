@@ -28,7 +28,7 @@
                             Yes
                         </label>
                     </div>
-                    <validate-input model="PatientTBHistory" property="PreviousTBDiagnosisYear" inline-template>
+                    <validate-input model="PreviousHistory" property="PreviousTBDiagnosisYear" inline-template>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-previously-had-tb-conditional">
                             @{
                                 var previousTBDiagnosisError = !Model.IsValid("PatientTBHistory.PreviousTBDiagnosisYear");
