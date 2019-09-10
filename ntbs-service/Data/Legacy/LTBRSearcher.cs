@@ -23,10 +23,10 @@ SELECT DISTINCT 'tbc' AS 'NotificationId'
 	,p.pt_DOB AS 'DateOfBirth'
 	,p.pt_Sex AS 'Sex'
 	,dp.dp_NotifiedDate AS 'NotificationDate'
-FROM ltbr_dbt_Patient p
-JOIN ltbr_dbt_PatientEpisode pe
+FROM dbt_Patient p
+JOIN dbt_PatientEpisode pe
 	ON p.pt_PatientId = pe.pe_PatientId
-JOIN ltbr_dbt_DiseasePeriod dp
+JOIN dbt_DiseasePeriod dp
 	ON p.pt_PatientId = dp.dp_PatientId
 WHERE 1 = 1
 ";
