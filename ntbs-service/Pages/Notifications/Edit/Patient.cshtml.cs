@@ -16,10 +16,10 @@ namespace ntbs_service.Pages_Notifications
         private readonly INotificationService service;
         private readonly NtbsContext context;
 
-        public SelectList Ethnicities { get; set;}
+        public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
         public List<Sex> Sexes { get; set; }
-        
+
         [BindProperty]
         public PatientDetails Patient { get; set; }
         [BindProperty]
@@ -45,7 +45,8 @@ namespace ntbs_service.Pages_Notifications
             NotificationId = notification.NotificationId;
             Patient = notification.PatientDetails;
 
-            if (Patient == null) {
+            if (Patient == null)
+            {
                 Patient = new PatientDetails();
             }
 
