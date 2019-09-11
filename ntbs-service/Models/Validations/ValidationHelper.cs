@@ -16,7 +16,7 @@ namespace ntbs_service.Models.Validations
             return $"Should be later than birth year ({birthYear})";
         }
 
-        public const string NameFormat = "Names can only contain letters and ' - . ,";
+        public const string StandardStringFormat = "Can only contain letters and ' - . ,";
 
         public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
         public const string NhsNumberLength = "NHS Number needs to be 10 digits long";

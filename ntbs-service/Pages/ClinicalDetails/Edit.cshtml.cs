@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,42 +12,34 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_ClinicalDetails
 {
+    [BindProperties]
     public class EditModel : ValidationModel
     {
         private readonly INotificationService service;
         private readonly NtbsContext _context;
+
+        public ClinicalDetails ClinicalDetails { get; set; }
+        public int NotificationId { get; set; }
+
+        public Dictionary<SiteId, bool> NotificationSiteMap { get; set; }
+
+        public List<Site> Sites { get; set; }
+        // We want to bind to the full model rather than a string for SiteDescription so we can validate against the data annotation
+        public NotificationSite OtherSite { get; set; }
+
+        public int? PatientBirthYear { get; set; }
+
+        public FormattedDate FormattedSymptomDate { get; set; }
+        public FormattedDate FormattedPresentationDate { get; set; }
+        public FormattedDate FormattedDiagnosisDate { get; set; }
+        public FormattedDate FormattedTreatmentDate { get; set; }
+        public FormattedDate FormattedDeathDate { get; set; }
 
         public EditModel(INotificationService service, NtbsContext context)
         {
             this.service = service;
             _context = context;
         }
-
-        [BindProperty]
-        public ClinicalDetails ClinicalDetails { get; set; }
-        [BindProperty]
-        public int NotificationId { get; set; }
-
-        [BindProperty]
-        public Dictionary<SiteId, bool> NotificationSiteMap { get; set; }
-        [BindProperty]
-        public List<Site> Sites { get; set; }
-        [BindProperty]
-        public NotificationSite OtherSite { get; set; }
-
-        [BindProperty]
-        public int? PatientBirthYear { get; set; }
-
-        [BindProperty]
-        public FormattedDate FormattedSymptomDate { get; set; }
-        [BindProperty]
-        public FormattedDate FormattedPresentationDate { get; set; }
-        [BindProperty]
-        public FormattedDate FormattedDiagnosisDate { get; set; }
-        [BindProperty]
-        public FormattedDate FormattedTreatmentDate { get; set; }
-        [BindProperty]
-        public FormattedDate FormattedDeathDate { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -64,9 +57,9 @@ namespace ntbs_service.Pages_ClinicalDetails
             }
 
             var notificationSites = notification.NotificationSites;
+            SetupNotificationSiteMap(notificationSites);
             OtherSite = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER);
             Sites = (await _context.GetAllSitesAsync()).ToList();
-            NotificationSiteMap = CreateNotificationSiteMap(notificationSites, Sites);
 
             PatientBirthYear = notification.PatientDetails.Dob?.Year;
 
@@ -79,24 +72,24 @@ namespace ntbs_service.Pages_ClinicalDetails
             return Page();
         }
 
-        private Dictionary<SiteId, bool> CreateNotificationSiteMap(IEnumerable<NotificationSite> notificationSites, IEnumerable<Site> sites)
+        private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)
         {
-            var dict = new Dictionary<SiteId, bool>();
-            foreach (var site in sites)
+            NotificationSiteMap = new Dictionary<SiteId, bool>();
+            foreach (SiteId siteId in Enum.GetValues(typeof(SiteId)))
             {
-                dict.Add((SiteId)site.SiteId, notificationSites.FirstOrDefault(ns => ns.SiteId == site.SiteId) != null);
+                NotificationSiteMap.Add(siteId, notificationSites.FirstOrDefault(ns => ns.SiteId == (int)siteId) != null);
             }
-            return dict;
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
-            SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
-            SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
-            SetAndValidateDate(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
-            ValidateYearAgainstOtherYear(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear), ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
+            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
+            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
+            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
+            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
+            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
+            ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+                ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
 
             if (!ModelState.IsValid)
             {
@@ -123,6 +116,25 @@ namespace ntbs_service.Pages_ClinicalDetails
                     };
                 }
             }
+        }
+
+        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value)
+        {
+            return ValidateProperty(new ClinicalDetails(), key, value);
+        }
+        public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
+        {
+            return ValidateDate(new ClinicalDetails(), key, day, month, year);
+        }
+
+        public ContentResult OnGetValidateNotificationSiteProperty(string key, string value)
+        {
+            return ValidateProperty(new NotificationSite(), key, value);
+        }
+
+        public ContentResult OnGetValidateYearComparison(string newYear, int existingYear)
+        {
+            return ValidateYearComparison(newYear, existingYear);
         }
     }
 }

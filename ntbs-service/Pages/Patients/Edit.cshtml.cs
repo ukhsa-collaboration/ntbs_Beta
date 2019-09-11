@@ -58,7 +58,7 @@ namespace ntbs_service.Pages_Patients
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            SetAndValidateDate(Patient, nameof(Patient.Dob), FormattedDob);
+            SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
 
             if (!ModelState.IsValid)
             {
@@ -69,6 +69,16 @@ namespace ntbs_service.Pages_Patients
             await service.UpdatePatientAsync(notification, Patient);
             
             return RedirectToPage("/ClinicalDetails/Edit", new {id = notification.NotificationId});
+        }
+
+        public ContentResult OnGetValidatePatientProperty(string key, string value)
+        {
+            return ValidateProperty(new PatientDetails(), key, value);
+        }
+
+        public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
+        {
+            return ValidateDate(new PatientDetails(), key, day, month, year);
         }
     }
 }

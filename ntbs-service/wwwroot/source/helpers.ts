@@ -1,5 +1,7 @@
-var getValidationBaseBath = function(modelName: string) {
-    return `/Validation/Validate${modelName}`;
+var getHeaders = function() {
+    return {
+        "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
+    }
 }
 
 type FormattedDate = { day: any, month: any, year: any };
@@ -9,5 +11,5 @@ var convertFormattedDateToDate = function(date: FormattedDate) {
 }
 
 export { 
-    getValidationBaseBath, FormattedDate, convertFormattedDateToDate
+    getHeaders, FormattedDate, convertFormattedDateToDate
 };

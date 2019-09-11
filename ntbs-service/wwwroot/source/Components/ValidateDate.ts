@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { getValidationBaseBath, FormattedDate, convertFormattedDateToDate } from '../helpers';
+import { getHeaders, FormattedDate, convertFormattedDateToDate } from '../helpers';
 const axios = require('axios');
 
 const ValidateDate = Vue.extend({
@@ -26,12 +26,8 @@ const ValidateDate = Vue.extend({
                 return;
             }
 
-            var headers = {
-                "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
-            }
-
-            axios.post(`${getValidationBaseBath(this.$props.model)}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
-                    null, { headers: headers })
+            axios.get(`Edit/Validate${this.$props.model}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
+                    null, { headers: getHeaders() })
                 .then((response: any) => {
                     console.log(response);
                     var errorMessage = response.data;

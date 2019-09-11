@@ -11,7 +11,7 @@ namespace ntbs_service.Models
         public int SiteId { get; set; }
         public Site Site { get; set; }
 
-        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SiteDescription { get; set; }
     }
 }

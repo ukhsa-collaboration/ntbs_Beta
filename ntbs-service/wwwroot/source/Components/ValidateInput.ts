@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { getValidationBaseBath } from '../helpers';
+import { getHeaders } from '../helpers';
 const axios = require('axios');
 
 const ValidateInput = Vue.extend({
@@ -13,11 +13,8 @@ const ValidateInput = Vue.extend({
         // Our onBlur validate events happen on input fields
         const inputField = event.target as HTMLInputElement
         const newValue = inputField.value;
-        var headers = {
-            "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
-        }
 
-        axios.post(`${getValidationBaseBath(this.$props.model)}Property?key=${this.$props.property}&value=${newValue}`, null, { headers: headers })
+        axios.get(`Edit/Validate${this.$props.model}Property?key=${this.$props.property}&value=${newValue}`, null, { headers: getHeaders() })
         .then((response: any) => {
             console.log(response);
             var errorMessage = response.data;

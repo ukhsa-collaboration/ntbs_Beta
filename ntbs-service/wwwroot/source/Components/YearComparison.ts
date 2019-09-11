@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { getValidationBaseBath } from '../helpers';
+import { getHeaders } from '../helpers';
 const axios = require('axios');
 
 const YearComparison = Vue.extend({
@@ -10,16 +10,14 @@ const YearComparison = Vue.extend({
       }},
   methods: {
     validate: function (event: FocusEvent) {
+        // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
         if (!this.$props.yeartocompare) {
             return;
         }
         const inputField = event.target as HTMLInputElement
         const newValue = inputField.value;
-        var headers = {
-            "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
-        }
 
-        axios.post(`${getValidationBaseBath('YearComparison')}?newYear=${newValue}&existingYear=${this.$props.yeartocompare}`, null, { headers: headers })
+        axios.get(`Edit/ValidateYearComparison?newYear=${newValue}&existingYear=${this.$props.yeartocompare}`, null, { headers: getHeaders() })
         .then((response: any) => {
             console.log(response);
             var errorMessage = response.data;

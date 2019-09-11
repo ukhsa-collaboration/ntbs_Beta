@@ -11,11 +11,11 @@ namespace ntbs_service.Models
     {
 
         [StringLength(35)]
-        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string FamilyName { get; set; }
 
         [StringLength(35)]
-        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegex.NameFormat, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }
 
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NhsNumberFormat)]
