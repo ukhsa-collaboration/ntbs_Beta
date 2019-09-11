@@ -59,8 +59,9 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
+            UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-
+            
             if (!ModelState.IsValid)
             {
                 return await OnGetAsync(NotificationId);
@@ -70,7 +71,18 @@ namespace ntbs_service.Pages_Notifications
             await service.UpdatePatientAsync(notification, Patient);
             
             return RedirectToPage("./Episode", new {id = notification.NotificationId});
+        }
 
+        private void UpdatePatientFlags() {
+            if (Patient.NhsNumberNotKnown) {
+                Patient.NhsNumber = null;
+                ModelState.Remove("Patient.NhsNumber");
+            }
+
+            if (Patient.NoFixedAbode) {
+                Patient.Postcode = null;
+                ModelState.Remove("Patient.Postcode");
+            }
         }
 
         public ContentResult OnGetValidatePatientProperty(string key, string value)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,7 +60,7 @@ namespace ntbs_service.Pages_Notifications
         {
             bool validModel = await validateAndSave(NotificationId);
 
-            if(!validModel) {
+            if (!validModel) {
                 return await OnGetAsync(NotificationId);
             }
 
@@ -67,6 +68,7 @@ namespace ntbs_service.Pages_Notifications
         }
 
         public async Task<bool> validateAndSave(int? NotificationId) {
+            UpdateFlags();
             
             if (!ModelState.IsValid)
             {
@@ -78,10 +80,17 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
         
-        public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value)
+        private void UpdateFlags()
+        {
+            if (PatientTBHistory.NotPreviouslyHadTB) {
+                PatientTBHistory.PreviousTBDiagnosisYear = null;
+                ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
+            }
+        }
+
+        public ContentResult OnGetValidatePreviousHistoryProperty(string key, int value)
         {
             return ValidateProperty(new PatientTBHistory(), key, value);
         }
-
     }
 }
