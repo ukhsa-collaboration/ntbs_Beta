@@ -151,7 +151,7 @@ namespace ntbs_service.Pages_Notifications
             return ValidateProperty(new NotificationSite(), key, value);
         }
 
-        public ContentResult OnGetValidateClinicalDetailsYearComparison(string newYear, int existingYear)
+        public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
             return ValidateYearComparison(newYear, existingYear);
         }

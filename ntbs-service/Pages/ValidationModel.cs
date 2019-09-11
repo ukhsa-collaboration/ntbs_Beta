@@ -70,11 +70,11 @@ namespace ntbs_service.Pages
             }
         }
 
-        protected ContentResult ValidateYearComparison(string yearToValidate, int yearToCompare)
+        protected ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare)
         {
-            if (IsValidYear(yearToValidate)) 
+            if (IsValidYear(yearToValidate))
             {
-                if (int.Parse(yearToValidate) < yearToCompare)
+                if (yearToValidate < yearToCompare)
                 {
                     return Content(ValidationMessages.ValidYearLaterThanBirthYear(yearToCompare));
                 }
@@ -89,30 +89,25 @@ namespace ntbs_service.Pages
             }
         }
 
-        private bool IsValidYear(string year)
+        // We could do this validation using a custom data annotation, but as we already need to do another comparison
+        // it is simpler to do it here
+        private bool IsValidYear(int year)
         {
-            if (int.TryParse(year, out int parsedYear))
-            {
-                return parsedYear >= ValidDates.EarliestYear && parsedYear <= DateTime.Now.Year;
-            }
-            else 
-            {
-                return false;
-            }
+            return year >= ValidDates.EarliestYear && year <= DateTime.Now.Year;
         }
 
-        protected void ValidateYearComparisonOnModel(object model, string key, string yearToValidate, int? yearToCompare)
+        protected void ValidateYearComparisonOnModel(object model, string key, int? yearToValidate, int? yearToCompare)
         {
-            if (string.IsNullOrEmpty(yearToValidate) || yearToCompare == null) 
+            if (yearToValidate == null || yearToCompare == null)
             {
                 return;
             }
 
             string modelTypeName = model.GetType().Name;
 
-            if (IsValidYear(yearToValidate)) 
+            if (IsValidYear((int)yearToValidate))
             {
-                if (int.Parse(yearToValidate) < (int)yearToCompare)
+                if ((int)yearToValidate < (int)yearToCompare)
                 {
                     ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
                     return;

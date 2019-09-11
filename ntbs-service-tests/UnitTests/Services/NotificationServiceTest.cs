@@ -56,13 +56,13 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalDetails() { BCGVaccinationState = State.No, BCGVaccinationYear = "2000" };
+            var timeline = new ClinicalDetails() { BCGVaccinationState = State.No, BCGVaccinationYear = 2000 };
 
             // Act
             service.UpdateTimelineAsync(notification, timeline);
 
             // Assert
-            Assert.True(string.IsNullOrEmpty(timeline.BCGVaccinationYear));
+            Assert.Null(timeline.BCGVaccinationYear);
         }
 
         [Fact]
@@ -70,13 +70,13 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalDetails() { BCGVaccinationState = State.Unknown, BCGVaccinationYear = "2000" };
+            var timeline = new ClinicalDetails() { BCGVaccinationState = State.Unknown, BCGVaccinationYear = 2000 };
 
             // Act
             service.UpdateTimelineAsync(notification, timeline);
 
             // Assert
-            Assert.True(string.IsNullOrEmpty(timeline.BCGVaccinationYear));
+            Assert.Null(timeline.BCGVaccinationYear);
         }
 
         public static IEnumerable<object[]> UkBornTestCases()
