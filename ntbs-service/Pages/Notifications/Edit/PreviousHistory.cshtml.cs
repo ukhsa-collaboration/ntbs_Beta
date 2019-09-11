@@ -78,9 +78,9 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
         
-        public ContentResult OnPostValidatePreviousHistoryProperty(string key, string value)
+        public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value)
         {
-            return OnPostValidateProperty(PatientTBHistory, key, value);
+            return ValidateProperty(new PatientTBHistory(), key, value);
         }
 
     }

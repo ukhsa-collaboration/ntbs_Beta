@@ -10,6 +10,7 @@ import { TestButton } from './Components/TestButton';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
 import { DateComparison } from './Components/DateComparison';
+import { YearComparison } from './Components/YearComparison';
 // @ts-ignore
 import config from './config/config-APP_TARGET';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
@@ -25,6 +26,7 @@ Vue.component('validate-date', ValidateDate);
 Vue.component('date-comparison', DateComparison);
 Vue.component('cascading-dropdowns', CascadingDropwdowns);
 Vue.component('validate-riskfactor', ValidateRiskFactor);
+Vue.component('year-comparison', YearComparison);
 
 new Vue({
   el: '#app',

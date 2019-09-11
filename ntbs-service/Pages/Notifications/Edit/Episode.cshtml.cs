@@ -83,7 +83,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./ClinicalTimeline", new {id = NotificationId});
+            return RedirectToPage("./ClinicalDetails", new {id = NotificationId});
         }
 
         public async Task<bool> validateAndSave(int? NotificationId) {
@@ -98,9 +98,9 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
 
-        public ContentResult OnPostValidateEpisodeProperty(string key, string value)
+        public ContentResult OnGetValidateEpisodeProperty(string key, string value)
         {
-            return OnPostValidateProperty(Episode, key, value);
+            return ValidateProperty(new Episode(), key, value);
         }
     }
 }

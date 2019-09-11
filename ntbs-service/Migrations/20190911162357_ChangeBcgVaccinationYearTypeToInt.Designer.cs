@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20190911162357_ChangeBcgVaccinationYearTypeToInt")]
+    partial class ChangeBcgVaccinationYearTypeToInt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -11448,112 +11450,6 @@ namespace ntbs_service.Migrations
                                 .WithOne("PatientTBHistory")
                                 .HasForeignKey("ntbs_service.Models.PatientTBHistory", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.SocialRiskFactors", "SocialRiskFactors", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<string>("AlcoholMisuseStatus");
-
-                            b1.Property<string>("SmokingStatus");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("SocialRiskFactors");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("SocialRiskFactors")
-                                .HasForeignKey("ntbs_service.Models.SocialRiskFactors", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorDrugs", b2 =>
-                                {
-                                    b2.Property<int>("SocialRiskFactorsNotificationId");
-
-                                    b2.Property<bool>("InPastFiveYears");
-
-                                    b2.Property<bool>("IsCurrent");
-
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
-
-                                    b2.Property<string>("Status");
-
-                                    b2.HasKey("SocialRiskFactorsNotificationId");
-
-                                    b2.ToTable("RiskFactorDrugs");
-
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
-                                        .WithOne("RiskFactorDrugs")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
-
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorHomelessness", b2 =>
-                                {
-                                    b2.Property<int>("SocialRiskFactorsNotificationId");
-
-                                    b2.Property<bool>("InPastFiveYears");
-
-                                    b2.Property<bool>("IsCurrent");
-
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
-
-                                    b2.Property<string>("Status");
-
-                                    b2.HasKey("SocialRiskFactorsNotificationId");
-
-                                    b2.ToTable("RiskFactorHomelessness");
-
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
-                                        .WithOne("RiskFactorHomelessness")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
-
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorImprisonment", b2 =>
-                                {
-                                    b2.Property<int>("SocialRiskFactorsNotificationId");
-
-                                    b2.Property<bool>("InPastFiveYears");
-
-                                    b2.Property<bool>("IsCurrent");
-
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
-
-                                    b2.Property<string>("Status");
-
-                                    b2.HasKey("SocialRiskFactorsNotificationId");
-
-                                    b2.ToTable("RiskFactorImprisonment");
-
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
-                                        .WithOne("RiskFactorImprisonment")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
-
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorMentalHealth", b2 =>
-                                {
-                                    b2.Property<int>("SocialRiskFactorsNotificationId");
-
-                                    b2.Property<bool>("InPastFiveYears");
-
-                                    b2.Property<bool>("IsCurrent");
-
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
-
-                                    b2.Property<string>("Status");
-
-                                    b2.HasKey("SocialRiskFactorsNotificationId");
-
-                                    b2.ToTable("RiskFactorMentalHealth");
-
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
-                                        .WithOne("RiskFactorMentalHealth")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
                         });
                 });
 

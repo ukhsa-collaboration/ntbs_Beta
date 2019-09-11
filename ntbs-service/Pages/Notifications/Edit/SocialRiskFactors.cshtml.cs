@@ -51,8 +51,6 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public IActionResult OnGetPartial() => Partial("_RiskFactorPartial");
-
         public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
         {
             var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
@@ -91,8 +89,7 @@ namespace ntbs_service.Pages_Notifications
                 Status = riskStatus
             }; 
             
-            return OnPostValidateProperty(SocialRiskFactors, key, riskFactor);
-      
+            return ValidateProperty(SocialRiskFactors, key, riskFactor);
         }
     }
 }

@@ -65,7 +65,9 @@ namespace ntbs_service.DataAccess
 
         public async Task<Notification> GetNotificationAsync(int? NotificationId)
         {
-            return await context.Notification.FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
+            return await context.Notification
+                .Include(n => n.NotificationSites)
+                .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
         public async Task<Notification> FindNotificationByIdAsync(int? NotificationId)

@@ -60,7 +60,7 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
-            SetAndValidateDate(Patient, nameof(Patient.Dob), FormattedDob);
+            SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
 
             if (!ModelState.IsValid)
             {
@@ -74,14 +74,14 @@ namespace ntbs_service.Pages_Notifications
 
         }
 
-        public ContentResult OnPostValidatePatientProperty(string key, string value)
+        public ContentResult OnGetValidatePatientProperty(string key, string value)
         {
-            return OnPostValidateProperty(Patient, key, value);
+            return ValidateProperty(new PatientDetails(), key, value);
         }
 
-        public ContentResult OnPostValidatePatientDate(string key, string day, string month, string year)
+        public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
-            return OnPostValidateDate(Patient, key, day, month, year);
+            return ValidateDate(new PatientDetails(), key, day, month, year);
         }
     }
 }

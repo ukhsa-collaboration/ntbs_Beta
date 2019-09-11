@@ -28,7 +28,7 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalTimeline() { TreatmentStartDate = DateTime.Now, DidNotStartTreatment = true };
+            var timeline = new ClinicalDetails() { TreatmentStartDate = DateTime.Now, DidNotStartTreatment = true };
 
             // Act
             service.UpdateTimelineAsync(notification, timeline);
@@ -42,13 +42,41 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalTimeline() { DeathDate = DateTime.Now, IsPostMortem = false };
+            var timeline = new ClinicalDetails() { DeathDate = DateTime.Now, IsPostMortem = false };
 
             // Act
             service.UpdateTimelineAsync(notification, timeline);
 
             // Assert
             Assert.Null(timeline.DeathDate);
+        }
+
+        [Fact]
+        public void BCGVaccinationYear_IsSetToNullIfVaccinationStateNo()
+        {
+            // Arrange
+            var notification = new Notification();
+            var timeline = new ClinicalDetails() { BCGVaccinationState = State.No, BCGVaccinationYear = 2000 };
+
+            // Act
+            service.UpdateTimelineAsync(notification, timeline);
+
+            // Assert
+            Assert.Null(timeline.BCGVaccinationYear);
+        }
+
+        [Fact]
+        public void BCGVaccinationYear_IsSetToNullIfVaccinationStateUnknown()
+        {
+            // Arrange
+            var notification = new Notification();
+            var timeline = new ClinicalDetails() { BCGVaccinationState = State.Unknown, BCGVaccinationYear = 2000 };
+
+            // Act
+            service.UpdateTimelineAsync(notification, timeline);
+
+            // Assert
+            Assert.Null(timeline.BCGVaccinationYear);
         }
 
         public static IEnumerable<object[]> UkBornTestCases()

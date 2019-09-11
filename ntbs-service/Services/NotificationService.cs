@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
@@ -11,7 +13,8 @@ namespace ntbs_service.Services
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
-        Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline);
+        Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
+        Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
@@ -76,16 +79,16 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline)
+        public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
         {
             UpdateTimelineFlags(timeline);
             context.Attach(notification);
-            notification.ClinicalTimeline = timeline;
+            notification.ClinicalDetails = timeline;
 
             await context.SaveChangesAsync();
         }
 
-        private void UpdateTimelineFlags(ClinicalTimeline timeline)
+        private void UpdateTimelineFlags(ClinicalDetails timeline)
         {
             if (timeline.DidNotStartTreatment) 
             {
@@ -94,6 +97,10 @@ namespace ntbs_service.Services
             if (!timeline.IsPostMortem) 
             {
                 timeline.DeathDate = null;
+            }
+            if (!(timeline.BCGVaccinationState == State.Yes))
+            {
+                timeline.BCGVaccinationYear = null;
             }
         }
         
@@ -165,6 +172,14 @@ namespace ntbs_service.Services
         public async Task<Notification> GetNotificationWithSocialRisksAsync(int? id)
         {
             return await repository.GetNotificationWithSocialRiskFactorsAsync(id);
+        }
+
+        public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 
+        {
+            var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
+            context.NotificationSite.RemoveRange(currentSites);
+            context.NotificationSite.AddRange(notificationSites);
+            await context.SaveChangesAsync();
         }
     }
 }
