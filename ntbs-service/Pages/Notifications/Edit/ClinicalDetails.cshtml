@@ -1,0 +1,406 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.ClinicalDetailsModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using ntbs_service.Models
+
+@{
+Layout = "../../Shared/_NotificationLayout.cshtml";
+ViewData["Title"] = "Notification - Clinical Details";
+ViewData["NextPage"] = "Previous History";
+ViewData["PreviousPage"] = "Hospital Details";
+}
+@{string errorClassName = "nhsuk-form-group--error";}
+<div><a asp-page="/Patients/Index">Back to List</a></div>
+
+<h2>Clinical Details</h2>
+<!-- TODO: Split this into multiple partial pages for readability -->
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="NotificationId" />
+    <input type="hidden" asp-for="PatientBirthYear" />
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Large">Sites of disease</nhs-fieldset-legend>
+            <nhs-checkboxes>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PULMONARY).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <label nhs-label-type="Standard" style="padding-left: 12px">Extra-pulmonary</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+            <nhs-checkboxes style="margin-left: 52px">
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_SPINE).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_OTHER).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <label nhs-label-type="Standard" style="padding-left: 12px">CNS</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+            <nhs-checkboxes style="margin-left: 104px">
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CNS_MENINGITIS).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" id="cns-other" asp-for="@Model.NotificationSiteMap[SiteId.CNS_OTHER]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CNS_OTHER).Description</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+            <nhs-checkboxes style="margin-left: 52px">
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.OCULAR).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CRYPTIC).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GASTROINTESTINAL]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GASTROINTESTINAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GASTROINTESTINAL).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GENITOURINARY).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <label nhs-label-type="Standard" style="padding-left: 12px">Lymph nodes</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+            <nhs-checkboxes style="margin-left: 104px">
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LYMPH_INTRA).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LYMPH_EXTRA).Description</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+            <nhs-checkboxes style="margin-left: 52px">
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LARYNGEAL]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LARYNGEAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LARYNGEAL).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.MILIARY).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PLEURAL).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PERICARDIAL]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PERICARDIAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PERICARDIAL).Description</label>
+                </nhs-checkboxes-item>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.SKIN]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.SKIN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.SKIN).Description</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+            <div class="nhsuk-checkboxes" style="margin-left: 52px; padding-top:4px" data-module="govuk-checkboxes">
+                <div class="nhsuk-checkboxes__item">
+                    <input class="nhsuk-checkboxes__input" asp-for="@Model.NotificationSiteMap[SiteId.OTHER]" data-aria-controls="conditional-other-conditional">
+                    <label class="nhsil-label nhsuk-checkboxes__label" asp-for="@Model.NotificationSiteMap[SiteId.OTHER]">
+                        @Model.Sites.Find(s => s.SiteId == (int)SiteId.OTHER).Description
+                    </label>
+                </div>
+                <validate-input model="NotificationSite" property="SiteDescription" inline-template>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-conditional">
+                        @{var siteDescritionErrorClass = !Model.IsValid("OtherSite.SiteDescription") ? errorClassName : ""; }
+                        <div class="nsuk-form-group @siteDescritionErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="other-site-error">
+                            <span class="nhsuk-error-message" id="other-site-error">
+                                <span ref="errorField" asp-validation-for="OtherSite.SiteDescription"></span>
+                            </span>
+                            <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10" asp-for="OtherSite.SiteDescription" type="text">
+                        </div>
+                    </div>
+                </validate-input>
+            </div>    
+        </nhs-fieldset>
+    </nhs-form-group>
+    <br/>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">Sample details</nhs-fieldset-legend>
+            <nhs-checkboxes>
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="ClinicalDetails.NoSampleTaken"/>
+                    <label nhs-label-type="Checkboxes" asp-for="ClinicalDetails.NoSampleTaken">No sample taken</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
+        </nhs-fieldset>
+    </nhs-form-group>
+    <br/>    
+
+    <div class="nhsuk-form-group">
+        <fieldset class="nhsuk-fieldset" aria-describedby="bcg-vaccination-error">
+            <legend class="nhsuk-fieldset__legend">BCG Vaccination</legend>
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@State.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
+                        Yes
+                    </label>
+                </div>
+                <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" inline-template>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-bcg-vaccination-conditional">
+                        @{var bcgVaccinationErrorClass = !Model.IsValid("ClinicalDetails.BCGVaccinationYear") ? errorClassName : ""; }
+                        <div class="nhsuk-form-group @bcgVaccinationErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="bcg-vaccination-error">
+                            <span class="nhsuk-error-message" id="bcg-vaccination-error">
+                                <span ref="errorField" asp-validation-for="ClinicalDetails.BCGVaccinationYear"></span>
+                            </span>
+                            <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10" asp-for="ClinicalDetails.BCGVaccinationYear" type="number">
+                        </div>
+                    </div>
+                </year-comparison>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@State.No">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
+                        No
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@State.Unknown">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
+                        Unknown
+                    </label>
+                </div>   
+            </div>
+        </fieldset>
+    </div>
+    <br/>
+
+    <date-comparison inline-template>
+        <div>
+            <h4 class="text-warning" v-if="dateComparisonError">{{dateComparisonError}}</h4>
+            <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
+                @{
+                    var SymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
+                    var SymptomGroupState = SymptomError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@SymptomGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <nhs-fieldset aria-describedby="symptom-error" role="group">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">Symptom Onset Date</nhs-fieldset-legend>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate" id="symptom-error"></span>
+                        <nhs-date-input id="symptom">
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Day">Day</label>
+                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@SymptomError asp-for="FormattedSymptomDate.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Month">Month</label>
+                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@SymptomError asp-for="FormattedSymptomDate.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Year">Year</label>
+                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@SymptomError asp-for="FormattedSymptomDate.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                    </nhs-fieldset>
+                </nhs-form-group>
+            </validate-date>
+            <br/>
+
+            <validate-date ref="date1" name="Presentation Date" model="ClinicalDetails" property="PresentationDate" rank="1" v-model="dates[1]" inline-template>
+                @{
+                    var PresentationError = !Model.IsValid("ClinicalDetails.PresentationDate");
+                    var PresentationGroupState = PresentationError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@PresentationGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <nhs-fieldset aria-describedby="presentation-error" role="group">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">Presentation Date</nhs-fieldset-legend>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationDate" id="presentation-error"></span>
+                        <nhs-date-input id="presentation">
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@PresentationGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Day">Day</label>
+                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@PresentationError asp-for="FormattedPresentationDate.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@PresentationGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Month">Month</label>
+                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@PresentationError asp-for="FormattedPresentationDate.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@PresentationGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Year">Year</label>
+                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@PresentationError asp-for="FormattedPresentationDate.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                    </nhs-fieldset>
+                </nhs-form-group>
+            </validate-date>
+            <br/>
+
+            <validate-date ref="date2" name="Diagnosis Date" model="ClinicalDetails" property="DiagnosisDate" rank="2" v-model="dates[2]" inline-template>
+                @{
+                    var DiagnosisError = !Model.IsValid("ClinicalDetails.DiagnosisDate");
+                    var DiagnosisGroupState = DiagnosisError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@DiagnosisGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <nhs-fieldset aria-describedby="diagnosis-error" role="group">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">Diagnosis Date</nhs-fieldset-legend>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DiagnosisDate" id="diagnosis-error"></span>
+                        <nhs-date-input id="diagnosis">
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Day">Day</label>
+                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Day" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Month">Month</label>
+                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Month" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
+                                <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Year">Year</label>
+                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Year" v-bind:class="{ 'nhsuk-input--error': hasError}"/>
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                    </nhs-fieldset>
+                </nhs-form-group>
+            </validate-date>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="ClinicalDetails.DidNotStartTreatment" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-treatment-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.DidNotStartTreatment">
+                                Patient started treatment
+                            </label>
+                        </div>
+                        <validate-date ref="date3" name="Treatment Start Date" model="ClinicalDetails" property="TreatmentStartDate" rank="3" v-model="dates[3]" inline-template>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-treatment-conditional">
+                                @{var treatmentErrorClass = !Model.IsValid("ClinicalDetails.TreatmentStartDate") ? errorClassName : ""; }
+                                <div class="nhsuk-form-group @treatmentErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                                    <fieldset class="nhsuk-fieldset" aria-describedby="treatment-error" role="group">
+                                        <span class="nhsuk-error-message" id="treatment-error">
+                                            <span ref="errorField" asp-validation-for="ClinicalDetails.TreatmentStartDate"></span>
+                                        </span>
+                                        <div class="nhsuk-date-input" id="treatment">
+                                            <div class="nhsuk-date-input__item">
+                                                <div class="nhsuk-form-group">
+                                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedTreatmentDate.Day">
+                                                        Day
+                                                    </label>
+                                                    <input v-on:blur="validate" ref="dayInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedTreatmentDate.Day" type="number" pattern="[0-9]*">
+                                                </div>
+                                            </div>
+                                            <div class="nhsuk-date-input__item">
+                                                <div class="nhsuk-form-group">
+                                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedTreatmentDate.Month">
+                                                        Month
+                                                    </label>
+                                                    <input v-on:blur="validate" ref="monthInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedTreatmentDate.Month" type="number" pattern="[0-9]*">
+                                                </div>
+                                            </div>
+                                            <div class="nhsuk-date-input__item">
+                                                <div class="nhsuk-form-group">
+                                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedTreatmentDate.Year">
+                                                        Year
+                                                    </label>
+                                                    <input v-on:blur="validate" ref="yearInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedTreatmentDate.Year" type="number" pattern="[0-9]*">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </validate-date>
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="ClinicalDetails.DidNotStartTreatment" class="nhsuk-radios__input" type="radio" value="true">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.DidNotStartTreatment">
+                                Patient did not start treatment
+                            </label>
+                        </div>   
+                    </div>
+                </fieldset>
+            </div>
+            <br/>
+
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
+                                Is Post Mortem Diagnosis
+                            </label>
+                        </div>
+                        <validate-date ref="date4" name="Death Date" model="ClinicalDetails" property="DeathDate" rank="4" v-model="dates[4]" inline-template>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
+                                @{var deathErrorClass = !Model.IsValid("ClinicalDetails.DeathDate") ? errorClassName : ""; }
+                                <div class="nhsuk-form-group @deathErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                                    <fieldset class="nhsuk-fieldset" aria-describedby="postmortem-error" role="group">
+                                        <span class="nhsuk-error-message" id="postmortem-error">
+                                            <span ref="errorField" asp-validation-for="ClinicalDetails.DeathDate"></span>
+                                        </span>
+                                        <div class="nhsuk-date-input" id="postmortem">
+                                            <div class="nhsuk-date-input__item">
+                                                <div class="nhsuk-form-group">
+                                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDeathDate.Day">
+                                                        Day
+                                                    </label>
+                                                    <input v-on:blur="validate" ref="dayInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDeathDate.Day" type="number" pattern="[0-9]*">
+                                                </div>
+                                            </div>
+                                            <div class="nhsuk-date-input__item">
+                                                <div class="nhsuk-form-group">
+                                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDeathDate.Month">
+                                                        Month
+                                                    </label>
+                                                    <input v-on:blur="validate" ref="monthInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" asp-for="FormattedDeathDate.Month" type="number" pattern="[0-9]*">
+                                                </div>
+                                            </div>
+                                            <div class="nhsuk-date-input__item">
+                                                <div class="nhsuk-form-group">
+                                                    <label class="nhsuk-label nhsuk-date-input__label" asp-for="FormattedDeathDate.Year">
+                                                        Year
+                                                    </label>
+                                                    <input v-on:blur="validate" ref="yearInput" class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" asp-for="FormattedDeathDate.Year" type="number" pattern="[0-9]*">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </validate-date>
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="false">
+                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
+                                Is Not Post Mortem
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </date-comparison>
+
+    @Html.Partial("_PaginationPartial")
+</form>

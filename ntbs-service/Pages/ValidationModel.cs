@@ -8,13 +8,13 @@ namespace ntbs_service.Pages
 {
     public abstract class ValidationModel : PageModel
     {
-        public ContentResult OnPostValidateProperty(object model, string key, string value)
+        protected ContentResult ValidateProperty(object model, string key, string value)
         {
             model.GetType().GetProperty(key).SetValue(model, value);
             return GetValidationResult(model, key);
         }
 
-        public ContentResult OnPostValidateDate(object model, string key, string day, string month, string year)
+        protected ContentResult ValidateDate(object model, string key, string day, string month, string year)
         {
             DateTime? convertedDob;
             var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
@@ -32,7 +32,7 @@ namespace ntbs_service.Pages
         {
             if (TryValidateModel(model))
             {
-                return Content("");
+                return ValidContent();
             }
             else
             {
@@ -40,12 +40,17 @@ namespace ntbs_service.Pages
             }
         }
 
+        private ContentResult ValidContent()
+        {
+            return Content("");
+        }
+
         public bool IsValid(string key)
         {
             return ModelState[key] == null ? true : ModelState[key].Errors.Count == 0;
         }
 
-        public void SetAndValidateDate(object model, string key, FormattedDate formattedDate)
+        protected void SetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
         {
             if (formattedDate.IsEmpty()) {
                 return;
@@ -61,6 +66,61 @@ namespace ntbs_service.Pages
             else
             {
                 ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidDate);
+                return;
+            }
+        }
+
+        protected ContentResult ValidateYearComparison(string yearToValidate, int yearToCompare)
+        {
+            if (IsValidYear(yearToValidate)) 
+            {
+                if (int.Parse(yearToValidate) < yearToCompare)
+                {
+                    return Content(ValidationMessages.ValidYearLaterThanBirthYear(yearToCompare));
+                }
+                else
+                {
+                    return ValidContent();
+                }
+            } 
+            else
+            {
+                return Content(ValidationMessages.ValidYear);
+            }
+        }
+
+        private bool IsValidYear(string year)
+        {
+            if (int.TryParse(year, out int parsedYear))
+            {
+                return parsedYear >= ValidDates.EarliestYear && parsedYear <= DateTime.Now.Year;
+            }
+            else 
+            {
+                return false;
+            }
+        }
+
+        protected void ValidateYearComparisonOnModel(object model, string key, string yearToValidate, int? yearToCompare)
+        {
+            if (string.IsNullOrEmpty(yearToValidate) || yearToCompare == null) 
+            {
+                return;
+            }
+
+            string modelTypeName = model.GetType().Name;
+
+            if (IsValidYear(yearToValidate)) 
+            {
+                if (int.Parse(yearToValidate) < (int)yearToCompare)
+                {
+                    ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
+                    return;
+                }
+            } 
+            else
+            {
+                ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
                 return;
             }
         }

@@ -9,11 +9,11 @@ namespace ntbs_service.Models
     public class Episode
     {        
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string Consultant { get; set; }
 
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string CaseManager { get; set; }
 
         public string TBServiceCode { get; set; }

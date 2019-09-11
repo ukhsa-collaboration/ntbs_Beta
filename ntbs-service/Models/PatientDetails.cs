@@ -10,11 +10,11 @@ namespace ntbs_service.Models
     public class PatientDetails
     {
         [StringLength(35)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string FamilyName { get; set; }
 
         [StringLength(35)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.NameFormat)]
+        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }
 
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NhsNumberFormat)]

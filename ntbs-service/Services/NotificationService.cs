@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -8,7 +10,8 @@ namespace ntbs_service.Services
     {
         Task<Notification> GetNotificationAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
-        Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline);
+        Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
+        Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
     }
@@ -72,16 +75,16 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline)
+        public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
         {
             UpdateTimelineFlags(timeline);
             context.Attach(notification);
-            notification.ClinicalTimeline = timeline;
+            notification.ClinicalDetails = timeline;
 
             await context.SaveChangesAsync();
         }
 
-        private void UpdateTimelineFlags(ClinicalTimeline timeline)
+        private void UpdateTimelineFlags(ClinicalDetails timeline)
         {
             if (timeline.DidNotStartTreatment) 
             {
@@ -90,6 +93,10 @@ namespace ntbs_service.Services
             if (!timeline.IsPostMortem) 
             {
                 timeline.DeathDate = null;
+            }
+            if (!(timeline.BCGVaccinationState == State.Yes))
+            {
+                timeline.BCGVaccinationYear = null;
             }
         }
         
@@ -116,6 +123,13 @@ namespace ntbs_service.Services
             {
                 tBHistory.PreviousTBDiagnosisYear = null;
             }
+        }
+
+        public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) {
+            var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
+            context.NotificationSite.RemoveRange(currentSites);
+            context.NotificationSite.AddRange(notificationSites);
+            await context.SaveChangesAsync();
         }
     }
 }
