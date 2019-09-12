@@ -141,6 +141,13 @@ namespace ntbs_service.Pages_Notifications
                 ClinicalDetails.BCGVaccinationYear = null;
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }
+            
+            if (!NotificationSiteMap[SiteId.OTHER]) {
+                OtherSite.SiteDescription = null;
+                ModelState.Remove("OtherSite.SiteDescription");
+            }
+
+           
         }
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
