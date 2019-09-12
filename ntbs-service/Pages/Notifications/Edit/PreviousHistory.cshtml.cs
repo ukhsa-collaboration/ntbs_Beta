@@ -53,7 +53,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./ClinicalDetails", new {id = NotificationId});
+            return RedirectToPage("./SocialRiskFactors", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 
@@ -137,7 +138,7 @@ namespace ntbs_service.Pages_Notifications
                 ModelState.Remove("ClinicalDetails.DeathDate");
             }
 
-            if (ClinicalDetails.BCGVaccinationState != State.Yes) {
+            if (ClinicalDetails.BCGVaccinationState != Status.Yes) {
                 ClinicalDetails.BCGVaccinationYear = null;
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }

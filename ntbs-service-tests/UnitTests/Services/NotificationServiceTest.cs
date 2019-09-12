@@ -5,6 +5,8 @@ using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Services;
+using ntbs_service.Models.Enums;
+
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.ntbs_service_tests
@@ -21,6 +23,72 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             mockRepository = new Mock<INotificationRepository>();
             mockContext = new Mock<NtbsContext>();
             service = new NotificationService(mockRepository.Object, mockContext.Object);
+        }
+
+        [Fact]
+        public void SocialRiskFactorChecklist_AreSetToFalseIfStatusUnknown()
+        {
+            // Arrange
+            var notification = new Notification();
+            var socialRiskFactors = new SocialRiskFactors() { 
+                RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown },
+                RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+                RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+                RiskFactorMentalHealth = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+            };
+
+            // Act
+            service.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
+
+            // Assert
+            Assert.False(socialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.IsCurrent);
+         
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.IsCurrent);   
+        }
+
+        [Fact]
+        public void SocialRiskFactorChecklist_AreSetToFalseIfStatusNo()
+        {
+            // Arrange
+            var notification = new Notification();
+            var socialRiskFactors = new SocialRiskFactors() { 
+                RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No },
+                RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+                RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+                RiskFactorMentalHealth = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+            };
+
+            // Act
+            service.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
+
+            // Assert
+            Assert.False(socialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.IsCurrent);
+         
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.IsCurrent);   
         }
 
         public static IEnumerable<object[]> UkBornTestCases()

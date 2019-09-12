@@ -10,6 +10,8 @@ namespace ntbs_service.DataAccess
     {
         Task<IList<Notification>> GetNotificationsAsync();
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
+        Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? id);
+
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
         Task DeleteNotificationAsync(Notification Notification);
@@ -30,7 +32,7 @@ namespace ntbs_service.DataAccess
         {
             return await context.Notification.ToListAsync();
         }
-
+        
         public async Task<IList<Notification>> GetNotificationsWithPatientsAsync()
         {
             // This is to ensure all the relationships on patients are eagerly fetched
@@ -76,6 +78,16 @@ namespace ntbs_service.DataAccess
         public bool NotificationExists(int NotificationId)
         {
             return context.Notification.Any(e => e.NotificationId == NotificationId);
+        }
+
+        public async Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? id)
+        {
+            return await context.Notification
+                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
+                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
+                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
+                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorMentalHealth)
+                    .FirstOrDefaultAsync(n => n.NotificationId == id);
         }
     }
 }

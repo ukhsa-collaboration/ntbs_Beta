@@ -12,5 +12,6 @@ namespace ntbs_service.Models
         public virtual List<NotificationSite> NotificationSites { get; set; }
         public virtual Episode Episode { get; set; }
         public virtual PatientTBHistory PatientTBHistory { get; set; }
+        public virtual SocialRiskFactors SocialRiskFactors { get; set; }
     }
 }
