@@ -23,62 +23,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             service = new NotificationService(mockRepository.Object, mockContext.Object);
         }
 
-        [Fact]
-        public void TreatmentStartDate_IsSetToNullIfDidNotStartTreatmentTrue()
-        {
-            // Arrange
-            var notification = new Notification();
-            var timeline = new ClinicalDetails() { TreatmentStartDate = DateTime.Now, DidNotStartTreatment = true };
-
-            // Act
-            service.UpdateTimelineAsync(notification, timeline);
-
-            // Assert
-            Assert.Null(timeline.TreatmentStartDate);
-        }
-
-        [Fact]
-        public void DeathDate_IsSetToNullIfPostMortemFalse()
-        {
-            // Arrange
-            var notification = new Notification();
-            var timeline = new ClinicalDetails() { DeathDate = DateTime.Now, IsPostMortem = false };
-
-            // Act
-            service.UpdateTimelineAsync(notification, timeline);
-
-            // Assert
-            Assert.Null(timeline.DeathDate);
-        }
-
-        [Fact]
-        public void BCGVaccinationYear_IsSetToNullIfVaccinationStateNo()
-        {
-            // Arrange
-            var notification = new Notification();
-            var timeline = new ClinicalDetails() { BCGVaccinationState = State.No, BCGVaccinationYear = 2000 };
-
-            // Act
-            service.UpdateTimelineAsync(notification, timeline);
-
-            // Assert
-            Assert.Null(timeline.BCGVaccinationYear);
-        }
-
-        [Fact]
-        public void BCGVaccinationYear_IsSetToNullIfVaccinationStateUnknown()
-        {
-            // Arrange
-            var notification = new Notification();
-            var timeline = new ClinicalDetails() { BCGVaccinationState = State.Unknown, BCGVaccinationYear = 2000 };
-
-            // Act
-            service.UpdateTimelineAsync(notification, timeline);
-
-            // Assert
-            Assert.Null(timeline.BCGVaccinationYear);
-        }
-
         public static IEnumerable<object[]> UkBornTestCases()
         {
             yield return new object[] { new Country() { CountryId = 1, IsoCode = Countries.UkCode}, true};
@@ -114,34 +58,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
 
             // Assert
             Assert.Null(patient.UkBorn);
-        }
-
-        [Fact]
-        public void NhsNumber_IsSetToNullIfNhsNumberUnknownTrue()
-        {
-            // Arrange
-            var notification = new Notification();
-            var patient = new PatientDetails() { NhsNumber = "1534645612", NhsNumberNotKnown = true };
-
-            // Act
-            service.UpdatePatientAsync(notification, patient);
-
-            // Assert
-            Assert.Null(patient.NhsNumber);
-        }
-
-        [Fact]
-        public void Postcode_IsSetToNullIfPostcodeUnknownTrue()
-        {
-            // Arrange
-            var notification = new Notification();
-            var patient = new PatientDetails() { Postcode = "NW5 1TL", NoFixedAbode = true };
-
-            // Act
-            service.UpdatePatientAsync(notification, patient);
-
-            // Assert
-            Assert.Null(patient.Postcode);
         }
     }
 }
