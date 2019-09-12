@@ -77,5 +77,12 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
 
+        public ContentResult OnPostValidateContactTracing(string key, string adultsIdentified, string childrenIdentified, string adultsScreened, string childrenScreened,
+                            string adultsActiveTB, string childrenActiveTB, string adultsLatentTB, string childrenLatentTB, string adultsStartedTreatment, 
+                            string childrenStartedTreatment, string adultsFinishedTreatment, string childrenFinishedTreatment)
+        {
+            return ValidateContactTracing(ContactTracing, key, adultsIdentified, childrenIdentified, adultsScreened, childrenScreened, adultsActiveTB, childrenActiveTB,
+                adultsLatentTB, childrenLatentTB, adultsStartedTreatment, childrenStartedTreatment, adultsFinishedTreatment, childrenFinishedTreatment);
+        }
     }
 }

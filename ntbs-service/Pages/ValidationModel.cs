@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Models;
 using ntbs_service.Models.Validations;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ntbs_service.Pages
 {
@@ -62,6 +65,29 @@ namespace ntbs_service.Pages
             {
                 ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidDate);
                 return;
+            }
+        }
+
+        public ContentResult ValidateContactTracing(object model, string key, string adultsIdentified, string childrenIdentified, string adultsScreened, string childrenScreened,
+                            string adultsActiveTB, string childrenActiveTB, string adultsLatentTB, string childrenLatentTB, string adultsStartedTreatment, 
+                            string childrenStartedTreatment, string adultsFinishedTreatment, string childrenFinishedTreatment) 
+        {
+            if(TryValidateModel(model, model.GetType().Name)) {
+                return Content("");
+            } else {
+                Dictionary<string, string> keyErrorDictionary = new Dictionary<string, string>();
+                foreach (var modelStateKey in ViewData.ModelState.Keys)
+                {
+                    var modelStateVal = ViewData.ModelState[modelStateKey];
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        //comment here TODO
+                        if(!modelStateKey.StartsWith("ContactTracing")) {
+                            keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
+                        }
+                    }
+                }
+                return Content(JsonConvert.SerializeObject(keyErrorDictionary));
             }
         }
     }

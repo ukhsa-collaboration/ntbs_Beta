@@ -29,7 +29,7 @@ namespace ntbs_service.Models.Validations
                     }
                 }
             }
-            return new ValidationResult("Invalid entry");
+            return new ValidationResult(ErrorMessage);
         }
     }
 
@@ -62,7 +62,7 @@ namespace ntbs_service.Models.Validations
                     }
                 }
             }
-            return new ValidationResult("Invalid entry");
+            return new ValidationResult(ErrorMessage);
         }
     }
 }
