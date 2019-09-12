@@ -8,7 +8,7 @@ namespace ntbs_service.Pages
 {
     public abstract class ValidationModel : PageModel
     {
-        protected ContentResult ValidateProperty(object model, string key, string value)
+        protected ContentResult ValidateProperty(object model, string key, object value)
         {
             model.GetType().GetProperty(key).SetValue(model, value);
             return GetValidationResult(model, key);

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
@@ -30,7 +28,7 @@ namespace ntbs_service.Models
 
         public bool NoSampleTaken { get; set; }
 
-        public State BCGVaccinationState { get; set; }
+        public Status BCGVaccinationState { get; set; }
         public int? BCGVaccinationYear { get; set; }
     }
 }

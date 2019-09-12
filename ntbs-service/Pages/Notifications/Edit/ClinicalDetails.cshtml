@@ -2,6 +2,7 @@
 @model ntbs_service.Pages_Notifications.ClinicalDetailsModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using ntbs_service.Models
+@using ntbs_service.Models.Enums
 
 @{
 Layout = "../../Shared/_NotificationLayout.cshtml";
@@ -147,7 +148,7 @@ ViewData["PreviousPage"] = "Hospital Details";
             <legend class="nhsuk-fieldset__legend">BCG Vaccination</legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@State.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
                         Yes
                     </label>
@@ -164,13 +165,13 @@ ViewData["PreviousPage"] = "Hospital Details";
                     </div>
                 </year-comparison>
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@State.No">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@Status.No">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
                         No
                     </label>
                 </div>
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@State.Unknown">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
                         Unknown
                     </label>

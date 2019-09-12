@@ -1,19 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
 {
     public interface INotificationService
     {
         Task<Notification> GetNotificationAsync(int? id);
+        Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
+        Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
     }
 
     public class NotificationService : INotificationService
@@ -94,7 +98,7 @@ namespace ntbs_service.Services
             {
                 timeline.DeathDate = null;
             }
-            if (!(timeline.BCGVaccinationState == State.Yes))
+            if (!(timeline.BCGVaccinationState == Status.Yes))
             {
                 timeline.BCGVaccinationYear = null;
             }
@@ -125,7 +129,53 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) {
+        public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
+        {
+            UpdateSocialRiskFactorsFlags(socialRiskFactors);
+            var entry = context.Attach(notification);
+            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.CurrentValues.SetValues(socialRiskFactors);
+            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorMentalHealth).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorMentalHealth);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorMentalHealth).TargetEntry.State = EntityState.Modified;
+
+            await context.SaveChangesAsync();        
+        }
+
+        private void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors) 
+        {
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorDrugs);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorHomelessness);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorImprisonment);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorMentalHealth);
+        }
+
+        private void UpdateRiskFactorFlags(RiskFactorBase riskFactor)
+        {
+            if (riskFactor.Status != Status.Yes)
+            {
+                riskFactor.IsCurrent = false;
+                riskFactor.InPastFiveYears = false;
+                riskFactor.MoreThanFiveYearsAgo = false;
+            } 
+        }
+
+        public async Task<Notification> GetNotificationWithSocialRisksAsync(int? id)
+        {
+            return await repository.GetNotificationWithSocialRiskFactorsAsync(id);
+        }
+
+        public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 
+        {
             var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
             context.NotificationSite.RemoveRange(currentSites);
             context.NotificationSite.AddRange(notificationSites);
