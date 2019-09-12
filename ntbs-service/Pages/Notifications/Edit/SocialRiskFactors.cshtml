@@ -1,0 +1,107 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.SocialRiskFactorsModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using ntbs_service.Models.Enums
+
+@{
+    Layout = "../../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Social Risk Factors";
+    ViewData["PreviousPage"] = "Clinical Details";
+    ViewData["NextPage"] = "Previous History";
+}
+<div><a asp-page="/Patients/Index">Back to List</a></div>
+
+<h2>Social Risk Factors</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="NotificationId" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Patien's ability to self-administer treatment is affected by alcohol misuse or abuse
+            </nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in Model.StatusList)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.AlcoholMisuseStatus" id="alcohol-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="alcohol-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+    <br/>
+
+    <div>
+        @{
+            var DrugsModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorDrugs");
+            var DrugsViewData = new ViewDataDictionary(this.ViewData) { 
+                { "propertyName", "RiskFactorDrugs" }, 
+                { "errorState", DrugsModelIsValid },
+                { "questionText", "Patient has a history of drug misuse" } 
+            };
+        }
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorDrugs" view-data="@DrugsViewData"/>
+        <br/>
+    </div>
+
+    <div>
+        @{
+            var HomelessnessModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorHomelessness");
+            var HomelessnessViewData = new ViewDataDictionary(this.ViewData) { 
+                { "propertyName", "RiskFactorHomelessness" }, 
+                { "errorState", HomelessnessModelIsValid },
+                { "questionText", "Patient has a history of homelessness" }  
+            };
+        }
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorHomelessness" view-data="@HomelessnessViewData"/>
+        <br/>
+    </div>
+
+    <div>
+        @{
+            var ImprisonmentModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorImprisonment");
+            var ImprisonmentViewData = new ViewDataDictionary(this.ViewData) { 
+                { "propertyName", "RiskFactorImprisonment" }, 
+                { "errorState", ImprisonmentModelIsValid },
+                { "questionText", "Patient has a history of imprisonment" } 
+            };       
+        }
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorImprisonment" view-data="@ImprisonmentViewData"/>
+        <br/>
+    </div>
+    
+    <div>
+        @{
+            var MentalHealthModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorMentalHealth");
+            var MentalHealthViewData = new ViewDataDictionary(this.ViewData) { 
+                { "propertyName", "RiskFactorMentalHealth" }, 
+                { "errorState", MentalHealthModelIsValid },
+                { "questionText", "Patient has a history of menatal health issue" } 
+            };       
+        }
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorMentalHealth" view-data="@MentalHealthViewData"/>
+        <br/>
+    </div>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">Patient is a current smoker</nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in Model.StatusList)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.SmokingStatus" id="smoking-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="smoking-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+    <br/>
+    @Html.Partial("_PaginationPartial")
+</form>

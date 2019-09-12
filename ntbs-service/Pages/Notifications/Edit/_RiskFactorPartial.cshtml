@@ -1,0 +1,65 @@
+@model ntbs_service.Models.RiskFactorBase
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using ntbs_service.Models.Enums
+@{
+    var prefix = ViewData["propertyName"];
+    var errorGroupState = (bool) ViewData["errorState"] ? Error : Standard;
+    var propertyName = ViewData["propertyName"];
+    var questionText = ViewData["questionText"];
+}
+
+<validate-riskfactor ref="socialRiskFactor-@prefix" model="SocialRiskFactors" property="@propertyName" inline-template>
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset aria-describedby="error-@prefix"> 
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                @questionText
+            </nhs-fieldset-legend>
+            <div v-on:focusout="validate">
+                <div ref="radio-@prefix" ref class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input ref="statusYes" asp-for="Status" id="@prefix-radio-button-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio-@prefix">
+                        <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-yes">
+                            @Status.Yes
+                        </label>
+                    </div>
+
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-@prefix">
+                        <nhs-form-group nhs-form-group-type="@errorGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="error-@prefix">
+                            <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="@Model"></span>
+                            <nhs-fieldset> 
+                                <nhs-checkboxes>
+                                    <nhs-checkboxes-item>
+                                        <input ref="isCurrentCheckbox" nhs-input-type="Checkboxes" asp-for="IsCurrent"/>
+                                        <label nhs-label-type="Checkboxes" asp-for="IsCurrent">Current</label>
+                                    </nhs-checkboxes-item>
+                                    <nhs-checkboxes-item>
+                                        <input ref="inPastFiveYearsCheckbox" nhs-input-type="Checkboxes" asp-for="InPastFiveYears"/>
+                                        <label nhs-label-type="Checkboxes" asp-for="InPastFiveYears" >In the past 5 years</label>
+                                    </nhs-checkboxes-item>
+                                    <nhs-checkboxes-item>
+                                        <input ref="moreThanFiveYearsAgoCheckbox" nhs-input-type="Checkboxes" asp-for="MoreThanFiveYearsAgo"/>
+                                        <label nhs-label-type="Checkboxes" asp-for="MoreThanFiveYearsAgo">More than 5 years</label>
+                                    </nhs-checkboxes-item>
+                                </nhs-checkboxes>
+                            </nhs-fieldset>
+                        </nhs-form-group>                        
+                    </div>
+
+                    <div class="nhsuk-radios__item">
+                        <input ref="statusNo" asp-for="Status" id="@prefix-radio-button-no" class="nhsuk-radios__input" value="No" type="radio">
+                        <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-no">
+                            @Status.No
+                        </label>
+                    </div>
+                    
+                    <div class="nhsuk-radios__item">
+                        <input ref="statusUnknown" asp-for="Status" id="@prefix-radio-button-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
+                        <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-unknown">
+                            @Status.Unknown
+                        </label>
+                    </div>      
+                </div>
+            </div> 
+        </nhs-fieldset>
+    </nhs-form-group>
+</validate-riskfactor>

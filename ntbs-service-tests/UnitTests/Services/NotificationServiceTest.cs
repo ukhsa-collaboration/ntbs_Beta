@@ -5,6 +5,8 @@ using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Services;
+using ntbs_service.Models.Enums;
+
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.ntbs_service_tests
@@ -24,31 +26,69 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
         }
 
         [Fact]
-        public void TreatmentStartDate_IsSetToNullIfDidNotStartTreatmentTrue()
+        public void SocialRiskFactorChecklist_AreSetToFalseIfStatusUnknown()
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalTimeline() { TreatmentStartDate = DateTime.Now, DidNotStartTreatment = true };
+            var socialRiskFactors = new SocialRiskFactors() { 
+                RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown },
+                RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+                RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+                RiskFactorMentalHealth = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+            };
 
             // Act
-            service.UpdateTimelineAsync(notification, timeline);
+            service.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
 
             // Assert
-            Assert.Null(timeline.TreatmentStartDate);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.IsCurrent);
+         
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.IsCurrent);   
         }
 
         [Fact]
-        public void DeathDate_IsSetToNullIfPostMortemFalse()
+        public void SocialRiskFactorChecklist_AreSetToFalseIfStatusNo()
         {
             // Arrange
             var notification = new Notification();
-            var timeline = new ClinicalTimeline() { DeathDate = DateTime.Now, IsPostMortem = false };
+            var socialRiskFactors = new SocialRiskFactors() { 
+                RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No },
+                RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+                RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+                RiskFactorMentalHealth = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+            };
 
             // Act
-            service.UpdateTimelineAsync(notification, timeline);
+            service.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
 
             // Assert
-            Assert.Null(timeline.DeathDate);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorDrugs.IsCurrent);
+         
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.InPastFiveYears);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.MoreThanFiveYearsAgo);
+            Assert.False(socialRiskFactors.RiskFactorMentalHealth.IsCurrent);   
         }
 
         public static IEnumerable<object[]> UkBornTestCases()
@@ -86,34 +126,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
 
             // Assert
             Assert.Null(patient.UkBorn);
-        }
-
-        [Fact]
-        public void NhsNumber_IsSetToNullIfNhsNumberUnknownTrue()
-        {
-            // Arrange
-            var notification = new Notification();
-            var patient = new PatientDetails() { NhsNumber = "1534645612", NhsNumberNotKnown = true };
-
-            // Act
-            service.UpdatePatientAsync(notification, patient);
-
-            // Assert
-            Assert.Null(patient.NhsNumber);
-        }
-
-        [Fact]
-        public void Postcode_IsSetToNullIfPostcodeUnknownTrue()
-        {
-            // Arrange
-            var notification = new Notification();
-            var patient = new PatientDetails() { Postcode = "NW5 1TL", NoFixedAbode = true };
-
-            // Act
-            service.UpdatePatientAsync(notification, patient);
-
-            // Assert
-            Assert.Null(patient.Postcode);
         }
     }
 }

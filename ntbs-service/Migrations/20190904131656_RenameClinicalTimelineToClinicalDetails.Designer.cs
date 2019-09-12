@@ -10,8 +10,8 @@ using ntbs_service.Models;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20190905143217_AddPatientTBHistoryFlags")]
-    partial class AddPatientTBHistoryFlags
+    [Migration("20190904131656_RenameClinicalTimelineToClinicalDetails")]
+    partial class RenameClinicalTimelineToClinicalDetails
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1843,24 +1843,6 @@ namespace ntbs_service.Migrations
                             b1.HasOne("ntbs_service.Models.Sex", "Sex")
                                 .WithMany()
                                 .HasForeignKey("SexId");
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.PatientTBHistory", "PatientTBHistory", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<bool>("NotPreviouslyHadTB");
-
-                            b1.Property<int?>("PreviousTBDiagnosisYear");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("PatientTBHistories");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("PatientTBHistory")
-                                .HasForeignKey("ntbs_service.Models.PatientTBHistory", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
                         });
                 });
 #pragma warning restore 612, 618

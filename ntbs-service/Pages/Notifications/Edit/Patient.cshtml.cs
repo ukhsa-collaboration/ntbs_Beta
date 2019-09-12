@@ -16,10 +16,10 @@ namespace ntbs_service.Pages_Notifications
         private readonly INotificationService service;
         private readonly NtbsContext context;
 
-        public SelectList Ethnicities { get; set;}
+        public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
         public List<Sex> Sexes { get; set; }
-        
+
         [BindProperty]
         public PatientDetails Patient { get; set; }
         [BindProperty]
@@ -45,7 +45,8 @@ namespace ntbs_service.Pages_Notifications
             NotificationId = notification.NotificationId;
             Patient = notification.PatientDetails;
 
-            if (Patient == null) {
+            if (Patient == null)
+            {
                 Patient = new PatientDetails();
             }
 
@@ -59,8 +60,9 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
-            SetAndValidateDate(Patient, nameof(Patient.Dob), FormattedDob);
-
+            UpdatePatientFlags();
+            SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            
             if (!ModelState.IsValid)
             {
                 return await OnGetAsync(NotificationId);
@@ -70,17 +72,28 @@ namespace ntbs_service.Pages_Notifications
             await service.UpdatePatientAsync(notification, Patient);
             
             return RedirectToPage("./Episode", new {id = notification.NotificationId});
-
         }
 
-        public ContentResult OnPostValidatePatientProperty(string key, string value)
-        {
-            return OnPostValidateProperty(Patient, key, value);
+        private void UpdatePatientFlags() {
+            if (Patient.NhsNumberNotKnown) {
+                Patient.NhsNumber = null;
+                ModelState.Remove("Patient.NhsNumber");
+            }
+
+            if (Patient.NoFixedAbode) {
+                Patient.Postcode = null;
+                ModelState.Remove("Patient.Postcode");
+            }
         }
 
-        public ContentResult OnPostValidatePatientDate(string key, string day, string month, string year)
+        public ContentResult OnGetValidatePatientProperty(string key, string value)
         {
-            return OnPostValidateDate(Patient, key, day, month, year);
+            return ValidateProperty(new PatientDetails(), key, value);
+        }
+
+        public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
+        {
+            return ValidateDate(new PatientDetails(), key, day, month, year);
         }
     }
 }

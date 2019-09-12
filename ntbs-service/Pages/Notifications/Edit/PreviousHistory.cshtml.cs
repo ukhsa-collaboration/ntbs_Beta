@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,14 +51,14 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./ContactTracing", new {id = NotificationId});
+            return RedirectToPage("./SocialRiskFactors", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
         {
             bool validModel = await validateAndSave(NotificationId);
 
-            if(!validModel) {
+            if (!validModel) {
                 return await OnGetAsync(NotificationId);
             }
 
@@ -65,6 +66,7 @@ namespace ntbs_service.Pages_Notifications
         }
 
         public async Task<bool> validateAndSave(int? NotificationId) {
+            UpdateFlags();
             
             if (!ModelState.IsValid)
             {
@@ -74,6 +76,19 @@ namespace ntbs_service.Pages_Notifications
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
             return true;
+        }
+        
+        private void UpdateFlags()
+        {
+            if (PatientTBHistory.NotPreviouslyHadTB) {
+                PatientTBHistory.PreviousTBDiagnosisYear = null;
+                ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
+            }
+        }
+
+        public ContentResult OnGetValidatePreviousHistoryProperty(string key, int value)
+        {
+            return ValidateProperty(new PatientTBHistory(), key, value);
         }
     }
 }

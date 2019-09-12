@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using CsvHelper;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using ntbs_service.Helpers;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models
 {
@@ -25,9 +25,12 @@ namespace ntbs_service.Models
         public virtual DbSet<TBService> TBService { get; set;}
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
+        public virtual DbSet<NotificationSite> NotificationSite { get; set; }
+        public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<Episode> Episode { get; set; }
+        public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -65,6 +68,12 @@ namespace ntbs_service.Models
         {
             return await Ethnicity.ToListAsync();
         }
+
+        public virtual async Task<IList<Site>> GetAllSitesAsync()
+        {
+            return await Site.ToListAsync();
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -118,17 +127,50 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Hospital>().HasData(GetHospitalsList());
 
+            var converter = new EnumToStringConverter<Status>();
+
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
-                entity.OwnsOne(e => e.ClinicalTimeline).ToTable("ClinicalTimelines");
+                entity.OwnsOne(e => e.ClinicalDetails, e => {
+                     e.Property(cd => cd.BCGVaccinationState)
+                        .HasConversion(converter);
+                    e.ToTable("ClinicalDetails");
+                });
 
                 entity.OwnsOne(e => e.PatientTBHistory).ToTable("PatientTBHistories");
 
                 entity.OwnsOne(e => e.ContactTracing).ToTable("ContactTracing");
+
+                entity.OwnsOne(e => e.SocialRiskFactors, x => {
+                    x.OwnsOne(c => c.RiskFactorDrugs , rf => {
+                        rf.Property(e => e.Status).HasConversion(converter);
+                        rf.ToTable("RiskFactorDrugs");
+                    });
+
+                    x.OwnsOne(c => c.RiskFactorHomelessness, rh => {
+                        rh.Property(e => e.Status).HasConversion(converter);
+                        rh.ToTable("RiskFactorHomelessness");
+                    });
+
+                    x.OwnsOne(c => c.RiskFactorImprisonment, rh => {
+                        rh.Property(e => e.Status).HasConversion(converter);
+                        rh.ToTable("RiskFactorImprisonment");
+                    });
+                    
+                    x.OwnsOne(c => c.RiskFactorMentalHealth, rh => {
+                        rh.Property(e => e.Status).HasConversion(converter);
+                        rh.ToTable("RiskFactorMentalHealth");
+                    });
+
+                    x.Property(e => e.AlcoholMisuseStatus).HasConversion(converter);
+                    x.Property(e => e.SmokingStatus).HasConversion(converter);
+
+                    x.ToTable("SocialRiskFactors");
+                });
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -146,6 +188,39 @@ namespace ntbs_service.Models
                 new Sex { SexId = 1, Label = "Male" },
                 new Sex { SexId = 2, Label = "Female" },
                 new Sex { SexId = 3, Label = "Unknown" }
+            );
+
+            modelBuilder.Entity<NotificationSite>(entity =>
+            {
+                entity.HasKey(e => new {e.NotificationId, e.SiteId });
+
+                entity.HasOne(e => e.Notification)
+                    .WithMany(n => n.NotificationSites)
+                    .HasForeignKey(ns => ns.NotificationId);
+
+                entity.HasOne(e => e.Site)
+                    .WithMany(s => s.NotificationSites)
+                    .HasForeignKey(ns => ns.SiteId);
+            });
+
+            modelBuilder.Entity<Site>().HasData(
+                new Site { SiteId = (int)SiteId.PULMONARY, Description = "Pulmonary" },
+                new Site { SiteId = (int)SiteId.BONE_SPINE, Description = "Bone/joint: spine" },
+                new Site { SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: other" },
+                new Site { SiteId = (int)SiteId.CNS_MENINGITIS, Description = "meningitis" },
+                new Site { SiteId = (int)SiteId.CNS_OTHER, Description = "other" },
+                new Site { SiteId = (int)SiteId.OCULAR, Description = "Ocular" },
+                new Site { SiteId = (int)SiteId.CRYPTIC, Description = "Cryptic disseminated" },
+                new Site { SiteId = (int)SiteId.GASTROINTESTINAL, Description = "Gastrointestinal/peritoneal" },
+                new Site { SiteId = (int)SiteId.GENITOURINARY, Description = "Genitourinary" },
+                new Site { SiteId = (int)SiteId.LYMPH_INTRA, Description = "Intra-thoracic" },
+                new Site { SiteId = (int)SiteId.LYMPH_EXTRA, Description = "Extra-thoracic" },
+                new Site { SiteId = (int)SiteId.LARYNGEAL, Description = "Laryngeal" },
+                new Site { SiteId = (int)SiteId.MILIARY, Description = "Miliary" },
+                new Site { SiteId = (int)SiteId.PLEURAL, Description = "Pleural" },
+                new Site { SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial" },
+                new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin" },
+                new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" }
             );
         }
 

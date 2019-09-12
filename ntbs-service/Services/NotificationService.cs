@@ -1,17 +1,24 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
 {
     public interface INotificationService
     {
         Task<Notification> GetNotificationAsync(int? id);
+        Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
-        Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline);
+        Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
+        Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
+        Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
     }
 
     public class NotificationService : INotificationService
@@ -39,16 +46,6 @@ namespace ntbs_service.Services
         private async Task UpdatePatientFlags(PatientDetails patient)
         {
             await UpdateUkBorn(patient);
-
-            if (patient.NhsNumberNotKnown)
-            {
-                patient.NhsNumber = null;
-            }
-
-            if (patient.NoFixedAbode)
-            {
-                patient.Postcode = null;
-            }
         }
 
         private async Task UpdateUkBorn(PatientDetails patient)
@@ -73,27 +70,14 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UpdateTimelineAsync(Notification notification, ClinicalTimeline timeline)
+        public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
         {
-            UpdateTimelineFlags(timeline);
             context.Attach(notification);
-            notification.ClinicalTimeline = timeline;
+            notification.ClinicalDetails = timeline;
 
             await context.SaveChangesAsync();
         }
 
-        private void UpdateTimelineFlags(ClinicalTimeline timeline)
-        {
-            if (timeline.DidNotStartTreatment) 
-            {
-                timeline.TreatmentStartDate = null;
-            }
-            if (!timeline.IsPostMortem) 
-            {
-                timeline.DeathDate = null;
-            }
-        }
-        
         public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
         {
             context.Attach(notification);
@@ -111,19 +95,63 @@ namespace ntbs_service.Services
 
         public async Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory tBHistory)
         {
-            UpdateTBHistoryFlags(tBHistory);
             context.Attach(notification);
             notification.PatientTBHistory = tBHistory;
 
             await context.SaveChangesAsync();
         }
 
-        private void UpdateTBHistoryFlags(PatientTBHistory tBHistory)
+        public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
         {
-            if (tBHistory.NotPreviouslyHadTB)
+            UpdateSocialRiskFactorsFlags(socialRiskFactors);
+            var entry = context.Attach(notification);
+            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.CurrentValues.SetValues(socialRiskFactors);
+            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.State = EntityState.Modified;
+
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorMentalHealth).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorMentalHealth);
+            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorMentalHealth).TargetEntry.State = EntityState.Modified;
+
+            await context.SaveChangesAsync();        
+        }
+
+        private void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors) 
+        {
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorDrugs);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorHomelessness);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorImprisonment);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorMentalHealth);
+        }
+
+        private void UpdateRiskFactorFlags(RiskFactorBase riskFactor)
+        {
+            if (riskFactor.Status != Status.Yes)
             {
-                tBHistory.PreviousTBDiagnosisYear = null;
-            }
+                riskFactor.IsCurrent = false;
+                riskFactor.InPastFiveYears = false;
+                riskFactor.MoreThanFiveYearsAgo = false;
+            } 
+        }
+
+        public async Task<Notification> GetNotificationWithSocialRisksAsync(int? id)
+        {
+            return await repository.GetNotificationWithSocialRiskFactorsAsync(id);
+        }
+
+        public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 
+        {
+            var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
+            context.NotificationSite.RemoveRange(currentSites);
+            context.NotificationSite.AddRange(notificationSites);
+            await context.SaveChangesAsync();
         }
     }
 }

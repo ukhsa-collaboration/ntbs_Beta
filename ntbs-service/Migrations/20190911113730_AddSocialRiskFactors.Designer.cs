@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20190911113730_AddSocialRiskFactors")]
+    partial class AddSocialRiskFactors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -9795,21 +9797,6 @@ namespace ntbs_service.Migrations
                     b.ToTable("Notification");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
-                {
-                    b.Property<int>("NotificationId");
-
-                    b.Property<int>("SiteId");
-
-                    b.Property<string>("SiteDescription");
-
-                    b.HasKey("NotificationId", "SiteId");
-
-                    b.HasIndex("SiteId");
-
-                    b.ToTable("NotificationSite");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Region", b =>
                 {
                     b.Property<int>("RegionId")
@@ -9852,106 +9839,6 @@ namespace ntbs_service.Migrations
                         {
                             SexId = 3,
                             Label = "Unknown"
-                        });
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Site", b =>
-                {
-                    b.Property<int>("SiteId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
-
-                    b.HasKey("SiteId");
-
-                    b.ToTable("Site");
-
-                    b.HasData(
-                        new
-                        {
-                            SiteId = 1,
-                            Description = "Pulmonary"
-                        },
-                        new
-                        {
-                            SiteId = 2,
-                            Description = "Bone/joint: spine"
-                        },
-                        new
-                        {
-                            SiteId = 3,
-                            Description = "Bone/joint: other"
-                        },
-                        new
-                        {
-                            SiteId = 4,
-                            Description = "meningitis"
-                        },
-                        new
-                        {
-                            SiteId = 5,
-                            Description = "other"
-                        },
-                        new
-                        {
-                            SiteId = 6,
-                            Description = "Ocular"
-                        },
-                        new
-                        {
-                            SiteId = 7,
-                            Description = "Cryptic disseminated"
-                        },
-                        new
-                        {
-                            SiteId = 8,
-                            Description = "Gastrointestinal/peritoneal"
-                        },
-                        new
-                        {
-                            SiteId = 9,
-                            Description = "Genitourinary"
-                        },
-                        new
-                        {
-                            SiteId = 10,
-                            Description = "Intra-thoracic"
-                        },
-                        new
-                        {
-                            SiteId = 11,
-                            Description = "Extra-thoracic"
-                        },
-                        new
-                        {
-                            SiteId = 12,
-                            Description = "Laryngeal"
-                        },
-                        new
-                        {
-                            SiteId = 13,
-                            Description = "Miliary"
-                        },
-                        new
-                        {
-                            SiteId = 14,
-                            Description = "Pleural"
-                        },
-                        new
-                        {
-                            SiteId = 15,
-                            Description = "Pericardial"
-                        },
-                        new
-                        {
-                            SiteId = 16,
-                            Description = "Soft tissue/Skin"
-                        },
-                        new
-                        {
-                            SiteId = 17,
-                            Description = "Other extra-pulmonary"
                         });
                 });
 
@@ -11304,14 +11191,9 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Notification", b =>
                 {
-                    b.OwnsOne("ntbs_service.Models.ClinicalDetails", "ClinicalDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.ClinicalTimeline", "ClinicalTimeline", b1 =>
                         {
                             b1.Property<int>("NotificationId");
-
-                            b1.Property<string>("BCGVaccinationState")
-                                .IsRequired();
-
-                            b1.Property<int?>("BCGVaccinationYear");
 
                             b1.Property<DateTime?>("DeathDate");
 
@@ -11321,8 +11203,6 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("IsPostMortem");
 
-                            b1.Property<bool>("NoSampleTaken");
-
                             b1.Property<DateTime?>("PresentationDate");
 
                             b1.Property<DateTime?>("SymptomStartDate");
@@ -11331,47 +11211,11 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("ClinicalDetails");
+                            b1.ToTable("ClinicalTimelines");
 
                             b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("ClinicalDetails")
-                                .HasForeignKey("ntbs_service.Models.ClinicalDetails", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.ContactTracing", "ContactTracing", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<int>("AdultsActiveTB");
-
-                            b1.Property<int>("AdultsFinishedTreatment");
-
-                            b1.Property<int>("AdultsLatentTB");
-
-                            b1.Property<int>("AdultsScreened");
-
-                            b1.Property<int>("AdultsStartedTreatment");
-
-                            b1.Property<int>("ChildrenActiveTB");
-
-                            b1.Property<int>("ChildrenFinishedTreatment");
-
-                            b1.Property<int>("ChildrenIdentified");
-
-                            b1.Property<int>("ChildrenLatentTB");
-
-                            b1.Property<int>("ChildrenScreened");
-
-                            b1.Property<int>("ChildrenStartedTreatment");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("ContactTracing");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("ContactTracing")
-                                .HasForeignKey("ntbs_service.Models.ContactTracing", "NotificationId")
+                                .WithOne("ClinicalTimeline")
+                                .HasForeignKey("ntbs_service.Models.ClinicalTimeline", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
@@ -11591,19 +11435,6 @@ namespace ntbs_service.Migrations
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Notification", "Notification")
-                        .WithMany("NotificationSites")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.Site", "Site")
-                        .WithMany("NotificationSites")
-                        .HasForeignKey("SiteId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

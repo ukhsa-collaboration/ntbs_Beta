@@ -1,12 +1,12 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
     [Owned]
-    public class ClinicalTimeline
+    public class ClinicalDetails
     {
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
@@ -24,7 +24,11 @@ namespace ntbs_service.Models
         public DateTime? DeathDate { get; set; }
 
         public bool DidNotStartTreatment { get; set; }
-
         public bool IsPostMortem { get; set; }
+
+        public bool NoSampleTaken { get; set; }
+
+        public Status BCGVaccinationState { get; set; }
+        public int? BCGVaccinationYear { get; set; }
     }
 }
