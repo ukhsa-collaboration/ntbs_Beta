@@ -45,16 +45,6 @@ namespace ntbs_service.Services
         private async Task UpdatePatientFlags(PatientDetails patient)
         {
             await UpdateUkBorn(patient);
-
-            if (patient.NhsNumberNotKnown)
-            {
-                patient.NhsNumber = null;
-            }
-
-            if (patient.NoFixedAbode)
-            {
-                patient.Postcode = null;
-            }
         }
 
         private async Task UpdateUkBorn(PatientDetails patient)
@@ -81,29 +71,12 @@ namespace ntbs_service.Services
 
         public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
         {
-            UpdateTimelineFlags(timeline);
             context.Attach(notification);
             notification.ClinicalDetails = timeline;
 
             await context.SaveChangesAsync();
         }
 
-        private void UpdateTimelineFlags(ClinicalDetails timeline)
-        {
-            if (timeline.DidNotStartTreatment) 
-            {
-                timeline.TreatmentStartDate = null;
-            }
-            if (!timeline.IsPostMortem) 
-            {
-                timeline.DeathDate = null;
-            }
-            if (!(timeline.BCGVaccinationState == Status.Yes))
-            {
-                timeline.BCGVaccinationYear = null;
-            }
-        }
-        
         public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
         {
             context.Attach(notification);
@@ -114,19 +87,10 @@ namespace ntbs_service.Services
 
         public async Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory tBHistory)
         {
-            UpdateTBHistoryFlags(tBHistory);
             context.Attach(notification);
             notification.PatientTBHistory = tBHistory;
 
             await context.SaveChangesAsync();
-        }
-
-        private void UpdateTBHistoryFlags(PatientTBHistory tBHistory)
-        {
-            if (tBHistory.NotPreviouslyHadTB)
-            {
-                tBHistory.PreviousTBDiagnosisYear = null;
-            }
         }
 
         public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 
@@ -102,6 +103,8 @@ namespace ntbs_service.Pages_Notifications
         }
 
         private async Task<bool> validateAndSave(int? NotificationId) {
+            UpdateFlags();
+
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
@@ -120,6 +123,32 @@ namespace ntbs_service.Pages_Notifications
             await service.UpdateSitesAsync(notification, CreateNotificationSitesFromModel(notification));
 
             return true;
+        }
+
+        private void UpdateFlags() {
+            if (ClinicalDetails.DidNotStartTreatment) {
+                ClinicalDetails.TreatmentStartDate = null;
+                FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.TreatmentStartDate");
+            }
+            
+            if (!ClinicalDetails.IsPostMortem) {
+                ClinicalDetails.DeathDate = null;
+                FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.DeathDate");
+            }
+
+            if (ClinicalDetails.BCGVaccinationState != Status.Yes) {
+                ClinicalDetails.BCGVaccinationYear = null;
+                ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
+            }
+            
+            if (!NotificationSiteMap[SiteId.OTHER]) {
+                OtherSite.SiteDescription = null;
+                ModelState.Remove("OtherSite.SiteDescription");
+            }
+
+           
         }
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
