@@ -105,3 +105,15 @@ body {
     background: #ffcd60;
     color: #212b32;
 }
+
+.top-margin-separator {
+    margin-top: 20px;
+}
+
+.fixed-width-separator {
+    width: 50px;
+}
+
+.double-fixed-width-separator {
+    width: 100px;
+}

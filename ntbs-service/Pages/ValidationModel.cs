@@ -73,9 +73,7 @@ namespace ntbs_service.Pages
             }
         }
 
-        public ContentResult ValidateContactTracing(object model, string key, string adultsIdentified, string childrenIdentified, string adultsScreened, string childrenScreened,
-                            string adultsActiveTB, string childrenActiveTB, string adultsLatentTB, string childrenLatentTB, string adultsStartedTreatment, 
-                            string childrenStartedTreatment, string adultsFinishedTreatment, string childrenFinishedTreatment) 
+        public ContentResult ValidateFullModel(object model, string key, string modelName) 
         {
             if(TryValidateModel(model, model.GetType().Name)) {
                 return Content("");
@@ -86,8 +84,9 @@ namespace ntbs_service.Pages
                     var modelStateVal = ViewData.ModelState[modelStateKey];
                     foreach (var error in modelStateVal.Errors)
                     {
-                        //comment here TODO
-                        if(!modelStateKey.StartsWith("ContactTracing")) {
+                        // Currently this double counts each property as "property" and "model.property", the below if clause 
+                        // removes the instances of "model.property"
+                        if(!modelStateKey.StartsWith(modelName)) {
                             keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
                         }
                     }

@@ -8,44 +8,44 @@ namespace ntbs_service.Models
     [Owned]
     public class ContactTracing
     {
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive value")]
+        [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
         public int AdultsIdentified { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter a positive value")]
+        [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
         public int ChildrenIdentified { get; set; }
 
-        [PositiveIntegerSmallerThanValue("AdultsIdentified", ErrorMessage = "Must be smaller or equal to the number identified")]
+        [PositiveIntegerSmallerThanValue("AdultsIdentified", ErrorMessage = ValidationMessages.ContactTracingContactsScreened)]
         public int AdultsScreened { get; set; }
 
-        [PositiveIntegerSmallerThanValue("ChildrenIdentified", ErrorMessage = "Must be smaller or equal to the number identified")]
+        [PositiveIntegerSmallerThanValue("ChildrenIdentified", ErrorMessage = ValidationMessages.ContactTracingContactsScreened)]
         public int ChildrenScreened { get; set; }
 
-        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsLatentTB", ErrorMessage = "Must be smaller or equal to than number screened minus those with latent TB")]      
+        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsLatentTB", ErrorMessage = ValidationMessages.ContactTracingContactsActiveTB)]      
         public int AdultsActiveTB { get; set; }
 
-        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenLatentTB", ErrorMessage = "Must be smaller or equal to than number screened minus those with latent TB")]
+        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenLatentTB", ErrorMessage = ValidationMessages.ContactTracingContactsActiveTB)]
         public int ChildrenActiveTB { get; set; }
 
-        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsActiveTB", ErrorMessage = "Must be smaller or equal to than number of adults screened minus those with active TB")]
+        [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsActiveTB", ErrorMessage = ValidationMessages.ContactTracingContactsLatentTB)]
         public int AdultsLatentTB { get; set; }
 
-        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenActiveTB", ErrorMessage = "Must be smaller or equal to than number of children screened minus those with active TB")]
+        [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenActiveTB", ErrorMessage = ValidationMessages.ContactTracingContactsLatentTB)]
         public int ChildrenLatentTB { get; set; }
     
         
-        [PositiveIntegerSmallerThanValue("AdultsLatentTB", ErrorMessage = "Must be smaller or equal to number of adults with latent TB")]
+        [PositiveIntegerSmallerThanValue("AdultsLatentTB", ErrorMessage = ValidationMessages.ContactTracingContactsStartedTreatment)]
         public int AdultsStartedTreatment { get; set; }
 
         
-        [PositiveIntegerSmallerThanValue("ChildrenLatentTB", ErrorMessage = "Must be smaller or equal to number of children with latent TB")]
+        [PositiveIntegerSmallerThanValue("ChildrenLatentTB", ErrorMessage = ValidationMessages.ContactTracingContactsStartedTreatment)]
         public int ChildrenStartedTreatment { get; set; }
 
         
-        [PositiveIntegerSmallerThanValue("AdultsStartedTreatment", ErrorMessage = "Must be smaller or equal to number of adults the started treatment")]
+        [PositiveIntegerSmallerThanValue("AdultsStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingContactsFinishedTreatment)]
         public int AdultsFinishedTreatment { get; set; }
 
         
-        [PositiveIntegerSmallerThanValue("ChildrenStartedTreatment", ErrorMessage = "Must be smaller or equal to number of children the started treatment")]
+        [PositiveIntegerSmallerThanValue("ChildrenStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingContactsFinishedTreatment)]
         public int ChildrenFinishedTreatment { get; set; }
     }
 }
