@@ -62,7 +62,7 @@ namespace ntbs_service.Pages_Notifications
 
             await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
 
-            return RedirectToPage("./ClinicalTimeline", new {id = NotificationId});
+            return RedirectToPage("./ClinicalDetails", new {id = NotificationId});
         }
 
         public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
