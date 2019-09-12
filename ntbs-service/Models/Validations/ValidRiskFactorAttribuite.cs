@@ -12,15 +12,10 @@ namespace ntbs_service.Models.Validations
 
             var isAnyChosen = riskFactor.InPastFiveYears || riskFactor.IsCurrent || riskFactor.MoreThanFiveYearsAgo;
             if (riskFactor.Status == Status.Yes && !isAnyChosen) {
-                return new ValidationResult(GetErrorMessage());
+                return new ValidationResult(ValidationMessages.RiskFactorSelection);
             } else {
                 return ValidationResult.Success;
             }
-        }
-
-        private string GetErrorMessage()
-        {
-            return "At least one field should be selected";
         }
     }
 }

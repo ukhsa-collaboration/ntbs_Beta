@@ -1,11 +1,12 @@
 import Vue from 'vue';
 const axios = require('axios');
+import { getHeaders, getValidationPath } from '../helpers';
 
 type RiskFactor = { 
-  inPastFiveYearsCheckbox: any, 
-  moreThanFiveYearsAgoCheckbox: any,
-  isCurrentCheckbox: any,
-  status: any
+  inPastFiveYearsCheckbox: boolean, 
+  moreThanFiveYearsAgoCheckbox: boolean,
+  isCurrentCheckbox: boolean,
+  status: string
 }
 
 const ValidateRiskFactor = Vue.extend({
@@ -19,16 +20,24 @@ const ValidateRiskFactor = Vue.extend({
     validate: function (event: FocusEvent) {
         // Do nothing if focused element is part of the div that lost focus
         if (this.$el.contains(event.relatedTarget)) {
-            return;
-        }
-        
-        var headers = {
-            "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
+          return;
         }
 
         var riskFactor = this.getRiskFactor();
-        const url = `${this.$props.model}/Validate${this.$props.model}Property?key=${this.$props.property}&pastFive=${riskFactor.inPastFiveYearsCheckbox}&moreThanFive=${riskFactor.moreThanFiveYearsAgoCheckbox}&isCurrent=${riskFactor.isCurrentCheckbox}&status=${riskFactor.status}`;
-        axios.post(url, null, { headers: headers })
+
+        let requestConfig = {
+          url: `${this.$props.model}/Validate${this.$props.model}Property`,
+          headers: getHeaders(),
+          params: {
+            "pastFive": riskFactor.inPastFiveYearsCheckbox,
+            "moreThanFive": riskFactor.moreThanFiveYearsAgoCheckbox,
+            "isCurrent": riskFactor.isCurrentCheckbox,
+            "status": riskFactor.status,
+            "key": this.$props.property
+          }
+        }
+
+        axios.request(requestConfig)
         .then((response: any) => {
             var errorMessage = response.data;
             this.hasError = errorMessage != '';

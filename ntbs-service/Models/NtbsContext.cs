@@ -137,7 +137,7 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.ClinicalDetails, e => {
                      e.Property(cd => cd.BCGVaccinationState)
-                        .HasConversion<string>();
+                        .HasConversion(converter);
                     e.ToTable("ClinicalDetails");
                 });
 

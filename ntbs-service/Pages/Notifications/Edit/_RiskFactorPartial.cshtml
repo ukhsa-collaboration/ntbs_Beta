@@ -17,8 +17,8 @@
             <div v-on:focusout="validate">
                 <div ref="radio-@prefix" ref class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
-                        <input ref="statusYes" asp-for="Status" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio-@prefix">
-                        <label class="nhsuk-label nhsuk-radios__label" asp-for="Status">
+                        <input ref="statusYes" asp-for="Status" id="@prefix-radio-button-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio-@prefix">
+                        <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-yes">
                             @Status.Yes
                         </label>
                     </div>
@@ -46,15 +46,15 @@
                     </div>
 
                     <div class="nhsuk-radios__item">
-                        <input ref="statusNo" asp-for="Status" class="nhsuk-radios__input" value="No" type="radio">
-                        <label class="nhsuk-label nhsuk-radios__label" asp-for="Status">
+                        <input ref="statusNo" asp-for="Status" id="@prefix-radio-button-no" class="nhsuk-radios__input" value="No" type="radio">
+                        <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-no">
                             @Status.No
                         </label>
                     </div>
                     
                     <div class="nhsuk-radios__item">
-                        <input  ref="statusUnknown" asp-for="Status" class="nhsuk-radios__input" value="Unknown" type="radio">
-                        <label class="nhsuk-label nhsuk-radios__label" asp-for="Status">
+                        <input ref="statusUnknown" asp-for="Status" id="@prefix-radio-button-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
+                        <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-unknown">
                             @Status.Unknown
                         </label>
                     </div>      

@@ -79,7 +79,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./PreviousHistory", new {id = NotificationId});
         }
 
-        public ContentResult OnPostValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
+        public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
         {
             var riskStatus = status == null ? null : (Status?) Enum.Parse(typeof(Status), status);
             RiskFactorBase riskFactor = new RiskFactorBase {
@@ -89,7 +89,7 @@ namespace ntbs_service.Pages_Notifications
                 Status = riskStatus
             }; 
             
-            return ValidateProperty(SocialRiskFactors, key, riskFactor);
+            return ValidateProperty(new SocialRiskFactors(), key, riskFactor);
         }
     }
 }

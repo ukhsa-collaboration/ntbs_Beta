@@ -27,8 +27,8 @@
                 @foreach (var status in Model.StatusList)
                 {
                     <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.AlcoholMisuseStatus" type="radio" value="@status" />
-                        <label nhs-label-type="Radios" asp-for="SocialRiskFactors.AlcoholMisuseStatus">@status</label>
+                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.AlcoholMisuseStatus" id="alcohol-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="alcohol-radio-button-@status">@status</label>
                     </nhs-radios-item>
                 }
             </nhs-radios>
@@ -39,8 +39,6 @@
     <div>
         @{
             var DrugsModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorDrugs");
-             ;
-
             var DrugsViewData = new ViewDataDictionary(this.ViewData) { 
                 { "propertyName", "RiskFactorDrugs" }, 
                 { "errorState", DrugsModelIsValid },
@@ -97,8 +95,8 @@
                 @foreach (var status in Model.StatusList)
                 {
                     <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.SmokingStatus" type="radio" value="@status" />
-                        <label nhs-label-type="Radios" asp-for="SocialRiskFactors.SmokingStatus">@status</label>
+                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.SmokingStatus" id="smoking-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="smoking-radio-button-@status">@status</label>
                     </nhs-radios-item>
                 }
             </nhs-radios>

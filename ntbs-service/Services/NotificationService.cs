@@ -98,7 +98,7 @@ namespace ntbs_service.Services
             {
                 timeline.DeathDate = null;
             }
-            if (!(timeline.BCGVaccinationState == State.Yes))
+            if (!(timeline.BCGVaccinationState == Status.Yes))
             {
                 timeline.BCGVaccinationYear = null;
             }
