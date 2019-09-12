@@ -5,7 +5,6 @@
 @{
 Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Personal Details";
-ViewData["NextPage"] = "Hospital Details";
 }
 @{string errorClassName = "nhsuk-form-group--error";}
 
@@ -196,5 +195,5 @@ ViewData["NextPage"] = "Hospital Details";
             </div>
             <br />
     </div>
-    @Html.Partial("_PaginationPartial")
+    <partial name="_PaginationPartial">
 </form>

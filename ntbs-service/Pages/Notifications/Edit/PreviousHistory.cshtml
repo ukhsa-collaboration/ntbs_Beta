@@ -5,8 +5,6 @@
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
     ViewData["Title"] = "Notification - Patient TB History";
-    ViewData["PreviousPage"] = "Social Risk Factors";
-    ViewData["NextPage"] = "Index";
 }
 
 <div><a asp-page="/Patients/Index">Back to List</a></div>
@@ -54,6 +52,6 @@
             </nhs-fieldset>
         </div>
         <br/>
-        @Html.Partial("_PaginationPartial")
+        <partial name="_PaginationPartial">
     </form>
 </date-comparison>
