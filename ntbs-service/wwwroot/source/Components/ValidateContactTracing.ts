@@ -67,6 +67,7 @@ const ValidateContactTracing = Vue.extend({
             axios.post(`${this.$props.model}/Validate${this.$props.model}?key=${this.$props.property}&adultsIdentified=${contactTracingVariables.adultsIdentified}&childrenIdentified=${contactTracingVariables.childrenIdentified}&adultsScreened=${contactTracingVariables.adultsScreened}&childrenScreened=${contactTracingVariables.childrenScreened}&adultsLatentTB=${contactTracingVariables.adultsLatentTB}&childrenLatentTB=${contactTracingVariables.childrenLatentTB}&adultsActiveTB=${contactTracingVariables.adultsActiveTB}&childrenActiveTB=${contactTracingVariables.childrenActiveTB}&adultsStartedTreatment=${contactTracingVariables.adultsStartedTreatment}&childrenStartedTreatment=${contactTracingVariables.childrenStartedTreatment}&adultsFinishedTreatment=${contactTracingVariables.adultsFinishedTreatment}&childrenFinishedTreatment=${contactTracingVariables.childrenFinishedTreatment}`, 
                     null, { headers: headers })
                 .then((response: any) => {
+                    console.log(response);
                     var data = response.data;
                     for(let key in data) {
                         let value = data[key];
@@ -76,9 +77,6 @@ const ValidateContactTracing = Vue.extend({
                         this.$refs[formGroupRef].classList.add("nhsuk-form-group--error");
                         this.$refs[lowerCaseFirstLetterString].classList.add("nhsuk-input--error");
                         this.$refs[errorRef].textContent = value;
-                    }
-                    if (!this.hasError && this.rank) {
-                        this.$emit('input', contactTracingVariables);
                     }
                 })
                 .catch((error: any) => {
