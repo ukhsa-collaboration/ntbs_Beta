@@ -62,7 +62,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./PreviousHistory", new {id = NotificationId});
+            return RedirectToPage("./SocialRiskFactors", new {id = NotificationId});
         }
 
         public async Task<bool> validateAndSave(int? NotificationId) {
