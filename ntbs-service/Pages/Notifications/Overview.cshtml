@@ -1,0 +1,75 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.OverviewModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Overview";
+}
+
+<div style="display: flex">
+    <h3> Personal details of patient </h3>
+    <a href="/edit/patientDetails"> edit </a> 
+</div> 
+<div>
+    <div style="display: flex">
+        <div style="width: 33%">
+            <div> Name </div>
+            <div> @Model.Notification.PatientDetails.GivenName </div>
+        </div>
+        <div style="width: 33%">
+            <div> Sex </div>
+            <div> Male </div>
+        </div>
+        <div style="width: 33%">
+            <div> Country of birth </div>
+            <div> XXX </div>
+        </div>
+    </div>
+    <div style="display: flex">
+        <div style="width: 33%">
+            <div> Date of birth </div>
+            <div> XX/XX/XX </div>
+        </div>
+        <div style="width: 33%">
+            <div> NHS number </div>
+            <div> 3-3-4 format </div>
+        </div>
+        <div style="width: 33%">
+            <div> Ethnic group </div>
+            <div> XXX </div>
+        </div>
+    </div>
+</div>
+
+<h3> Hospital Details </h3>
+
+<div style="display: flex">
+    <div style="width: 33%">
+        <div> Notifying TB Service </div>
+        <div> Example Service </div>
+    </div>
+    <div style="width: 33%">
+        <div> Consultant </div>
+        <div> XXX </div>
+    </div>
+    <div style="width: 33%">
+        <div> Case Manager </div>
+        <div> XXX </div>
+    </div>
+</div>
+
+<h3> Clinical Details </h3>
+
+<h3> Contact Tracing </h3>
+
+<h3> Social Risk Factors </h3>
+
+<h3> Travel/visitors </h3>
+
+<h3> Co-morbidities details </h3>
+
+<h3> Immunosuppresion </h3>
+
+<h3> Previous history details for new patient </h3>
+
+<div> Back to top </div>
