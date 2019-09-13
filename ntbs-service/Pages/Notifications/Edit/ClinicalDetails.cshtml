@@ -7,11 +7,8 @@
 @{
 Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Clinical Details";
-ViewData["NextPage"] = "Contact Tracing";
-ViewData["PreviousPage"] = "Hospital Details";
 }
 @{string errorClassName = "nhsuk-form-group--error";}
-<div><a asp-page="/Patients/Index">Back to List</a></div>
 
 <h2>Clinical Details</h2>
 <!-- TODO: Split this into multiple partial pages for readability -->
@@ -402,6 +399,5 @@ ViewData["PreviousPage"] = "Hospital Details";
             </div>
         </div>
     </date-comparison>
-
-    @Html.Partial("_PaginationPartial")
+    <partial name="_PaginationPartial">
 </form>

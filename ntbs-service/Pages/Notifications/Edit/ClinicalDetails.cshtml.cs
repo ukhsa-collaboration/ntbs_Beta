@@ -80,18 +80,8 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
-        public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
-        {
-            bool validModel = await validateAndSave(NotificationId);
 
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./Episode", new {id = NotificationId});
-        }
-
-        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
+        public async Task<IActionResult> OnPostAsync(int? NotificationId)
         {
             bool validModel = await validateAndSave(NotificationId);
 

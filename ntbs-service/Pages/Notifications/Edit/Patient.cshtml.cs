@@ -58,7 +58,7 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
+        public async Task<IActionResult> OnPostAsync(int? NotificationId)
         {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);

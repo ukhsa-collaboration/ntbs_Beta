@@ -6,11 +6,7 @@
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
     ViewData["Title"] = "Social Risk Factors";
-    ViewData["PreviousPage"] = "Contact Tracing";
-    ViewData["NextPage"] = "Previous History";
 }
-<div><a asp-page="/Patients/Index">Back to List</a></div>
-
 <h2>Social Risk Factors</h1>
 
 <form method="post">
@@ -103,5 +99,5 @@
         </nhs-fieldset>
     </nhs-form-group>
     <br/>
-    @Html.Partial("_PaginationPartial")
+    <partial name="_PaginationPartial">
 </form>
