@@ -13,8 +13,8 @@ ViewData["Title"] = "Notification - Contact Tracing";
     <input type="hidden" asp-for="NotificationId" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <validate-contact-tracing ref="ContactTracing" name="Contact Tracing" model="ContactTracing" property="ContactTracing"
-                rank="0" v-model="ContactTracing" inline-template>
+    <validate-contact-tracing name="Contact Tracing" model="ContactTracing" property="ContactTracing"
+                rank="0" inline-template>
         <nhs-fieldset aria-describedby="TB-contacts-identified">
             <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts identified for screening </nhs-fieldset-legend>
             <div style="display: flex">
