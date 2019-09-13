@@ -27,8 +27,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="AdultsIdentifiedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.AdultsIdentified"></span>
                 <input type="number " v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsIdentifiedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsIdentified"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="adultsIdentified" />
+                    asp-for="ContactTracing.AdultsIdentified" fixed-width="Two" ref="adultsIdentified" />
             </nhs-form-group>
             <div class="fixed-width-separator"> </div>
             @{
@@ -40,8 +39,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="ChildrenIdentifiedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.ChildrenIdentified"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenIdentifiedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenIdentified"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="childrenIdentified" />
+                    asp-for="ContactTracing.ChildrenIdentified" fixed-width="Two" ref="childrenIdentified" />
             </nhs-form-group>
             <div class="double-fixed-width-separator"> </div>
             <div>
@@ -63,8 +61,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="AdultsScreenedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.AdultsScreened"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsScreenedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsScreened"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="adultsScreened" />
+                    asp-for="ContactTracing.AdultsScreened" fixed-width="Two" ref="adultsScreened" />
             </nhs-form-group>
         <div class="fixed-width-separator"> </div>
             @{
@@ -76,8 +73,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="ChildrenScreenedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.ChildrenScreened"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenScreenedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenScreened"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="childrenScreened" />
+                    asp-for="ContactTracing.ChildrenScreened" fixed-width="Two" ref="childrenScreened" />
             </nhs-form-group>
             <div class="double-fixed-width-separator"> </div>
             <div>
@@ -99,8 +95,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="AdultsActiveTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.AdultsActiveTB"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsActiveTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsActiveTB"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="adultsActiveTB" />
+                    asp-for="ContactTracing.AdultsActiveTB" fixed-width="Two" ref="adultsActiveTB" />
             </nhs-form-group>
         <div class="fixed-width-separator"> </div>
             @{
@@ -112,8 +107,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="ChildrenActiveTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.ChildrenActiveTB"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenActiveTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenActiveTB"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="childrenActiveTB" />
+                    asp-for="ContactTracing.ChildrenActiveTB" fixed-width="Two" ref="childrenActiveTB" />
             </nhs-form-group>
             <div class="double-fixed-width-separator"> </div>
             <div>
@@ -135,8 +129,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="AdultsLatentTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.AdultsLatentTB"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsLatentTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsLatentTB"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="adultsLatentTB" />
+                    asp-for="ContactTracing.AdultsLatentTB" fixed-width="Two" ref="adultsLatentTB" />
             </nhs-form-group>
         <div class="fixed-width-separator"> </div>
             @{
@@ -148,8 +141,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="ChildrenLatentTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.ChildrenLatentTB"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenLatentTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenLatentTB"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="childrenLatentTB" />
+                    asp-for="ContactTracing.ChildrenLatentTB" fixed-width="Two" ref="childrenLatentTB" />
             </nhs-form-group>
             <div class="double-fixed-width-separator"> </div>
             <div>
@@ -171,8 +163,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="AdultsStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.AdultsStartedTreatment"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsStartedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsStartedTreatment"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="adultsStartedTreatment" />
+                    asp-for="ContactTracing.AdultsStartedTreatment" fixed-width="Two" ref="adultsStartedTreatment" />
             </nhs-form-group>
         <div class="fixed-width-separator"> </div>
             @{
@@ -184,8 +175,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="ChildrenStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.ChildrenStartedTreatment"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenStartedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenStartedTreatment"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="childrenStartedTreatment" />
+                    asp-for="ContactTracing.ChildrenStartedTreatment" fixed-width="Two" ref="childrenStartedTreatment" />
             </nhs-form-group>
             <div class="double-fixed-width-separator"> </div>
             <div>
@@ -207,8 +197,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="AdultsFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.AdultsFinishedTreatment"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsFinishedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsFinishedTreatment"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="adultsFinishedTreatment" />
+                    asp-for="ContactTracing.AdultsFinishedTreatment" fixed-width="Two" ref="adultsFinishedTreatment" />
             </nhs-form-group>
         <div class="fixed-width-separator"> </div>
             @{
@@ -220,8 +209,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
                 <span ref="ChildrenFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
                     asp-validation-for="ContactTracing.ChildrenFinishedTreatment"></span>
                 <input v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenFinishedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenFinishedTreatment"
-                    v-bind:class="{ 'nhsuk-input--error': hasError}" fixed-width="Two" ref="childrenFinishedTreatment" />
+                    asp-for="ContactTracing.ChildrenFinishedTreatment" fixed-width="Two" ref="childrenFinishedTreatment" />
             </nhs-form-group>
             <div class="double-fixed-width-separator"> </div>
             <div>
