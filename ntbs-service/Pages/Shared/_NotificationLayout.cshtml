@@ -1,48 +1,48 @@
 @{
     Layout = "../Shared/_Layout.cshtml";
-    var patientId = Context.Request.Query["id"].ToString();
+    var notificationId = Context.Request.Query["id"].ToString();
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
     var currentPage = splitUrlPath[splitUrlPath.Length-1];
 }
 <!DOCTYPE html>
 <html>
 <body>
-    <h1 class="nhs-heading-1">NTBS #@(patientId)</h1>
+    <h1 class="nhs-heading-1">NTBS #@(notificationId) - DRAFT</h1>
     <div class="patient-layout-flexbox">
         <div class="contents-list">
             <!-- Overview available if notification has been submitted -->
             @if (ViewData["OverviewAvailable"] as bool? ?? false)
             {
-                <li class="@("contents-list-item " + (currentPage == "overview" ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Overview?id=" + @(patientId)>Overview</a>
+                <li class="@("contents-list-item " + (currentPage == "Overview" ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Overview?id=@notificationId">Overview</a>
                 </li>
             }
             <li class="@("contents-list-item " + (currentPage == "Patient" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@patientId">Person details</a>
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@notificationId">Person details</a>
             </li>
             <li class="@("contents-list-item " + (currentPage == "Episode" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Episode?id=@patientId">Hospital details</a>
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Episode?id=@notificationId">Hospital details</a>
             </li>
             <li class="@("contents-list-item " + (currentPage == "ClinicalDetails" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/ClinicalDetails?id=@patientId">Clinical Details</a>
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/ClinicalDetails?id=@notificationId">Clinical Details</a>
             </li>
-            <li class="@("contents-list-item " + (currentPage == "contactTracing" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@patientId">Contact Tracing</a>
+            <li class="@("contents-list-item " + (currentPage == "ContactTracing" ? "contents-list-item--current" : ""))">
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/ContactTracing?id=@patientId">Contact Tracing</a>
             </li>
             <li class="@("contents-list-item " + (currentPage == "SocialRiskFactors" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/SocialRiskFactors?id=@patientId">Social Risk Factors</a>
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/SocialRiskFactors?id=@notificationId">Social Risk Factors</a>
             </li>
-            <li class="@("contents-list-item " + (currentPage == "travelVisitorHistory" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@patientId">Travel/visitor history</a>
+            <li class="@("contents-list-item " + (currentPage == "Travel" ? "contents-list-item--current" : ""))">
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Travel?id=@notificationId">Travel/visitor history</a>
             </li>
-            <li class="@("contents-list-item " + (currentPage == "comordbidities" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@patientId">Co-morbidities</a>
+            <li class="@("contents-list-item " + (currentPage == "Comorbidities" ? "contents-list-item--current" : ""))">
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Comorbidities?id=@notificationId">Co-morbidities</a>
             </li>
-            <li class="@("contents-list-item " + (currentPage == "immunosupression" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@patientId">Immunosupression</a>
+            <li class="@("contents-list-item " + (currentPage == "Immunosupression" ? "contents-list-item--current" : ""))">
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Immunosupression?id=@notificationId">Immunosupression</a>
             </li>
-            <li class="@("contents-list-item " + (currentPage == "previousHistory" ? "contents-list-item--current" : ""))">
-              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/PreviousHistory?id=@patientId">Previous History</a>
+            <li class="@("contents-list-item " + (currentPage == "PreviousHistory" ? "contents-list-item--current" : ""))">
+              <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/PreviousHistory?id=@notificationId">Previous History</a>
             </li>
         </div>
         <div style="width: 100%"> 

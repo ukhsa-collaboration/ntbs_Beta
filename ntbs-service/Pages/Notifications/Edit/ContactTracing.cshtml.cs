@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,17 +10,18 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class PreviousHistoryModel : ValidationModel
+
+    public class ContactTracingModel : ValidationModel
     {
         private readonly INotificationService service;
 
-        public PreviousHistoryModel(INotificationService service)
+        public ContactTracingModel(INotificationService service)
         {
             this.service = service;
         }
 
         [BindProperty]
-        public PatientTBHistory PatientTBHistory { get; set; }
+        public ContactTracing ContactTracing { get; set; }
         [BindProperty]
         public int NotificationId { get; set; }
 
@@ -34,10 +34,10 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = notification.NotificationId;
-            PatientTBHistory = notification.PatientTBHistory;
+            ContactTracing = notification.ContactTracing;
 
-            if (PatientTBHistory == null) {
-                PatientTBHistory = new PatientTBHistory();
+            if (ContactTracing == null) {
+                ContactTracing = new ContactTracing();
             }
 
             return Page();
@@ -47,37 +47,28 @@ namespace ntbs_service.Pages_Notifications
         {
             bool validModel = await validateAndSave(NotificationId);
 
-            if (!validModel) {
+            if(!validModel) {
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("../Index", new {id = NotificationId});
+            return RedirectToPage("./SocialRiskFactors", new {id = NotificationId});
         }
 
         public async Task<bool> validateAndSave(int? NotificationId) {
-            UpdateFlags();
-            
+
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
             var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
+            await service.UpdateContactTracingAsync(notification, ContactTracing);
             return true;
         }
-        
-        private void UpdateFlags()
-        {
-            if (PatientTBHistory.NotPreviouslyHadTB) {
-                PatientTBHistory.PreviousTBDiagnosisYear = null;
-                ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
-            }
-        }
 
-        public ContentResult OnGetValidatePreviousHistoryProperty(string key, int value)
+        public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)
         {
-            return ValidateProperty(new PatientTBHistory(), key, value);
+            return ValidateFullModel(model, key, "contactTracing");
         }
     }
 }

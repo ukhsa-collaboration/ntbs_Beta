@@ -5,8 +5,6 @@
 @{
 Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Hospital Details";
-ViewData["NextPage"] = "Clinical Details";
-ViewData["PreviousPage"] = "Patient Details";
 }
 
 <h2>Hospital details</h1>
@@ -63,6 +61,5 @@ ViewData["PreviousPage"] = "Patient Details";
         </nhs-form-group>
     </validate-input>
     <br/>
-
-    @Html.Partial("_PaginationPartial")
+    <partial name="_PaginationPartial">
 </form>

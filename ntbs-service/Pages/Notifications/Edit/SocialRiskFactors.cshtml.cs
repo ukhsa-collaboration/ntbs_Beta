@@ -51,21 +51,7 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
-        {
-            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
-            
-            if (!ModelState.IsValid)
-            {
-                return await OnGetAsync(NotificationId);
-            }
-
-            await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
-
-            return RedirectToPage("./ClinicalDetails", new {id = NotificationId});
-        }
-
-        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
+        public async Task<IActionResult> OnPostAsync(int? NotificationId)
         {
             var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
             

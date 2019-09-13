@@ -143,6 +143,8 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.PatientTBHistory).ToTable("PatientTBHistories");
 
+                entity.OwnsOne(e => e.ContactTracing).ToTable("ContactTracing");
+
                 entity.OwnsOne(e => e.SocialRiskFactors, x => {
                     x.OwnsOne(c => c.RiskFactorDrugs , rf => {
                         rf.Property(e => e.Status).HasConversion(converter);

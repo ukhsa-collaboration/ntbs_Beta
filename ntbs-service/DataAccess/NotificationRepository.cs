@@ -42,6 +42,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
+                .OrderByDescending(notification => notification.NotificationId)
                 .ToListAsync();
         }
 

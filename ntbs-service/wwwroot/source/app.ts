@@ -14,8 +14,8 @@ import { YearComparison } from './Components/YearComparison';
 // @ts-ignore
 import config from './config/config-APP_TARGET';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
+import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
-
 // Vue needs to be the firs thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 
@@ -25,6 +25,7 @@ Vue.component('validate-input', ValidateInput);
 Vue.component('validate-date', ValidateDate);
 Vue.component('date-comparison', DateComparison);
 Vue.component('cascading-dropdowns', CascadingDropwdowns);
+Vue.component('validate-contact-tracing', ValidateContactTracing);
 Vue.component('validate-riskfactor', ValidateRiskFactor);
 Vue.component('year-comparison', YearComparison);
 

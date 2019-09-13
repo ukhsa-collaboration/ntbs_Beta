@@ -16,6 +16,7 @@ namespace ntbs_service.Services
         Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
+        Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
     }
@@ -81,6 +82,13 @@ namespace ntbs_service.Services
         {
             context.Attach(notification);
             notification.Episode = episode;
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing) {
+            context.Attach(notification);
+            notification.ContactTracing = contactTracing;
 
             await context.SaveChangesAsync();
         }

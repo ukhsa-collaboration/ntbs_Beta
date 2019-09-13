@@ -80,7 +80,8 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
-        public async Task<IActionResult> OnPostPreviousPageAsync(int? NotificationId)
+
+        public async Task<IActionResult> OnPostAsync(int? NotificationId)
         {
             bool validModel = await validateAndSave(NotificationId);
 
@@ -88,18 +89,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToPage("./Episode", new {id = NotificationId});
-        }
-
-        public async Task<IActionResult> OnPostNextPageAsync(int? NotificationId)
-        {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./SocialRiskFactors", new {id = NotificationId});
+            return RedirectToPage("./ContactTracing", new {id = NotificationId});
         }
 
         private async Task<bool> validateAndSave(int? NotificationId) {

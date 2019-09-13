@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Models;
 using ntbs_service.Models.Validations;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ntbs_service.Pages
 {
@@ -70,6 +73,27 @@ namespace ntbs_service.Pages
             }
         }
 
+        public ContentResult ValidateFullModel(object model, string key, string modelName) 
+        {
+            if(TryValidateModel(model, model.GetType().Name)) {
+                return Content("");
+            } else {
+                Dictionary<string, string> keyErrorDictionary = new Dictionary<string, string>();
+                foreach (var modelStateKey in ViewData.ModelState.Keys)
+                {
+                    var modelStateVal = ViewData.ModelState[modelStateKey];
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        // Currently this double counts each property as "property" and "model.property", the below if clause 
+                        // removes the instances of "model.property"
+                        if(!modelStateKey.StartsWith(modelName)) {
+                            keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
+                        }
+                    }
+                }
+                return Content(JsonConvert.SerializeObject(keyErrorDictionary));
+            }
+        }
         protected ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare)
         {
             if (IsValidYear(yearToValidate))

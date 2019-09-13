@@ -21,7 +21,12 @@ namespace ntbs_service.Models.Validations
         public const string NhsNumberLength = "NHS Number needs to be 10 digits long";
         public const string PreviousTBDiagnosisYear = "Please enter a valid year. Year of diagnosis cannot be after 2000";
         public const string RiskFactorSelection = "At least one field should be selected";
-
+        public const string PositiveNumbersOnly = "Please enter a positive value";
+        public const string ContactTracingContactsScreened = "Must be smaller or equal to the number identified";
+        public const string ContactTracingContactsLatentTB = "Must be smaller or equal to than number screened minus those with latent TB";
+        public const string ContactTracingContactsActiveTB = "Must be smaller or equal to than number of adults screened minus those with active TB";
+        public const string ContactTracingContactsStartedTreatment = "Must be smaller or equal to number of adults with latent TB";
+        public const string ContactTracingContactsFinishedTreatment = "Must be smaller or equal to number of adults the started treatment";
     }
 
     public static class ValidDates
