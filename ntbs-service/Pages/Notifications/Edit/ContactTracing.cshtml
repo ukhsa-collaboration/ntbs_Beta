@@ -7,15 +7,13 @@ Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Contact Tracing";
 }
 
-<div><a asp-page="Index">Back to List</a></div>
-
 <h2>Contact Tracing</h2>
 
 <form method="post">
     <input type="hidden" asp-for="NotificationId" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <validate-contact-tracing ref="contactTracing0" name="Contact Tracing" model="ContactTracing" property="ContactTracing"
+    <validate-contact-tracing ref="contactTracing" name="Contact Tracing" model="ContactTracing" property="ContactTracing"
                 rank="0" v-model="contactTracing" inline-template>
         <nhs-fieldset aria-describedby="TB-contacts-identified">
             <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts identified for screening </nhs-fieldset-legend>
