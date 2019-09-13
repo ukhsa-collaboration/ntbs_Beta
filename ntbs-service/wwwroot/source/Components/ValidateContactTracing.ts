@@ -1,20 +1,20 @@
 import Vue from 'vue';
-import { getHeaders, getValidationPath as getValidationPath, FormattedDate, convertFormattedDateToDate } from '../helpers';
+import { getHeaders } from '../helpers';
 const axios = require('axios');
 
 type ContactTracingVariables = { 
-    adultsIdentified: any, 
-    childrenIdentified: any, 
-    adultsScreened: any,
-    childrenScreened: any,
-    adultsLatentTB: any, 
-    childrenLatentTB: any, 
-    adultsActiveTB: any,
-    childrenActiveTB: any,
-    adultsStartedTreatment: any, 
-    childrenStartedTreatment: any, 
-    adultsFinishedTreatment: any,
-    childrenFinishedTreatment: any
+    adultsIdentified: string,
+    childrenIdentified: string,
+    adultsScreened: string,
+    childrenScreened: string,
+    adultsLatentTB: string,
+    childrenLatentTB: string,
+    adultsActiveTB: string,
+    childrenActiveTB: string,
+    adultsStartedTreatment: string,
+    childrenStartedTreatment: string,
+    adultsFinishedTreatment: string,
+    childrenFinishedTreatment: string
 };
 
 const ValidateContactTracing = Vue.extend({
@@ -56,7 +56,7 @@ const ValidateContactTracing = Vue.extend({
         },
 
         ValidateModel: function(contactTracingVariables: ContactTracingVariables) {
-            axios.get(`${this.$props.model}/Validate${this.$props.model}?key=${this.$props.property}&adultsIdentified=${contactTracingVariables.adultsIdentified}&childrenIdentified=${contactTracingVariables.childrenIdentified}&adultsScreened=${contactTracingVariables.adultsScreened}&childrenScreened=${contactTracingVariables.childrenScreened}&adultsLatentTB=${contactTracingVariables.adultsLatentTB}&childrenLatentTB=${contactTracingVariables.childrenLatentTB}&adultsActiveTB=${contactTracingVariables.adultsActiveTB}&childrenActiveTB=${contactTracingVariables.childrenActiveTB}&adultsStartedTreatment=${contactTracingVariables.adultsStartedTreatment}&childrenStartedTreatment=${contactTracingVariables.childrenStartedTreatment}&adultsFinishedTreatment=${contactTracingVariables.adultsFinishedTreatment}&childrenFinishedTreatment=${contactTracingVariables.childrenFinishedTreatment}`, 
+            axios.get(`${this.$props.model}/Validate${this.$props.model}?key=${this.$props.property}`, { params: contactTracingVariables }, 
                     null, { headers: getHeaders() })
                 .then((response: any) => {
                     console.log(response);
