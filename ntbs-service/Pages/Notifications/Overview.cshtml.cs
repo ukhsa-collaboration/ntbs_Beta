@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public Notification Notification { get; set; }
         [BindProperty]
+        public string Dob { get; set; }
+        [BindProperty]
         public int NotificationId { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -36,8 +39,14 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = Notification.NotificationId;
+            Dob = this.convertDatetimeToString(Notification.PatientDetails.Dob);
 
             return Page();
+        }
+
+        public string convertDatetimeToString(DateTime? date) {
+            var dobString = date.ToString();
+            return dobString.Substring(0, 6) + dobString.Substring(8, 2);
         }
     }
 }

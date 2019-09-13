@@ -6,69 +6,237 @@
     ViewData["Title"] = "Overview";
 }
 
-<div style="display: flex">
-    <h3> Personal details of patient </h3>
-    <a href="/edit/patientDetails"> edit </a> 
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Personal details of patient </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
-<div>
-    <div style="display: flex">
-        <div style="width: 33%">
-            <div> Name </div>
-            <div> @Model.Notification.PatientDetails.GivenName </div>
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Name </div>
+            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
         </div>
-        <div style="width: 33%">
-            <div> Sex </div>
-            <div> Male </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Sex </div>
+            <div> @if(@Model.Notification.PatientDetails.Sex != null) {
+                @Model.Notification.PatientDetails.Sex.Label
+             } </div>
         </div>
-        <div style="width: 33%">
-            <div> Country of birth </div>
-            <div> XXX </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Country of birth </div>
+            <div> @if(@Model.Notification.PatientDetails.Country != null) {
+                @Model.Notification.PatientDetails.Country.Name
+             } </div>
         </div>
     </div>
-    <div style="display: flex">
-        <div style="width: 33%">
-            <div> Date of birth </div>
-            <div> XX/XX/XX </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Date of birth </div>
+            <div> @Model.Dob </div>
         </div>
-        <div style="width: 33%">
-            <div> NHS number </div>
-            <div> 3-3-4 format </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> NHS number </div>
+            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
         </div>
-        <div style="width: 33%">
-            <div> Ethnic group </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Ethnic group </div>
+            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
+                @Model.Notification.PatientDetails.Ethnicity.Label
+             } </div>
+        </div>
+    </div>
+</div>
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Hospital Details </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div>
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Notifying TB Service </div>
+            <div> Example Service </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Consultant </div>
+            <div> XXX </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Case Manager </div>
             <div> XXX </div>
         </div>
     </div>
 </div>
 
-<h3> Hospital Details </h3>
-
-<div style="display: flex">
-    <div style="width: 33%">
-        <div> Notifying TB Service </div>
-        <div> Example Service </div>
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Clinical details </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Sites of Disease </div>
+            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Sample details </div>
+            <div> @if(@Model.Notification.PatientDetails.Sex != null) {
+                @Model.Notification.PatientDetails.Sex.Label
+             } </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> BCG vaccination </div>
+            <div> @if(@Model.Notification.PatientDetails.Country != null) {
+                @Model.Notification.PatientDetails.Country.Name
+             } </div>
+        </div>
     </div>
-    <div style="width: 33%">
-        <div> Consultant </div>
-        <div> XXX </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Symptom onset </div>
+            <div> @Model.Notification.PatientDetails.Dob </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Start of treatment </div>
+            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Postmortem diagnosis </div>
+            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
+                @Model.Notification.PatientDetails.Ethnicity.Label
+             } </div>
+        </div>
     </div>
-    <div style="width: 33%">
-        <div> Case Manager </div>
-        <div> XXX </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Presentation </div>
+            <div> @Model.Notification.PatientDetails.Dob </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Start of treatment date </div>
+            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Postmortem diagnosis </div>
+            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
+                @Model.Notification.PatientDetails.Ethnicity.Label
+             } </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Diagnosis date </div>
+            <div> @Model.Notification.PatientDetails.Dob </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of days between diagnosis and treatment </div>
+            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Death date </div>
+            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
+                @Model.Notification.PatientDetails.Ethnicity.Label
+             } </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of days between onset and treatment </div>
+            <div> @Model.Notification.PatientDetails.Dob </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Patient on short course </div>
+            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+        </div>
     </div>
 </div>
 
-<h3> Clinical Details </h3>
-
-<h3> Contact Tracing </h3>
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Contact tracing </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts identified for screening </div>
+            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts screened for TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with active TB </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div>  </div>
+        </div>
+    </div>
+</div>
 
 <h3> Social Risk Factors </h3>
 
 <h3> Travel/visitors </h3>
 
-<h3> Co-morbidities details </h3>
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Co-morbidities details </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Diabetes </div>
+            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Hepatitis B </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Hepatitis C </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Chronic Liver Disease </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Chronic Renal Disease </div>
+            <div>  </div>
+        </div>
+    </div>
+</div>
 
-<h3> Immunosuppresion </h3>
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Immunosuppresion </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Immunosuppresion </div>
+            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Type </div>
+            <div>  </div>
+        </div>
+    </div>
+</div>
 
 <h3> Previous history details for new patient </h3>
 

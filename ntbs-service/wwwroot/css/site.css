@@ -117,3 +117,33 @@ body {
 .double-fixed-width-separator {
     width: 100px;
 }
+
+.notification-overview-type-and-edit-container {
+    display: flex;
+    border-bottom: 1px solid #cccccc;
+}
+
+.notification-details-type {
+    margin-bottom: 10px;
+}
+
+.notification-edit-link {
+    margin: auto 0 10px auto;
+}
+
+.notification-overview-details-container {
+    padding: 10px 0 5px 0;
+}
+
+.notification-overview-details {
+    display: flex;
+    padding-bottom: 10px;
+}
+
+.notification-details-label {
+    font-weight: 600;
+}
+
+.three-column-row-field {
+    width: 33%;
+}
