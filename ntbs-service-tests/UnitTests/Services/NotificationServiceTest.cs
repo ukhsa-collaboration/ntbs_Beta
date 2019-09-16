@@ -34,7 +34,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
                 RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown },
                 RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
                 RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
-                RiskFactorMentalHealth = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
             };
 
             // Act
@@ -52,10 +51,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             Assert.False(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
             Assert.False(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
             Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
-            
-            Assert.False(socialRiskFactors.RiskFactorMentalHealth.InPastFiveYears);
-            Assert.False(socialRiskFactors.RiskFactorMentalHealth.MoreThanFiveYearsAgo);
-            Assert.False(socialRiskFactors.RiskFactorMentalHealth.IsCurrent);   
         }
 
         [Fact]
@@ -67,7 +62,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
                 RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No },
                 RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
                 RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
-                RiskFactorMentalHealth = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
             };
 
             // Act
@@ -85,10 +79,6 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             Assert.False(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
             Assert.False(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
             Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
-            
-            Assert.False(socialRiskFactors.RiskFactorMentalHealth.InPastFiveYears);
-            Assert.False(socialRiskFactors.RiskFactorMentalHealth.MoreThanFiveYearsAgo);
-            Assert.False(socialRiskFactors.RiskFactorMentalHealth.IsCurrent);   
         }
 
         public static IEnumerable<object[]> UkBornTestCases()

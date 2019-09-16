@@ -17,7 +17,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Patien's ability to self-administer treatment is affected by alcohol misuse or abuse
+                Patient's ability to self-administer treatment is affected by alcohol misuse or abuse
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in Model.StatusList)
@@ -70,19 +70,21 @@
         <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorImprisonment" view-data="@ImprisonmentViewData"/>
         <br/>
     </div>
-    
-    <div>
-        @{
-            var MentalHealthModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorMentalHealth");
-            var MentalHealthViewData = new ViewDataDictionary(this.ViewData) { 
-                { "propertyName", "RiskFactorMentalHealth" }, 
-                { "errorState", MentalHealthModelIsValid },
-                { "questionText", "Patient has a history of menatal health issue" } 
-            };       
-        }
-        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorMentalHealth" view-data="@MentalHealthViewData"/>
-        <br/>
-    </div>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">Patient has mental health issues</nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in Model.StatusList)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.MentalHealthStatus" id="mentalhealth-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="mentalhealth-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
 
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
