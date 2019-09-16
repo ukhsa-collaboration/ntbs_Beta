@@ -11,6 +11,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsAsync();
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? id);
+        Task<Notification> GetNotificationWithAllInfoAsync(int? id);
 
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
@@ -89,6 +90,22 @@ namespace ntbs_service.DataAccess
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorMentalHealth)
                     .FirstOrDefaultAsync(n => n.NotificationId == id);
+        }
+
+        public async Task<Notification> GetNotificationWithAllInfoAsync(int? id)
+        {
+            return await context.Notification
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
+                .Include(n => n.Episode).ThenInclude(p => p.Hospital)
+                .Include(n => n.Episode).ThenInclude(p => p.TBService)
+                .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
+                .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
+                .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
+                .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorMentalHealth)
+                .Include(n => n.NotificationSites)
+                .FirstOrDefaultAsync(n => n.NotificationId == id);
         }
     }
 }

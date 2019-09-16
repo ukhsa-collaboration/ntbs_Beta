@@ -11,10 +11,10 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Name </div>
-            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+            <div> @if(@Model.Notification.PatientDetails.FamilyName) { @Model.Notification.PatientDetails.FamilyName.ToString().ToUpper(), @Model.Notification.PatientDetails.GivenName } </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Sex </div>
@@ -24,10 +24,11 @@
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> NHS number </div>
-            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+            <div> @(@Model.Notification.PatientDetails.NhsNumber.ToString().Substring(0, 3) + " " + @Model.Notification.PatientDetails.NhsNumber.ToString().Substring(3, 3) 
+                + " " + @Model.Notification.PatientDetails.NhsNumber.ToString().Substring(6, 4) ) </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Notification Date </div>
             <div>  </div>
@@ -41,27 +42,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Date of death </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Occupation </div>
-            <div>  </div>
-        </div>
-    </div>
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Previous IDs </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Local Patient ID </div>
-            <div>  </div>
-        </div>
-    </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Address </div>
             <div>  </div>
@@ -70,22 +51,30 @@
             <div class="notification-details-label"> Postcode </div>
             <div> No fixed abode or postcode </div>
         </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Occupation </div>
+            <div>  </div>
+        </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Ethnic group </div>
+            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
+                @Model.Notification.PatientDetails.Ethnicity.Label
+             } </div>
+        </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Country of birth </div>
-            <div>  </div>
+            <div> @if(@Model.Notification.PatientDetails.Country != null) {
+                @Model.Notification.PatientDetails.Country.Name
+             } </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Year of first entry to UK </div>
             <div>  </div>
         </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Ethnic group </div>
-            <div>  </div>
-        </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Local Authority </div>
             <div>  </div>
@@ -99,6 +88,16 @@
             <div>  </div>
         </div>
     </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Previous IDs </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Local Patient ID </div>
+            <div>  </div>
+        </div>
+    </div>
 </div>
 
 <div class="notification-overview-type-and-edit-container">
@@ -106,18 +105,28 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div>
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Notifying TB Service </div>
-            <div> @Model.Notification.Episode.TBServiceCode </div>
+            <div class="notification-details-label"> Case Manager </div>
+            <div> @Model.Notification.Episode.CaseManager </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Consultant </div>
             <div> @Model.Notification.Episode.Consultant </div>
         </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Case Manager </div>
-            <div> @Model.Notification.Episode.CaseManager </div>
+            <div class="notification-details-label"> TB Service </div>
+            <div> @if(@Model.Notification.Episode.TBService != null) {
+                @Model.Notification.Episode.TBService.Name
+             } </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Hospital </div>
+            <div> @if(@Model.Notification.Episode.Hospital != null) {
+                @Model.Notification.Episode.Hospital.Name
+             } </div>
         </div>
     </div>
 </div>
@@ -127,7 +136,7 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Sites of Disease </div>
             <div> Complicated? </div>
@@ -143,7 +152,7 @@
              } </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Symptom onset </div>
             <div>  </div>
@@ -159,7 +168,7 @@
              } </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Presentation </div>
             <div> @Model.Notification.PatientDetails.Dob </div>
@@ -175,7 +184,7 @@
              } </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Diagnosis date </div>
             <div> @Model.Notification.PatientDetails.Dob </div>
@@ -191,7 +200,7 @@
              } </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of days between onset and treatment </div>
             <div> @Model.Notification.PatientDetails.Dob </div>
@@ -208,7 +217,7 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts identified for screening </div>
             <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
@@ -222,7 +231,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
             <div>  </div>
@@ -243,11 +252,11 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div> Is the patient's ability to self-administer treatment affected by alcohol misuse or abuse? </div>
         <div> Answer </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
             <div>  </div>
@@ -261,7 +270,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
             <div>  </div>
@@ -275,7 +284,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
             <div>  </div>
@@ -289,7 +298,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
             <div>  </div>
@@ -303,7 +312,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
             <div>  </div>
@@ -326,7 +335,7 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Diabetes </div>
             <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
@@ -340,7 +349,7 @@
             <div>  </div>
         </div>
     </div>
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Chronic Liver Disease </div>
             <div>  </div>
@@ -357,7 +366,7 @@
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Immunosuppresion </div>
             <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
