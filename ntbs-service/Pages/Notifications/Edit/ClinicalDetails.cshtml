@@ -10,22 +10,21 @@ ViewData["Title"] = "Notification - Clinical Details";
 }
 @{string errorClassName = "nhsuk-form-group--error";}
 
-<h2>Clinical Details</h2>
 <!-- TODO: Split this into multiple partial pages for readability -->
 <form method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="NotificationId" />
     <input type="hidden" asp-for="PatientBirthYear" />
+    <h2>Sites of disease</h2>
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Large">Sites of disease</nhs-fieldset-legend>
             <nhs-checkboxes>
                 <nhs-checkboxes-item>
                     <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]"/>
                     <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PULMONARY).Description</label>
                 </nhs-checkboxes-item>
                 <nhs-checkboxes-item>
-                    <label nhs-label-type="Standard" style="padding-left: 12px">Extra-pulmonary</label>
+                    <label nhs-label-type="Standard" style="margin-left: -40px">Extra-pulmonary</label>
                 </nhs-checkboxes-item>
             </nhs-checkboxes>
             <nhs-checkboxes style="margin-left: 52px">
@@ -38,7 +37,7 @@ ViewData["Title"] = "Notification - Clinical Details";
                     <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_OTHER).Description</label>
                 </nhs-checkboxes-item>
                 <nhs-checkboxes-item>
-                    <label nhs-label-type="Standard" style="padding-left: 12px">CNS</label>
+                    <label nhs-label-type="Standard" style="margin-left: -40px">CNS</label>
                 </nhs-checkboxes-item>
             </nhs-checkboxes>
             <nhs-checkboxes style="margin-left: 104px">
@@ -69,7 +68,7 @@ ViewData["Title"] = "Notification - Clinical Details";
                     <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GENITOURINARY).Description</label>
                 </nhs-checkboxes-item>
                 <nhs-checkboxes-item>
-                    <label nhs-label-type="Standard" style="padding-left: 12px">Lymph nodes</label>
+                    <label nhs-label-type="Standard" style="margin-left: -40px">Lymph nodes</label>
                 </nhs-checkboxes-item>
             </nhs-checkboxes>
             <nhs-checkboxes style="margin-left: 104px">
@@ -122,14 +121,20 @@ ViewData["Title"] = "Notification - Clinical Details";
                         </div>
                     </div>
                 </validate-input>
-            </div>    
+            </div>
+            <nhs-checkboxes style="margin-left: 52px">
+                <nhs-checkboxes-item>
+                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]"/>
+                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.UNKNOWN).Description</label>
+                </nhs-checkboxes-item>
+            </nhs-checkboxes>
         </nhs-fieldset>
     </nhs-form-group>
     <br/>
 
+    <h2>Sample Details</h2>
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">Sample details</nhs-fieldset-legend>
             <nhs-checkboxes>
                 <nhs-checkboxes-item>
                     <input nhs-input-type="Checkboxes" asp-for="ClinicalDetails.NoSampleTaken"/>
@@ -138,8 +143,9 @@ ViewData["Title"] = "Notification - Clinical Details";
             </nhs-checkboxes>
         </nhs-fieldset>
     </nhs-form-group>
-    <br/>    
+    <br/>
 
+    <h2>BCG Details</h2>
     <div class="nhsuk-form-group">
         <fieldset class="nhsuk-fieldset" aria-describedby="bcg-vaccination-error">
             <legend class="nhsuk-fieldset__legend">BCG Vaccination</legend>
@@ -178,9 +184,14 @@ ViewData["Title"] = "Notification - Clinical Details";
     </div>
     <br/>
 
+    <h2>Clinical Dates</h2>
     <date-comparison inline-template>
         <div>
-            <h4 class="text-warning" v-if="dateComparisonError">{{dateComparisonError}}</h4>
+            <ul class="text-warning" id="date-warnings">
+                <li v-for="warning in dateWarnings" v-if="warning">
+                    <h4>{{ warning.message }}</h4>
+                </li>
+            </ul>
             <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
                 @{
                     var SymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
@@ -341,13 +352,14 @@ ViewData["Title"] = "Notification - Clinical Details";
             </div>
             <br/>
 
+            <h2>Post Mortem Diagnosis</h2>
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
                             <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
                             <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
-                                Is Post Mortem Diagnosis
+                                Yes
                             </label>
                         </div>
                         <validate-date ref="date4" name="Death Date" model="ClinicalDetails" property="DeathDate" rank="4" v-model="dates[4]" inline-template>
@@ -391,7 +403,7 @@ ViewData["Title"] = "Notification - Clinical Details";
                         <div class="nhsuk-radios__item">
                             <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="false">
                             <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
-                                Is Not Post Mortem
+                                No
                             </label>
                         </div>
                     </div>

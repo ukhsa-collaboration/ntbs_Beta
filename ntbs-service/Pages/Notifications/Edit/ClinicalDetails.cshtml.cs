@@ -137,8 +137,6 @@ namespace ntbs_service.Pages_Notifications
                 OtherSite.SiteDescription = null;
                 ModelState.Remove("OtherSite.SiteDescription");
             }
-
-           
         }
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)

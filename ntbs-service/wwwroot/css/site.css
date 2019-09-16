@@ -117,3 +117,7 @@ body {
 .double-fixed-width-separator {
     width: 100px;
 }
+
+.text-warning {
+    color: orangered;
+}
