@@ -9,39 +9,39 @@ namespace ntbs_service.Models
     public class ContactTracing
     {
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
-        public int AdultsIdentified { get; set; }
+        public int? AdultsIdentified { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
-        public int ChildrenIdentified { get; set; }
+        public int? ChildrenIdentified { get; set; }
 
         [PositiveIntegerSmallerThanValue("AdultsIdentified", ErrorMessage = ValidationMessages.ContactTracingAdultsScreened)]
-        public int AdultsScreened { get; set; }
+        public int? AdultsScreened { get; set; }
 
         [PositiveIntegerSmallerThanValue("ChildrenIdentified", ErrorMessage = ValidationMessages.ContactTracingChildrenScreened)]
-        public int ChildrenScreened { get; set; }
+        public int? ChildrenScreened { get; set; }
 
         [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsLatentTB", ErrorMessage = ValidationMessages.ContactTracingAdultsActiveTB)]      
-        public int AdultsActiveTB { get; set; }
+        public int? AdultsActiveTB { get; set; }
 
         [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenLatentTB", ErrorMessage = ValidationMessages.ContactTracingChildrenActiveTB)]
-        public int ChildrenActiveTB { get; set; }
+        public int? ChildrenActiveTB { get; set; }
 
         [PositiveIntegerSmallerThanDifferenceOfValues("AdultsScreened", "AdultsActiveTB", ErrorMessage = ValidationMessages.ContactTracingAdultsLatentTB)]
-        public int AdultsLatentTB { get; set; }
+        public int? AdultsLatentTB { get; set; }
 
         [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenActiveTB", ErrorMessage = ValidationMessages.ContactTracingChildrenLatentTB)]
-        public int ChildrenLatentTB { get; set; }
+        public int? ChildrenLatentTB { get; set; }
         
         [PositiveIntegerSmallerThanValue("AdultsLatentTB", ErrorMessage = ValidationMessages.ContactTracingAdultStartedTreatment)]
-        public int AdultsStartedTreatment { get; set; }
+        public int? AdultsStartedTreatment { get; set; }
         
         [PositiveIntegerSmallerThanValue("ChildrenLatentTB", ErrorMessage = ValidationMessages.ContactTracingChildrenStartedTreatment)]
-        public int ChildrenStartedTreatment { get; set; }
+        public int? ChildrenStartedTreatment { get; set; }
         
         [PositiveIntegerSmallerThanValue("AdultsStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingAdultsFinishedTreatment)]
-        public int AdultsFinishedTreatment { get; set; }
+        public int? AdultsFinishedTreatment { get; set; }
 
         [PositiveIntegerSmallerThanValue("ChildrenStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingChildrenFinishedTreatment)]
-        public int ChildrenFinishedTreatment { get; set; }
+        public int? ChildrenFinishedTreatment { get; set; }
     }
 }

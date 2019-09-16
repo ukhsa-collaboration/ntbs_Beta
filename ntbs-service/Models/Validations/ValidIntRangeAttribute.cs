@@ -20,14 +20,23 @@ namespace ntbs_service.Models.Validations
             PropertyInfo property = type.GetProperty(ComparisonValue);
             if (property != null)
             {
-                object propertyValue = property.GetValue(instance);
                 int valueToValidate;
                 int maxValue;
-                if(Int32.TryParse(propertyValue.ToString(), out maxValue) && Int32.TryParse(value.ToString(), out valueToValidate)) {
-                    if(valueToValidate >= 0 && valueToValidate <= maxValue) {
-                    return null;
-                    }
+                object propertyValue = property.GetValue(instance);
+                if(propertyValue == null) {
+                    maxValue = 0;
+                } else {
+                    Int32.TryParse(propertyValue.ToString(), out maxValue);
                 }
+                if(value == null) {
+                    valueToValidate = 0;
+                } else {
+                    Int32.TryParse(value.ToString(), out valueToValidate);
+                }
+                if(valueToValidate >= 0 && valueToValidate <= maxValue) {
+                    return null;
+                }
+
             }
             return new ValidationResult(ErrorMessage);
         }
@@ -51,15 +60,30 @@ namespace ntbs_service.Models.Validations
             PropertyInfo propertyToSum = type.GetProperty(SummedComparisonValue);
             if (propertyMax != null && propertyToSum != null)
             {
-                object propertyValueMax = propertyMax.GetValue(instance);
-                object propertyValueToSum = propertyToSum.GetValue(instance);
                 int valueToValidate;
                 int valueToSum;
                 int maxValue;
-                if(Int32.TryParse(propertyValueMax.ToString(), out maxValue) && Int32.TryParse(propertyValueToSum.ToString(), out valueToSum) && Int32.TryParse(value.ToString(), out valueToValidate)) {
-                    if(valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum) {
+                object propertyValueMax = propertyMax.GetValue(instance);
+                object propertyValueToSum = propertyToSum.GetValue(instance);
+
+                if(propertyValueMax == null) {
+                    maxValue = 0;
+                } else {
+                    Int32.TryParse(propertyValueMax.ToString(), out maxValue);
+                }
+                if(propertyValueToSum == null) {
+                    valueToSum = 0;
+                } else {
+                    Int32.TryParse(propertyValueToSum.ToString(), out valueToSum);
+                }
+                if(value == null) {
+                    valueToValidate = 0;
+                } else {
+                    Int32.TryParse(value.ToString(), out valueToValidate);
+                }
+
+                if(valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum) {
                     return null;
-                    }
                 }
             }
             return new ValidationResult(ErrorMessage);
