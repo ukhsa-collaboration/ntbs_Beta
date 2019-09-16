@@ -14,7 +14,7 @@
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Name </div>
-            <div> @if(@Model.Notification.PatientDetails.FamilyName) { @Model.Notification.PatientDetails.FamilyName.ToString().ToUpper(), @Model.Notification.PatientDetails.GivenName } </div>
+            <div> @Model.Notification.PatientDetails.FamilyName?.ToString().ToUpper(), @Model.Notification.PatientDetails.GivenName </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Sex </div>
@@ -35,7 +35,7 @@
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Date of birth </div>
-            <div> @(@Model.Notification.PatientDetails.Dob?.ToString("dd-MMM-yyyy")) </div>
+            <div> @Model.Notification.PatientDetails.Dob?.ToString("dd-MMM-yyyy") </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Age at notification </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Postcode </div>
-            <div> No fixed abode or postcode </div>
+            <div> @(@Model.Notification.PatientDetails.NoFixedAbode ? "No fixed abode" : @Model.Notification.PatientDetails.Postcode.ToString()) </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Occupation </div>
@@ -59,15 +59,11 @@
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Ethnic group </div>
-            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
-                @Model.Notification.PatientDetails.Ethnicity.Label
-             } </div>
+            <div> @Model.Notification.PatientDetails.Ethnicity?.Label </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Country of birth </div>
-            <div> @if(@Model.Notification.PatientDetails.Country != null) {
-                @Model.Notification.PatientDetails.Country.Name
-             } </div>
+            <div> @Model.Notification.PatientDetails.Country?.Name </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Year of first entry to UK </div>
@@ -118,15 +114,11 @@
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> TB Service </div>
-            <div> @if(@Model.Notification.Episode.TBService != null) {
-                @Model.Notification.Episode.TBService.Name
-             } </div>
+            <div> @Model.Notification.Episode.TBService?.Name </div> 
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Hospital </div>
-            <div> @if(@Model.Notification.Episode.Hospital != null) {
-                @Model.Notification.Episode.Hospital.Name
-             } </div>
+            <div> @Model.Notification.Episode.Hospital?.Name </div>
         </div>
     </div>
 </div>
@@ -139,75 +131,89 @@
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Sites of Disease </div>
-            <div> Complicated? </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Drug resistance profile </div>
+            <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Sample details </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> BCG vaccination </div>
-            <div> @if(@Model.Notification.PatientDetails.Country != null) {
-                @Model.Notification.PatientDetails.Country.Name
-             } </div>
+            <div> @(@Model.Notification.ClinicalDetails.NoSampleTaken ? "No" : "Yes") </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Symptom onset </div>
-            <div>  </div>
+            <div class="notification-details-label"> Symptom onset date </div>
+            <div> @Model.Notification.ClinicalDetails.SymptomStartDate?.ToString("dd-MMM-yyyy") </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Start of treatment </div>
+            <div class="notification-details-label"> Days from onset to treatment </div>
             <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Postmortem diagnosis </div>
-            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
-                @Model.Notification.PatientDetails.Ethnicity.Label
-             } </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Presentation </div>
-            <div> @Model.Notification.PatientDetails.Dob </div>
+            <div class="notification-details-label"> Presentation date </div>
+            <div> @Model.Notification.ClinicalDetails.PresentationDate?.ToString("dd-MMM-yyyy") </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Start of treatment date </div>
-            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Postmortem diagnosis </div>
-            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
-                @Model.Notification.PatientDetails.Ethnicity.Label
-             } </div>
+            <div class="notification-details-label"> Days from onset to presentation </div>
+            <div>  </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Diagnosis date </div>
-            <div> @Model.Notification.PatientDetails.Dob </div>
+            <div> @Model.Notification.ClinicalDetails.DiagnosisDate?.ToString("dd-MMM-yyyy") </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of days between diagnosis and treatment </div>
-            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Death date </div>
-            <div> @if(@Model.Notification.PatientDetails.Ethnicity != null) {
-                @Model.Notification.PatientDetails.Ethnicity.Label
-             } </div>
+            <div class="notification-details-label"> Days from presentation to diagnosis </div>
+            <div>  </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of days between onset and treatment </div>
-            <div> @Model.Notification.PatientDetails.Dob </div>
+            <div class="notification-details-label"> Treatment date </div>
+            <div> @Model.Notification.ClinicalDetails.TreatmentStartDate?.ToString("dd-MMM-yyyy") </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Patient on short course </div>
-            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+            <div class="notification-details-label"> Days from diagnosis to treatment </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Postmortem diagnosis </div>
+            <div> @(@Model.Notification.ClinicalDetails.IsPostMortem ? "Yes" : "No") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Date of death </div>
+            <div> @Model.Notification.ClinicalDetails.DeathDate?.ToString("dd-MMM-yyyy") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> HIV test offered </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Short course treatment </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Directly observed treatment </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> MDR treatment </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> BCG vaccination </div>
+            <div> @Model.Notification.ClinicalDetails.BCGVaccinationState </div>
         </div>
     </div>
 </div>
@@ -220,125 +226,193 @@
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts identified for screening </div>
-            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsIdentified </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenIdentified </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsIdentified + @Model.Notification.ContactTracing.ChildrenIdentified) </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts screened for TB </div>
-            <div>  </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsScreened </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenScreened </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsScreened + @Model.Notification.ContactTracing.ChildrenScreened) </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with active TB </div>
-            <div>  </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsActiveTB </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenActiveTB </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsActiveTB + @Model.Notification.ContactTracing.ChildrenActiveTB) </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts with latent TB </div>
-            <div>  </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsLatentTB </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenLatentTB </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsLatentTB + @Model.Notification.ContactTracing.ChildrenLatentTB) </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
-            <div>  </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsStartedTreatment </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenStartedTreatment </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsStartedTreatment + @Model.Notification.ContactTracing.ChildrenStartedTreatment) </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
-            <div>  </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsFinishedTreatment </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenFinishedTreatment </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsFinishedTreatment + @Model.Notification.ContactTracing.ChildrenFinishedTreatment) </div>
         </div>
     </div>
 </div>
 
 <div class="notification-overview-type-and-edit-container">
-    <h3 class="notification-details-type"> Contact tracing </h3>
+    <h3 class="notification-details-type"> Social risk factors </h3>
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
     <div class="nhsuk-grid-row notification-overview-details">
-        <div> Is the patient's ability to self-administer treatment affected by alcohol misuse or abuse? </div>
-        <div> Answer </div>
-    </div>
-    <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts with latent TB </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div class="notification-details-label"> At least one social risk factor </div>
             <div>  </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div class="notification-details-label"> Alcohol misuse </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> History of drug misuse </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.DrugRiskFactorTimePeriods </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> History of homelessness </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.HomelessRiskFactorTimePeriods </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> History of imprisonment </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.ImprisonmentRiskFactorTimePeriods </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Mental health issues </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> MENTAL HEALTH STATUS HERE </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Smoker </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
+        </div>
+    </div>
+</div>
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Travel/visitors </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a>
+</div> 
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Patient has visited one or more high incidence countries </div>
             <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div class="notification-details-label"> Total countries visited </div>
             <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div class="notification-details-label"> Total number of months travelled </div>
             <div>  </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div class="notification-details-label"> Country 1 </div>
+            <div>  </div>
             <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div class="notification-details-label"> Country 2 </div>
+            <div>  </div>
             <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div class="notification-details-label"> Country 3 </div>
             <div>  </div>
-        </div>
-    </div>
-    <div class="nhsuk-grid-row notification-overview-details">
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts with latent TB </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
-            <div>  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
             <div>  </div>
         </div>
     </div>
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div class="notification-details-label"> Patient has had visitors from one or more high incidence countries </div>
             <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div class="notification-details-label"> Total visitor countries </div>
             <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
-            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div class="notification-details-label"> Total number of months of visits </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Country 1 </div>
+            <div>  </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Country 2 </div>
+            <div>  </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Country 3 </div>
+            <div>  </div>
             <div>  </div>
         </div>
     </div>
 </div>
 
-<h3> Travel/visitors </h3>
-
 <div class="notification-overview-type-and-edit-container">
-    <h3 class="notification-details-type"> Co-morbidities details </h3>
+    <h3 class="notification-details-type"> Co-morbidities and immunosuppresion </h3>
     <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
 </div> 
 <div class="notification-overview-details-container">
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Diabetes </div>
-            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+            <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Hepatitis B </div>
@@ -359,25 +433,49 @@
             <div>  </div>
         </div>
     </div>
-</div>
-
-<div class="notification-overview-type-and-edit-container">
-    <h3 class="notification-details-type"> Immunosuppresion </h3>
-    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
-</div> 
-<div class="notification-overview-details-container">
     <div class="nhsuk-grid-row notification-overview-details">
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Immunosuppresion </div>
-            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+            <div>  </div>
         </div>
         <div class="nhsuk-grid-column-one-third">
             <div class="notification-details-label"> Type </div>
             <div>  </div>
         </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Further information </div>
+            <div>  </div>
+        </div>
     </div>
 </div>
 
-<h3> Previous history details for new patient </h3>
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Previous history of TB (pre-2000) </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div>
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Previous notification of TB </div>
+            <div> @(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == true ? "No" : "Yes") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Year of previous notification </div>
+            <div> @if(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == false) {
+                    @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear
+                } </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Drug therapy </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Treatment in UK </div>
+            <div>  </div>
+        </div>
+    </div>
+</div>
 
 <div> Back to top </div>

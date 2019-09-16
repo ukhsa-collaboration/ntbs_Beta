@@ -27,6 +27,14 @@ namespace ntbs_service.Pages_Notifications
         public Notification Notification { get; set; }
         [BindProperty]
         public int NotificationId { get; set; }
+        [BindProperty]
+        public string DrugRiskFactorTimePeriods { get; set; }
+        [BindProperty]
+        public string HomelessRiskFactorTimePeriods { get; set; }
+        [BindProperty]
+        public string ImprisonmentRiskFactorTimePeriods { get; set; }
+        [BindProperty]
+        public string Postcode { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -37,8 +45,29 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = Notification.NotificationId;
+            
+            DrugRiskFactorTimePeriods = CreateTimePeriodsString(Notification.SocialRiskFactors.RiskFactorDrugs);
+            HomelessRiskFactorTimePeriods = CreateTimePeriodsString(Notification.SocialRiskFactors.RiskFactorHomelessness);
+            ImprisonmentRiskFactorTimePeriods = CreateTimePeriodsString(Notification.SocialRiskFactors.RiskFactorImprisonment);
+
+            // make postcode string
+            // make sites string?
 
             return Page();
+        }
+
+        public string CreateTimePeriodsString(RiskFactorBase riskFactor) {
+            string timeString = "";
+            if(riskFactor.IsCurrent) {
+                timeString = timeString + "current";
+            }
+            if(riskFactor.InPastFiveYears) {
+                timeString = timeString + (String.IsNullOrEmpty(timeString) ? "less than 5 years ago" : ", less than 5 years ago");
+            }
+            if(riskFactor.MoreThanFiveYearsAgo) {
+                timeString = timeString + (String.IsNullOrEmpty(timeString) ? "more than 5 years ago" : ", more than 5 years ago");
+            }
+            return timeString;
         }
     }
 }

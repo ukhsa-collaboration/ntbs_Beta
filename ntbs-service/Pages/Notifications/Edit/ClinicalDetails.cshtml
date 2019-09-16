@@ -12,7 +12,7 @@ ViewData["Title"] = "Notification - Clinical Details";
 
 <h2>Clinical Details</h2>
 <!-- TODO: Split this into multiple partial pages for readability -->
-<form method="post">
+<form method="post" autocomplete="off">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="NotificationId" />
     <input type="hidden" asp-for="PatientBirthYear" />

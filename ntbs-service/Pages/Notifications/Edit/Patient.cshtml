@@ -11,7 +11,7 @@ ViewData["Title"] = "Notification - Personal Details";
 
 <h2>Personal details</h2>
 
-<form method="post">
+<form method="post" autocomplete="off">
     <input type="hidden" asp-for="NotificationId" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <validate-input model="Patient" property="GivenName" inline-template>
