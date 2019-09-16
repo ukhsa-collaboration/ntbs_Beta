@@ -62,7 +62,7 @@ namespace ntbs_service.Pages_Notifications
 
             await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
 
-            return RedirectToPage("./PreviousHistory", new {id = NotificationId});
+            return RedirectToPage("./Travel", new {id = NotificationId});
         }
 
         public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
