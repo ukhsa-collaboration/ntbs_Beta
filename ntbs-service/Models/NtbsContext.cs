@@ -216,7 +216,8 @@ namespace ntbs_service.Models
                 new Site { SiteId = (int)SiteId.PLEURAL, Description = "Pleural" },
                 new Site { SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial" },
                 new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin" },
-                new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" }
+                new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" },
+                new Site { SiteId = (int)SiteId.UNKNOWN, Description = "Unknown" }
             );
         }
 
