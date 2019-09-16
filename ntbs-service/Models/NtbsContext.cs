@@ -160,14 +160,10 @@ namespace ntbs_service.Models
                         rh.Property(e => e.Status).HasConversion(converter);
                         rh.ToTable("RiskFactorImprisonment");
                     });
-                    
-                    x.OwnsOne(c => c.RiskFactorMentalHealth, rh => {
-                        rh.Property(e => e.Status).HasConversion(converter);
-                        rh.ToTable("RiskFactorMentalHealth");
-                    });
 
                     x.Property(e => e.AlcoholMisuseStatus).HasConversion(converter);
                     x.Property(e => e.SmokingStatus).HasConversion(converter);
+                    x.Property(e => e.MentalHealthStatus).HasConversion(converter);
 
                     x.ToTable("SocialRiskFactors");
                 });

@@ -11346,7 +11346,7 @@ namespace ntbs_service.Migrations
                             b1.Property<int?>("AdultsActiveTB");
 
                             b1.Property<int?>("AdultsFinishedTreatment");
-
+                            
                             b1.Property<int?>("AdultsIdentified");
 
                             b1.Property<int?>("AdultsLatentTB");
@@ -11494,6 +11494,8 @@ namespace ntbs_service.Migrations
 
                             b1.Property<string>("AlcoholMisuseStatus");
 
+                            b1.Property<string>("MentalHealthStatus");
+
                             b1.Property<string>("SmokingStatus");
 
                             b1.HasKey("NotificationId");
@@ -11567,28 +11569,6 @@ namespace ntbs_service.Migrations
 
                                     b2.HasOne("ntbs_service.Models.SocialRiskFactors")
                                         .WithOne("RiskFactorImprisonment")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
-
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorMentalHealth", b2 =>
-                                {
-                                    b2.Property<int>("SocialRiskFactorsNotificationId");
-
-                                    b2.Property<bool>("InPastFiveYears");
-
-                                    b2.Property<bool>("IsCurrent");
-
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
-
-                                    b2.Property<string>("Status");
-
-                                    b2.HasKey("SocialRiskFactorsNotificationId");
-
-                                    b2.ToTable("RiskFactorMentalHealth");
-
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
-                                        .WithOne("RiskFactorMentalHealth")
                                         .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
