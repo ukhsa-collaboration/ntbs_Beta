@@ -55,15 +55,15 @@
     <div class="notification-overview-details">
         <div class="three-column-row-field">
             <div class="notification-details-label"> Notifying TB Service </div>
-            <div> Example Service </div>
+            <div> @Model.Notification.Episode.TBServiceCode </div>
         </div>
         <div class="three-column-row-field">
             <div class="notification-details-label"> Consultant </div>
-            <div> XXX </div>
+            <div> @Model.Notification.Episode.Consultant </div>
         </div>
         <div class="three-column-row-field">
             <div class="notification-details-label"> Case Manager </div>
-            <div> XXX </div>
+            <div> @Model.Notification.Episode.CaseManager </div>
         </div>
     </div>
 </div>
@@ -76,13 +76,11 @@
     <div class="notification-overview-details">
         <div class="three-column-row-field">
             <div class="notification-details-label"> Sites of Disease </div>
-            <div> @Model.Notification.PatientDetails.GivenName @Model.Notification.PatientDetails.FamilyName </div>
+            <div> Complicated? </div>
         </div>
         <div class="three-column-row-field">
             <div class="notification-details-label"> Sample details </div>
-            <div> @if(@Model.Notification.PatientDetails.Sex != null) {
-                @Model.Notification.PatientDetails.Sex.Label
-             } </div>
+            <div> @Model.Notification.ClinicalDetails.NoSampleTaken </div>
         </div>
         <div class="three-column-row-field">
             <div class="notification-details-label"> BCG vaccination </div>
@@ -94,11 +92,11 @@
     <div class="notification-overview-details">
         <div class="three-column-row-field">
             <div class="notification-details-label"> Symptom onset </div>
-            <div> @Model.Notification.PatientDetails.Dob </div>
+            <div> @Model.Notification.ClinicalDetails.SymptomStartDate </div>
         </div>
         <div class="three-column-row-field">
             <div class="notification-details-label"> Start of treatment </div>
-            <div> 3-3-4 format @Model.Notification.PatientDetails.NhsNumber </div>
+            <div> @Model.Notification.ClinicalDetails.TreatmentStartDate </div>
         </div>
         <div class="three-column-row-field">
             <div class="notification-details-label"> Postmortem diagnosis </div>
@@ -186,7 +184,86 @@
     </div>
 </div>
 
-<h3> Social Risk Factors </h3>
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Contact tracing </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="notification-overview-details">
+        <div> Is the patient's ability to self-administer treatment affected by alcohol misuse or abuse? </div>
+        <div> Answer </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div>  </div>
+        </div>
+    </div>
+    <div class="notification-overview-details">
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div>  </div>
+        </div>
+        <div class="three-column-row-field">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div>  </div>
+        </div>
+    </div>
+</div>
 
 <h3> Travel/visitors </h3>
 
