@@ -20,13 +20,14 @@ namespace ntbs_service.Models.Validations
             PropertyInfo property = type.GetProperty(ComparisonValue);
             if (property != null)
             {
-                object propertyValue = property.GetValue(instance);
                 int valueToValidate;
                 int maxValue;
-                if(Int32.TryParse(propertyValue.ToString(), out maxValue) && Int32.TryParse(value.ToString(), out valueToValidate)) {
-                    if(valueToValidate >= 0 && valueToValidate <= maxValue) {
+                object propertyValue = property.GetValue(instance);
+                // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
+                Int32.TryParse(propertyValue?.ToString(), out maxValue);
+                Int32.TryParse(value?.ToString(), out valueToValidate);
+                if(valueToValidate >= 0 && valueToValidate <= maxValue) {
                     return null;
-                    }
                 }
             }
             return new ValidationResult(ErrorMessage);
@@ -51,15 +52,19 @@ namespace ntbs_service.Models.Validations
             PropertyInfo propertyToSum = type.GetProperty(SummedComparisonValue);
             if (propertyMax != null && propertyToSum != null)
             {
-                object propertyValueMax = propertyMax.GetValue(instance);
-                object propertyValueToSum = propertyToSum.GetValue(instance);
                 int valueToValidate;
                 int valueToSum;
                 int maxValue;
-                if(Int32.TryParse(propertyValueMax.ToString(), out maxValue) && Int32.TryParse(propertyValueToSum.ToString(), out valueToSum) && Int32.TryParse(value.ToString(), out valueToValidate)) {
-                    if(valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum) {
+                object propertyValueMax = propertyMax.GetValue(instance);
+                object propertyValueToSum = propertyToSum.GetValue(instance);
+
+                // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
+                Int32.TryParse(propertyValueMax?.ToString(), out maxValue);
+                Int32.TryParse(propertyValueToSum?.ToString(), out valueToSum);
+                Int32.TryParse(value?.ToString(), out valueToValidate);
+
+                if(valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum) {
                     return null;
-                    }
                 }
             }
             return new ValidationResult(ErrorMessage);

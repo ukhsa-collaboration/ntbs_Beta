@@ -11343,29 +11343,29 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<int>("AdultsActiveTB");
+                            b1.Property<int?>("AdultsActiveTB");
 
-                            b1.Property<int>("AdultsFinishedTreatment");
+                            b1.Property<int?>("AdultsFinishedTreatment");
+                            
+                            b1.Property<int?>("AdultsIdentified");
 
-                            b1.Property<int>("AdultsIdentified");
+                            b1.Property<int?>("AdultsLatentTB");
 
-                            b1.Property<int>("AdultsLatentTB");
+                            b1.Property<int?>("AdultsScreened");
 
-                            b1.Property<int>("AdultsScreened");
+                            b1.Property<int?>("AdultsStartedTreatment");
 
-                            b1.Property<int>("AdultsStartedTreatment");
+                            b1.Property<int?>("ChildrenActiveTB");
 
-                            b1.Property<int>("ChildrenActiveTB");
+                            b1.Property<int?>("ChildrenFinishedTreatment");
 
-                            b1.Property<int>("ChildrenFinishedTreatment");
+                            b1.Property<int?>("ChildrenIdentified");
 
-                            b1.Property<int>("ChildrenIdentified");
+                            b1.Property<int?>("ChildrenLatentTB");
 
-                            b1.Property<int>("ChildrenLatentTB");
+                            b1.Property<int?>("ChildrenScreened");
 
-                            b1.Property<int>("ChildrenScreened");
-
-                            b1.Property<int>("ChildrenStartedTreatment");
+                            b1.Property<int?>("ChildrenStartedTreatment");
 
                             b1.HasKey("NotificationId");
 
