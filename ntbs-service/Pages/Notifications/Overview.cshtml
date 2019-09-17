@@ -4,7 +4,10 @@
 @{
     Layout = "../Shared/_NotificationLayout.cshtml";
     ViewData["Title"] = "Overview";
+    ViewData["NotificationId"] = @Model.NotificationId;
 }
+
+<html lang="en">
 
 <partial name="./OverviewPartials/_PatientOverviewPartial" model="@Model"/>
 

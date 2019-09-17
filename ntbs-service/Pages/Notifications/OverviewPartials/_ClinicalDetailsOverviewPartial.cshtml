@@ -1,6 +1,10 @@
+@{
+    var notificationId = ViewData["NotificationId"];
+}
+
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Clinical details </h3>
-    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+    <a href="./Edit/ClinicalDetails?id=@notificationId" class="notification-edit-link"> Edit </a>
 </div> 
 <div class="notification-overview-details-container">
     <div class="nhsuk-grid-row notification-overview-details">
