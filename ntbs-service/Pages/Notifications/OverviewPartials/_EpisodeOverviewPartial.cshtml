@@ -1,0 +1,26 @@
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Hospital Details </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div>
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Case Manager </div>
+            <div class="empty-cell-min-height"> @Model.Notification.Episode.CaseManager </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Consultant </div>
+            <div class="empty-cell-min-height"> @Model.Notification.Episode.Consultant </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> TB Service </div>
+            <div class="empty-cell-min-height"> @Model.Notification.Episode.TBService?.Name </div> 
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Hospital </div>
+            <div class="empty-cell-min-height"> @Model.Notification.Episode.Hospital?.Name </div>
+        </div>
+    </div>
+</div>

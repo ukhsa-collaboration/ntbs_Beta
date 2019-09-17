@@ -142,3 +142,16 @@ body {
 .notification-details-label {
     font-weight: 600;
 }
+
+.empty-cell-min-height {
+    min-height: 20px;
+}
+
+.back-to-top-link {
+    border: none;
+    background: transparent;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+    padding: 0;
+}

@@ -31,19 +31,15 @@ namespace ntbs_service.Models
 
         [PositiveIntegerSmallerThanDifferenceOfValues("ChildrenScreened", "ChildrenActiveTB", ErrorMessage = ValidationMessages.ContactTracingContactsLatentTB)]
         public int ChildrenLatentTB { get; set; }
-    
         
         [PositiveIntegerSmallerThanValue("AdultsLatentTB", ErrorMessage = ValidationMessages.ContactTracingContactsStartedTreatment)]
         public int AdultsStartedTreatment { get; set; }
-
         
         [PositiveIntegerSmallerThanValue("ChildrenLatentTB", ErrorMessage = ValidationMessages.ContactTracingContactsStartedTreatment)]
         public int ChildrenStartedTreatment { get; set; }
-
         
         [PositiveIntegerSmallerThanValue("AdultsStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingContactsFinishedTreatment)]
         public int AdultsFinishedTreatment { get; set; }
-
         
         [PositiveIntegerSmallerThanValue("ChildrenStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingContactsFinishedTreatment)]
         public int ChildrenFinishedTreatment { get; set; }

@@ -35,6 +35,8 @@ namespace ntbs_service.Pages_Notifications
         public string ImprisonmentRiskFactorTimePeriods { get; set; }
         [BindProperty]
         public string Postcode { get; set; }
+        [BindProperty]
+        public string SitesOfDisease { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -50,8 +52,15 @@ namespace ntbs_service.Pages_Notifications
             HomelessRiskFactorTimePeriods = CreateTimePeriodsString(Notification.SocialRiskFactors.RiskFactorHomelessness);
             ImprisonmentRiskFactorTimePeriods = CreateTimePeriodsString(Notification.SocialRiskFactors.RiskFactorImprisonment);
 
-            // make postcode string
-            // make sites string?
+            var postcodeNoWhiteSpace = Notification.PatientDetails.Postcode.Replace(" ", string.Empty);
+            Postcode = postcodeNoWhiteSpace.Insert(postcodeNoWhiteSpace.Length - 3, " ");
+
+            for(var i = 0; i < Notification.NotificationSites.Count; i++) {
+                SitesOfDisease = SitesOfDisease + Notification.NotificationSites[i].Site.Description;
+                if(i < Notification.NotificationSites.Count - 1) {
+                    SitesOfDisease = SitesOfDisease + ", ";
+                }
+            }
 
             return Page();
         }

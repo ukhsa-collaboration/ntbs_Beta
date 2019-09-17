@@ -1,0 +1,71 @@
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Social risk factors </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> At least one social risk factor </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Alcohol misuse </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> History of drug misuse </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.DrugRiskFactorTimePeriods </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> History of homelessness </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.HomelessRiskFactorTimePeriods </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> History of imprisonment </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.ImprisonmentRiskFactorTimePeriods </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Mental health issues </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> MENTAL HEALTH STATUS HERE </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Smoker </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
+        </div>
+    </div>
+</div>

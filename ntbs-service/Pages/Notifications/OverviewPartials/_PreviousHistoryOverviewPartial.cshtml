@@ -1,0 +1,28 @@
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Previous history of TB (pre-2000) </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div>
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Previous notification of TB </div>
+            <div class="empty-cell-min-height"> @(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == true ? "No" : "Yes") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Year of previous notification </div>
+            <div class="empty-cell-min-height"> @if(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == false) {
+                    @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear
+                } </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Drug therapy </div>
+            <div class="empty-cell-min-height">  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Treatment in UK </div>
+            <div class="empty-cell-min-height">  </div>
+        </div>
+    </div>
+</div>

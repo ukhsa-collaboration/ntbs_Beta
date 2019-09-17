@@ -1,0 +1,46 @@
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Contact tracing </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Number of contacts identified for screening </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsIdentified </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenIdentified </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsIdentified + @Model.Notification.ContactTracing.ChildrenIdentified) </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Number of contacts screened for TB </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsScreened </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenScreened </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsScreened + @Model.Notification.ContactTracing.ChildrenScreened) </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Number of contacts with active TB </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsActiveTB </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenActiveTB </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsActiveTB + @Model.Notification.ContactTracing.ChildrenActiveTB) </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsLatentTB </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenLatentTB </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsLatentTB + @Model.Notification.ContactTracing.ChildrenLatentTB) </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsStartedTreatment </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenStartedTreatment </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsStartedTreatment + @Model.Notification.ContactTracing.ChildrenStartedTreatment) </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
+            <div> Adults - @Model.Notification.ContactTracing.AdultsFinishedTreatment </div>
+            <div> Children - @Model.Notification.ContactTracing.ChildrenFinishedTreatment </div>
+            <div> Total - @(@Model.Notification.ContactTracing.AdultsFinishedTreatment + @Model.Notification.ContactTracing.ChildrenFinishedTreatment) </div>
+        </div>
+    </div>
+</div>

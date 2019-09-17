@@ -1,0 +1,94 @@
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Clinical details </h3>
+    <a href="/edit/patientDetails" class="notification-edit-link"> Edit </a> 
+</div> 
+<div class="notification-overview-details-container">
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Sites of Disease </div>
+            <div class="empty-cell-min-height"> @Model.SitesOfDisease </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Drug resistance profile </div>
+            <div>  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Sample details </div>
+            <div class="empty-cell-min-height"> @(@Model.Notification.ClinicalDetails.NoSampleTaken ? "No" : "Yes") </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Symptom onset date </div>
+            <div class="empty-cell-min-height"> @Model.Notification.ClinicalDetails.SymptomStartDate?.ToString("dd-MMM-yyyy") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Days from onset to treatment </div>
+            <div class="empty-cell-min-height"> @((@Model.Notification.ClinicalDetails.TreatmentStartDate?.Date - @Model.Notification.ClinicalDetails.SymptomStartDate?.Date)?.Days) </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Presentation date </div>
+            <div class="empty-cell-min-height"> @Model.Notification.ClinicalDetails.PresentationDate?.ToString("dd-MMM-yyyy") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Days from onset to presentation </div>
+            <div class="empty-cell-min-height"> @((@Model.Notification.ClinicalDetails.PresentationDate?.Date - @Model.Notification.ClinicalDetails.SymptomStartDate?.Date)?.Days) </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Diagnosis date </div>
+            <div class="empty-cell-min-height"> @Model.Notification.ClinicalDetails.DiagnosisDate?.ToString("dd-MMM-yyyy") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Days from presentation to diagnosis </div>
+            <div class="empty-cell-min-height"> @((@Model.Notification.ClinicalDetails.DiagnosisDate?.Date - @Model.Notification.ClinicalDetails.PresentationDate?.Date)?.Days) </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Treatment date </div>
+            <div class="empty-cell-min-height"> @Model.Notification.ClinicalDetails.TreatmentStartDate?.ToString("dd-MMM-yyyy") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Days from diagnosis to treatment </div>
+            <div class="empty-cell-min-height"> @((@Model.Notification.ClinicalDetails.TreatmentStartDate?.Date - @Model.Notification.ClinicalDetails.DiagnosisDate?.Date)?.Days) </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Postmortem diagnosis </div>
+            <div class="empty-cell-min-height"> @(@Model.Notification.ClinicalDetails.IsPostMortem ? "Yes" : "No") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Date of death </div>
+            <div class="empty-cell-min-height"> @Model.Notification.ClinicalDetails.DeathDate?.ToString("dd-MMM-yyyy") </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> HIV test offered </div>
+            <div class="empty-cell-min-height">  </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Short course treatment </div>
+            <div class="empty-cell-min-height">  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> Directly observed treatment </div>
+            <div class="empty-cell-min-height">  </div>
+        </div>
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> MDR treatment </div>
+            <div class="empty-cell-min-height">  </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row notification-overview-details">
+        <div class="nhsuk-grid-column-one-third">
+            <div class="notification-details-label"> BCG vaccination </div>
+            <div class="empty-cell-min-height"> @Model.Notification.ClinicalDetails.BCGVaccinationState @(@Model.Notification.ClinicalDetails.BCGVaccinationYear != null ? " - " + @Model.Notification.ClinicalDetails.BCGVaccinationYear : "") </div>
+        </div>
+    </div>
+</div>
