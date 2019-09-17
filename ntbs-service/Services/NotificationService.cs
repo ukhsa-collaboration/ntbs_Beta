@@ -118,9 +118,6 @@ namespace ntbs_service.Services
             context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
             context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.State = EntityState.Modified;
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorMentalHealth).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorMentalHealth);
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorMentalHealth).TargetEntry.State = EntityState.Modified;
-
             await context.SaveChangesAsync();        
         }
 
@@ -129,7 +126,6 @@ namespace ntbs_service.Services
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorDrugs);
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorHomelessness);
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorImprisonment);
-            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorMentalHealth);
         }
 
         private void UpdateRiskFactorFlags(RiskFactorBase riskFactor)

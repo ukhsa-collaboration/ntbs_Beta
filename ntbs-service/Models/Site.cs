@@ -26,6 +26,7 @@ namespace ntbs_service.Models
         PLEURAL = 14,
         PERICARDIAL = 15,
         SKIN = 16,
-        OTHER = 17
+        OTHER = 17,
+        UNKNOWN = 18
     }
 }

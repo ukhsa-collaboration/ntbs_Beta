@@ -23,6 +23,10 @@ const ValidateDate = Vue.extend({
         validate: function () {
             var date: FormattedDate = this.getFormattedDate();
             if (!date) {
+                if (this.rank) {
+                    this.$emit('input', null);
+                    this.$parent.datechanged(this.rank);
+                }
                 return;
             }
 

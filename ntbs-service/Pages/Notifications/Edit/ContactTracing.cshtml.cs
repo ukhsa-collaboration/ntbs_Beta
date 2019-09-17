@@ -68,7 +68,7 @@ namespace ntbs_service.Pages_Notifications
 
         public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)
         {
-            return ValidateFullModel(model, key, "contactTracing");
+            return ValidateFullModel(model, key, "ContactTracing");
         }
     }
 }

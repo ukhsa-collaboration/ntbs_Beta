@@ -88,7 +88,6 @@ namespace ntbs_service.DataAccess
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
-                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorMentalHealth)
                     .FirstOrDefaultAsync(n => n.NotificationId == id);
         }
 
@@ -103,7 +102,6 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
-                .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorMentalHealth)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
                 .FirstOrDefaultAsync(n => n.NotificationId == id);
         }

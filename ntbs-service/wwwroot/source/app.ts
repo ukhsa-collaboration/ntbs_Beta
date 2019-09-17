@@ -6,7 +6,6 @@ import 'nhsuk-frontend/packages/nhsuk'
 import 'nhsuk-frontend/packages/nhsuk.scss'
 import '../css/site.css'
 import Vue from 'vue';
-import { TestButton } from './Components/TestButton';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
 import { DateComparison } from './Components/DateComparison';
@@ -21,7 +20,6 @@ import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 
 // register Vue components
-Vue.component('test-button', TestButton);
 Vue.component('back-to-top-button', BackToTopButton);
 Vue.component('validate-input', ValidateInput);
 Vue.component('validate-date', ValidateDate);

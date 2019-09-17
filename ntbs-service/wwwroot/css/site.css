@@ -155,3 +155,7 @@ body {
     cursor: pointer;
     padding: 0;
 }
+
+.text-warning {
+    color: orangered;
+}
