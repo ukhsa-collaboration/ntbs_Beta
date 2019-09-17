@@ -19,7 +19,7 @@ pipeline {
     stage('build and publish image') {
       steps {
         script {
-          docker.withRegistry('https://ntbscontainerregistry.azurecr.io') {
+          docker.withRegistry('https://ntbscontainerregistry.azurecr.io', 'ntbs-registery-credentials') {
             ntbsImage = docker.build("ntbs-service:jenkinsbuild-${env.BUILD_ID}",  "./ntbs-service")
             echo "Uploading build image jenkinsbuild-${env.BUILD_ID}"
             ntbsImage.push()
