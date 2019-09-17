@@ -82,6 +82,11 @@ Install `kubectl` using: `az aks install-cli`.
 We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registery user.
 `az acr credential show -n ntbsContainerRegistry`
 
+## Deploying to environments
+`master` branch deploys to `int` automatically.
+For `test` and `research` environments, pick the TAG of the build from registery you want deployed and run:
+`kubectl set image deployment/ntbs-<ENV> ntbs-<ENV>=ntbscontainerregistry.azurecr.io/ntbs-service:<TAG>`
+
 ## Running the app in Docker (builds in produciton mode)
 ```
 docker build -t ntbs .
