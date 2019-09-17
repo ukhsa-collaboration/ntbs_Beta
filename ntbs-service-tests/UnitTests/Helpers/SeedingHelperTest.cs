@@ -10,7 +10,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
     {
         [Fact]
         public void GetRecordsFromCSV_GetsTBServicesData() {
-            var results = SeedingHelper.GetRecordsFromCSV<TBService>("..\\..\\..\\UnitTests\\TestData\\tbservices.csv");
+            var results = SeedingHelper.GetRecordsFromCSV<TBService>("../../../UnitTests/TestData/tbservices.csv");
             var firstEntryInTBServicesList = new TBService {
                 Code = "TBS0001",
                 Name = "Abingdon Community Hospital"
