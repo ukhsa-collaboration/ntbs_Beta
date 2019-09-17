@@ -104,3 +104,4 @@ create: `kubectl create -f .\ntbs-service\int.yml`
 update: `kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:latest`
 see ip address: `kubectl get service/ntbs-int -w`
 dashboard: `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
+adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
