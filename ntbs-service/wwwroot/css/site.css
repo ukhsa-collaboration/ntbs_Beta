@@ -121,3 +121,23 @@ body {
 .text-warning {
     color: orangered;
 }
+.manage-notification-section {
+  width: 300px;
+  padding-top: 10px;
+  border-top: 10px solid #1d70b8;
+}
+
+.notification-sideline-container {
+  width: 25%;
+  display: inline-block;
+}
+
+.notification-body-container {
+  width: 50%;
+  display: inline-block;
+}
+
+.notification-container {
+  display: flex; 
+  flex-direction: row;
+}

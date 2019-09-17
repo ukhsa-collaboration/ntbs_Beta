@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages;
 using ntbs_service.Services;
 using System.Linq;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class SocialRiskFactorsModel : ValidationModel
+    public class SocialRiskFactorsModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
         
         public List<Status> StatusList { get; set; }
@@ -20,13 +18,8 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        [BindProperty]
-        public int NotificationId { get; set; }
-        
-
-        public SocialRiskFactorsModel(INotificationService service, NtbsContext context)
+        public SocialRiskFactorsModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 

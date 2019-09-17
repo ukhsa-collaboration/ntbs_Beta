@@ -12,13 +12,11 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages_Notifications
 {
     [BindProperties]
-    public class ClinicalDetailsModel : ValidationModel
+    public class ClinicalDetailsModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
 
         public ClinicalDetails ClinicalDetails { get; set; }
-        public int NotificationId { get; set; }
 
         public Dictionary<SiteId, bool> NotificationSiteMap { get; set; }
 
@@ -34,9 +32,8 @@ namespace ntbs_service.Pages_Notifications
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context)
+        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 

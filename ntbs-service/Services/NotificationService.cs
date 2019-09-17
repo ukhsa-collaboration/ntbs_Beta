@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace ntbs_service.Services
         Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
+        Task SubmitNotification(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
@@ -147,6 +149,15 @@ namespace ntbs_service.Services
             var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
             context.NotificationSite.RemoveRange(currentSites);
             context.NotificationSite.AddRange(notificationSites);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task SubmitNotification(Notification notification)
+        {
+            context.Attach(notification);
+            notification.NotificationStatus = NotificationStatus.Notified;
+            notification.SubmissionDate = DateTime.UtcNow;
+
             await context.SaveChangesAsync();
         }
     }

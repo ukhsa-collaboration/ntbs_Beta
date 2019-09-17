@@ -9,9 +9,8 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class EpisodeModel : ValidationModel
+    public class EpisodeModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
         
         public SelectList TBServices { get; set; }
@@ -21,13 +20,8 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public Episode Episode { get; set; }
 
-        [BindProperty]
-        public int NotificationId { get; set; }
-        
-
-        public EpisodeModel(INotificationService service, NtbsContext context)
+        public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 

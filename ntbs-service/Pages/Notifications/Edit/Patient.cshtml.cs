@@ -10,10 +10,8 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-
-    public class PatientModel : ValidationModel
+    public class PatientModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
 
         public SelectList Ethnicities { get; set; }
@@ -22,15 +20,12 @@ namespace ntbs_service.Pages_Notifications
 
         [BindProperty]
         public PatientDetails Patient { get; set; }
+
         [BindProperty]
         public FormattedDate FormattedDob { get; set; }
-        [BindProperty]
-        public int NotificationId { get; set; }
 
-
-        public PatientModel(INotificationService service, NtbsContext context)
+        public PatientModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 
