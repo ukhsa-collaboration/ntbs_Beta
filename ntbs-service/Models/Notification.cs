@@ -22,15 +22,63 @@ namespace ntbs_service.Models
             }
         }
 
-        public string FormattedNhsNumber {
+        public string SexLabel {
             get {
-                return CreateFormattedNhsNumberString();
+                return PatientDetails.Sex?.Label;
             }
         }
 
-        public string FormattedPostcode {
+        public string EthnicityLabel {
             get {
-                return CreatePostcodeString();
+                return PatientDetails.Ethnicity?.Label;
+            }
+        }
+
+        public string CountryName {
+            get {
+                return PatientDetails.Country?.Name;
+            }
+        }
+
+        public string TBServiceName {
+            get {
+                return Episode.TBService?.Name;
+            }
+        }
+
+        public string HospitalName {
+            get {
+                return Episode.Hospital?.Name;
+            }
+        }
+
+        public string IsPostMortemYesNo {
+            get {
+                return TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
+            }
+        }
+
+        public string NoSampleTakenYesNo {
+            get {
+                return TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
+            }
+        }
+
+        public string NotPreviouslyHadTBYesNo {
+            get {
+                return TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
+            }
+        }
+
+        public string FormattedNhsNumber {
+            get {
+                return FormatNhsNumberString();
+            }
+        }
+
+        public string FormattedNoAbodeOrPostcodeString {
+            get {
+                return CreateNoAbodeOrPostcodeString();
             }
         }
 
@@ -47,12 +95,12 @@ namespace ntbs_service.Models
         }
         public string HomelessRiskFactorTimePeriods { 
             get {
-                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
+                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
             }
         }
         public string ImprisonmentRiskFactorTimePeriods { 
             get {
-                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
+                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
             }
         }
 
@@ -86,6 +134,90 @@ namespace ntbs_service.Models
             }
         }
 
+        public string FormattedSymptomStartDate {
+            get {
+                return FormatDate(ClinicalDetails.SymptomStartDate);
+            }
+        }
+
+        public string FormattedPresentationDate {
+            get {
+                return FormatDate(ClinicalDetails.PresentationDate);
+            }
+        }
+
+        public string FormattedDiagnosisDate {
+            get {
+                return FormatDate(ClinicalDetails.DiagnosisDate);
+            }
+        }
+
+        public string FormattedTreatmentStartDate {
+            get {
+                return FormatDate(ClinicalDetails.TreatmentStartDate);
+            }
+        }
+
+        public string FormattedDeathDate {
+            get {
+                return FormatDate(ClinicalDetails.DeathDate);
+            }
+        }
+
+        public string FormattedDob {
+            get {
+                return FormatDate(PatientDetails.Dob);
+            }
+        }
+
+        public int? TotalContactsIdentified {
+            get {
+                return CalculateSum(ContactTracing.AdultsIdentified, ContactTracing.ChildrenIdentified);
+            }
+        }
+
+        public int? TotalContactsScreened {
+            get {
+                return CalculateSum(ContactTracing.AdultsScreened, ContactTracing.ChildrenScreened);
+            }
+        }
+
+        public int? TotalContactsActiveTB {
+            get {
+                return CalculateSum(ContactTracing.AdultsActiveTB, ContactTracing.ChildrenActiveTB);
+            }
+        }
+
+        public int? TotalContactsLatentTB {
+            get {
+                return CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
+            }
+        }
+
+        public int? TotalContactsStartedTreatment {
+            get {
+                return CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
+            }
+        }
+
+        public int? TotalContactsFinishedTreatment {
+            get {
+                return CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
+            }
+        }
+
+        public int? CalculateSum(int? x, int? y) {
+            return x + y;
+        }
+
+        public string FormatDate(DateTime? date) {
+            return date?.ToString("dd-MMM-yyyy");
+        }
+
+        public string TrueFalseToYesNo(bool x) {
+            return x ? "Yes" : "No";
+        }
+
         public string FormatVaccintationStateAndYear(Status vaccinationState, int? vaccinationYear) {
             return vaccinationState.ToString() + (vaccinationYear != null ? " - " + vaccinationYear : "");
         }
@@ -99,29 +231,33 @@ namespace ntbs_service.Models
             return String.Join(", ", siteNames); 
         }
 
-        public string CreatePostcodeString() {
-            var postcodeNoWhiteSpace = PatientDetails.Postcode.Replace(" ", string.Empty);
-            string FormattedPostcode = postcodeNoWhiteSpace.Insert(postcodeNoWhiteSpace.Length - 3, " ");
-            return FormattedPostcode;
+        public string CreateNoAbodeOrPostcodeString() {
+            if(PatientDetails.NoFixedAbode) {
+                return "No fixed abode";
+            } else {
+                var postcodeNoWhiteSpace = PatientDetails.Postcode.Replace(" ", string.Empty);
+                string FormattedPostcode = postcodeNoWhiteSpace.Insert(postcodeNoWhiteSpace.Length - 3, " ");
+                return FormattedPostcode;
+            }
         }
 
-        public string CreateFormattedNhsNumberString() {
+        public string FormatNhsNumberString() {
             return PatientDetails.NhsNumber.ToString().Substring(0, 3) + " " + PatientDetails.NhsNumber.ToString().Substring(3, 3) 
                 + " " + PatientDetails.NhsNumber.ToString().Substring(6, 4);
         }
 
         public string CreateTimePeriodsString(RiskFactorBase riskFactor) {
-            string timeString = "";
+            var timeStrings = new List<string>();
             if(riskFactor.IsCurrent) {
-                timeString = "current";
+                timeStrings.Add("current");
             }
             if(riskFactor.InPastFiveYears) {
-                timeString = String.Join(", ", new string[] {timeString, "less than 5 years ago"});
+                timeStrings.Add("less than 5 years ago");
             }
             if(riskFactor.MoreThanFiveYearsAgo) {
-                timeString = String.Join(", ", new string[] {timeString, "more than 5 years ago"});
+                timeStrings.Add("more than 5 years ago");
             }
-            return timeString;
+            return String.Join(", ", timeStrings);
         }
     }
 }

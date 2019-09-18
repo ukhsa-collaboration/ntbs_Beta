@@ -14,7 +14,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Sex </div>
-            <div class="cell-min-height"> @Model.Notification.PatientDetails.Sex?.Label </div>
+            <div class="cell-min-height"> @Model.Notification.SexLabel </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> NHS number </div>
@@ -28,7 +28,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Date of birth </div>
-            <div class="cell-min-height"> @Model.Notification.PatientDetails.Dob?.ToString("dd-MMM-yyyy") </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedDob </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Age at notification </div>
@@ -42,7 +42,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Postcode </div>
-            <div class="cell-min-height"> @(@Model.Notification.PatientDetails.NoFixedAbode ? "No fixed abode" : @Model.Notification.FormattedPostcode) </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedNoAbodeOrPostcodeString </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Occupation </div>
@@ -52,11 +52,11 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Ethnic group </div>
-            <div class="cell-min-height"> @Model.Notification.PatientDetails.Ethnicity?.Label </div>
+            <div class="cell-min-height"> @Model.Notification.EthnicityLabel </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Country of birth </div>
-            <div class="cell-min-height"> @Model.Notification.PatientDetails.Country?.Name </div>
+            <div class="cell-min-height"> @Model.Notification.CountryName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Year of first entry to UK </div>

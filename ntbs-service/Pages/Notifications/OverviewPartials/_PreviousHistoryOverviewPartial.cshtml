@@ -10,13 +10,11 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Previous notification of TB </div>
-            <div class="cell-min-height"> @(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == true ? "No" : "Yes") </div>
+            <div class="cell-min-height"> @Model.Notification.NotPreviouslyHadTBYesNo </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Year of previous notification </div>
-            <div class="cell-min-height"> @if(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == false) {
-                    @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear
-                } </div>
+            <div class="cell-min-height"> @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">

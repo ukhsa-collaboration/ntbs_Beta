@@ -18,13 +18,13 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Sample details </div>
-            <div class="cell-min-height"> @(@Model.Notification.ClinicalDetails.NoSampleTaken ? "No" : "Yes") </div>
+            <div class="cell-min-height"> @Model.Notification.NoSampleTakenYesNo </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Symptom onset date </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.SymptomStartDate?.ToString("dd-MMM-yyyy") </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedSymptomStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Days from onset to treatment </div>
@@ -34,7 +34,7 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Presentation date </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.PresentationDate?.ToString("dd-MMM-yyyy") </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedPresentationDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Days from onset to presentation </div>
@@ -44,7 +44,7 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Diagnosis date </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DiagnosisDate?.ToString("dd-MMM-yyyy") </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedDiagnosisDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Days from presentation to diagnosis </div>
@@ -54,7 +54,7 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Treatment date </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.TreatmentStartDate?.ToString("dd-MMM-yyyy") </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedTreatmentStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Days from diagnosis to treatment </div>
@@ -64,11 +64,11 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Postmortem diagnosis </div>
-            <div class="cell-min-height"> @(@Model.Notification.ClinicalDetails.IsPostMortem ? "Yes" : "No") </div>
+            <div class="cell-min-height"> @Model.Notification.IsPostMortemYesNo </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Date of death </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DeathDate?.ToString("dd-MMM-yyyy") </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedDeathDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> HIV test offered </div>
