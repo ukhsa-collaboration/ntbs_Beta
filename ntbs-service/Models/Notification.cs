@@ -25,6 +25,7 @@ namespace ntbs_service.Models
         public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
         public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
+        public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string FormattedNhsNumber => FormatNhsNumberString();
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
@@ -57,8 +58,12 @@ namespace ntbs_service.Models
             return date?.ToString("dd-MMM-yyyy");
         }
 
-        public string TrueFalseToYesNo(bool x) {
-            return x ? "Yes" : "No";
+        public string TrueFalseToYesNo(bool? x) {
+            if(x == null) {
+                return "";
+            } else {
+                return x.Value ? "Yes" : "No";
+            }
         }
 
         public string FormatVaccintationStateAndYear(Status vaccinationState, int? vaccinationYear) {
@@ -70,7 +75,7 @@ namespace ntbs_service.Models
         }
 
         public string CreateSitesOfDiseaseString() {
-            var siteNames = NotificationSites.Select(ns => ns.Site).Select(s => s.Description);
+            var siteNames = NotificationSites?.Select(ns => ns.Site)?.Select(s => s.Description);
             return String.Join(", ", siteNames); 
         }
 
@@ -78,15 +83,21 @@ namespace ntbs_service.Models
             if(PatientDetails.NoFixedAbode) {
                 return "No fixed abode";
             } else {
-                var postcodeNoWhiteSpace = PatientDetails.Postcode.Replace(" ", string.Empty);
-                string FormattedPostcode = postcodeNoWhiteSpace.Insert(postcodeNoWhiteSpace.Length - 3, " ");
+                var postcodeNoWhiteSpace = PatientDetails.Postcode?.Replace(" ", string.Empty);
+                string FormattedPostcode = postcodeNoWhiteSpace?.Insert(postcodeNoWhiteSpace.Length - 3, " ");
                 return FormattedPostcode;
             }
         }
 
         public string FormatNhsNumberString() {
-            return PatientDetails.NhsNumber.ToString().Substring(0, 3) + " " + PatientDetails.NhsNumber.ToString().Substring(3, 3) 
-                + " " + PatientDetails.NhsNumber.ToString().Substring(6, 4);
+            if(String.IsNullOrEmpty(PatientDetails.NhsNumber)) {
+                return "";
+            }
+            return String.Join(" ",
+                PatientDetails.NhsNumber.ToString().Substring(0, 3),
+                PatientDetails.NhsNumber.ToString().Substring(3, 3),
+                PatientDetails.NhsNumber.ToString().Substring(6, 4)
+            );
         }
 
         public string CreateTimePeriodsString(RiskFactorBase riskFactor) {
