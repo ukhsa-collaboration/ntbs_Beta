@@ -16,195 +16,38 @@ namespace ntbs_service.Models
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public string FullName {
-            get {
-                return String.Join(", ", new string[] {PatientDetails.FamilyName.ToUpper(), PatientDetails.GivenName});
-            }
-        }
-
-        public string SexLabel {
-            get {
-                return PatientDetails.Sex?.Label;
-            }
-        }
-
-        public string EthnicityLabel {
-            get {
-                return PatientDetails.Ethnicity?.Label;
-            }
-        }
-
-        public string CountryName {
-            get {
-                return PatientDetails.Country?.Name;
-            }
-        }
-
-        public string TBServiceName {
-            get {
-                return Episode.TBService?.Name;
-            }
-        }
-
-        public string HospitalName {
-            get {
-                return Episode.Hospital?.Name;
-            }
-        }
-
-        public string IsPostMortemYesNo {
-            get {
-                return TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
-            }
-        }
-
-        public string NoSampleTakenYesNo {
-            get {
-                return TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
-            }
-        }
-
-        public string NotPreviouslyHadTBYesNo {
-            get {
-                return TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
-            }
-        }
-
-        public string FormattedNhsNumber {
-            get {
-                return FormatNhsNumberString();
-            }
-        }
-
-        public string FormattedNoAbodeOrPostcodeString {
-            get {
-                return CreateNoAbodeOrPostcodeString();
-            }
-        }
-
-        public string SitesOfDiseaseList { 
-            get {
-                return CreateSitesOfDiseaseString();
-            } 
-        }
-
-        public string DrugRiskFactorTimePeriods { 
-            get {
-                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
-            }
-        }
-        public string HomelessRiskFactorTimePeriods { 
-            get {
-                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
-            }
-        }
-        public string ImprisonmentRiskFactorTimePeriods { 
-            get {
-                return CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
-            }
-        }
-
-        public int? DaysFromOnsetToTreatment {
-            get {
-                return CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
-            }
-        }
-
-        public int? DaysFromOnsetToPresentation {
-            get {
-                return CalculateDaysBetweenNullableDates(ClinicalDetails.PresentationDate, ClinicalDetails.SymptomStartDate);
-            }
-        }
-
-        public int? DaysFromPresentationToDiagnosis {
-            get {
-                return CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.PresentationDate);
-            }
-        }
-
-        public int? DaysFromDiagnosisToTreatment {
-            get {
-                return CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
-            }
-        }
-
-        public string BCGVaccinationStateAndYear {
-            get {
-                return FormatVaccintationStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
-            }
-        }
-
-        public string FormattedSymptomStartDate {
-            get {
-                return FormatDate(ClinicalDetails.SymptomStartDate);
-            }
-        }
-
-        public string FormattedPresentationDate {
-            get {
-                return FormatDate(ClinicalDetails.PresentationDate);
-            }
-        }
-
-        public string FormattedDiagnosisDate {
-            get {
-                return FormatDate(ClinicalDetails.DiagnosisDate);
-            }
-        }
-
-        public string FormattedTreatmentStartDate {
-            get {
-                return FormatDate(ClinicalDetails.TreatmentStartDate);
-            }
-        }
-
-        public string FormattedDeathDate {
-            get {
-                return FormatDate(ClinicalDetails.DeathDate);
-            }
-        }
-
-        public string FormattedDob {
-            get {
-                return FormatDate(PatientDetails.Dob);
-            }
-        }
-
-        public int? TotalContactsIdentified {
-            get {
-                return CalculateSum(ContactTracing.AdultsIdentified, ContactTracing.ChildrenIdentified);
-            }
-        }
-
-        public int? TotalContactsScreened {
-            get {
-                return CalculateSum(ContactTracing.AdultsScreened, ContactTracing.ChildrenScreened);
-            }
-        }
-
-        public int? TotalContactsActiveTB {
-            get {
-                return CalculateSum(ContactTracing.AdultsActiveTB, ContactTracing.ChildrenActiveTB);
-            }
-        }
-
-        public int? TotalContactsLatentTB {
-            get {
-                return CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
-            }
-        }
-
-        public int? TotalContactsStartedTreatment {
-            get {
-                return CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
-            }
-        }
-
-        public int? TotalContactsFinishedTreatment {
-            get {
-                return CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
-            }
-        }
+        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName.ToUpper(), PatientDetails.GivenName});
+        public string SexLabel => PatientDetails.Sex?.Label;
+        public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
+        public string CountryName => PatientDetails.Country?.Name;
+        public string TBServiceName => Episode.TBService?.Name;
+        public string HospitalName => Episode.Hospital?.Name;
+        public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
+        public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
+        public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
+        public string FormattedNhsNumber => FormatNhsNumberString();
+        public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
+        public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
+        public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
+        public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
+        public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
+        public int? DaysFromOnsetToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
+        public int? DaysFromOnsetToPresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.PresentationDate, ClinicalDetails.SymptomStartDate);
+        public int? DaysFromPresentationToDiagnosis => CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.PresentationDate);
+        public int? DaysFromDiagnosisToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
+        public string BCGVaccinationStateAndYear => FormatVaccintationStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
+        public string FormattedSymptomStartDate => FormatDate(ClinicalDetails.SymptomStartDate);
+        public string FormattedPresentationDate => FormatDate(ClinicalDetails.PresentationDate);
+        public string FormattedDiagnosisDate => FormatDate(ClinicalDetails.DiagnosisDate);
+        public string FormattedTreatmentStartDate => FormatDate(ClinicalDetails.TreatmentStartDate);
+        public string FormattedDeathDate => FormatDate(ClinicalDetails.DeathDate);
+        public string FormattedDob => FormatDate(PatientDetails.Dob);
+        public int? TotalContactsIdentified => CalculateSum(ContactTracing.AdultsIdentified, ContactTracing.ChildrenIdentified);
+        public int? TotalContactsScreened => CalculateSum(ContactTracing.AdultsScreened, ContactTracing.ChildrenScreened);
+        public int? TotalContactsActiveTB => CalculateSum(ContactTracing.AdultsActiveTB, ContactTracing.ChildrenActiveTB);
+        public int? TotalContactsLatentTB => CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
+        public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
+        public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
 
         public int? CalculateSum(int? x, int? y) {
             return x + y;
