@@ -1,0 +1,26 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.OverviewModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Overview";
+    ViewData["NotificationId"] = @Model.NotificationId;
+}
+
+<partial name="./OverviewPartials/_PatientOverviewPartial" model="@Model"/>
+
+<partial name="./OverviewPartials/_EpisodeOverviewPartial" model="@Model"/>
+
+<partial name="./OverviewPartials/_ClinicalDetailsOverviewPartial" model="@Model">
+
+<partial name="./OverviewPartials/_ContactTracingOverviewPartial" model="@Model">
+
+<partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial" model="@Model">
+
+<partial name="./OverviewPartials/_TravelOverviewPartial" model="@Model">
+
+<partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial" model="@Model">
+
+<partial name="./OverviewPartials/_PreviousHistoryOverviewPartial" model="@Model">
+
+<a href='#top' class="govuk-link--no-visited-state"> Back to top </a>

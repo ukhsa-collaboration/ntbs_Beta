@@ -1,9 +1,10 @@
-import { initAll as govUkJsInitAll } from 'govuk-frontend'
+import { initAll as govUkJsInitAll } from 'govuk-frontend';
 // Govuk css - needed for things like conditionally revealed radios sections
-import "../css/reset.css"
+import "../css/reset.css";
 import 'govuk-frontend/govuk/all.scss';
-import 'nhsuk-frontend/packages/nhsuk.scss'
-import '../css/site.css'
+import 'nhsuk-frontend/packages/nhsuk.scss';
+import '../css/site.css';
+import '../css/notificationView.css';
 import Vue from 'vue';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
@@ -14,7 +15,7 @@ import config from './config/config-APP_TARGET';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
 import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
-// Vue needs to be the firs thing to load!
+// Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 
 // register Vue components

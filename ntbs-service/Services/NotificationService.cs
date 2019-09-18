@@ -12,6 +12,7 @@ namespace ntbs_service.Services
     {
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
+        Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
@@ -148,6 +149,10 @@ namespace ntbs_service.Services
             context.NotificationSite.RemoveRange(currentSites);
             context.NotificationSite.AddRange(notificationSites);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<Notification> GetNotificationWithAllInfoAsync(int? id) {
+            return await repository.GetNotificationWithAllInfoAsync(id);
         }
     }
 }
