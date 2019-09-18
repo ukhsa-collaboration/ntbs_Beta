@@ -122,7 +122,7 @@ ViewData["Title"] = "Notification - Clinical Details";
                     </div>
                 </validate-input>
             </div>
-            <nhs-checkboxes style="margin-left: 52px">
+            <nhs-checkboxes>
                 <nhs-checkboxes-item>
                     <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]"/>
                     <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.UNKNOWN).Description</label>
@@ -367,6 +367,9 @@ ViewData["Title"] = "Notification - Clinical Details";
                                 @{var deathErrorClass = !Model.IsValid("ClinicalDetails.DeathDate") ? errorClassName : ""; }
                                 <div class="nhsuk-form-group @deathErrorClass" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                                     <fieldset class="nhsuk-fieldset" aria-describedby="postmortem-error" role="group">
+                                        <label class="nhsuk-label" for="postmortem">
+                                            Date of Death
+                                        </label>
                                         <span class="nhsuk-error-message" id="postmortem-error">
                                             <span ref="errorField" asp-validation-for="ClinicalDetails.DeathDate"></span>
                                         </span>
