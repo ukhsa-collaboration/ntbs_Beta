@@ -1,0 +1,51 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ntbs-research
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ntbs-research
+    spec:
+      containers:
+      - name: ntbs-research
+        image: "ntbscontainerregistry.azurecr.io/ntbs-service"
+        ports:
+        - containerPort: 80
+        env:
+          - name: ConnectionStrings__ntbsContext
+            valueFrom:
+              secretKeyRef:
+                name: research-db-connection-string
+                key: connectionString
+      imagePullSecrets:
+      - name: registery-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ntbs-research
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: ntbs-research
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ntbs-research
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
+    http:
+      paths:
+      - backend:
+          serviceName: ntbs-research
+          servicePort: 80
+        path: /

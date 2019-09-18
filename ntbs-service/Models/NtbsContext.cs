@@ -223,12 +223,12 @@ namespace ntbs_service.Models
 
         private List<Object> GetHospitalsList()
         {
-            return SeedingHelper.GetHospitalsList("Models\\SeedData\\hospitals.csv");
+            return SeedingHelper.GetHospitalsList("Models/SeedData/hospitals.csv");
         }
 
         private List<TBService> GetTBServicesList()
         {
-            return SeedingHelper.GetRecordsFromCSV<TBService>("Models\\SeedData\\tbservices.csv");
+            return SeedingHelper.GetRecordsFromCSV<TBService>("Models/SeedData/tbservices.csv");
         }
     }
 }
