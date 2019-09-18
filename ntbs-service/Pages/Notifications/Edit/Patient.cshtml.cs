@@ -23,6 +23,10 @@ namespace ntbs_service.Pages_Notifications
 
         [BindProperty]
         public FormattedDate FormattedDob { get; set; }
+        [BindProperty]
+        public int NotificationId { get; set; }
+        [BindProperty]
+        public NotificationBannerDetails NotificationBannerDetails { get; set; }
 
         public PatientModel(INotificationService service, NtbsContext context) : base(service)
         {
@@ -39,6 +43,11 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationId = notification.NotificationId;
             Patient = notification.PatientDetails;
+            NotificationBannerDetails = new NotificationBannerDetails {
+                NotificationId = NotificationId,
+                Patient = notification.PatientDetails,
+                Episode = notification.Episode
+            };
 
             if (Patient == null)
             {

@@ -13,7 +13,60 @@
             <nhs-main-wrapper>
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
-                        <h1 class="nhs-heading-1">NTBS #@Model.NotificationId - DRAFT</h1>
+                        <div class="notification-banner"> 
+                            <div class="notification-banner-title-container"> 
+                                <div class="nhsuk-grid-row" style="padding-bottom: 10px">
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600; font-size: 30px"> Notification </div>
+                                        <div style="font-weight: 600; font-size: 30px"> #@(notificationId) </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Date of notification </div>
+                                        <div> </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> TB service </div>
+                                        <div> @Model.NotificationBannerDetails.Episode.TBService?.Name </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Case manager </div>
+                                        <div> @Model.NotificationBannerDetails.Episode.CaseManager </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-banner-details-container"> 
+                                <div class="nhsuk-grid-row" style="padding-bottom: 10px">
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> NHS number </div>
+                                        <div>  @(@Model.NotificationBannerDetails.Patient.NhsNumber.ToString().Substring(0, 3) + " " + @Model.NotificationBannerDetails.Patient.NhsNumber.ToString().Substring(3, 3) 
+                                    + " " + @Model.NotificationBannerDetails.Patient.NhsNumber.ToString().Substring(6, 4)) </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Date of birth </div>
+                                        <div> @Model.NotificationBannerDetails.Patient.Dob?.ToString("dd-MMM-yyyy") </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Country of birth </div>
+                                        <div> @Model.NotificationBannerDetails.Patient.Country?.Name </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Post code </div>
+                                        <div> @(@Model.NotificationBannerDetails.Patient.NoFixedAbode ? "No fixed abode" : @Model.NotificationBannerDetails.Patient.Postcode) </div>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-row" style="padding-bottom: 10px">
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Name </div>
+                                        <div> @Model.NotificationBannerDetails.Patient.FamilyName?.ToString().ToUpper(), @Model.NotificationBannerDetails.Patient.GivenName </div>
+                                    </div>
+                                    <div class="nhsuk-grid-column-one-quarter">
+                                        <div style="font-weight: 600"> Sex </div>
+                                        <div> @Model.NotificationBannerDetails.Patient.Sex?.Label </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 10px"> Notification details / Audit </div>
                         <div class="patient-layout-flexbox">
                             <div class="contents-list">
                                 <!-- Overview available if notification has been submitted -->

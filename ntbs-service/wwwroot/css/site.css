@@ -63,14 +63,11 @@ body {
 .contents-list-item {
     list-style-type: none;
     margin-bottom: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-
+    padding: 5px 0 5px 14px;
 }
 
 .contents-list-item--current {
     font-weight: bold;
-    margin-left: -14px;
     padding-left: 10px;
     border-left: 4px solid #1d70b8;
 }
@@ -97,4 +94,19 @@ body {
 
 .text-warning {
     color: orangered;
+}
+
+.notification-banner-title-container {
+    background: #999999;
+    color: white;
+    padding: 10px 0 0 10px;
+}
+
+.notification-banner-details-container {
+    background: #dddddd;
+    padding: 10px 0 0 10px;
+}
+
+.notification-banner {
+    padding-bottom: 10px;
 }

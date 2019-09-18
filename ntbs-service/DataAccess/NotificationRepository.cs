@@ -69,6 +69,9 @@ namespace ntbs_service.DataAccess
         {
             return await context.Notification
                 .Include(n => n.NotificationSites)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
+                .Include(n => n.Episode).ThenInclude(p => p.TBService)
                 .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
