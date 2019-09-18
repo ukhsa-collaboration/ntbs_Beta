@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ntbs_service</title>
+    <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true">
 </head>
 <body>
     <div id="app">
@@ -34,7 +35,6 @@
     <!-- govuk requires elements that depend on js-usage require this calss to be set on the root of the document (e.g. conditionally revealling radios' sections) -->
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <script src="~/dist/bundle.js" asp-append-version="true"></script>
-    <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true">
     @RenderSection("Scripts", required: false)
 </body>
 </html>
