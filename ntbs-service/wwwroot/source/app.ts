@@ -13,7 +13,6 @@ import { DateComparison } from './Components/DateComparison';
 import { YearComparison } from './Components/YearComparison';
 // @ts-ignore
 import config from './config/config-APP_TARGET';
-import { BackToTopButton } from './Components/BackToTopButton';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
 import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
@@ -21,7 +20,6 @@ import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 
 // register Vue components
-Vue.component('back-to-top-button', BackToTopButton);
 Vue.component('validate-input', ValidateInput);
 Vue.component('validate-date', ValidateDate);
 Vue.component('date-comparison', DateComparison);
