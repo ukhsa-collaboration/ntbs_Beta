@@ -11,9 +11,8 @@ ViewData["Title"] = "Notification - Clinical Details";
 @{string errorClassName = "nhsuk-form-group--error";}
 
 <!-- TODO: Split this into multiple partial pages for readability -->
-<form method="post" autocomplete="off">
+<div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="NotificationId" />
     <input type="hidden" asp-for="PatientBirthYear" />
     <h2>Sites of disease</h2>
     <nhs-form-group nhs-form-group-type="Standard">
@@ -412,4 +411,4 @@ ViewData["Title"] = "Notification - Clinical Details";
         </div>
     </date-comparison>
     <partial name="_PaginationPartial">
-</form>
+</div>

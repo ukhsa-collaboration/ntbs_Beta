@@ -9,9 +9,7 @@
 }
 <h2>Social Risk Factors</h1>
 
-<form method="post" autocomplete="off">
-    <input type="hidden" asp-for="NotificationId" />
-
+<div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <nhs-form-group nhs-form-group-type="Standard">
@@ -102,4 +100,4 @@
     </nhs-form-group>
     <br/>
     <partial name="_PaginationPartial">
-</form>
+</div>

@@ -29,7 +29,7 @@ namespace ntbs_service.Pages_Notifications
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             var notification = await service.GetNotificationAsync(id);
             if (notification == null)
@@ -53,20 +53,18 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
-        {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(NotificationId);
+                return false;
             }
 
             var notification = await service.GetNotificationAsync(NotificationId);
             await service.UpdatePatientAsync(notification, Patient);
-            
-            return RedirectToPage("./Episode", new {id = notification.NotificationId});
+            return true;
         }
 
         private void UpdatePatientFlags() {
@@ -79,6 +77,10 @@ namespace ntbs_service.Pages_Notifications
                 Patient.Postcode = null;
                 ModelState.Remove("Patient.Postcode");
             }
+        }
+
+        protected override IActionResult RedirectToNextPage(int? notificationId) {
+            return RedirectToPage("./Episode", new {id = notificationId});
         }
 
         public ContentResult OnGetValidatePatientProperty(string key, string value)

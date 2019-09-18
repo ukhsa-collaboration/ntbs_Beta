@@ -5,7 +5,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class NotificationModelBase : ValidationModel
+    public abstract class NotificationModelBase : ValidationModel
     {
         protected INotificationService service;
 
@@ -16,17 +16,40 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public int? NotificationId { get; set; }
 
-        public async Task<IActionResult> OnPostSubmitAsync(int? NotificationId)
+        public async Task<IActionResult> OnPostSubmitAsync(int? notificationId)
         {
-            var notification = await service.GetNotificationAsync(NotificationId);
+            bool isValid = await ValidateAndSave(notificationId);
+            if (!isValid) {
+                return await OnGetAsync(notificationId);
+            }
+            
+            var notification = await service.GetNotificationAsync(notificationId);
             if (notification == null)
             {
                 return NotFound();
             }
 
             await service.SubmitNotification(notification);
-
+            
             return RedirectToPage("../Index");
-        } 
+        }
+
+        
+        public async Task<IActionResult> OnPostSaveAsync(int? notificationId)
+        {
+            bool isValid = await ValidateAndSave(notificationId);
+
+            if (!isValid) {
+                return await OnGetAsync(notificationId);
+            }
+
+            return RedirectToNextPage(notificationId);
+        }
+
+        protected abstract Task<bool> ValidateAndSave(int? notificationId);
+
+        public abstract Task<IActionResult> OnGetAsync(int? notificationId);
+
+        protected abstract IActionResult RedirectToNextPage(int? notificationId);
     }
 }

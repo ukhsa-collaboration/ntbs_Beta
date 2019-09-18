@@ -18,7 +18,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             var notification = await service.GetNotificationAsync(id);
             if (notification == null)
@@ -36,18 +36,12 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
-        {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if (!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("../Index", new {id = NotificationId});
+        protected override IActionResult RedirectToNextPage(int? notificationId)
+        { 
+            return RedirectToPage("../Index");
         }
 
-        public async Task<bool> validateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
             UpdateFlags();
             
             if (!ModelState.IsValid)

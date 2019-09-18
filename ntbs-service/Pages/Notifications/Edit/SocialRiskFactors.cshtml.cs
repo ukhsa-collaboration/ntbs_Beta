@@ -23,7 +23,7 @@ namespace ntbs_service.Pages_Notifications
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -44,19 +44,21 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
-        {
-            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
-            
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {            
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(NotificationId);
+                return false;
             }
 
+            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
             await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
-
-            return RedirectToPage("./Travel", new {id = NotificationId});
+            return true;
         }
+
+        protected override IActionResult RedirectToNextPage(int? notificationId)
+        {
+            return RedirectToPage("./Travel", new {id = notificationId});
+        } 
 
         public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
         {

@@ -17,7 +17,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             var notification = await service.GetNotificationAsync(id);
             if (notification == null)
@@ -35,18 +35,12 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId)
         {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./SocialRiskFactors", new {id = NotificationId});
+            return RedirectToPage("./SocialRiskFactors", new {id = notificationId});
         }
 
-        public async Task<bool> validateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
 
             if (!ModelState.IsValid)
             {

@@ -37,7 +37,7 @@ namespace ntbs_service.Pages_Notifications
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
              var notification = await service.GetNotificationAsync(id);
             if (notification == null)
@@ -77,19 +77,11 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
+        protected override IActionResult RedirectToNextPage(int? notificationId) {
+            return RedirectToPage("./ContactTracing", new {id = notificationId});
+        } 
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
-        {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./ContactTracing", new {id = NotificationId});
-        }
-
-        private async Task<bool> validateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
             UpdateFlags();
 
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);

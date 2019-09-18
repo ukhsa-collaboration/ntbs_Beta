@@ -5,6 +5,7 @@ import 'govuk-frontend/govuk/all.scss';
 import 'nhsuk-frontend/packages/nhsuk'
 import 'nhsuk-frontend/packages/nhsuk.scss'
 import '../css/site.css'
+import '../css/notification.css'
 import Vue from 'vue';
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';

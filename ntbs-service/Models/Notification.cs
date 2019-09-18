@@ -7,8 +7,9 @@ namespace ntbs_service.Models
     public class Notification
     {
         public Notification() {
-            NotificationStatus = Enums.NotificationStatus.Draft;
+            NotificationStatus = NotificationStatus.Draft;
         }
+        
         public int NotificationId { get; set; }
         public DateTime? SubmissionDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }

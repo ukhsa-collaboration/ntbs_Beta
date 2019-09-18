@@ -9,8 +9,7 @@ ViewData["Title"] = "Notification - Hospital Details";
 
 <h2>Hospital details</h1>
 
-<form method="post" autocomplete="off">
-    <input type="hidden" asp-for="NotificationId" />
+<div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <cascading-dropdowns inline-template>
@@ -62,4 +61,4 @@ ViewData["Title"] = "Notification - Hospital Details";
     </validate-input>
     <br/>
     <partial name="_PaginationPartial">
-</form>
+</div>

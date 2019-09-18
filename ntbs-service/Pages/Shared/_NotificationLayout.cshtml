@@ -4,10 +4,9 @@
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
     var currentPage = splitUrlPath[splitUrlPath.Length-1];
 }
-<!DOCTYPE html>
-<html>
-<body>
-<div class="notification-container">
+  
+<form method="post" autocomplete="off" class="notification-container">
+    <input type="hidden" asp-for="NotificationId" />
     <div class="notification-sideline-container"></div>
     <div class="notification-body-container">
         <nhs-width-container container-width="Fluid">
@@ -61,18 +60,14 @@
             </nhs-main-wrapper>
         </nhs-width-container>
     </div>
+
     <div class="nhsuk-main-wrapper notification-sideline-container">
         <aside class="manage-notification-section">
             <h2 class="govuk-heading-m" id="manage-notification-title">
                 Manage Notification
             </h2>
-            <form method="post">
-                <input type="hidden" asp-for="NotificationId" />
-                <button nhs-button-type="Standard" asp-page-handler="Submit">Submit</button>
-            </form>
+            <button nhs-button-type="Standard" asp-page-handler="Submit">Submit</button>
             </aside>
     </div>
-</div>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>
+</form>
+@RenderSection("Scripts", required: false)

@@ -25,7 +25,7 @@ namespace ntbs_service.Pages_Notifications
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -58,18 +58,12 @@ namespace ntbs_service.Pages_Notifications
             return new JsonResult(tbServices);
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId)
         {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./ClinicalDetails", new {id = NotificationId});
+            return RedirectToPage("./ClinicalDetails", new {id = notificationId});
         }
 
-        public async Task<bool> validateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
     
             if (!ModelState.IsValid)
             {
