@@ -4,29 +4,29 @@
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Previous history of TB (pre-2000) </h3>
-    <a href="./Edit/PreviousHistory?id=@notificationId" class="notification-edit-link"> Edit </a>
+    <a href="./Edit/PreviousHistory?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
 </div>
 <div class="notification-overview-details-container">
-    <div class="nhsuk-grid-row notification-overview-details">
-        <div class="nhsuk-grid-column-one-third">
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Previous notification of TB </div>
-            <div class="empty-cell-min-height"> @(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == true ? "No" : "Yes") </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
+            <div class="cell-min-height"> @(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == true ? "No" : "Yes") </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Year of previous notification </div>
-            <div class="empty-cell-min-height"> @if(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == false) {
+            <div class="cell-min-height"> @if(@Model.Notification.PatientTBHistory.NotPreviouslyHadTB == false) {
                     @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear
                 } </div>
-        </div>
-    </div>
-    <div class="nhsuk-grid-row notification-overview-details">
-        <div class="nhsuk-grid-column-one-third">
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Drug therapy </div>
-            <div class="empty-cell-min-height">  </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Treatment in UK </div>
-            <div class="empty-cell-min-height">  </div>
-        </div>
-    </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
 </div>

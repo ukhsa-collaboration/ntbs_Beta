@@ -79,31 +79,12 @@ body {
     border-left: 4px solid #1d70b8;
 }
 
-.remove-button-styling-add-orange-hover {
-    background: transparent;
-    padding: 0;
-    outline: none;
-    border: 0;
-    color: #1d70b8;
-    cursor: pointer;
-}
-
 .text-align-right {
     text-align: right;
 }
 
 .text-align-left {
     text-align: left;
-}
-
-.remove-button-styling-add-orange-hover:focus {
-    background: #ffb81C;
-    color: #212b32;
-}
-
-.remove-button-styling-add-orange-hover:hover {
-    background: #ffcd60;
-    color: #212b32;
 }
 
 .top-margin-separator {
@@ -116,44 +97,6 @@ body {
 
 .double-fixed-width-separator {
     width: 100px;
-}
-
-.notification-overview-type-and-edit-container {
-    display: flex;
-    border-bottom: 1px solid #cccccc;
-}
-
-.notification-details-type {
-    margin-bottom: 10px;
-}
-
-.notification-edit-link {
-    margin: auto 0 10px auto;
-}
-
-.notification-overview-details-container {
-    padding: 10px 0 5px 0;
-}
-
-.notification-overview-details {
-    padding-bottom: 10px;
-}
-
-.notification-details-label {
-    font-weight: 600;
-}
-
-.empty-cell-min-height {
-    min-height: 20px;
-}
-
-.back-to-top-link {
-    border: none;
-    background: transparent;
-    text-decoration: underline;
-    color: blue;
-    cursor: pointer;
-    padding: 0;
 }
 
 .text-warning {
