@@ -43,10 +43,13 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationId = notification.NotificationId;
             Patient = notification.PatientDetails;
+            var postcodeNoWhiteSpace = notification.PatientDetails.Postcode.Replace(" ", string.Empty);
+            var formattedPostcode = postcodeNoWhiteSpace.Insert(postcodeNoWhiteSpace.Length - 3, " ");
             NotificationBannerDetails = new NotificationBannerDetails {
                 NotificationId = NotificationId,
                 Patient = notification.PatientDetails,
-                Episode = notification.Episode
+                Episode = notification.Episode,
+                Postcode = formattedPostcode
             };
 
             if (Patient == null)
