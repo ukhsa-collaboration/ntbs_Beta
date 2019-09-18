@@ -167,6 +167,9 @@ namespace ntbs_service.Models
 
                     x.ToTable("SocialRiskFactors");
                 });
+
+                entity.Property(e => e.NotificationStatus)
+                    .HasConversion(new EnumToStringConverter<NotificationStatus>());
             });
 
             modelBuilder.Entity<Region>(entity =>

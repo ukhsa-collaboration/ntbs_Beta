@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages;
 using ntbs_service.Services;
 using System.Linq;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class SocialRiskFactorsModel : ValidationModel
+    public class SocialRiskFactorsModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
         
         public List<Status> StatusList { get; set; }
@@ -20,17 +18,12 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        [BindProperty]
-        public int NotificationId { get; set; }
-        
-
-        public SocialRiskFactorsModel(INotificationService service, NtbsContext context)
+        public SocialRiskFactorsModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -51,19 +44,21 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
-        {
-            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
-            
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {            
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(NotificationId);
+                return false;
             }
 
+            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
             await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
-
-            return RedirectToPage("./Travel", new {id = NotificationId});
+            return true;
         }
+
+        protected override IActionResult RedirectToNextPage(int? notificationId)
+        {
+            return RedirectToPage("./Travel", new {id = notificationId});
+        } 
 
         public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
         {

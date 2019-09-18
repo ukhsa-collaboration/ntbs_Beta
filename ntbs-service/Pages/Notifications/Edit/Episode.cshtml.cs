@@ -9,9 +9,8 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class EpisodeModel : ValidationModel
+    public class EpisodeModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
         
         public SelectList TBServices { get; set; }
@@ -21,17 +20,12 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public Episode Episode { get; set; }
 
-        [BindProperty]
-        public int NotificationId { get; set; }
-        
-
-        public EpisodeModel(INotificationService service, NtbsContext context)
+        public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -64,18 +58,12 @@ namespace ntbs_service.Pages_Notifications
             return new JsonResult(tbServices);
         }
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId)
         {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./ClinicalDetails", new {id = NotificationId});
+            return RedirectToPage("./ClinicalDetails", new {id = notificationId});
         }
 
-        public async Task<bool> validateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
     
             if (!ModelState.IsValid)
             {
