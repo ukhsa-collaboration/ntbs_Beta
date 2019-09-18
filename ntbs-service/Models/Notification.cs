@@ -7,7 +7,14 @@ namespace ntbs_service.Models
 {
     public class Notification
     {
+        public Notification() {
+            NotificationStatus = NotificationStatus.Draft;
+        }
+        
         public int NotificationId { get; set; }
+        public DateTime? SubmissionDate { get; set; }
+        public NotificationStatus NotificationStatus { get; set; }
+
         public virtual PatientDetails PatientDetails { get; set; }
         public virtual ClinicalDetails ClinicalDetails { get; set; }
         public virtual List<NotificationSite> NotificationSites { get; set; }

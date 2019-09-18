@@ -12,13 +12,11 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages_Notifications
 {
     [BindProperties]
-    public class ClinicalDetailsModel : ValidationModel
+    public class ClinicalDetailsModel : NotificationModelBase
     {
-        private readonly INotificationService service;
         private readonly NtbsContext context;
 
         public ClinicalDetails ClinicalDetails { get; set; }
-        public int NotificationId { get; set; }
 
         public Dictionary<SiteId, bool> NotificationSiteMap { get; set; }
 
@@ -34,13 +32,12 @@ namespace ntbs_service.Pages_Notifications
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context)
+        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.service = service;
             this.context = context;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
              var notification = await service.GetNotificationAsync(id);
             if (notification == null)
@@ -80,19 +77,11 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
+        protected override IActionResult RedirectToNextPage(int? notificationId) {
+            return RedirectToPage("./ContactTracing", new {id = notificationId});
+        } 
 
-        public async Task<IActionResult> OnPostAsync(int? NotificationId)
-        {
-            bool validModel = await validateAndSave(NotificationId);
-
-            if(!validModel) {
-                return await OnGetAsync(NotificationId);
-            }
-
-            return RedirectToPage("./ContactTracing", new {id = NotificationId});
-        }
-
-        private async Task<bool> validateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
             UpdateFlags();
 
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);

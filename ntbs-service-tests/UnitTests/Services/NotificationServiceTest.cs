@@ -117,5 +117,21 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             // Assert
             Assert.Null(patient.UkBorn);
         }
+
+        [Fact]
+        public void SubmitNotification_ChangesDateAndStatus()
+        {
+            // Arrange
+            var notification = new Notification();
+            var expectedDate = DateTime.UtcNow;
+
+            // Act
+            service.SubmitNotification(notification);
+            DateTime statusChangeDate = (DateTime) notification.SubmissionDate;
+
+            // Assert
+            Assert.Equal(notification.NotificationStatus, NotificationStatus.Notified);
+            Assert.Equal(statusChangeDate.Date, expectedDate.Date);
+        }
     }
 }
