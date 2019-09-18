@@ -1,0 +1,30 @@
+@{
+    var notificationId = ViewData["NotificationId"];
+}
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Hospital Details </h3>
+    <a href="./Edit/Episode?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div>
+<div class="notification-overview-details-container">
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Case Manager </div>
+            <div class="cell-min-height"> @Model.Notification.Episode.CaseManager </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Consultant </div>
+            <div class="cell-min-height"> @Model.Notification.Episode.Consultant </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> TB Service </div>
+            <div class="cell-min-height"> @Model.Notification.TBServiceName </div> 
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Hospital </div>
+            <div class="cell-min-height"> @Model.Notification.HospitalName </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</div>

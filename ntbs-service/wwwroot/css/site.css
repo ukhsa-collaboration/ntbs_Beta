@@ -75,31 +75,12 @@ body {
     border-left: 4px solid #1d70b8;
 }
 
-.remove-button-styling-add-orange-hover {
-    background: transparent;
-    padding: 0;
-    outline: none;
-    border: 0;
-    color: #1d70b8;
-    cursor: pointer;
-}
-
 .text-align-right {
     text-align: right;
 }
 
 .text-align-left {
     text-align: left;
-}
-
-.remove-button-styling-add-orange-hover:focus {
-    background: #ffb81C;
-    color: #212b32;
-}
-
-.remove-button-styling-add-orange-hover:hover {
-    background: #ffcd60;
-    color: #212b32;
 }
 
 .top-margin-separator {

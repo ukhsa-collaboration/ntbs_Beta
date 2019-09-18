@@ -1,0 +1,72 @@
+@{
+    var notificationId = ViewData["NotificationId"];
+}
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Travel/visitors </h3>
+    <a href="./Edit/Travel?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div> 
+<div class="notification-overview-details-container">
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Patient has visited one or more high incidence countries </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Total countries visited </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Total number of months travelled </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country 1 </div>
+            <div class="cell-min-height">  </div>
+            <div>  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country 2 </div>
+            <div class="cell-min-height">  </div>
+            <div>  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country 3 </div>
+            <div class="cell-min-height">  </div>
+            <div>  </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Patient has had visitors from one or more high incidence countries </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Total visitor countries </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Total number of months of visits </div>
+            <div class="cell-min-height">  </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country 1 </div>
+            <div class="cell-min-height">  </div>
+            <div>  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country 2 </div>
+            <div class="cell-min-height">  </div>
+            <div>  </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country 3 </div>
+            <div class="cell-min-height">  </div>
+            <div>  </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</div>

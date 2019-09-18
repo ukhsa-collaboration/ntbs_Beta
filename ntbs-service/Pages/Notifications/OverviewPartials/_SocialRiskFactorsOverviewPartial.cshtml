@@ -1,0 +1,75 @@
+@{
+    var notificationId = ViewData["NotificationId"];
+}
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Social risk factors </h3>
+    <a href="./Edit/SocialRiskFactors?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div> 
+<div class="notification-overview-details-container">
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> At least one social risk factor </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Alcohol misuse </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> History of drug misuse </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.Notification.DrugRiskFactorTimePeriods </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> History of homelessness </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.Notification.HomelessRiskFactorTimePeriods </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> History of imprisonment </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.Notification.ImprisonmentRiskFactorTimePeriods </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Mental health issues </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.MentalHealthStatus </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Smoker </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</div>
