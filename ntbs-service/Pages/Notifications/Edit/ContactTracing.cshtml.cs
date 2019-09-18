@@ -40,6 +40,7 @@ namespace ntbs_service.Pages_Notifications
                 ContactTracing = new ContactTracing();
             }
 
+            await OnGetAuditAsync(notification.NotificationId, ContactTracing);
             return Page();
         }
 

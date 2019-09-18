@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {

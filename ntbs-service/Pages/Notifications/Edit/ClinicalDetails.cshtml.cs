@@ -42,7 +42,7 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-             var notification = await service.GetNotificationAsync(id);
+            var notification = await service.GetNotificationAsync(id);
             if (notification == null)
             {
                 return NotFound();
@@ -68,6 +68,7 @@ namespace ntbs_service.Pages_Notifications
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
 
+            await OnGetAuditAsync(notification.NotificationId, ClinicalDetails);
             return Page();
         }
 

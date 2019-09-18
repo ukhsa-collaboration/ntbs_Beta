@@ -48,6 +48,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            await OnGetAuditAsync(notification.NotificationId, SocialRiskFactors);
             return Page();
         }
 

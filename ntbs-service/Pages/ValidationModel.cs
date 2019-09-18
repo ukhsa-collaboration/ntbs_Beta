@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Models;
 using ntbs_service.Models.Validations;
-using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using EFAuditer;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Pages
 {
     public abstract class ValidationModel : PageModel
     {
+        protected async Task OnGetAuditAsync(int notificationId, object model)
+        {
+            await Auditer.AuditReadOperation("NotificationId", notificationId, model);
+        }
+
         protected ContentResult ValidateProperty(object model, string key, object value)
         {
             model.GetType().GetProperty(key).SetValue(model, value);

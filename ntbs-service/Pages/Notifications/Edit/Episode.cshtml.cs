@@ -1,8 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
@@ -55,6 +53,7 @@ namespace ntbs_service.Pages_Notifications
                                         nameof(Hospital.HospitalId), 
                                         nameof(Hospital.Name));
 
+            await OnGetAuditAsync(notification.NotificationId, Episode);
             return Page();
         }
 

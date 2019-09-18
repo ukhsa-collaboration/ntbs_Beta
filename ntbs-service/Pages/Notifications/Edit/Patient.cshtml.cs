@@ -55,6 +55,7 @@ namespace ntbs_service.Pages_Notifications
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
 
+            await OnGetAuditAsync(notification.NotificationId, Patient);
             return Page();
         }
 

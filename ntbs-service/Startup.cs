@@ -10,6 +10,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Data.Legacy;
 using ntbs_service.Models;
 using ntbs_service.Services;
+using EFAuditer;
 
 namespace ntbs_service
 {
@@ -71,6 +72,8 @@ namespace ntbs_service
             app.UseCookiePolicy();
 
             app.UseMvc();
+
+            Auditer.SetupAuditFramework();
         }
     }
 }

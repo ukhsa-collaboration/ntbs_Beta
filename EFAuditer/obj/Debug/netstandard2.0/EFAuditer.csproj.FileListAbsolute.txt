@@ -1,0 +1,9 @@
+C:\Work\ntbs\EFAuditer\bin\Debug\netstandard2.0\EFAuditer.deps.json
+C:\Work\ntbs\EFAuditer\bin\Debug\netstandard2.0\EFAuditer.dll
+C:\Work\ntbs\EFAuditer\bin\Debug\netstandard2.0\EFAuditer.pdb
+C:\Work\ntbs\EFAuditer\obj\Debug\netstandard2.0\EFAuditer.csprojAssemblyReference.cache
+C:\Work\ntbs\EFAuditer\obj\Debug\netstandard2.0\EFAuditer.csproj.CoreCompileInputs.cache
+C:\Work\ntbs\EFAuditer\obj\Debug\netstandard2.0\EFAuditer.AssemblyInfoInputs.cache
+C:\Work\ntbs\EFAuditer\obj\Debug\netstandard2.0\EFAuditer.AssemblyInfo.cs
+C:\Work\ntbs\EFAuditer\obj\Debug\netstandard2.0\EFAuditer.dll
+C:\Work\ntbs\EFAuditer\obj\Debug\netstandard2.0\EFAuditer.pdb
