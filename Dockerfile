@@ -1,13 +1,11 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /app
 
-# copy csproj and restore as distinct layers
-COPY *.csproj .
-RUN dotnet restore
-
-# copy everything else and build app
-COPY . ./
-RUN dotnet publish -c Release -o out
+# copy and build app
+COPY ntbs-service/ .
+COPY EFAuditer/ .
+RUN dotnet restore ntbs-service/*.csproj
+RUN dotnet publish ntbs-service/*.csproj -c Release -o out
 
 FROM node AS build-frontend
 WORKDIR /app
