@@ -27,6 +27,7 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = notification.NotificationId;
+            NotificationStatus = notification.NotificationStatus;
             PatientTBHistory = notification.PatientTBHistory;
 
             if (PatientTBHistory == null) {

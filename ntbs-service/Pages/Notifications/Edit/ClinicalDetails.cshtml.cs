@@ -47,6 +47,7 @@ namespace ntbs_service.Pages_Notifications
 
             ClinicalDetails = notification.ClinicalDetails;
             NotificationId = notification.NotificationId;
+            NotificationStatus = notification.NotificationStatus;
 
             if (ClinicalDetails == null) {
                 ClinicalDetails = new ClinicalDetails();

@@ -32,6 +32,7 @@ namespace ntbs_service.Pages_Notifications
 
             var notification = await service.GetNotificationWithSocialRisksAsync(id);
             NotificationId = notification.NotificationId;
+            NotificationStatus = notification.NotificationStatus;
             SocialRiskFactors = notification.SocialRiskFactors;
 
             StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();

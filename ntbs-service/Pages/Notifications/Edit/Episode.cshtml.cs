@@ -34,6 +34,7 @@ namespace ntbs_service.Pages_Notifications
 
             var notification = await service.GetNotificationAsync(id);
             NotificationId = notification.NotificationId;
+            NotificationStatus = notification.NotificationStatus;
             Episode = notification.Episode;
 
             if (Episode == null)

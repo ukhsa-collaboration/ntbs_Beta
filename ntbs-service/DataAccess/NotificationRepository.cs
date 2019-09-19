@@ -99,10 +99,13 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
                 .Include(n => n.Episode).ThenInclude(p => p.Hospital)
                 .Include(n => n.Episode).ThenInclude(p => p.TBService)
+                .Include(n => n.ClinicalDetails)
+                .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
-                .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
+                .Include(n => n.ContactTracing)
+                .Include(n => n.PatientTBHistory)
                 .FirstOrDefaultAsync(n => n.NotificationId == id);
         }
     }
