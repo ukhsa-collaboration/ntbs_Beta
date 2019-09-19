@@ -11,6 +11,7 @@ namespace ntbs_service.Pages_Notifications
     {
         private readonly INotificationService service;
         private readonly NtbsContext context;
+        private readonly IAuditService auditService;
         
         public SelectList TBServices { get; set; }
         public SelectList Hospitals { get; set; }
@@ -22,11 +23,11 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public int NotificationId { get; set; }
         
-
-        public EpisodeModel(INotificationService service, NtbsContext context)
+        public EpisodeModel(INotificationService service, NtbsContext context, IAuditService auditService)
         {
             this.service = service;
             this.context = context;
+            this.auditService = auditService;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -53,7 +54,7 @@ namespace ntbs_service.Pages_Notifications
                                         nameof(Hospital.HospitalId), 
                                         nameof(Hospital.Name));
 
-            await OnGetAuditAsync(notification.NotificationId, Episode);
+            await auditService.OnGetAuditAsync(notification.NotificationId, Episode);
             return Page();
         }
 

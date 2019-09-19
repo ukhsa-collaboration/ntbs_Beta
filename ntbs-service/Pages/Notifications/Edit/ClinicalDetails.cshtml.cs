@@ -16,6 +16,7 @@ namespace ntbs_service.Pages_Notifications
     {
         private readonly INotificationService service;
         private readonly NtbsContext context;
+        private readonly IAuditService auditService;
 
         public ClinicalDetails ClinicalDetails { get; set; }
         public int NotificationId { get; set; }
@@ -34,10 +35,11 @@ namespace ntbs_service.Pages_Notifications
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context)
+        public ClinicalDetailsModel(INotificationService service, NtbsContext context, IAuditService auditService)
         {
             this.service = service;
             this.context = context;
+            this.auditService = auditService;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -68,7 +70,7 @@ namespace ntbs_service.Pages_Notifications
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
 
-            await OnGetAuditAsync(notification.NotificationId, ClinicalDetails);
+            await auditService.OnGetAuditAsync(notification.NotificationId, ClinicalDetails);
             return Page();
         }
 

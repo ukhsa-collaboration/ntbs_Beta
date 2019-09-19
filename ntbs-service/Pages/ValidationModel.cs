@@ -12,11 +12,6 @@ namespace ntbs_service.Pages
 {
     public abstract class ValidationModel : PageModel
     {
-        protected async Task OnGetAuditAsync(int notificationId, object model)
-        {
-            await Auditer.AuditReadOperation("NotificationId", notificationId, model);
-        }
-
         protected ContentResult ValidateProperty(object model, string key, object value)
         {
             model.GetType().GetProperty(key).SetValue(model, value);

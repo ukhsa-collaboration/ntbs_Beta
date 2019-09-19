@@ -14,9 +14,9 @@ The Audit.NET framework does not log any database reads, so this project has bee
 To use the Auditer in a project, do the following:
 - Install the AuditNET EF extension: `dotnet add package Audit.EntityFramework.Core`
 - Add a reference to EFAuditer: `dotnet add reference <path to EFAuditer.csproj file>`
-- Specify path to auditing database in (TODO NTBS-218: db settings file)
+- Create auditing db and register EFAuditer.AuditDatabaseContext in ConfigureServices if you want to DI the context (to use the manual auditing methods)
+- Register the framework by calling `services.AddEFAuditer(auditDbConnectionString)` in ConfigureServices, passing in the db connection string
 - Ensure DbContext inherits from `Audit.EntityFramework.AuditDbContext` instead of the ordinary DbContext
-- Call the method `Auditer.SetupAuditFramework()` from e.g. Configure within Startup.cs (it needs to be called at application startup)
-- Whenever db access should be logged, call `Auditer.CreateReadLog(primaryKeyName, primaryKeyId, model)`, where the first two parameters are the primary key name and integer value of the retrieved entity, and model is the entity itself. This will log the state of the entity when it was retrieved.
+- Whenever db access should be logged, call `auditerDbContext.CreateReadLog(primaryKeyName, primaryKeyId, model)`, where the first two parameters are the primary key name and integer value of the retrieved entity, and model is the entity itself. This will log the state of the entity when it was retrieved.
 
 This is all that is required for logging db operations. Audit.NET can be customised further, e.g. to not include certain models in the auditing - see the [documentation](https://www.amazon.co.uk/Adapter-Aluminum-Compatible-MacBook-Devices-4-1/dp/B07PV66G2S/ref=sr_1_3?keywords=usbc+to+usb+hub&qid=1568809731&s=gateway&sr=8-3) for more details.

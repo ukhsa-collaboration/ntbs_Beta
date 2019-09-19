@@ -9,10 +9,12 @@ namespace ntbs_service.Pages_Notifications
     public class PreviousHistoryModel : ValidationModel
     {
         private readonly INotificationService service;
+        private readonly IAuditService auditService;
 
-        public PreviousHistoryModel(INotificationService service)
+        public PreviousHistoryModel(INotificationService service, IAuditService auditService)
         {
             this.service = service;
+            this.auditService = auditService;
         }
 
         [BindProperty]
@@ -35,7 +37,7 @@ namespace ntbs_service.Pages_Notifications
                 PatientTBHistory = new PatientTBHistory();
             }
 
-            await OnGetAuditAsync(notification.NotificationId, PatientTBHistory);
+            await auditService.OnGetAuditAsync(notification.NotificationId, PatientTBHistory);
             return Page();
         }
 

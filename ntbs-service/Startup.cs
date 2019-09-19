@@ -40,12 +40,23 @@ namespace ntbs_service
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
 
+            var auditDbConnectionString = Configuration.GetConnectionString("auditContext");
+
+            services.AddDbContext<AuditDatabaseContext>(options =>
+                options.UseSqlServer(auditDbConnectionString)
+            );
+
+            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE)) {
+                services.AddEFAuditer(auditDbConnectionString);
+            }
+
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IETSSearchService, ETSSearcher>();
             services.AddScoped<ILTBRSearchService, LTBRSearcher>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IAuditService, AuditService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,8 +83,6 @@ namespace ntbs_service
             app.UseCookiePolicy();
 
             app.UseMvc();
-
-            Auditer.SetupAuditFramework();
         }
     }
 }
