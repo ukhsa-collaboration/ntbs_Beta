@@ -33,6 +33,7 @@ namespace ntbs_service.Models
         public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
+        public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
         public string FormattedNhsNumber => FormatNhsNumberString();
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
@@ -43,7 +44,8 @@ namespace ntbs_service.Models
         public int? DaysFromOnsetToPresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.PresentationDate, ClinicalDetails.SymptomStartDate);
         public int? DaysFromPresentationToDiagnosis => CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.PresentationDate);
         public int? DaysFromDiagnosisToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
-        public string BCGVaccinationStateAndYear => FormatVaccintationStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
+        public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
+        public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
         public string FormattedSymptomStartDate => FormatDate(ClinicalDetails.SymptomStartDate);
         public string FormattedPresentationDate => FormatDate(ClinicalDetails.PresentationDate);
         public string FormattedDiagnosisDate => FormatDate(ClinicalDetails.DiagnosisDate);
@@ -57,47 +59,64 @@ namespace ntbs_service.Models
         public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
         public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
 
-        public int? CalculateSum(int? x, int? y) {
+        public int? CalculateSum(int? x, int? y)
+        {
             return x + y;
         }
 
-        public string FormatDate(DateTime? date) {
+        public string FormatDate(DateTime? date)
+        {
             return date?.ToString("dd-MMM-yyyy");
         }
 
         public string TrueFalseToYesNo(bool? x) {
-            if(x == null) {
+            if (x == null)
+            {
                 return "";
-            } else {
+            } else
+            {
                 return x.Value ? "Yes" : "No";
             }
         }
 
-        public string FormatVaccintationStateAndYear(Status vaccinationState, int? vaccinationYear) {
-            return vaccinationState.ToString() + (vaccinationYear != null ? " - " + vaccinationYear : "");
+        public string FormatStateAndYear(Status state, int? year)
+        {
+            return state.ToString() + (year != null ? " - " + year : "");
         }
 
-        public int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2) {
+        public string FormatBooleanStateAndDate(bool booleanState, DateTime? date)
+        {
+            return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : "");
+        }
+
+        public int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
+        {
             return (date1?.Date - date2?.Date)?.Days;
         }
 
-        public string CreateSitesOfDiseaseString() {
+        public string CreateSitesOfDiseaseString()
+        {
             var siteNames = NotificationSites?.Select(ns => ns.Site)?.Select(s => s.Description);
             return String.Join(", ", siteNames); 
         }
 
-        public string CreateNoAbodeOrPostcodeString() {
-            if(PatientDetails.NoFixedAbode) {
+        public string CreateNoAbodeOrPostcodeString()
+        {
+            if(PatientDetails.NoFixedAbode)
+            {
                 return "No fixed abode";
-            } else {
+            } else
+            {
                 var postcodeNoWhiteSpace = PatientDetails.Postcode?.Replace(" ", string.Empty);
                 string FormattedPostcode = postcodeNoWhiteSpace?.Insert(postcodeNoWhiteSpace.Length - 3, " ");
                 return FormattedPostcode;
             }
         }
 
-        public string FormatNhsNumberString() {
-            if(String.IsNullOrEmpty(PatientDetails.NhsNumber)) {
+        public string FormatNhsNumberString()
+        {
+            if(String.IsNullOrEmpty(PatientDetails.NhsNumber))
+            {
                 return "";
             }
             return String.Join(" ",
@@ -107,15 +126,19 @@ namespace ntbs_service.Models
             );
         }
 
-        public string CreateTimePeriodsString(RiskFactorBase riskFactor) {
+        public string CreateTimePeriodsString(RiskFactorBase riskFactor)
+        {
             var timeStrings = new List<string>();
-            if(riskFactor.IsCurrent) {
+            if (riskFactor.IsCurrent)
+            {
                 timeStrings.Add("current");
             }
-            if(riskFactor.InPastFiveYears) {
+            if (riskFactor.InPastFiveYears)
+            {
                 timeStrings.Add("less than 5 years ago");
             }
-            if(riskFactor.MoreThanFiveYearsAgo) {
+            if (riskFactor.MoreThanFiveYearsAgo)
+            {
                 timeStrings.Add("more than 5 years ago");
             }
             return String.Join(", ", timeStrings);

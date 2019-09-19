@@ -15,7 +15,7 @@ namespace ntbs_service.Services
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
-        Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
+        Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task SubmitNotification(Notification notification);
@@ -73,10 +73,10 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
+        public async Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails clinicalDetails)
         {
             context.Attach(notification);
-            notification.ClinicalDetails = timeline;
+            notification.ClinicalDetails = clinicalDetails;
 
             await context.SaveChangesAsync();
         }

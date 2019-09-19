@@ -13,15 +13,36 @@ namespace ntbs_service.Pages
     {
         protected ContentResult ValidateProperty(object model, string key, object value)
         {
-            model.GetType().GetProperty(key).SetValue(model, value);
+            SetProperty(model, key, value);
             return GetValidationResult(model, key);
+        }
+
+        protected ContentResult ValidateMultipleProperties(object model, IEnumerable<Tuple<string, object>> propertyValueTuples)
+        {
+            var keys = new List<string>();
+            foreach (var tuple in propertyValueTuples)
+            {
+                SetProperty(model, tuple.Item1, tuple.Item2);
+                keys.Add(tuple.Item1);
+            }
+            return GetValidationResult(model, keys);
+        }
+
+        private void SetProperty(object model, string key, object value)
+        {
+            var property = model.GetType().GetProperty(key);
+            if (property.PropertyType == typeof(bool)) {
+                value = bool.Parse((string)value);
+            }
+            property.SetValue(model, value);
         }
 
         protected ContentResult ValidateDate(object model, string key, string day, string month, string year)
         {
             DateTime? convertedDob;
             var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
-            if (formattedDate.TryConvertToDateTime(out convertedDob)) {
+            if (formattedDate.TryConvertToDateTime(out convertedDob))
+            {
                 model.GetType().GetProperty(key).SetValue(model, convertedDob);
                 return GetValidationResult(model, key);
             }
@@ -43,6 +64,24 @@ namespace ntbs_service.Pages
             }
         }
 
+        private ContentResult GetValidationResult(object model, IEnumerable<string> keys)
+        {
+            if (TryValidateModel(model))
+            {
+                return ValidContent();
+            }
+            else
+            {
+                var errorMessageMap = new Dictionary<int,string>();
+                var errorIndex = 0;
+                foreach (var key in keys) {
+                    errorMessageMap.Add(errorIndex, ModelState[key].Errors[0].ErrorMessage);
+                    errorIndex++;
+                }
+                return Content(JsonConvert.SerializeObject(errorMessageMap), "application/json");
+            }
+        }
+
         private ContentResult ValidContent()
         {
             return Content("");
@@ -55,14 +94,16 @@ namespace ntbs_service.Pages
 
         protected void SetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
         {
-            if (formattedDate.IsEmpty()) {
+            if (formattedDate.IsEmpty())
+            {
                 return;
             }
 
             DateTime? convertedDob;
             string modelTypeName = model.GetType().Name;
 
-            if (formattedDate.TryConvertToDateTime(out convertedDob)) {
+            if (formattedDate.TryConvertToDateTime(out convertedDob))
+            {
                 model.GetType().GetProperty(key).SetValue(model, convertedDob);
                 TryValidateModel(model, modelTypeName);
             }
@@ -75,9 +116,12 @@ namespace ntbs_service.Pages
 
         public ContentResult ValidateFullModel(object model, string key, string modelName) 
         {
-            if(TryValidateModel(model, model.GetType().Name)) {
+            if (TryValidateModel(model, model.GetType().Name))
+            {
                 return Content("");
-            } else {
+            }
+            else
+            {
                 Dictionary<string, string> keyErrorDictionary = new Dictionary<string, string>();
                 foreach (var modelStateKey in ViewData.ModelState.Keys)
                 {
@@ -94,6 +138,7 @@ namespace ntbs_service.Pages
                 return Content(JsonConvert.SerializeObject(keyErrorDictionary));
             }
         }
+
         protected ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare)
         {
             if (IsValidYear(yearToValidate))
