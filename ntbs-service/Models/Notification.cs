@@ -28,7 +28,7 @@ namespace ntbs_service.Models
         public string NotificationBannerCssClass => GetBannerCssClass();
         public string NotificationBannerTriangleCssClass => GetBannerTriangleCssClass();
         public string FormattedSubmissionDate => FormatDate(SubmissionDate);
-        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName});
+        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName}.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
