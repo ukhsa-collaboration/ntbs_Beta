@@ -2,8 +2,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /app
 
 # copy and build app
-COPY ntbs-service/ .
-COPY EFAuditer/ .
+COPY . ./
 RUN dotnet restore ntbs-service/*.csproj
 RUN dotnet publish ntbs-service/*.csproj -c Release -o out
 
