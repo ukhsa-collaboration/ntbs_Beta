@@ -1,15 +1,21 @@
 // Root styles import - other global styles are imported from this sass file
 import '../css/site.scss'
+<<<<<<< HEAD
 import { initAll as govUkJsInitAll } from 'govuk-frontend';
 import Vue from 'vue';
 // import 'nhsuk-frontend/packages/nhsuk.scss'
 
+=======
+
+// @ts-ignore
+import config from './config/config-APP_TARGET';
+import Vue from 'vue';
+import { initAll as govUkJsInitAll } from 'govuk-frontend';
+>>>>>>> 741200a5506087c62652b6300015fb27a3432618
 import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
 import { DateComparison } from './Components/DateComparison';
 import { YearComparison } from './Components/YearComparison';
-// @ts-ignore
-import config from './config/config-APP_TARGET';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
 import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import { ValidateRiskFactor } from './Components/ValidateRiskFactor';

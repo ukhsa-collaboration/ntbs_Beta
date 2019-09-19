@@ -20,8 +20,8 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://ntbscontainerregistry.azurecr.io', 'ntbs-registery-credentials') {
-            ntbsImage = docker.build("ntbs-service:jenkinsbuild-${env.BUILD_ID}",  "./ntbs-service")
-            echo "Uploading build image jenkinsbuild-${env.BUILD_ID}"
+            ntbsImage = docker.build("ntbs-service:build-${env.BUILD_ID}",  "./ntbs-service")
+            echo "Uploading build image build-${env.BUILD_ID}"
             ntbsImage.push()
             echo "Uploading latest imagine"
             ntbsImage.push("latest")
@@ -38,7 +38,7 @@ pipeline {
               echo "Deploying to int"
               sh "kubectl apply -f ./ntbs-service/int.yml"
               // This sets the image to current build. Should be the same as "latest", but triggers pull of the image.
-              sh "kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:jenkinsbuild-${env.BUILD_ID}"
+              sh "kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:build-${env.BUILD_ID}"
               echo "Deployed!"
             }
           }
@@ -47,8 +47,8 @@ pipeline {
     }
   }
   post {
-    fixed {
-      notifySlack(":green_heart: Build fixed")
+    success {
+      notifySlack(":green_heart: Build succeeded. New deployment on int: build-${env.BUILD_ID}")
     }
     failure {
       notifySlack(":red_circle: Build failed")
