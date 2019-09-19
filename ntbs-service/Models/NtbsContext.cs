@@ -6,10 +6,11 @@ using System.Linq;
 using ntbs_service.Helpers;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models.Enums;
+using Audit.EntityFramework;
 
 namespace ntbs_service.Models
 {
-    public partial class NtbsContext : DbContext
+    public partial class NtbsContext : AuditDbContext
     {
         public NtbsContext()
         {

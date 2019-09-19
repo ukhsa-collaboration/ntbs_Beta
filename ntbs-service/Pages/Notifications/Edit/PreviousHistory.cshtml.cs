@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
@@ -13,7 +8,12 @@ namespace ntbs_service.Pages_Notifications
 {
     public class PreviousHistoryModel : NotificationModelBase
     {
-        public PreviousHistoryModel(INotificationService service) : base(service) {}
+        private readonly IAuditService auditService;
+
+        public PreviousHistoryModel(INotificationService service, IAuditService auditService) : base(service)
+        {
+            this.auditService = auditService;
+        }
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
@@ -34,6 +34,7 @@ namespace ntbs_service.Pages_Notifications
                 PatientTBHistory = new PatientTBHistory();
             }
 
+            await auditService.OnGetAuditAsync(notification.NotificationId, PatientTBHistory);
             return Page();
         }
 

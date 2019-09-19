@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -40,8 +39,7 @@ namespace ntbs_service.Services
         public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)
         {
             await UpdatePatientFlags(patient);
-            context.Attach(notification);
-            notification.PatientDetails = patient;
+            context.Entry(notification.PatientDetails).CurrentValues.SetValues(patient);
 
             await context.SaveChangesAsync();
         }
@@ -75,31 +73,27 @@ namespace ntbs_service.Services
 
         public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
         {
-            context.Attach(notification);
-            notification.ClinicalDetails = timeline;
+            context.Entry(notification.ClinicalDetails).CurrentValues.SetValues(timeline);
 
             await context.SaveChangesAsync();
         }
 
         public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
         {
-            context.Attach(notification);
-            notification.Episode = episode;
+            context.Entry(notification.Episode).CurrentValues.SetValues(episode);
 
             await context.SaveChangesAsync();
         }
 
         public async Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing) {
-            context.Attach(notification);
-            notification.ContactTracing = contactTracing;
+            context.Entry(notification.ContactTracing).CurrentValues.SetValues(contactTracing);
 
             await context.SaveChangesAsync();
         }
 
         public async Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory tBHistory)
         {
-            context.Attach(notification);
-            notification.PatientTBHistory = tBHistory;
+            context.Entry(notification.PatientTBHistory).CurrentValues.SetValues(tBHistory);
 
             await context.SaveChangesAsync();
         }
@@ -107,18 +101,13 @@ namespace ntbs_service.Services
         public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
         {
             UpdateSocialRiskFactorsFlags(socialRiskFactors);
-            var entry = context.Attach(notification);
             context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.CurrentValues.SetValues(socialRiskFactors);
-            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.State = EntityState.Modified;
 
             context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.State = EntityState.Modified;
 
             context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.State = EntityState.Modified;
 
             context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.State = EntityState.Modified;
 
             await context.SaveChangesAsync();        
         }

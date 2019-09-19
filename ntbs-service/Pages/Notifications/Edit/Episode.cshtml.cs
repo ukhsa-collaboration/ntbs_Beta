@@ -1,8 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
@@ -12,6 +10,7 @@ namespace ntbs_service.Pages_Notifications
     public class EpisodeModel : NotificationModelBase
     {
         private readonly NtbsContext context;
+        private readonly IAuditService auditService;
         
         public SelectList TBServices { get; set; }
         public SelectList Hospitals { get; set; }
@@ -20,9 +19,10 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
+        public EpisodeModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
         {
             this.context = context;
+            this.auditService = auditService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int? id)
@@ -50,6 +50,7 @@ namespace ntbs_service.Pages_Notifications
                                         nameof(Hospital.HospitalId), 
                                         nameof(Hospital.Name));
 
+            await auditService.OnGetAuditAsync(notification.NotificationId, Episode);
             return Page();
         }
 
