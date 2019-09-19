@@ -37,7 +37,7 @@ namespace ntbs_service.Pages_Notifications
 
             await service.SubmitNotification(notification);
             
-            return RedirectToPage("../Overview", new {id = notificationId});
+            return RedirectToPage("../Overview", new {id = NotificationId});
         }
 
         
