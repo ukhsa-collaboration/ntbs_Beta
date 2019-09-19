@@ -1,4 +1,13 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+﻿@import './reset.scss';
+// We're importing the raw scss instaed of a packaged css bundle since we're using some of the dynamic elements ourselves (colour variables, functions etc)
+@import '../../node_modules/nhsuk-frontend/packages/nhsuk.scss';
+// Govuk css - needed for things like conditionally revealed radios sections
+@import '../../node_modules/govuk-frontend/govuk/all.scss';
+@import './checkboxes.scss';
+@import './notification.scss';
+@import './notificationView.scss';
+
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
@@ -98,3 +107,4 @@ body {
 .text-warning {
     color: orangered;
 }
+
