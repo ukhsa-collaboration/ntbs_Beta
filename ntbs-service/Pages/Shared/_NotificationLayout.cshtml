@@ -117,8 +117,11 @@
             <h2 class="govuk-heading-m" id="manage-notification-title">
                 Manage Notification
             </h2>
-            <button nhs-button-type="Standard" asp-page-handler="Submit">Submit</button>
-        </aside>
+            @if(Model.NotificationStatus == NotificationStatus.Draft) 
+            {
+              <button nhs-button-type="Standard" asp-page-handler="Submit">Submit</button>
+            }
+            </aside>
     </div>
 </form>
 @RenderSection("Scripts", required: false)

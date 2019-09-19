@@ -12,23 +12,18 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class OverviewModel : ValidationModel
+    public class OverviewModel : NotificationModelBase
     {
-        private readonly INotificationService service;
-        private readonly NtbsContext context;
 
-        public OverviewModel(INotificationService service, NtbsContext context)
+        public OverviewModel(INotificationService service) : base(service)
         {
             this.service = service;
-            this.context = context;
         }
 
         [BindProperty]
         public Notification Notification { get; set; }
-        [BindProperty]
-        public int NotificationId { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id)
         {
             Notification = await service.GetNotificationWithAllInfoAsync(id);
             if (Notification == null)
@@ -37,8 +32,23 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = Notification.NotificationId;
+            NotificationStatus = Notification.NotificationStatus;
 
             return Page();
+        }
+
+        protected override IActionResult RedirectToNextPage(int? notificationId)
+        {
+            // This is not needed on the overview page. We should think about restructuring the
+            // inheritance to accommodate pages like this one without this hack
+            throw new NotImplementedException();
+        }
+
+        protected override Task<bool> ValidateAndSave(int? notificationId)
+        {
+            // This is not needed on the overview page. We should think about restructuring the
+            // inheritance to accommodate pages like this one without this hack
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 using ntbs_service.Models;
@@ -17,6 +18,9 @@ namespace ntbs_service.Pages_Notifications
         public Notification Notification { get; set; }
         [BindProperty]
         public int? NotificationId { get; set; }
+        
+        // This can be thrown away once proper banner work completes
+        public NotificationStatus NotificationStatus { get; set; }
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
@@ -33,7 +37,7 @@ namespace ntbs_service.Pages_Notifications
 
             await service.SubmitNotification(notification);
             
-            return RedirectToPage("../Index");
+            return RedirectToPage("../Overview", new {id = notificationId});
         }
 
         

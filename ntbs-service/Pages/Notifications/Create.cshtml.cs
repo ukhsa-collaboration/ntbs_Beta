@@ -21,6 +21,9 @@ namespace ntbs_service.Pages_Notifications
             notification.PatientDetails = new PatientDetails();
             notification.Episode = new Episode();
             notification.SocialRiskFactors = new SocialRiskFactors();
+            notification.ClinicalDetails = new ClinicalDetails();
+            notification.PatientTBHistory = new PatientTBHistory();
+            notification.ContactTracing = new ContactTracing();
             await repository.AddNotificationAsync(notification);
 
             return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });

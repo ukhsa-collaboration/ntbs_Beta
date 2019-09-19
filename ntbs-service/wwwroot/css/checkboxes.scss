@@ -1,0 +1,71 @@
+﻿/* 
+Dotnet asp-for tag helper creates two input elements per checkbox.
+That's desired behaviour, as explained here: 
+However, the nhs checkbox styling is based on a rigid structure of label following input field directly
+This file copyies the styling that fails to be applied due to this clash and applies it to the labels.
+
+The only change from https://github.com/nhsuk/nhsuk-frontend/tree/master/packages/components/checkboxes
+is the addition fo `+ input` to the selectors to accommodate for the hidden input.
+*/
+
+.nhsuk-checkboxes__input + input + .nhsuk-checkboxes__label::before {
+  background: $nhsuk-form-element-background-color;
+  border: $nhsuk-border-width-form-element solid $nhsuk-form-border-color;
+  box-sizing: border-box;
+  content: '';
+  height: $nhsuk-checkboxes-size;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: $nhsuk-checkboxes-size;
+}
+
+.nhsuk-checkboxes__input + input + .nhsuk-checkboxes__label::after {
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  background: transparent;
+  border: solid;
+  border-top-color: transparent;
+  border-width: 0 0 $nhsuk-border-width $nhsuk-border-width;
+  content: '';
+  height: 10px;
+  left: 10px;
+  opacity: 0; /* 2 */
+  position: absolute;
+  top: 13px;
+  transform: rotate(-45deg);
+  width: 22px;
+}
+
+
+
+/*
+ * Focus state
+ *
+ * 1. Since box-shadows are removed when users customise their colours
+ *    We set a transparent outline that is shown instead.
+ *    https://accessibility.blog.gov.uk/2017/03/27/how-users-change-colours-on-websites/
+ */
+
+.nhsuk-checkboxes__input:focus + input + .nhsuk-checkboxes__label::before {
+  box-shadow: 0 0 0 $nhsuk-focus-width $nhsuk-focus-color;
+  outline: $nhsuk-focus-width solid transparent; /* 1 */
+  outline-offset: $nhsuk-focus-width;
+}
+
+/* Selected state */
+
+.nhsuk-checkboxes__input:checked +  input +.nhsuk-checkboxes__label::after {
+  opacity: 1;
+}
+
+/* Disabled state */
+
+.nhsuk-checkboxes__input:disabled,
+.nhsuk-checkboxes__input:disabled + input + .nhsuk-checkboxes__label {
+  cursor: default;
+}
+
+.nhsuk-checkboxes__input:disabled + input + .nhsuk-checkboxes__label {
+  opacity: .5;
+}
