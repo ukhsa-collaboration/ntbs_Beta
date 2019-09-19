@@ -37,6 +37,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationId = Notification.NotificationId;
             Patient = Notification.PatientDetails;
 
             if (Patient == null)

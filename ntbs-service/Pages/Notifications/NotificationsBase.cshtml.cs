@@ -13,17 +13,19 @@ namespace ntbs_service.Pages_Notifications
         public NotificationModelBase(INotificationService service) {
             this.service = service;
         }
-        [BindProperty]
-        public Notification Notification { get; set; }
 
-        public async Task<IActionResult> OnPostSubmitAsync(int? notificationId)
+        public Notification Notification { get; set; }
+        [BindProperty]
+        public int? NotificationId { get; set; }
+
+        public async Task<IActionResult> OnPostSubmitAsync()
         {
-            bool isValid = await ValidateAndSave(notificationId);
+            bool isValid = await ValidateAndSave(NotificationId);
             if (!isValid) {
-                return await OnGetAsync(notificationId);
+                return await OnGetAsync(NotificationId);
             }
             
-            var notification = await service.GetNotificationAsync(notificationId);
+            var notification = await service.GetNotificationAsync(NotificationId);
             if (notification == null)
             {
                 return NotFound();
