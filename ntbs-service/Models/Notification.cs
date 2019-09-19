@@ -25,8 +25,10 @@ namespace ntbs_service.Models
 
         public string NotificationStatusString => GetNotificationStatusString();
         public string NotificationBannerTitleCssClass => GetBannerTitleCssClass();
-        public string NotificationBannerBodyCssClass => GetBannerBodyCssClass();
-        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName.ToUpper(), PatientDetails.GivenName});
+        public string NotificationBannerCssClass => GetBannerCssClass();
+        public string NotificationBannerTriangleCssClass => GetBannerTriangleCssClass();
+        public string FormattedSubmissionDate => FormatDate(SubmissionDate);
+        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName});
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
@@ -69,11 +71,23 @@ namespace ntbs_service.Models
             }
         }
 
-        public string GetBannerBodyCssClass() {
-            if(NotificationStatus == Enums.NotificationStatus.Denotified) {
-                return "notification-banner-details-container-denotified";
+        public string GetBannerCssClass() {
+            if(NotificationStatus == Enums.NotificationStatus.Draft) {
+                return "notification-banner-container-editing";
+            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
+                return "notification-banner-container-notified";
             } else {
-                return "notification-banner-details-container";
+                return "notification-banner-container-denotified";
+            }
+        }
+
+        public string GetBannerTriangleCssClass() {
+            if(NotificationStatus == Enums.NotificationStatus.Draft) {
+                return "notification-banner-triangle-editing";
+            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
+                return "notification-banner-triangle-notified";
+            } else {
+                return "notification-banner-triangle-denotified";
             }
         }
 
