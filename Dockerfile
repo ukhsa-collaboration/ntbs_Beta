@@ -15,6 +15,7 @@ COPY ntbs-service/package-lock.json .
 RUN npm install
 
 # copy everything else and build frontend app
+COPY . ./
 RUN npm run build:prod
 
 
