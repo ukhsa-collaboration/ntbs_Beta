@@ -23,10 +23,6 @@ namespace ntbs_service.Pages_Notifications
 
         [BindProperty]
         public FormattedDate FormattedDob { get; set; }
-        [BindProperty]
-        public int NotificationId { get; set; }
-        [BindProperty]
-        public NotificationBannerDetails NotificationBannerDetails { get; set; }
 
         public PatientModel(INotificationService service, NtbsContext context) : base(service)
         {
@@ -35,22 +31,13 @@ namespace ntbs_service.Pages_Notifications
 
         public override async Task<IActionResult> OnGetAsync(int? id)
         {
-            var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = notification.NotificationId;
-            Patient = notification.PatientDetails;
-            var postcodeNoWhiteSpace = notification.PatientDetails.Postcode.Replace(" ", string.Empty);
-            var formattedPostcode = postcodeNoWhiteSpace.Insert(postcodeNoWhiteSpace.Length - 3, " ");
-            NotificationBannerDetails = new NotificationBannerDetails {
-                NotificationId = NotificationId,
-                Patient = notification.PatientDetails,
-                Episode = notification.Episode,
-                Postcode = formattedPostcode
-            };
+            Patient = Notification.PatientDetails;
 
             if (Patient == null)
             {

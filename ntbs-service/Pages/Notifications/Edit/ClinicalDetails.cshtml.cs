@@ -39,25 +39,24 @@ namespace ntbs_service.Pages_Notifications
 
         public override async Task<IActionResult> OnGetAsync(int? id)
         {
-             var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationWithNotificationSitesAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            ClinicalDetails = notification.ClinicalDetails;
-            NotificationId = notification.NotificationId;
+            ClinicalDetails = Notification.ClinicalDetails;
 
             if (ClinicalDetails == null) {
                 ClinicalDetails = new ClinicalDetails();
             }
 
-            var notificationSites = notification.NotificationSites;
+            var notificationSites = Notification.NotificationSites;
             SetupNotificationSiteMap(notificationSites);
             OtherSite = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER);
             Sites = (await context.GetAllSitesAsync()).ToList();
 
-            PatientBirthYear = notification.PatientDetails.Dob?.Year;
+            PatientBirthYear = Notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
             FormattedPresentationDate = ClinicalDetails.PresentationDate.ConvertToFormattedDate();

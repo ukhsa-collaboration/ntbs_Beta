@@ -32,9 +32,8 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            var notification = await service.GetNotificationAsync(id);
-            NotificationId = notification.NotificationId;
-            Episode = notification.Episode;
+            Notification = await service.GetNotificationAsync(id);
+            Episode = Notification.Episode;
 
             if (Episode == null)
             {

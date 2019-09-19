@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using ntbs_service.Models;
 
 namespace ntbs_service.DataAccess
@@ -10,8 +11,9 @@ namespace ntbs_service.DataAccess
     {
         Task<IList<Notification>> GetNotificationsAsync();
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
-        Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? id);
-        Task<Notification> GetNotificationWithAllInfoAsync(int? id);
+        Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
+        Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
+        Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
 
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
@@ -67,11 +69,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<Notification> GetNotificationAsync(int? NotificationId)
         {
-            return await context.Notification
-                .Include(n => n.NotificationSites)
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
-                .Include(n => n.Episode).ThenInclude(p => p.TBService)
+            return await GetBaseNotification(NotificationId)
                 .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
@@ -85,28 +83,38 @@ namespace ntbs_service.DataAccess
             return context.Notification.Any(e => e.NotificationId == NotificationId);
         }
 
-        public async Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? id)
+        public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId) {
+            return await GetBaseNotification(NotificationId)
+                .Include(n => n.NotificationSites)
+                .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
+        }
+
+        public async Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId)
         {
-            return await context.Notification
+            return await GetBaseNotification(NotificationId)
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                     .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
-                    .FirstOrDefaultAsync(n => n.NotificationId == id);
+                    .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
         }
 
-        public async Task<Notification> GetNotificationWithAllInfoAsync(int? id)
+        public async Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId)
         {
-            return await context.Notification
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
+            return await GetBaseNotification(NotificationId)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
                 .Include(n => n.Episode).ThenInclude(p => p.Hospital)
-                .Include(n => n.Episode).ThenInclude(p => p.TBService)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
-                .FirstOrDefaultAsync(n => n.NotificationId == id);
+                .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
+        }
+
+        public IIncludableQueryable<ntbs_service.Models.Notification, ntbs_service.Models.TBService> GetBaseNotification(int? NotificationId) {
+            return context.Notification
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
+                .Include(n => n.Episode).ThenInclude(p => p.TBService);
         }
     }
 }

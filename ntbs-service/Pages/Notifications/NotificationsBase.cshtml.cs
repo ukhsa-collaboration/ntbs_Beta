@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Pages;
 using ntbs_service.Services;
+using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -12,9 +13,8 @@ namespace ntbs_service.Pages_Notifications
         public NotificationModelBase(INotificationService service) {
             this.service = service;
         }
-
         [BindProperty]
-        public int? NotificationId { get; set; }
+        public Notification Notification { get; set; }
 
         public async Task<IActionResult> OnPostSubmitAsync(int? notificationId)
         {

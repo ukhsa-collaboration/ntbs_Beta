@@ -95,33 +95,3 @@ body {
 .text-warning {
     color: orangered;
 }
-
-.notification-banner-title-container {
-    color: white;
-    padding: 10px 0 0 10px;
-}
-
-.notification-editing-title-background {
-    background: #999999;
-}
-
-.notification-submitted-title-background {
-    background: #7f0029;
-}
-
-.notification-banner-details-container {
-    background: #dddddd;
-    padding: 10px 0 0 10px;
-}
-
-.notification-banner-links-container {
-    padding: 5px 10px;
-    border-bottom: 1px solid #dddddd;
-    margin-bottom: 20px;
-    display: flex;
-}
-
-.notification-banner-link-separator {
-    margin: 2px 10px;
-    border-right: 2px solid black;
-}

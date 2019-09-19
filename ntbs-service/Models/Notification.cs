@@ -23,6 +23,9 @@ namespace ntbs_service.Models
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
 
+        public string NotificationStatusString => GetNotificationStatusString();
+        public string NotificationBannerTitleCssClass => GetBannerTitleCssClass();
+        public string NotificationBannerBodyCssClass => GetBannerBodyCssClass();
         public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName.ToUpper(), PatientDetails.GivenName});
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
@@ -55,6 +58,34 @@ namespace ntbs_service.Models
         public int? TotalContactsLatentTB => CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
         public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
         public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
+
+        public string GetBannerTitleCssClass() {
+            if(NotificationStatus == Enums.NotificationStatus.Draft) {
+                return "notification-editing-title-background";
+            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
+                return "notification-submitted-title-background";
+            } else {
+                return "notification-denotified-title-background";
+            }
+        }
+
+        public string GetBannerBodyCssClass() {
+            if(NotificationStatus == Enums.NotificationStatus.Denotified) {
+                return "notification-banner-details-container-denotified";
+            } else {
+                return "notification-banner-details-container";
+            }
+        }
+
+        public string GetNotificationStatusString() {
+            if(NotificationStatus == Enums.NotificationStatus.Draft) {
+                return "Draft Notification";
+            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
+                return "Notification";
+            } else {
+                return "Denotified";
+            }
+        }
 
         public int? CalculateSum(int? x, int? y) {
             return x + y;
