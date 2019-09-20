@@ -20,7 +20,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://ntbscontainerregistry.azurecr.io', 'ntbs-registery-credentials') {
-            ntbsImage = docker.build("ntbs-service:build-${env.BUILD_ID}",  "./ntbs-service")
+            ntbsImage = docker.build("ntbs-service:build-${env.BUILD_ID}",  ".")
             echo "Uploading build image build-${env.BUILD_ID}"
             ntbsImage.push()
             echo "Uploading latest imagine"
