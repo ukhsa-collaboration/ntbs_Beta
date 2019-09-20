@@ -13,65 +13,7 @@
             <nhs-main-wrapper>
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
-                        <div class="@Model.Notification.NotificationBannerCssClass">
-                            <div class="notification-banner-title-container @Model.Notification.NotificationBannerTitleCssClass"> 
-                                <nhs-grid-row classes="notification-overview-details">
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-banner-title-text"> @Model.Notification.NotificationStatusString </div>
-                                        <div class="notification-banner-title-text"> #@Model.Notification.NotificationId </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Date of notification </div>
-                                        <div class="cell-min-height"> @Model.Notification.FormattedSubmissionDate </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> TB service </div>
-                                        <div> @Model.Notification.TBServiceName </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Case manager </div>
-                                        <div class="cell-min-height"> @Model.Notification.Episode.CaseManager </div>
-                                    </nhs-grid-column>
-                                </nhs-grid-row>
-                            </div>
-                            <div class="notification-banner-details-container"> 
-                                <nhs-grid-row classes="notification-overview-details">
-                                    <nhs-grid-column grid-column-width="OneQuarter" classes="notification-banner-field">
-                                        <div class="notification-details-label"> NHS number </div>
-                                        <div class="cell-min-height">  @Model.Notification.FormattedNhsNumber </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Date of birth </div>
-                                        <div class="cell-min-height"> @Model.Notification.FormattedDob </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Country of birth </div>
-                                        <div class="cell-min-height"> @Model.Notification.CountryName </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Postcode </div>
-                                        <div> @Model.Notification.FormattedNoAbodeOrPostcodeString </div>
-                                    </nhs-grid-column>
-                                </nhs-grid-row>
-                                <nhs-grid-row classes="notification-overview-details">
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Name </div>
-                                        <div class="cell-min-height"> @Model.Notification.FullName </div>
-                                    </nhs-grid-column>
-                                    <nhs-grid-column grid-column-width="OneQuarter">
-                                        <div class="notification-details-label"> Sex </div>
-                                        <div class="cell-min-height"> @Model.Notification.SexLabel </div>
-                                    </nhs-grid-column>
-                                </nhs-grid-row> 
-                            </div>
-                            <div class="notification-banner-triangle @Model.Notification.NotificationBannerTriangleCssClass"> </div>
-
-                        </div>
-                        <div class="notification-banner-links-container"> 
-                            <a href="/Notifications/Overview?id=@Model.Notification.NotificationId"> Notification details </a>
-                            <div class="notification-banner-link-separator"> </div>
-                            <a href="/Notifications/Overview?id=@Model.Notification.NotificationId"> Audit </a>
-                        </div>
+                        <partial name="./_NotificationBanner.cshtml" model="@Model"/>
                         <div class="patient-layout-flexbox">
                             <div class="contents-list">
                                 <li class="@("contents-list-item " + (currentPage == "Patient" ? "contents-list-item--current" : ""))">

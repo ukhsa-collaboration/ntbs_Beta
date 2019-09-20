@@ -24,9 +24,6 @@ namespace ntbs_service.Models
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
-        public string NotificationBannerTitleCssClass => GetBannerTitleCssClass();
-        public string NotificationBannerCssClass => GetBannerCssClass();
-        public string NotificationBannerTriangleCssClass => GetBannerTriangleCssClass();
         public string FormattedSubmissionDate => FormatDate(SubmissionDate);
         public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName}.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
@@ -61,36 +58,6 @@ namespace ntbs_service.Models
         public int? TotalContactsLatentTB => CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
         public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
         public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
-
-        public string GetBannerTitleCssClass() {
-            if(NotificationStatus == Enums.NotificationStatus.Draft) {
-                return "notification-editing-title-background";
-            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
-                return "notification-submitted-title-background";
-            } else {
-                return "notification-denotified-title-background";
-            }
-        }
-
-        public string GetBannerCssClass() {
-            if(NotificationStatus == Enums.NotificationStatus.Draft) {
-                return "notification-banner-container-editing";
-            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
-                return "notification-banner-container-notified";
-            } else {
-                return "notification-banner-container-denotified";
-            }
-        }
-
-        public string GetBannerTriangleCssClass() {
-            if(NotificationStatus == Enums.NotificationStatus.Draft) {
-                return "notification-banner-triangle-editing";
-            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
-                return "notification-banner-triangle-notified";
-            } else {
-                return "notification-banner-triangle-denotified";
-            }
-        }
 
         public string GetNotificationStatusString() {
             if(NotificationStatus == Enums.NotificationStatus.Draft) {

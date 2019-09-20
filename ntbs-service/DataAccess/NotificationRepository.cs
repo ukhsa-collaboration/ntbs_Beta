@@ -114,7 +114,7 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
         }
 
-        public IIncludableQueryable<ntbs_service.Models.Notification, ntbs_service.Models.TBService> GetBaseNotification(int? NotificationId) {
+        public IIncludableQueryable<Notification, TBService> GetBaseNotification(int? NotificationId) {
             return context.Notification
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
