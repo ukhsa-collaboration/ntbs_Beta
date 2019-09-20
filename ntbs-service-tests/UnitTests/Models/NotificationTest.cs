@@ -8,88 +8,96 @@ namespace ntbs_service_tests.UnitTests.Models
     public class NotificationTest
     {
 
-        public static Notification TestNotification = new Notification {
-            PatientDetails = new PatientDetails {
-                FamilyName = "example",
-                GivenName = "name",
-                NoFixedAbode = false,
-                Postcode = "NW 123 RT",
-                NhsNumber = "1234567890"
-            },
-            ClinicalDetails = new ClinicalDetails {
-                SymptomStartDate = new DateTime(2000, 1, 1),
-                PresentationDate = new DateTime(2000, 1, 4),
-                BCGVaccinationState = ntbs_service.Models.Enums.Status.Yes,
-                BCGVaccinationYear = 2000
-            },
-            SocialRiskFactors = new SocialRiskFactors {
-                RiskFactorDrugs = new RiskFactorBase {
-                    Status = ntbs_service.Models.Enums.Status.Yes,
-                    IsCurrent = true,
-                    InPastFiveYears = false,
-                    MoreThanFiveYearsAgo = true
-                }
-            }
+        Notification TestNotification = new Notification {
+            PatientDetails = new PatientDetails {},
+            ClinicalDetails = new ClinicalDetails {},
+            SocialRiskFactors = new SocialRiskFactors {}
         };
 
         [Fact]
         public void FormatsFullNameCorrectly()
         {
             // Arrange
-            var expectedFullName = "EXAMPLE, name";
+            TestNotification.PatientDetails.FamilyName = "example";
+            TestNotification.PatientDetails.GivenName = "name";
+
+            // Act
             var fullName = TestNotification.FullName;
 
             // Assert
-            Assert.Equal(expectedFullName, fullName);
+            Assert.Equal(fullName, "EXAMPLE, name");
         }
 
         [Fact]
         public void FormatsPostcodeCorrectly()
         {
             // Arrange
-            var expectedPostcode = "NW12 3RT";
+            TestNotification.PatientDetails.NoFixedAbode = false;
+            TestNotification.PatientDetails.Postcode = "NW 123 RT";
+
+            // Act
             var postcode = TestNotification.FormattedNoAbodeOrPostcodeString;
 
             // Assert
-            Assert.Equal(expectedPostcode, postcode);
+            Assert.Equal(postcode, "NW12 3RT");
         }
 
         [Fact]
-        public void FormatsDateCorrectly() {
+        public void FormatsDateCorrectly() 
+        {
             // Arrange
-            var expectedDate = "01-Jan-2000";
+            TestNotification.ClinicalDetails.SymptomStartDate = new DateTime(2000, 1, 1);
+            
+            // Act
             var formattedDate = TestNotification.FormattedSymptomStartDate;
 
             // Assert
-            Assert.Equal(expectedDate, formattedDate);
+            Assert.Equal(formattedDate, "01-Jan-2000");
         }
 
         [Fact]
-        public void CalculatesDaysBetweenDates() {
+        public void CalculatesDaysBetweenDates() 
+        {
             // Arrange
-            var expectedDays = 3;
+            TestNotification.ClinicalDetails.SymptomStartDate = new DateTime(2000, 1, 1);
+            TestNotification.ClinicalDetails.PresentationDate = new DateTime(2000, 1, 4);
+            
+            // Act
             var days = TestNotification.DaysFromOnsetToPresentation;
 
             // Assert
-            Assert.Equal(expectedDays, days);
+            Assert.Equal(days, 3);
         }
 
-        public void CreatesSocialRiskTimePeriodsStringCorrectly() {
+        [Fact]
+        public void CreatesSocialRiskTimePeriodsStringCorrectly() 
+        {
             // Arrange
-            var expectedTimePeriods = "current, more than 5 years ago";
+            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorBase {
+                Status = ntbs_service.Models.Enums.Status.Yes,
+                        IsCurrent = true,
+                        InPastFiveYears = false,
+                        MoreThanFiveYearsAgo = true
+            };
+            
+            // Act
             var timePeriods = TestNotification.DrugRiskFactorTimePeriods;
 
             // Assert
-            Assert.Equal(expectedTimePeriods, timePeriods);
+            Assert.Equal(timePeriods, "current, more than 5 years ago");
         }
 
+        [Fact]
         public void CreatesVaccinationStateStringCorrectly() {
             // Arrange
-            var expectedStateAndYear = "Yes - 2000";
+            TestNotification.ClinicalDetails.BCGVaccinationState = ntbs_service.Models.Enums.Status.Yes;
+            TestNotification.ClinicalDetails.BCGVaccinationYear = 2000;
+            
+            // Act
             var stateAndYear = TestNotification.BCGVaccinationStateAndYear;
 
             // Assert
-            Assert.Equal(expectedStateAndYear, stateAndYear);
+            Assert.Equal(stateAndYear, "Yes - 2000");
         }
     }
 }
