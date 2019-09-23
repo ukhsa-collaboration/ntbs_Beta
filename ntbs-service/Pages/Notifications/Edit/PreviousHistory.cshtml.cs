@@ -20,15 +20,14 @@ namespace ntbs_service.Pages_Notifications
 
         public override async Task<IActionResult> OnGetAsync(int? id)
         {
-            var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = notification.NotificationId;
-            NotificationStatus = notification.NotificationStatus;
-            PatientTBHistory = notification.PatientTBHistory;
+            PatientTBHistory = Notification.PatientTBHistory;
+            NotificationId = Notification.NotificationId;
 
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();

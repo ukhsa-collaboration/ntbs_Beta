@@ -20,9 +20,6 @@ namespace ntbs_service.Pages_Notifications
             this.service = service;
         }
 
-        [BindProperty]
-        public Notification Notification { get; set; }
-
         public override async Task<IActionResult> OnGetAsync(int? id)
         {
             Notification = await service.GetNotificationWithAllInfoAsync(id);

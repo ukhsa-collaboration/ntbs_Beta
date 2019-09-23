@@ -12,6 +12,7 @@ namespace ntbs_service.Services
     {
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
+        Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
@@ -132,6 +133,11 @@ namespace ntbs_service.Services
         public async Task<Notification> GetNotificationWithSocialRisksAsync(int? id)
         {
             return await repository.GetNotificationWithSocialRiskFactorsAsync(id);
+        }
+
+        public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? id) 
+        {
+            return await repository.GetNotificationWithNotificationSitesAsync(id);
         }
 
         public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 

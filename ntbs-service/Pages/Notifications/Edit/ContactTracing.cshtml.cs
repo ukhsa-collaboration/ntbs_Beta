@@ -24,14 +24,13 @@ namespace ntbs_service.Pages_Notifications
 
         public override async Task<IActionResult> OnGetAsync(int? id)
         {
-            var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = notification.NotificationId;
-            ContactTracing = notification.ContactTracing;
+            ContactTracing = Notification.ContactTracing;
 
             if (ContactTracing == null) {
                 ContactTracing = new ContactTracing();
