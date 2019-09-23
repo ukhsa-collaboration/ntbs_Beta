@@ -39,28 +39,35 @@ namespace ntbs_service.Pages_Notifications
             this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
-            var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            ClinicalDetails = notification.ClinicalDetails;
-            NotificationId = notification.NotificationId;
-            NotificationStatus = notification.NotificationStatus;
+            NotificationId = Notification.NotificationId;
+            NotificationStatus = Notification.NotificationStatus;
+            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            ClinicalDetails = Notification.ClinicalDetails;
 
             if (ClinicalDetails == null) {
                 ClinicalDetails = new ClinicalDetails();
             }
 
-            var notificationSites = notification.NotificationSites;
+            ClinicalDetails.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            if (ClinicalDetails.ShouldValidateFull)
+            {
+                TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
+            }        
+
+            var notificationSites = Notification.NotificationSites;
             SetupNotificationSiteMap(notificationSites);
             OtherSite = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER);
             Sites = (await context.GetAllSitesAsync()).ToList();
 
-            PatientBirthYear = notification.PatientDetails.Dob?.Year;
+            PatientBirthYear = Notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
             FormattedPresentationDate = ClinicalDetails.PresentationDate.ConvertToFormattedDate();
@@ -68,7 +75,7 @@ namespace ntbs_service.Pages_Notifications
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, ClinicalDetails);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, ClinicalDetails);
             return Page();
         }
 

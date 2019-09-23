@@ -18,23 +18,24 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
-            var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = notification.NotificationId;
-            NotificationStatus = notification.NotificationStatus;
-            PatientTBHistory = notification.PatientTBHistory;
+            NotificationId = Notification.NotificationId;
+            NotificationStatus = Notification.NotificationStatus;
+            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            PatientTBHistory = Notification.PatientTBHistory;
 
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();
             }
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, PatientTBHistory);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
         }
 

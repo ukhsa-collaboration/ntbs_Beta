@@ -25,21 +25,28 @@ namespace ntbs_service.Pages_Notifications
             this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
-            if (id == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            var notification = await service.GetNotificationAsync(id);
-            NotificationId = notification.NotificationId;
-            NotificationStatus = notification.NotificationStatus;
-            Episode = notification.Episode;
+            NotificationId = Notification.NotificationId;
+            NotificationStatus = Notification.NotificationStatus;
+            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            Episode = Notification.Episode;
 
             if (Episode == null)
             {
                 return NotFound();
+            }
+
+            Episode.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            if (Episode.ShouldValidateFull)
+            {
+                TryValidateModel(Episode, Episode.GetType().Name);
             }
 
             TBServices = new SelectList(context.GetAllTbServicesAsync().Result, 
@@ -50,7 +57,7 @@ namespace ntbs_service.Pages_Notifications
                                         nameof(Hospital.HospitalId), 
                                         nameof(Hospital.Name));
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, Episode);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, Episode);
             return Page();
         }
 

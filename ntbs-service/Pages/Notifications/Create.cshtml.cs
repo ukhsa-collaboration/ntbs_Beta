@@ -18,12 +18,6 @@ namespace ntbs_service.Pages_Notifications
         public async Task<IActionResult> OnGetAsync()
         {
             var notification = new Notification();
-            notification.PatientDetails = new PatientDetails();
-            notification.Episode = new Episode();
-            notification.ClinicalDetails = new ClinicalDetails();
-            notification.SocialRiskFactors = new SocialRiskFactors();
-            notification.ContactTracing = new ContactTracing();
-            notification.PatientTBHistory = new PatientTBHistory();
             await repository.AddNotificationAsync(notification);
 
             return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });

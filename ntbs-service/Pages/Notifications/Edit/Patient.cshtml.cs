@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
 using ntbs_service.Services;
+using System;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -31,21 +33,28 @@ namespace ntbs_service.Pages_Notifications
             this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
-            var notification = await service.GetNotificationAsync(id);
-            if (notification == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = notification.NotificationId;
-            NotificationStatus = notification.NotificationStatus;
-            Patient = notification.PatientDetails;
+            NotificationId = Notification.NotificationId;
+            NotificationStatus = Notification.NotificationStatus;
+            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            Patient = Notification.PatientDetails;
 
             if (Patient == null)
             {
                 Patient = new PatientDetails();
+            }
+
+            Patient.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            if (Patient.ShouldValidateFull)
+            {
+                TryValidateModel(Patient, "Patient");
             }
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
@@ -53,7 +62,7 @@ namespace ntbs_service.Pages_Notifications
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, Patient);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, Patient);
             return Page();
         }
 
