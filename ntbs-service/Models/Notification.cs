@@ -12,6 +12,7 @@ namespace ntbs_service.Models
         }
         
         public int NotificationId { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
         

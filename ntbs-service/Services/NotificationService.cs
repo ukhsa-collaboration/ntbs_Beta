@@ -10,6 +10,8 @@ namespace ntbs_service.Services
 {
     public interface INotificationService
     {
+        Task<IList<Notification>> GetRecentNotificationsAsync();
+        Task<IList<Notification>> GetDraftNotificationsAsync();
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
@@ -31,6 +33,14 @@ namespace ntbs_service.Services
         public NotificationService(INotificationRepository repository, NtbsContext context) {
             this.repository = repository;
             this.context = context;
+        }
+
+        public async Task<IList<Notification>> GetRecentNotificationsAsync() {
+            return await repository.GetRecentNotificationsAsync();
+        }
+
+        public async Task<IList<Notification>> GetDraftNotificationsAsync() {
+            return await repository.GetDraftNotificationsAsync();
         }
 
         public async Task<Notification> GetNotificationAsync(int? id) {

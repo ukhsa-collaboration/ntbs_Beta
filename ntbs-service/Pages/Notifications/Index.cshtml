@@ -10,53 +10,85 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+<h2> Draft notifications </h2>
 <table>
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.FamilyName)
+                @Html.DisplayNameFor(Model => Model.DraftNotifications[0].NotificationId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.GivenName)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].CreationDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.NhsNumber)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.TBService.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.Dob)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManager)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.Country)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notifications[0].PatientDetails.Sex)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Notifications) {
+@foreach (var item in Model.DraftNotifications) {
         <tr>
+            <th>
+                <a href="./Notifications/Edit/Patient?id=@item.NotificationId">
+                    @Html.DisplayFor(modelItem => item.NotificationId)
+                </a>
+            </th>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.FamilyName)
+                @Html.DisplayFor(modelItem => item.CreationDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.GivenName)
+                @Html.DisplayFor(modelItem => item.Episode.TBService.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.NhsNumber)
+                @Html.DisplayFor(modelItem => item.Episode.CaseManager)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.RecentNotifications[0].NotificationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].SubmissionDate)
+            </th>
+            <th>
+                AUDIT
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.TBService.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManager)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.RecentNotifications) {
+        <tr>
+            <th>
+                <a href="./Notifications/Edit/Patient?id=@item.NotificationId">
+                    @Html.DisplayFor(modelItem => item.NotificationId)
+                </a>
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubmissionDate)
+            </td>
+            <th>
+                AUDIT
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Episode.TBService.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.Dob)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.Country.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PatientDetails.Sex.SexId)
-            </td>
-            <td>
-                <a asp-page="./Edit/Patient" asp-route-id="@item.NotificationId">Edit</a>
+                @Html.DisplayFor(modelItem => item.Episode.CaseManager)
             </td>
         </tr>
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -24,6 +25,7 @@ namespace ntbs_service.Pages_Notifications
             notification.SocialRiskFactors = new SocialRiskFactors();
             notification.ContactTracing = new ContactTracing();
             notification.PatientTBHistory = new PatientTBHistory();
+            notification.CreationDate = DateTime.Now;
             await repository.AddNotificationAsync(notification);
 
             return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });

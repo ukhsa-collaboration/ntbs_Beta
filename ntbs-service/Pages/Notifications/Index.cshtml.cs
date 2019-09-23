@@ -4,23 +4,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Models;
 using ntbs_service.DataAccess;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
     public class IndexModel : PageModel
     {
-        private readonly INotificationRepository repository;
+        private readonly INotificationService service;
 
-        public IndexModel(INotificationRepository repository)
+        public IndexModel(INotificationService service)
         {
-            this.repository = repository;
+            this.service = service;
         }
 
-        public IList<Notification> Notifications { get;set; }
+        public IList<Notification> DraftNotifications { get;set; }
+        public IList<Notification> RecentNotifications { get;set; }
 
         public async Task OnGetAsync()
         {
-            Notifications = await repository.GetNotificationsWithPatientsAsync();
+            DraftNotifications = await service.GetDraftNotificationsAsync();
+            RecentNotifications = await service.GetRecentNotificationsAsync();
         }
     }
 }

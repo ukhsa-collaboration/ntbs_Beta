@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        Task<IList<Notification>> GetNotificationsAsync();
+        Task<IList<Notification>> GetRecentNotificationsAsync();
+        Task<IList<Notification>> GetDraftNotificationsAsync();
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
@@ -31,9 +33,23 @@ namespace ntbs_service.DataAccess
             this.context = context;
         }
 
-        public async Task<IList<Notification>> GetNotificationsAsync() 
+        public async Task<IList<Notification>> GetRecentNotificationsAsync() 
         {
-            return await context.Notification.ToListAsync();
+            //Get TB service here
+            return await context.Notification
+            .Where(n => n.Episode.TBService.Name == "Ashford Hospital")
+            .OrderByDescending(n => n.SubmissionDate)
+            .Take(10)
+            .ToListAsync();
+        }
+
+        public async Task<IList<Notification>> GetDraftNotificationsAsync()
+        {
+            return await context.Notification
+            .Where(n => n.Episode.TBService.Name == "Ashford Hospital")
+            .Where(n => n.NotificationStatus == NotificationStatus.Draft)
+            .OrderByDescending(n => n.CreationDate)
+            .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsWithPatientsAsync()
