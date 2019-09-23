@@ -70,13 +70,11 @@ This will create a migration file, that can be edited further to match needs. It
 The deployments are based on Docker-on-Kubernetes infrastructure.
 The development envs are available on Azure, with production environments hosted on PHE's Kubernetes instace.
 
-## Connecting to Azure kubernetes
-When logged in to Azure, run the following command to add appropriate credentials to your `~/.kube/config` file:
-
-`az aks get-credentials -g phe-ntbs -n ntbs-envs`
-
-The `kubectl` tool uses it to gain appropriate permissions when talking to the kubernetes instance.
-Install `kubectl` using: `az aks install-cli`.
+## First time set up
+Ensure you have `azure-cli` installed
+- `az login` to log into the azure subscription
+- `az aks install-cli` to install `kubectl`
+- `az aks get-credentials -g phe-ntbs -n ntbs-envs` to add appropriate credentials to your `~/.kube/config` file
 
 ## Images registery
 We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registery user.
@@ -85,7 +83,8 @@ We're using ACR to store docker images. When logged in to Azure, run this comman
 ## Deploying to environments
 `master` branch deploys to `int` automatically.
 For `test` and `research` environments, pick the TAG of the build from registery you want deployed and run:
-`kubectl set image deployment/ntbs-<ENV> ntbs-<ENV>=ntbscontainerregistry.azurecr.io/ntbs-service:<TAG>`
+1. `kubectl apply -f .\<ENV>.yml` if there are changes to the yml definition
+1. `kubectl set image deployment/ntbs-<ENV> ntbs-<ENV>=ntbscontainerregistry.azurecr.io/ntbs-service:<TAG>`
 
 ## Running the app in Docker (builds in produciton mode)
 ```
@@ -100,8 +99,6 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 ```
 
 ## Maintanance
-create: `kubectl create -f .\ntbs-service\int.yml`
-update: `kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:latest`
-see ip address: `kubectl get service/ntbs-int -w`
-dashboard: `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
-adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
+- see ip address: `kubectl get service/ntbs-int -w`
+- dashboard: `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
+- adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`

@@ -12,15 +12,17 @@ namespace ntbs_service.Pages_Notifications
     public class SocialRiskFactorsModel : NotificationModelBase
     {
         private readonly NtbsContext context;
+        private readonly IAuditService auditService;
         
         public List<Status> StatusList { get; set; }
 
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public SocialRiskFactorsModel(INotificationService service, NtbsContext context) : base(service)
+        public SocialRiskFactorsModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
         {
             this.context = context;
+            this.auditService = auditService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int? id)
@@ -41,6 +43,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            await auditService.OnGetAuditAsync(notification.NotificationId, SocialRiskFactors);
             return Page();
         }
 

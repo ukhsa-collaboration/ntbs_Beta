@@ -12,7 +12,12 @@ namespace ntbs_service.Pages_Notifications
 {
     public class ContactTracingModel : NotificationModelBase
     {
-        public ContactTracingModel(INotificationService service) : base(service) {}
+        private readonly IAuditService auditService;
+
+        public ContactTracingModel(INotificationService service, IAuditService auditService) : base(service)
+        {
+            this.auditService = auditService;
+        }
 
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
@@ -31,6 +36,7 @@ namespace ntbs_service.Pages_Notifications
                 ContactTracing = new ContactTracing();
             }
 
+            await auditService.OnGetAuditAsync(notification.NotificationId, ContactTracing);
             return Page();
         }
 
