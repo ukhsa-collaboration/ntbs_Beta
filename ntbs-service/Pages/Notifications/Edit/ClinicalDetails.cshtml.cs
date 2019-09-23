@@ -67,7 +67,7 @@ namespace ntbs_service.Pages_Notifications
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, ClinicalDetails);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, ClinicalDetails);
             return Page();
         }
 
