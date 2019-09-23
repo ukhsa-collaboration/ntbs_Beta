@@ -10,14 +10,14 @@
         {"PatientDetails", "Patient Details"},
         {"ClinicalDetails", "Clinical Details"},
         {"Episode", "Hospital Details"},
-        {"SocialRiskFactors", "Social Risk Factors"},
+        {"PatientTBHistory", "Previous History"}
     };
 
     var ErrorToUrlMapping = new Dictionary<string, string> {
         {"PatientDetails", "Patient"},
         {"ClinicalDetails", "ClinicalDetails"},
         {"Episode", "Episode"},
-        {"SocialRiskFactors", "SocialRiskFactors"},
+        {"PatientTBHistory", "PreviousHistory"},
     };
 }
 
@@ -25,7 +25,7 @@
 role="alert" tabindex="-1" data-module="error-summary">
     @foreach (var errorMapping in ErrorToPageMapping) 
     {
-        @if (ErrorDictionary.ContainsKey(errorMapping.Key)) 
+        @if (ErrorDictionary.ContainsKey(errorMapping.Key) && ErrorDictionary[errorMapping.Key].Count > 0) 
         {
             <li>
                 @{string page_url = $"/Notifications/Edit/{ErrorToUrlMapping[errorMapping.Key]}?id={Model.NotificationId}&isBeingSubmitted={Model.Notification.ShouldValidateFull}";}

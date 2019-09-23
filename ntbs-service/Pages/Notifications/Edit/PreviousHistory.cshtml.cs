@@ -35,6 +35,11 @@ namespace ntbs_service.Pages_Notifications
                 PatientTBHistory = new PatientTBHistory();
             }
 
+            PatientTBHistory.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            if (PatientTBHistory.ShouldValidateFull)
+            {
+                TryValidateModel(PatientTBHistory, "Patient");
+            }
             await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
         }

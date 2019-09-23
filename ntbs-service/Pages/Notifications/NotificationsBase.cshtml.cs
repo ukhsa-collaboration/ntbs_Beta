@@ -6,7 +6,6 @@ using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
 using System;
-using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Notifications
 {
