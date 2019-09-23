@@ -1,6 +1,6 @@
 @import "./_colors.scss";
 
-.notification-banner-head-container {
+.notification-banner-head {
     color: white;
     padding: 15px 20px;
 }
@@ -11,7 +11,7 @@
     margin-bottom: 0;
 }
 
-.notification-banner-body-container {
+.notification-banner-body {
     padding: 15px 20px;
 }
 
@@ -19,7 +19,7 @@
     padding-bottom: 10px;
 }
 
-.notification-banner-links-container {
+.notification-banner-links {
     padding: 5px 10px;
     border-bottom: 1px solid $draft-grey;
     margin-bottom: 20px;
@@ -31,53 +31,57 @@
     border-right: 2px solid black;
 }
 
+.bold-label {
+    font-weight: 600;
+}
+
 .notification-banner-triangle {
     position: absolute;
     width: 0; 
     height: 0; 
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
+    border-top: 20px solid;
     right: 40px;
+}
+
+.notification-banner {
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .notification-banner--draft {
     border: 2px solid $draft-grey;
-    position: relative;
-    margin-bottom: 20px;
 
-    .notification-banner-head-container {
-        background: #999999;
+    .notification-banner-head {
+        background: $draft-grey;
     }
 
     .notification-banner-triangle {
-        border-top: 20px solid $draft-grey;
+        border-top-color: $draft-grey;
     }
 }
 
 .notification-banner--notified {
     border: 2px solid $notified-red;
-    position: relative;
-    margin-bottom: 20px;
 
-    .notification-banner-head-container {
+    .notification-banner-head {
         background: $notified-red;
     }
 
     .notification-banner-triangle {
-        border-top: 20px solid $notified-red;
+        border-top-color: $notified-red;
     }
 }
 
 .notification-banner--denotified {
     border: 2px solid black;
-    position: relative;
-    margin-bottom: 20px;
 
-    .notification-banner-head-container {
+    .notification-banner-head {
         background: black;
     }
 
     .notification-banner-triangle {
-        border-top: 20px solid black;
+        border-top-color: black;
     }
 }
