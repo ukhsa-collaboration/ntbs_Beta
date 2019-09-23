@@ -124,9 +124,9 @@ namespace ntbs_service.Models
                 return "";
             }
             return String.Join(" ",
-                PatientDetails.NhsNumber?.ToString().Substring(0, 3),
-                PatientDetails.NhsNumber?.ToString().Substring(3, 3),
-                PatientDetails.NhsNumber?.ToString().Substring(6, 4)
+                PatientDetails.NhsNumber.ToString().Substring(0, 3),
+                PatientDetails.NhsNumber.ToString().Substring(3, 3),
+                PatientDetails.NhsNumber.ToString().Substring(6, 4)
             );
         }
 
