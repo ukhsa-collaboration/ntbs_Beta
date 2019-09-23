@@ -34,7 +34,9 @@ namespace ntbs_service.Models
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName});
+        public string NotificationStatusString => GetNotificationStatusString();
+        public string FormattedSubmissionDate => FormatDate(SubmissionDate);
+        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName}.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
@@ -67,6 +69,16 @@ namespace ntbs_service.Models
         public int? TotalContactsLatentTB => CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
         public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
         public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
+
+        public string GetNotificationStatusString() {
+            if(NotificationStatus == Enums.NotificationStatus.Draft) {
+                return "Draft Notification";
+            } else if(NotificationStatus == Enums.NotificationStatus.Notified) {
+                return "Notification";
+            } else {
+                return "Denotified";
+            }
+        }
 
         public int? CalculateSum(int? x, int? y) {
             return x + y;

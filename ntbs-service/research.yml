@@ -20,7 +20,7 @@ spec:
               secretKeyRef:
                 name: research-db-connection-string
                 key: connectionString
-          - name: ConnectionStrings_auditContext
+          - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:
                 name: research-audit-db-connection-string

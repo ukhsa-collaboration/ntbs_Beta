@@ -1,0 +1,87 @@
+@import "./_colors.scss";
+
+.notification-banner-head {
+    color: white;
+    padding: 15px 20px;
+}
+
+.notification-banner-title-text {
+    font-weight: 600;
+    font-size: x-large;
+    margin-bottom: 0;
+}
+
+.notification-banner-body {
+    padding: 15px 20px;
+}
+
+.notification-banner-field {
+    padding-bottom: 10px;
+}
+
+.notification-banner-links {
+    padding: 5px 10px;
+    border-bottom: 1px solid $draft-grey;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.notification-banner-link-separator {
+    margin: 2px 10px;
+    border-right: 2px solid black;
+}
+
+.bold-label {
+    font-weight: 600;
+}
+
+.notification-banner-triangle {
+    position: absolute;
+    width: 0; 
+    height: 0; 
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid;
+    right: 40px;
+}
+
+.notification-banner {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.notification-banner--draft {
+    border: 2px solid $draft-grey;
+
+    .notification-banner-head {
+        background: $draft-grey;
+    }
+
+    .notification-banner-triangle {
+        border-top-color: $draft-grey;
+    }
+}
+
+.notification-banner--notified {
+    border: 2px solid $notified-red;
+
+    .notification-banner-head {
+        background: $notified-red;
+    }
+
+    .notification-banner-triangle {
+        border-top-color: $notified-red;
+    }
+}
+
+.notification-banner--denotified {
+    border: 2px solid black;
+
+    .notification-banner-head {
+        background: black;
+    }
+
+    .notification-banner-triangle {
+        border-top-color: black;
+    }
+}
