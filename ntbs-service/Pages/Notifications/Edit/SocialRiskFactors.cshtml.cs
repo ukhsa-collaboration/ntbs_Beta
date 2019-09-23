@@ -43,7 +43,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, SocialRiskFactors);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, SocialRiskFactors);
             return Page();
         }
 

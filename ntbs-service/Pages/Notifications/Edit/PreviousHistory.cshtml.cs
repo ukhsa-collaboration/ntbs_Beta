@@ -33,7 +33,7 @@ namespace ntbs_service.Pages_Notifications
                 PatientTBHistory = new PatientTBHistory();
             }
 
-            await auditService.OnGetAuditAsync(notification.NotificationId, PatientTBHistory);
+            await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
         }
 
