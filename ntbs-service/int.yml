@@ -20,7 +20,7 @@ spec:
               secretKeyRef:
                 name: int-db-connection-string
                 key: connectionString
-          - name: ConnectionStrings_auditContext
+          - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:
                 name: int-audit-db-connection-string
