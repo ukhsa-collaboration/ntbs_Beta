@@ -59,7 +59,7 @@
             <h2 class="govuk-heading-m" id="manage-notification-title">
                 Manage Notification
             </h2>
-            @if(Model.NotificationStatus == NotificationStatus.Draft) 
+            @if(Model.Notification.NotificationStatus == NotificationStatus.Draft) 
             {
               <button nhs-button-type="Standard" asp-page-handler="Submit">Submit</button>
             }

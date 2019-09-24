@@ -19,9 +19,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public int? NotificationId { get; set; }
         
-        // This can be thrown away once proper banner work completes
-        public NotificationStatus NotificationStatus { get; set; }
-
+        
         public async Task<IActionResult> OnPostSubmitAsync()
         {
             bool isValid = await ValidateAndSave(NotificationId);

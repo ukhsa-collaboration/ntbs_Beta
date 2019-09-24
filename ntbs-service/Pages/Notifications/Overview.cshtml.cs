@@ -29,7 +29,6 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
 
             return Page();
         }
