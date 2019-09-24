@@ -21,7 +21,7 @@
 
 .notification-banner-links {
     padding: 5px 10px;
-    border-bottom: 1px solid $draft-grey;
+    border-bottom: 1px solid $grey;
     margin-bottom: 20px;
     display: flex;
 }
@@ -51,26 +51,26 @@
 }
 
 .notification-banner--draft {
-    border: 2px solid $draft-grey;
+    border: 2px solid $grey;
 
     .notification-banner-head {
-        background: $draft-grey;
+        background: $grey;
     }
 
     .notification-banner-triangle {
-        border-top-color: $draft-grey;
+        border-top-color: $grey;
     }
 }
 
 .notification-banner--notified {
-    border: 2px solid $notified-red;
+    border: 2px solid $phe-red;
 
     .notification-banner-head {
-        background: $notified-red;
+        background: $phe-red;
     }
 
     .notification-banner-triangle {
-        border-top-color: $notified-red;
+        border-top-color: $phe-red;
     }
 }
 

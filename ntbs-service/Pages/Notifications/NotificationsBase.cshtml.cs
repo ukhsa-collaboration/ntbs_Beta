@@ -28,12 +28,10 @@ namespace ntbs_service.Pages_Notifications
 
         [BindProperty]
         public int? NotificationId { get; set; }
-        
-        // This can be thrown away once proper banner work completes
-        public NotificationStatus NotificationStatus { get; set; }
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
@@ -91,8 +89,7 @@ namespace ntbs_service.Pages_Notifications
         protected void SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase 
         {
             NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
         }
 
