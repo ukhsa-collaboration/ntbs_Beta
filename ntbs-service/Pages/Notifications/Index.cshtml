@@ -5,8 +5,6 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
 <p>
     <a asp-page="Create">Create New</a>
 </p>
@@ -32,7 +30,7 @@
 @foreach (var item in Model.DraftNotifications) {
         <tr>
             <th>
-                <a href="./Notifications/Edit/Patient?id=@item.NotificationId">
+                <a href="./Notifications/Edit/Patient?id=@item.NotificationId" class="govuk-link--no-visited-state">
                     @Html.DisplayFor(modelItem => item.NotificationId)
                 </a>
             </th>
@@ -50,6 +48,7 @@
     </tbody>
 </table>
 
+<h2> Draft notifications </h2>
 <table>
     <thead>
         <tr>
@@ -60,7 +59,7 @@
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].SubmissionDate)
             </th>
             <th>
-                AUDIT
+                Last modified by
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.TBService.Name)

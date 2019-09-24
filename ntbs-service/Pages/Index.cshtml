@@ -4,9 +4,85 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">National TB Surveillance</h1>
-    <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button">
-        Create new case
-    </a>
-</div>
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<h2> Draft notifications </h2>
+<table class="notifications-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.DraftNotifications[0].NotificationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].FormattedCreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.TBService.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManager)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.DraftNotifications) {
+        <tr>
+            <th>
+                <a href="./Notifications/Edit/Patient?id=@item.NotificationId" class="govuk-link govuk-link--no-visited-state">
+                    @Html.DisplayFor(modelItem => item.NotificationId)
+                </a>
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormattedCreationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Episode.TBService.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Episode.CaseManager)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<h2> Recent notifications </h2>
+<table class="notifications-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.RecentNotifications[0].NotificationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedSubmissionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.TBService.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManager)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.RecentNotifications) {
+        <tr>
+            <th>
+                <a href="./Notifications/Edit/Patient?id=@item.NotificationId" class="govuk-link--no-visited-state">
+                    @Html.DisplayFor(modelItem => item.NotificationId)
+                </a>
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormattedSubmissionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Episode.TBService.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Episode.CaseManager)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
