@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.DraftNotifications[0].CreationDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.TBService.Name)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].TBServiceName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManager)
@@ -38,7 +38,7 @@
                 @Html.DisplayFor(modelItem => item.CreationDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Episode.TBService.Name)
+                @Html.DisplayFor(modelItem => item.TBServiceName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Episode.CaseManager)
@@ -62,7 +62,7 @@
                 Last modified by
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.TBService.Name)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].TBServiceName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManager)
@@ -84,7 +84,7 @@
                 AUDIT
             </th>
             <td>
-                @Html.DisplayFor(modelItem => item.Episode.TBService.Name)
+                @Html.DisplayFor(modelItem => item.TBServiceName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Episode.CaseManager)
