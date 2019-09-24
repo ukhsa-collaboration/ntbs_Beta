@@ -5,7 +5,9 @@
 }
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button">
+        Create new case
+    </a>
 </p>
 <h2> Draft notifications </h2>
 <table class="notifications-table">
@@ -86,3 +88,13 @@
 }
     </tbody>
 </table>
+
+@section ActionsAside 
+{
+    <h2 class="govuk-heading-s" id="manage-notification-title">
+        Actions
+    </h2>
+    <a href="#" role="button" draggable="false" class="nhsuk-button search-notifications-button">
+        Search notifications
+    </a>
+}
