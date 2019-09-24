@@ -33,4 +33,7 @@ if (config.env === 'development') {
   module.hot.accept()
 }
 
-govUkJsInitAll()
+govUkJsInitAll();
+
+// For compatibility with IE11
+require('es6-promise').polyfill();
