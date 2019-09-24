@@ -26,16 +26,12 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
             PatientTBHistory = Notification.PatientTBHistory;
-
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();
             }
-
-            PatientTBHistory.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            
+            SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
             if (PatientTBHistory.ShouldValidateFull)
             {
                 TryValidateModel(PatientTBHistory, "Patient");

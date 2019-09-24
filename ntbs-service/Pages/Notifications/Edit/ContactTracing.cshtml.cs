@@ -30,16 +30,12 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
             ContactTracing = Notification.ContactTracing;
-            
             if (ContactTracing == null) {
                 ContactTracing = new ContactTracing();
             }
-            ContactTracing.SetFullValidation(NotificationStatus, isBeingSubmitted);
-
+            
+            SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
             await auditService.OnGetAuditAsync(Notification.NotificationId, ContactTracing);
             return Page();
         }

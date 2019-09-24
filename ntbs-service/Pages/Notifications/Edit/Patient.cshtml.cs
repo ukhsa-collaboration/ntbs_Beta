@@ -41,17 +41,13 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
             Patient = Notification.PatientDetails;
-
             if (Patient == null)
             {
                 Patient = new PatientDetails();
             }
 
-            Patient.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
             if (Patient.ShouldValidateFull)
             {
                 TryValidateModel(Patient, "Patient");

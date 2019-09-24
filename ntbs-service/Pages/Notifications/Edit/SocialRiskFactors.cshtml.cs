@@ -27,25 +27,21 @@ namespace ntbs_service.Pages_Notifications
 
         public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
-            if (id == null)
+            Notification = await service.GetNotificationWithSocialRisksAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            Notification = await service.GetNotificationWithSocialRisksAsync(id);
-            NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
             SocialRiskFactors = Notification.SocialRiskFactors;
-
-            StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
-
             if (SocialRiskFactors == null)
             {
                 return NotFound();
             }
+            
+            SetNotificationProperties<SocialRiskFactors>(isBeingSubmitted, SocialRiskFactors);
 
-            SocialRiskFactors.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
             await auditService.OnGetAuditAsync(Notification.NotificationId, SocialRiskFactors);
             return Page();
         }

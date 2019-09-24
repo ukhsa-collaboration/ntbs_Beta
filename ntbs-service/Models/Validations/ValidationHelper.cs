@@ -40,7 +40,7 @@ namespace ntbs_service.Models.Validations
         public const string EthnicGroupIsRequired = "Ethnic Group is a mandatory field";
         public const string NHSNumberIsRequired = "NHS number is a mandatory field";
         public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
-        public const string PostcodeIsRequired = "Given Name is a mandatory field";
+        public const string PostcodeIsRequired = "Postcode is a mandatory field";
         public const string TBServiceIsRequired = "TB Service is a mandatory field";
         public const string HospitalIsRequired = "Hospital is a mandatory field";
         public const string DiseaseSiteIsRequired = "Please choose at least one site disease";

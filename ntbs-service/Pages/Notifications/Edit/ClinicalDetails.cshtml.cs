@@ -47,16 +47,12 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
             ClinicalDetails = Notification.ClinicalDetails;
-
             if (ClinicalDetails == null) {
                 ClinicalDetails = new ClinicalDetails();
             }
 
-            ClinicalDetails.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
             if (ClinicalDetails.ShouldValidateFull)
             {
                 TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);

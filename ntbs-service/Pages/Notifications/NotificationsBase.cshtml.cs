@@ -68,12 +68,14 @@ namespace ntbs_service.Pages_Notifications
         private void SetShouldValidateFull() 
         {
             Notification.ShouldValidateFull = true;
-            Notification.SocialRiskFactors.ShouldValidateFull = true;
-            Notification.PatientDetails.ShouldValidateFull = true;
-            Notification.PatientTBHistory.ShouldValidateFull = true;
-            Notification.ContactTracing.ShouldValidateFull = true;
-            Notification.ClinicalDetails.ShouldValidateFull = true;
-            Notification.Episode.ShouldValidateFull = true;
+            foreach (var property in Notification.GetType().GetProperties()) {
+                if (property.PropertyType.IsSubclassOf(typeof(ModelBase))) {
+                    var noticationProperty = property.GetValue(Notification);
+                    var shouldValidateFull = noticationProperty.GetType().GetProperty("ShouldValidateFull");
+                    shouldValidateFull.SetValue(noticationProperty, true);
+                    property.SetValue(Notification, noticationProperty);
+                }
+            }
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
 
@@ -86,6 +88,14 @@ namespace ntbs_service.Pages_Notifications
             }
 
             return RedirectToNextPage(notificationId);
+        }
+
+        protected void SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase 
+        {
+            NotificationId = Notification.NotificationId;
+            NotificationStatus = Notification.NotificationStatus;
+            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
+            ownedModel.SetFullValidation(NotificationStatus, isBeingSubmitted);
         }
 
         protected abstract Task<bool> ValidateAndSave(int? notificationId);

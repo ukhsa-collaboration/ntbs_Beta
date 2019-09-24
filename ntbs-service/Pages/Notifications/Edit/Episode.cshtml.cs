@@ -33,17 +33,14 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
-            Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
-            Episode = Notification.Episode;
 
+            Episode = Notification.Episode;
             if (Episode == null)
             {
                 return NotFound();
             }
 
-            Episode.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
             if (Episode.ShouldValidateFull)
             {
                 TryValidateModel(Episode, Episode.GetType().Name);
