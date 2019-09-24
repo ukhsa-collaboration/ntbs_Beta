@@ -39,7 +39,8 @@ namespace ntbs_service.Pages_Notifications
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
         { 
-            return RedirectToPage("../Index");
+            // This is the last page in the flow, so there's no next page to go to
+            return Page();
         }
 
         protected override async Task<bool> ValidateAndSave(int? NotificationId) {

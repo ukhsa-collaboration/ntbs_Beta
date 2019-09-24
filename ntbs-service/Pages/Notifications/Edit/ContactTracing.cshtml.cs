@@ -25,6 +25,7 @@ namespace ntbs_service.Pages_Notifications
         public override async Task<IActionResult> OnGetAsync(int? id)
         {
             Notification = await service.GetNotificationAsync(id);
+            NotificationId = Notification.NotificationId;
             if (Notification == null)
             {
                 return NotFound();
