@@ -1,0 +1,22 @@
+@model ntbs_service.Pages_Notifications.NotificationModelBase
+@using ntbs_service.Pages_Notifications
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    Dictionary<string, NotifyError> NotifyErrorDictionary = (Dictionary<string, NotifyError>) ViewData["NotifyErrorDictionary"];
+}
+
+<nhs-error-summary title-text="You cannot proceed until the following issues are resolved" title-id="error-summary-title"
+role="alert" tabindex="-1" data-module="error-summary">
+    @foreach (var notifyError in NotifyErrorDictionary) 
+    {
+        <li>
+            <a href=@notifyError.Value.Url>@notifyError.Key</a>
+        </li>
+        @foreach(var item in notifyError.Value.ErrorMessages) 
+        {
+            <li>@item</li>
+        }
+    
+    }
+</nhs-error-summary>

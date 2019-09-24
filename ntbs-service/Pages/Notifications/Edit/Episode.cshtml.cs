@@ -25,20 +25,25 @@ namespace ntbs_service.Pages_Notifications
             this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
-            if (id == null)
+            Notification = await service.GetNotificationAsync(id);
+            if (Notification == null)
             {
                 return NotFound();
             }
 
-            Notification = await service.GetNotificationAsync(id);
-            Episode = Notification.Episode;
-            NotificationId = Notification.NotificationId;
 
+            Episode = Notification.Episode;
             if (Episode == null)
             {
                 return NotFound();
+            }
+
+            SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
+            if (Episode.ShouldValidateFull)
+            {
+                TryValidateModel(Episode, Episode.GetType().Name);
             }
 
             TBServices = new SelectList(context.GetAllTbServicesAsync().Result, 

@@ -32,6 +32,27 @@ namespace ntbs_service.Models.Validations
         public const string ContactTracingChildrenStartedTreatment = "Must be smaller or equal to number of children with latent TB";
         public const string ContactTracingAdultsFinishedTreatment = "Must be smaller or equal to number of adults the started treatment";
         public const string ContactTracingChildrenFinishedTreatment = "Must be smaller or equal to number of children the started treatment";
+
+        public const string FamilyNameIsRequired = "Family Name is a mandatory field";
+        public const string GivenNameIsRequired = "Given Name is a mandatory field";
+        public const string BirthDateIsRequired = "Date of birth is a mandatory field";
+        public const string SexIsRequired = "Sex is a mandatory field";
+        public const string EthnicGroupIsRequired = "Ethnic Group is a mandatory field";
+        public const string NHSNumberIsRequired = "NHS number is a mandatory field";
+        public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
+        public const string PostcodeIsRequired = "Postcode is a mandatory field";
+        public const string TBServiceIsRequired = "TB Service is a mandatory field";
+        public const string HospitalIsRequired = "Hospital is a mandatory field";
+        public const string DiseaseSiteIsRequired = "Please choose at least one site disease";
+        public const string DiseaseSiteOtherIsRequired = "Other Field is a mandatory field";
+        public const string SampleTakenIsRequired = "Sample taken is a mandatory field";
+        public const string NotificationDateIsRequired = "Notification Date is a mandatory field";
+        public const string DeathDateIsRequired = "Date of death is a mandatory field";
+        public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
+        public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
+        public const string MDRDateIsRequired = "MDR treatment date is a mandatory field";
+        public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
+        public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
     }
 
     public static class ValidDates

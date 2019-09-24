@@ -18,7 +18,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
@@ -27,12 +27,15 @@ namespace ntbs_service.Pages_Notifications
             }
 
             PatientTBHistory = Notification.PatientTBHistory;
-            NotificationId = Notification.NotificationId;
-
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();
             }
-
+            
+            SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+            if (PatientTBHistory.ShouldValidateFull)
+            {
+                TryValidateModel(PatientTBHistory, "Patient");
+            }
             await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
         }

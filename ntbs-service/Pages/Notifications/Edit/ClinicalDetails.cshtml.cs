@@ -39,7 +39,7 @@ namespace ntbs_service.Pages_Notifications
             this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationWithNotificationSitesAsync(id);
             if (Notification == null)
@@ -48,11 +48,15 @@ namespace ntbs_service.Pages_Notifications
             }
 
             ClinicalDetails = Notification.ClinicalDetails;
-            NotificationId = Notification.NotificationId;
-
             if (ClinicalDetails == null) {
                 ClinicalDetails = new ClinicalDetails();
             }
+
+            SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            if (ClinicalDetails.ShouldValidateFull)
+            {
+                TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
+            }        
 
             var notificationSites = Notification.NotificationSites;
             SetupNotificationSiteMap(notificationSites);

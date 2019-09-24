@@ -22,7 +22,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             NotificationId = Notification.NotificationId;
@@ -32,11 +32,11 @@ namespace ntbs_service.Pages_Notifications
             }
 
             ContactTracing = Notification.ContactTracing;
-
             if (ContactTracing == null) {
                 ContactTracing = new ContactTracing();
             }
-
+            
+            SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
             await auditService.OnGetAuditAsync(Notification.NotificationId, ContactTracing);
             return Page();
         }
