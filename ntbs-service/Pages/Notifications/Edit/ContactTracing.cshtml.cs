@@ -34,10 +34,11 @@ namespace ntbs_service.Pages_Notifications
             NotificationStatus = Notification.NotificationStatus;
             Notification.SetFullValidation(NotificationStatus, isBeingSubmitted);
             ContactTracing = Notification.ContactTracing;
-
+            
             if (ContactTracing == null) {
                 ContactTracing = new ContactTracing();
             }
+            ContactTracing.SetFullValidation(NotificationStatus, isBeingSubmitted);
 
             await auditService.OnGetAuditAsync(Notification.NotificationId, ContactTracing);
             return Page();

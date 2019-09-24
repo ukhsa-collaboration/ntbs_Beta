@@ -45,6 +45,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            SocialRiskFactors.SetFullValidation(NotificationStatus, isBeingSubmitted);
             await auditService.OnGetAuditAsync(Notification.NotificationId, SocialRiskFactors);
             return Page();
         }

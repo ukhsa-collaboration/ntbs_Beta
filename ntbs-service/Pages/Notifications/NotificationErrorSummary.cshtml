@@ -1,40 +1,21 @@
 @model ntbs_service.Pages_Notifications.NotificationModelBase
+@using ntbs_service.Pages_Notifications
 
 @{
     Layout = "../Shared/_NotificationLayout.cshtml";
-    Dictionary<string, List<string>> ErrorDictionary = (Dictionary<string, List<string>>) ViewData["ErrorDictionary"];
-}
-
-@{
-    var ErrorToPageMapping = new Dictionary<string, string> {
-        {"PatientDetails", "Patient Details"},
-        {"ClinicalDetails", "Clinical Details"},
-        {"Episode", "Hospital Details"},
-        {"PatientTBHistory", "Previous History"}
-    };
-
-    var ErrorToUrlMapping = new Dictionary<string, string> {
-        {"PatientDetails", "Patient"},
-        {"ClinicalDetails", "ClinicalDetails"},
-        {"Episode", "Episode"},
-        {"PatientTBHistory", "PreviousHistory"},
-    };
+    Dictionary<string, NotifyError> NotifyErrorDictionary = (Dictionary<string, NotifyError>) ViewData["NotifyErrorDictionary"];
 }
 
 <nhs-error-summary title-text="You cannot proceed until the following issues are resolved" title-id="error-summary-title"
 role="alert" tabindex="-1" data-module="error-summary">
-    @foreach (var errorMapping in ErrorToPageMapping) 
+    @foreach (var notifyError in NotifyErrorDictionary) 
     {
-        @if (ErrorDictionary.ContainsKey(errorMapping.Key) && ErrorDictionary[errorMapping.Key].Count > 0) 
+        <li>
+            <a href=@notifyError.Value.Url>@notifyError.Key</a>
+        </li>
+        @foreach(var item in notifyError.Value.ErrorMessages) 
         {
-            <li>
-                @{string page_url = $"/Notifications/Edit/{ErrorToUrlMapping[errorMapping.Key]}?id={Model.NotificationId}&isBeingSubmitted=True";}
-                <a href=@page_url>@errorMapping.Value</a>
-            </li>
-            @foreach(var item in ErrorDictionary[errorMapping.Key]) 
-            {
-                <li>@item</li>
-            }
+            <li>@item</li>
         }
     
     }

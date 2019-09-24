@@ -27,7 +27,7 @@ namespace ntbs_service.Models
         public virtual PatientDetails PatientDetails { get; set; }
         public virtual ClinicalDetails ClinicalDetails { get; set; }
 
-        [AssertThat("(NotificationSites.Count > 0 && ShouldValidateFull) || !ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteIsRequired)]
+        [AssertThat("NotificationSites.Count > 0 || !ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteIsRequired)]
         public virtual List<NotificationSite> NotificationSites { get; set; }
         public virtual Episode Episode { get; set; }
         public virtual PatientTBHistory PatientTBHistory { get; set; }
