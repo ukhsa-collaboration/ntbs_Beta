@@ -7,6 +7,7 @@ using ntbs_service.Pages;
 using ntbs_service.Services;
 using System;
 using System.Linq;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -53,20 +54,15 @@ namespace ntbs_service.Pages_Notifications
             // IsRequired fields on Models requires ShouldValidateFull flag
             SetShouldValidateFull();
 
-            if (!IsModelValid())
+            if (!TryValidateModel(Notification))
             {
-                GetModelStateErrors();
+                NotifyErrorDictionary = NotificationValidationErrorGenerator.MapToDictionary(ModelState, NotificationId);
                 return Partial("./NotificationErrorSummary", this);
             } 
 
             await service.SubmitNotification(Notification);
             
             return RedirectToPage("../Overview", new {id = NotificationId});
-        }
-
-        private bool IsModelValid()
-        {
-            return TryValidateModel(Notification);
         }
 
         private void SetShouldValidateFull() 
@@ -80,69 +76,6 @@ namespace ntbs_service.Pages_Notifications
             Notification.Episode.ShouldValidateFull = true;
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
-
-        private void AddErrorMessagesIntoDictonary(string displayName, string url, List<string> errorMessages) {
-            if (errorMessages == null || errorMessages.Count == 0) {
-                return;
-            }
-
-            if (!NotifyErrorDictionary.ContainsKey(displayName))
-            {
-                NotifyErrorDictionary.Add(displayName, new NotifyError {
-                    Url = url,
-                    ErrorMessages = errorMessages
-                });
-            }
-            else 
-            {
-                NotifyErrorDictionary[displayName].ErrorMessages.AddRange(errorMessages);
-            }
-        }
-
-        // This method converts Model State Errors to Dictionary of Errors to be used in view
-        private void GetModelStateErrors() 
-        {
-            NotifyErrorDictionary = new Dictionary<string, NotifyError>();
-
-            foreach (var key in ModelState.Keys) 
-            {
-                // Splitting on '[' as well due to List properties having index, ex. NotificationSites[0]
-                var propertyKey = key.Split(new Char[] {'.', '['})[0];
-
-                string url;
-                string displayName;
-                switch (propertyKey) {
-                    case "PatientDetails":
-                        url = getUrl("Patient");
-                        displayName = "Patient Details";
-                        break;
-                    // NotificationSites is part of Clinical Details page despite being property of Notification
-                    case "NotificationSites":
-                        url = getUrl("ClinicalDetails");
-                        displayName = "Clinical Details";
-                        break;
-                    case "ClinicalDetails":
-                        url = getUrl("ClinicalDetails");
-                        displayName = "Clinical Details";
-                        break;
-                    case "Episode":
-                        url = getUrl("Episode");
-                        displayName = "Hospital Details";
-                        break;
-                    case "PatientTBHistory":
-                        url = getUrl("PreviousHistory");
-                        displayName = "Previous History";
-                        break;
-                    default:
-                        continue;
-                }
-
-                AddErrorMessagesIntoDictonary(displayName, url, 
-                    ModelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList());
-            }
-        }
-
-        private string getUrl(string viewModelName) => $"/Notifications/Edit/{viewModelName}?id={NotificationId}&isBeingSubmitted=True";
 
         public async Task<IActionResult> OnPostSaveAsync(int? notificationId)
         {
