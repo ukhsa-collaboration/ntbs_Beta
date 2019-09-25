@@ -25,7 +25,7 @@ namespace ntbs_service_tests.UnitTests.Models
             var fullName = TestNotification.FullName;
 
             // Assert
-            Assert.Equal(fullName, "EXAMPLE, name");
+            Assert.Equal("EXAMPLE, name", fullName);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace ntbs_service_tests.UnitTests.Models
             var postcode = TestNotification.FormattedNoAbodeOrPostcodeString;
 
             // Assert
-            Assert.Equal(postcode, "NW12 3RT");
+            Assert.Equal("NW12 3RT", postcode);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace ntbs_service_tests.UnitTests.Models
             var formattedDate = TestNotification.FormattedSymptomStartDate;
 
             // Assert
-            Assert.Equal(formattedDate, "01-Jan-2000");
+            Assert.Equal("01-Jan-2000", formattedDate);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace ntbs_service_tests.UnitTests.Models
             var days = TestNotification.DaysFromOnsetToPresentation;
 
             // Assert
-            Assert.Equal(days, 3);
+            Assert.Equal(3, days);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace ntbs_service_tests.UnitTests.Models
             var timePeriods = TestNotification.DrugRiskFactorTimePeriods;
 
             // Assert
-            Assert.Equal(timePeriods, "current, more than 5 years ago");
+            Assert.Equal("current, more than 5 years ago", timePeriods);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace ntbs_service_tests.UnitTests.Models
             var stateAndYear = TestNotification.BCGVaccinationStateAndYear;
 
             // Assert
-            Assert.Equal(stateAndYear, "Yes - 2000");
+            Assert.Equal("Yes - 2000", stateAndYear);
         }
     }
 }
