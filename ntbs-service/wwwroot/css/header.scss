@@ -1,0 +1,36 @@
+.header-container {
+    width: 75%;
+    margin: 0 auto;
+    padding-top: 10px;
+    position: relative;
+    height: 100%;
+    border: none;
+    background: white;
+}
+
+.header-logo {
+    padding-right: 15px;
+    vertical-align: top;
+    float: left;
+    display: flex;
+    max-width: 150px;
+}
+
+.govuk-header__logotype {
+    flex-direction: column;
+}
+
+.govuk-header {
+    border: none;
+}
+
+.header-navigation {
+    width: 75%;
+    margin: 0 auto;
+    background: red;
+}
+
+.header-navigation-list {
+    display: flex !important;
+    justify-content: space-between;
+}
