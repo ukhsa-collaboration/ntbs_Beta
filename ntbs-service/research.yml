@@ -45,6 +45,9 @@ metadata:
   name: ntbs-research
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: research-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - ntbsBeta"
 spec:
   rules:
   - host: ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
