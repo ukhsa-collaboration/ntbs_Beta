@@ -37,6 +37,7 @@ namespace ntbs_service.DataAccess
         {
             return await context.Notification
             .Where(n => TBServices.Contains(n.Episode.TBService.Name))
+            .Where(n => n.NotificationStatus == NotificationStatus.Notified)
             .OrderByDescending(n => n.SubmissionDate)
             .Take(10)
             .ToListAsync();
