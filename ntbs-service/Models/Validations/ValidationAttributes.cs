@@ -17,4 +17,26 @@ namespace ntbs_service.Models.Validations
             return ValidationMessages.DateValidityRange(StartDate);
         }
     }
+
+    public class OnlyOneTrue : ValidationAttribute
+    {
+
+        public string ComparisonValue { get; set; }
+        public OnlyOneTrue(string comparisonValue)
+        {
+            ComparisonValue = comparisonValue;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            object instance = validationContext.ObjectInstance;
+            var propertyToCompare = instance.GetType().GetProperty(ComparisonValue);
+            object valueToCompare = propertyToCompare.GetValue(instance);
+
+            if ((bool)valueToCompare && (bool)value) {
+                return new ValidationResult(ErrorMessage);
+            }
+            return null;
+        }
+    }
 }

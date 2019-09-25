@@ -102,3 +102,14 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 - see ip address: `kubectl get service/ntbs-int -w`
 - dashboard: `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
+
+## Basic auth securing
+Research env is set up with basic http auth, configured as per
+[these instructions](https://blog.bigbinary.com/2018/08/14/using-kubernetes-ingress-authentication.html).
+The credentials can be updated by running:
+```
+kubectl delete secret research-basic-auth
+htpasswd -c auth <username>
+# provide <password>
+kubectl create secret generic research-basic-auth --from-file=auth
+```

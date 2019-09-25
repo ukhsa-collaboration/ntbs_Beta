@@ -32,7 +32,7 @@ namespace ntbs_service.Models.Validations
         public const string ContactTracingChildrenStartedTreatment = "Must be smaller or equal to number of children with latent TB";
         public const string ContactTracingAdultsFinishedTreatment = "Must be smaller or equal to number of adults the started treatment";
         public const string ContactTracingChildrenFinishedTreatment = "Must be smaller or equal to number of children the started treatment";
-
+        public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string FamilyNameIsRequired = "Family Name is a mandatory field";
         public const string GivenNameIsRequired = "Given Name is a mandatory field";
         public const string BirthDateIsRequired = "Date of birth is a mandatory field";

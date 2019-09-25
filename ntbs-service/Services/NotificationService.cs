@@ -10,12 +10,14 @@ namespace ntbs_service.Services
 {
     public interface INotificationService
     {
+        Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
+        Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
-        Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline);
+        Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task SubmitNotification(Notification notification);
@@ -31,6 +33,14 @@ namespace ntbs_service.Services
         public NotificationService(INotificationRepository repository, NtbsContext context) {
             this.repository = repository;
             this.context = context;
+        }
+
+        public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices) {
+            return await repository.GetRecentNotificationsAsync(TBServices);
+        }
+
+        public async Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices) {
+            return await repository.GetDraftNotificationsAsync(TBServices);
         }
 
         public async Task<Notification> GetNotificationAsync(int? id) {
@@ -72,9 +82,9 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UpdateTimelineAsync(Notification notification, ClinicalDetails timeline)
+        public async Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails clinicalDetails)
         {
-            context.Entry(notification.ClinicalDetails).CurrentValues.SetValues(timeline);
+            context.Entry(notification.ClinicalDetails).CurrentValues.SetValues(clinicalDetails);
 
             await context.SaveChangesAsync();
         }

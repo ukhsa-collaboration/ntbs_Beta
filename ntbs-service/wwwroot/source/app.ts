@@ -11,6 +11,7 @@ import { YearComparison } from './Components/YearComparison';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
 import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
+import { ValidateMultiple } from './Components/ValidateMultiple';
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 
@@ -22,6 +23,7 @@ Vue.component('cascading-dropdowns', CascadingDropwdowns);
 Vue.component('validate-contact-tracing', ValidateContactTracing);
 Vue.component('validate-riskfactor', ValidateRiskFactor);
 Vue.component('year-comparison', YearComparison);
+Vue.component('validate-multiple', ValidateMultiple);
 
 new Vue({
   el: '#app',
@@ -33,4 +35,7 @@ if (config.env === 'development') {
   module.hot.accept()
 }
 
-govUkJsInitAll()
+govUkJsInitAll();
+
+// For compatibility with IE11
+require('es6-promise').polyfill();

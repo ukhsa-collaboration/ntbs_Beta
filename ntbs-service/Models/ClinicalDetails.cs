@@ -33,5 +33,14 @@ namespace ntbs_service.Models
         public Status BCGVaccinationState { get; set; }
         [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.BCGYearIsRequired)]
         public int? BCGVaccinationYear { get; set; }
+
+        [OnlyOneTrue("IsMDRTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
+        public bool IsShortCourseTreatment { get; set; }
+
+        [OnlyOneTrue("IsShortCourseTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
+        public bool IsMDRTreatment { get; set; }
+        [ValidDate(ValidDates.EarliestClinicalDate)]
+
+        public DateTime? MDRTreatmentStartDate { get; set; }
     }
 }

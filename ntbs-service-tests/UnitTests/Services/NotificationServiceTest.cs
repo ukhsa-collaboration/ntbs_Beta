@@ -130,8 +130,8 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             DateTime statusChangeDate = (DateTime) notification.SubmissionDate;
 
             // Assert
-            Assert.Equal(notification.NotificationStatus, NotificationStatus.Notified);
-            Assert.Equal(statusChangeDate.Date, expectedDate.Date);
+            Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
+            Assert.Equal(expectedDate.Date, statusChangeDate.Date);
         }
     }
 }
