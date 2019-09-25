@@ -21,8 +21,9 @@ namespace ntbs_service.Pages
 
         public async Task OnGetAsync()
         {
-            DraftNotifications = await service.GetDraftNotificationsAsync();
-            RecentNotifications = await service.GetRecentNotificationsAsync();
+            // Using a dummy TB service here while we don't have user profiles
+            DraftNotifications = await service.GetDraftNotificationsAsync(new List<string> {"Ashford Hospital"});
+            RecentNotifications = await service.GetRecentNotificationsAsync(new List<string> {"Ashford Hospital"});
         }
     }
 }

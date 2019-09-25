@@ -10,8 +10,8 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        Task<IList<Notification>> GetRecentNotificationsAsync();
-        Task<IList<Notification>> GetDraftNotificationsAsync();
+        Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
+        Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
@@ -33,20 +33,19 @@ namespace ntbs_service.DataAccess
             this.context = context;
         }
 
-        public async Task<IList<Notification>> GetRecentNotificationsAsync() 
+        public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices)
         {
-            //Get TB service here
             return await context.Notification
-            .Where(n => n.Episode.TBService.Name == "Ashford Hospital")
+            .Where(n => TBServices.Contains(n.Episode.TBService.Name))
             .OrderByDescending(n => n.SubmissionDate)
             .Take(10)
             .ToListAsync();
         }
 
-        public async Task<IList<Notification>> GetDraftNotificationsAsync()
+        public async Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices)
         {
             return await context.Notification
-            .Where(n => n.Episode.TBService.Name == "Ashford Hospital")
+            .Where(n => TBServices.Contains(n.Episode.TBService.Name))
             .Where(n => n.NotificationStatus == NotificationStatus.Draft)
             .OrderByDescending(n => n.CreationDate)
             .ToListAsync();
