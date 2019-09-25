@@ -21,15 +21,13 @@ namespace ntbs_service_tests.UnitTests.Patients
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesPageModel_WithPatients()
+        public async Task OnGetAsync_PopulatesPageModel_WithRecentAndDraftNotifications()
         {
             // Arrange
-            // TB service is currently hard coded on Index.cshtml.cs while user logins are missing so this needs to match
-            var mockTBServices = new List<string> {"Ashford Hospital"};
-            mockService.Setup(service => service.GetRecentNotificationsAsync(mockTBServices))
-                                 .Returns(Task.FromResult(GetRecentNotifications()));
-            mockService.Setup(service => service.GetDraftNotificationsAsync(mockTBServices))
-                                 .Returns(Task.FromResult(GetDraftNotifications()));           
+            var recent = Task.FromResult(GetRecentNotifications());
+            var drafts = Task.FromResult(GetDraftNotifications());
+            mockService.Setup(s => s.GetRecentNotificationsAsync(It.IsAny<List<string>>())).Returns(recent);
+            mockService.Setup(s => s.GetDraftNotificationsAsync(It.IsAny<List<string>>())).Returns(drafts);           
 
             var pageModel = new IndexModel(mockService.Object);
 
