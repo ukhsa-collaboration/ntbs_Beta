@@ -1,11 +1,19 @@
-.header-container {
+@import "./colors.scss";
+
+.header-title-and-logo-container {
+    width: 100%;
+    background: white;
+    display: flex;
+}
+
+.header-title-and-logo {
     width: 75%;
     margin: 0 auto;
     padding-top: 10px;
     position: relative;
     height: 100%;
     border: none;
-    background: white;
+    background: none;
 }
 
 .header-logo {
@@ -18,19 +26,52 @@
 
 .govuk-header__logotype {
     flex-direction: column;
+    color: black;
 }
 
 .govuk-header {
     border: none;
 }
 
+.header-navigation-container {
+    width: 100%;
+    background: $notified-red;
+}
+
 .header-navigation {
     width: 75%;
     margin: 0 auto;
-    background: red;
 }
 
 .header-navigation-list {
     display: flex !important;
     justify-content: space-between;
+
+    :first-child {
+        padding-left: 10px;
+    }
+
+    :last-child {
+        padding-right: 10px;
+    }
+}
+
+.govuk-header__logotype-text {
+    color: black;
+}
+
+.govuk-header__link--service-name {
+    color: $notified-red !important;
+    text-decoration: none;
+}
+
+.govuk-header__navigation-item {
+    font-weight: 400 !important;
+    font-style: italic;
+    text-decoration: none;
+}
+
+.govuk-header__link:hover {
+    background: none;
+    box-shadow: none;
 }
