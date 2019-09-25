@@ -21,13 +21,13 @@ namespace ntbs_service_tests.UnitTests.Patients
         }
 
         [Fact]
-        public async Task OnGetAsync_PopulatesPageModel_WithPatients()
+        public async Task OnGetAsync_PopulatesPageModel_WithRecentAndDraftNotifications()
         {
             // Arrange
-            mockService.Setup(service => service.GetRecentNotificationsAsync())
-                                 .Returns(Task.FromResult(GetRecentNotifications()));
-            mockService.Setup(service => service.GetDraftNotificationsAsync())
-                                 .Returns(Task.FromResult(GetDraftNotifications()));           
+            var recent = Task.FromResult(GetRecentNotifications());
+            var drafts = Task.FromResult(GetDraftNotifications());
+            mockService.Setup(s => s.GetRecentNotificationsAsync(It.IsAny<List<string>>())).Returns(recent);
+            mockService.Setup(s => s.GetDraftNotificationsAsync(It.IsAny<List<string>>())).Returns(drafts);           
 
             var pageModel = new IndexModel(mockService.Object);
 
