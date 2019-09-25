@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { getHeaders, getValidationPath } from '../helpers';
 const axios = require('axios');
+const qs = require('qs');
 
 const ValidateMultiple = Vue.extend({
     props: {
@@ -44,11 +45,11 @@ const ValidateMultiple = Vue.extend({
 });
 
 function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<string>) {
-    var keyValueArray = [];
+    var queryStringObject : any = { keyValuePairs: [] };
     for (var i = 0; i < keys.length; i++) {
-        keyValueArray.push(`keyValuePairs[${i}][key]=${keys[i]}&keyValuePairs[${i}][value]=${values[i]}`)
+        queryStringObject['keyValuePairs'].push( { key: keys[i], value: values[i] } );
     }
-    return keyValueArray.join('&');
+    return qs.stringify(queryStringObject);
 };
 
 export {
