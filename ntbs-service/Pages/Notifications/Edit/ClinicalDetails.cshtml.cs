@@ -32,6 +32,7 @@ namespace ntbs_service.Pages_Notifications
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
+        public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
         public ClinicalDetailsModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
         {
@@ -70,6 +71,7 @@ namespace ntbs_service.Pages_Notifications
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
+            FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
 
             await auditService.OnGetAuditAsync(Notification.NotificationId, ClinicalDetails);
             return Page();
@@ -96,6 +98,7 @@ namespace ntbs_service.Pages_Notifications
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
+            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
             ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
 
@@ -105,7 +108,7 @@ namespace ntbs_service.Pages_Notifications
             }
 
             var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdateTimelineAsync(notification, ClinicalDetails);
+            await service.UpdateClinicalDetailsAsync(notification, ClinicalDetails);
             await service.UpdateSitesAsync(notification, CreateNotificationSitesFromModel(notification));
 
             return true;
@@ -127,6 +130,12 @@ namespace ntbs_service.Pages_Notifications
             if (ClinicalDetails.BCGVaccinationState != Status.Yes) {
                 ClinicalDetails.BCGVaccinationYear = null;
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
+            }
+
+            if (!ClinicalDetails.IsMDRTreatment) {
+                ClinicalDetails.MDRTreatmentStartDate = null;
+                FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
             
             if (!NotificationSiteMap[SiteId.OTHER]) {
@@ -167,6 +176,15 @@ namespace ntbs_service.Pages_Notifications
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
             return ValidateYearComparison(newYear, existingYear);
+        }
+
+        public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
+        {
+            var propertyValueTuples = new List<Tuple<string, object>>();
+            foreach (var keyValuePair in keyValuePairs) {
+                propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], keyValuePair["value"]));
+            }
+            return ValidateMultipleProperties(new ClinicalDetails(), propertyValueTuples);
         }
     }
 }

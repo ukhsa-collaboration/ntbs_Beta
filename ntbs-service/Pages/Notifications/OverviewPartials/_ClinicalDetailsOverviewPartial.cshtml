@@ -78,7 +78,7 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Short course treatment </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height"> @Model.Notification.IsShortCourseYesNo </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Directly observed treatment </div>
@@ -86,7 +86,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> MDR treatment </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height"> @Model.Notification.MDRTreatmentStateAndDate </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
