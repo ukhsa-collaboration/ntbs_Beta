@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
@@ -19,8 +20,10 @@ namespace ntbs_service.Models
             PatientTBHistory = new PatientTBHistory();
             ContactTracing = new ContactTracing();
         }
-
+        
+        [Display(Name = "Notification Id")]
         public int NotificationId { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
         
@@ -35,11 +38,13 @@ namespace ntbs_service.Models
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
+        [Display(Name = "Date notified")]
         public string FormattedSubmissionDate => FormatDate(SubmissionDate);
         public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName}.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
+        [Display(Name = "TB Service")]
         public string TBServiceName => Episode.TBService?.Name;
         public string HospitalName => Episode.Hospital?.Name;
         public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
@@ -63,6 +68,8 @@ namespace ntbs_service.Models
         public string FormattedTreatmentStartDate => FormatDate(ClinicalDetails.TreatmentStartDate);
         public string FormattedDeathDate => FormatDate(ClinicalDetails.DeathDate);
         public string FormattedDob => FormatDate(PatientDetails.Dob);
+        [Display(Name = "Date created")]
+        public string FormattedCreationDate => FormatDate(CreationDate);
         public int? TotalContactsIdentified => CalculateSum(ContactTracing.AdultsIdentified, ContactTracing.ChildrenIdentified);
         public int? TotalContactsScreened => CalculateSum(ContactTracing.AdultsScreened, ContactTracing.ChildrenScreened);
         public int? TotalContactsActiveTB => CalculateSum(ContactTracing.AdultsActiveTB, ContactTracing.ChildrenActiveTB);

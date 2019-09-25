@@ -13,6 +13,7 @@ namespace ntbs_service.Models
         [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string Consultant { get; set; }
 
+        [Display(Name = "Case Manager")]
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string CaseManager { get; set; }

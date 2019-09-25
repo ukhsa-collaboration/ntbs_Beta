@@ -1,27 +1,22 @@
-.manage-notification-section {
-    max-width: 300px;
-    padding-top: 10px;
+.actions-aside-section {
+    width: 300px;
+    padding: 10px 0 0 0;
+    margin-top: 30px;
     border-top: 10px solid #1d70b8;
-}
-  
-.notification-sideline-container {
-    width: 25%;
-    display: inline-block;
-    flex-wrap: nowrap;
+
+    // This is used to position the ActionsAside component to the right when the page is wide enough
+    @media(min-width: 1480px) {
+        width: 200px;
+        right: -220px;
+        margin-top: 0;
+        position: absolute;
+    }
 }
 
-.notification-body-container {
-    width: 50%;
-    display: inline-block;
-    flex-wrap: nowrap;
+.search-notifications-button {
+    font-size: medium;
 }
 
-.notification-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-
-.patient-layout-flexbox {
-    display: flex;
+.notifications-table {
+    margin-top: 0;
 }

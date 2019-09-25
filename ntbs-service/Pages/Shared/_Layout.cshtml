@@ -18,17 +18,32 @@
                 </div>
             </nav>
         </header>
-        <div class="container">
-            <main role="main" style="padding: 60px">
-                @Html.AntiForgeryToken()
-                @RenderBody()
-            </main>
-        </div>
+        <nhs-main-wrapper>
+            <nhs-width-container container-width="Standard">
+                <form method="post" autocomplete="off">
+                    <nhs-grid-row style="position: relative">
+                        <nhs-grid-column grid-column-width="Full">
+                            @RenderBody()
+                        </nhs-grid-column>
+                        @if (IsSectionDefined("ActionsAside"))
+                        {
+                            <!-- TODO change class name to be generic -->
+                            <nhs-grid-column grid-column-width="Full" classes="actions-aside-section" >
+                                <aside>
+                                    @RenderSection("ActionsAside")
+                                </aside>
+                            </nhs-grid-column>
+                        }
+                    </nhs-grid-row>
+
+                </form>
+            </nhs-width-container>
+        </nhs-main-wrapper>
 
         <partial name="./_Footer.cshtml" />
     </div>
 
-    <!-- govuk requires elements that depend on js-usage require this calss to be set on the root of the document (e.g. conditionally revealling radios' sections) -->
+    <!-- govuk requires elements that depend on js-usage require this class to be set on the root of the document (e.g. conditionally revealling radios' sections) -->
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <script src="~/dist/bundle.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
