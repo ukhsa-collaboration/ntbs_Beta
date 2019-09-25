@@ -20,7 +20,7 @@ namespace ntbs_service.Pages_Notifications
             this.service = service;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationWithAllInfoAsync(id);
             if (Notification == null)
@@ -29,7 +29,6 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = Notification.NotificationId;
-            NotificationStatus = Notification.NotificationStatus;
 
             return Page();
         }

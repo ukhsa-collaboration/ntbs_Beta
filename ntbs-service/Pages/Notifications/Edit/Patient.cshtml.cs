@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
 using ntbs_service.Services;
+using System;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -31,7 +33,7 @@ namespace ntbs_service.Pages_Notifications
             this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
@@ -39,12 +41,16 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
             Patient = Notification.PatientDetails;
-
             if (Patient == null)
             {
                 Patient = new PatientDetails();
+            }
+
+            SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
+            if (Patient.ShouldValidateFull)
+            {
+                TryValidateModel(Patient, "Patient");
             }
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();

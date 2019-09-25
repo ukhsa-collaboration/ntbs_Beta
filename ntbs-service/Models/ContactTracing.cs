@@ -6,7 +6,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models
 {
     [Owned]
-    public class ContactTracing
+    public class ContactTracing : ModelBase
     {
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
         public int? AdultsIdentified { get; set; }

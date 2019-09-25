@@ -4,7 +4,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models
 {
     [Owned]
-    public class SocialRiskFactors
+    public class SocialRiskFactors : ModelBase
     {
         public SocialRiskFactors() {
             RiskFactorHomelessness = new RiskFactorHomelessness();

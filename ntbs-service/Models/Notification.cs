@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
-    public class Notification
+    public class Notification : ModelBase
     {
         public Notification() {
             NotificationStatus = NotificationStatus.Draft;
+            PatientDetails = new PatientDetails();
+            Episode = new Episode();
+            SocialRiskFactors = new SocialRiskFactors();
+            ClinicalDetails = new ClinicalDetails();
+            PatientTBHistory = new PatientTBHistory();
+            ContactTracing = new ContactTracing();
         }
         
         [Display(Name = "Notification Id")]
@@ -20,6 +29,8 @@ namespace ntbs_service.Models
         
         public virtual PatientDetails PatientDetails { get; set; }
         public virtual ClinicalDetails ClinicalDetails { get; set; }
+
+        [AssertThat("NotificationSites.Count > 0 || !ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteIsRequired)]
         public virtual List<NotificationSite> NotificationSites { get; set; }
         public virtual Episode Episode { get; set; }
         public virtual PatientTBHistory PatientTBHistory { get; set; }

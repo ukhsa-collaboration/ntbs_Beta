@@ -1,4 +1,5 @@
 using System;
+using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
@@ -6,7 +7,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models
 {
     [Owned]
-    public class ClinicalDetails
+    public class ClinicalDetails : ModelBase
     {
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
@@ -20,6 +21,7 @@ namespace ntbs_service.Models
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? TreatmentStartDate { get; set; }
 
+        [RequiredIf(@"ShouldValidateFull && IsPostMortem", ErrorMessage = ValidationMessages.DeathDateIsRequired)]
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? DeathDate { get; set; }
 
@@ -29,6 +31,7 @@ namespace ntbs_service.Models
         public bool NoSampleTaken { get; set; }
 
         public Status BCGVaccinationState { get; set; }
+        [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.BCGYearIsRequired)]
         public int? BCGVaccinationYear { get; set; }
     }
 }

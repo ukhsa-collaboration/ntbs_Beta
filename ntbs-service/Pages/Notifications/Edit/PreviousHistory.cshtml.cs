@@ -18,7 +18,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id)
+        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
@@ -27,19 +27,23 @@ namespace ntbs_service.Pages_Notifications
             }
 
             PatientTBHistory = Notification.PatientTBHistory;
-            NotificationId = Notification.NotificationId;
-
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();
             }
-
+            
+            SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+            if (PatientTBHistory.ShouldValidateFull)
+            {
+                TryValidateModel(PatientTBHistory, "Patient");
+            }
             await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
         { 
-            return RedirectToPage("../Index");
+            // This is the last page in the flow, so there's no next page to go to
+            return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
         protected override async Task<bool> ValidateAndSave(int? NotificationId) {
