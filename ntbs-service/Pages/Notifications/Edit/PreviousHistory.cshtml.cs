@@ -26,6 +26,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             PatientTBHistory = Notification.PatientTBHistory;
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();

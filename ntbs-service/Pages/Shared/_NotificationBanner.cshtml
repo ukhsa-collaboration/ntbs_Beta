@@ -1,7 +1,7 @@
 @using ntbs_service.Models.Enums;
 @{
     var NotificationStatusCssClass = "";
-    switch(@Model.Notification.NotificationStatus)
+    switch(@Model.NotificationStatus)
         {
             case NotificationStatus.Draft: NotificationStatusCssClass = "notification-banner--draft";
                 break;
@@ -19,21 +19,28 @@
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
                 <h1 class="notification-banner-title-text">
-                    <div> @Model.Notification.NotificationStatusString </div>
-                    <div> #@Model.Notification.NotificationId </div>
+                        <div> @Model.NotificationStatusString </div>
+                    
+                @if(@Model.SearchPage) 
+                {
+                    <a href="/Notifications/Overview?id=@Model.NotificationId" style="color: white"> #@Model.NotificationId </a>
+                } else 
+                {
+                    <div> #@Model.NotificationId </div>
+                }
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Date of notification </dt>
-                <dd class="cell-min-height"> @Model.Notification.FormattedSubmissionDate </dd>
+                <dd class="cell-min-height"> @Model.DateOfNotification </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> TB service </dt>
-                <dd> @Model.Notification.TBServiceName </dd>
+                <dd> @Model.TBService </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Case manager </dt>
-                <dd class="cell-min-height"> @Model.Notification.Episode.CaseManager </dd>
+                <dd class="cell-min-height"> @Model.CaseManager </dd>
             </nhs-grid-column>
         </nhs-grid-row>
     </div>
@@ -41,39 +48,42 @@
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter" classes="notification-banner-field">
                 <dt class="bold-label"> NHS number </dt>
-                <dd class="cell-min-height">  @Model.Notification.FormattedNhsNumber </dd>
+                <dd class="cell-min-height">  @Model.NHSNumber </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Date of birth </div>
-                <div class="cell-min-height"> @Model.Notification.FormattedDob </div>
+                <div class="cell-min-height"> @Model.DateOfBirth </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Country of birth </div>
-                <div class="cell-min-height"> @Model.Notification.CountryName </div>
+                <div class="cell-min-height"> @Model.CountryOfBirth </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Postcode </div>
-                <div> @Model.Notification.FormattedNoAbodeOrPostcodeString </div>
+                <div> @Model.Postcode </div>
             </nhs-grid-column>
         </nhs-grid-row>
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Name </div>
-                <div class="cell-min-height"> @Model.Notification.FullName </div>
+                <div class="cell-min-height"> @Model.Name </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Sex </div>
-                <div class="cell-min-height"> @Model.Notification.SexLabel </div>
+                <div class="cell-min-height"> @Model.Sex </div>
             </nhs-grid-column>
         </nhs-grid-row> 
     </div>
-    <div class="notification-banner-triangle"> </div>
+    @if(!@Model.SearchPage) 
+    {
+        <div class="notification-banner-triangle"> </div>
+    }
 </dl>
-@if(@Model.Notification.NotificationStatus == NotificationStatus.Notified) 
+@if(@Model.NotificationStatus == NotificationStatus.Notified && !@Model.SearchPage) 
 {
     <div class="notification-banner-links">
-        <a href="/Notifications/Overview?id=@Model.Notification.NotificationId"> Notification details </a>
+        <a href="/Notifications/Overview?id=@Model.NotificationId"> Notification details </a>
         <div class="notification-banner-link-separator"> </div>
-        <a href="/Notifications/Overview?id=@Model.Notification.NotificationId"> Audit </a>
+        <a href="/Notifications/Overview?id=@Model.NotificationId"> Audit </a>
     </div>
 }

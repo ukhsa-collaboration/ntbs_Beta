@@ -33,7 +33,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             Episode = Notification.Episode;
             if (Episode == null)
             {

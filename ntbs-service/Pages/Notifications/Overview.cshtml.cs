@@ -27,6 +27,7 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
+            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             NotificationId = Notification.NotificationId;
 

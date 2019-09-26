@@ -25,6 +25,7 @@ namespace ntbs_service.Pages_Notifications
         }
 
         public Notification Notification { get; set; }
+        public NotificationBannerModel NotificationBannerModel { get; set; }
 
         [BindProperty]
         public int? NotificationId { get; set; }

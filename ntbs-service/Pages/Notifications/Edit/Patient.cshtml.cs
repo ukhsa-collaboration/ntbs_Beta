@@ -41,6 +41,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             Patient = Notification.PatientDetails;
             if (Patient == null)
             {
