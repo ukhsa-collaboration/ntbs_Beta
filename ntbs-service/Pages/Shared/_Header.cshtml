@@ -1,50 +1,46 @@
-<header class="govuk-header" role="banner" data-module="govuk-header">
-    <!-- <div class="header-title-and-logo-container"> -->
-        <div class="govuk-header__container header-title-and-logo">
-            <div class="header-logo">
+<header class="govuk-header " role="banner" data-module="govuk-header">
+    <div class="header-title-and-logo-background">
+        <div class="govuk-header__container govuk-width-container no-border">
+            <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle header-expand-menu-button" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+
+            <div class="govuk-header__logo header-logo-container header-logo">
+            <a href="#" class="govuk-header__link govuk-header__link--homepage">
                 <span class="govuk-header__logotype">
-                    logo here
+                    <img src="~/Images/pheLogo.png" class="header-phe-logo"></img>
                 </span>
-            </div>
-            <div class="govuk-header__content">
-                <a href="#" class="govuk-header__link govuk-header__link--service-name">
-                    National Tuberculosis Surveillance System
-                </a>
-            </div>
+            </a>
         </div>
-    <!-- </div> -->
-    <div class="header-navigation-container">
-        <div class="header-navigation">
-            <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+        <a href="#" class="govuk-header__link govuk-header__link--service-name header-title">
+            National Tuberculosis Surveillance System
+        </a>
+        </div>
+    </div>
+   <div class="header-navigation-background">
+        <div class="govuk-header__container govuk-width-container no-border">
             <nav>
-                <ul id="navigation" class="govuk-header__navigation header-navigation-list" aria-label="Top Level Navigation">
-                    <li class="govuk-header__navigation-item">
-                        <a class="govuk-header__link govuk-link--no-visited-state" href="#1">
-                        Home
+                <ul id="navigation" class="govuk-header__navigation header-navgation-list" aria-label="Top Level Navigation">
+                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                        <a class="govuk-header__link" href="/">
+                        Dashboard
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item">
-                        <a class="govuk-header__link govuk-link--no-visited-state" href="#2">
+                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                        <a class="govuk-header__link" href="#2">
+                        Search
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                        <a class="govuk-header__link" href="/">
                         Link
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item">
-                        <a class="govuk-header__link govuk-link--no-visited-state" href="#3">
-                        Link
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a class="govuk-header__link govuk-link--no-visited-state" href="#4">
-                        Link
-                        </a>
-                    </li>
-                    <li class="govuk-header__navigation-item">
-                        <a class="govuk-header__link govuk-link--no-visited-state" href="#5">
+                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                        <a class="govuk-header__link" href="/">
                         Link
                         </a>
                     </li>
                 </ul>
             </nav>
-        </div> 
-    </div>    
-</header> 
+        </div>
+    </div>
+</header>
