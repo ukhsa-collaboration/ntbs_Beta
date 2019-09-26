@@ -83,7 +83,7 @@ namespace ntbs_service.Models
         {
             if (NotificationStatus == Enums.NotificationStatus.Draft)
             {
-                return "Draft Notification";
+                return "Draft";
             } else if (NotificationStatus == Enums.NotificationStatus.Notified)
             {
                 return "Notification";
