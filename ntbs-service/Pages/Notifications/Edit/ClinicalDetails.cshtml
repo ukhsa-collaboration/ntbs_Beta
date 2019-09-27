@@ -166,6 +166,7 @@
                             var BCGVaccinationGroupState = BCGVaccinationError ? Error : Standard; 
                         }
                         <nhs-form-group nhs-form-group-type=@BCGVaccinationGroupState aria-describedby="bcg-vaccination-error">
+                            <label nhs-label-type="Standard"> Year of vaccination </label>
                             <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.BCGVaccinationYear" 
                                 id="bcg-vaccination-error"></span>
                             <input ref="inputField" nhs-input-type="Standard" v-on:blur="validate" classes="nhsuk-input--width-4" 

@@ -8,16 +8,7 @@
 </head>
 <body>
     <div id="app">
-        <header id="top">
-            <!-- TODO remove these colour hacks -->
-            <nav style="background-color: #822433; height: 60px; padding: 20px;">
-                <div >
-                    <a asp-area="" asp-page="/Index" style="color: white">NTBS</a>
-                    <a asp-area="" asp-page="/Notifications/Index" style="color: white">Patient Search</a>
-                    <a asp-area="" asp-page="/Notifications/Create" style="color: white">Notify</a>
-                </div>
-            </nav>
-        </header>
+        <partial name="./_Header.cshtml">
         <nhs-main-wrapper>
             <nhs-width-container container-width="Standard">
                 <form method="post" autocomplete="off">
