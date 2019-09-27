@@ -36,7 +36,9 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices)
         {
             return await context.Notification
+            .Include(n => n.Episode).ThenInclude(p => p.TBService)
             .Where(n => TBServices.Contains(n.Episode.TBService.Name))
+            .Where(n => n.NotificationStatus == NotificationStatus.Notified)
             .OrderByDescending(n => n.SubmissionDate)
             .Take(10)
             .ToListAsync();
@@ -45,6 +47,7 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices)
         {
             return await context.Notification
+            .Include(n => n.Episode).ThenInclude(p => p.TBService)
             .Where(n => TBServices.Contains(n.Episode.TBService.Name))
             .Where(n => n.NotificationStatus == NotificationStatus.Draft)
             .OrderByDescending(n => n.CreationDate)
