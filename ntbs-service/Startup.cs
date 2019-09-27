@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +16,7 @@ using ntbs_service.Services;
 using System.Globalization;
 using EFAuditer;
 using ntbs_service.Middleware;
+using Microsoft.AspNetCore.Authentication.WsFederation;
 
 namespace ntbs_service
 {
@@ -35,8 +39,34 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // services.AddIdentity<IdentityUser, IdentityRole>()
+            //     .AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAuthentication(sharedOptions =>
+                    {
+                        sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                    }).AddWsFederation(options =>
+                    {
+                        // MetadataAddress represents the Active Directory instance used to authenticate users.
+                        // options.MetadataAddress = "https://<ADFS FQDN or AAD tenant>/FederationMetadata/2007-06/FederationMetadata.xml";
+                        options.MetadataAddress = "https://fs.softwire.com/FederationMetadata/2007-06/FederationMetadata.xml";
+
+                        // Wtrealm is the app's identifier in the Active Directory instance.
+                        options.Wtrealm = "https://localhost:5001/";
+
+                    })
+                    .AddCookie();
+
+            services.AddMvc(options => 
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
@@ -90,6 +120,9 @@ namespace ntbs_service
             app.UseCookiePolicy();
 
             app.UseMiddleware<AuditGetRequestMiddleWare>();
+
+            app.UseAuthentication();
+
             app.UseMvc();
 
             var cultureInfo = new CultureInfo("en-GB");
