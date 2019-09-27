@@ -82,9 +82,10 @@ We're using ACR to store docker images. When logged in to Azure, run this comman
 
 ## Deploying to environments
 `master` branch deploys to `int` automatically.
-For `test` and `research` environments, pick the TAG of the build from registery you want deployed and run:
-1. `kubectl apply -f .\<ENV>.yml` if there are changes to the yml definition
-1. `kubectl set image deployment/ntbs-<ENV> ntbs-<ENV>=ntbscontainerregistry.azurecr.io/ntbs-service:<TAG>`
+
+For `test` and `research` environments, pick the docker image <TAG> of the build from registery and from root directory run:
+
+`.\scripts\release.ps1 -env <ENV> -build <TAG>`
 
 ## Running the app in Docker (builds in produciton mode)
 ```
