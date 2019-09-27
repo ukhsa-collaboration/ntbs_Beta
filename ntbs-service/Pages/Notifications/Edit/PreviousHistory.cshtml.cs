@@ -34,7 +34,7 @@ namespace ntbs_service.Pages_Notifications
             SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
             if (PatientTBHistory.ShouldValidateFull)
             {
-                TryValidateModel(PatientTBHistory, "Patient");
+                TryValidateModel(PatientTBHistory, PatientTBHistory.GetType().Name);
             }
             await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
@@ -61,15 +61,15 @@ namespace ntbs_service.Pages_Notifications
         
         private void UpdateFlags()
         {
-            if (PatientTBHistory.NotPreviouslyHadTB) {
+            if (PatientTBHistory.NotPreviouslyHadTB == true) {
                 PatientTBHistory.PreviousTBDiagnosisYear = null;
                 ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
             }
         }
 
-        public ContentResult OnGetValidatePreviousHistoryProperty(string key, int value)
+        public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new PatientTBHistory(), key, value);
+            return ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
         }
     }
 }

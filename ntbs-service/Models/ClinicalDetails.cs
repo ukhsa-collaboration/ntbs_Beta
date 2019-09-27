@@ -30,7 +30,7 @@ namespace ntbs_service.Models
 
         public bool NoSampleTaken { get; set; }
 
-        public Status BCGVaccinationState { get; set; }
+        public Status? BCGVaccinationState { get; set; }
         [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.BCGYearIsRequired)]
         public int? BCGVaccinationYear { get; set; }
 

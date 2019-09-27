@@ -3,11 +3,7 @@ import { getHeaders, getValidationPath } from '../helpers';
 const axios = require('axios');
 
 const YearComparison = Vue.extend({
-    props: ['model', 'yeartocompare'],
-    data: function() {
-      return {
-        hasError: false
-      }},
+  props: ['model', 'yeartocompare'],
   methods: {
     validate: function (event: FocusEvent) {
         // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
@@ -21,8 +17,19 @@ const YearComparison = Vue.extend({
         .then((response: any) => {
             console.log(response);
             var errorMessage = response.data;
-            this.hasError = errorMessage != '';
+            var hasError = errorMessage != '';
             this.$refs["errorField"].textContent = errorMessage;
+            if (hasError) {
+              this.$el.classList.add('nhsuk-form-group--error');
+              if (this.$refs["inputField"]) {
+                this.$refs["inputField"].classList.add('nhsuk-input--error')
+              }
+            } else {
+              this.$el.classList.remove('nhsuk-form-group--error')
+              if (this.$refs["inputField"]) {
+                this.$refs["inputField"].classList.remove('nhsuk-input--error')
+              }
+            }
           })
         .catch((error: any) => {
             console.log(error.response)

@@ -112,9 +112,9 @@ namespace ntbs_service.Models
             }
         }
 
-        public string FormatStateAndYear(Status state, int? year)
+        public string FormatStateAndYear(Status? state, int? year)
         {
-            return state.ToString() + (year != null ? " - " + year : "");
+            return state?.ToString() + (year != null ? " - " + year : "");
         }
 
         public string FormatBooleanStateAndDate(bool booleanState, DateTime? date)

@@ -93,6 +93,13 @@ namespace ntbs_service.Pages_Notifications
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
         }
 
+        public ContentResult ValidateModelProperty<T>(string key, object value, bool shouldValidateFull) where T : ModelBase
+        {
+            T model = (T)Activator.CreateInstance(typeof(T));
+            model.ShouldValidateFull = shouldValidateFull;
+            return ValidateProperty(model, key, value);
+        }
+
         protected abstract Task<bool> ValidateAndSave(int? notificationId);
 
         public abstract Task<IActionResult> OnGetAsync(int? notificationId, bool isBeingSubmitted = false);

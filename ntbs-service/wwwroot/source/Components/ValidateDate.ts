@@ -4,11 +4,6 @@ const axios = require('axios');
 
 const ValidateDate = Vue.extend({
     props: ['model', 'property', 'name', 'rank'],
-    data: function() {
-        return {
-            hasError: false
-        }
-    },
     mounted: function () {
         if (this.rank) {
             // v-model binds to the input event, so this gets picked up by the containing DateComparison component, if present
@@ -35,12 +30,25 @@ const ValidateDate = Vue.extend({
                 .then((response: any) => {
                     console.log(response);
                     var errorMessage = response.data;
-                    this.hasError = errorMessage != '';
+                    var hasError = errorMessage != '';
                     this.$refs["errorField"].textContent = errorMessage;
-                    if (!this.hasError && this.rank) {
-                        this.$emit('input', convertFormattedDateToDate(date));
-                        this.$parent.datechanged(this.rank);
+                    if (hasError) {
+                        if (this.rank) {
+                            this.$emit('input', convertFormattedDateToDate(date));
+                            this.$parent.datechanged(this.rank);
+                        }
+                        this.$el.classList.add('nhsuk-form-group--error')
+                        this.$refs["dayInput"].classList.add('nhsuk-input--error')
+                        this.$refs["monthInput"].classList.add('nhsuk-input--error')
+                        this.$refs["yearInput"].classList.add('nhsuk-input--error')
+
+                    } else {
+                        this.$el.classList.remove('nhsuk-form-group--error')
+                        this.$refs["dayInput"].classList.remove('nhsuk-input--error')
+                        this.$refs["monthInput"].classList.remove('nhsuk-input--error')
+                        this.$refs["yearInput"].classList.remove('nhsuk-input--error')
                     }
+
                 })
                 .catch((error: any) => {
                     console.log(error.response)

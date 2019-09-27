@@ -81,9 +81,9 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
 
-        public ContentResult OnGetValidateEpisodeProperty(string key, string value)
+        public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new Episode(), key, value);
+            return ValidateModelProperty<Episode>(key, value, shouldValidateFull);
         }
     }
 }

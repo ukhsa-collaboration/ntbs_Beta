@@ -115,7 +115,7 @@ namespace ntbs_service.Pages_Notifications
         }
 
         private void UpdateFlags() {
-            if (ClinicalDetails.DidNotStartTreatment) {
+            if (ClinicalDetails.DidNotStartTreatment == true) {
                 ClinicalDetails.TreatmentStartDate = null;
                 FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.TreatmentStartDate");
@@ -159,10 +159,11 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
-        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value)
+        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new ClinicalDetails(), key, value);
+            return ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
+
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
             return ValidateDate(new ClinicalDetails(), key, day, month, year);

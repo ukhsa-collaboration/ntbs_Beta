@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using EFAuditer;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace ntbs_service.Pages
 {
@@ -31,10 +32,15 @@ namespace ntbs_service.Pages
 
         private void SetProperty(object model, string key, object value)
         {
-            var property = model.GetType().GetProperty(key);
-            if (property.PropertyType == typeof(bool)) {
-                value = bool.Parse((string)value);
+            if (value == null)
+            {
+                return;
             }
+            var property = model.GetType().GetProperty(key);
+
+            var converter = TypeDescriptor.GetConverter(property.PropertyType);
+            value = converter.ConvertFromString((string) value);
+
             property.SetValue(model, value);
         }
 
@@ -55,14 +61,9 @@ namespace ntbs_service.Pages
 
         private ContentResult GetValidationResult(object model, string key)
         {
-            if (TryValidateModel(model))
-            {
-                return ValidContent();
-            }
-            else
-            {
-                return Content(ModelState[key].Errors[0].ErrorMessage);
-            }
+            TryValidateModel(model);
+
+            return ModelState[key] == null ? ValidContent() : Content(ModelState[key].Errors[0].ErrorMessage);
         }
 
         private ContentResult GetValidationResult(object model, IEnumerable<string> keys)
