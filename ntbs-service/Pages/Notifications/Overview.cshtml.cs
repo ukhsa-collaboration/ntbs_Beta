@@ -9,6 +9,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Pages;
 using ntbs_service.Services;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -29,6 +30,10 @@ namespace ntbs_service.Pages_Notifications
             }
 
             NotificationId = Notification.NotificationId;
+
+            if (Notification.NotificationStatus == NotificationStatus.Draft) {
+                return RedirectToPage("./Edit/Patient", new {id = NotificationId});
+            }
 
             return Page();
         }
