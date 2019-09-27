@@ -1,0 +1,50 @@
+@import "./colors.scss";
+
+.header-title-and-logo-background {
+    background: white;
+}
+
+.header-navigation-background {
+    background: $phe-red;
+}
+
+.header-navigation-link {
+    padding-right: 40px;
+}
+
+.header-navgation-list {
+    margin-bottom: 0;
+}
+
+@media (min-width: 48.0625em) {
+    .js-enabled .govuk-header__navigation {
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+.header-title {
+    padding-bottom: 10px;
+    color: $phe-red;
+}
+
+
+.no-border {
+    border: none;
+}
+
+.header-logo {
+    padding: 0 15px 5px 0;
+    margin: 0;
+    width: 200px;
+    box-sizing: content-box;
+}
+
+.header-phe-logo {
+    height: 30px;
+    width: 200px;
+}
+
+.header-expand-menu-button {
+    color: black;
+}
