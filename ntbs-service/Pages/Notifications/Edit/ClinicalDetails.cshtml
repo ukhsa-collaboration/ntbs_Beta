@@ -158,6 +158,7 @@ ViewData["Title"] = "Notification - Clinical Details";
                         @{ var BCGVaccinationGroupState = !Model.IsValid("ClinicalDetails.BCGVaccinationYear") ? Error : Standard; }
                         <nhs-form-group nhs-form-group-type=@BCGVaccinationGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="bcg-vaccination-error">
                             <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.BCGVaccinationYear" id="bcg-vaccination-error"></span>
+                            <label nhs-label-type="Standard"> Year of vaccination </label>
                             <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10" asp-for="ClinicalDetails.BCGVaccinationYear" type="number">
                         </nhs-form-group>
                     </div>
