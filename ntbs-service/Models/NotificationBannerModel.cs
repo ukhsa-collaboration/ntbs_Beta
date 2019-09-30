@@ -27,28 +27,7 @@ namespace ntbs_service.Models
         public bool FullPermissions;
         public bool SearchPage;
 
-        public NotificationBannerModel(Notification notification) {
-            NotificationId = notification.NotificationId;
-            if (notification.NotificationStatus == Enums.NotificationStatus.Draft) {
-                DateOfNotification = notification.FormattedCreationDate;
-            } else {
-                DateOfNotification = notification.FormattedSubmissionDate;
-            }
-            TBService = notification.TBServiceName;
-            CaseManager = notification.Episode.CaseManager;
-            NHSNumber = notification.FormattedNhsNumber;
-            DateOfBirth = notification.FormattedDob;
-            CountryOfBirth = notification.CountryName;
-            Postcode = notification.FormattedNoAbodeOrPostcodeString;
-            Name = notification.FullName;
-            Sex = notification.SexLabel;
-            NotificationStatus = notification.NotificationStatus;
-            NotificationStatusString = notification.NotificationStatusString;
-            FullPermissions = true;
-            NotificationOrigination = "ntbs";
-        }
-
-        public NotificationBannerModel(Notification notification, bool isSearchPage) {
+        public NotificationBannerModel(Notification notification, bool isSearchPage = false) {
             NotificationId = notification.NotificationId;
             if (notification.NotificationStatus == Enums.NotificationStatus.Draft) {
                 DateOfNotification = notification.FormattedCreationDate;

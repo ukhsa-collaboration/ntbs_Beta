@@ -1,0 +1,15 @@
+.clear-search-button-container {
+    display: flex;
+}
+
+.clear-search-button {
+    margin-left: auto;
+}
+
+.actions-aside-link {
+    text-decoration: none;
+    color: white;
+    &:visited {
+        color: white;
+    }
+}

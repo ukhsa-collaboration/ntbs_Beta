@@ -10,7 +10,7 @@ namespace ntbs_service.Services
 {
     public interface INotificationService
     {
-        Task<SearchResults> getSearchResultsAsync(int offset, int pageSize);
+        IQueryable<Notification> GetBaseNotificationIQueryable();
         Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
         Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
@@ -36,8 +36,8 @@ namespace ntbs_service.Services
             this.context = context;
         }
 
-        public async Task<SearchResults> getSearchResultsAsync(int offset, int pageSize) {
-            return await repository.GetSearchResultsAsync(offset, pageSize);
+        public IQueryable<Notification> GetBaseNotificationIQueryable() {
+            return repository.GetBaseNotificationIQueryable();
         }
 
         public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices) {
