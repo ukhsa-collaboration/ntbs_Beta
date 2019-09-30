@@ -31,7 +31,7 @@
 @foreach (var item in Model.DraftNotifications) {
         <tr>
             <th>
-                <a href="./Notifications/Edit/Patient?id=@item.NotificationId" class="govuk-link govuk-link--no-visited-state">
+                <a href="./Notifications/Overview?id=@item.NotificationId" class="govuk-link govuk-link--no-visited-state">
                     @Html.DisplayFor(modelItem => item.NotificationId)
                 </a>
             </th>
@@ -71,7 +71,7 @@
 @foreach (var item in Model.RecentNotifications) {
         <tr>
             <th>
-                <a href="./Notifications/Edit/Patient?id=@item.NotificationId" class="govuk-link--no-visited-state">
+                <a href="./Notifications/Overview?id=@item.NotificationId" class="govuk-link--no-visited-state">
                     @Html.DisplayFor(modelItem => item.NotificationId)
                 </a>
             </th>

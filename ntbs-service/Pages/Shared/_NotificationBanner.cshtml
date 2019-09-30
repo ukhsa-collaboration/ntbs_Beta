@@ -47,8 +47,8 @@
     <div class="notification-banner-body">
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter" classes="notification-banner-field">
-                <dt class="bold-label"> NHS number </dt>
-                <dd class="cell-min-height">  @Model.NHSNumber </dd>
+                <div class="bold-label"> Name </div>
+                <div class="cell-min-height"> @Model.Notification.FullName </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Date of birth </div>
@@ -65,8 +65,8 @@
         </nhs-grid-row>
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
-                <div class="bold-label"> Name </div>
-                <div class="cell-min-height"> @Model.Name </div>
+                <dt class="bold-label"> NHS number </dt>
+                <dd class="cell-min-height">  @Model.Notification.FormattedNhsNumber </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Sex </div>
