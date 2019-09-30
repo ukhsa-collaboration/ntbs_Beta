@@ -28,7 +28,7 @@ const ValidateMultiple = Vue.extend({
                 var errorMessages = response.data;
                 this.hasError = errorMessages != '';
                 var errorFields = this.createArrayFromRefElements('errorField');
-                errorFields.forEach((errorField: any, index: number) => errorField.textContent = errorMessages[index]);
+                errorFields.forEach((errorField: any, index: number) => errorField.textContent = this.hasError ? errorMessages[index] : '');
             })
             .catch((error: any) => {
                 console.log(error.response)
