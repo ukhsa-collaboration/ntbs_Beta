@@ -6,9 +6,11 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
+    [Owned]
     [ValidRiskFactorAttribute]
-    public class RiskFactorBase
+    public class RiskFactorDetails
     {
+        public RiskFactorType Type { get; set; }
         public Status? Status { get; set; }
         public bool IsCurrent { get; set; }
         public bool InPastFiveYears { get; set; }

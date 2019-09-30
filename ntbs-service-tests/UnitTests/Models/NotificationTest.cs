@@ -73,7 +73,7 @@ namespace ntbs_service_tests.UnitTests.Models
         public void CreatesSocialRiskTimePeriodsStringCorrectly() 
         {
             // Arrange
-            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorBase {
+            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorDetails {
                 Status = ntbs_service.Models.Enums.Status.Yes,
                         IsCurrent = true,
                         InPastFiveYears = false,

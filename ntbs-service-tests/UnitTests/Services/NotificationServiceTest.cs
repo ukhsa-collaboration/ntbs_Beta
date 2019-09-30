@@ -31,9 +31,9 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             // Arrange
             var notification = new Notification();
             var socialRiskFactors = new SocialRiskFactors() { 
-                RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown },
-                RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
-                RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+                RiskFactorDrugs = new RiskFactorDetails { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown },
+                RiskFactorHomelessness   = new RiskFactorDetails { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
+                RiskFactorImprisonment = new RiskFactorDetails { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.Unknown},
             };
 
             // Act
@@ -59,9 +59,9 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
             // Arrange
             var notification = new Notification();
             var socialRiskFactors = new SocialRiskFactors() { 
-                RiskFactorDrugs = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No },
-                RiskFactorHomelessness   = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
-                RiskFactorImprisonment = new RiskFactorBase { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+                RiskFactorDrugs = new RiskFactorDetails { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No },
+                RiskFactorHomelessness   = new RiskFactorDetails { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
+                RiskFactorImprisonment = new RiskFactorDetails { IsCurrent = true,  MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = Status.No},
             };
 
             // Act

@@ -159,7 +159,7 @@ namespace ntbs_service.Models
             );
         }
 
-        private string CreateTimePeriodsString(RiskFactorBase riskFactor)
+        private string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
             var timeStrings = new List<string>();
             if (riskFactor.IsCurrent)
