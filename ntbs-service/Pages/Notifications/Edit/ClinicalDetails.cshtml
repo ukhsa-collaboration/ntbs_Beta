@@ -15,124 +15,134 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="PatientBirthYear" />
     <h2>Sites of disease</h2>
-    <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset>
-            <nhs-checkboxes>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PULMONARY).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <label nhs-label-type="Standard" style="margin-left: -40px">Extra-pulmonary</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-            <nhs-checkboxes style="margin-left: 52px">
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_SPINE).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_OTHER).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <label nhs-label-type="Standard" style="margin-left: -40px">CNS</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-            <nhs-checkboxes style="margin-left: 104px">
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CNS_MENINGITIS).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" id="cns-other" asp-for="@Model.NotificationSiteMap[SiteId.CNS_OTHER]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CNS_OTHER).Description</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-            <nhs-checkboxes style="margin-left: 52px">
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.OCULAR).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CRYPTIC).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GASTROINTESTINAL]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GASTROINTESTINAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GASTROINTESTINAL).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GENITOURINARY).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <label nhs-label-type="Standard" style="margin-left: -40px">Lymph nodes</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-            <nhs-checkboxes style="margin-left: 104px">
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LYMPH_INTRA).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LYMPH_EXTRA).Description</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-            <nhs-checkboxes style="margin-left: 52px">
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LARYNGEAL]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LARYNGEAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LARYNGEAL).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.MILIARY).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PLEURAL).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PERICARDIAL]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PERICARDIAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PERICARDIAL).Description</label>
-                </nhs-checkboxes-item>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.SKIN]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.SKIN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.SKIN).Description</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-            <div class="nhsuk-checkboxes" style="margin-left: 52px; padding-top:4px" data-module="govuk-checkboxes">
-                <div class="nhsuk-checkboxes__item">
-                    <input class="nhsuk-checkboxes__input" asp-for="@Model.NotificationSiteMap[SiteId.OTHER]" data-aria-controls="conditional-other-conditional">
-                    <label class="nhsil-label nhsuk-checkboxes__label" asp-for="@Model.NotificationSiteMap[SiteId.OTHER]">
-                        @Model.Sites.Find(s => s.SiteId == (int)SiteId.OTHER).Description
-                    </label>
-                </div>
-                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-conditional">
-                    <validate-input model="NotificationSite" property="SiteDescription" inline-template>
-                        @{
-                            var SiteDescriptionError = !Model.IsValid("OtherSite.SiteDescription");
-                            var SiteDescriptionGroupState = SiteDescriptionError ? Error : Standard; 
-                        }
-                        <nhs-form-group nhs-form-group-type=@SiteDescriptionGroupState aria-describedby="other-site-error">
-                            <span nhs-span-type="ErrorMessage" ref="errorField"
-                                asp-validation-for="OtherSite.SiteDescription" id="other-site-error"></span>
-                            <input ref="inputField" v-on:blur="validate" is-error-input=@SiteDescriptionError nhs-input-type="Standard"
-                                classes="nhsuk-input--width-10" asp-for="OtherSite.SiteDescription" type="text">
-                        </nhs-form-group>
-                    </validate-input>
-                </div>
+    @{
+        var NotificationSitesError = !Model.IsValid("Notification.NotificationSites");
+        var NotificationSitesGroupState = NotificationSitesError ? Error : Standard;
+    }
 
-            </div>
-            <nhs-checkboxes>
-                <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]"/>
-                    <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.UNKNOWN).Description</label>
-                </nhs-checkboxes-item>
-            </nhs-checkboxes>
-        </nhs-fieldset>
-    </nhs-form-group>
+    <validate-required-checkboxes model="ClinicalDetails" property="NotificationSites" shouldvalidatefull="@fullValidation" inline-template>
+        <nhs-form-group v-on:change="validate" ref="checkboxgroup" nhs-form-group-type="@NotificationSitesGroupState"> 
+            <nhs-fieldset>
+                <span class="nhsuk-error-message" id="notification-sites-id" 
+                    ref="errorField" asp-validation-for="Notification.NotificationSites"></span>
+                <nhs-checkboxes>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PULMONARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PULMONARY).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <label nhs-label-type="Standard" style="margin-left: -40px">Extra-pulmonary</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+                <nhs-checkboxes style="margin-left: 52px">
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_SPINE).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.BONE_OTHER).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <label nhs-label-type="Standard" style="margin-left: -40px">CNS</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+                <nhs-checkboxes style="margin-left: 104px">
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CNS_MENINGITIS).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_OTHER]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_OTHER]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CNS_OTHER).Description</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+                <nhs-checkboxes style="margin-left: 52px">
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.OCULAR).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CRYPTIC).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GASTROINTESTINAL]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GASTROINTESTINAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GASTROINTESTINAL).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.GENITOURINARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.GENITOURINARY).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <label nhs-label-type="Standard" style="margin-left: -40px">Lymph nodes</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+                <nhs-checkboxes style="margin-left: 104px">
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LYMPH_INTRA).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LYMPH_EXTRA).Description</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+                <nhs-checkboxes style="margin-left: 52px">
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LARYNGEAL]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LARYNGEAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.LARYNGEAL).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.MILIARY).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PLEURAL).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PERICARDIAL]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PERICARDIAL]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.PERICARDIAL).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.SKIN]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.SKIN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.SKIN).Description</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+                <div class="nhsuk-checkboxes" style="margin-left: 52px; padding-top:4px" data-module="govuk-checkboxes">
+                    <div class="nhsuk-checkboxes__item">
+                        <input class="nhsuk-checkboxes__input" asp-for="@Model.NotificationSiteMap[SiteId.OTHER]" data-aria-controls="conditional-other-conditional">
+                        <label class="nhsil-label nhsuk-checkboxes__label" asp-for="@Model.NotificationSiteMap[SiteId.OTHER]">
+                            @Model.Sites.Find(s => s.SiteId == (int)SiteId.OTHER).Description
+                        </label>
+                    </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-conditional">
+                        <validate-input model="NotificationSite" property="SiteDescription" shouldvalidatefull="@fullValidation" inline-template>
+                            @{
+                                var SiteDescriptionError = !Model.IsValid("OtherSite.SiteDescription");
+                                var SiteDescriptionGroupState = SiteDescriptionError ? Error : Standard; 
+                            }
+                            <nhs-form-group nhs-form-group-type=@SiteDescriptionGroupState aria-describedby="other-site-error">
+                                <span nhs-span-type="ErrorMessage" ref="errorField"
+                                    asp-validation-for="OtherSite.SiteDescription" id="other-site-error"></span>
+                                <input ref="inputField" v-on:blur="validate" is-error-input=@SiteDescriptionError nhs-input-type="Standard"
+                                    classes="nhsuk-input--width-10" asp-for="OtherSite.SiteDescription" type="text">
+                            </nhs-form-group>
+                        </validate-input>
+                    </div>
+
+                </div>
+                <nhs-checkboxes>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]"/>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.UNKNOWN]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.UNKNOWN).Description</label>
+                    </nhs-checkboxes-item>
+                </nhs-checkboxes>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-required-checkboxes>
+
     <br/>
 
     <h2>Sample Details</h2>
@@ -160,7 +170,7 @@
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-bcg-vaccination-conditional">
-                    <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" inline-template>
+                    <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" shouldvalidatefull="@fullValidation" inline-template>
                         @{
                             var BCGVaccinationError = !Model.IsValid("ClinicalDetails.BCGVaccinationYear");
                             var BCGVaccinationGroupState = BCGVaccinationError ? Error : Standard; 

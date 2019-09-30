@@ -3,17 +3,23 @@ import { getHeaders, getValidationPath } from '../helpers';
 const axios = require('axios');
 
 const YearComparison = Vue.extend({
-  props: ['model', 'yeartocompare'],
+  props: ['model', 'yeartocompare', 'shouldValidateFull'],
   methods: {
     validate: function (event: FocusEvent) {
         // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
-        if (!this.$props.yeartocompare) {
-            return;
-        }
         const inputField = event.target as HTMLInputElement
         const newValue = inputField.value;
-
-        axios.get(`${getValidationPath(this.$props.model)}YearComparison?newYear=${newValue}&existingYear=${this.$props.yeartocompare}`, null, { headers: getHeaders() })
+        
+        let requestConfig = {
+          url: `${getValidationPath(this.$props.model)}YearComparison`,
+          headers: getHeaders(),
+          params: {
+            "newYear": newValue,
+            "shouldValidateFull": this.$props.shouldvalidatefull,
+            "existingYear": this.$props.yeartocompare
+          }
+        }
+        axios.request(requestConfig)
         .then((response: any) => {
             console.log(response);
             var errorMessage = response.data;

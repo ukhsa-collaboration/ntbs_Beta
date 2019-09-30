@@ -46,7 +46,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int NotificationId) {
             UpdateFlags();
             
             if (!ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace ntbs_service.Pages_Notifications
         
         private void UpdateFlags()
         {
-            if (PatientTBHistory.NotPreviouslyHadTB == true) {
+            if (PatientTBHistory.NotPreviouslyHadTB ?? false) {
                 PatientTBHistory.PreviousTBDiagnosisYear = null;
                 ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
             }

@@ -27,7 +27,7 @@ namespace ntbs_service.Pages_Notifications
         public Notification Notification { get; set; }
 
         [BindProperty]
-        public int? NotificationId { get; set; }
+        public int NotificationId { get; set; }
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
@@ -75,7 +75,7 @@ namespace ntbs_service.Pages_Notifications
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
 
-        public async Task<IActionResult> OnPostSaveAsync(int? notificationId)
+        public async Task<IActionResult> OnPostSaveAsync(int notificationId)
         {
             bool isValid = await ValidateAndSave(notificationId);
 
@@ -100,7 +100,7 @@ namespace ntbs_service.Pages_Notifications
             return ValidateProperty(model, key, value);
         }
 
-        protected abstract Task<bool> ValidateAndSave(int? notificationId);
+        protected abstract Task<bool> ValidateAndSave(int notificationId);
 
         public abstract Task<IActionResult> OnGetAsync(int? notificationId, bool isBeingSubmitted = false);
 

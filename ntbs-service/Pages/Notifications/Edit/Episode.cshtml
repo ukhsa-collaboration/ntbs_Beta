@@ -26,7 +26,7 @@
                 <span class="nhsuk-error-message" id="tb-service-error"
                     ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
                 <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode" 
-                    asp-items="Model.TBServices" v-on:change="(ev) => {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
+                    asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
                     <option value="" selected>Select TB Service</option>
                 </select>
             </nhs-form-group>
@@ -41,7 +41,7 @@
                 <span class="nhsuk-error-message" id="hospital-error"
                     ref="errorFieldHospitalId" asp-validation-for="Episode.HospitalId"></span>
                 <select ref="selectFieldHospitalId" nhs-select-type="@HospitalSelectErrorState" asp-for="Episode.HospitalId" 
-                        asp-items="Model.Hospitals" v-on:change="(ev) => validate('HospitalId')(ev)">
+                        asp-items="Model.Hospitals" v-on:change="function(ev) { validate('HospitalId')(ev); }">
                     <option value="" selected>Select Hospital</option>
                 </select>
             </nhs-form-group>

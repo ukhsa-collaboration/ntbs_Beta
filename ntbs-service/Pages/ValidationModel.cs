@@ -39,8 +39,11 @@ namespace ntbs_service.Pages
             var property = model.GetType().GetProperty(key);
 
             var converter = TypeDescriptor.GetConverter(property.PropertyType);
-            value = converter.ConvertFromString((string) value);
-
+            try
+            {
+                value = converter.ConvertFrom(value);
+            }
+            catch {}
             property.SetValue(model, value);
         }
 

@@ -60,7 +60,7 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int NotificationId) {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
