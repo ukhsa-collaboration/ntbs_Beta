@@ -1,5 +1,5 @@
 @page "{handler?}"
-@model ntbs_service.Pages_Notifications.PatientModel
+@model ntbs_service.Pages_Notifications.TravelModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -7,3 +7,5 @@ Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Travel and visitor history";
 }
 <h1>Travel and visitor history</h1>
+
+<partial name="_PaginationPartial">
