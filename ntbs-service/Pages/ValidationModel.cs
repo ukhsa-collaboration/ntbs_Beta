@@ -32,7 +32,8 @@ namespace ntbs_service.Pages
         private void SetProperty(object model, string key, object value)
         {
             var property = model.GetType().GetProperty(key);
-            if (property.PropertyType == typeof(bool)) {
+            if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+            {
                 value = bool.Parse((string)value);
             }
             property.SetValue(model, value);

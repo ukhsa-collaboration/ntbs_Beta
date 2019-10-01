@@ -132,7 +132,7 @@ namespace ntbs_service.Pages_Notifications
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }
 
-            if (!ClinicalDetails.IsMDRTreatment) {
+            if (ClinicalDetails.IsMDRTreatment.HasValue && !ClinicalDetails.IsMDRTreatment.Value) {
                 ClinicalDetails.MDRTreatmentStartDate = null;
                 FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
