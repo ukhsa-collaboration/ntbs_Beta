@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "./_Layout.cshtml";
+}
+<form method="post" autocomplete="off">
+    <nhs-grid-row style="position: relative">
+        <nhs-grid-column grid-column-width="Full">
+            @RenderBody()
+        </nhs-grid-column>
+        @if (IsSectionDefined("ActionsAside"))
+        {
+            <nhs-grid-column grid-column-width="Full" classes="actions-aside-section" >
+                <aside>
+                    @RenderSection("ActionsAside")
+                </aside>
+            </nhs-grid-column>
+        }
+    </nhs-grid-row>
+</form>
+

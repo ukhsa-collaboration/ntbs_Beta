@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 using ntbs_service.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Validations;
+using ntbs_service.Pages;
 
 namespace ntbs_service.Pages_Search
 {
-    public class IndexModel : PageModel
+    public class IndexModel : ValidationModel
     {
         public INotificationService service;
         public int PageIndex;
-        public string CurrentFilter { get; set; }
         public PaginatedList<Notification> Notifications { get; set; }
         public IList<NotificationBannerModel> SearchResultsBannerDisplay;
+
+        [RegularExpression(@"[0-9]+", ErrorMessage = "This can only contain digits 0-9")]
+        [BindProperty(SupportsGet = true)]
+        public string IdFilter { get; set; }
+        public bool? DisplayCreateNotification { get; set; }
 
         public IndexModel(INotificationService service)
         {
@@ -25,12 +32,23 @@ namespace ntbs_service.Pages_Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
+            if(!ModelState.IsValid) 
+            {
+                return Page();
+            }
 
             var pageSize = 50;
 
             PageIndex = pageIndex ?? 1;
 
             IQueryable<Notification> notificationsIQ = service.GetBaseNotificationIQueryable();
+            
+            if (!String.IsNullOrEmpty(IdFilter))
+            {
+                DisplayCreateNotification = true;
+                notificationsIQ = notificationsIQ.Where(s => s.NotificationId.Equals(Int32.Parse(IdFilter)) 
+                    || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
+            }
 
             Notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
@@ -43,14 +61,14 @@ namespace ntbs_service.Pages_Search
             return Page();
         }
 
-        public IActionResult OnPost()
+        public void OnGetSearch(int? pageIndex)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            DisplayCreateNotification = true;
+        }
 
-            return Page();
+        public ContentResult OnGetValidateSearchProperty(string key, string value)
+        {
+            return ValidateProperty(new IndexModel(service), key, value);
         }
     }
 }
