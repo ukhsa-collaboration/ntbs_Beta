@@ -173,6 +173,20 @@ namespace ntbs_service.Models
                     .HasConversion(new EnumToStringConverter<NotificationStatus>());
             });
 
+            modelBuilder.Entity<NotificationLink>(entity =>
+            {
+                entity.HasKey(e => new {e.NotificationId, e.LinkedNotificationId });
+
+                entity.HasOne(nl => nl.Notification)
+                    .WithMany(n => n.LinkedNotifications)
+                    .HasForeignKey(nl => nl.NotificationId);
+
+                entity.HasOne(nl => nl.LinkedNotification)
+                    .WithMany()
+                    .HasForeignKey(nl => nl.LinkedNotificationId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             modelBuilder.Entity<Region>(entity =>
             {
                 entity.Property(e => e.Label).HasMaxLength(200);
