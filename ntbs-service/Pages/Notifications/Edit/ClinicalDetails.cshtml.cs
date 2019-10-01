@@ -165,22 +165,23 @@ namespace ntbs_service.Pages_Notifications
             return ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidateClinicalDetailsListProperty(string key, IEnumerable<string> valueList, bool shouldValidateFull)
+        public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
+            return ValidateDate(new ClinicalDetails(), key, day, month, year);
+        }
+
+        public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
+        {
+            string key = "NotificationSites";
             List<NotificationSite> notificationSites = new List<NotificationSite>();
             foreach (string value in valueList)
             {
                 notificationSites.Add(new NotificationSite {
-                    SiteId = (int) ((SiteId) Enum.Parse(typeof(SiteId), value))
+                    SiteId = (int) Enum.Parse(typeof(SiteId), value)
                 });
             }
             
             return ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
-        }
-
-        public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
-        {
-            return ValidateDate(new ClinicalDetails(), key, day, month, year);
         }
 
         public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)

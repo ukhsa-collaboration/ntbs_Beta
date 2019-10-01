@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { getHeaders, getValidationPath } from '../helpers';
-const axios = require('axios');
+import axios from 'axios';
+
 const qs = require('qs');
 
 const ValidateMultiple = Vue.extend({
@@ -22,8 +23,9 @@ const ValidateMultiple = Vue.extend({
                 // TODO: Do this mapping for other types if element is reused for non-radio inputs.
                 inputValues = inputs.map((i: any) => i.checked);
             }
+            
             var queryString = buildKeyValuePairsQueryString(this.properties, inputValues);
-            axios.get(`${getValidationPath(this.$props.model)}Properties?${queryString}`, null, { headers: getHeaders() })
+            axios.get(`${getValidationPath(this.$props.model)}Properties?${queryString}`, { headers: getHeaders() })
             .then((response: any) => {
                 var errorMessages = response.data;
                 this.hasError = errorMessages != '';

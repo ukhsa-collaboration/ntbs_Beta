@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { getHeaders, getValidationPath } from '../helpers';
-
-const axios = require('axios');
+import axios from 'axios';
 
 const CascadingDropwdowns = Vue.extend({
     props: ['model', 'shouldvalidatefull'],

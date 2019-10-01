@@ -1,28 +1,31 @@
 import Vue from 'vue';
 import { getHeaders, getValidationPath } from '../helpers';
-const axios = require('axios');
+import axios from 'axios';
+import { InputType } from 'zlib';
+
 const qs = require('qs');
 
 const ValidateRequiredCheckboxes = Vue.extend({
-    props: ['model', 'property', 'shouldvalidatefull'],
+    props: ['property', 'shouldvalidatefull'],
     methods: {
       validate: function (event: FocusEvent) {
         // Our onBlur validate events happen on input fields;;
         const inputField = event.target as HTMLInputElement
         const newValue = inputField.value;
 
-        var checkboxes = Array.from(this.$refs["checkboxgroup"].getElementsByClassName("nhsuk-checkboxes__input"));
+        var notificationSiteRegex = /NotificationSiteMap\[(.*)\]/;
+        var checkboxes : Array<HTMLInputElement> = Array.from(this.$refs["checkboxgroup"].getElementsByClassName("nhsuk-checkboxes__input"));
         var checkboxList = checkboxes
-          .filter((x: any) => x.checked)
-          .map((x : any) => x.id.replace("NotificationSiteMap_", "").slice(0, -1))
+          .filter(x => x.checked)
+          .map(x => notificationSiteRegex.exec(x.name)[1])
 
         var queryString = qs.stringify({
           "valueList": checkboxList,
           "shouldValidateFull": this.$props.shouldvalidatefull,
-          "key": this.$props.property
         })
+
         let requestConfig = {
-          url: `${getValidationPath(this.$props.model)}ListProperty?${queryString}`,
+          url: `${getValidationPath(this.$props.property)}?${queryString}`,
           headers: getHeaders(),
         }
         

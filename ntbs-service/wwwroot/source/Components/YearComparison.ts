@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { getHeaders, getValidationPath } from '../helpers';
-const axios = require('axios');
+import axios from 'axios';
 
 const YearComparison = Vue.extend({
   props: ['model', 'yeartocompare', 'shouldValidateFull'],

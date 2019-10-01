@@ -20,7 +20,7 @@
         var NotificationSitesGroupState = NotificationSitesError ? Error : Standard;
     }
 
-    <validate-required-checkboxes model="ClinicalDetails" property="NotificationSites" shouldvalidatefull="@fullValidation" inline-template>
+    <validate-required-checkboxes property="NotificationSites" shouldvalidatefull="@fullValidation" inline-template>
         <nhs-form-group v-on:change="validate" ref="checkboxgroup" nhs-form-group-type="@NotificationSitesGroupState"> 
             <nhs-fieldset>
                 <span class="nhsuk-error-message" id="notification-sites-id" 
@@ -475,7 +475,7 @@
                                 var MDRTreatmentDateError = !Model.IsValid("ClinicalDetails.MDRTreatmentStartDate");
                                 var MDRTreatmentGroupState = MDRTreatmentDateError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type=@MDRTreatmentGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                                <nhs-form-group nhs-form-group-type=@MDRTreatmentGroupState>
                                     <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
                                         <nhs-fieldset-legend nhs-legend-size="Standard">MDR treatment date</nhs-fieldset-legend>
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.MDRTreatmentStartDate"
@@ -485,24 +485,21 @@
                                                 <nhs-form-group nhs-form-group-type=@MDRTreatmentGroupState>
                                                     <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Day">Day</label>
                                                     <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Day"
-                                                        v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Day"/>
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
                                                 <nhs-form-group nhs-form-group-type=@MDRTreatmentGroupState>
                                                     <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Month">Month</label>
                                                     <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Month"
-                                                        v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Month"/>
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
                                                 <nhs-form-group nhs-form-group-type=@MDRTreatmentGroupState>
                                                     <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Year">Year</label>
                                                     <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Year"
-                                                        v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Year"/>
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                         </nhs-date-input>

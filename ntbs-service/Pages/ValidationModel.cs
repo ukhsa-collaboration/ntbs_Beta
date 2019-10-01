@@ -43,7 +43,10 @@ namespace ntbs_service.Pages
             {
                 value = converter.ConvertFrom(value);
             }
-            catch {}
+            catch 
+            {
+                // Value is a type of object and Complex objects may results in error when casting it to a necessary type
+            }
             property.SetValue(model, value);
         }
 
@@ -94,7 +97,11 @@ namespace ntbs_service.Pages
 
         public bool IsValid(string key)
         {
-            return ModelState[key] == null ? true : ModelState[key].Errors.Count == 0;
+            if (ModelState[key] == null)
+            {
+                return true;
+            }
+            return ModelState[key].Errors.Count == 0;
         }
 
         protected void SetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)

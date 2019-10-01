@@ -4,10 +4,6 @@ const axios = require('axios');
 
 const ValidateDate = Vue.extend({
     props: ['model', 'property', 'name', 'rank'],
-    data: function() {
-        return {
-            hasError: false
-        }},
     mounted: function () {
         if (this.rank) {
             // v-model binds to the input event, so this gets picked up by the containing DateComparison component, if present
@@ -34,10 +30,10 @@ const ValidateDate = Vue.extend({
                 .then((response: any) => {
                     console.log(response);
                     var errorMessage = response.data;
-                    this.hasError = errorMessage != '';
+                    var hasError = errorMessage != '';
 
                     this.$refs["errorField"].textContent = errorMessage;
-                    if (this.hasError) {
+                    if (hasError) {
                         this.$el.classList.add('nhsuk-form-group--error')
                         this.$refs["dayInput"].classList.add('nhsuk-input--error')
                         this.$refs["monthInput"].classList.add('nhsuk-input--error')
