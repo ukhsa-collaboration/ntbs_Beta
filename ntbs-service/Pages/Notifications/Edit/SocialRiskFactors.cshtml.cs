@@ -62,7 +62,8 @@ namespace ntbs_service.Pages_Notifications
         public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
         {
             var riskStatus = status == null ? null : (Status?) Enum.Parse(typeof(Status), status);
-            RiskFactorDetails riskFactor = new RiskFactorDetails {
+            RiskFactorDetails riskFactor = new RiskFactorDetails
+            {
                 MoreThanFiveYearsAgo = moreThanFive,
                 InPastFiveYears = pastFive,
                 IsCurrent = isCurrent,

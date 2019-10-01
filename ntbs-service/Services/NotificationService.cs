@@ -113,13 +113,13 @@ namespace ntbs_service.Services
         public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
         {
             UpdateSocialRiskFactorsFlags(socialRiskFactors);
-            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.CurrentValues.SetValues(socialRiskFactors);
+            context.Entry(notification.SocialRiskFactors).CurrentValues.SetValues(socialRiskFactors);
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
+            context.Entry(notification.SocialRiskFactors.RiskFactorDrugs).CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
+            context.Entry(notification.SocialRiskFactors.RiskFactorHomelessness).CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
+            context.Entry(notification.SocialRiskFactors.RiskFactorImprisonment).CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
 
             await UpdateDatabase();
         }
@@ -179,28 +179,16 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.SubmissionDate = DateTime.UtcNow;
 
-            await UpdateDatabase(isSubmission: true);
+            await UpdateDatabase(AuditType.Notified);
         }
         
-        public async Task<Notification> GetNotificationWithAllInfoAsync(int? id) {
+        public async Task<Notification> GetNotificationWithAllInfoAsync(int? id)
+        {
             return await repository.GetNotificationWithAllInfoAsync(id);
         }
 
-        private async Task UpdateDatabase(bool? isSubmission = null) {
-            AuditType auditType;
-
-            switch (isSubmission)
-            {
-                case true:
-                    auditType = AuditType.Notified;
-                    break;
-                case false:
-                    auditType = AuditType.Denotified;
-                    break;
-                default:
-                    auditType = AuditType.Edit;
-                    break;
-            }
+        private async Task UpdateDatabase(AuditType auditType = AuditType.Edit)
+        {
             context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await context.SaveChangesAsync();
         }

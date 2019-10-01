@@ -6,11 +6,13 @@ namespace ntbs_service.Models
     [Owned]
     public class SocialRiskFactors : ModelBase
     {
-        public SocialRiskFactors() {
-            RiskFactorHomelessness = new RiskFactorDetails() { Type = RiskFactorType.Homelessness };
-            RiskFactorDrugs = new RiskFactorDetails() { Type = RiskFactorType.Drugs };
-            RiskFactorImprisonment = new RiskFactorDetails() { Type = RiskFactorType.Imprisonment };
+        public SocialRiskFactors()
+        {
+            RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness);
+            RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs);
+            RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment);
         }
+
         public Status? AlcoholMisuseStatus { get; set; }
         public Status? SmokingStatus { get; set; }
         public Status? MentalHealthStatus { get; set; }

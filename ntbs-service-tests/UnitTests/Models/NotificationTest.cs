@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.Models
@@ -73,11 +74,12 @@ namespace ntbs_service_tests.UnitTests.Models
         public void CreatesSocialRiskTimePeriodsStringCorrectly() 
         {
             // Arrange
-            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorDetails {
-                Status = ntbs_service.Models.Enums.Status.Yes,
-                        IsCurrent = true,
-                        InPastFiveYears = false,
-                        MoreThanFiveYearsAgo = true
+            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs)
+            {
+                Status = Status.Yes,
+                IsCurrent = true,
+                InPastFiveYears = false,
+                MoreThanFiveYearsAgo = true
             };
             
             // Act

@@ -6,6 +6,10 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Middleware
 {
+/*
+    This class is used to audit all page reads of the system.
+    It hooks into the middleware pipeline, and audits all successful (status 200) GET requests of particular records (no search pages/lists of records).
+ */
     public class AuditGetRequestMiddleWare
     {
         private readonly RequestDelegate _next;
@@ -17,17 +21,18 @@ namespace ntbs_service.Middleware
 
         public async Task InvokeAsync(HttpContext context, IAuditService auditService)
         {
-            var request = context.Request;
+            // Call the MVC middleware so we know HTTP status code
+            await _next(context);
 
-            if (request.Method == "GET" && request.Query.ContainsKey("id"))
+            var request = context.Request;
+            var response = context.Response;
+
+            if (response.StatusCode == StatusCodes.Status200OK && request.Method == "GET" && request.Query.ContainsKey("id"))
             {
                 var id = int.Parse(request.Query["id"].ToString());
-                var modelName = request.Path.Value.Split("/").Last();
-                await auditService.OnGetAuditAsync(id, modelName, viewType: "Full");
+                // TODO: Differentiate between Cluster and Full view.
+                await auditService.OnGetAuditAsync(id, model: "Notification", viewType: "Full");
             }
-
-            // Call the next delegate/middleware in the pipeline
-            await _next(context);
         }
     }
 }
