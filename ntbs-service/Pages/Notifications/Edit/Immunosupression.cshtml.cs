@@ -12,7 +12,12 @@ namespace ntbs_service.Pages_Notifications
         public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
-            NotificationId = id;
+            if (Notification == null) 
+            {
+                return NotFound();
+            }
+            
+            NotificationId = (int) id;
 
             return Page();
         }
@@ -22,7 +27,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int? notificationId)
+        protected override async Task<bool> ValidateAndSave(int notificationId)
         {
             return true;
         }
