@@ -5,15 +5,15 @@
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
     ViewData["Title"] = "Notification - Patient TB History";
+    var fullValidation = Model.PatientTBHistory.ShouldValidateFull ? "True" : "False"; 
 }
 
 <h2>Previous History for New Patient</h2>
 
-<date-comparison inline-template>
-    <div>
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="nhsuk-form-group">
+     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset aria-describedby="tb-diagnosis-year-error">
             <nhs-fieldset-legend nhs-legend-size="Standard"> The patient has had TB in the past </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
@@ -23,22 +23,23 @@
                         Yes
                     </label>
                 </div>
-                <validate-input model="PreviousHistory" property="PreviousTBDiagnosisYear" inline-template>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-previously-had-tb-conditional">
+                
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-previously-had-tb-conditional">
+                    <validate-input model="PreviousHistory" property="PreviousTBDiagnosisYear" shouldvalidatefull="@fullValidation" inline-template>
                         @{
                             var previousTBDiagnosisError = !Model.IsValid("PatientTBHistory.PreviousTBDiagnosisYear");
                             var previousTBDiagnosisGroupState = previousTBDiagnosisError ? Error : Standard;
-
                         }
-                        <nhs-form-group nhs-form-group-type=@previousTBDiagnosisGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}" aria-describedby="previous-tb-diagnosis-year-error">
-                            Year of diagnosis
-                            <span class="nhsuk-error-message" id="previous-tb-diagnosis-year-error">
-                                <span ref="errorField" asp-validation-for="PatientTBHistory.PreviousTBDiagnosisYear"></span>
-                            </span>
-                            <input v-on:blur="validate" class="nhsuk-input nhsuk-input--width-10" asp-for="PatientTBHistory.PreviousTBDiagnosisYear" type="text">
+                        <nhs-form-group nhs-form-group-type="@previousTBDiagnosisGroupState" aria-describedby="previous-tb-diagnosis-year-error">
+                            <label nhs-label-type="Standard" asp-for="PatientTBHistory.PreviousTBDiagnosisYear"> Year of diagnosis </label>
+                            <span nhs-span-type="ErrorMessage" id="previous-tb-diagnosis-year-error" ref="errorField"
+                                asp-validation-for="PatientTBHistory.PreviousTBDiagnosisYear"></span>
+                            <input ref="inputField" v-on:blur="validate" is-error-input=@previousTBDiagnosisError 
+                                nhs-input-type="Standard" classes="nhsuk-input--width-4" asp-for="PatientTBHistory.PreviousTBDiagnosisYear">
                         </nhs-form-group>
-                    </div>
-                </validate-input>
+                    </validate-input>
+                </div>
+                
                 <div class="nhsuk-radios__item">
                     <input asp-for="PatientTBHistory.NotPreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="true">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="PatientTBHistory.NotPreviouslyHadTB">
@@ -47,7 +48,7 @@
                 </div>
             </div>
         </nhs-fieldset>
-    </div>
-    <br/>
-    <partial name="_PaginationPartial">
-</date-comparison>
+    </nhs-form-group>
+</div>
+<br/>
+<partial name="_PaginationPartial" for="Notification">

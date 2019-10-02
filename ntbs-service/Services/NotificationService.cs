@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFAuditer;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -53,7 +54,7 @@ namespace ntbs_service.Services
             await UpdatePatientFlags(patient);
             context.Entry(notification.PatientDetails).CurrentValues.SetValues(patient);
 
-            await context.SaveChangesAsync();
+            await UpdateDatabase();
         }
 
         private async Task UpdatePatientFlags(PatientDetails patient)
@@ -87,41 +88,41 @@ namespace ntbs_service.Services
         {
             context.Entry(notification.ClinicalDetails).CurrentValues.SetValues(clinicalDetails);
 
-            await context.SaveChangesAsync();
+            await UpdateDatabase();
         }
 
         public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
         {
             context.Entry(notification.Episode).CurrentValues.SetValues(episode);
 
-            await context.SaveChangesAsync();
+            await UpdateDatabase();
         }
 
         public async Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing) {
             context.Entry(notification.ContactTracing).CurrentValues.SetValues(contactTracing);
 
-            await context.SaveChangesAsync();
+            await UpdateDatabase();
         }
 
         public async Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory tBHistory)
         {
             context.Entry(notification.PatientTBHistory).CurrentValues.SetValues(tBHistory);
 
-            await context.SaveChangesAsync();
+            await UpdateDatabase();
         }
 
         public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
         {
             UpdateSocialRiskFactorsFlags(socialRiskFactors);
-            context.Entry(notification).Reference(p => p.SocialRiskFactors).TargetEntry.CurrentValues.SetValues(socialRiskFactors);
+            context.Entry(notification.SocialRiskFactors).CurrentValues.SetValues(socialRiskFactors);
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorDrugs).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
+            context.Entry(notification.SocialRiskFactors.RiskFactorDrugs).CurrentValues.SetValues(socialRiskFactors.RiskFactorDrugs);
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorHomelessness).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
+            context.Entry(notification.SocialRiskFactors.RiskFactorHomelessness).CurrentValues.SetValues(socialRiskFactors.RiskFactorHomelessness);
 
-            context.Entry(notification.SocialRiskFactors).Reference(p => p.RiskFactorImprisonment).TargetEntry.CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
+            context.Entry(notification.SocialRiskFactors.RiskFactorImprisonment).CurrentValues.SetValues(socialRiskFactors.RiskFactorImprisonment);
 
-            await context.SaveChangesAsync();        
+            await UpdateDatabase();
         }
 
         private void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors) 
@@ -131,7 +132,7 @@ namespace ntbs_service.Services
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorImprisonment);
         }
 
-        private void UpdateRiskFactorFlags(RiskFactorBase riskFactor)
+        private void UpdateRiskFactorFlags(RiskFactorDetails riskFactor)
         {
             if (riskFactor.Status != Status.Yes)
             {
@@ -154,9 +155,23 @@ namespace ntbs_service.Services
         public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 
         {
             var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
-            context.NotificationSite.RemoveRange(currentSites);
-            context.NotificationSite.AddRange(notificationSites);
-            await context.SaveChangesAsync();
+
+            foreach (var newSite in notificationSites)
+            {
+                var existingSite = currentSites.FirstOrDefault(s => s.SiteId == newSite.SiteId);
+                if (existingSite == null)
+                {
+                    context.NotificationSite.Add(newSite);
+                } else if (existingSite.SiteDescription != newSite.SiteDescription)
+                {
+                    existingSite.SiteDescription = newSite.SiteDescription;
+                }
+            }
+
+            var sitesToRemove = currentSites.Where(s => !notificationSites.Select(ns => ns.SiteId).Contains(s.SiteId));
+            context.NotificationSite.RemoveRange(sitesToRemove);
+
+            await UpdateDatabase();
         }
 
         public async Task SubmitNotification(Notification notification)
@@ -165,7 +180,7 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.SubmissionDate = DateTime.UtcNow;
 
-            await context.SaveChangesAsync();
+            await UpdateDatabase(AuditType.Notified);
         }
         
         public async Task<Notification> GetNotificationWithAllInfoAsync(int? id)
@@ -195,6 +210,12 @@ namespace ntbs_service.Services
             await context.SaveChangesAsync();
 
             return linkedNotification;
+        }
+
+        private async Task UpdateDatabase(AuditType auditType = AuditType.Edit)
+        {
+            context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+            await context.SaveChangesAsync();
         }
     }
 }

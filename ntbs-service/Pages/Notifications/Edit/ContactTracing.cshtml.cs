@@ -12,17 +12,14 @@ namespace ntbs_service.Pages_Notifications
 {
     public class ContactTracingModel : NotificationModelBase
     {
-        private readonly IAuditService auditService;
-
-        public ContactTracingModel(INotificationService service, IAuditService auditService) : base(service)
+        public ContactTracingModel(INotificationService service) : base(service)
         {
-            this.auditService = auditService;
         }
 
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             NotificationId = Notification.NotificationId;
@@ -37,7 +34,6 @@ namespace ntbs_service.Pages_Notifications
             }
             
             SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
-            await auditService.OnGetAuditAsync(Notification.NotificationId, ContactTracing);
             return Page();
         }
 
@@ -46,15 +42,14 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./SocialRiskFactors", new {id = notificationId});
         }
 
-        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave() {
 
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdateContactTracingAsync(notification, ContactTracing);
+            await service.UpdateContactTracingAsync(Notification, ContactTracing);
             return true;
         }
 

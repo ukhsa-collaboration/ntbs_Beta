@@ -12,6 +12,7 @@ using ntbs_service.Models;
 using ntbs_service.Services;
 using System.Globalization;
 using EFAuditer;
+using ntbs_service.Middleware;
 
 namespace ntbs_service
 {
@@ -88,6 +89,7 @@ namespace ntbs_service
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseMiddleware<AuditGetRequestMiddleWare>();
             app.UseMvc();
 
             var cultureInfo = new CultureInfo("en-GB");

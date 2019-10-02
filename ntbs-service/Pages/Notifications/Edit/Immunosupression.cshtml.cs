@@ -9,9 +9,14 @@ namespace ntbs_service.Pages_Notifications
     {
         public ImmunosupressionModel(INotificationService service) : base(service) {}
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
+            if (Notification == null) 
+            {
+                return NotFound();
+            }
+            
             NotificationId = id;
 
             return Page();
@@ -22,7 +27,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int? notificationId)
+        protected override async Task<bool> ValidateAndSave()
         {
             return true;
         }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20190926135827_MakeBooleanNullable")]
+    partial class MakePreviousTBHistoryBooleanNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -9792,8 +9794,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<int?>("GroupId");
-
                     b.Property<string>("NotificationStatus")
                         .IsRequired();
 
@@ -9801,20 +9801,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
-                    b.HasIndex("GroupId");
-
                     b.ToTable("Notification");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationGroup", b =>
-                {
-                    b.Property<int>("NotificationGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("NotificationGroupId");
-
-                    b.ToTable("NotificationGroup");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
@@ -11331,15 +11318,12 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Notification", b =>
                 {
-                    b.HasOne("ntbs_service.Models.NotificationGroup", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId");
-
                     b.OwnsOne("ntbs_service.Models.ClinicalDetails", "ClinicalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<string>("BCGVaccinationState");
+                            b1.Property<string>("BCGVaccinationState")
+                                .IsRequired();
 
                             b1.Property<int?>("BCGVaccinationYear");
 
@@ -11349,11 +11333,11 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("DidNotStartTreatment");
 
-                            b1.Property<bool?>("IsMDRTreatment");
+                            b1.Property<bool>("IsMDRTreatment");
 
                             b1.Property<bool>("IsPostMortem");
 
-                            b1.Property<bool?>("IsShortCourseTreatment");
+                            b1.Property<bool>("IsShortCourseTreatment");
 
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
 
@@ -11543,7 +11527,7 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("ntbs_service.Models.SocialRiskFactors", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorDrugs", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorDrugs", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -11554,11 +11538,6 @@ namespace ntbs_service.Migrations
                                     b2.Property<bool>("MoreThanFiveYearsAgo");
 
                                     b2.Property<string>("Status");
-
-                                    b2.Property<string>("Type")
-                                        .IsRequired()
-                                        .ValueGeneratedOnAdd()
-                                        .HasDefaultValue("Drugs");
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
@@ -11566,11 +11545,11 @@ namespace ntbs_service.Migrations
 
                                     b2.HasOne("ntbs_service.Models.SocialRiskFactors")
                                         .WithOne("RiskFactorDrugs")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorHomelessness", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -11581,11 +11560,6 @@ namespace ntbs_service.Migrations
                                     b2.Property<bool>("MoreThanFiveYearsAgo");
 
                                     b2.Property<string>("Status");
-
-                                    b2.Property<string>("Type")
-                                        .IsRequired()
-                                        .ValueGeneratedOnAdd()
-                                        .HasDefaultValue("Homelessness");
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
@@ -11593,11 +11567,11 @@ namespace ntbs_service.Migrations
 
                                     b2.HasOne("ntbs_service.Models.SocialRiskFactors")
                                         .WithOne("RiskFactorHomelessness")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.RiskFactorBase", "RiskFactorImprisonment", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -11609,18 +11583,13 @@ namespace ntbs_service.Migrations
 
                                     b2.Property<string>("Status");
 
-                                    b2.Property<string>("Type")
-                                        .IsRequired()
-                                        .ValueGeneratedOnAdd()
-                                        .HasDefaultValue("Imprisonment");
-
                                     b2.HasKey("SocialRiskFactorsNotificationId");
 
                                     b2.ToTable("RiskFactorImprisonment");
 
                                     b2.HasOne("ntbs_service.Models.SocialRiskFactors")
                                         .WithOne("RiskFactorImprisonment")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.RiskFactorBase", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });

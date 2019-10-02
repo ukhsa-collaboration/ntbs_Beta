@@ -9,9 +9,10 @@ namespace ntbs_service.Models
     [Owned]
     public class PatientTBHistory : ModelBase
     {
-        public bool NotPreviouslyHadTB { get; set; }
+        public bool? NotPreviouslyHadTB { get; set; }
         
-        [RequiredIf("ShouldValidateFull && !NotPreviouslyHadTB", ErrorMessage = ValidationMessages.TBHistoryIsRequired)]
+        // NotPreviouslyHadTB flag can bu null and therefore we need exact match on "false" to avoid seeing null as false
+        [RequiredIf("ShouldValidateFull && NotPreviouslyHadTB == false", ErrorMessage = ValidationMessages.TBHistoryIsRequired)]
         [Range(1900, 2000, ErrorMessage = ValidationMessages.PreviousTBDiagnosisYear)]
         public int? PreviousTBDiagnosisYear { get; set; }
     }
