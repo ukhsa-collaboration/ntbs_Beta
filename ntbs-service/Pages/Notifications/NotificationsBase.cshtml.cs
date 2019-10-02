@@ -65,17 +65,10 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostCreateLinkAsync()
         {
-            // First Validate and Save current page details
-            bool isValid = await ValidateAndSave(NotificationId);
-            if (!isValid)
-            {
-                return await OnGetAsync(NotificationId);
-            }
-
             var notification = await service.GetNotificationAsync(NotificationId);
             var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
 
-            return RedirectToPage("./Patient", new {id = linkedNotification.NotificationId});
+            return RedirectToPage("/Notifications/Edit/Patient", new {id = linkedNotification.NotificationId});
         }
 
         private void SetShouldValidateFull() 

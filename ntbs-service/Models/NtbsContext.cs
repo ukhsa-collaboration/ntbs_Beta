@@ -27,6 +27,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
+        public virtual DbSet<NotificationGroup> NotificationGroup { get; set; }
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
@@ -132,6 +133,10 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
+                entity.HasOne<NotificationGroup>()
+                    .WithMany(g => g.Notifications)
+                    .HasForeignKey(e => e.GroupId);
+
                 entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
@@ -171,20 +176,6 @@ namespace ntbs_service.Models
 
                 entity.Property(e => e.NotificationStatus)
                     .HasConversion(new EnumToStringConverter<NotificationStatus>());
-            });
-
-            modelBuilder.Entity<NotificationLink>(entity =>
-            {
-                entity.HasKey(e => new {e.NotificationId, e.LinkedNotificationId });
-
-                entity.HasOne(nl => nl.Notification)
-                    .WithMany(n => n.LinkedNotifications)
-                    .HasForeignKey(nl => nl.NotificationId);
-
-                entity.HasOne(nl => nl.LinkedNotification)
-                    .WithMany()
-                    .HasForeignKey(nl => nl.LinkedNotificationId)
-                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Region>(entity =>

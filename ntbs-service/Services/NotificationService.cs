@@ -176,10 +176,21 @@ namespace ntbs_service.Services
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification)
         {
             var linkedNotification = new Notification();
+            context.Notification.Add(linkedNotification);
             context.Entry(linkedNotification.PatientDetails).CurrentValues.SetValues(notification.PatientDetails);
 
-            notification.LinkedNotifications.Add(new NotificationLink { LinkedNotification = linkedNotification });
-            linkedNotification.LinkedNotifications.Add(new NotificationLink { LinkedNotification = notification });
+            if (notification.GroupId != null)
+            {
+                linkedNotification.GroupId = notification.GroupId;
+            }
+            else
+            {
+                var group = new NotificationGroup();
+                context.NotificationGroup.Add(group);
+
+                linkedNotification.GroupId = group.NotificationGroupId;
+                notification.GroupId = group.NotificationGroupId;
+            }
 
             await context.SaveChangesAsync();
 

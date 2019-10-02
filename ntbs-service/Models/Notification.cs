@@ -19,7 +19,6 @@ namespace ntbs_service.Models
             ClinicalDetails = new ClinicalDetails();
             PatientTBHistory = new PatientTBHistory();
             ContactTracing = new ContactTracing();
-            LinkedNotifications = new List<NotificationLink>();
         }
         
         [Display(Name = "Notification Id")]
@@ -37,7 +36,7 @@ namespace ntbs_service.Models
         public virtual PatientTBHistory PatientTBHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
-        public virtual List<NotificationLink> LinkedNotifications { get; set; }
+        public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]

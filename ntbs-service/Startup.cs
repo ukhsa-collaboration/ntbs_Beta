@@ -47,8 +47,13 @@ namespace ntbs_service
                 options.UseSqlServer(auditDbConnectionString)
             );
 
-            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE)) {
+            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            {
                 services.AddEFAuditer(auditDbConnectionString);
+            }
+            else
+            {
+                Audit.Core.Configuration.AuditDisabled = true;
             }
 
             services.AddScoped<INotificationRepository, NotificationRepository>();

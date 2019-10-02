@@ -10,8 +10,8 @@ using ntbs_service.Models;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20191001121509_AddNotificationLinks")]
-    partial class AddNotificationLinks
+    [Migration("20191002112735_AddNotificationGroup")]
+    partial class AddNotificationGroup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -9794,6 +9794,8 @@ namespace ntbs_service.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
+                    b.Property<int?>("GroupId");
+
                     b.Property<string>("NotificationStatus")
                         .IsRequired();
 
@@ -9801,20 +9803,20 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Notification");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.NotificationLink", b =>
+            modelBuilder.Entity("ntbs_service.Models.NotificationGroup", b =>
                 {
-                    b.Property<int>("NotificationId");
+                    b.Property<int>("NotificationGroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LinkedNotificationId");
+                    b.HasKey("NotificationGroupId");
 
-                    b.HasKey("NotificationId", "LinkedNotificationId");
-
-                    b.HasIndex("LinkedNotificationId");
-
-                    b.ToTable("NotificationLink");
+                    b.ToTable("NotificationGroup");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
@@ -11331,6 +11333,10 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Notification", b =>
                 {
+                    b.HasOne("ntbs_service.Models.NotificationGroup", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
                     b.OwnsOne("ntbs_service.Models.ClinicalDetails", "ClinicalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
@@ -11606,19 +11612,6 @@ namespace ntbs_service.Migrations
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationLink", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Notification", "LinkedNotification")
-                        .WithMany()
-                        .HasForeignKey("LinkedNotificationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ntbs_service.Models.Notification", "Notification")
-                        .WithMany("LinkedNotifications")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
