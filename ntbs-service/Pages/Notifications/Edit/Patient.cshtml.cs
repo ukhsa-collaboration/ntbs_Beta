@@ -13,7 +13,6 @@ namespace ntbs_service.Pages_Notifications
     public class PatientModel : NotificationModelBase
     {
         private readonly NtbsContext context;
-        private readonly IAuditService auditService;
 
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
@@ -25,10 +24,9 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public FormattedDate FormattedDob { get; set; }
 
-        public PatientModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
+        public PatientModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
-            this.auditService = auditService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
@@ -56,7 +54,6 @@ namespace ntbs_service.Pages_Notifications
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
 
-            await auditService.OnGetAuditAsync(Notification.NotificationId, Patient);
             return Page();
         }
 

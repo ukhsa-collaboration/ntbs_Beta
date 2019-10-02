@@ -8,12 +8,14 @@ namespace ntbs_service.Models.Validations
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var riskFactor = (RiskFactorBase) value;
+            var riskFactor = (RiskFactorDetails) value;
 
             var isAnyChosen = riskFactor.InPastFiveYears || riskFactor.IsCurrent || riskFactor.MoreThanFiveYearsAgo;
-            if (riskFactor.Status == Status.Yes && !isAnyChosen) {
+            if (riskFactor.Status == Status.Yes && !isAnyChosen)
+            {
                 return new ValidationResult(ValidationMessages.RiskFactorSelection);
-            } else {
+            } else
+            {
                 return ValidationResult.Success;
             }
         }
