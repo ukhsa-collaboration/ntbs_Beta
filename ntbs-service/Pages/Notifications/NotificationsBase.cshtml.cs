@@ -20,7 +20,8 @@ namespace ntbs_service.Pages_Notifications
     {
         protected INotificationService service;
 
-        public NotificationModelBase(INotificationService service) {
+        public NotificationModelBase(INotificationService service) 
+        {
             this.service = service;
         }
 
@@ -35,13 +36,6 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
-            // First Validate and Save current page details
-            bool isValid = await ValidateAndSave(NotificationId);
-            if (!isValid) 
-            {
-                return await OnGetAsync(NotificationId);
-            }
-
             // Get Notifications with all owned properties to check for 
             Notification = await service.GetNotificationWithAllInfoAsync(NotificationId);
             if (Notification == null)
@@ -49,6 +43,14 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
             
+            // First Validate and Save current page details
+            bool isValid = await ValidateAndSave();
+            if (!isValid) 
+            {
+                return await OnGetAsync(NotificationId);
+            }
+
+
             // IsRequired fields on Models requires ShouldValidateFull flag
             SetShouldValidateFull();
 
@@ -60,14 +62,16 @@ namespace ntbs_service.Pages_Notifications
 
             await service.SubmitNotification(Notification);
             
-            return RedirectToPage("../Overview", new {id = NotificationId});
+            return RedirectToOverview();
         }
 
         private void SetShouldValidateFull() 
         {
             Notification.ShouldValidateFull = true;
-            foreach (var property in Notification.GetType().GetProperties()) {
-                if (property.PropertyType.IsSubclassOf(typeof(ModelBase))) {
+            foreach (var property in Notification.GetType().GetProperties()) 
+            {
+                if (property.PropertyType.IsSubclassOf(typeof(ModelBase))) 
+                {
                     var ownedModel = property.GetValue(Notification);
                     ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
                 }
@@ -75,15 +79,27 @@ namespace ntbs_service.Pages_Notifications
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
 
-        public async Task<IActionResult> OnPostSaveAsync(int? notificationId)
-        {
-            bool isValid = await ValidateAndSave(notificationId);
+        public async Task<IActionResult> OnPostSaveAsync()
+        {            
+            Notification = await service.GetNotificationAsync(NotificationId);
+            bool isValid = await ValidateAndSave();
 
-            if (!isValid) {
-                return await OnGetAsync(notificationId);
+            if (!isValid) 
+            {
+                return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToNextPage(notificationId);
+            if (Notification?.NotificationStatus == NotificationStatus.Notified) 
+            {
+                return RedirectToOverview();
+            }
+
+            return RedirectToNextPage(NotificationId);
+        }
+
+        private IActionResult RedirectToOverview() 
+        {
+            return RedirectToPage("../Overview", new {id = NotificationId});
         }
 
         protected void SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase 
@@ -93,7 +109,7 @@ namespace ntbs_service.Pages_Notifications
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
         }
 
-        protected abstract Task<bool> ValidateAndSave(int? notificationId);
+        protected abstract Task<bool> ValidateAndSave();
 
         public abstract Task<IActionResult> OnGetAsync(int? notificationId, bool isBeingSubmitted = false);
 

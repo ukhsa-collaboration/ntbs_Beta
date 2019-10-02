@@ -46,14 +46,13 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave(int? NotificationId) {            
+        protected override async Task<bool> ValidateAndSave() {            
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
-            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
-            await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
+            await service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
             return true;
         }
 
