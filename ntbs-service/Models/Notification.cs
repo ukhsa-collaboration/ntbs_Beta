@@ -94,7 +94,11 @@ namespace ntbs_service.Models
         }
 
         private int? CalculateSum(int? x, int? y) {
-            return x + y;
+            if (x == null && y == null) 
+            {
+                return null;
+            }
+            return x ?? 0 + y ?? 0;
         }
 
         private string FormatDate(DateTime? date)

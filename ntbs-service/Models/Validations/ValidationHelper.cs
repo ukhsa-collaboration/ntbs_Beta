@@ -24,10 +24,10 @@ namespace ntbs_service.Models.Validations
         public const string PositiveNumbersOnly = "Please enter a positive value";
         public const string ContactTracingAdultsScreened = "Must be smaller or equal to the number of adults identified";
         public const string ContactTracingChildrenScreened = "Must be smaller or equal to the number of children identified";
-        public const string ContactTracingAdultsLatentTB = "Must be smaller or equal to than number of adults screened minus those with latent TB";
-        public const string ContactTracingChildrenLatentTB = "Must be smaller or equal to than number of children screened minus those with latent TB";
-        public const string ContactTracingAdultsActiveTB = "Must be smaller or equal to than number of adults screened minus those with active TB";
-        public const string ContactTracingChildrenActiveTB = "Must be smaller or equal to than number of children screened minus those with active TB";
+        public const string ContactTracingAdultsLatentTB = "Must be smaller or equal to than number of adults screened minus those with active TB";
+        public const string ContactTracingChildrenLatentTB = "Must be smaller or equal to than number of children screened minus those with active TB";
+        public const string ContactTracingAdultsActiveTB = "Must be smaller or equal to than number of adults screened minus those with latent TB";
+        public const string ContactTracingChildrenActiveTB = "Must be smaller or equal to than number of children screened minus those with laten TB";
         public const string ContactTracingAdultStartedTreatment = "Must be smaller or equal to number of adults with latent TB";
         public const string ContactTracingChildrenStartedTreatment = "Must be smaller or equal to number of children with latent TB";
         public const string ContactTracingAdultsFinishedTreatment = "Must be smaller or equal to number of adults the started treatment";

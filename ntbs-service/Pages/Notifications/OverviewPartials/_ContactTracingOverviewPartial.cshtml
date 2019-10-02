@@ -1,7 +1,7 @@
 @{
     var notificationId = ViewData["NotificationId"];
+    string emptySpace = "&nbsp;";
 }
-
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Contact tracing </h3>
     <a href="./Edit/ContactTracing?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
@@ -17,9 +17,9 @@
                     <div> Total  </div>
                 </div>
                 <div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.AdultsIdentified </div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.ChildrenIdentified </div>
-                    <div class="contact-tracing-value"> @Model.Notification.TotalContactsIdentified </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsIdentified ?? Html.Raw(emptySpace))</div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenIdentified ?? Html.Raw(emptySpace))</div>
+                    <div class="contact-tracing-value"> @(Model.Notification.TotalContactsIdentified ?? Html.Raw(emptySpace)) </div>
                 </div>
             </div>
         </nhs-grid-column>
@@ -32,9 +32,9 @@
                     <div> Total  </div>
                 </div>
                 <div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.AdultsScreened </div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.ChildrenScreened </div>
-                    <div class="contact-tracing-value"> @Model.Notification.TotalContactsScreened </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsScreened ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenScreened ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.TotalContactsScreened ?? Html.Raw(emptySpace)) </div>
                 </div>
             </div>
         </nhs-grid-column>
@@ -47,9 +47,9 @@
                     <div> Total  </div>
                 </div>
                 <div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.AdultsActiveTB </div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.ChildrenActiveTB </div>
-                    <div class="contact-tracing-value"> @Model.Notification.TotalContactsActiveTB </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsActiveTB ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenActiveTB ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.TotalContactsActiveTB ?? Html.Raw(emptySpace)) </div>
                 </div>
             </div>
         </nhs-grid-column>
@@ -64,9 +64,9 @@
                     <div> Total  </div>
                 </div>
                 <div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.AdultsLatentTB </div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.ChildrenLatentTB </div>
-                    <div class="contact-tracing-value"> @Model.Notification.TotalContactsLatentTB </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsLatentTB ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenLatentTB ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.TotalContactsLatentTB ?? Html.Raw(emptySpace)) </div>
                 </div>
             </div>
         </nhs-grid-column>
@@ -79,9 +79,9 @@
                     <div> Total  </div>
                 </div>
                 <div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.AdultsStartedTreatment </div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.ChildrenStartedTreatment </div>
-                    <div class="contact-tracing-value"> @Model.Notification.TotalContactsStartedTreatment </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsStartedTreatment ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenStartedTreatment ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.TotalContactsStartedTreatment ?? Html.Raw(emptySpace)) </div>
                 </div>
             </div>
         </nhs-grid-column>
@@ -94,9 +94,9 @@
                     <div> Total  </div>
                 </div>
                 <div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.AdultsFinishedTreatment </div>
-                    <div class="contact-tracing-value"> @Model.Notification.ContactTracing.ChildrenFinishedTreatment </div>
-                    <div class="contact-tracing-value"> @Model.Notification.TotalContactsFinishedTreatment </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsFinishedTreatment ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenFinishedTreatment ?? Html.Raw(emptySpace)) </div>
+                    <div class="contact-tracing-value"> @(Model.Notification.TotalContactsFinishedTreatment ?? Html.Raw(emptySpace)) </div>
                 </div>
             </div>
         </nhs-grid-column>
