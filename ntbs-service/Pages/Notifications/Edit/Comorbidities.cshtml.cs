@@ -9,9 +9,14 @@ namespace ntbs_service.Pages_Notifications
     {
         public ComorbiditiesModel(INotificationService service) : base(service) {}
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
+            if (Notification == null) 
+            {
+                return NotFound();
+            }
+            
             NotificationId = id;
 
             return Page();

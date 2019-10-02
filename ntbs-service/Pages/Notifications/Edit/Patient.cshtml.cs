@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Models.Enums;
-using ntbs_service.Pages;
 using ntbs_service.Services;
 using System;
 
@@ -15,7 +13,6 @@ namespace ntbs_service.Pages_Notifications
     public class PatientModel : NotificationModelBase
     {
         private readonly NtbsContext context;
-        private readonly IAuditService auditService;
 
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
@@ -27,13 +24,12 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public FormattedDate FormattedDob { get; set; }
 
-        public PatientModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
+        public PatientModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
-            this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
@@ -58,7 +54,6 @@ namespace ntbs_service.Pages_Notifications
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
 
-            await auditService.OnGetAuditAsync(Notification.NotificationId, Patient);
             return Page();
         }
 
@@ -91,9 +86,9 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./Episode", new {id = notificationId});
         }
 
-        public ContentResult OnGetValidatePatientProperty(string key, string value)
+        public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new PatientDetails(), key, value);
+            return ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)

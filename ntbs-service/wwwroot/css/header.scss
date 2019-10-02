@@ -8,12 +8,13 @@
     background: $phe-red;
 }
 
-.header-navigation-link {
-    padding-right: 40px;
-}
-
 .header-navgation-list {
     margin-bottom: 0;
+
+    .header-navigation-list-item {
+        font-family: "Helvetica Neue";
+        font-size: large;
+    }
 }
 
 @media (min-width: 48.0625em) {
@@ -25,7 +26,8 @@
 
 .header-title {
     padding-bottom: 10px;
-    color: $phe-red;
+    color: black;
+    font-family: "Helvetica Neue";
 }
 
 
@@ -34,7 +36,7 @@
 }
 
 .header-logo {
-    padding: 0 15px 5px 0;
+    padding: 0 40px 5px 0;
     margin: 0;
     width: 200px;
     box-sizing: content-box;
@@ -47,4 +49,17 @@
 
 .header-expand-menu-button {
     color: black;
+}
+
+.breadcrumb-trail {
+    display: none;
+}
+
+@media (min-width: 48.0625em) {
+    .breadcrumb-trail {
+        display: block;
+        height: 45px;
+        background-color: #DAD7CB;
+        margin-top: 10px;
+    }
 }

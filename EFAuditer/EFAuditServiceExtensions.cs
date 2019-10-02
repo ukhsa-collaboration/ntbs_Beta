@@ -24,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         audit.OriginalId = int.Parse(entry.PrimaryKey.First().Value.ToString());
                         audit.EntityType = entry.EntityType.Name;
                         audit.EventType = entry.Action;
+                        audit.AuditDetails = ev.CustomFields.ContainsKey(CustomFields.AuditDetails) ? ev.CustomFields[CustomFields.AuditDetails].ToString() : null;
                         audit.AuditDateTime = DateTime.Now;
                         audit.AuditUser = ev.Environment.UserName;
                     })

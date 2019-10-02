@@ -8,17 +8,15 @@ namespace ntbs_service.Pages_Notifications
 {
     public class PreviousHistoryModel : NotificationModelBase
     {
-        private readonly IAuditService auditService;
 
-        public PreviousHistoryModel(INotificationService service, IAuditService auditService) : base(service)
+        public PreviousHistoryModel(INotificationService service) : base(service)
         {
-            this.auditService = auditService;
         }
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
@@ -34,9 +32,8 @@ namespace ntbs_service.Pages_Notifications
             SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
             if (PatientTBHistory.ShouldValidateFull)
             {
-                TryValidateModel(PatientTBHistory, "Patient");
+                TryValidateModel(PatientTBHistory, PatientTBHistory.GetType().Name);
             }
-            await auditService.OnGetAuditAsync(Notification.NotificationId, PatientTBHistory);
             return Page();
         }
 
@@ -60,15 +57,15 @@ namespace ntbs_service.Pages_Notifications
         
         private void UpdateFlags()
         {
-            if (PatientTBHistory.NotPreviouslyHadTB) {
+            if (PatientTBHistory.NotPreviouslyHadTB ?? false) {
                 PatientTBHistory.PreviousTBDiagnosisYear = null;
                 ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
             }
         }
 
-        public ContentResult OnGetValidatePreviousHistoryProperty(string key, int value)
+        public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new PatientTBHistory(), key, value);
+            return ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
         }
     }
 }

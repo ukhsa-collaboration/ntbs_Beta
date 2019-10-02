@@ -28,7 +28,7 @@ namespace ntbs_service.Pages_Notifications
         public Notification Notification { get; set; }
 
         [BindProperty]
-        public int? NotificationId { get; set; }
+        public int NotificationId { get; set; }
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
@@ -109,9 +109,16 @@ namespace ntbs_service.Pages_Notifications
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
         }
 
+        public ContentResult ValidateModelProperty<T>(string key, object value, bool shouldValidateFull) where T : ModelBase
+        {
+            T model = (T)Activator.CreateInstance(typeof(T));
+            model.ShouldValidateFull = shouldValidateFull;
+            return ValidateProperty(model, key, value);
+        }
+
         protected abstract Task<bool> ValidateAndSave();
 
-        public abstract Task<IActionResult> OnGetAsync(int? notificationId, bool isBeingSubmitted = false);
+        public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
 
         protected abstract IActionResult RedirectToNextPage(int? notificationId);
     }

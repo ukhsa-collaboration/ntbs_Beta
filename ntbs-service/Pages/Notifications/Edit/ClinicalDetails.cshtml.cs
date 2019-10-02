@@ -14,7 +14,6 @@ namespace ntbs_service.Pages_Notifications
     public class ClinicalDetailsModel : NotificationModelBase
     {
         private readonly NtbsContext context;
-        private readonly IAuditService auditService;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -33,13 +32,12 @@ namespace ntbs_service.Pages_Notifications
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
+        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
-            this.auditService = auditService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationWithNotificationSitesAsync(id);
             if (Notification == null)
@@ -53,10 +51,6 @@ namespace ntbs_service.Pages_Notifications
             }
 
             SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
-            if (ClinicalDetails.ShouldValidateFull)
-            {
-                TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
-            }        
 
             var notificationSites = Notification.NotificationSites;
             SetupNotificationSiteMap(notificationSites);
@@ -72,7 +66,10 @@ namespace ntbs_service.Pages_Notifications
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
             FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
 
-            await auditService.OnGetAuditAsync(Notification.NotificationId, ClinicalDetails);
+            if (ClinicalDetails.ShouldValidateFull)
+            {
+                TryValidateModel(this);
+            }
             return Page();
         }
 
@@ -100,14 +97,14 @@ namespace ntbs_service.Pages_Notifications
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
             ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
-
+            
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
             await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-            await service.UpdateSitesAsync(Notification, CreateNotificationSitesFromModel(Notification));
+            await service.UpdateSitesAsync(Notification, CreateNotificationSitesFromModel(Notification.NotificationId));
 
             return true;
         }
@@ -142,14 +139,14 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
-        private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
+        private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(int notificationId)
         {
             foreach (var item in NotificationSiteMap) {
                 if (item.Value) 
                 {
                     yield return new NotificationSite
                     {
-                        NotificationId = notification.NotificationId,
+                        NotificationId = notificationId,
                         SiteId = (int)item.Key,
                         SiteDescription = item.Key == SiteId.OTHER ? OtherSite.SiteDescription : null
                     };
@@ -157,25 +154,45 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
-        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value)
+        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new ClinicalDetails(), key, value);
+            return ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
+
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
             return ValidateDate(new ClinicalDetails(), key, day, month, year);
         }
 
-        public ContentResult OnGetValidateNotificationSiteProperty(string key, string value)
+        public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
         {
-            return ValidateProperty(new NotificationSite(), key, value);
+            string key = "NotificationSites";
+            List<NotificationSite> notificationSites = new List<NotificationSite>();
+            foreach (string value in valueList)
+            {
+                notificationSites.Add(new NotificationSite {
+                    SiteId = (int) Enum.Parse(typeof(SiteId), value)
+                });
+            }
+            
+            return ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
+        }
+
+        public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
+        {
+            var notification = new Notification { ShouldValidateFull = shouldValidateFull };
+            var notificationSite = new NotificationSite { 
+                Notification = notification,
+                SiteId = (int) SiteId.OTHER
+            };
+            return ValidateProperty(notificationSite, key, value);
         }
 
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
             return ValidateYearComparison(newYear, existingYear);
         }
-
+        
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
         {
             var propertyValueTuples = new List<Tuple<string, object>>();

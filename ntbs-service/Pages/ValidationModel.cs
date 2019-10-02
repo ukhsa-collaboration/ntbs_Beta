@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using EFAuditer;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace ntbs_service.Pages
 {
@@ -31,10 +32,29 @@ namespace ntbs_service.Pages
 
         private void SetProperty(object model, string key, object value)
         {
-            var property = model.GetType().GetProperty(key);
-            if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+            if (value == null)
             {
-                value = bool.Parse((string)value);
+                return;
+            }
+            var property = model.GetType().GetProperty(key);
+
+            var converter = TypeDescriptor.GetConverter(property.PropertyType);
+            try
+            {
+                /*
+                 This will convert strings to boolean and numeric types if appropriate ...
+                */
+                value = converter.ConvertFrom(value);
+            }
+            catch (NotSupportedException)
+            {
+                /*
+                 ... but it will throw an error for complex object types (e.g.: List<T>)
+                 If that's the case, then we're safe to ignore that error, as `value` is already of the correct type.
+
+                 Any type discrepencies that still exist will cause `SetValue` to throw errors anyways.
+                */
+
             }
             property.SetValue(model, value);
         }
@@ -56,14 +76,9 @@ namespace ntbs_service.Pages
 
         private ContentResult GetValidationResult(object model, string key)
         {
-            if (TryValidateModel(model))
-            {
-                return ValidContent();
-            }
-            else
-            {
-                return Content(ModelState[key].Errors[0].ErrorMessage);
-            }
+            TryValidateModel(model);
+
+            return ModelState[key] == null ? ValidContent() : Content(ModelState[key].Errors[0].ErrorMessage);
         }
 
         private ContentResult GetValidationResult(object model, IEnumerable<string> keys)
@@ -91,7 +106,11 @@ namespace ntbs_service.Pages
 
         public bool IsValid(string key)
         {
-            return ModelState[key] == null ? true : ModelState[key].Errors.Count == 0;
+            if (ModelState[key] == null)
+            {
+                return true;
+            }
+            return ModelState[key].Errors.Count == 0;
         }
 
         protected void SetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
