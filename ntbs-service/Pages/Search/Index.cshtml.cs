@@ -15,8 +15,7 @@ namespace ntbs_service.Pages_Search
         public INotificationService service;
         public int PageIndex;
         public string CurrentFilter { get; set; }
-        public PaginatedList<Notification> Notifications { get; set; }
-        public IList<NotificationBannerModel> SearchResultsBannerDisplay;
+        public PaginatedList<NotificationBannerModel> SearchResultsBannerDisplay;
 
         public IndexModel(INotificationService service)
         {
@@ -29,16 +28,14 @@ namespace ntbs_service.Pages_Search
             var pageSize = 50;
 
             IQueryable<Notification> notificationsIQ = service.GetBaseNotificationIQueryable();
+            // IQueryable<Notification> draftsIQ = service.GetBaseNotificationIQueryable(Drafts);
 
             notificationsIQ = OrderQueryable(notificationsIQ);
 
-            Notifications = await PaginatedList<Notification>.CreateAsync(
+            var notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
 
-            SearchResultsBannerDisplay = new List<NotificationBannerModel>();
-            foreach(Notification result in Notifications) {
-                SearchResultsBannerDisplay.Add(new NotificationBannerModel(result, true));
-            }
+            SearchResultsBannerDisplay = notifications.SelectItems(NotificationBannerModel.WithLink);
 
             return Page();
         }

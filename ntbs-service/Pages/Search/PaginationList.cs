@@ -12,13 +12,26 @@ namespace ntbs_service.Pages_Search
         public int TotalPages { get; private set; }
         public int NumberOfResults { get; private set; }
 
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        public PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             NumberOfResults = count;
 
             this.AddRange(items);
+        }
+        private PaginatedList(IEnumerable<T> items)
+        {
+            this.AddRange(items);
+        }
+
+        public PaginatedList<TResult> SelectItems<TResult>(Func<T, TResult> selector) {
+            var newItems = this.Select(selector);
+            return new PaginatedList<TResult>(newItems) {
+                PageIndex = this.PageIndex,
+                TotalPages = this.TotalPages,
+                NumberOfResults = this.NumberOfResults
+            };
         }
 
         public bool HasPreviousPage
