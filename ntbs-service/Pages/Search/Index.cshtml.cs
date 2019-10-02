@@ -28,9 +28,9 @@ namespace ntbs_service.Pages_Search
 
             var pageSize = 50;
 
-            PageIndex = pageIndex ?? 1;
-
             IQueryable<Notification> notificationsIQ = service.GetBaseNotificationIQueryable();
+
+            notificationsIQ = OrderQueryable(notificationsIQ);
 
             Notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
@@ -41,6 +41,12 @@ namespace ntbs_service.Pages_Search
             }
 
             return Page();
+        }
+
+        public IQueryable<Notification> OrderQueryable(IQueryable<Notification> query) {
+            return query.OrderByDescending(n => n.CreationDate)
+                .OrderByDescending(n => n.SubmissionDate)
+                .OrderBy(n => n.NotificationStatus);
         }
 
         public IActionResult OnPost()

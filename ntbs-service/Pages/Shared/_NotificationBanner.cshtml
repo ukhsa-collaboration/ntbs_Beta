@@ -21,9 +21,9 @@
                 <h1 class="notification-banner-title-text">
                         <div> @Model.NotificationStatusString </div>
                     
-                @if(@Model.SearchPage) 
+                @if(@Model.ShowLink) 
                 {
-                    <a href="/Notifications/Overview?id=@Model.NotificationId" style="color: white"> #@Model.NotificationId </a>
+                    <a href="/Notifications/Overview?id=@Model.NotificationId" class="notification-banner-id-link"> #@Model.NotificationId </a>
                 } else 
                 {
                     <div> #@Model.NotificationId </div>
@@ -32,7 +32,7 @@
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Date of notification </dt>
-                <dd class="cell-min-height"> @Model.DateOfNotification </dd>
+                <dd class="cell-min-height">  </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> TB service </dt>
@@ -74,16 +74,4 @@
             </nhs-grid-column>
         </nhs-grid-row> 
     </div>
-    @if(!@Model.SearchPage) 
-    {
-        <div class="notification-banner-triangle"> </div>
-    }
 </dl>
-@if(@Model.NotificationStatus == NotificationStatus.Notified && !@Model.SearchPage) 
-{
-    <div class="notification-banner-links">
-        <a href="/Notifications/Overview?id=@Model.NotificationId"> Notification details </a>
-        <div class="notification-banner-link-separator"> </div>
-        <a href="/Notifications/Overview?id=@Model.NotificationId"> Audit </a>
-    </div>
-}
