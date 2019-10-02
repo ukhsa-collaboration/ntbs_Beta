@@ -34,7 +34,20 @@ namespace ntbs_service.Pages_Notifications
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
 
-        public async Task<IActionResult> OnPostSubmitAsync()
+        public async Task<IActionResult> OnPostAsync(string actionName)
+        {
+            switch (actionName) 
+            {
+                case "Save":
+                    return await Save();
+                case "Submit":
+                    return await Submit();
+                default:
+                    return Page();
+            }
+        }
+
+        public async Task<IActionResult> Submit()
         {
             // Get Notifications with all owned properties to check for 
             Notification = await service.GetNotificationWithAllInfoAsync(NotificationId);
@@ -79,8 +92,8 @@ namespace ntbs_service.Pages_Notifications
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
 
-        public async Task<IActionResult> OnPostSaveAsync()
-        {            
+        public async Task<IActionResult> Save()
+        {           
             Notification = await service.GetNotificationAsync(NotificationId);
             bool isValid = await ValidateAndSave();
 
