@@ -102,7 +102,7 @@ namespace ntbs_service.Pages_Notifications
 
         protected abstract Task<bool> ValidateAndSave(int notificationId);
 
-        public abstract Task<IActionResult> OnGetAsync(int? notificationId, bool isBeingSubmitted = false);
+        public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
 
         protected abstract IActionResult RedirectToNextPage(int? notificationId);
     }

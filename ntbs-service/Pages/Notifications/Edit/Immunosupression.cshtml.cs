@@ -9,7 +9,7 @@ namespace ntbs_service.Pages_Notifications
     {
         public ImmunosupressionModel(INotificationService service) : base(service) {}
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null) 
@@ -17,7 +17,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
             
-            NotificationId = (int) id;
+            NotificationId = id;
 
             return Page();
         }
