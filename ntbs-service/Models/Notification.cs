@@ -36,6 +36,7 @@ namespace ntbs_service.Models
         public virtual PatientTBHistory PatientTBHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
+        public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]

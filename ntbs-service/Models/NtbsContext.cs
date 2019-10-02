@@ -27,6 +27,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
+        public virtual DbSet<NotificationGroup> NotificationGroup { get; set; }
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
@@ -133,6 +134,10 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
+                entity.HasOne<NotificationGroup>()
+                    .WithMany(g => g.Notifications)
+                    .HasForeignKey(e => e.GroupId);
+
                 entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");

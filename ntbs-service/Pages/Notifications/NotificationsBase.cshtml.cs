@@ -65,6 +65,14 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToOverview();
         }
 
+        public async Task<IActionResult> OnPostCreateLinkAsync()
+        {
+            var notification = await service.GetNotificationAsync(NotificationId);
+            var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
+
+            return RedirectToPage("/Notifications/Edit/Patient", new {id = linkedNotification.NotificationId});
+        }
+
         private void SetShouldValidateFull() 
         {
             Notification.ShouldValidateFull = true;

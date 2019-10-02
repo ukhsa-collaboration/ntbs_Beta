@@ -25,6 +25,7 @@ namespace ntbs_service.Services
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
+        Task<Notification> CreateLinkedNotificationAsync(Notification notification);
     }
 
     public class NotificationService : INotificationService
@@ -185,6 +186,30 @@ namespace ntbs_service.Services
         public async Task<Notification> GetNotificationWithAllInfoAsync(int? id)
         {
             return await repository.GetNotificationWithAllInfoAsync(id);
+        }
+
+        public async Task<Notification> CreateLinkedNotificationAsync(Notification notification)
+        {
+            var linkedNotification = new Notification();
+            context.Notification.Add(linkedNotification);
+            context.Entry(linkedNotification.PatientDetails).CurrentValues.SetValues(notification.PatientDetails);
+
+            if (notification.GroupId != null)
+            {
+                linkedNotification.GroupId = notification.GroupId;
+            }
+            else
+            {
+                var group = new NotificationGroup();
+                context.NotificationGroup.Add(group);
+
+                linkedNotification.GroupId = group.NotificationGroupId;
+                notification.GroupId = group.NotificationGroupId;
+            }
+
+            await context.SaveChangesAsync();
+
+            return linkedNotification;
         }
 
         private async Task UpdateDatabase(AuditType auditType = AuditType.Edit)
