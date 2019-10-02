@@ -8,42 +8,28 @@ namespace EFAuditer
 {
     public class AuditDatabaseContext : DbContext
     {
+        public AuditDatabaseContext() {}
         public AuditDatabaseContext(DbContextOptions<AuditDatabaseContext> options) : base(options) {}
 
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
-        public async Task AuditReadOperationAsync(string primaryKeyName, int primaryKeyId, object model)
+        public async Task AuditOperationAsync(int primaryKeyId, string entity, string details, string eventType)
         {
-            var log = CreateReadLog(primaryKeyName, primaryKeyId, model);
+            var log = CreateAuditLog(primaryKeyId, entity, details, eventType);
             AuditLogs.Add(log);
             await SaveChangesAsync();
         }
 
-        private AuditLog CreateReadLog(string primaryKeyName, int primaryKeyId, object model)
+        private AuditLog CreateAuditLog(int primaryKeyId, string entity, string details, string eventType)
         {
-            var modelName = model.GetType().Name;
             return new AuditLog() {
-                AuditData = CreateReadAuditData(primaryKeyName, primaryKeyId, modelName, model),
                 OriginalId = primaryKeyId,
-                EntityType = modelName,
-                EventType = "Read",
+                EntityType = entity,
+                EventType = eventType,
                 AuditDateTime = DateTime.Now,
-                AuditUser = Environment.UserName
+                AuditUser = Environment.UserName,
+                AuditDetails = details
             };
-        }
-
-        // This matches the format of the Entity Framework Data Provider audit entry in Audit.NET
-        private string CreateReadAuditData(string primaryKeyName, int primaryKeyId, string modelName, object model)
-        {
-            var auditData = new {
-                Table = modelName,
-                Action = "Read",
-                PrimaryKey = new Dictionary<string, int> {
-                    { primaryKeyName, primaryKeyId }
-                },
-                ColumnValues = model
-            };
-            return JsonConvert.SerializeObject(auditData);
         }
     }
 }

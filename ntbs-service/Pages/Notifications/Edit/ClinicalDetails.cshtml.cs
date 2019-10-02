@@ -15,7 +15,6 @@ namespace ntbs_service.Pages_Notifications
     public class ClinicalDetailsModel : NotificationModelBase
     {
         private readonly NtbsContext context;
-        private readonly IAuditService auditService;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -34,10 +33,9 @@ namespace ntbs_service.Pages_Notifications
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
+        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
-            this.auditService = auditService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
@@ -69,12 +67,10 @@ namespace ntbs_service.Pages_Notifications
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
             FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
 
-
             if (ClinicalDetails.ShouldValidateFull)
             {
                 TryValidateModel(this);
             }
-            await auditService.OnGetAuditAsync(Notification.NotificationId, ClinicalDetails);
             return Page();
         }
 

@@ -12,17 +12,15 @@ namespace ntbs_service.Pages_Notifications
     public class SocialRiskFactorsModel : NotificationModelBase
     {
         private readonly NtbsContext context;
-        private readonly IAuditService auditService;
         
         public List<Status> StatusList { get; set; }
 
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public SocialRiskFactorsModel(INotificationService service, NtbsContext context, IAuditService auditService) : base(service)
+        public SocialRiskFactorsModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
-            this.auditService = auditService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
@@ -42,7 +40,6 @@ namespace ntbs_service.Pages_Notifications
             SetNotificationProperties<SocialRiskFactors>(isBeingSubmitted, SocialRiskFactors);
 
             StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
-            await auditService.OnGetAuditAsync(Notification.NotificationId, SocialRiskFactors);
             return Page();
         }
 
@@ -65,7 +62,8 @@ namespace ntbs_service.Pages_Notifications
         public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
         {
             var riskStatus = status == null ? null : (Status?) Enum.Parse(typeof(Status), status);
-            RiskFactorBase riskFactor = new RiskFactorBase {
+            RiskFactorDetails riskFactor = new RiskFactorDetails
+            {
                 MoreThanFiveYearsAgo = moreThanFive,
                 InPastFiveYears = pastFive,
                 IsCurrent = isCurrent,

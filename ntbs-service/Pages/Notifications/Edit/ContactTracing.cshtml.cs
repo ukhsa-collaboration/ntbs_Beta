@@ -12,11 +12,8 @@ namespace ntbs_service.Pages_Notifications
 {
     public class ContactTracingModel : NotificationModelBase
     {
-        private readonly IAuditService auditService;
-
-        public ContactTracingModel(INotificationService service, IAuditService auditService) : base(service)
+        public ContactTracingModel(INotificationService service) : base(service)
         {
-            this.auditService = auditService;
         }
 
         [BindProperty]
@@ -37,7 +34,6 @@ namespace ntbs_service.Pages_Notifications
             }
             
             SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
-            await auditService.OnGetAuditAsync(Notification.NotificationId, ContactTracing);
             return Page();
         }
 
