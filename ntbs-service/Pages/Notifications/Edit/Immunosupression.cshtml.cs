@@ -27,7 +27,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int notificationId)
+        protected override async Task<bool> ValidateAndSave()
         {
             return true;
         }

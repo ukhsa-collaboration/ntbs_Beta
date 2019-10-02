@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
@@ -87,7 +86,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./ContactTracing", new {id = notificationId});
         } 
 
-        protected override async Task<bool> ValidateAndSave(int NotificationId) {
+        protected override async Task<bool> ValidateAndSave() {
             UpdateFlags();
 
             SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
@@ -104,9 +103,8 @@ namespace ntbs_service.Pages_Notifications
                 return false;
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdateClinicalDetailsAsync(notification, ClinicalDetails);
-            await service.UpdateSitesAsync(notification, CreateNotificationSitesFromModel(NotificationId));
+            await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
+            await service.UpdateSitesAsync(Notification, CreateNotificationSitesFromModel(Notification.NotificationId));
 
             return true;
         }

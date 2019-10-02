@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ntbs_service.Models;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
@@ -27,7 +28,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./Comorbidities", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int notificationId)
+        protected override async Task<bool> ValidateAndSave()
         {
             return true;
         }
