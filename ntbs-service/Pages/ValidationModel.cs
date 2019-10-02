@@ -41,11 +41,19 @@ namespace ntbs_service.Pages
             var converter = TypeDescriptor.GetConverter(property.PropertyType);
             try
             {
+                /*
+                 This will convert strings to boolean and numeric types if appropriate ...
+                */
                 value = converter.ConvertFrom(value);
             }
-            catch 
+            catch (NotSupportedException)
             {
-                // Value is a type of object and Complex objects may results in error when casting it to a necessary type
+                /*
+                 ... but it will throw an error for complex object types (e.g.: List<T>)
+                 If that's the case, then we're safe to ignore that error, as `value` is already of the correct type.
+
+                 Any type discrepencies that still exist will cause `SetValue` to throw errors anyways.
+                */
             }
             property.SetValue(model, value);
         }
