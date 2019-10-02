@@ -16,7 +16,7 @@ namespace ntbs_service.Pages_Notifications
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)

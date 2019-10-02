@@ -23,7 +23,7 @@ namespace ntbs_service.Pages_Notifications
             this.context = context;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationWithSocialRisksAsync(id);
             if (Notification == null)
