@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Models.Enums;
-using ntbs_service.Pages;
 using ntbs_service.Services;
 using System;
 
@@ -62,7 +60,7 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int NotificationId) {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
@@ -92,9 +90,9 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./Episode", new {id = notificationId});
         }
 
-        public ContentResult OnGetValidatePatientProperty(string key, string value)
+        public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateProperty(new PatientDetails(), key, value);
+            return ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)

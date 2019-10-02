@@ -46,7 +46,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./SocialRiskFactors", new {id = notificationId});
         }
 
-        protected override async Task<bool> ValidateAndSave(int? NotificationId) {
+        protected override async Task<bool> ValidateAndSave(int NotificationId) {
 
             if (!ModelState.IsValid)
             {

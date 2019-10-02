@@ -112,9 +112,9 @@ namespace ntbs_service.Models
             }
         }
 
-        public string FormatStateAndYear(Status state, int? year)
+        public string FormatStateAndYear(Status? state, int? year)
         {
-            return state.ToString() + (year != null ? " - " + year : "");
+            return state?.ToString() + (year != null ? " - " + year : "");
         }
 
         public string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
@@ -129,7 +129,14 @@ namespace ntbs_service.Models
 
         public string CreateSitesOfDiseaseString()
         {
-            var siteNames = NotificationSites?.Select(ns => ns.Site)?.Select(s => s.Description);
+            if (NotificationSites == null) 
+            {
+                return "";
+            }
+            
+            var siteNames = NotificationSites.Select(ns => ns.Site)?
+                .Where(ns => ns != null)
+                .Select(s => s.Description);
             return String.Join(", ", siteNames); 
         }
 
