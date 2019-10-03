@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ntbs_service.Models;
 
 namespace ntbs_service.Services
@@ -15,13 +16,12 @@ namespace ntbs_service.Services
 
   public class UserService : IUserService
   {
-    // This allows us to use group names agnostic of any naming convention prefixes that exist in the setup
-    // TODO NTBS-61 put into config
-    private readonly string prefix = "pheNtbs - ";
+    private readonly AdfsOptions config;
     private readonly NtbsContext context;
     
-    public UserService(NtbsContext context) {
+    public UserService(NtbsContext context, IOptionsMonitor<AdfsOptions> options) {
       this.context = context;
+      config = options.CurrentValue;
     }
     async public Task<List<TBService>> TbServices(ClaimsPrincipal user)
     {
@@ -42,17 +42,16 @@ namespace ntbs_service.Services
     {
       return user.FindAll(claim => claim.Type == ClaimsIdentity.DefaultRoleClaimType)
               .Select(claim => claim.Value)
-              .Select(role => role.StartsWith(prefix) ? role.Substring(prefix.Length) : role);
+              .Select(role => role.StartsWith(config.AdGroupsPrefix) ? role.Substring(config.AdGroupsPrefix.Length) : role);
     }
 
     public UserType GetUserType(ClaimsPrincipal user)
     {
-      if (user.IsInRole(prefix + "Global.NIS.NTBS.NTA")) 
+      if (user.IsInRole(config.AdGroupsPrefix + config.NationalTeamAdGroup)) 
       { 
         return UserType.NationalTeam;
       }
-      // TB service groups are of the format Global.NIS.NTBS.Service_<service-specifc-postfix>
-      if (GetRoles(user).Where(role => role.Contains("Global.NIS.NTBS.Service")).Any())
+      if (GetRoles(user).Where(role => role.Contains(config.ServiceGroupAdPrefix)).Any())
       {
         return UserType.NhsUser;
       }

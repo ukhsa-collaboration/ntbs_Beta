@@ -39,9 +39,8 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            // services.AddIdentity<IdentityUser, IdentityRole>()
-            //     .AddDefaultTokenProviders();
 
+            IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
             services.AddAuthentication(sharedOptions =>
                     {
                         sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -49,13 +48,8 @@ namespace ntbs_service
                         sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
                     }).AddWsFederation(options =>
                     {
-                        // MetadataAddress represents the Active Directory instance used to authenticate users.
-                        // options.MetadataAddress = "https://<ADFS FQDN or AAD tenant>/FederationMetadata/2007-06/FederationMetadata.xml";
-                        options.MetadataAddress = "https://fs.softwire.com/FederationMetadata/2007-06/FederationMetadata.xml";
-
-                        // Wtrealm is the app's identifier in the Active Directory instance.
-                        options.Wtrealm = "https://localhost:5001/";
-
+                        options.MetadataAddress = adfsConfig["AdfsUrl"];
+                        options.Wtrealm = adfsConfig["Wtrealm"];
                     })
                     .AddCookie();
 
@@ -95,6 +89,8 @@ namespace ntbs_service
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.Configure<AdfsOptions>(adfsConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
