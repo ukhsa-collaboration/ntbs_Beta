@@ -220,19 +220,25 @@
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate" id="symptom-error"></span>
                         <nhs-date-input id="symptom">
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Day">Day</label>
-                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" 
-                                    is-error-input=@SymptomError asp-for="FormattedSymptomDate.Day"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" 
+                                        is-error-input=@SymptomError asp-for="FormattedSymptomDate.Day"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Month">Month</label>
-                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" 
-                                    is-error-input=@SymptomError asp-for="FormattedSymptomDate.Month"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" 
+                                        is-error-input=@SymptomError asp-for="FormattedSymptomDate.Month"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Year">Year</label>
-                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                    is-error-input=@SymptomError asp-for="FormattedSymptomDate.Year"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                        is-error-input=@SymptomError asp-for="FormattedSymptomDate.Year"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                         </nhs-date-input>
                     </nhs-fieldset>
@@ -251,19 +257,25 @@
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationDate" id="presentation-error"></span>
                         <nhs-date-input id="presentation">
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Day">Day</label>
-                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@PresentationError asp-for="FormattedPresentationDate.Day" />
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                        is-error-input=@PresentationError asp-for="FormattedPresentationDate.Day" />
+                                </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Month">Month</label>
-                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@PresentationError asp-for="FormattedPresentationDate.Month"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                        is-error-input=@PresentationError asp-for="FormattedPresentationDate.Month"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Year">Year</label>
-                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                    is-error-input=@PresentationError asp-for="FormattedPresentationDate.Year"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedPresentationDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                        is-error-input=@PresentationError asp-for="FormattedPresentationDate.Year"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                         </nhs-date-input>
                     </nhs-fieldset>
@@ -282,19 +294,25 @@
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DiagnosisDate" id="diagnosis-error"></span>
                         <nhs-date-input id="diagnosis">
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Day">Day</label>
-                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" 
-                                    is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Day"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Day">Day</label>
+                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two" 
+                                        is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Day"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Month">Month</label>
-                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" 
-                                    is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Month"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Month">Month</label>
+                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two" 
+                                        is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Month"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
-                                <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Year">Year</label>
-                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" 
-                                    is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Year"/>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedDiagnosisDate.Year">Year</label>
+                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four" 
+                                        is-error-input=@DiagnosisError asp-for="FormattedDiagnosisDate.Year"/>
+                                </nhs-form-group>
                             </nhs-date-input-item>
                         </nhs-date-input>
                     </nhs-fieldset>
@@ -322,19 +340,25 @@
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TreatmentStartDate" id="treatment-error"></span>
                                         <nhs-date-input id="treatment">
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Day">Day</label>
-                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                    is-error-input=@TreatmentError asp-for="FormattedTreatmentDate.Day"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Day">Day</label>
+                                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                                        is-error-input=@TreatmentError asp-for="FormattedTreatmentDate.Day"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Month">Month</label>
-                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                    is-error-input=@TreatmentError asp-for="FormattedTreatmentDate.Month"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Month">Month</label>
+                                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                                        is-error-input=@TreatmentError asp-for="FormattedTreatmentDate.Month"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Year">Year</label>
-                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                    is-error-input=@TreatmentError asp-for="FormattedTreatmentDate.Year"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Year">Year</label>
+                                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                                        is-error-input=@TreatmentError asp-for="FormattedTreatmentDate.Year"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                         </nhs-date-input>
                                     </nhs-fieldset>
@@ -374,19 +398,25 @@
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DeathDate" id="postmortem-error"></span>
                                         <nhs-date-input id="postmortem">
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Day">Day</label>
-                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                    is-error-input=@DeathError asp-for="FormattedDeathDate.Day"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedDeathDate.Day">Day</label>
+                                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                                        is-error-input=@DeathError asp-for="FormattedDeathDate.Day"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Month">Month</label>
-                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                    is-error-input=@DeathError asp-for="FormattedDeathDate.Month" />
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedDeathDate.Month">Month</label>
+                                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                                        is-error-input=@DeathError asp-for="FormattedDeathDate.Month" />
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Year">Year</label>
-                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                    is-error-input=@DeathError asp-for="FormattedDeathDate.Year" />
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedDeathDate.Year">Year</label>
+                                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                                        is-error-input=@DeathError asp-for="FormattedDeathDate.Year" />
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                         </nhs-date-input>
                                     </nhs-fieldset>
@@ -452,19 +482,25 @@
                                             id="mdr-treatment-date-error"></span>
                                         <nhs-date-input id="mdr-treatment-date">
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Day">Day</label>
-                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                    is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Day"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Day">Day</label>
+                                                    <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Day"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Month">Month</label>
-                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                    is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Month"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Month">Month</label>
+                                                    <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Month"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
-                                                <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Year">Year</label>
-                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                    is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Year"/>
+                                                <nhs-form-group nhs-form-group-type="Standard">
+                                                    <label nhs-label-type="Date" asp-for="FormattedMDRTreatmentDate.Year">Year</label>
+                                                    <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                                        is-error-input=@MDRTreatmentDateError asp-for="FormattedMDRTreatmentDate.Year"/>
+                                                </nhs-form-group>
                                             </nhs-date-input-item>
                                         </nhs-date-input>
                                     </nhs-fieldset>

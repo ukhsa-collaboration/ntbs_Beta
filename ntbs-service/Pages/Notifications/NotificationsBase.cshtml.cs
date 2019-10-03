@@ -33,7 +33,11 @@ namespace ntbs_service.Pages_Notifications
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
-
+        /* 
+        Post method accepts name of action specified by button clicked.
+        Using handler adds handler onto url and therefore breaking javascript 
+        validation hapening after form is submitted
+        */ 
         public async Task<IActionResult> OnPostAsync(string actionName)
         {
             switch (actionName) 
