@@ -1,0 +1,17 @@
+@page "{handler?}"
+@model ntbs_service.Pages_Notifications.LinkedNotificationsModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Linked Notifications";
+    ViewData["NotificationId"] = @Model.NotificationId;
+}
+
+<h2>Linked Notifications</h2>
+
+@foreach (var notification in @Model.LinkedNotifications)
+{
+    <partial name="./Shared/_NotificationDetails" model="notification" />
+}
+
+<a href='#top' class="govuk-link--no-visited-state"> Back to top </a>

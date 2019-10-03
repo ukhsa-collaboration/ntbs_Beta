@@ -9,19 +9,14 @@ using System.Linq;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class SocialRiskFactorsModel : NotificationModelBase
+    public class SocialRiskFactorsModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
-        
         public List<Status> StatusList { get; set; }
 
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public SocialRiskFactorsModel(INotificationService service, NtbsContext context) : base(service)
-        {
-            this.context = context;
-        }
+        public SocialRiskFactorsModel(INotificationService service) : base(service) {}
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
@@ -32,14 +27,10 @@ namespace ntbs_service.Pages_Notifications
             }
 
             SocialRiskFactors = Notification.SocialRiskFactors;
-            if (SocialRiskFactors == null)
-            {
-                return NotFound();
-            }
-            
-            SetNotificationProperties<SocialRiskFactors>(isBeingSubmitted, SocialRiskFactors);
+            await SetNotificationProperties(isBeingSubmitted, SocialRiskFactors);
 
             StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
+
             return Page();
         }
 
@@ -69,7 +60,7 @@ namespace ntbs_service.Pages_Notifications
                 Status = riskStatus
             }; 
             
-            return ValidateProperty(new SocialRiskFactors(), key, riskFactor);
+            return validationService.ValidateModelProperty<SocialRiskFactors>(key, riskFactor, false);
         }
     }
 }

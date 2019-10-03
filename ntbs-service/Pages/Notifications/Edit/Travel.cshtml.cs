@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ntbs_service.Models;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
     // TODO - To complete when spec is ready for this page
-    public class TravelModel : NotificationModelBase
+    public class TravelModel : NotificationEditModelBase
     {
         public TravelModel(INotificationService service) : base(service) {}
 

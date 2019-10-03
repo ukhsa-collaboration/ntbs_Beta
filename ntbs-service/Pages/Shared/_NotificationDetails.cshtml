@@ -1,0 +1,84 @@
+@using ntbs_service.Models.Enums;
+@{
+    var NotificationStatusCssClass = "";
+    switch(@Model.NotificationStatus)
+        {
+            case NotificationStatus.Draft: NotificationStatusCssClass = "notification-banner--draft";
+                break;
+            case NotificationStatus.Notified: NotificationStatusCssClass = "notification-banner--notified";
+                break;
+            case NotificationStatus.Denotified: NotificationStatusCssClass = "notification-banner--denotified";
+                break;
+            default:
+                break;
+        }
+    var isBanner = ViewData.ContainsKey("IsBanner") && (bool)ViewData["IsBanner"];
+
+    var RedirectPath = @Model.NotificationStatus == NotificationStatus.Draft ? @Model.PatientEditPath : @Model.OverviewPath;
+}
+
+<dl class="notification-banner @NotificationStatusCssClass">
+    <div class="notification-banner-head">
+        <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <h1 class="notification-banner-title-text">
+                    <div> @Model.NotificationStatusString </div>
+                    @if(isBanner)
+                    {
+                        <div> #@Model.NotificationId </div>
+                    }
+                    else
+                    {
+                        <a href="@RedirectPath"> #@Model.NotificationId </a>
+                    }
+                </h1>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="bold-label"> Date of notification </dt>
+                <dd class="cell-min-height"> @Model.FormattedSubmissionDate </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="bold-label"> TB service </dt>
+                <dd> @Model.TBServiceName </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="bold-label"> Case manager </dt>
+                <dd class="cell-min-height"> @Model.Episode.CaseManager </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+    </div>
+    <div class="notification-banner-body">
+        <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-column grid-column-width="OneQuarter" classes="notification-banner-field">
+                <div class="bold-label"> Name </div>
+                <div class="cell-min-height"> @Model.FullName </div>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <div class="bold-label"> Date of birth </div>
+                <div class="cell-min-height"> @Model.FormattedDob </div>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <div class="bold-label"> Country of birth </div>
+                <div class="cell-min-height"> @Model.CountryName </div>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <div class="bold-label"> Postcode </div>
+                <div> @Model.FormattedNoAbodeOrPostcodeString </div>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="bold-label"> NHS number </dt>
+                <dd class="cell-min-height">  @Model.FormattedNhsNumber </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <div class="bold-label"> Sex </div>
+                <div class="cell-min-height"> @Model.SexLabel </div>
+            </nhs-grid-column>
+        </nhs-grid-row> 
+    </div>
+    @if(isBanner)
+    {
+        <div class="notification-banner-triangle"></div>
+    }
+</dl>

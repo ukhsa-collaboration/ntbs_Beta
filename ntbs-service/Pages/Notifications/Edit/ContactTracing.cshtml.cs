@@ -10,11 +10,9 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class ContactTracingModel : NotificationModelBase
+    public class ContactTracingModel : NotificationEditModelBase
     {
-        public ContactTracingModel(INotificationService service) : base(service)
-        {
-        }
+        public ContactTracingModel(INotificationService service) : base(service) {}
 
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
@@ -22,18 +20,14 @@ namespace ntbs_service.Pages_Notifications
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
-            NotificationId = Notification.NotificationId;
             if (Notification == null)
             {
                 return NotFound();
             }
 
             ContactTracing = Notification.ContactTracing;
-            if (ContactTracing == null) {
-                ContactTracing = new ContactTracing();
-            }
-            
-            SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
+            await SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
+
             return Page();
         }
 
@@ -55,7 +49,7 @@ namespace ntbs_service.Pages_Notifications
 
         public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)
         {
-            return ValidateFullModel(model, key, "ContactTracing");
+            return validationService.ValidateFullModel(model, "ContactTracing");
         }
     }
 }

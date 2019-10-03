@@ -16,23 +16,17 @@ namespace ntbs_service.Pages_Notifications
         public List<string> ErrorMessages { get; set; }
     }
 
-    public abstract class NotificationModelBase : ValidationModel
+    public abstract class NotificationEditModelBase : NotificationModelBase
     {
-        protected INotificationService service;
+        protected ValidationService validationService;
 
-        public NotificationModelBase(INotificationService service) 
+        public NotificationEditModelBase(INotificationService service) : base(service)
         {
-            this.service = service;
+            validationService = new ValidationService(this);
         }
-
-        public Notification Notification { get; set; }
-
-        [BindProperty]
-        public int NotificationId { get; set; }
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
-
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
@@ -63,14 +57,6 @@ namespace ntbs_service.Pages_Notifications
             await service.SubmitNotification(Notification);
             
             return RedirectToOverview();
-        }
-
-        public async Task<IActionResult> OnPostCreateLinkAsync()
-        {
-            var notification = await service.GetNotificationAsync(NotificationId);
-            var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
-
-            return RedirectToPage("/Notifications/Edit/Patient", new {id = linkedNotification.NotificationId});
         }
 
         private void SetShouldValidateFull() 
@@ -110,18 +96,18 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("../Overview", new {id = NotificationId});
         }
 
-        protected void SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase 
+        protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
         {
             NotificationId = Notification.NotificationId;
             Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
+
+            await GetLinkedNotifications();
         }
 
-        public ContentResult ValidateModelProperty<T>(string key, object value, bool shouldValidateFull) where T : ModelBase
+        public bool IsValid(string key)
         {
-            T model = (T)Activator.CreateInstance(typeof(T));
-            model.ShouldValidateFull = shouldValidateFull;
-            return ValidateProperty(model, key, value);
+            return validationService.IsValid(key);
         }
 
         protected abstract Task<bool> ValidateAndSave();
