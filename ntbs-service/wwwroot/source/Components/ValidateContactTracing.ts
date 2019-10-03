@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { getHeaders } from '../helpers';
-const axios = require('axios');
+import axios from 'axios';
 
 type ContactTracingVariables = { 
     adultsIdentified: string,
@@ -56,8 +56,13 @@ const ValidateContactTracing = Vue.extend({
         },
 
         ValidateModel: function(contactTracingVariables: ContactTracingVariables) {
-            axios.get(`${this.$props.model}/Validate${this.$props.model}?key=${this.$props.property}`, { params: contactTracingVariables }, 
-                    null, { headers: getHeaders() })
+            let requestConfig = {
+                url: `${this.$props.model}/Validate${this.$props.model}?key=${this.$props.property}`,
+                headers: getHeaders(),
+                params: contactTracingVariables
+              }
+
+            axios.request(requestConfig)
                 .then((response: any) => {
                     console.log(response);
                     var data = response.data;

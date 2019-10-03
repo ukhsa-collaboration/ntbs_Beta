@@ -1,5 +1,5 @@
 import Vue from 'vue';
-const axios = require('axios');
+import axios from 'axios';
 import { getHeaders, getValidationPath } from '../helpers';
 
 type RiskFactor = { 
