@@ -9,5 +9,7 @@ namespace ntbs_service.Models
 
         [Key]
         public string Code { get; set; }
+        public string ServiceAdGroup { get; internal set; }
+        public string PHECAdGroup { get; internal set; }
     }
 }

@@ -94,6 +94,7 @@ namespace ntbs_service
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<ITbServiceManager, TbServiceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

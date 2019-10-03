@@ -13,8 +13,8 @@ namespace ntbs_service.Services
     {
         IQueryable<Notification> GetBaseNotificationIQueryable();
         IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
-        Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
-        Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
+        Task<IList<Notification>> GetRecentNotificationsAsync(List<TBService> TBServices);
+        Task<IList<Notification>> GetDraftNotificationsAsync(List<TBService> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
@@ -43,11 +43,11 @@ namespace ntbs_service.Services
             return repository.GetBaseNotificationIQueryable();
         }
 
-        public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices) {
+        public async Task<IList<Notification>> GetRecentNotificationsAsync(List<TBService> TBServices) {
             return await repository.GetRecentNotificationsAsync(TBServices);
         }
 
-        public async Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices) {
+        public async Task<IList<Notification>> GetDraftNotificationsAsync(List<TBService> TBServices) {
             return await repository.GetDraftNotificationsAsync(TBServices);
         }
 

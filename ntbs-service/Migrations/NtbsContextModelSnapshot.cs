@@ -9990,6 +9990,10 @@ namespace ntbs_service.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
+                    b.Property<string>("PHECAdGroup");
+
+                    b.Property<string>("ServiceAdGroup");
+
                     b.HasKey("Code");
 
                     b.ToTable("TBService");

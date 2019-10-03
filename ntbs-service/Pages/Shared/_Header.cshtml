@@ -34,7 +34,8 @@
                     </li>
                     <li class="govuk-header__navigation-item" class="header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/">
-                        Link
+                            @(User.Identity.Name)
+                            <!-- TODO NTBS-61 add logout -->
                         </a>
                     </li>
                 </ul>
