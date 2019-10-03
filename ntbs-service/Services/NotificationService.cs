@@ -11,7 +11,7 @@ namespace ntbs_service.Services
     public interface INotificationService
     {
         IQueryable<Notification> GetBaseNotificationIQueryable();
-        IQueryable<Notification> GetBaseNotificationIQueryableByNotificationStatus(IList<NotificationStatus> statuses);
+        IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
         Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
@@ -177,8 +177,8 @@ namespace ntbs_service.Services
             return await repository.GetNotificationWithAllInfoAsync(id);
         }
 
-        public IQueryable<Notification> GetBaseNotificationIQueryableByNotificationStatus(IList<NotificationStatus> statuses) {
-            return repository.GetBaseNotificationIQueryableByNotificationStatus(statuses);
+        public IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses) {
+            return repository.GetBaseQueryableNotificationByStatus(statuses);
         }
     }
 }
