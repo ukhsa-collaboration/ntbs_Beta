@@ -12,7 +12,7 @@
 <div>
     <form method="get">
         <div asp-validation-summary="ModelOnly"></div>
-        <div style="padding-bottom: 15px">
+        <div class="enter-search-details-tip">
             To search enter at least one of the following fields
         </div>
         <nhs-grid-row>
@@ -34,44 +34,45 @@
                 </nhs-form-group>
             </nhs-grid-column>
         </nhs-grid-row>
-        <div style="display: flex">
-            <input type="submit" value="Search" class="nhsuk-button" style="margin-left: auto; margin-bottom: 0"/>
+        <div class="submit-search-button-container">
+            <input type="submit" value="Search" class="nhsuk-button submit-search-button"/>
         </div>
     </form>
 </div>
 <hr />
-<div>
-    <div class="clear-search-button-container">
-        <a href="/search" class="clear-search-button">
-            Clear search & start again
-        </a>
-    </div>
-    <div>
-        @{ var resultCount = Model.SearchResults?.NumberOfResults ?? 0; }
-        <p> @resultCount Results found. </p>
-        <p> To filter results, add more search terms and search again. </p>
-    </div>
-    @if(Model.SearchResults != null) 
-    {
-        <ol class="search-results-list">
-            @foreach(var result in @Model.SearchResults) {
-                <li>
-                    <partial name="../Shared/_NotificationBanner.cshtml" model="result"/>
-                </li>
-            }
-        <ol>
-    }
-
-    <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
-        <ul class="nhsuk-list nhsuk-pagination__list">
-            <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl" 
-                previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
-        </ul>
-    </nav>
-</div>
-
-@if(@Model.DisplayCreateNotification ?? false) 
+@if(Model.SearchParamsExist ?? false) 
 {
+    <div>
+        <div class="clear-search-button-container">
+            <a href="/search" class="clear-search-button">
+                Clear search & start again
+            </a>
+        </div>
+        <div>
+            @{ var resultCount = Model.SearchResults?.NumberOfResults ?? 0; }
+            <p> @resultCount Results found. </p>
+            <p> To filter results, add more search terms and search again. </p>
+        </div>
+        @if(Model.SearchResults != null) 
+        {
+            <ol class="search-results-list">
+                @foreach(var result in @Model.SearchResults) 
+                {
+                    <li>
+                        <partial name="../Shared/_NotificationBanner.cshtml" model="result"/>
+                    </li>
+                }
+            </ol>
+        }
+
+        <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
+            <ul class="nhsuk-list nhsuk-pagination__list">
+                <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl" 
+                    previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
+            </ul>
+        </nav>
+    </div>
+
     @section ActionsAside 
     {
         <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button search-notifications-button">

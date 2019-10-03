@@ -30,7 +30,7 @@ namespace ntbs_service.Pages_Search
         [RegularExpression(@"[0-9]+", ErrorMessage = "This can only contain digits 0-9")]
         [BindProperty(SupportsGet = true)]
         public string IdFilter { get; set; }
-        public bool? DisplayCreateNotification { get; set; }
+        public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service)
         {
@@ -53,7 +53,7 @@ namespace ntbs_service.Pages_Search
 
             if (!String.IsNullOrEmpty(IdFilter))
             {
-                DisplayCreateNotification = true;
+                SearchParamsExist = true;
                 draftsIQ = FilterById(draftsIQ, IdFilter);
                 nonDraftsIQ = FilterById(nonDraftsIQ, IdFilter);
             }
