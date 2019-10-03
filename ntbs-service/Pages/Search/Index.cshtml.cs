@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 using ntbs_service.Models;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Pages_Search
 {
@@ -27,10 +28,10 @@ namespace ntbs_service.Pages_Search
 
             var pageSize = 50;
 
-            IQueryable<Notification> notificationsIQ = service.GetBaseNotificationIQueryable();
-            // IQueryable<Notification> draftsIQ = service.GetBaseNotificationIQueryable(Drafts);
+            IQueryable<Notification> draftsIQ = service.GetBaseNotificationIQueryableByNotificationStatus(new List<NotificationStatus>() {NotificationStatus.Draft});
+            IQueryable<Notification> nonDraftsIQ = service.GetBaseNotificationIQueryableByNotificationStatus(new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified});
 
-            notificationsIQ = OrderQueryable(notificationsIQ);
+            var notificationsIQ = OrderQueryable(draftsIQ).Union(OrderQueryable(nonDraftsIQ));
 
             var notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);

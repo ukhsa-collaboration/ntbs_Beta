@@ -11,6 +11,7 @@ namespace ntbs_service.DataAccess
     public interface INotificationRepository
     {
         IQueryable<Notification> GetBaseNotificationIQueryable();
+        IQueryable<Notification> GetBaseNotificationIQueryableByNotificationStatus(IList<NotificationStatus> statuses);
         Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
         Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
@@ -138,6 +139,10 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
                 .Include(n => n.Episode).ThenInclude(p => p.TBService);
+        }
+
+        public IQueryable<Notification> GetBaseNotificationIQueryableByNotificationStatus(IList<NotificationStatus> statuses) {
+            return GetBaseNotificationIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
         }
     }
 }
