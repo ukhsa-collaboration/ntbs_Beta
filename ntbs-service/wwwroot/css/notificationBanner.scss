@@ -47,6 +47,7 @@
     border-right: 20px solid transparent;
     border-top: 20px solid;
     right: 40px;
+    bottom: -20px;
 }
 
 .notification-banner {
@@ -54,8 +55,15 @@
     margin-bottom: 20px;
 }
 
-.notification-banner--draft {
-    border: 2px solid $grey;
+.notification-banner-container {
+    position: relative;
+}
+
+.notification-banner-container--draft {
+
+    .notification-banner {
+        border: 2px solid $grey;
+    }
 
     .notification-banner-head {
         background: $grey;
@@ -66,8 +74,11 @@
     }
 }
 
-.notification-banner--notified {
-    border: 2px solid $phe-red;
+.notification-banner-container--notified {
+
+    .notification-banner {
+        border: 2px solid $phe-red;
+    }
 
     .notification-banner-head {
         background: $phe-red;
@@ -78,8 +89,11 @@
     }
 }
 
-.notification-banner--denotified {
-    border: 2px solid black;
+.notification-banner-container--denotified {
+
+    .notification-banner {
+        border: 2px solid black;
+    }
 
     .notification-banner-head {
         background: black;
