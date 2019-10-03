@@ -27,11 +27,11 @@
         </a>
     </div>
     <div>
-        <p> @Model.SearchResultsBannerDisplay.NumberOfResults Results found. </p>
+        <p> @Model.SearchResults.NumberOfResults Results found. </p>
         <p> To filter results, add more search terms and search again. </p>
     </div>
     <ol class="search-results-list">
-        @foreach(var result in @Model.SearchResultsBannerDisplay) {
+        @foreach(var result in @Model.SearchResults) {
             <li>
                 <partial name="../Shared/_NotificationBanner.cshtml" model="result"/>
             </li>
@@ -40,31 +40,8 @@
 
     <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
         <ul class="nhsuk-list nhsuk-pagination__list">
-            @{
-
-                var previousPageText = "";
-                var previousPageUrl = "";
-                var nextPageText = "";
-                var nextPageUrl = "";
-                var queryString = Request.Query;
-                var previousPageQueryString = new RouteValueDictionary();
-                queryString.Keys.Select(x => previousPageQueryString[x] = queryString[x].ToString());
-                var nextPageQueryString = previousPageQueryString;
-                if(@Model.SearchResultsBannerDisplay.HasPreviousPage)
-                {
-                    previousPageText = "Page " + (Model.SearchResultsBannerDisplay.PageIndex - 1) + " of " + (Model.SearchResultsBannerDisplay.TotalPages);
-                    previousPageQueryString["pageIndex"] = "" + (Model.SearchResultsBannerDisplay.PageIndex - 1);
-                    previousPageUrl = @Url.Action("Search", previousPageQueryString);
-                }
-                if(@Model.SearchResultsBannerDisplay.HasNextPage)
-                {
-                    nextPageText = "Page " + (Model.SearchResultsBannerDisplay.PageIndex + 1) + " of " + (Model.SearchResultsBannerDisplay.TotalPages);
-                    nextPageQueryString["pageIndex"] = "" + (Model.SearchResultsBannerDisplay.PageIndex + 1);
-                    nextPageUrl = @Url.Action("Search", nextPageQueryString);
-                }
-            }
-            <nhs-pagination next-link-text="@nextPageText" next-url="@nextPageUrl" 
-                previous-link-text="@previousPageText" previous-url="@previousPageUrl"></nhs-pagination>
+            <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl" 
+                previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
         </ul>
     </nav>
 </div>
