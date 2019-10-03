@@ -72,12 +72,6 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-        public int? TotalContactsIdentified => CalculateSum(ContactTracing.AdultsIdentified, ContactTracing.ChildrenIdentified);
-        public int? TotalContactsScreened => CalculateSum(ContactTracing.AdultsScreened, ContactTracing.ChildrenScreened);
-        public int? TotalContactsActiveTB => CalculateSum(ContactTracing.AdultsActiveTB, ContactTracing.ChildrenActiveTB);
-        public int? TotalContactsLatentTB => CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
-        public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
-        public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
 
         private string GetNotificationStatusString()
         {
@@ -91,14 +85,6 @@ namespace ntbs_service.Models
             {
                 return "Denotified";
             }
-        }
-
-        private int? CalculateSum(int? x, int? y) {
-            if (x == null && y == null) 
-            {
-                return null;
-            }
-            return x ?? 0 + y ?? 0;
         }
 
         private string FormatDate(DateTime? date)

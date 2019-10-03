@@ -19,12 +19,17 @@
     padding-bottom: 10px;
 }
 
-.contact-tracing-values {
-    display: flex;
+.contact-tracing-row {
+    display: table-row
 }
 
 .contact-tracing-value {
     padding-left: 20px;
+    display: table-cell
+}
+
+.contact-tracing-label {
+    display: table-cell
 }
 
 .notification-details-label {
