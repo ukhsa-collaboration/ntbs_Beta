@@ -9,9 +9,9 @@ namespace ntbs_service.Pages
     public class IndexModel : PageModel
     {
         private readonly INotificationService Service;
-        private readonly ITbServiceManager TbServicesManager;
+        private readonly IUserService TbServicesManager;
 
-        public IndexModel(INotificationService service, ITbServiceManager tbServiceManager)
+        public IndexModel(INotificationService service, IUserService tbServiceManager)
         {
             Service = service;
             TbServicesManager = tbServiceManager;
@@ -22,7 +22,7 @@ namespace ntbs_service.Pages
 
         public async Task OnGetAsync()
         {
-            List<TBService> services = await TbServicesManager.ForUser(User);
+            List<TBService> services = await TbServicesManager.TbServices(User);
             DraftNotifications = await Service.GetDraftNotificationsAsync(services);
             RecentNotifications = await Service.GetRecentNotificationsAsync(services);
         }
