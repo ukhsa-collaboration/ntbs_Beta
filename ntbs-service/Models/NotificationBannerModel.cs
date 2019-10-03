@@ -10,7 +10,8 @@ namespace ntbs_service.Models
     public class NotificationBannerModel
     {
         public int NotificationId;
-        public string DateOfNotification;
+        public string SortByDate;
+        public string NotificationDate;
         public string TBService;
         public string CaseManager;
         public string NHSNumber;
@@ -21,18 +22,17 @@ namespace ntbs_service.Models
         public string Sex;
         public string DrugResistance;
         public string TreatmentOutcome;
-        public string NotificationOrigination;
+        public string Origin;
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
-        public bool FullPermissions;
-        public bool SearchPage;
+        public bool ShowLink = false;
 
-        public NotificationBannerModel(Notification notification, bool isSearchPage = false) {
+        public NotificationBannerModel(Notification notification) {
             NotificationId = notification.NotificationId;
             if (notification.NotificationStatus == Enums.NotificationStatus.Draft) {
-                DateOfNotification = notification.FormattedCreationDate;
+                SortByDate = notification.FormattedCreationDate;
             } else {
-                DateOfNotification = notification.FormattedSubmissionDate;
+                SortByDate = notification.FormattedSubmissionDate;
             }
             TBService = notification.TBServiceName;
             CaseManager = notification.Episode.CaseManager;
@@ -44,9 +44,15 @@ namespace ntbs_service.Models
             Sex = notification.SexLabel;
             NotificationStatus = notification.NotificationStatus;
             NotificationStatusString = notification.NotificationStatusString;
-            FullPermissions = true;
-            NotificationOrigination = "ntbs";
-            SearchPage = isSearchPage;
+            // TODO most likely need an enum for the different origins of notifications
+            Origin = "ntbs";
+        }
+
+        static public NotificationBannerModel WithLink(Notification notification) {
+            return new NotificationBannerModel(notification)
+            {
+                ShowLink = true
+            };
         }
     }
 }

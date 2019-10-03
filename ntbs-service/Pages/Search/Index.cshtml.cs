@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
 using ntbs_service.Pages;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Pages_Search
 {
@@ -17,8 +18,7 @@ namespace ntbs_service.Pages_Search
     {
         public INotificationService service;
         public int PageIndex;
-        public PaginatedList<Notification> Notifications { get; set; }
-        public IList<NotificationBannerModel> SearchResultsBannerDisplay;
+        public PaginatedList<NotificationBannerModel> SearchResultsBannerDisplay;
 
         [RegularExpression(@"[0-9]+", ErrorMessage = "This can only contain digits 0-9")]
         [BindProperty(SupportsGet = true)]
@@ -39,31 +39,34 @@ namespace ntbs_service.Pages_Search
 
             var pageSize = 50;
 
-            PageIndex = pageIndex ?? 1;
+            IQueryable<Notification> draftsIQ = service.GetBaseNotificationIQueryableByNotificationStatus(new List<NotificationStatus>() {NotificationStatus.Draft});
+            IQueryable<Notification> nonDraftsIQ = service.GetBaseNotificationIQueryableByNotificationStatus(new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified});
 
-            IQueryable<Notification> notificationsIQ = service.GetBaseNotificationIQueryable();
-            
             if (!String.IsNullOrEmpty(IdFilter))
             {
                 DisplayCreateNotification = true;
-                notificationsIQ = notificationsIQ.Where(s => s.NotificationId.Equals(Int32.Parse(IdFilter)) 
-                    || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
+                draftsIQ = FilterById(draftsIQ, IdFilter);
+                nonDraftsIQ = FilterById(nonDraftsIQ, IdFilter);
             }
 
-            Notifications = await PaginatedList<Notification>.CreateAsync(
+            IQueryable<Notification> notificationsIQ = OrderQueryable(draftsIQ).Union(OrderQueryable(nonDraftsIQ));
+
+            var notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
 
-            SearchResultsBannerDisplay = new List<NotificationBannerModel>();
-            foreach(Notification result in Notifications) {
-                SearchResultsBannerDisplay.Add(new NotificationBannerModel(result, true));
-            }
+            SearchResultsBannerDisplay = notifications.SelectItems(NotificationBannerModel.WithLink);
 
             return Page();
         }
 
-        public void OnGetSearch(int? pageIndex)
-        {
-            DisplayCreateNotification = true;
+        public IQueryable<Notification> OrderQueryable(IQueryable<Notification> query) {
+            return query.OrderByDescending(n => n.CreationDate)
+                .OrderByDescending(n => n.SubmissionDate);
+        }
+
+        public IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter) {
+            return IQ.Where(s => s.NotificationId.Equals(Int32.Parse(IdFilter)) 
+                    || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
         }
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)

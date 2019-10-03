@@ -8,6 +8,15 @@
 <nhs-grid-row>
     <nhs-grid-column grid-column-width="Full">
         <partial name="./_NotificationBanner.cshtml" model="@Model.NotificationBannerModel"/>
+        <div class="notification-banner-triangle"> </div>
+        @if(@Model.Notification.NotificationStatus == NotificationStatus.Notified)
+        {
+            <div class="notification-banner-links">
+                <a href="/Notifications/Overview?id=@Model.NotificationId"> Notification details </a>
+                <div class="notification-banner-link-separator"> </div>
+                <a href="/Notifications/Overview?id=@Model.NotificationId"> Audit </a>
+            </div>
+        }
     </nhs-grid-column>
     <nhs-grid-column grid-column-width="OneQuarter">
         <div>
