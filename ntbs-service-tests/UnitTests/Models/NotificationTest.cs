@@ -34,7 +34,7 @@ namespace ntbs_service_tests.UnitTests.Models
         {
             // Arrange
             TestNotification.PatientDetails.NoFixedAbode = false;
-            TestNotification.PatientDetails.Postcode = "NW 123 RT";
+            TestNotification.PatientDetails.Postcode = " NW12 3RT   ";
 
             // Act
             var postcode = TestNotification.FormattedNoAbodeOrPostcodeString;
@@ -92,7 +92,7 @@ namespace ntbs_service_tests.UnitTests.Models
         [Fact]
         public void CreatesVaccinationStateStringCorrectly() {
             // Arrange
-            TestNotification.ClinicalDetails.BCGVaccinationState = ntbs_service.Models.Enums.Status.Yes;
+            TestNotification.ClinicalDetails.BCGVaccinationState = Status.Yes;
             TestNotification.ClinicalDetails.BCGVaccinationYear = 2000;
             
             // Act

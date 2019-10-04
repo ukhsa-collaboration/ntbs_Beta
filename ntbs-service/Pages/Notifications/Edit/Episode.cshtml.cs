@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
-using ntbs_service.Pages;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
@@ -31,7 +30,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             Episode = Notification.Episode;
             if (Episode == null)
             {
@@ -66,15 +65,14 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./ClinicalDetails", new {id = notificationId});
         }
 
-        protected override async Task<bool> ValidateAndSave(int NotificationId) {
+        protected override async Task<bool> ValidateAndSave() {
     
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdateEpisodeAsync(notification, Episode);
+            await service.UpdateEpisodeAsync(Notification, Episode);
             return true;
         }
 

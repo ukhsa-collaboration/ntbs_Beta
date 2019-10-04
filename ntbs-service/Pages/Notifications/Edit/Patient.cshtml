@@ -54,19 +54,25 @@
                     id="dob-error"></span>
                 <nhs-date-input id="dob">
                     <nhs-date-input-item>
-                        <label nhs-label-type="Date" asp-for="FormattedDob.Day">Day</label>
-                        <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                            is-error-input=@DobError asp-for="FormattedDob.Day"/>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedDob.Day">Day</label>
+                            <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@DobError asp-for="FormattedDob.Day"/>
+                        </nhs-form-group>
                     </nhs-date-input-item>
                     <nhs-date-input-item>
-                        <label nhs-label-type="Date" asp-for="FormattedDob.Month">Month</label>
-                        <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                            is-error-input=@DobError asp-for="FormattedDob.Month" />
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedDob.Month">Month</label>
+                            <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@DobError asp-for="FormattedDob.Month" />
+                        </nhs-form-group>
                     </nhs-date-input-item>
                     <nhs-date-input-item>
-                        <label nhs-label-type="Date" asp-for="FormattedDob.Year">Year</label>
-                        <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                            is-error-input=@DobError asp-for="FormattedDob.Year" />
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedDob.Year">Year</label>
+                            <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                is-error-input=@DobError asp-for="FormattedDob.Year" />
+                        </nhs-form-group>
                     </nhs-date-input-item>
                 </nhs-date-input>
             </nhs-fieldset>
@@ -204,5 +210,5 @@
             </div>
             <br />
     </div>
-    <partial name="_PaginationPartial">
+    <partial name="_PaginationPartial" for="Notification">
 </div>

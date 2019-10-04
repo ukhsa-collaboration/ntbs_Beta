@@ -11,6 +11,8 @@ namespace ntbs_service.Services
 {
     public interface INotificationService
     {
+        IQueryable<Notification> GetBaseNotificationIQueryable();
+        IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
         Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
@@ -27,6 +29,7 @@ namespace ntbs_service.Services
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
+        Task<Notification> CreateLinkedNotificationAsync(Notification notification);
     }
 
     public class NotificationService : INotificationService
@@ -37,6 +40,10 @@ namespace ntbs_service.Services
         public NotificationService(INotificationRepository repository, NtbsContext context) {
             this.repository = repository;
             this.context = context;
+        }
+
+        public IQueryable<Notification> GetBaseNotificationIQueryable() {
+            return repository.GetBaseNotificationIQueryable();
         }
 
         public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices) {
@@ -211,6 +218,34 @@ namespace ntbs_service.Services
         public async Task<Notification> GetNotificationWithAllInfoAsync(int? id)
         {
             return await repository.GetNotificationWithAllInfoAsync(id);
+        }
+
+        public IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses) {
+            return repository.GetBaseQueryableNotificationByStatus(statuses);
+        }
+        
+        public async Task<Notification> CreateLinkedNotificationAsync(Notification notification)
+        {
+            var linkedNotification = new Notification();
+            context.Notification.Add(linkedNotification);
+            context.Entry(linkedNotification.PatientDetails).CurrentValues.SetValues(notification.PatientDetails);
+
+            if (notification.GroupId != null)
+            {
+                linkedNotification.GroupId = notification.GroupId;
+            }
+            else
+            {
+                var group = new NotificationGroup();
+                context.NotificationGroup.Add(group);
+
+                linkedNotification.GroupId = group.NotificationGroupId;
+                notification.GroupId = group.NotificationGroupId;
+            }
+
+            await context.SaveChangesAsync();
+
+            return linkedNotification;
         }
 
         private async Task UpdateDatabase(AuditType auditType = AuditType.Edit)

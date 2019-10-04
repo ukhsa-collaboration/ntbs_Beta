@@ -31,6 +31,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             SocialRiskFactors = Notification.SocialRiskFactors;
             if (SocialRiskFactors == null)
             {
@@ -43,34 +44,19 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave(int NotificationId) {            
+        protected override async Task<bool> ValidateAndSave() {            
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
-            var notification = await service.GetNotificationWithSocialRisksAsync(NotificationId);
-            await service.UpdateSocialRiskFactorsAsync(notification, SocialRiskFactors);
+            await service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
             return true;
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
         {
             return RedirectToPage("./Travel", new {id = notificationId});
-        } 
-
-        public ContentResult OnGetValidateSocialRiskFactorsProperty(string key, bool pastFive, bool moreThanFive, bool isCurrent, string status)
-        {
-            var riskStatus = status == null ? null : (Status?) Enum.Parse(typeof(Status), status);
-            RiskFactorDetails riskFactor = new RiskFactorDetails
-            {
-                MoreThanFiveYearsAgo = moreThanFive,
-                InPastFiveYears = pastFive,
-                IsCurrent = isCurrent,
-                Status = riskStatus
-            }; 
-            
-            return ValidateProperty(new SocialRiskFactors(), key, riskFactor);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
+            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             NotificationId = Notification.NotificationId;
 
@@ -45,7 +46,7 @@ namespace ntbs_service.Pages_Notifications
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> ValidateAndSave(int notificationId)
+        protected override Task<bool> ValidateAndSave()
         {
             // This is not needed on the overview page. We should think about restructuring the
             // inheritance to accommodate pages like this one without this hack

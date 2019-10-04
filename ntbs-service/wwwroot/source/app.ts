@@ -11,7 +11,6 @@ import { YearComparison } from './Components/YearComparison';
 import { CascadingDropwdowns } from './Components/CascadingDropdowns';
 import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import ValidateImmunosuppression from './Components/ValidateImmunosuppression';
-import { ValidateRiskFactor } from './Components/ValidateRiskFactor';
 import { ValidateMultiple } from './Components/ValidateMultiple';
 import { ValidateRequiredCheckboxes } from './Components/ValidateRequiredCheckboxes';
 // Vue needs to be the first thing to load!
@@ -24,7 +23,6 @@ Vue.component('date-comparison', DateComparison);
 Vue.component('cascading-dropdowns', CascadingDropwdowns);
 Vue.component('validate-contact-tracing', ValidateContactTracing);
 Vue.component('validate-immunosuppression', ValidateImmunosuppression);
-Vue.component('validate-riskfactor', ValidateRiskFactor);
 Vue.component('year-comparison', YearComparison);
 Vue.component('validate-multiple', ValidateMultiple);
 Vue.component('validate-required-checkboxes', ValidateRequiredCheckboxes);

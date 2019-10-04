@@ -37,6 +37,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             Patient = Notification.PatientDetails;
             if (Patient == null)
             {
@@ -57,7 +58,7 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave(int NotificationId) {
+        protected override async Task<bool> ValidateAndSave() {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
@@ -66,8 +67,7 @@ namespace ntbs_service.Pages_Notifications
                 return false;
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdatePatientAsync(notification, Patient);
+            await service.UpdatePatientAsync(Notification, Patient);
             return true;
         }
 

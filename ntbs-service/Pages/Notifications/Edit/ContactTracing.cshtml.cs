@@ -23,6 +23,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
+
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             ContactTracing = Notification.ContactTracing;
             
             SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
@@ -34,15 +36,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./SocialRiskFactors", new {id = notificationId});
         }
 
-        protected override async Task<bool> ValidateAndSave(int NotificationId) {
+        protected override async Task<bool> ValidateAndSave() {
 
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdateContactTracingAsync(notification, ContactTracing);
+            await service.UpdateContactTracingAsync(Notification, ContactTracing);
             return true;
         }
 

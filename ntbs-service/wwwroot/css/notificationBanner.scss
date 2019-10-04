@@ -3,6 +3,10 @@
 .notification-banner-head {
     color: white;
     padding: 15px 20px;
+
+    .notification-banner-id-link {
+        color: white;
+    }
 }
 
 .notification-banner-title-text {
@@ -43,11 +47,16 @@
     border-right: 20px solid transparent;
     border-top: 20px solid;
     right: 40px;
+    bottom: -20px;
 }
 
 .notification-banner {
     position: relative;
     margin-bottom: 20px;
+}
+
+.notification-banner-container {
+    position: relative;
 }
 
 .notification-banner--draft {
@@ -56,10 +65,10 @@
     .notification-banner-head {
         background: $grey;
     }
+}
 
-    .notification-banner-triangle {
-        border-top-color: $grey;
-    }
+.notification-banner-triangle--draft {
+    border-top-color: $grey;
 }
 
 .notification-banner--notified {
@@ -68,10 +77,10 @@
     .notification-banner-head {
         background: $phe-red;
     }
+}
 
-    .notification-banner-triangle {
-        border-top-color: $phe-red;
-    }
+.notification-banner-triangle--notified {
+    border-top-color: $phe-red;
 }
 
 .notification-banner--denotified {
@@ -80,8 +89,8 @@
     .notification-banner-head {
         background: black;
     }
+}
 
-    .notification-banner-triangle {
-        border-top-color: black;
-    }
+.notification-banner-triangle--denotified {
+    border-top-color: black;
 }

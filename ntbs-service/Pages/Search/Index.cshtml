@@ -1,5 +1,6 @@
 @page
 @model ntbs_service.Pages_Search.IndexModel
+@using Microsoft.AspNetCore.Routing
 
 @{
     ViewData["Title"] = "Search";
@@ -13,60 +14,41 @@
     <form method="post">
         <div asp-validation-summary="ModelOnly"></div>
         <div>
-            <label asp-for="SearchRequest.NhsNumber"></label>
-            <input asp-for="SearchRequest.NhsNumber" />
-            <span asp-validation-for="SearchRequest.NhsNumber"></span>
         </div>
         <div>
             <input type="submit" value="Search" />
         </div>
     </form>
 </div>
-<table>
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].Source)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].FamilyNames)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].GivenNames)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].NhsNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].DateOfBirth)
-            </th>
-                        <th>
-                @Html.DisplayNameFor(model => model.Results[0].DateOfNotification)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Results) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Source)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FamilyNames)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GivenNames)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NhsNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfNotification)
-            </td>
-        </tr>
+<div>
+    <div class="clear-search-button-container">
+        <a href="/search" class="clear-search-button">
+            Clear search & start again
+        </a>
+    </div>
+    <div>
+        <p> @Model.SearchResults.NumberOfResults Results found. </p>
+        <p> To filter results, add more search terms and search again. </p>
+    </div>
+    <ol class="search-results-list">
+        @foreach(var result in @Model.SearchResults) {
+            <li>
+                <partial name="../Shared/_NotificationBanner.cshtml" model="result"/>
+            </li>
+        }
+    <ol>
+
+    <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
+        <ul class="nhsuk-list nhsuk-pagination__list">
+            <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl" 
+                previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
+        </ul>
+    </nav>
+</div>
+
+@section ActionsAside 
+{
+    <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button search-notifications-button">
+        Create Notification
+    </a>
 }
-    </tbody>
-</table>

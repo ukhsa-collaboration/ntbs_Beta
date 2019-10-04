@@ -24,6 +24,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             PatientTBHistory = Notification.PatientTBHistory;
             if (PatientTBHistory == null) {
                 PatientTBHistory = new PatientTBHistory();
@@ -43,7 +44,7 @@ namespace ntbs_service.Pages_Notifications
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int NotificationId) {
+        protected override async Task<bool> ValidateAndSave() {
             UpdateFlags();
             
             if (!ModelState.IsValid)
@@ -51,8 +52,7 @@ namespace ntbs_service.Pages_Notifications
                 return false;
             }
 
-            var notification = await service.GetNotificationAsync(NotificationId);
-            await service.UpdatePatientTBHistoryAsync(notification, PatientTBHistory);
+            await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
             return true;
         }
         

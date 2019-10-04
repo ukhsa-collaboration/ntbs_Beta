@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
 
@@ -43,5 +44,25 @@ namespace ntbs_service.Models
 
         [PositiveIntegerSmallerThanValue("ChildrenStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingChildrenFinishedTreatment)]
         public int? ChildrenFinishedTreatment { get; set; }
+
+
+        public int? TotalContactsIdentified => CalculateSum(AdultsIdentified, ChildrenIdentified);
+
+        public int? TotalContactsScreened => CalculateSum(AdultsScreened, ChildrenScreened);
+
+        public int? TotalContactsActiveTB => CalculateSum(AdultsActiveTB, ChildrenActiveTB);
+
+        public int? TotalContactsLatentTB => CalculateSum(AdultsLatentTB, ChildrenLatentTB);
+
+        public int? TotalContactsStartedTreatment => CalculateSum(AdultsStartedTreatment, ChildrenStartedTreatment);
+
+        public int? TotalContactsFinishedTreatment => CalculateSum(AdultsFinishedTreatment, ChildrenFinishedTreatment);
+
+        private int? CalculateSum(int? x, int? y) {
+            if (x == null && y == null) {
+                return null;
+            }
+            return (x ?? 0) + (y ?? 0);
+        }
     }
 }
