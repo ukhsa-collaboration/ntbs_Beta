@@ -113,13 +113,10 @@ namespace ntbs_service
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseMiddleware<AuditGetRequestMiddleWare>();
-
-            app.UseAuthentication();
-
             app.UseMvc();
 
             var cultureInfo = new CultureInfo("en-GB");

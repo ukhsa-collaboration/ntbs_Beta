@@ -6,15 +6,15 @@ namespace ntbs_service.Services
 {
     public interface IAuditService
     {
-        Task OnGetAuditAsync(int notificationId, string model, string viewType);
+        Task OnGetAuditAsync(int notificationId, string model, string viewType, string userName);
     }
 
     public class AuditService : IAuditService
     {
-        private AuditDatabaseContext auditContext;
+        private readonly AuditDatabaseContext auditContext;
 
         private const string READ_EVENT = "Read";
-        private bool shouldAudit;
+        private readonly bool shouldAudit;
 
         public AuditService(AuditDatabaseContext auditContext, IConfiguration configuration)
         {
@@ -22,10 +22,10 @@ namespace ntbs_service.Services
             shouldAudit = configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE);
         }
         
-        public async Task OnGetAuditAsync(int notificationId, string model, string viewType)
+        public async Task OnGetAuditAsync(int notificationId, string model, string viewType, string userName)
         {
             if (shouldAudit) {
-                await auditContext.AuditOperationAsync(notificationId, model, viewType, READ_EVENT);
+                await auditContext.AuditOperationAsync(notificationId, model, viewType, READ_EVENT, userName);
             }
         }
     }
