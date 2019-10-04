@@ -386,12 +386,12 @@
                                 Yes
                             </label>
                         </div>
-                        <validate-date ref="date4" name="Death Date" model="ClinicalDetails" property="DeathDate" rank="4" v-model="dates[4]" inline-template>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
-                                @{
-                                var DeathError = !Model.IsValid("ClinicalDetails.DeathDate");
-                                var DeathGroupState = DeathError ? Error : Standard;
-                                }
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
+                            @{
+                            var DeathError = !Model.IsValid("ClinicalDetails.DeathDate");
+                            var DeathGroupState = DeathError ? Error : Standard;
+                            }
+                            <validate-date ref="date4" name="Death Date" model="ClinicalDetails" property="DeathDate" rank="4" v-model="dates[4]" inline-template>
                                 <nhs-form-group nhs-form-group-type=@DeathGroupState>
                                     <nhs-fieldset aria-describedby="postmortem-error" role="group">
                                         <nhs-fieldset-legend nhs-legend-size="Standard">Date of Death</nhs-fieldset-legend>
@@ -421,8 +421,8 @@
                                         </nhs-date-input>
                                     </nhs-fieldset>
                                 </nhs-form-group>
-                            </div>
-                        </validate-date>
+                            </validate-date>
+                        </div>
                         <div class="nhsuk-radios__item">
                             <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="false">
                             <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
