@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ntbs_service.Models;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
@@ -16,6 +17,7 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             
             NotificationId = id;
 
