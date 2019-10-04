@@ -32,7 +32,7 @@ namespace ntbs_service.Pages_Search
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
 
-            var pageSize = 50;
+            var pageSize = 3;
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
@@ -78,7 +78,7 @@ namespace ntbs_service.Pages_Search
             {
                 PreviousPageText = "Page " + (SearchResults.PageIndex - 1) + " of " + (SearchResults.TotalPages);
                 previousPageQueryString["pageIndex"] = "" + (SearchResults.PageIndex - 1);
-                PreviousPageUrl = @Url.Action("Search", previousPageQueryString);
+                PreviousPageUrl = QueryHelpers.AddQueryString("/Search", previousPageQueryString);
             }
             if(SearchResults.HasNextPage)
             {
