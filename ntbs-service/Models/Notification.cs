@@ -138,9 +138,7 @@ namespace ntbs_service.Models
                 return "No fixed abode";
             } else
             {
-                var postcodeNoWhiteSpace = PatientDetails.Postcode?.Replace(" ", string.Empty);
-                string FormattedPostcode = postcodeNoWhiteSpace?.Insert(postcodeNoWhiteSpace.Length - 3, " ");
-                return FormattedPostcode;
+                return PatientDetails.Postcode.Trim();
             }
         }
 
