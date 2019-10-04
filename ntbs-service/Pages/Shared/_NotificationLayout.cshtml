@@ -3,11 +3,34 @@
     Layout = "../Shared/_Layout.cshtml";
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
     var currentPage = splitUrlPath[splitUrlPath.Length-1];
+    var NotificationStatusTriangleCssClass = "";
+    switch(@Model.Notification.NotificationStatus)
+    {
+        case NotificationStatus.Draft: NotificationStatusTriangleCssClass = "notification-banner-triangle--draft";
+            break;
+        case NotificationStatus.Notified: NotificationStatusTriangleCssClass = "notification-banner-triangle--notified";
+            break;
+        case NotificationStatus.Denotified: NotificationStatusTriangleCssClass = "notification-banner-triangle--denotified";
+            break;
+        default:
+            break;
+    }
 }
 
 <nhs-grid-row>
     <nhs-grid-column grid-column-width="Full">
-        <partial name="./_NotificationBanner.cshtml" model="@Model"/>
+        <div class="notification-banner-container">
+            <partial name="./_NotificationBanner.cshtml" model="@Model.NotificationBannerModel"/>
+            <div class="notification-banner-triangle @NotificationStatusTriangleCssClass"> </div>
+        </div>
+        @if(@Model.Notification.NotificationStatus == NotificationStatus.Notified)
+        {
+            <div class="notification-banner-links">
+                <a href="/Notifications/Overview?id=@Model.NotificationId"> Notification details </a>
+                <div class="notification-banner-link-separator"> </div>
+                <a href="/Notifications/Overview?id=@Model.NotificationId"> Audit </a>
+            </div>
+        }
     </nhs-grid-column>
     <nhs-grid-column grid-column-width="OneQuarter">
         <div>

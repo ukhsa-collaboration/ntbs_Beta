@@ -28,6 +28,7 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationBannerModel = new NotificationBannerModel(Notification);
             ContactTracing = Notification.ContactTracing;
             if (ContactTracing == null) {
                 ContactTracing = new ContactTracing();
