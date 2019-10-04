@@ -27,6 +27,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
+        public virtual DbSet<NotificationGroup> NotificationGroup { get; set; }
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
@@ -128,17 +129,22 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Hospital>().HasData(GetHospitalsList());
 
-            var converter = new EnumToStringConverter<Status>();
+            var statusEnumConverter = new EnumToStringConverter<Status>();
+            var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
 
             modelBuilder.Entity<Notification>(entity =>
             {
+                entity.HasOne<NotificationGroup>()
+                    .WithMany(g => g.Notifications)
+                    .HasForeignKey(e => e.GroupId);
+
                 entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
                 entity.OwnsOne(e => e.ClinicalDetails, e => {
                      e.Property(cd => cd.BCGVaccinationState)
-                        .HasConversion(converter);
+                        .HasConversion(statusEnumConverter);
                     e.ToTable("ClinicalDetails");
                 });
 
@@ -148,23 +154,26 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.SocialRiskFactors, x => {
                     x.OwnsOne(c => c.RiskFactorDrugs , rf => {
-                        rf.Property(e => e.Status).HasConversion(converter);
+                        rf.Property(e => e.Status).HasConversion(statusEnumConverter);
+                        rf.Property(e => e.Type).HasConversion(riskFactorEnumConverter).HasDefaultValue(RiskFactorType.Drugs);
                         rf.ToTable("RiskFactorDrugs");
                     });
 
                     x.OwnsOne(c => c.RiskFactorHomelessness, rh => {
-                        rh.Property(e => e.Status).HasConversion(converter);
+                        rh.Property(e => e.Status).HasConversion(statusEnumConverter);
+                        rh.Property(e => e.Type).HasConversion(riskFactorEnumConverter).HasDefaultValue(RiskFactorType.Homelessness);
                         rh.ToTable("RiskFactorHomelessness");
                     });
 
                     x.OwnsOne(c => c.RiskFactorImprisonment, rh => {
-                        rh.Property(e => e.Status).HasConversion(converter);
+                        rh.Property(e => e.Status).HasConversion(statusEnumConverter);
+                        rh.Property(e => e.Type).HasConversion(riskFactorEnumConverter).HasDefaultValue(RiskFactorType.Imprisonment);
                         rh.ToTable("RiskFactorImprisonment");
                     });
 
-                    x.Property(e => e.AlcoholMisuseStatus).HasConversion(converter);
-                    x.Property(e => e.SmokingStatus).HasConversion(converter);
-                    x.Property(e => e.MentalHealthStatus).HasConversion(converter);
+                    x.Property(e => e.AlcoholMisuseStatus).HasConversion(statusEnumConverter);
+                    x.Property(e => e.SmokingStatus).HasConversion(statusEnumConverter);
+                    x.Property(e => e.MentalHealthStatus).HasConversion(statusEnumConverter);
 
                     x.ToTable("SocialRiskFactors");
                 });

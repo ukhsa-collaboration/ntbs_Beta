@@ -29,6 +29,8 @@ namespace EFAuditer.Migrations
 
                     b.Property<DateTime>("AuditDateTime");
 
+                    b.Property<string>("AuditDetails");
+
                     b.Property<string>("AuditUser");
 
                     b.Property<string>("EntityType");

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.Models
@@ -73,11 +74,12 @@ namespace ntbs_service_tests.UnitTests.Models
         public void CreatesSocialRiskTimePeriodsStringCorrectly() 
         {
             // Arrange
-            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorBase {
-                Status = ntbs_service.Models.Enums.Status.Yes,
-                        IsCurrent = true,
-                        InPastFiveYears = false,
-                        MoreThanFiveYearsAgo = true
+            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs)
+            {
+                Status = Status.Yes,
+                IsCurrent = true,
+                InPastFiveYears = false,
+                MoreThanFiveYearsAgo = true
             };
             
             // Act
@@ -98,6 +100,25 @@ namespace ntbs_service_tests.UnitTests.Models
 
             // Assert
             Assert.Equal("Yes - 2000", stateAndYear);
+        }
+
+        [Theory]
+        [InlineData(true, 2019, 1, 1, "Yes - 01-Jan-2019")]
+        [InlineData(false, 2019, 1, 1, "No - 01-Jan-2019")]
+        [InlineData(false, null, null, null, "No")]
+        public void CreatesMDRTreatmentStringCorrectly(bool state, int? year, int? month, int? day, string expectedResult) {
+            // Arrange
+            if (year != null && month != null && day != null) {
+                var dateTime = new DateTime((int)year, (int)month, (int)day);
+                TestNotification.ClinicalDetails.MDRTreatmentStartDate = dateTime;
+            }
+            TestNotification.ClinicalDetails.IsMDRTreatment = state;
+
+            // Act
+            var stateAndDate = TestNotification.MDRTreatmentStateAndDate;
+
+            // Assert
+            Assert.Equal(expectedResult, stateAndDate);
         }
     }
 }

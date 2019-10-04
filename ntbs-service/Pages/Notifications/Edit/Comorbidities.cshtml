@@ -1,5 +1,5 @@
 @page "{handler?}"
-@model ntbs_service.Pages_Notifications.PatientModel
+@model ntbs_service.Pages_Notifications.ComorbiditiesModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -7,3 +7,5 @@ Layout = "../../Shared/_NotificationLayout.cshtml";
 ViewData["Title"] = "Notification - Comorbidities";
 }
 <h1>Comorbidities</h1>
+
+<partial name="_PaginationPartial" for="Notification">

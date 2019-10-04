@@ -21,7 +21,7 @@ namespace ntbs_service.Pages_Notifications
             this.service = service;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int? id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationWithAllInfoAsync(id);
             if (Notification == null)
@@ -46,7 +46,7 @@ namespace ntbs_service.Pages_Notifications
             throw new NotImplementedException();
         }
 
-        protected override Task<bool> ValidateAndSave(int? notificationId)
+        protected override Task<bool> ValidateAndSave()
         {
             // This is not needed on the overview page. We should think about restructuring the
             // inheritance to accommodate pages like this one without this hack

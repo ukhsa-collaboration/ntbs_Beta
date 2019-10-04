@@ -33,10 +33,15 @@ namespace ntbs_service.Models.Validations
             var propertyToCompare = instance.GetType().GetProperty(ComparisonValue);
             object valueToCompare = propertyToCompare.GetValue(instance);
 
-            if ((bool)valueToCompare && (bool)value) {
+            if (isTruthy(valueToCompare) && isTruthy(value)) {
                 return new ValidationResult(ErrorMessage);
             }
             return null;
+        }
+
+        private bool isTruthy(object value)
+        {
+            return value != null && (bool)value;
         }
     }
 }
