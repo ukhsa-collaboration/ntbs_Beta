@@ -57,6 +57,7 @@ namespace ntbs_service
             {
                 var policy = new AuthorizationPolicyBuilder()
                                 .RequireAuthenticatedUser()
+                                .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
