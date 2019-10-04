@@ -34,7 +34,7 @@ namespace ntbs_service_tests.UnitTests.Models
         {
             // Arrange
             TestNotification.PatientDetails.NoFixedAbode = false;
-            TestNotification.PatientDetails.Postcode = " NW123 RT   ";
+            TestNotification.PatientDetails.Postcode = " NW12 3RT   ";
 
             // Act
             var postcode = TestNotification.FormattedNoAbodeOrPostcodeString;
