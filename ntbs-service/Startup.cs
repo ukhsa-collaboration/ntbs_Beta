@@ -17,17 +17,20 @@ using System.Globalization;
 using EFAuditer;
 using ntbs_service.Middleware;
 using Microsoft.AspNetCore.Authentication.WsFederation;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ntbs_service
 {
-    public class Startup
+  public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,7 +44,7 @@ namespace ntbs_service
 
 
             IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
-            services.AddAuthentication(sharedOptions =>
+            var authSetup = services.AddAuthentication(sharedOptions =>
                     {
                         sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                         sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -51,7 +54,14 @@ namespace ntbs_service
                         options.MetadataAddress = adfsConfig["AdfsUrl"];
                         options.Wtrealm = adfsConfig["Wtrealm"];
                     })
-                    .AddCookie();
+                    .AddCookie(options =>
+                    {   
+                        options.ForwardDefaultSelector = ctx => Env.IsDevelopment() ? "Dev" : null;
+                    });
+
+            if (Env.IsDevelopment()) {
+                authSetup.AddScheme<AuthenticationSchemeOptions, Authentication.DevAuthHandler>("Dev", o => { });
+            }
 
             services.AddMvc(options => 
             {
