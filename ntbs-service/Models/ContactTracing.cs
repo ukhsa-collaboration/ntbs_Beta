@@ -46,19 +46,22 @@ namespace ntbs_service.Models
         public int? ChildrenFinishedTreatment { get; set; }
 
 
-        public int TotalContactsIdentified => CalculateSum(AdultsIdentified, ChildrenIdentified);
+        public int? TotalContactsIdentified => CalculateSum(AdultsIdentified, ChildrenIdentified);
 
-        public int TotalContactsScreened => CalculateSum(AdultsScreened, ChildrenScreened);
+        public int? TotalContactsScreened => CalculateSum(AdultsScreened, ChildrenScreened);
 
-        public int TotalContactsActiveTB => CalculateSum(AdultsActiveTB, ChildrenActiveTB);
+        public int? TotalContactsActiveTB => CalculateSum(AdultsActiveTB, ChildrenActiveTB);
 
-        public int TotalContactsLatentTB => CalculateSum(AdultsLatentTB, ChildrenLatentTB);
+        public int? TotalContactsLatentTB => CalculateSum(AdultsLatentTB, ChildrenLatentTB);
 
-        public int TotalContactsStartedTreatment => CalculateSum(AdultsStartedTreatment, ChildrenStartedTreatment);
+        public int? TotalContactsStartedTreatment => CalculateSum(AdultsStartedTreatment, ChildrenStartedTreatment);
 
-        public int TotalContactsFinishedTreatment => CalculateSum(AdultsFinishedTreatment, ChildrenFinishedTreatment);
+        public int? TotalContactsFinishedTreatment => CalculateSum(AdultsFinishedTreatment, ChildrenFinishedTreatment);
 
-        private int CalculateSum(int? x, int? y) {
+        private int? CalculateSum(int? x, int? y) {
+            if (x == null && y == null) {
+                return null;
+            }
             return (x ?? 0) + (y ?? 0);
         }
     }
