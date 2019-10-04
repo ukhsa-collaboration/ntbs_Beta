@@ -76,7 +76,7 @@
     </h2>
     @if(Model.Notification.NotificationStatus == NotificationStatus.Draft)
     {
-        <button nhs-button-type="Standard" asp-page-handler="Submit">Submit</button>
+        <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
     }
     else
     {
