@@ -3,4 +3,4 @@
 @{
     var buttonName = Model?.NotificationStatus == NotificationStatus.Notified ? "Save" : "Save and continue";
 }
-<button nhs-button-type="Standard" asp-page-handler="Save">@buttonName</button>
+<button nhs-button-type="Standard" name="actionName" value="Save">@buttonName</button>
