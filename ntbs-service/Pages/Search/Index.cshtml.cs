@@ -32,7 +32,7 @@ namespace ntbs_service.Pages_Search
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
 
-            var pageSize = 3;
+            var pageSize = 50;
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
