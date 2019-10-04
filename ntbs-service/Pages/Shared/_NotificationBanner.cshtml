@@ -1,5 +1,6 @@
 @using ntbs_service.Models.Enums;
 @{
+    var NotificationStatusBannerCssClass = "";
     switch(@Model.NotificationStatus)
     {
         case NotificationStatus.Draft: NotificationStatusBannerCssClass = "notification-banner--draft";
