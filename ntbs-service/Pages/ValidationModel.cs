@@ -1,12 +1,10 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using ntbs_service.Models;
 using ntbs_service.Models.Validations;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using EFAuditer;
-using System.Threading.Tasks;
 using System.ComponentModel;
 
 namespace ntbs_service.Pages
@@ -61,9 +59,8 @@ namespace ntbs_service.Pages
 
         protected ContentResult ValidateDate(object model, string key, string day, string month, string year)
         {
-            DateTime? convertedDob;
             var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
-            if (formattedDate.TryConvertToDateTime(out convertedDob))
+            if (formattedDate.TryConvertToDateTime(out var convertedDob))
             {
                 model.GetType().GetProperty(key).SetValue(model, convertedDob);
                 return GetValidationResult(model, key);
@@ -89,9 +86,10 @@ namespace ntbs_service.Pages
             }
             else
             {
-                var errorMessageMap = new Dictionary<int,string>();
+                var errorMessageMap = new Dictionary<int, string>();
                 var errorIndex = 0;
-                foreach (var key in keys) {
+                foreach (var key in keys)
+                {
                     errorMessageMap.Add(errorIndex, ModelState[key].Errors[0].ErrorMessage);
                     errorIndex++;
                 }
@@ -120,10 +118,9 @@ namespace ntbs_service.Pages
                 return;
             }
 
-            DateTime? convertedDob;
             string modelTypeName = model.GetType().Name;
 
-            if (formattedDate.TryConvertToDateTime(out convertedDob))
+            if (formattedDate.TryConvertToDateTime(out var convertedDob))
             {
                 model.GetType().GetProperty(key).SetValue(model, convertedDob);
                 TryValidateModel(model, modelTypeName);
@@ -131,11 +128,10 @@ namespace ntbs_service.Pages
             else
             {
                 ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidDate);
-                return;
             }
         }
 
-        public ContentResult ValidateFullModel(object model, string key, string modelName) 
+        public ContentResult ValidateFullModel(object model)
         {
             if (TryValidateModel(model, model.GetType().Name))
             {
@@ -149,11 +145,7 @@ namespace ntbs_service.Pages
                     var modelStateVal = ViewData.ModelState[modelStateKey];
                     foreach (var error in modelStateVal.Errors)
                     {
-                        // Currently this double counts each property as "property" and "model.property", the below if clause 
-                        // removes the instances of "model.property"
-                        if(!modelStateKey.StartsWith(modelName)) {
-                            keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
-                        }
+                        keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
                     }
                 }
                 return Content(JsonConvert.SerializeObject(keyErrorDictionary));
@@ -172,7 +164,7 @@ namespace ntbs_service.Pages
                 {
                     return ValidContent();
                 }
-            } 
+            }
             else
             {
                 return Content(ValidationMessages.ValidYear);
@@ -200,13 +192,11 @@ namespace ntbs_service.Pages
                 if ((int)yearToValidate < (int)yearToCompare)
                 {
                     ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
-                    return;
                 }
-            } 
+            }
             else
             {
                 ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
-                return;
             }
         }
     }

@@ -4,20 +4,18 @@ using System.Threading.Tasks;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Services;
 using ntbs_service.Models.Enums;
-
+using ntbs_service.Services;
 using Xunit;
 
-namespace ntbs_service_tests.UnitTests.ntbs_service_tests
+namespace ntbs_service_tests.UnitTests.Services
 {
     public class NotificationServiceTest
     {
-        private INotificationService service;
-        private Mock<INotificationRepository> mockRepository;
-        private Mock<NtbsContext> mockContext;
+        private readonly INotificationService service;
+        private readonly Mock<INotificationRepository> mockRepository;
+        private readonly Mock<NtbsContext> mockContext;
 
-        private const int UkId = 1;
         public NotificationServiceTest()
         {
             mockRepository = new Mock<INotificationRepository>();
@@ -129,11 +127,103 @@ namespace ntbs_service_tests.UnitTests.ntbs_service_tests
 
             // Act
             service.SubmitNotification(notification);
-            DateTime statusChangeDate = (DateTime) notification.SubmissionDate;
 
             // Assert
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
+            Assert.True(notification.SubmissionDate.HasValue);
+            var statusChangeDate = notification.SubmissionDate.Value;
             Assert.Equal(expectedDate.Date, statusChangeDate.Date);
+        }
+
+        [Fact]
+        public void UpdateImmunosuppressionDetails_LeavesValuesUnchangedWhenStatusIsYes()
+        {
+            var reference = new ImmunosuppressionDetails
+            {
+                Status = Status.Yes,
+                HasBioTherapy = true,
+                HasTransplantation = true,
+                HasOther = true,
+                OtherDescription = "Test description"
+            };
+            var input = new ImmunosuppressionDetails
+            {
+                Status = reference.Status,
+                HasBioTherapy = reference.HasBioTherapy,
+                HasTransplantation = reference.HasTransplantation,
+                HasOther = reference.HasOther,
+                OtherDescription = reference.OtherDescription
+            };
+            var notification = new Notification();
+
+            service.UpdateImmunosuppresionDetailsAsync(notification, input);
+
+            Assert.Equal(reference.Status, input.Status);
+            Assert.Equal(reference.HasBioTherapy, input.HasBioTherapy);
+            Assert.Equal(reference.HasTransplantation, input.HasTransplantation);
+            Assert.Equal(reference.HasOther, input.HasOther);
+            Assert.Equal(reference.OtherDescription, input.OtherDescription);
+        }
+
+        [Theory]
+        [InlineData(Status.No)]
+        [InlineData(Status.Unknown)]
+        public void UpdateImmunosuppressionDetails_StripsAllButStatusWhenStatusIsNotYes(Status status)
+        {
+            var reference = new ImmunosuppressionDetails
+            {
+                Status = status,
+                HasBioTherapy = true,
+                HasTransplantation = true,
+                HasOther = true,
+                OtherDescription = "Test description"
+            };
+            var input = new ImmunosuppressionDetails
+            {
+                Status = reference.Status,
+                HasBioTherapy = reference.HasBioTherapy,
+                HasTransplantation = reference.HasTransplantation,
+                HasOther = reference.HasOther,
+                OtherDescription = reference.OtherDescription
+            };
+            var notification = new Notification();
+
+            service.UpdateImmunosuppresionDetailsAsync(notification, input);
+
+            Assert.Equal(reference.Status, input.Status);
+            Assert.NotEqual(reference.HasBioTherapy, input.HasBioTherapy);
+            Assert.False(input.HasBioTherapy);
+            Assert.NotEqual(reference.HasTransplantation, input.HasTransplantation);
+            Assert.False(input.HasTransplantation);
+            Assert.NotEqual(reference.HasOther, input.HasOther);
+            Assert.False(input.HasOther);
+            Assert.NotEqual(reference.OtherDescription, input.OtherDescription);
+            Assert.Null(input.OtherDescription);
+        }
+
+        [Fact]
+        public void UpdateImmunosuppressionDetails_StripsOtherDescriptionWhenHasOtherIsFalse()
+        {
+            var reference = new ImmunosuppressionDetails
+            {
+                Status = Status.Yes,
+                HasOther = false,
+                OtherDescription = "Test description"
+            };
+            var input = new ImmunosuppressionDetails
+            {
+                Status = reference.Status,
+                HasOther = reference.HasOther,
+                OtherDescription = reference.OtherDescription
+            };
+            var notification = new Notification();
+
+            service.UpdateImmunosuppresionDetailsAsync(notification, input);
+
+            Assert.Equal(reference.Status, input.Status);
+            Assert.Equal(reference.HasOther, input.HasOther);
+            Assert.NotEqual(reference.OtherDescription, input.OtherDescription);
+            Assert.Null(input.OtherDescription);
         }
     }
 }

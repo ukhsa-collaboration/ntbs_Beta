@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
@@ -11,7 +10,8 @@ namespace ntbs_service.Models
 {
     public class Notification : ModelBase
     {
-        public Notification() {
+        public Notification()
+        {
             NotificationStatus = NotificationStatus.Draft;
             PatientDetails = new PatientDetails();
             Episode = new Episode();
@@ -19,14 +19,15 @@ namespace ntbs_service.Models
             ClinicalDetails = new ClinicalDetails();
             PatientTBHistory = new PatientTBHistory();
             ContactTracing = new ContactTracing();
+            ImmunosuppressionDetails = new ImmunosuppressionDetails();
         }
-        
+
         [Display(Name = "Notification Id")]
         public int NotificationId { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
-        
+
         public virtual PatientDetails PatientDetails { get; set; }
         public virtual ClinicalDetails ClinicalDetails { get; set; }
 
@@ -36,11 +37,12 @@ namespace ntbs_service.Models
         public virtual PatientTBHistory PatientTBHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
+        public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
         public string FormattedSubmissionDate => FormatDate(SubmissionDate);
-        public string FullName => String.Join(", ", new string[] {PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName}.Where(s => !String.IsNullOrEmpty(s)));
+        public string FullName => string.Join(", ", new string[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
@@ -84,16 +86,19 @@ namespace ntbs_service.Models
             if (NotificationStatus == Enums.NotificationStatus.Draft)
             {
                 return "Draft";
-            } else if (NotificationStatus == Enums.NotificationStatus.Notified)
+            }
+            else if (NotificationStatus == Enums.NotificationStatus.Notified)
             {
                 return "Notification";
-            } else
+            }
+            else
             {
                 return "Denotified";
             }
         }
 
-        private int? CalculateSum(int? x, int? y) {
+        private int? CalculateSum(int? x, int? y)
+        {
             return x + y;
         }
 
@@ -102,11 +107,13 @@ namespace ntbs_service.Models
             return date?.ToString("dd-MMM-yyyy");
         }
 
-        private string TrueFalseToYesNo(bool? x) {
+        private string TrueFalseToYesNo(bool? x)
+        {
             if (x == null)
             {
                 return "";
-            } else
+            }
+            else
             {
                 return x.Value ? "Yes" : "No";
             }
@@ -129,15 +136,15 @@ namespace ntbs_service.Models
 
         private string CreateSitesOfDiseaseString()
         {
-            if (NotificationSites == null) 
+            if (NotificationSites == null)
             {
                 return "";
             }
-            
+
             var siteNames = NotificationSites.Select(ns => ns.Site)?
                 .Where(ns => ns != null)
                 .Select(s => s.Description);
-            return String.Join(", ", siteNames); 
+            return string.Join(", ", siteNames);
         }
 
         private string CreateNoAbodeOrPostcodeString()
@@ -145,7 +152,8 @@ namespace ntbs_service.Models
             if (PatientDetails.NoFixedAbode)
             {
                 return "No fixed abode";
-            } else
+            }
+            else
             {
                 var postcodeNoWhiteSpace = PatientDetails.Postcode?.Replace(" ", string.Empty);
                 string FormattedPostcode = postcodeNoWhiteSpace?.Insert(postcodeNoWhiteSpace.Length - 3, " ");
@@ -155,11 +163,11 @@ namespace ntbs_service.Models
 
         private string FormatNhsNumberString()
         {
-            if (String.IsNullOrEmpty(PatientDetails.NhsNumber))
+            if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
             {
                 return "";
             }
-            return String.Join(" ",
+            return string.Join(" ",
                 PatientDetails.NhsNumber.ToString().Substring(0, 3),
                 PatientDetails.NhsNumber.ToString().Substring(3, 3),
                 PatientDetails.NhsNumber.ToString().Substring(6, 4)
@@ -181,7 +189,7 @@ namespace ntbs_service.Models
             {
                 timeStrings.Add("more than 5 years ago");
             }
-            return String.Join(", ", timeStrings);
+            return string.Join(", ", timeStrings);
         }
     }
 }

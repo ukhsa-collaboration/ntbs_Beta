@@ -23,7 +23,7 @@ namespace ntbs_service.Models
 
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
-        public virtual DbSet<TBService> TBService { get; set;}
+        public virtual DbSet<TBService> TBService { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
@@ -32,6 +32,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<Episode> Episode { get; set; }
         public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
+        public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -42,12 +43,12 @@ namespace ntbs_service.Models
         {
             return await Country.FindAsync(countryId);
         }
-        
+
         public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
         {
             return await TBService.ToListAsync();
         }
-        
+
         public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
         {
             return await Hospital.ToListAsync();
@@ -130,6 +131,7 @@ namespace ntbs_service.Models
 
             var statusEnumConverter = new EnumToStringConverter<Status>();
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
+            var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
 
             modelBuilder.Entity<Notification>(entity =>
             {
@@ -137,9 +139,11 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
 
-                entity.OwnsOne(e => e.ClinicalDetails, e => {
-                     e.Property(cd => cd.BCGVaccinationState)
-                        .HasConversion(statusEnumConverter);
+                entity.OwnsOne(e => e.ClinicalDetails, e =>
+                {
+                    e.Property(cd => cd.BCGVaccinationState)
+                       .HasConversion(statusEnumConverter)
+                       .HasMaxLength(30);
                     e.ToTable("ClinicalDetails");
                 });
 
@@ -147,34 +151,67 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.ContactTracing).ToTable("ContactTracing");
 
-                entity.OwnsOne(e => e.SocialRiskFactors, x => {
-                    x.OwnsOne(c => c.RiskFactorDrugs , rf => {
-                        rf.Property(e => e.Status).HasConversion(statusEnumConverter);
-                        rf.Property(e => e.Type).HasConversion(riskFactorEnumConverter).HasDefaultValue(RiskFactorType.Drugs);
+                entity.OwnsOne(e => e.SocialRiskFactors, x =>
+                {
+                    x.OwnsOne(c => c.RiskFactorDrugs, rf =>
+                    {
+                        rf.Property(e => e.Status)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(30);
+                        rf.Property(e => e.Type)
+                            .HasConversion(riskFactorEnumConverter)
+                            .HasMaxLength(30)
+                            .HasDefaultValue(RiskFactorType.Drugs);
                         rf.ToTable("RiskFactorDrugs");
                     });
 
-                    x.OwnsOne(c => c.RiskFactorHomelessness, rh => {
-                        rh.Property(e => e.Status).HasConversion(statusEnumConverter);
-                        rh.Property(e => e.Type).HasConversion(riskFactorEnumConverter).HasDefaultValue(RiskFactorType.Homelessness);
+                    x.OwnsOne(c => c.RiskFactorHomelessness, rh =>
+                    {
+                        rh.Property(e => e.Status)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(30);
+                        rh.Property(e => e.Type)
+                            .HasConversion(riskFactorEnumConverter)
+                            .HasMaxLength(30)
+                            .HasDefaultValue(RiskFactorType.Homelessness);
                         rh.ToTable("RiskFactorHomelessness");
                     });
 
-                    x.OwnsOne(c => c.RiskFactorImprisonment, rh => {
-                        rh.Property(e => e.Status).HasConversion(statusEnumConverter);
-                        rh.Property(e => e.Type).HasConversion(riskFactorEnumConverter).HasDefaultValue(RiskFactorType.Imprisonment);
+                    x.OwnsOne(c => c.RiskFactorImprisonment, rh =>
+                    {
+                        rh.Property(e => e.Status)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(30);
+                        rh.Property(e => e.Type)
+                            .HasConversion(riskFactorEnumConverter)
+                            .HasMaxLength(30)
+                            .HasDefaultValue(RiskFactorType.Imprisonment);
                         rh.ToTable("RiskFactorImprisonment");
                     });
 
-                    x.Property(e => e.AlcoholMisuseStatus).HasConversion(statusEnumConverter);
-                    x.Property(e => e.SmokingStatus).HasConversion(statusEnumConverter);
-                    x.Property(e => e.MentalHealthStatus).HasConversion(statusEnumConverter);
+                    x.Property(e => e.AlcoholMisuseStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(30);
+                    x.Property(e => e.SmokingStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(30);
+                    x.Property(e => e.MentalHealthStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(30);
 
                     x.ToTable("SocialRiskFactors");
                 });
 
                 entity.Property(e => e.NotificationStatus)
-                    .HasConversion(new EnumToStringConverter<NotificationStatus>());
+                    .HasConversion(notificationStatusEnumConverter)
+                    .HasMaxLength(30);
+
+                entity.OwnsOne(e => e.ImmunosuppressionDetails, i => {
+                    i.Property(e => e.Status)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(30);
+                    i.ToTable("ImmunosuppressionDetails");
+                });
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -196,7 +233,7 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<NotificationSite>(entity =>
             {
-                entity.HasKey(e => new {e.NotificationId, e.SiteId });
+                entity.HasKey(e => new { e.NotificationId, e.SiteId });
 
                 entity.HasOne(e => e.Notification)
                     .WithMany(n => n.NotificationSites)

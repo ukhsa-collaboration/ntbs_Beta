@@ -53,6 +53,8 @@ namespace ntbs_service.Models.Validations
         public const string MDRDateIsRequired = "MDR treatment date is a mandatory field";
         public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
+        public const string ImmunosuppressionTypeRequired = "Atleast one field must be selected";
+        public const string ImmunosuppressionDetailRequired = "Details is a mandatory field";
     }
 
     public static class ValidDates

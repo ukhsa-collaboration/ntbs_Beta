@@ -16,6 +16,7 @@ namespace ntbs_service.Services
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
+        Task<Notification> GetNotificationWithImmunosuppressionDetailsAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
@@ -25,12 +26,14 @@ namespace ntbs_service.Services
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
+        Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
     }
 
     public class NotificationService : INotificationService
     {
-        private INotificationRepository repository;
-        private NtbsContext context;
+        private readonly INotificationRepository repository;
+        private readonly NtbsContext context;
+
         public NotificationService(INotificationRepository repository, NtbsContext context) {
             this.repository = repository;
             this.context = context;
@@ -138,7 +141,7 @@ namespace ntbs_service.Services
                 riskFactor.IsCurrent = false;
                 riskFactor.InPastFiveYears = false;
                 riskFactor.MoreThanFiveYearsAgo = false;
-            } 
+            }
         }
 
         public async Task<Notification> GetNotificationWithSocialRisksAsync(int? id)
@@ -149,6 +152,29 @@ namespace ntbs_service.Services
         public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? id) 
         {
             return await repository.GetNotificationWithNotificationSitesAsync(id);
+        }
+
+        public async Task<Notification> GetNotificationWithImmunosuppressionDetailsAsync(int? id)
+        {
+            return await repository.GetNotificationWithImmunosuppresionDetailsAsync(id);
+        }
+        public async Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails)
+        {
+            if (immunosuppressionDetails.Status != Status.Yes)
+            {
+                immunosuppressionDetails.HasBioTherapy = false;
+                immunosuppressionDetails.HasTransplantation = false;
+                immunosuppressionDetails.HasOther = false;
+                immunosuppressionDetails.OtherDescription = null;
+            }
+
+            if (immunosuppressionDetails.HasOther == false)
+            {
+                immunosuppressionDetails.OtherDescription = null;
+            }
+
+            context.Entry(notification.ImmunosuppressionDetails).CurrentValues.SetValues(immunosuppressionDetails);
+            await UpdateDatabase();
         }
 
         public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 
