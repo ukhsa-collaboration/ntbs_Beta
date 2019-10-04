@@ -138,7 +138,7 @@ namespace ntbs_service.Models
                 return "No fixed abode";
             } else
             {
-                return PatientDetails.Postcode.Trim();
+                return PatientDetails.Postcode?.Trim();
             }
         }
 
