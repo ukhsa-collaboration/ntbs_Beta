@@ -25,6 +25,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
             ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
+            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
             
@@ -36,15 +37,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave(int notificationId)
+        protected override async Task<bool> ValidateAndSave()
         {
             if (!ModelState.IsValid)
             {
                 return false;
             }
 
-            var notification = await service.GetNotificationWithImmunosuppressionDetailsAsync(notificationId);
-            await service.UpdateImmunosuppresionDetailsAsync(notification, ImmunosuppressionDetails);
+            await service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
             return true;
         }
 
@@ -64,7 +64,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 HasOther = hasOther,
                 OtherDescription = string.IsNullOrEmpty(otherDescription) ? null : otherDescription
             };
-
 
             return ValidateFullModel(model);
         }
