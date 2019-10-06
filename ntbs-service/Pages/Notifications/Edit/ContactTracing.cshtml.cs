@@ -44,8 +44,8 @@ namespace ntbs_service.Pages_Notifications
         }
 
         protected override async Task<bool> ValidateAndSave() {
-
-            if (!ModelState.IsValid)
+            ContactTracing.SetFullValidation(Notification.NotificationStatus);
+            if (!TryValidateModel(this))
             {
                 return false;
             }

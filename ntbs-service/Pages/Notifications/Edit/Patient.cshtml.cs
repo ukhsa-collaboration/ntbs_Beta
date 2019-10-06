@@ -27,6 +27,9 @@ namespace ntbs_service.Pages_Notifications
         public PatientModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
+            Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
+            Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
+            Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
@@ -51,9 +54,6 @@ namespace ntbs_service.Pages_Notifications
             }
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
-            Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
-            Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
-            Sexes = context.GetAllSexesAsync().Result.ToList();
 
             return Page();
         }
@@ -61,8 +61,9 @@ namespace ntbs_service.Pages_Notifications
         protected override async Task<bool> ValidateAndSave() {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-            
-            if (!ModelState.IsValid)
+            Patient.SetFullValidation(Notification.NotificationStatus);
+
+            if (!TryValidateModel(this))
             {
                 return false;
             }

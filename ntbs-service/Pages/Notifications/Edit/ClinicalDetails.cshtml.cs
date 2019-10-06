@@ -99,13 +99,20 @@ namespace ntbs_service.Pages_Notifications
             ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             
-            if (!ModelState.IsValid)
+            ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
+
+            var notificationSites = CreateNotificationSitesFromModel(Notification.NotificationId);
+            Notification.NotificationSites = notificationSites.ToList();
+            if (!TryValidateModel(this))
             {
                 return false;
             }
 
+            // Setting NotificationSite to null is required to prevent db updating notificationSites in UpdateClinicalDetailsAsync method
+            Notification.NotificationSites = null;
             await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-            await service.UpdateSitesAsync(Notification, CreateNotificationSitesFromModel(Notification.NotificationId));
+            
+            await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
 
             return true;
         }

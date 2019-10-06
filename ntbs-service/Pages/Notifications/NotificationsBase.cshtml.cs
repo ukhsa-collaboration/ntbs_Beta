@@ -108,6 +108,7 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> Save()
         {           
+            Notification.SetFullValidation(Notification.NotificationStatus);
             bool isValid = await ValidateAndSave();
 
             if (!isValid) 
