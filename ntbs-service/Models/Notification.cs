@@ -83,7 +83,7 @@ namespace ntbs_service.Models
         public string SocialRiskFactorsEditPath => GetNotificationEditPath("SocialRiskFactors");
         public string TravelEditPath => GetNotificationEditPath("Travel");
         public string ComorbiditiesEditPath => GetNotificationEditPath("Comorbidities");
-        public string ImmunosupressionEditPath => GetNotificationEditPath("Immunosupression");
+        public string ImmunosuppressionEditPath => GetNotificationEditPath("Immunosuppression");
         public string PreviousHistoryEditPath => GetNotificationEditPath("PreviousHistory");
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");

@@ -8,7 +8,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class ImmunosuppressionModel : NotificationModelBase
+    public class ImmunosuppressionModel : NotificationEditModelBase
     {
         [BindProperty]
         public ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
@@ -27,7 +27,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
-            SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
+            await SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
             
             return Page();
         }
@@ -65,7 +65,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 OtherDescription = string.IsNullOrEmpty(otherDescription) ? null : otherDescription
             };
 
-            return ValidateFullModel(model);
+            return validationService.ValidateFullModel(model);
         }
     }
 }

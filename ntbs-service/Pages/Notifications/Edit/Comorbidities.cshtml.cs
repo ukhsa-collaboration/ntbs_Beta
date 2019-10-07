@@ -27,7 +27,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
         {
-            return RedirectToPage("./Immunosupression", new { id = notificationId });
+            return RedirectToPage("./Immunosuppression", new { id = notificationId });
         }
 
         protected override async Task<bool> ValidateAndSave() => await Task.FromResult(true);

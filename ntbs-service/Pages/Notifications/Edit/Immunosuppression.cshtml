@@ -64,7 +64,8 @@
                                                         Specify Details
                                                     </label>
                                                     <span ref="descriptionError" name="description-error" nhs-span-type="ErrorMessage" asp-validation-for="ImmunosuppressionDetails.OtherDescription"></span>
-                                                    <input ref="otherDescription" nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
+                                                    <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription" 
+                                                           nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error"  />
                                                 </nhs-fieldset>
                                             </nhs-form-group>
                                         </div>
