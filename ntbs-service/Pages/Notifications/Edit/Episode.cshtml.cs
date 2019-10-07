@@ -6,7 +6,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class EpisodeModel : NotificationModelBase
+    public class EpisodeModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
         
@@ -32,16 +32,7 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             Episode = Notification.Episode;
-            if (Episode == null)
-            {
-                return NotFound();
-            }
-
-            SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
-            if (Episode.ShouldValidateFull)
-            {
-                TryValidateModel(Episode, Episode.GetType().Name);
-            }
+            await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
 
             TBServices = new SelectList(context.GetAllTbServicesAsync().Result, 
                                         nameof(TBService.Code), 
@@ -50,6 +41,11 @@ namespace ntbs_service.Pages_Notifications
             Hospitals = new SelectList(context.GetAllHospitalsAsync().Result, 
                                         nameof(Hospital.HospitalId), 
                                         nameof(Hospital.Name));
+
+            if (Episode.ShouldValidateFull)
+            {
+                TryValidateModel(Episode, Episode.GetType().Name);
+            }
 
             return Page();
         }
@@ -78,7 +74,7 @@ namespace ntbs_service.Pages_Notifications
 
         public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<Episode>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<Episode>(key, value, shouldValidateFull);
         }
     }
 }

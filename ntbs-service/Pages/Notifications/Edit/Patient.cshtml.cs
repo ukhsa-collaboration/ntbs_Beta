@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Services;
-using System;
 
 namespace ntbs_service.Pages_Notifications
 {
-    public class PatientModel : NotificationModelBase
+    public class PatientModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
 
@@ -39,28 +38,24 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             Patient = Notification.PatientDetails;
-            if (Patient == null)
-            {
-                Patient = new PatientDetails();
-            }
-
-            SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
-            if (Patient.ShouldValidateFull)
-            {
-                TryValidateModel(Patient, "Patient");
-            }
+            await SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
             Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
 
+            if (Patient.ShouldValidateFull)
+            {
+                TryValidateModel(Patient, "Patient");
+            }
+
             return Page();
         }
 
         protected override async Task<bool> ValidateAndSave() {
             UpdatePatientFlags();
-            SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
             if (!ModelState.IsValid)
             {
@@ -89,12 +84,12 @@ namespace ntbs_service.Pages_Notifications
 
         public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
-            return ValidateDate(new PatientDetails(), key, day, month, year);
+            return validationService.ValidateDate<PatientDetails>(key, day, month, year);
         }
     }
 }
