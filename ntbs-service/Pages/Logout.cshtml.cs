@@ -8,20 +8,22 @@ namespace ntbs_service.Pages
   public class LogoutModel : PageModel
     {
     private readonly string ReturnUrl;
+    private readonly string BaseUrl;
 
     public LogoutModel(IOptionsMonitor<AdfsOptions> options)
     {
         // We just want to return to the homepage (which will trigger going to login again)
         ReturnUrl = options.CurrentValue.Wtrealm;
+        BaseUrl = options.CurrentValue.AdfsUrl;
     }
 
     public RedirectResult OnGet()
         {
-            // Eras the cookie ...
+            // Erase the cookie ...
             HttpContext.SignOutAsync();
 
             // ... and sign out of adfs
-            return Redirect($"https://fs.softwire.com/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}");
+            return Redirect($"{BaseUrl}/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}");
         }
     }
 }

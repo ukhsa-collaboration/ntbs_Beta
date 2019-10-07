@@ -51,7 +51,7 @@ namespace ntbs_service
                         sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
                     }).AddWsFederation(options =>
                     {
-                        options.MetadataAddress = adfsConfig["AdfsUrl"];
+                        options.MetadataAddress = adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                         options.Wtrealm = adfsConfig["Wtrealm"];
                     })
                     .AddCookie(options =>
