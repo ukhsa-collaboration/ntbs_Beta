@@ -32,9 +32,9 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./SocialRiskFactors", new {id = notificationId});
+            return RedirectToPage("./SocialRiskFactors", new {id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task<bool> ValidateAndSave() {

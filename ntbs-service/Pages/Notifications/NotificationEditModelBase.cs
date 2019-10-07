@@ -31,7 +31,7 @@ namespace ntbs_service.Pages_Notifications
         Using handler adds handler onto url and therefore breaking javascript
         validation hapening after form is submitted
         */
-        public async Task<IActionResult> OnPostAsync(string actionName)
+        public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
         {
             // Get Notifications with all owned properties to check for 
             Notification = await service.GetNotificationWithAllInfoAsync(NotificationId); 
@@ -44,7 +44,7 @@ namespace ntbs_service.Pages_Notifications
             switch (actionName) 
             {
                 case "Save":
-                    return await Save();
+                    return await Save(isBeingSubmitted);
                 case "Submit":
                     return await Submit();
                 default:
@@ -90,7 +90,7 @@ namespace ntbs_service.Pages_Notifications
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
 
-        public async Task<IActionResult> Save()
+        public async Task<IActionResult> Save(bool isBeingSubmitted)
         {           
             Notification.SetFullValidation(Notification.NotificationStatus);
             bool isValid = await ValidateAndSave();
@@ -105,7 +105,7 @@ namespace ntbs_service.Pages_Notifications
                 return RedirectToOverview();
             }
 
-            return RedirectToNextPage(NotificationId);
+            return RedirectToNextPage(NotificationId, isBeingSubmitted);
         }
 
         private IActionResult RedirectToOverview() 
@@ -131,6 +131,6 @@ namespace ntbs_service.Pages_Notifications
 
         public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
 
-        protected abstract IActionResult RedirectToNextPage(int? notificationId);
+        protected abstract IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted);
     }
 }
