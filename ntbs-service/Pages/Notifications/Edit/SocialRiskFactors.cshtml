@@ -1,7 +1,5 @@
 @page "{handler?}"
-@model ntbs_service.Pages_Notifications.SocialRiskFactorsModel
-@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
-@using ntbs_service.Models.Enums
+@model ntbs_service.Pages.Notifications.Edit.SocialRiskFactorsModel
 
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
@@ -29,45 +27,45 @@
             </nhs-radios>
         </nhs-fieldset>
     </nhs-form-group>
-    <br/>
+    <br />
 
     <div>
         @{
             var DrugsModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorDrugs");
-            var DrugsViewData = new ViewDataDictionary(this.ViewData) { 
-                { "propertyName", "RiskFactorDrugs" }, 
+            var DrugsViewData = new ViewDataDictionary(this.ViewData) {
+                { "propertyName", "RiskFactorDrugs" },
                 { "errorState", DrugsModelIsValid },
-                { "questionText", "Patient has a history of drug misuse" } 
+                { "questionText", "Patient has a history of drug misuse" }
             };
         }
-        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorDrugs" view-data="@DrugsViewData"/>
-        <br/>
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorDrugs" view-data="@DrugsViewData" />
+        <br />
     </div>
 
     <div>
         @{
             var HomelessnessModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorHomelessness");
-            var HomelessnessViewData = new ViewDataDictionary(this.ViewData) { 
-                { "propertyName", "RiskFactorHomelessness" }, 
+            var HomelessnessViewData = new ViewDataDictionary(this.ViewData) {
+                { "propertyName", "RiskFactorHomelessness" },
                 { "errorState", HomelessnessModelIsValid },
-                { "questionText", "Patient has a history of homelessness" }  
+                { "questionText", "Patient has a history of homelessness" }
             };
         }
-        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorHomelessness" view-data="@HomelessnessViewData"/>
-        <br/>
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorHomelessness" view-data="@HomelessnessViewData" />
+        <br />
     </div>
 
     <div>
         @{
             var ImprisonmentModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorImprisonment");
-            var ImprisonmentViewData = new ViewDataDictionary(this.ViewData) { 
-                { "propertyName", "RiskFactorImprisonment" }, 
+            var ImprisonmentViewData = new ViewDataDictionary(this.ViewData) {
+                { "propertyName", "RiskFactorImprisonment" },
                 { "errorState", ImprisonmentModelIsValid },
-                { "questionText", "Patient has a history of imprisonment" } 
-            };       
+                { "questionText", "Patient has a history of imprisonment" }
+            };
         }
-        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorImprisonment" view-data="@ImprisonmentViewData"/>
-        <br/>
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorImprisonment" view-data="@ImprisonmentViewData" />
+        <br />
     </div>
 
     <nhs-form-group nhs-form-group-type="Standard">
@@ -99,6 +97,6 @@
             </nhs-radios>
         </nhs-fieldset>
     </nhs-form-group>
-    <br/>
-    <partial name="_PaginationPartial" for="Notification">
+    <br />
+    <partial name="_PaginationPartial" for="Notification" />
 </div>

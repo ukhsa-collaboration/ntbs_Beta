@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
-using System;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PatientModel : NotificationModelBase
     {
@@ -39,10 +39,6 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             Patient = Notification.PatientDetails;
-            if (Patient == null)
-            {
-                Patient = new PatientDetails();
-            }
 
             SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
             if (Patient.ShouldValidateFull)
@@ -58,10 +54,11 @@ namespace ntbs_service.Pages_Notifications
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave() {
+        protected override async Task<bool> ValidateAndSave()
+        {
             UpdatePatientFlags();
             SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-            
+
             if (!ModelState.IsValid)
             {
                 return false;
@@ -71,20 +68,24 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
 
-        private void UpdatePatientFlags() {
-            if (Patient.NhsNumberNotKnown) {
+        private void UpdatePatientFlags()
+        {
+            if (Patient.NhsNumberNotKnown)
+            {
                 Patient.NhsNumber = null;
                 ModelState.Remove("Patient.NhsNumber");
             }
 
-            if (Patient.NoFixedAbode) {
+            if (Patient.NoFixedAbode)
+            {
                 Patient.Postcode = null;
                 ModelState.Remove("Patient.Postcode");
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId) {
-            return RedirectToPage("./Episode", new {id = notificationId});
+        protected override IActionResult RedirectToNextPage(int? notificationId)
+        {
+            return RedirectToPage("./Episode", new { id = notificationId });
         }
 
         public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)

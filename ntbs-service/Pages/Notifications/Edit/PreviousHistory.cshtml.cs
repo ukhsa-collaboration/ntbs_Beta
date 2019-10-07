@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
-using ntbs_service.Pages;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PreviousHistoryModel : NotificationModelBase
     {
@@ -26,10 +26,11 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             PatientTBHistory = Notification.PatientTBHistory;
-            if (PatientTBHistory == null) {
+            if (PatientTBHistory == null)
+            {
                 PatientTBHistory = new PatientTBHistory();
             }
-            
+
             SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
             if (PatientTBHistory.ShouldValidateFull)
             {
@@ -39,14 +40,15 @@ namespace ntbs_service.Pages_Notifications
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
-        { 
+        {
             // This is the last page in the flow, so there's no next page to go to
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave() {
+        protected override async Task<bool> ValidateAndSave()
+        {
             UpdateFlags();
-            
+
             if (!ModelState.IsValid)
             {
                 return false;
@@ -55,10 +57,11 @@ namespace ntbs_service.Pages_Notifications
             await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
             return true;
         }
-        
+
         private void UpdateFlags()
         {
-            if (PatientTBHistory.NotPreviouslyHadTB ?? false) {
+            if (PatientTBHistory.NotPreviouslyHadTB ?? false)
+            {
                 PatientTBHistory.PreviousTBDiagnosisYear = null;
                 ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
             }

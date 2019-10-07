@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
-using System.Linq;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
     public class SocialRiskFactorsModel : NotificationModelBase
     {
         private readonly NtbsContext context;
-        
+
         public List<Status> StatusList { get; set; }
 
         [BindProperty]
@@ -37,14 +38,15 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
-            
+
             SetNotificationProperties<SocialRiskFactors>(isBeingSubmitted, SocialRiskFactors);
 
             StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave() {            
+        protected override async Task<bool> ValidateAndSave()
+        {
             if (!ModelState.IsValid)
             {
                 return false;
@@ -56,7 +58,7 @@ namespace ntbs_service.Pages_Notifications
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
         {
-            return RedirectToPage("./Travel", new {id = notificationId});
+            return RedirectToPage("./Travel", new { id = notificationId });
         }
     }
 }

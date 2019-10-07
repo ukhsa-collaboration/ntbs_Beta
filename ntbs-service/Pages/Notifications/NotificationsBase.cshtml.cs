@@ -41,6 +41,14 @@ namespace ntbs_service.Pages_Notifications
         */ 
         public async Task<IActionResult> OnPostAsync(string actionName)
         {
+            // Get Notifications with all owned properties to check for 
+            Notification = await service.GetNotificationWithAllInfoAsync(NotificationId); 
+            if (Notification == null)
+            {
+                return NotFound();
+            }
+            NotificationBannerModel = new NotificationBannerModel(Notification);
+
             switch (actionName) 
             {
                 case "Save":
@@ -54,13 +62,6 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> Submit()
         {
-            // Get Notifications with all owned properties to check for 
-            Notification = await service.GetNotificationWithAllInfoAsync(NotificationId);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
-            
             // First Validate and Save current page details
             bool isValid = await ValidateAndSave();
             if (!isValid) 
@@ -107,7 +108,6 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> Save()
         {           
-            Notification = await service.GetNotificationAsync(NotificationId);
             bool isValid = await ValidateAndSave();
 
             if (!isValid) 
