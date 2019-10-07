@@ -102,16 +102,20 @@ namespace ntbs_service.Pages_Notifications
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
 
             var notificationSites = CreateNotificationSitesFromModel(Notification.NotificationId);
-            Notification.NotificationSites = notificationSites.ToList();
-            if (!TryValidateModel(this))
+
+            // Separate notification with notification sites only is needed to check if notification sites are valid,
+            // and to avoid updating notification site when updating Clinical Details
+            var notificationWithSitesOnly = new Notification {
+                ShouldValidateFull = Notification.ShouldValidateFull,
+                NotificationSites = notificationSites.ToList()
+            };
+            
+            if (!TryValidateModel(this) && !TryValidateModel(notificationWithSitesOnly))
             {
                 return false;
             }
 
-            // Setting NotificationSite to null is required to prevent db updating notificationSites in UpdateClinicalDetailsAsync method
-            Notification.NotificationSites = null;
             await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-            
             await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
 
             return true;
