@@ -19,7 +19,6 @@ namespace ntbs_service.Pages_Search
     public class IndexModel : ValidationModel
     {
         public INotificationService service;
-        public int PageIndex;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
@@ -27,9 +26,8 @@ namespace ntbs_service.Pages_Search
         public string PreviousPageUrl;
         public string PreviousPageText;
 
-        [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         [BindProperty(SupportsGet = true)]
-        public string IdFilter { get; set; }
+        public SearchParameters SearchParameters { get; set; }
         public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service)
@@ -51,14 +49,14 @@ namespace ntbs_service.Pages_Search
             IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
-            if (!String.IsNullOrEmpty(IdFilter))
+            if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
             {
                 SearchParamsExist = true;
-                draftsIQ = FilterById(draftsIQ, IdFilter);
-                nonDraftsIQ = FilterById(nonDraftsIQ, IdFilter);
+                draftsIQ = service.FilterById(draftsIQ, SearchParameters.IdFilter);
+                nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
             }
 
-            IQueryable<Notification> notificationsIQ = OrderQueryable(draftsIQ).Union(OrderQueryable(nonDraftsIQ));
+            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
 
             var notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
@@ -68,16 +66,6 @@ namespace ntbs_service.Pages_Search
             SetPaginationDetails();
 
             return Page();
-        }
-
-        public IQueryable<Notification> OrderQueryable(IQueryable<Notification> query) {
-            return query.OrderByDescending(n => n.CreationDate)
-                .OrderByDescending(n => n.SubmissionDate);
-        }
-
-        public IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter) {
-            return IQ.Where(s => s.NotificationId.Equals(Int32.Parse(IdFilter)) 
-                    || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
         }
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
