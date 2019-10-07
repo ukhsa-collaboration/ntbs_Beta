@@ -6,12 +6,10 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class PreviousHistoryModel : NotificationModelBase
+    public class PreviousHistoryModel : NotificationEditModelBase
     {
 
-        public PreviousHistoryModel(INotificationService service) : base(service)
-        {
-        }
+        public PreviousHistoryModel(INotificationService service) : base(service) {}
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
@@ -26,16 +24,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             PatientTBHistory = Notification.PatientTBHistory;
-            if (PatientTBHistory == null)
-            {
-                PatientTBHistory = new PatientTBHistory();
-            }
+            await SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
 
-            SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
             if (PatientTBHistory.ShouldValidateFull)
             {
                 TryValidateModel(PatientTBHistory, PatientTBHistory.GetType().Name);
             }
+
             return Page();
         }
 
@@ -69,7 +64,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
         }
     }
 }

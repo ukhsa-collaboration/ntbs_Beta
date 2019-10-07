@@ -12,7 +12,7 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages.Notifications.Edit
 {
     [BindProperties]
-    public class ClinicalDetailsModel : NotificationModelBase
+    public class ClinicalDetailsModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
 
@@ -48,8 +48,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             ClinicalDetails = Notification.ClinicalDetails;
-
-            SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
             SetupNotificationSiteMap(notificationSites);
@@ -69,6 +68,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TryValidateModel(this);
             }
+
             return Page();
         }
 
@@ -90,13 +90,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             UpdateFlags();
 
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
-            ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
+            validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
 
             if (!ModelState.IsValid)
@@ -164,12 +164,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            return ValidateDate(new ClinicalDetails(), key, day, month, year);
+            return validationService.ValidateDate<ClinicalDetails>(key, day, month, year);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
@@ -184,7 +184,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 });
             }
 
-            return ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
+            return validationService.ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
@@ -195,12 +195,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 Notification = notification,
                 SiteId = (int)SiteId.OTHER
             };
-            return ValidateProperty(notificationSite, key, value);
+            return validationService.ValidateProperty(notificationSite, key, value);
         }
 
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
-            return ValidateYearComparison(newYear, existingYear);
+            return validationService.ValidateYearComparison(newYear, existingYear);
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
@@ -210,7 +210,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], keyValuePair["value"]));
             }
-            return ValidateMultipleProperties(new ClinicalDetails(), propertyValueTuples);
+            return validationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
         }
     }
 }
