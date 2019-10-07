@@ -33,6 +33,48 @@
                         v-bind:class="{ 'nhsuk-input--error': hasError}" />
                 </nhs-form-group>
             </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                @{
+                    var DobError = !Model.IsValid("Dob");
+                    var DobGroupState = DobError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@DobGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <label nhs-label-type="Standard"> Date of birth </label>
+                    <span class="nhsuk-hint " id="example-hint">
+                        Dates can be partial, enter year at minimum
+                    </span>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
+                        asp-validation-for="Dov"></span>
+                    <input v-on:blur="validate" is-error-input=@DobError nhs-input-type="Standard"
+                        asp-for="Dov" classes="nhsuk-input--width-10"
+                        v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                </nhs-form-group>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <div class="enter-search-details-tip">
+            Advanced options
+        </div>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                @{
+                    var SexIdError = !Model.IsValid("SexId");
+                    var SexIdGroupState = SexIdError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@SexIdGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                    <label nhs-label-type="Standard"> Sex </label>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="sexId-error"
+                        asp-validation-for="SexId"></span>
+                    <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
+                        @foreach (var sex in Model.Sexes)
+                        {
+                            <nhs-radios-item>
+                                <input is-error-input=@SexError nhs-input-type="Radios" asp-for="SexId" type="radio" value="@sex.SexId" />
+                                <label nhs-label-type="Radios" asp-for="SexId">@sex.Label</label>
+                            </nhs-radios-item>
+                        }
+                    </nhs-radios>
+                </nhs-form-group>
+            </nhs-grid-column>
         </nhs-grid-row>
         <div class="submit-search-button-container">
             <input type="submit" value="Search" class="nhsuk-button submit-search-button"/>

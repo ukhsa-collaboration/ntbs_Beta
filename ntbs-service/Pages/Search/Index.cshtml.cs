@@ -18,6 +18,7 @@ namespace ntbs_service.Pages_Search
 {
     public class IndexModel : ValidationModel
     {
+        private readonly NtbsContext context;
         public INotificationService service;
         public int PageIndex;
         public string CurrentFilter { get; set; }
@@ -26,19 +27,26 @@ namespace ntbs_service.Pages_Search
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
+        public int? SexId { get; set; }
+        public List<Sex> Sexes { get; set; }
+        public DateTime Dob;
+        public FormattedDate FormattedDob;
 
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         [BindProperty(SupportsGet = true)]
         public string IdFilter { get; set; }
         public bool? SearchParamsExist { get; set; }
 
-        public IndexModel(INotificationService service)
+        public IndexModel(INotificationService service, NtbsContext context)
         {
+            this.context = context;
             this.service = service;
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
+            
+            Sexes = context.GetAllSexesAsync().Result.ToList();
             if(!ModelState.IsValid) 
             {
                 return Page();
