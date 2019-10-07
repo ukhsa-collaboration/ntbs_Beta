@@ -7,7 +7,7 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages.Notifications.Edit
 {
     // TODO - To complete when spec is ready for this page
-    public class ComorbiditiesModel : NotificationModelBase
+    public class ComorbiditiesModel : NotificationEditModelBase
     {
         public ComorbiditiesModel(INotificationService service) : base(service) { }
 

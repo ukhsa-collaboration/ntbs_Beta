@@ -76,13 +76,35 @@ namespace ntbs_service.Models
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
 
+        public string PatientEditPath => GetNotificationEditPath("Patient");
+        public string EpisodeEditPath => GetNotificationEditPath("Episode");
+        public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");
+        public string ContactTracingEditPath => GetNotificationEditPath("ContactTracing");
+        public string SocialRiskFactorsEditPath => GetNotificationEditPath("SocialRiskFactors");
+        public string TravelEditPath => GetNotificationEditPath("Travel");
+        public string ComorbiditiesEditPath => GetNotificationEditPath("Comorbidities");
+        public string ImmunosupressionEditPath => GetNotificationEditPath("Immunosupression");
+        public string PreviousHistoryEditPath => GetNotificationEditPath("PreviousHistory");
+        public string OverviewPath => GetNotificationPath("Overview");
+        public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
+
+        private string GetNotificationEditPath(string subPath)
+        {
+            return $"/Notifications/Edit/{subPath}?id={NotificationId}&isBeingSubmitted={ShouldValidateFull}";
+        }
+
+        private string GetNotificationPath(string subPath)
+        {
+            return $"/Notifications/{subPath}?id={NotificationId}";
+        }
+
         private string GetNotificationStatusString()
         {
-            if (NotificationStatus == Enums.NotificationStatus.Draft)
+            if (NotificationStatus == NotificationStatus.Draft)
             {
                 return "Draft";
-            }
-            else if (NotificationStatus == Enums.NotificationStatus.Notified)
+            } 
+            else if (NotificationStatus == NotificationStatus.Notified)
             {
                 return "Notification";
             }

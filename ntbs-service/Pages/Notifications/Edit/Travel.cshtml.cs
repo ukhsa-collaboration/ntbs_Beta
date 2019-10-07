@@ -7,7 +7,7 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages.Notifications.Edit
 {
     // TODO - To complete when spec is ready for this page
-    public class TravelModel : NotificationModelBase
+    public class TravelModel : NotificationEditModelBase
     {
         public TravelModel(INotificationService service) : base(service) { }
 

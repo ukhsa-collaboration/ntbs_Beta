@@ -19,7 +19,6 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
         Task<Notification> GetNotificationWithImmunosuppresionDetailsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
-
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
         Task DeleteNotificationAsync(Notification Notification);
