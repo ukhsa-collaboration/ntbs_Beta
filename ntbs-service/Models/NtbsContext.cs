@@ -12,6 +12,10 @@ namespace ntbs_service.Models
 {
     public partial class NtbsContext : AuditDbContext
     {
+        // Max Length for fields with enum -> string conversion configured.
+        // Without this defaults to NVARCHAR(MAX) as field length.
+        private const int EnumMaxLength = 30;
+
         public NtbsContext()
         {
         }
@@ -148,7 +152,7 @@ namespace ntbs_service.Models
                 {
                     e.Property(cd => cd.BCGVaccinationState)
                        .HasConversion(statusEnumConverter)
-                       .HasMaxLength(30);
+                       .HasMaxLength(EnumMaxLength);
                     e.ToTable("ClinicalDetails");
                 });
 
@@ -162,10 +166,10 @@ namespace ntbs_service.Models
                     {
                         rf.Property(e => e.Status)
                             .HasConversion(statusEnumConverter)
-                            .HasMaxLength(30);
+                            .HasMaxLength(EnumMaxLength);
                         rf.Property(e => e.Type)
                             .HasConversion(riskFactorEnumConverter)
-                            .HasMaxLength(30)
+                            .HasMaxLength(EnumMaxLength)
                             .HasDefaultValue(RiskFactorType.Drugs);
                         rf.ToTable("RiskFactorDrugs");
                     });
@@ -174,10 +178,10 @@ namespace ntbs_service.Models
                     {
                         rh.Property(e => e.Status)
                             .HasConversion(statusEnumConverter)
-                            .HasMaxLength(30);
+                            .HasMaxLength(EnumMaxLength);
                         rh.Property(e => e.Type)
                             .HasConversion(riskFactorEnumConverter)
-                            .HasMaxLength(30)
+                            .HasMaxLength(EnumMaxLength)
                             .HasDefaultValue(RiskFactorType.Homelessness);
                         rh.ToTable("RiskFactorHomelessness");
                     });
@@ -186,35 +190,35 @@ namespace ntbs_service.Models
                     {
                         rh.Property(e => e.Status)
                             .HasConversion(statusEnumConverter)
-                            .HasMaxLength(30);
+                            .HasMaxLength(EnumMaxLength);
                         rh.Property(e => e.Type)
                             .HasConversion(riskFactorEnumConverter)
-                            .HasMaxLength(30)
+                            .HasMaxLength(EnumMaxLength)
                             .HasDefaultValue(RiskFactorType.Imprisonment);
                         rh.ToTable("RiskFactorImprisonment");
                     });
 
                     x.Property(e => e.AlcoholMisuseStatus)
                         .HasConversion(statusEnumConverter)
-                        .HasMaxLength(30);
+                        .HasMaxLength(EnumMaxLength);
                     x.Property(e => e.SmokingStatus)
                         .HasConversion(statusEnumConverter)
-                        .HasMaxLength(30);
+                        .HasMaxLength(EnumMaxLength);
                     x.Property(e => e.MentalHealthStatus)
                         .HasConversion(statusEnumConverter)
-                        .HasMaxLength(30);
+                        .HasMaxLength(EnumMaxLength);
 
                     x.ToTable("SocialRiskFactors");
                 });
 
                 entity.Property(e => e.NotificationStatus)
                     .HasConversion(notificationStatusEnumConverter)
-                    .HasMaxLength(30);
+                    .HasMaxLength(EnumMaxLength);
 
                 entity.OwnsOne(e => e.ImmunosuppressionDetails, i => {
                     i.Property(e => e.Status)
                         .HasConversion(statusEnumConverter)
-                        .HasMaxLength(30);
+                        .HasMaxLength(EnumMaxLength);
                     i.ToTable("ImmunosuppressionDetails");
                 });
             });

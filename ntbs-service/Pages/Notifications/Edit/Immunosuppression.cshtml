@@ -31,10 +31,11 @@
 
                         @{
                             var hasStatusError = !Model.IsValid("ImmunosuppressionDetails.Status");
+                            var statusFormGroupType = hasStatusError ? Error : Standard;  
                         }
 
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
-                            <div ref="statusFormGroup" class="@("nhsuk-form-group" + (hasStatusError ? " nhsuk-form-group--error" : string.Empty))" aria-describedby="status-error">
+                            <nhs-form-group ref="statusFormGroup" nhs-form-group-type="@statusFormGroupType" aria-describedby="status-error">
                                 <span ref="statusError" name="status-error" nhs-span-type="ErrorMessage" asp-validation-for="@Model.ImmunosuppressionDetails.Status"></span>
                                 <nhs-fieldset>
                                     <div class="nhsuk-checkboxes" data-module="govuk-checkboxes">
@@ -47,28 +48,29 @@
                                             <label nhs-label-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasTransplantation">Transplantation</label>
                                         </div>
                                         <div class="nhsuk-checkboxes__item">
-                                            <input ref="hasOther" nhs-input-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasOther" data-aria-controls="conditional-citizenship-conditional-2" />
+                                            <input ref="hasOther" nhs-input-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasOther" data-aria-controls="conditional-other-description" />
                                             <label nhs-label-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasOther">Other</label>
                                         </div>
 
                                         @{
                                             var hasDescriptionError = !Model.IsValid("ImmunosuppressionDetails.OtherDescription");
+                                            var descriptionFormGroupType = hasDescriptionError ? Error: Standard;
                                         }
 
-                                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-citizenship-conditional-2">
-                                            <div ref="descriptionFormGroup" class="@("nhsuk-form-group" + (hasDescriptionError ? " nhsuk-form-group--error" : string.Empty))">
+                                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-description">
+                                            <nhs-form-group ref="descriptionFormGroup" nhs-form-group-type="@descriptionFormGroupType" aria-describedby="description-error">
                                                 <nhs-fieldset>
                                                     <label nhs-label-type="Standard" asp-for="ImmunosuppressionDetails.OtherDescription">
                                                         Specify Details
                                                     </label>
                                                     <span ref="descriptionError" name="description-error" nhs-span-type="ErrorMessage" asp-validation-for="ImmunosuppressionDetails.OtherDescription"></span>
-                                                    <input ref="otherDescription" class="@("nhsuk-input" + (hasDescriptionError ? " nhsuk-input--error" : string.Empty))" asp-for="ImmunosuppressionDetails.OtherDescription" aria-describedby="description-error">
+                                                    <input ref="otherDescription" nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
                                                 </nhs-fieldset>
-                                            </div>
+                                            </nhs-form-group>
                                         </div>
                                     </div>
                                 </nhs-fieldset>
-                            </div>
+                            </nhs-form-group>
                         </div>
 
                         <div class="nhsuk-radios__item">
