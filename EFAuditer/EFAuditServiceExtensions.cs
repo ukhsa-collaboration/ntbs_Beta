@@ -35,11 +35,20 @@ namespace Microsoft.Extensions.DependencyInjection
                         audit.OriginalId = int.Parse(entry.PrimaryKey.First().Value.ToString());
                         audit.EntityType = entry.EntityType.Name;
                         audit.EventType = entry.Action;
-                        audit.AuditDetails = ev.CustomFields.ContainsKey(CustomFields.AuditDetails) ? ev.CustomFields[CustomFields.AuditDetails].ToString() : null;
+                        audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);
                         audit.AuditDateTime = DateTime.Now;
-                        audit.AuditUser = ev.CustomFields.ContainsKey(CustomFields.AppUser) ? ev.CustomFields[CustomFields.AppUser].ToString() : ev.Environment.UserName;
+                        audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
                     })
                     .IgnoreMatchedProperties(true));
+        }
+
+        private static string GetCustomKey(AuditEvent ev, string auditDetails)
+        {
+            if (ev.CustomFields.ContainsKey(CustomFields.AuditDetails))
+            {
+                return ev.CustomFields[CustomFields.AuditDetails].ToString();
+            }
+            else return null;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ntbs_service.Services
 {
   public interface IUserService
   {
-    Task<List<TBService>> TbServices(ClaimsPrincipal user);
+    Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
     UserType GetUserType(ClaimsPrincipal user);
   }
 
@@ -23,19 +23,19 @@ namespace ntbs_service.Services
       this.context = context;
       config = options.CurrentValue;
     }
-    async public Task<List<TBService>> TbServices(ClaimsPrincipal user)
+    async public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
     {
-      var services = await context.TBService.ToListAsync();
-      // National Team users have accss to all services' records
+      var tbServices = await context.TBService.ToListAsync();
+      // National Team users have access to all services' records
       if (GetUserType(user) == UserType.NationalTeam)
       {
-        return services;
+        return tbServices;
       }
 
       var roles = GetRoles(user);
-      return services.Where(service => roles.Contains(service.ServiceAdGroup))
-        .Union(services.Where(service => roles.Contains(service.PHECAdGroup)))
-        .ToList();
+      return tbServices.Where(
+        service => roles.Contains(service.ServiceAdGroup) || roles.Contains(service.PHECAdGroup)
+        ).ToList();
     }
 
     private IEnumerable<string> GetRoles(ClaimsPrincipal user)

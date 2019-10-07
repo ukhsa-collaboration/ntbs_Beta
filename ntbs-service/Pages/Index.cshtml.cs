@@ -8,13 +8,13 @@ namespace ntbs_service.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly INotificationService Service;
-        private readonly IUserService TbServicesManager;
+        private readonly INotificationService notificationService;
+        private readonly IUserService userService;
 
-        public IndexModel(INotificationService service, IUserService tbServiceManager)
+        public IndexModel(INotificationService notificationService, IUserService userService)
         {
-            Service = service;
-            TbServicesManager = tbServiceManager;
+            this.notificationService = notificationService;
+            this.userService = userService;
         }
 
         public IList<Notification> DraftNotifications { get;set; }
@@ -22,9 +22,9 @@ namespace ntbs_service.Pages
 
         public async Task OnGetAsync()
         {
-            List<TBService> services = await TbServicesManager.TbServices(User);
-            DraftNotifications = await Service.GetDraftNotificationsAsync(services);
-            RecentNotifications = await Service.GetRecentNotificationsAsync(services);
+            var tbServices = await userService.GetTbServicesAsync(User);
+            DraftNotifications = await notificationService.GetDraftNotificationsAsync(tbServices);
+            RecentNotifications = await notificationService.GetRecentNotificationsAsync(tbServices);
         }
     }
 }
