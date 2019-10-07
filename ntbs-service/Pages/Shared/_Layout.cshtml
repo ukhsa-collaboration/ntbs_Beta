@@ -11,23 +11,7 @@
         <partial name="./_Header.cshtml">
         <nhs-main-wrapper>
             <nhs-width-container container-width="Standard">
-                <form method="post" autocomplete="off">
-                    <nhs-grid-row style="position: relative">
-                        <nhs-grid-column grid-column-width="Full">
-                            @RenderBody()
-                        </nhs-grid-column>
-                        @if (IsSectionDefined("ActionsAside"))
-                        {
-                            <!-- TODO change class name to be generic -->
-                            <nhs-grid-column grid-column-width="Full" classes="actions-aside-section" >
-                                <aside>
-                                    @RenderSection("ActionsAside")
-                                </aside>
-                            </nhs-grid-column>
-                        }
-                    </nhs-grid-row>
-
-                </form>
+                @RenderBody()
             </nhs-width-container>
         </nhs-main-wrapper>
 
@@ -38,5 +22,6 @@
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <script src="~/dist/bundle.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>

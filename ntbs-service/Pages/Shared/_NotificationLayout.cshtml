@@ -1,7 +1,7 @@
 @model ntbs_service.Pages_Notifications.NotificationModelBase
 @using static NHSUK.FrontEndLibrary.TagHelpers.GridColumnWidth
 @{
-    Layout = "../Shared/_Layout.cshtml";
+    Layout = "./_Form_Layout.cshtml";
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
     var currentPage = splitUrlPath[splitUrlPath.Length-1];
     var NotificationStatusTriangleCssClass = "";

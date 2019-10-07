@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 using ntbs_service.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Validations;
+using ntbs_service.Pages;
 using ntbs_service.Models.Enums;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace ntbs_service.Pages_Search
 {
-    public class IndexModel : PageModel
+    public class IndexModel : ValidationModel
     {
         public INotificationService service;
-        public int PageIndex;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
+
+        [BindProperty(SupportsGet = true)]
+        public SearchParameters SearchParameters { get; set; }
+        public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service)
         {
@@ -31,6 +37,10 @@ namespace ntbs_service.Pages_Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
+            if(!ModelState.IsValid) 
+            {
+                return Page();
+            }
 
             var pageSize = 50;
 
@@ -39,7 +49,14 @@ namespace ntbs_service.Pages_Search
             IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
-            var notificationsIQ = OrderQueryable(draftsIQ).Union(OrderQueryable(nonDraftsIQ));
+            if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
+            {
+                SearchParamsExist = true;
+                draftsIQ = service.FilterById(draftsIQ, SearchParameters.IdFilter);
+                nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
+            }
+
+            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
 
             var notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
@@ -51,20 +68,9 @@ namespace ntbs_service.Pages_Search
             return Page();
         }
 
-        public IQueryable<Notification> OrderQueryable(IQueryable<Notification> query) {
-            return query.OrderByDescending(n => n.CreationDate)
-                .OrderByDescending(n => n.SubmissionDate)
-                .OrderBy(n => n.NotificationStatus);
-        }
-
-        public IActionResult OnPost()
+        public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            return Page();
+            return ValidateProperty(new IndexModel(service), key, value);
         }
 
         public void SetPaginationDetails() {
@@ -74,13 +80,13 @@ namespace ntbs_service.Pages_Search
                 previousPageQueryString[key] = queryString[key].ToString();
             }
             var nextPageQueryString = previousPageQueryString;
-            if(SearchResults.HasPreviousPage) 
+            if(SearchResults?.HasPreviousPage ?? false) 
             {
                 PreviousPageText = "Page " + (SearchResults.PageIndex - 1) + " of " + (SearchResults.TotalPages);
                 previousPageQueryString["pageIndex"] = "" + (SearchResults.PageIndex - 1);
                 PreviousPageUrl = QueryHelpers.AddQueryString("/Search", previousPageQueryString);
             }
-            if(SearchResults.HasNextPage)
+            if(SearchResults?.HasNextPage ?? false)
             {
                 NextPageText = "Page " + (SearchResults.PageIndex + 1) + " of " + (SearchResults.TotalPages);
                 nextPageQueryString["pageIndex"] = "" + (SearchResults.PageIndex + 1);

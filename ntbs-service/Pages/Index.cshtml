@@ -2,13 +2,9 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    Layout = "./Shared/_NoForm_Layout.cshtml";
 }
 
-<p>
-    <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button">
-        Create new case
-    </a>
-</p>
 <h2> Draft notifications </h2>
 <table class="notifications-table">
     <thead>
