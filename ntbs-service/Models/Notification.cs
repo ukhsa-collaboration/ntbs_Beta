@@ -24,6 +24,10 @@ namespace ntbs_service.Models
 
         [Display(Name = "Notification Id")]
         public int NotificationId { get; set; }
+        [MaxLength(50)]
+        public string ETSID { get; set; }
+        [MaxLength(50)]
+        public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }

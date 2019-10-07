@@ -43,8 +43,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<bool> ValidateAndSave()
         {
             UpdateFlags();
-
-            if (!ModelState.IsValid)
+            
+            PatientTBHistory.SetFullValidation(Notification.NotificationStatus);
+            if (!TryValidateModel(this))
             {
                 return false;
             }

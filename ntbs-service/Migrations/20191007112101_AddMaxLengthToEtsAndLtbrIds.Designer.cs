@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191007112101_AddMaxLengthToEtsAndLtbrIds")]
+    partial class AddMaxLengthToEtsAndLtbrIds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -9801,8 +9803,7 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("NotificationStatus")
-                        .IsRequired()
-                        .HasMaxLength(30);
+                        .IsRequired();
 
                     b.Property<DateTime?>("SubmissionDate");
 
@@ -11346,8 +11347,7 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<string>("BCGVaccinationState")
-                                .HasMaxLength(30);
+                            b1.Property<string>("BCGVaccinationState");
 
                             b1.Property<int?>("BCGVaccinationYear");
 
@@ -11457,31 +11457,6 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("TBServiceCode");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<bool>("HasBioTherapy");
-
-                            b1.Property<bool>("HasOther");
-
-                            b1.Property<bool>("HasTransplantation");
-
-                            b1.Property<string>("OtherDescription");
-
-                            b1.Property<string>("Status")
-                                .HasMaxLength(30);
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("ImmunosuppressionDetails");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("ImmunosuppressionDetails")
-                                .HasForeignKey("ntbs_service.Models.ImmunosuppressionDetails", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
                     b.OwnsOne("ntbs_service.Models.PatientDetails", "PatientDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
@@ -11561,14 +11536,11 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<string>("AlcoholMisuseStatus")
-                                .HasMaxLength(30);
+                            b1.Property<string>("AlcoholMisuseStatus");
 
-                            b1.Property<string>("MentalHealthStatus")
-                                .HasMaxLength(30);
+                            b1.Property<string>("MentalHealthStatus");
 
-                            b1.Property<string>("SmokingStatus")
-                                .HasMaxLength(30);
+                            b1.Property<string>("SmokingStatus");
 
                             b1.HasKey("NotificationId");
 
@@ -11589,13 +11561,11 @@ namespace ntbs_service.Migrations
 
                                     b2.Property<bool>("MoreThanFiveYearsAgo");
 
-                                    b2.Property<string>("Status")
-                                        .HasMaxLength(30);
+                                    b2.Property<string>("Status");
 
                                     b2.Property<string>("Type")
                                         .IsRequired()
                                         .ValueGeneratedOnAdd()
-                                        .HasMaxLength(30)
                                         .HasDefaultValue("Drugs");
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
@@ -11618,13 +11588,11 @@ namespace ntbs_service.Migrations
 
                                     b2.Property<bool>("MoreThanFiveYearsAgo");
 
-                                    b2.Property<string>("Status")
-                                        .HasMaxLength(30);
+                                    b2.Property<string>("Status");
 
                                     b2.Property<string>("Type")
                                         .IsRequired()
                                         .ValueGeneratedOnAdd()
-                                        .HasMaxLength(30)
                                         .HasDefaultValue("Homelessness");
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
@@ -11647,13 +11615,11 @@ namespace ntbs_service.Migrations
 
                                     b2.Property<bool>("MoreThanFiveYearsAgo");
 
-                                    b2.Property<string>("Status")
-                                        .HasMaxLength(30);
+                                    b2.Property<string>("Status");
 
                                     b2.Property<string>("Type")
                                         .IsRequired()
                                         .ValueGeneratedOnAdd()
-                                        .HasMaxLength(30)
                                         .HasDefaultValue("Imprisonment");
 
                                     b2.HasKey("SocialRiskFactorsNotificationId");
