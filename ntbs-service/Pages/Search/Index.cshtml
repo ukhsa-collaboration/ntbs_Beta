@@ -18,7 +18,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
-                    var IdFilterError = !Model.IsValid("SearchParameters.IdFilter");
+                    var IdFilterError = !Model.validationService.IsValid("SearchParameters.IdFilter");
                     var IdFilterGroupState = IdFilterError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@IdFilterGroupState>
