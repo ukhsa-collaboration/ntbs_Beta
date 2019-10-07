@@ -27,7 +27,7 @@ namespace ntbs_service.Pages_Search
         public string PreviousPageUrl;
         public string PreviousPageText;
 
-        [RegularExpression(@"[0-9]+", ErrorMessage = "This can only contain digits 0-9")]
+        [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         [BindProperty(SupportsGet = true)]
         public string IdFilter { get; set; }
         public bool? SearchParamsExist { get; set; }
