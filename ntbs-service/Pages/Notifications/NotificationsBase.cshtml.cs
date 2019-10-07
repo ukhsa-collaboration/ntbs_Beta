@@ -20,7 +20,8 @@ namespace ntbs_service.Pages_Notifications
     {
         protected INotificationService service;
 
-        public NotificationModelBase(INotificationService service) {
+        public NotificationModelBase(INotificationService service) 
+        {
             this.service = service;
         }
 
@@ -28,28 +29,47 @@ namespace ntbs_service.Pages_Notifications
         public NotificationBannerModel NotificationBannerModel { get; set; }
 
         [BindProperty]
-        public int? NotificationId { get; set; }
+        public int NotificationId { get; set; }
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
+        /* 
+        Post method accepts name of action specified by button clicked.
+        Using handler adds handler onto url and therefore breaking javascript 
+        validation hapening after form is submitted
+        */ 
+        public async Task<IActionResult> OnPostAsync(string actionName)
+        {
+            // Get Notifications with all owned properties to check for 
+            Notification = await service.GetNotificationWithAllInfoAsync(NotificationId); 
+            if (Notification == null)
+            {
+                return NotFound();
+            }
+            NotificationBannerModel = new NotificationBannerModel(Notification);
 
-        public async Task<IActionResult> OnPostSubmitAsync()
+            switch (actionName) 
+            {
+                case "Save":
+                    return await Save();
+                case "Submit":
+                    return await Submit();
+                default:
+                    return Page();
+            }
+        }
+
+        public async Task<IActionResult> Submit()
         {
             // First Validate and Save current page details
-            bool isValid = await ValidateAndSave(NotificationId);
+            bool isValid = await ValidateAndSave();
             if (!isValid) 
             {
                 return await OnGetAsync(NotificationId);
             }
 
-            // Get Notifications with all owned properties to check for 
-            Notification = await service.GetNotificationWithAllInfoAsync(NotificationId);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
-            
+
             // IsRequired fields on Models requires ShouldValidateFull flag
             SetShouldValidateFull();
 
@@ -61,14 +81,24 @@ namespace ntbs_service.Pages_Notifications
 
             await service.SubmitNotification(Notification);
             
-            return RedirectToPage("../Overview", new {id = NotificationId});
+            return RedirectToOverview();
+        }
+
+        public async Task<IActionResult> OnPostCreateLinkAsync()
+        {
+            var notification = await service.GetNotificationAsync(NotificationId);
+            var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
+
+            return RedirectToPage("/Notifications/Edit/Patient", new {id = linkedNotification.NotificationId});
         }
 
         private void SetShouldValidateFull() 
         {
             Notification.ShouldValidateFull = true;
-            foreach (var property in Notification.GetType().GetProperties()) {
-                if (property.PropertyType.IsSubclassOf(typeof(ModelBase))) {
+            foreach (var property in Notification.GetType().GetProperties()) 
+            {
+                if (property.PropertyType.IsSubclassOf(typeof(ModelBase))) 
+                {
                     var ownedModel = property.GetValue(Notification);
                     ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
                 }
@@ -76,15 +106,26 @@ namespace ntbs_service.Pages_Notifications
             Notification.NotificationSites.ForEach(x => x.Notification = Notification);
         }
 
-        public async Task<IActionResult> OnPostSaveAsync(int? notificationId)
-        {
-            bool isValid = await ValidateAndSave(notificationId);
+        public async Task<IActionResult> Save()
+        {           
+            bool isValid = await ValidateAndSave();
 
-            if (!isValid) {
-                return await OnGetAsync(notificationId);
+            if (!isValid) 
+            {
+                return await OnGetAsync(NotificationId);
             }
 
-            return RedirectToNextPage(notificationId);
+            if (Notification?.NotificationStatus == NotificationStatus.Notified) 
+            {
+                return RedirectToOverview();
+            }
+
+            return RedirectToNextPage(NotificationId);
+        }
+
+        private IActionResult RedirectToOverview() 
+        {
+            return RedirectToPage("../Overview", new {id = NotificationId});
         }
 
         protected void SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase 
@@ -94,9 +135,16 @@ namespace ntbs_service.Pages_Notifications
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
         }
 
-        protected abstract Task<bool> ValidateAndSave(int? notificationId);
+        public ContentResult ValidateModelProperty<T>(string key, object value, bool shouldValidateFull) where T : ModelBase
+        {
+            T model = (T)Activator.CreateInstance(typeof(T));
+            model.ShouldValidateFull = shouldValidateFull;
+            return ValidateProperty(model, key, value);
+        }
 
-        public abstract Task<IActionResult> OnGetAsync(int? notificationId, bool isBeingSubmitted = false);
+        protected abstract Task<bool> ValidateAndSave();
+
+        public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
 
         protected abstract IActionResult RedirectToNextPage(int? notificationId);
     }

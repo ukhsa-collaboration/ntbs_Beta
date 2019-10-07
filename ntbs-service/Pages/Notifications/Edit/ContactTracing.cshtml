@@ -43,7 +43,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
             <div class="double-fixed-width-separator"> </div>
             <div>
                 <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsIdentified"> 0 </div>
+                <div class="nhsuk-label top-margin-separator" ref="totalContactsIdentified"> @(Model.ContactTracing.TotalContactsIdentified ?? 0)</div>
             </div>
             </div>
 
@@ -77,7 +77,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
             <div class="double-fixed-width-separator"> </div>
             <div>
                 <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsScreened"> 0 </div>
+                <div class="nhsuk-label top-margin-separator" ref="totalContactsScreened"> @(Model.ContactTracing.TotalContactsScreened ?? 0) </div>
             </div>
         </div>
 
@@ -111,7 +111,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
             <div class="double-fixed-width-separator"> </div>
             <div>
                 <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsActiveTB"> 0 </div>
+                <div class="nhsuk-label top-margin-separator" ref="totalContactsActiveTB"> @(Model.ContactTracing.TotalContactsActiveTB ?? 0)</div>
             </div>
         </div>
 
@@ -145,7 +145,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
             <div class="double-fixed-width-separator"> </div>
             <div>
                 <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsLatentTB"> 0 </div>
+                <div class="nhsuk-label top-margin-separator" ref="totalContactsLatentTB"> @(Model.ContactTracing.TotalContactsLatentTB ?? 0) </div>
             </div>
         </div>
 
@@ -179,7 +179,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
             <div class="double-fixed-width-separator"> </div>
             <div>
                 <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsStartedTreatment"> 0 </div>
+                <div class="nhsuk-label top-margin-separator" ref="totalContactsStartedTreatment"> @(Model.ContactTracing.TotalContactsStartedTreatment ?? 0) </div>
             </div>
         </div>
 
@@ -213,7 +213,7 @@ ViewData["Title"] = "Notification - Contact Tracing";
             <div class="double-fixed-width-separator"> </div>
             <div>
                 <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsFinishedTreatment"> 0 </div>
+                <div class="nhsuk-label top-margin-separator" ref="totalContactsFinishedTreatment"> @(Model.ContactTracing.TotalContactsFinishedTreatment ?? 0) </div>
             </div>
         </div>
         </nhs-fieldset>
@@ -221,5 +221,5 @@ ViewData["Title"] = "Notification - Contact Tracing";
 
     <br />
 
-    @Html.Partial("_PaginationPartial")
+    <partial name="_PaginationPartial" for="Notification">
 </div>

@@ -38,6 +38,7 @@ namespace ntbs_service.Models
         public virtual PatientTBHistory PatientTBHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
+        public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
@@ -74,14 +75,8 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-        public int? TotalContactsIdentified => CalculateSum(ContactTracing.AdultsIdentified, ContactTracing.ChildrenIdentified);
-        public int? TotalContactsScreened => CalculateSum(ContactTracing.AdultsScreened, ContactTracing.ChildrenScreened);
-        public int? TotalContactsActiveTB => CalculateSum(ContactTracing.AdultsActiveTB, ContactTracing.ChildrenActiveTB);
-        public int? TotalContactsLatentTB => CalculateSum(ContactTracing.AdultsLatentTB, ContactTracing.ChildrenLatentTB);
-        public int? TotalContactsStartedTreatment => CalculateSum(ContactTracing.AdultsStartedTreatment, ContactTracing.ChildrenStartedTreatment);
-        public int? TotalContactsFinishedTreatment => CalculateSum(ContactTracing.AdultsFinishedTreatment, ContactTracing.ChildrenFinishedTreatment);
 
-        public string GetNotificationStatusString()
+        private string GetNotificationStatusString()
         {
             if (NotificationStatus == Enums.NotificationStatus.Draft)
             {
@@ -95,16 +90,12 @@ namespace ntbs_service.Models
             }
         }
 
-        public int? CalculateSum(int? x, int? y) {
-            return x + y;
-        }
-
-        public string FormatDate(DateTime? date)
+        private string FormatDate(DateTime? date)
         {
             return date?.ToString("dd-MMM-yyyy");
         }
 
-        public string TrueFalseToYesNo(bool? x) {
+        private string TrueFalseToYesNo(bool? x) {
             if (x == null)
             {
                 return "";
@@ -114,43 +105,48 @@ namespace ntbs_service.Models
             }
         }
 
-        public string FormatStateAndYear(Status state, int? year)
+        private string FormatStateAndYear(Status? state, int? year)
         {
-            return state.ToString() + (year != null ? " - " + year : "");
+            return state?.ToString() + (year != null ? " - " + year : "");
         }
 
-        public string FormatBooleanStateAndDate(bool booleanState, DateTime? date)
+        private string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
             return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : "");
         }
 
-        public int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
+        private int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
         {
             return (date1?.Date - date2?.Date)?.Days;
         }
 
-        public string CreateSitesOfDiseaseString()
+        private string CreateSitesOfDiseaseString()
         {
-            var siteNames = NotificationSites?.Select(ns => ns.Site)?.Select(s => s.Description);
+            if (NotificationSites == null) 
+            {
+                return "";
+            }
+            
+            var siteNames = NotificationSites.Select(ns => ns.Site)?
+                .Where(ns => ns != null)
+                .Select(s => s.Description);
             return String.Join(", ", siteNames); 
         }
 
-        public string CreateNoAbodeOrPostcodeString()
+        private string CreateNoAbodeOrPostcodeString()
         {
-            if(PatientDetails.NoFixedAbode)
+            if (PatientDetails.NoFixedAbode)
             {
                 return "No fixed abode";
             } else
             {
-                var postcodeNoWhiteSpace = PatientDetails.Postcode?.Replace(" ", string.Empty);
-                string FormattedPostcode = postcodeNoWhiteSpace?.Insert(postcodeNoWhiteSpace.Length - 3, " ");
-                return FormattedPostcode;
+                return PatientDetails.Postcode?.Trim();
             }
         }
 
-        public string FormatNhsNumberString()
+        private string FormatNhsNumberString()
         {
-            if(String.IsNullOrEmpty(PatientDetails.NhsNumber))
+            if (String.IsNullOrEmpty(PatientDetails.NhsNumber))
             {
                 return "";
             }
@@ -161,7 +157,7 @@ namespace ntbs_service.Models
             );
         }
 
-        public string CreateTimePeriodsString(RiskFactorBase riskFactor)
+        private string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
             var timeStrings = new List<string>();
             if (riskFactor.IsCurrent)

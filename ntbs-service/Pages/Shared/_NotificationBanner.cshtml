@@ -1,20 +1,20 @@
 @using ntbs_service.Models.Enums;
 @{
-    var NotificationStatusCssClass = "";
+    var NotificationStatusBannerCssClass = "";
     switch(@Model.NotificationStatus)
-        {
-            case NotificationStatus.Draft: NotificationStatusCssClass = "notification-banner--draft";
-                break;
-            case NotificationStatus.Notified: NotificationStatusCssClass = "notification-banner--notified";
-                break;
-            case NotificationStatus.Denotified: NotificationStatusCssClass = "notification-banner--denotified";
-                break;
-            default:
-                break;
-        }
+    {
+        case NotificationStatus.Draft: NotificationStatusBannerCssClass = "notification-banner--draft";
+            break;
+        case NotificationStatus.Notified: NotificationStatusBannerCssClass = "notification-banner--notified";
+            break;
+        case NotificationStatus.Denotified: NotificationStatusBannerCssClass = "notification-banner--denotified";
+            break;
+        default:
+            break;
+    }
 }
 
-<dl class="notification-banner @NotificationStatusCssClass">
+<dl class="notification-banner @NotificationStatusBannerCssClass">
     <div class="notification-banner-head">
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
