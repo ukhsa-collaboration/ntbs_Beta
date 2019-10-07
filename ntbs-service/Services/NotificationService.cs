@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -19,6 +20,7 @@ namespace ntbs_service.Services
         Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
+        Task<NotificationGroup> GetNotificationGroupAsync(int id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
@@ -53,6 +55,11 @@ namespace ntbs_service.Services
 
         public async Task<Notification> GetNotificationAsync(int? id) {
             return await repository.GetNotificationAsync(id);
+        }
+
+        public async Task<NotificationGroup> GetNotificationGroupAsync(int id) {
+            return await context.NotificationGroup.Include(n => n.Notifications)
+                .FirstOrDefaultAsync(n => n.NotificationGroupId == id);
         }
 
         public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)

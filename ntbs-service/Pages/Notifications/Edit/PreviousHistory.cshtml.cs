@@ -1,17 +1,15 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
-using ntbs_service.Pages;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class PreviousHistoryModel : NotificationModelBase
+    public class PreviousHistoryModel : NotificationEditModelBase
     {
 
-        public PreviousHistoryModel(INotificationService service) : base(service)
-        {
-        }
+        public PreviousHistoryModel(INotificationService service) : base(service) {}
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
@@ -26,25 +24,24 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             PatientTBHistory = Notification.PatientTBHistory;
-            if (PatientTBHistory == null) {
-                PatientTBHistory = new PatientTBHistory();
-            }
-            
-            SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+            await SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+
             if (PatientTBHistory.ShouldValidateFull)
             {
                 TryValidateModel(PatientTBHistory, PatientTBHistory.GetType().Name);
             }
+
             return Page();
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId)
-        { 
+        {
             // This is the last page in the flow, so there's no next page to go to
             return RedirectToPage("./PreviousHistory", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave() {
+        protected override async Task<bool> ValidateAndSave()
+        {
             UpdateFlags();
             
             PatientTBHistory.SetFullValidation(Notification.NotificationStatus);
@@ -56,10 +53,11 @@ namespace ntbs_service.Pages_Notifications
             await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
             return true;
         }
-        
+
         private void UpdateFlags()
         {
-            if (PatientTBHistory.NotPreviouslyHadTB ?? false) {
+            if (PatientTBHistory.NotPreviouslyHadTB ?? false)
+            {
                 PatientTBHistory.PreviousTBDiagnosisYear = null;
                 ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
             }
@@ -67,7 +65,7 @@ namespace ntbs_service.Pages_Notifications
 
         public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
         }
     }
 }

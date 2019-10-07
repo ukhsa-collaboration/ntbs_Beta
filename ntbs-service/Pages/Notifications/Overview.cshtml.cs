@@ -15,13 +15,9 @@ namespace ntbs_service.Pages_Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
+        public OverviewModel(INotificationService service) : base(service) {}
 
-        public OverviewModel(INotificationService service) : base(service)
-        {
-            this.service = service;
-        }
-
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             Notification = await service.GetNotificationWithAllInfoAsync(id);
             if (Notification == null)
@@ -30,27 +26,23 @@ namespace ntbs_service.Pages_Notifications
             }
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
+            await GetLinkedNotifications();
             NotificationId = Notification.NotificationId;
 
-            if (Notification.NotificationStatus == NotificationStatus.Draft) {
+            if (Notification.NotificationStatus == NotificationStatus.Draft)
+            {
                 return RedirectToPage("./Edit/Patient", new {id = NotificationId});
             }
 
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        public async Task<IActionResult> OnPostCreateLinkAsync()
         {
-            // This is not needed on the overview page. We should think about restructuring the
-            // inheritance to accommodate pages like this one without this hack
-            throw new NotImplementedException();
-        }
+            var notification = await service.GetNotificationAsync(NotificationId);
+            var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
 
-        protected override Task<bool> ValidateAndSave()
-        {
-            // This is not needed on the overview page. We should think about restructuring the
-            // inheritance to accommodate pages like this one without this hack
-            throw new NotImplementedException();
+            return RedirectToPage("/Notifications/Edit/Patient", new {id = linkedNotification.NotificationId});
         }
     }
 }

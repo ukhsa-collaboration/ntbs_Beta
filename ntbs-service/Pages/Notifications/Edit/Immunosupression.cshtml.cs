@@ -6,7 +6,7 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages_Notifications
 {
     // TODO - To complete when spec is ready for this page
-    public class ImmunosupressionModel : NotificationModelBase
+    public class ImmunosupressionModel : NotificationEditModelBase
     {
         public ImmunosupressionModel(INotificationService service) : base(service) {}
 

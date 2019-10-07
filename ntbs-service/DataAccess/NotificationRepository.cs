@@ -18,7 +18,6 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
-
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
         Task DeleteNotificationAsync(Notification Notification);

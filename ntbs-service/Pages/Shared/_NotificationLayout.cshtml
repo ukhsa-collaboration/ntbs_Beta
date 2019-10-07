@@ -1,4 +1,5 @@
 @model ntbs_service.Pages_Notifications.NotificationModelBase
+@using static NHSUK.FrontEndLibrary.TagHelpers.GridColumnWidth
 @{
     Layout = "../Shared/_Layout.cshtml";
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
@@ -15,6 +16,20 @@
         default:
             break;
     }
+
+    ViewData["IsOverviewPage"] = currentPage == "Overview";
+    ViewData["IsPatientPage"] = currentPage == "Patient";
+    ViewData["IsEpisodePage"] = currentPage == "Episode";
+    ViewData["IsClinicalDetailsPage"] = currentPage == "ClinicalDetails";
+    ViewData["IsContactTracingPage"] = currentPage == "ContactTracing";
+    ViewData["IsSocialRiskFactorsPage"] = currentPage == "SocialRiskFactors";
+    ViewData["IsTravelPage"] = currentPage == "Travel";
+    ViewData["IsComorbiditiesPage"] = currentPage == "Comorbidities";
+    ViewData["IsImmunosupressionPage"] = currentPage == "Immunosupression";
+    ViewData["IsPreviousHistoryPage"] = currentPage == "PreviousHistory";
+    ViewData["IsLinkedNotificationsPage"] = currentPage == "LinkedNotifications";
+
+    var MainGridWidth = (bool)ViewData["IsLinkedNotificationsPage"] ? Full : ThreeQuarters;
 }
 
 <nhs-grid-row>
@@ -23,47 +38,61 @@
             <partial name="./_NotificationBanner.cshtml" model="@Model.NotificationBannerModel"/>
             <div class="notification-banner-triangle @NotificationStatusTriangleCssClass"> </div>
         </div>
-        @if(@Model.Notification.NotificationStatus == NotificationStatus.Notified)
-        {
-            <div class="notification-banner-links">
-                <a href="/Notifications/Overview?id=@Model.NotificationId"> Notification details </a>
+        <div class="notification-banner-links">
+            @if(@Model.Notification.NotificationStatus == NotificationStatus.Notified)
+            {
+                <div class="@((bool)ViewData["IsOverviewPage"] ? "notification-banner-links--current" : "")">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.OverviewPath"> Notification details </a>
+                </div>
                 <div class="notification-banner-link-separator"> </div>
-                <a href="/Notifications/Overview?id=@Model.NotificationId"> Audit </a>
+            }
+            @if (@Model.NumberOfLinkedNotifications > 0)
+            {
+                <div class="@((bool)ViewData["IsLinkedNotificationsPage"] ? "notification-banner-links--current" : "")">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.LinkedNotificationsPath"> Linked Notifications (@Model.NumberOfLinkedNotifications) </a>
+                </div>
+                <div class="notification-banner-link-separator"> </div>
+            }
+            <div>
+                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.OverviewPath"> Audit </a>
             </div>
-        }
-    </nhs-grid-column>
-    <nhs-grid-column grid-column-width="OneQuarter">
-        <div>
-            <li class="@("contents-list-item " + (currentPage == "Patient" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Patient?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Person details</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "Episode" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Episode?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Hospital details</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "ClinicalDetails" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/ClinicalDetails?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Clinical Details</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "ContactTracing" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/ContactTracing?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Contact Tracing</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "SocialRiskFactors" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/SocialRiskFactors?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Social Risk Factors</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "Travel" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Travel?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Travel/visitor history</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "Comorbidities" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Comorbidities?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Co-morbidities</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "Immunosupression" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/Immunosupression?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Immunosupression</a>
-            </li>
-            <li class="@("contents-list-item " + (currentPage == "PreviousHistory" ? "contents-list-item--current" : ""))">
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="/Notifications/Edit/PreviousHistory?id=@Model.Notification.NotificationId&isBeingSubmitted=@Model.Notification.ShouldValidateFull">Previous History</a>
-            </li>
         </div>
     </nhs-grid-column>
-    <nhs-grid-column grid-column-width="ThreeQuarters">
+    @if (!(bool)ViewData["IsLinkedNotificationsPage"])
+    {
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsPatientPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.PatientEditPath">Person details</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsEpisodePage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.EpisodeEditPath">Hospital details</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsClinicalDetailsPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ClinicalDetailsEditPath">Clinical Details</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsContactTracingPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ContactTracingEditPath">Contact Tracing</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsSocialRiskFactorsPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.SocialRiskFactorsEditPath">Social Risk Factors</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsTravelPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.TravelEditPath">Travel/visitor history</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsComorbiditiesPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ComorbiditiesEditPath">Co-morbidities</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsImmunosupressionPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ImmunosupressionEditPath">Immunosupression</a>
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsPreviousHistoryPage"] ? "contents-list-item--current" : ""))">
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.PreviousHistoryEditPath">Previous History</a>
+                </li>
+            </div>
+        </nhs-grid-column>
+    }
+    <nhs-grid-column grid-column-width=@MainGridWidth>
             <input type="hidden" asp-for="NotificationId" />
             @RenderBody()
     </nhs-grid-column>
@@ -78,7 +107,7 @@
     {
         <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
     }
-    else
+    else if ((bool)ViewData["IsOverviewPage"])
     {
         <button nhs-button-type="Standard" asp-page-handler="CreateLink">New notification for this person</button>
     }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using ntbs_service.Models.Enums;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ntbs_service.Models
@@ -26,6 +23,7 @@ namespace ntbs_service.Models
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
         public bool ShowLink = false;
+        public string RedirectPath;
 
         public NotificationBannerModel(Notification notification) {
             NotificationId = notification.NotificationId;
@@ -46,6 +44,7 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatusString;
             // TODO most likely need an enum for the different origins of notifications
             Origin = "ntbs";
+            RedirectPath = notification.OverviewPath;
         }
 
         static public NotificationBannerModel WithLink(Notification notification) {

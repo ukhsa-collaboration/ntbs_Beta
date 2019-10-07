@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
-using System;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class PatientModel : NotificationModelBase
+    public class PatientModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
 
@@ -42,26 +42,23 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             Patient = Notification.PatientDetails;
-            if (Patient == null)
-            {
-                Patient = new PatientDetails();
-            }
+            await SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
 
-            SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
+            FormattedDob = Patient.Dob.ConvertToFormattedDate();
+
             if (Patient.ShouldValidateFull)
             {
                 TryValidateModel(Patient, "Patient");
             }
 
-            FormattedDob = Patient.Dob.ConvertToFormattedDate();
-
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave() {
+        protected override async Task<bool> ValidateAndSave()
+        {
             UpdatePatientFlags();
-            SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             Patient.SetFullValidation(Notification.NotificationStatus);
+            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
 
             if (!TryValidateModel(this))
             {
@@ -72,30 +69,34 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
 
-        private void UpdatePatientFlags() {
-            if (Patient.NhsNumberNotKnown) {
+        private void UpdatePatientFlags()
+        {
+            if (Patient.NhsNumberNotKnown)
+            {
                 Patient.NhsNumber = null;
                 ModelState.Remove("Patient.NhsNumber");
             }
 
-            if (Patient.NoFixedAbode) {
+            if (Patient.NoFixedAbode)
+            {
                 Patient.Postcode = null;
                 ModelState.Remove("Patient.Postcode");
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId) {
-            return RedirectToPage("./Episode", new {id = notificationId});
+        protected override IActionResult RedirectToNextPage(int? notificationId)
+        {
+            return RedirectToPage("./Episode", new { id = notificationId });
         }
 
         public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
-            return ValidateDate(new PatientDetails(), key, day, month, year);
+            return validationService.ValidateDate<PatientDetails>(key, day, month, year);
         }
     }
 }
