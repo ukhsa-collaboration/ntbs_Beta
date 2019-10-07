@@ -1,9 +1,9 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ntbs_service.Models;
 using ntbs_service.Models.Validations;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel;
@@ -149,7 +149,7 @@ namespace ntbs_service.Services
             }
         }
 
-        public ContentResult ValidateFullModel(object model, string modelName)
+        public ContentResult ValidateFullModel(object model)
         {
             if (pageModel.TryValidateModel(model, model.GetType().Name))
             {
@@ -164,12 +164,7 @@ namespace ntbs_service.Services
                     var modelStateVal = modelState[modelStateKey];
                     foreach (var error in modelStateVal.Errors)
                     {
-                        // Currently this double counts each property as "property" and "model.property", the below if clause 
-                        // removes the instances of "model.property"
-                        if (!modelStateKey.StartsWith(modelName))
-                        {
-                            keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
-                        }
+                        keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
                     }
                 }
                 return pageModel.Content(JsonConvert.SerializeObject(keyErrorDictionary));
@@ -216,13 +211,11 @@ namespace ntbs_service.Services
                 if ((int)yearToValidate < (int)yearToCompare)
                 {
                     ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
-                    return;
                 }
             }
             else
             {
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
-                return;
             }
         }
 

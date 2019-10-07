@@ -17,12 +17,12 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
+        Task<Notification> GetNotificationWithImmunosuppresionDetailsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
         Task DeleteNotificationAsync(Notification Notification);
         Task<Notification> GetNotificationAsync(int? NotificationId);
-        Task<Notification> FindNotificationByIdAsync(int? NotificationId);
         bool NotificationExists(int NotificationId);
     }
     
@@ -92,11 +92,6 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
-        public async Task<Notification> FindNotificationByIdAsync(int? NotificationId)
-        {
-            return await context.Notification.FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
-        }
-
         public bool NotificationExists(int NotificationId)
         {
             return context.Notification.Any(e => e.NotificationId == NotificationId);
@@ -117,6 +112,13 @@ namespace ntbs_service.DataAccess
                     .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
         }
 
+        public async Task<Notification> GetNotificationWithImmunosuppresionDetailsAsync(int? NotificationId)
+        {
+            return await GetBaseNotificationIQueryable()
+                .Include(n => n.ImmunosuppressionDetails)
+                .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
+        }
+
         public async Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId)
         {
             return await GetBaseNotificationIQueryable()
@@ -130,6 +132,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.ClinicalDetails)
                 .Include(n => n.ContactTracing)
                 .Include(n => n.PatientTBHistory)
+                .Include(n => n.ImmunosuppressionDetails)
                 .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
         }
 
