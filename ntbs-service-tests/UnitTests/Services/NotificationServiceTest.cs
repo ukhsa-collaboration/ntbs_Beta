@@ -166,13 +166,16 @@ namespace ntbs_service_tests.UnitTests.Services
         }
 
         [Theory]
-        [InlineData(Status.No)]
-        [InlineData(Status.Unknown)]
-        public void UpdateImmunosuppressionDetails_StripsAllButStatusWhenStatusIsNotYes(Status status)
+        [InlineData((int)Status.No)]
+        [InlineData((int)Status.Unknown)]
+        public void UpdateImmunosuppressionDetails_StripsAllButStatusWhenStatusIsNotYes(int status)
         {
+            // Hacky workaround to parameterise enum values seems to be required as passing enum directly resulted in console exception:
+            // System.IO.FileNotFoundException : Could not load file or assembly 'Microsoft.Extensions.Configuration.UserSecrets...
+            var parsedStatus = (Status)status;
             var reference = new ImmunosuppressionDetails
             {
-                Status = status,
+                Status = parsedStatus,
                 HasBioTherapy = true,
                 HasTransplantation = true,
                 HasOther = true,
