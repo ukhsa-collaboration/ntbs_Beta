@@ -12,7 +12,7 @@ namespace ntbs_service.Models
 
         /* 
         * Full Validation is done if the form is being submitted or already been submitted.
-        * Since the ModelBase does not have direct access to NotificaitonStatus, 
+        * Since the ModelBase does not have direct access to NotificationStatus, 
         * this methods is used to set Validation State from ViewModel
         */ 
         public void SetFullValidation(NotificationStatus notificationStatus, bool isBeingSubmitted = false) 

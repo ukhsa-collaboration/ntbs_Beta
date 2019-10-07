@@ -7,17 +7,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 using ntbs_service.Models;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using ntbs_service.Models.Validations;
-using ntbs_service.Pages;
 using ntbs_service.Models.Enums;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace ntbs_service.Pages_Search
 {
-    public class IndexModel : ValidationModel
+    public class IndexModel : PageModel
     {
+        public ValidationService validationService;
         public INotificationService service;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
@@ -33,6 +30,7 @@ namespace ntbs_service.Pages_Search
         public IndexModel(INotificationService service)
         {
             this.service = service;
+            validationService = new ValidationService(this);
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
@@ -70,7 +68,7 @@ namespace ntbs_service.Pages_Search
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            return ValidateProperty(new IndexModel(service), key, value);
+            return validationService.ValidateProperty(new IndexModel(service), key, value);
         }
 
         public void SetPaginationDetails() {
