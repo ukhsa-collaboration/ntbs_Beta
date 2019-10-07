@@ -26,10 +26,7 @@ namespace ntbs_service.Pages_Search
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
-        public int? SexId { get; set; }
         public List<Sex> Sexes { get; set; }
-        public DateTime Dob;
-        public FormattedDate FormattedDob;
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
@@ -64,6 +61,13 @@ namespace ntbs_service.Pages_Search
                 nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
             }
 
+            if (SearchParameters.SexId != null)
+            {
+                SearchParamsExist = true;
+                draftsIQ = service.FilterBySex(draftsIQ, (int) SearchParameters.SexId);
+                nonDraftsIQ = service.FilterBySex(nonDraftsIQ, (int) SearchParameters.SexId);
+            }
+
             IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
 
             var notifications = await PaginatedList<Notification>.CreateAsync(
@@ -78,7 +82,7 @@ namespace ntbs_service.Pages_Search
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            return ValidateProperty(new IndexModel(service), key, value);
+            return ValidateProperty(new IndexModel(service, context), key, value);
         }
 
         public void SetPaginationDetails() {

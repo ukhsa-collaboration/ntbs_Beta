@@ -34,41 +34,61 @@
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
-                    var DobError = !Model.IsValid("Dob");
+                    var DobError = !Model.IsValid("SearchParameters.Dob");
                     var DobGroupState = DobError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@DobGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                <nhs-form-group nhs-form-group-type=@DobGroupState>
                     <label nhs-label-type="Standard"> Date of birth </label>
                     <span class="nhsuk-hint " id="example-hint">
                         Dates can be partial, enter year at minimum
                     </span>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
-                        asp-validation-for="Dov"></span>
-                    <input v-on:blur="validate" is-error-input=@DobError nhs-input-type="Standard"
-                        asp-for="Dov" classes="nhsuk-input--width-10"
-                        v-bind:class="{ 'nhsuk-input--error': hasError}" />
+                        asp-validation-for="SearchParameters.Dob"></span>
+                    <nhs-date-input id="dob">
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day">Day</label>
+                            <input v-on:blur="validate" nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@DobError asp-for="SearchParameters.PartialDob.Day"/>
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
+                            <input v-on:blur="validate" nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
+                            <input v-on:blur="validate" nhs-input-type="Date" fixed-width="Four"
+                                is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
                 </nhs-form-group>
             </nhs-grid-column>
         </nhs-grid-row>
-        <div class="enter-search-details-tip">
+        <span class="enter-search-details-tip">
             Advanced options
-        </div>
+        </span>
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
                     var SexIdError = !Model.IsValid("SexId");
                     var SexIdGroupState = SexIdError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@SexIdGroupState v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+                <nhs-form-group nhs-form-group-type=@SexIdGroupState>
                     <label nhs-label-type="Standard"> Sex </label>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="sexId-error"
-                        asp-validation-for="SexId"></span>
+                        asp-validation-for="SearchParameters.SexId"></span>
                     <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
                         @foreach (var sex in Model.Sexes)
                         {
                             <nhs-radios-item>
-                                <input is-error-input=@SexError nhs-input-type="Radios" asp-for="SexId" type="radio" value="@sex.SexId" />
-                                <label nhs-label-type="Radios" asp-for="SexId">@sex.Label</label>
+                                <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" />
+                                <label nhs-label-type="Radios" asp-for="SearchParameters.SexId">@sex.Label</label>
                             </nhs-radios-item>
                         }
                     </nhs-radios>
