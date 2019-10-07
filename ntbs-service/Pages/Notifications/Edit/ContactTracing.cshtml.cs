@@ -30,9 +30,6 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             ContactTracing = Notification.ContactTracing;
-            if (ContactTracing == null) {
-                ContactTracing = new ContactTracing();
-            }
             
             SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
             return Page();
