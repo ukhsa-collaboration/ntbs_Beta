@@ -14,10 +14,12 @@ namespace ntbs_service_tests.UnitTests.Patients
 {
     public class IndexPageTest
     {
-        private Mock<INotificationService> mockService;
+        private Mock<INotificationService> mockNotificationService;
+        private Mock<IUserService> mockUserService;
         public IndexPageTest() 
         {
-            mockService = new Mock<INotificationService>();
+            mockNotificationService = new Mock<INotificationService>();
+            mockUserService = new Mock<IUserService>();
         }
 
         [Fact]
@@ -26,10 +28,10 @@ namespace ntbs_service_tests.UnitTests.Patients
             // Arrange
             var recent = Task.FromResult(GetRecentNotifications());
             var drafts = Task.FromResult(GetDraftNotifications());
-            mockService.Setup(s => s.GetRecentNotificationsAsync(It.IsAny<List<string>>())).Returns(recent);
-            mockService.Setup(s => s.GetDraftNotificationsAsync(It.IsAny<List<string>>())).Returns(drafts);           
+            mockNotificationService.Setup(s => s.GetRecentNotificationsAsync(It.IsAny<IEnumerable<TBService>>())).Returns(recent);
+            mockNotificationService.Setup(s => s.GetDraftNotificationsAsync(It.IsAny<IEnumerable<TBService>>())).Returns(drafts);           
 
-            var pageModel = new IndexModel(mockService.Object);
+            var pageModel = new IndexModel(mockNotificationService.Object, mockUserService.Object);
 
             // Act
             await pageModel.OnGetAsync();
