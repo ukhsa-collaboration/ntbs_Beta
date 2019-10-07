@@ -54,7 +54,7 @@ namespace ntbs_service.Pages_Notifications
 
         protected override async Task<bool> ValidateAndSave() {
             UpdatePatientFlags();
-            validationService.SetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
             if (!ModelState.IsValid)
             {

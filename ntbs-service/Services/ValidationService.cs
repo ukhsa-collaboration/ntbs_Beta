@@ -8,9 +8,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel;
 
-namespace ntbs_service.Pages
+namespace ntbs_service.Services
 {
-
     public class ValidationService
     {
         private readonly PageModel pageModel;
@@ -129,7 +128,7 @@ namespace ntbs_service.Pages
             return ModelState()[key].Errors.Count == 0;
         }
 
-        public void SetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
+        public void TrySetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
         {
             if (formattedDate.IsEmpty())
             {

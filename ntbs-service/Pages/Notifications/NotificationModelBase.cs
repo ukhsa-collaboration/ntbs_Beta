@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ntbs_service.Pages_Notifications
 {
-
+    // Needed by all Notification pages
     public abstract class NotificationModelBase : PageModel
     {
         protected INotificationService service;
@@ -34,11 +34,12 @@ namespace ntbs_service.Pages_Notifications
         private async Task<NotificationGroup> GetNotificationGroupAsync()
         {
             var groupId = Notification.GroupId;
-            if (groupId != null)
+            if (groupId == null)
             {
-                return await service.GetNotificationGroupAsync(groupId.Value);
+                return null;
             }
-            return null;
+
+            return await service.GetNotificationGroupAsync(groupId.Value);
         }
     }
 }

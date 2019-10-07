@@ -3,10 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models;
-using ntbs_service.Pages;
 using ntbs_service.Services;
-using System;
-using System.Linq;
 using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages_Notifications
@@ -16,6 +13,7 @@ namespace ntbs_service.Pages_Notifications
         public List<string> ErrorMessages { get; set; }
     }
 
+    // Needed by all Notification edit pages
     public abstract class NotificationEditModelBase : NotificationModelBase
     {
         protected ValidationService validationService;
