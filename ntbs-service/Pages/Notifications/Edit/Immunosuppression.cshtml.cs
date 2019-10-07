@@ -32,9 +32,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./PreviousHistory", new { id = notificationId });
+            return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task<bool> ValidateAndSave()

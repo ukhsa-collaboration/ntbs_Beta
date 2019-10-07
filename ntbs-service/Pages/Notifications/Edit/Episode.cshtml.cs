@@ -57,9 +57,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return new JsonResult(tbServices);
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./ClinicalDetails", new { id = notificationId });
+            return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task<bool> ValidateAndSave() 

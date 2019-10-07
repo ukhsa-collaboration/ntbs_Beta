@@ -19,15 +19,16 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
+            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             NotificationBannerModel = new NotificationBannerModel(Notification);
             NotificationId = id;
 
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Comorbidities", new { id = notificationId });
+            return RedirectToPage("./Comorbidities", new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task<bool> ValidateAndSave() => await Task.FromResult(true);
