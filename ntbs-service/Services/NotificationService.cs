@@ -23,7 +23,7 @@ namespace ntbs_service.Services
         Task<NotificationGroup> GetNotificationGroupAsync(int id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
-        Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites);
+        Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task SubmitNotification(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
@@ -165,9 +165,9 @@ namespace ntbs_service.Services
             return await repository.GetNotificationWithNotificationSitesAsync(id);
         }
 
-        public async Task UpdateSitesAsync(Notification notification, IEnumerable<NotificationSite> notificationSites) 
+        public async Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites) 
         {
-            var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notification.NotificationId);
+            var currentSites = context.NotificationSite.Where(ns => ns.NotificationId == notificationId);
 
             foreach (var newSite in notificationSites)
             {

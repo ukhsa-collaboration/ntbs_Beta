@@ -36,9 +36,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task<bool> ValidateAndSave() 
         {
-            if (!ModelState.IsValid)
+            SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);   
+            if (!TryValidateModel(SocialRiskFactors))
             {
                 return false;
             }

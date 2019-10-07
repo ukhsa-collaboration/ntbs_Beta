@@ -62,10 +62,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ClinicalDetails", new { id = notificationId });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task<bool> ValidateAndSave() 
         {
-
-            if (!ModelState.IsValid)
+            Episode.SetFullValidation(Notification.NotificationStatus);
+            if (!TryValidateModel(this))
             {
                 return false;
             }

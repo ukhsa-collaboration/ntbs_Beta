@@ -98,14 +98,25 @@ namespace ntbs_service.Pages.Notifications.Edit
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
             validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
+            
+            ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
 
-            if (!ModelState.IsValid)
+            var notificationSites = CreateNotificationSitesFromModel(Notification.NotificationId);
+
+            // Separate notification with notification sites only is needed to check if notification sites are valid,
+            // and to avoid updating notification site when updating Clinical Details
+            var notificationWithSitesOnly = new Notification {
+                ShouldValidateFull = Notification.ShouldValidateFull,
+                NotificationSites = notificationSites.ToList()
+            };
+            
+            if (!TryValidateModel(this) && !TryValidateModel(notificationWithSitesOnly))
             {
                 return false;
             }
 
             await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-            await service.UpdateSitesAsync(Notification, CreateNotificationSitesFromModel(Notification.NotificationId));
+            await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
 
             return true;
         }

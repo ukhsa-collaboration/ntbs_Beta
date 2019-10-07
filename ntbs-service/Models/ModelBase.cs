@@ -15,7 +15,7 @@ namespace ntbs_service.Models
         * Since the ModelBase does not have direct access to NotificaitonStatus, 
         * this methods is used to set Validation State from ViewModel
         */ 
-        public void SetFullValidation(NotificationStatus notificationStatus, bool isBeingSubmitted) 
+        public void SetFullValidation(NotificationStatus notificationStatus, bool isBeingSubmitted = false) 
         {
             ShouldValidateFull = isBeingSubmitted || notificationStatus == NotificationStatus.Notified;
         }
