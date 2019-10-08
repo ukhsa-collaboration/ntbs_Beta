@@ -38,6 +38,8 @@ namespace ntbs_service.Models
         public virtual DbSet<Episode> Episode { get; set; }
         public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
         public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
+        public virtual DbSet<TravelDetails> TravelDetails { get; set; }
+        public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -221,6 +223,9 @@ namespace ntbs_service.Models
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("ImmunosuppressionDetails");
                 });
+
+                entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails");;
+                entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails"); ;
             });
 
             modelBuilder.Entity<Region>(entity =>

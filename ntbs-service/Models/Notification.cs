@@ -20,6 +20,8 @@ namespace ntbs_service.Models
             PatientTBHistory = new PatientTBHistory();
             ContactTracing = new ContactTracing();
             ImmunosuppressionDetails = new ImmunosuppressionDetails();
+            TravelDetails = new TravelDetails();
+            VisitorDetails = new VisitorDetails();
         }
 
         [Display(Name = "Notification Id")]
@@ -42,6 +44,8 @@ namespace ntbs_service.Models
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
         public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
+        public virtual TravelDetails TravelDetails { get; set; }
+        public virtual VisitorDetails VisitorDetails { get; set; }
         public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();

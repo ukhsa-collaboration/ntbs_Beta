@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ntbs_service.Models
 {
@@ -6,9 +9,66 @@ namespace ntbs_service.Models
     {
         public const string UkCode = "GB";
         public const string UnknownCode = "-";
-        public static Country[] GetCountriesArray()
+
+        public static readonly string[] notHighTbOccurenceCountries = new[]
         {
-            return new Country[] {
+            "Andorra",
+            "Australia",
+            "Austria",
+            "Belgium",
+            "Canada",
+            "Cyprus",
+            "Denmark",
+            "Finland",
+            "France",
+            "Germany",
+            "Greece",
+            "Greenland",
+            "Guernsey",
+            "Holy See (Vatican City State)",
+            "Iceland",
+            "Ireland",
+            "Isle Of Man",
+            "Italy",
+            "Jersey",
+            "Liechtenstein",
+            "Luxembourg",
+            "Monaco",
+            "Netherlands",
+            "New Zealand",
+            "Norway",
+            "Portugal",
+            "Spain",
+            "Sweden",
+            "Switzerland",
+            "United Kingdom",
+            "United States",
+            "United States Minor Outlying Islands"
+        };
+
+        public static IEnumerable<Country> GetCountriesArray()
+        {
+            var allCountries = GetAllCountryData().ToList();
+
+            // Set all countries to high occurence and conditionally flag them as low.
+            // The vast majority are high occurence.
+            allCountries.ForEach(c => c.HasHighTbOccurence = true);
+
+
+            foreach (var notHighTbCountry in notHighTbOccurenceCountries)
+            {
+                // If country not found, or duplicate countries found with the name, this will throw an exception.
+                // Couldn't come up with a neat strongly typed way of doing this.
+                var lowCountry = allCountries.Single(c => c.Name == notHighTbCountry);
+                lowCountry.HasHighTbOccurence = false;
+            }
+
+            return allCountries;
+        }
+
+        private static IEnumerable<Country> GetAllCountryData()
+        {
+            return new[] {
                 new Country { CountryId = 1, Name = "Afghanistan", IsoCode = "AF" },
                 new Country { CountryId = 2, Name = "Åland Islands", IsoCode = "AX" },
                 new Country { CountryId = 3, Name = "Albania", IsoCode = "AL" },
@@ -260,6 +320,7 @@ namespace ntbs_service.Models
                 new Country { CountryId = 249, Name = "Zambia", IsoCode = "ZM" },
                 new Country { CountryId = 250, Name = "Zimbabwe", IsoCode = "ZW" }
             };
+
         }
     }
 }
