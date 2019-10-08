@@ -13,7 +13,7 @@ namespace ntbs_service.Models
         public Site Site { get; set; }
 
         [RequiredIf("SiteId == SiteId.OTHER && Notification != null && Notification.ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteOtherIsRequired)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SiteDescription { get; set; }
     }
 }

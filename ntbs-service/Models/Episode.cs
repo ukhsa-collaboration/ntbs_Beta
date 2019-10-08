@@ -10,12 +10,12 @@ namespace ntbs_service.Models
     public class Episode : ModelBase
     {        
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string Consultant { get; set; }
 
         [Display(Name = "Case Manager")]
         [MaxLength(200)]
-        [RegularExpression(ValidationRegexes.ValidCharactersForName, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string CaseManager { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.TBServiceIsRequired)]
