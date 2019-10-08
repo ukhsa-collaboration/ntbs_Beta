@@ -28,7 +28,7 @@
                     </span>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.IdFilter"></span>
-                    <input v-on:blur="validate" is-error-input=@IdFilterError nhs-input-type="Standard"
+                    <input is-error-input=@IdFilterError nhs-input-type="Standard"
                         asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" />
                 </nhs-form-group>
             </nhs-grid-column>
@@ -45,28 +45,28 @@
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
                         asp-validation-for="SearchParameters.Dob"></span>
                     <nhs-date-input id="dob">
-                    <nhs-date-input-item>
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day">Day</label>
-                            <input v-on:blur="validate" nhs-input-type="Date" fixed-width="Two"
-                                is-error-input=@DobError asp-for="SearchParameters.PartialDob.Day"/>
-                        </nhs-form-group>
-                    </nhs-date-input-item>
-                    <nhs-date-input-item>
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
-                            <input v-on:blur="validate" nhs-input-type="Date" fixed-width="Two"
-                                is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month" />
-                        </nhs-form-group>
-                    </nhs-date-input-item>
-                    <nhs-date-input-item>
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
-                            <input v-on:blur="validate" nhs-input-type="Date" fixed-width="Four"
-                                is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year" />
-                        </nhs-form-group>
-                    </nhs-date-input-item>
-                </nhs-date-input>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day">Day</label>
+                                <input nhs-input-type="Date" fixed-width="Two"
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Day"/>
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
+                                <input nhs-input-type="Date" fixed-width="Two"
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
+                                <input nhs-input-type="Date" fixed-width="Four"
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year" />
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                    </nhs-date-input>
                 </nhs-form-group>
             </nhs-grid-column>
         </nhs-grid-row>
@@ -83,7 +83,7 @@
                     <label nhs-label-type="Standard"> Sex </label>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="sexId-error"
                         asp-validation-for="SearchParameters.SexId"></span>
-                    <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
+                    <nhs-radios nhs-radios-type="Standard">
                         @foreach (var sex in Model.Sexes)
                         {
                             <nhs-radios-item>
@@ -91,6 +91,10 @@
                                 <label nhs-label-type="Radios" asp-for="SearchParameters.SexId">@sex.Label</label>
                             </nhs-radios-item>
                         }
+                        <nhs-radios-item>
+                            <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="0"/>
+                            <label nhs-label-type="Radios" asp-for="SearchParameters.SexId">Any</label>
+                        </nhs-radios-item>
                     </nhs-radios>
                 </nhs-form-group>
             </nhs-grid-column>

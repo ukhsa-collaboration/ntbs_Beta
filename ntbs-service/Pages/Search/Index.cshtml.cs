@@ -40,7 +40,10 @@ namespace ntbs_service.Pages_Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
-            
+            // TODO any better way to fix this? default check any without setting sexId
+            if(SearchParameters.SexId == null) {
+                SearchParameters.SexId = 0;
+            }
             Sexes = context.GetAllSexesAsync().Result.ToList();
             if(!ModelState.IsValid) 
             {
@@ -61,11 +64,18 @@ namespace ntbs_service.Pages_Search
                 nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
             }
 
-            if (SearchParameters.SexId != null)
+            if (SearchParameters.SexId != null && SearchParameters.SexId != 0)
             {
                 SearchParamsExist = true;
                 draftsIQ = service.FilterBySex(draftsIQ, (int) SearchParameters.SexId);
                 nonDraftsIQ = service.FilterBySex(nonDraftsIQ, (int) SearchParameters.SexId);
+            }
+
+            if (SearchParameters.PartialDob != null)
+            {
+                SearchParamsExist = true;
+                draftsIQ = service.FilterByPartialDate(draftsIQ, SearchParameters.PartialDob);
+                nonDraftsIQ = service.FilterByPartialDate(nonDraftsIQ, SearchParameters.PartialDob);
             }
 
             IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));

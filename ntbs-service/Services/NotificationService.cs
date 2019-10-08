@@ -30,6 +30,7 @@ namespace ntbs_service.Services
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
+        IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
         IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
     }
 
