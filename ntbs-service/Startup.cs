@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
 using ntbs_service.Data.Legacy;
 using ntbs_service.Models;
@@ -43,6 +44,7 @@ namespace ntbs_service
             });
 
 
+            var setupDevAuth = Env.IsDevelopment();
             IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
             var authSetup = services.AddAuthentication(sharedOptions =>
                     {
@@ -56,11 +58,11 @@ namespace ntbs_service
                     })
                     .AddCookie(options =>
                     {   
-                        options.ForwardDefaultSelector = ctx => Env.IsDevelopment() ? "Dev" : null;
+                        options.ForwardDefaultSelector = ctx => setupDevAuth ? DevAuthHandler.DevAuthName : null;
                     });
 
-            if (Env.IsDevelopment()) {
-                authSetup.AddScheme<AuthenticationSchemeOptions, Authentication.DevAuthHandler>("Dev", o => { });
+            if (setupDevAuth) {
+                authSetup.AddScheme<AuthenticationSchemeOptions, DevAuthHandler>(DevAuthHandler.DevAuthName, o => { });
             }
 
             services.AddMvc(options => 

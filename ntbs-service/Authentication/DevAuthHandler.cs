@@ -6,8 +6,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ntbs_service.Authentication {
-public class DevAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class DevAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
+        public static readonly string DevAuthName = "Dev";
+
         private readonly ClaimsPrincipal id;
 
         public DevAuthHandler(IOptionsMonitor<AdfsOptions> AdfsOptionsMonitor,
@@ -16,7 +18,7 @@ public class DevAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
                               UrlEncoder encoder,
                               ISystemClock clock) : base(options, logger, encoder, clock)
         {
-            var id = new ClaimsIdentity("Dev");
+            var id = new ClaimsIdentity(DevAuthName);
             id.AddClaim(new Claim(ClaimTypes.Name, "Devloper", ClaimValueTypes.String));
             var adfsOptions = AdfsOptionsMonitor.CurrentValue;
             id.AddClaim(new Claim(ClaimTypes.Role, adfsOptions.AdGroupsPrefix + adfsOptions.BaseUserGroup, ClaimValueTypes.String));
@@ -27,6 +29,6 @@ public class DevAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-            => Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(id, "Dev")));
+            => Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(id, DevAuthName)));
     }
 }
