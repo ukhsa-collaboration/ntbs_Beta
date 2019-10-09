@@ -31,7 +31,7 @@ namespace ntbs_service.Middleware
             {
                 var id = int.Parse(request.Query["id"].ToString());
                 // TODO: Differentiate between Cluster and Full view.
-                await auditService.OnGetAuditAsync(id, model: "Notification", viewType: "Full", context.User.Identity.Name);
+                await auditService.OnGetAuditAsync(id, model: "Notification", viewType: "Full", userName: context.User.Identity.Name);
             }
         }
     }
