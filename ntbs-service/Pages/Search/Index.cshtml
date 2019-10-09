@@ -47,23 +47,23 @@
                     <nhs-date-input id="dob">
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day">Day</label>
+                                <label nhs-label-type="Date" asp-for="PartialDob.Day">Day</label>
                                 <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Day"/>
+                                    is-error-input=@DobError asp-for="PartialDob.Day"/>
                             </nhs-form-group>
                         </nhs-date-input-item>
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
+                                <label nhs-label-type="Date" asp-for="PartialDob.Month">Month</label>
                                 <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month" />
+                                    is-error-input=@DobError asp-for="PartialDob.Month" />
                             </nhs-form-group>
                         </nhs-date-input-item>
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
+                                <label nhs-label-type="Date" asp-for="PartialDob.Year">Year</label>
                                 <input nhs-input-type="Date" fixed-width="Four"
-                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year" />
+                                    is-error-input=@DobError asp-for="PartialDob.Year" />
                             </nhs-form-group>
                         </nhs-date-input-item>
                     </nhs-date-input>

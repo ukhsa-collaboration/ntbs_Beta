@@ -13,6 +13,5 @@ namespace ntbs_service.Models
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
         public DateTime? Dob;
-        public PartialDate PartialDob;
     }
 }

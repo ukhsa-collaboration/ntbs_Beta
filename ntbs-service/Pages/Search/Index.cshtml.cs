@@ -30,6 +30,8 @@ namespace ntbs_service.Pages_Search
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public PartialDate PartialDob { get; set; }
         public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service, NtbsContext context)
@@ -40,14 +42,15 @@ namespace ntbs_service.Pages_Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
-            // TODO any better way to fix this? default check any without setting sexId
-            if(SearchParameters.SexId == null) {
-                SearchParameters.SexId = 0;
-            }
             Sexes = context.GetAllSexesAsync().Result.ToList();
             if(!ModelState.IsValid) 
             {
                 return Page();
+            }
+
+            // TODO any better way to fix this? default check any without setting sexId
+            if(SearchParameters.SexId == null) {
+                SearchParameters.SexId = 0;
             }
 
             var pageSize = 50;
@@ -71,11 +74,11 @@ namespace ntbs_service.Pages_Search
                 nonDraftsIQ = service.FilterBySex(nonDraftsIQ, (int) SearchParameters.SexId);
             }
 
-            if (SearchParameters.PartialDob != null)
+            if (PartialDob != null)
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterByPartialDate(draftsIQ, SearchParameters.PartialDob);
-                nonDraftsIQ = service.FilterByPartialDate(nonDraftsIQ, SearchParameters.PartialDob);
+                draftsIQ = service.FilterByPartialDate(draftsIQ, PartialDob);
+                nonDraftsIQ = service.FilterByPartialDate(nonDraftsIQ, PartialDob);
             }
 
             IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
