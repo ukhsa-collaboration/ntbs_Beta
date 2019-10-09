@@ -13,5 +13,8 @@ namespace ntbs_service.Migrations
             migrationBuilder.UpdateData("TBService", "Code", "TBS0008", "ServiceAdGroup", "Global.NIS.NTBS.Service_Ashford");
             migrationBuilder.UpdateData("TBService", "Code", "TBS0001", "ServiceAdGroup", "Global.NIS.NTBS.Service_Abingdon");
         }
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+        }
     }
 }
