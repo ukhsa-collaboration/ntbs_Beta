@@ -25,7 +25,6 @@ namespace ntbs_service.Pages_Search
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
-        public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service)
         {
@@ -47,14 +46,23 @@ namespace ntbs_service.Pages_Search
             IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
-            if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
-            {
-                SearchParamsExist = true;
-                draftsIQ = service.FilterById(draftsIQ, SearchParameters.IdFilter);
-                nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
-            }
+            NotificationSearchBuilder draftSearchBuilder = new NotificationSearchBuilder(draftsIQ);
+            NotificationSearchBuilder nonDraftsSearchBuilder = new NotificationSearchBuilder(nonDraftsIQ);
+            
+            var filteredDraftsIQ = draftSearchBuilder
+                .FilterById(SearchParameters.IdFilter)
+                .FilterByFamilyName(SearchParameters.FamilyName)
+                .FilterByGivenName(SearchParameters.GivenName)
+                .GetResult();
 
-            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
+            var filteredNonDraftsIQ = nonDraftsSearchBuilder
+                .FilterById(SearchParameters.IdFilter)
+                .FilterByFamilyName(SearchParameters.FamilyName)
+                .FilterByGivenName(SearchParameters.GivenName)
+                .GetResult();
+
+            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(filteredDraftsIQ)
+                .Union(service.OrderQueryableByNotificationDate(filteredNonDraftsIQ));
 
             var notifications = await PaginatedList<Notification>.CreateAsync(
                 notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
