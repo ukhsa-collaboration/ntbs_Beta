@@ -46,24 +46,23 @@ namespace ntbs_service.Pages_Search
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-            IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
-            IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
+            IQueryable<Notification> draftsQueryable = service.GetBaseQueryableNotificationByStatus(draftStatusList);
+            IQueryable<Notification> nonDraftsQueryable = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
             if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterById(draftsIQ, SearchParameters.IdFilter);
-                nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
+                draftsQueryable = service.FilterById(draftsQueryable, SearchParameters.IdFilter);
+                nonDraftsQueryable = service.FilterById(nonDraftsQueryable, SearchParameters.IdFilter);
             }
 
-            IQueryable<Notification> notificationIdsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
+            IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(draftsQueryable)
+                                                                .Union(service.OrderQueryableByNotificationDate(nonDraftsQueryable));
 
-            var notificationIds = await service.GetPaginatedIdsAsync(notificationIdsIQ.Select(n => n.NotificationId), PaginationParameters);
-            var count = await notificationIdsIQ.CountAsync();
-            IEnumerable<Notification> notifications = await service.GetNotificationsWithDetailsById(notificationIds);
-            var paginatedList = new PaginatedList<Notification>(notifications, count, PaginationParameters);
-
-            SearchResults = paginatedList.SelectItems(NotificationBannerModel.WithLink);
+            var notificationIds = await service.GetPaginatedIdsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
+            var count = await notificationIdsQueryable.CountAsync();
+            IEnumerable<Notification> notifications = await service.GetNotificationsByIdAsync(notificationIds);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notifications.Select(n => NotificationBannerModel.WithLink(n)), count, PaginationParameters);
 
             SetPaginationDetails();
 

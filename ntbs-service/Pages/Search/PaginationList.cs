@@ -26,15 +26,6 @@ namespace ntbs_service.Pages_Search
             this.AddRange(items);
         }
 
-        public PaginatedList<TResult> SelectItems<TResult>(Func<T, TResult> selector) {
-            var newItems = this.Select(selector);
-            return new PaginatedList<TResult>(newItems) {
-                PageIndex = this.PageIndex,
-                TotalPages = this.TotalPages,
-                NumberOfResults = this.NumberOfResults
-            };
-        }
-
         public bool HasPreviousPage
         {
             get
