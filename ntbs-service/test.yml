@@ -25,6 +25,8 @@ spec:
               secretKeyRef:
                 name: test-audit-db-connection-string
                 key: connectionString
+          - name: AdfsOptions__Wtrealm
+            value: "https://ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io"
       imagePullSecrets:
       - name: registery-password
 ---
@@ -46,6 +48,10 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
 spec:
+  tls:
+    - hosts:
+      - ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io
+      secretName: phe-ntbs-test-tls
   rules:
   - host: ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io
     http:

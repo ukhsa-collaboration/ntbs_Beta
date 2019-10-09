@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ntbs_service.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,11 +8,13 @@ namespace ntbs_service.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly INotificationService service;
+        private readonly INotificationService notificationService;
+        private readonly IUserService userService;
 
-        public IndexModel(INotificationService service)
+        public IndexModel(INotificationService notificationService, IUserService userService)
         {
-            this.service = service;
+            this.notificationService = notificationService;
+            this.userService = userService;
         }
 
         public IList<Notification> DraftNotifications { get;set; }
@@ -21,9 +22,9 @@ namespace ntbs_service.Pages
 
         public async Task OnGetAsync()
         {
-            // Using a dummy TB service here while we don't have user profiles
-            DraftNotifications = await service.GetDraftNotificationsAsync(new List<string> {"Ashford Hospital"});
-            RecentNotifications = await service.GetRecentNotificationsAsync(new List<string> {"Ashford Hospital"});
+            var tbServices = await userService.GetTbServicesAsync(User);
+            DraftNotifications = await notificationService.GetDraftNotificationsAsync(tbServices);
+            RecentNotifications = await notificationService.GetRecentNotificationsAsync(tbServices);
         }
     }
 }

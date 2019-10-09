@@ -12,8 +12,8 @@ namespace ntbs_service.DataAccess
     {
         IQueryable<Notification> GetBaseNotificationIQueryable();
         IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
-        Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices);
-        Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices);
+        Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices);
+        Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices);
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
@@ -34,22 +34,24 @@ namespace ntbs_service.DataAccess
             this.context = context;
         }
 
-        public async Task<IList<Notification>> GetRecentNotificationsAsync(List<string> TBServices)
+        public async Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices)
         {
+            var serviceNames = TBServices.Select(tbs => tbs.Name);
             return await context.Notification
                 .Include(n => n.Episode).ThenInclude(p => p.TBService)
-                .Where(n => TBServices.Contains(n.Episode.TBService.Name))
+                .Where(n => serviceNames.Contains(n.Episode.TBService.Name))
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
                 .OrderByDescending(n => n.SubmissionDate)
                 .Take(10)
                 .ToListAsync();
         }
 
-        public async Task<IList<Notification>> GetDraftNotificationsAsync(List<string> TBServices)
+        public async Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices)
         {
+            var serviceNames = TBServices.Select(tbs => tbs.Name);
             return await context.Notification
                 .Include(n => n.Episode).ThenInclude(p => p.TBService)
-                .Where(n => TBServices.Contains(n.Episode.TBService.Name))
+                .Where(n => serviceNames.Contains(n.Episode.TBService.Name))
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
                 .OrderByDescending(n => n.CreationDate)
                 .ToListAsync();
