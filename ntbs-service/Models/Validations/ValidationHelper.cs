@@ -67,6 +67,6 @@ namespace ntbs_service.Models.Validations
 
     public static class ValidationRegexes
     {
-        public const string ValidCharactersForName = @"[a-zA-Z \-,.']+";
+        public const string CharacterValidation = @"[a-zA-Z \-,.']+";
     }
 }

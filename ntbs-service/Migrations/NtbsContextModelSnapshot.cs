@@ -11467,7 +11467,8 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("HasTransplantation");
 
-                            b1.Property<string>("OtherDescription");
+                            b1.Property<string>("OtherDescription")
+                                .HasMaxLength(100);
 
                             b1.Property<string>("Status")
                                 .HasMaxLength(30);
