@@ -68,7 +68,7 @@ namespace ntbs_service.Pages_Search
                 nonDraftsIQ = service.FilterBySex(nonDraftsIQ, (int) SearchParameters.SexId);
             }
 
-            if (SearchParameters.PartialDob != null)
+            if (SearchParameters.PartialDob != null && SearchParameters.PartialDob.Year != null)
             {
                 SearchParamsExist = true;
                 draftsIQ = service.FilterByPartialDate(draftsIQ, SearchParameters.PartialDob);

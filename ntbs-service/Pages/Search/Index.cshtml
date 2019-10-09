@@ -47,23 +47,23 @@
                     <nhs-date-input id="dob">
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="PartialDob.Day">Day</label>
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day">Day</label>
                                 <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@DobError asp-for="PartialDob.Day"/>
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Day"/>
                             </nhs-form-group>
                         </nhs-date-input-item>
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="PartialDob.Month">Month</label>
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
                                 <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@DobError asp-for="PartialDob.Month" />
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month" />
                             </nhs-form-group>
                         </nhs-date-input-item>
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="PartialDob.Year">Year</label>
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
                                 <input nhs-input-type="Date" fixed-width="Four"
-                                    is-error-input=@DobError asp-for="PartialDob.Year" />
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year" />
                             </nhs-form-group>
                         </nhs-date-input-item>
                     </nhs-date-input>
@@ -87,13 +87,19 @@
                         @foreach (var sex in Model.Sexes)
                         {
                             <nhs-radios-item>
-                                <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" />
-                                <label nhs-label-type="Radios" asp-for="SearchParameters.SexId">@sex.Label</label>
+                                <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId"/>
+                                <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-@sex.SexId">@sex.Label</label>
                             </nhs-radios-item>
                         }
                         <nhs-radios-item>
-                            <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="0"/>
-                            <label nhs-label-type="Radios" asp-for="SearchParameters.SexId">Any</label>
+                            @{
+                                string anyChecked = null;
+                                if(Model.SearchParameters.SexId == null) {
+                                    anyChecked = "true";
+                                }
+                            }
+                            <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="" checked="@anyChecked"id="sexId-Any"/>
+                            <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-Any">Any</label>
                         </nhs-radios-item>
                     </nhs-radios>
                 </nhs-form-group>

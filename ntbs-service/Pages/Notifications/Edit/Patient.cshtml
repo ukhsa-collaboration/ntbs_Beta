@@ -93,8 +93,8 @@
                     @foreach (var sex in Model.Sexes)
                     {
                     <nhs-radios-item>
-                        <input is-error-input=@SexError nhs-input-type="Radios" asp-for="Patient.SexId" type="radio" value="@sex.SexId" />
-                        <label nhs-label-type="Radios" asp-for="Patient.SexId">@sex.Label</label>
+                        <input is-error-input=@SexError nhs-input-type="Radios" asp-for="Patient.SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId"/>
+                        <label nhs-label-type="Radios" asp-for="Patient.SexId" for="sexId-@sex.SexId">@sex.Label</label>
                     </nhs-radios-item>
                     }
                 </nhs-radios>
