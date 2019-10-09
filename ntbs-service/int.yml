@@ -29,7 +29,7 @@ spec:
             value: "https://ntbs-int.da0c702c3b574e3185f6.uksouth.aksapp.io"
       imagePullSecrets:
       - name: registery-password
---- 
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,7 +51,7 @@ spec:
   tls:
     - hosts:
       - ntbs-int.da0c702c3b574e3185f6.uksouth.aksapp.io
-      secretName: phe-ntbs-tls
+      secretName: phe-ntbs-int-tls
   rules:
   - host: ntbs-int.da0c702c3b574e3185f6.uksouth.aksapp.io
     http:
