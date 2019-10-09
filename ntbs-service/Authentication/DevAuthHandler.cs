@@ -19,11 +19,14 @@ namespace ntbs_service.Authentication {
                               ISystemClock clock) : base(options, logger, encoder, clock)
         {
             var id = new ClaimsIdentity(DevAuthName);
+            // Add name claim
             id.AddClaim(new Claim(ClaimTypes.Name, "Devloper", ClaimValueTypes.String));
             var adfsOptions = AdfsOptionsMonitor.CurrentValue;
+            // Add role claim for base user role
             id.AddClaim(new Claim(ClaimTypes.Role, adfsOptions.AdGroupsPrefix + adfsOptions.BaseUserGroup, ClaimValueTypes.String));
+            // Add role claim for user role - as specified in appsettings.Development.json
             string group = adfsOptions.AdGroupsPrefix + 
-                (adfsOptions.DevGroup == null ? adfsOptions.DevGroup : adfsOptions.NationalTeamAdGroup);
+                (adfsOptions.DevGroup == null ? adfsOptions.NationalTeamAdGroup : adfsOptions.DevGroup);
             id.AddClaim(new Claim(ClaimTypes.Role, group, ClaimValueTypes.String));
             this.id = new ClaimsPrincipal(id);
         }
