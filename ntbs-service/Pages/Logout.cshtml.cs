@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Pages
 {
@@ -17,10 +18,10 @@ namespace ntbs_service.Pages
         BaseUrl = options.CurrentValue.AdfsUrl;
     }
 
-    public RedirectResult OnGet()
+    public async Task<RedirectResult> OnGetAsync()
         {
             // Erase the cookie ...
-            HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync();
 
             // ... and sign out of adfs
             return Redirect($"{BaseUrl}/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}");

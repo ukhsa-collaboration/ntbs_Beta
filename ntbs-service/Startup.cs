@@ -58,7 +58,7 @@ namespace ntbs_service
                     })
                     .AddCookie(options =>
                     {   
-                        options.ForwardDefaultSelector = ctx => setupDevAuth ? DevAuthHandler.DevAuthName : null;
+                        options.ForwardAuthenticate = setupDevAuth ? DevAuthHandler.DevAuthName : null;
                     });
 
             if (setupDevAuth) {
