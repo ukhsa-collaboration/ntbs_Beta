@@ -35,7 +35,7 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> notifications, string IdFilter);
         IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
-        Task<List<T>> GetPaginatedIdsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
+        Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
     }
 
     public class NotificationService : INotificationService
@@ -283,10 +283,9 @@ namespace ntbs_service.Services
             return await repository.GetNotificationsByIdsAsync(ids);
         }
 
-        public async Task<List<T>> GetPaginatedIdsAsync<T>(
-            IQueryable<T> notificationIds, PaginationParameters paginationParameters)
+        public async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
         {
-            return await notificationIds.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
+            return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
                 .Take(paginationParameters.PageSize).ToListAsync();
         }
     }

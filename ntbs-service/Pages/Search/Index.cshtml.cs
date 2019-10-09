@@ -59,10 +59,11 @@ namespace ntbs_service.Pages_Search
             IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(draftsQueryable)
                                                                 .Union(service.OrderQueryableByNotificationDate(nonDraftsQueryable));
 
-            var notificationIds = await service.GetPaginatedIdsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
+            var notificationIds = await service.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
             var count = await notificationIdsQueryable.CountAsync();
             IEnumerable<Notification> notifications = await service.GetNotificationsByIdAsync(notificationIds);
-            SearchResults = new PaginatedList<NotificationBannerModel>(notifications.Select(n => NotificationBannerModel.WithLink(n)), count, PaginationParameters);
+            var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();
 
