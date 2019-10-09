@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
@@ -13,5 +14,6 @@ namespace ntbs_service.Models
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
         public DateTime? Dob;
+        public PartialDate PartialDob { get; set; }
     }
 }

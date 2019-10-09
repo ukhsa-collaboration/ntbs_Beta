@@ -30,8 +30,7 @@ namespace ntbs_service.Pages_Search
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public PartialDate PartialDob { get; set; }
+        
         public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service, NtbsContext context)
@@ -48,11 +47,6 @@ namespace ntbs_service.Pages_Search
                 return Page();
             }
 
-            // TODO any better way to fix this? default check any without setting sexId
-            if(SearchParameters.SexId == null) {
-                SearchParameters.SexId = 0;
-            }
-
             var pageSize = 50;
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
@@ -67,18 +61,18 @@ namespace ntbs_service.Pages_Search
                 nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
             }
 
-            if (SearchParameters.SexId != null && SearchParameters.SexId != 0)
+            if (SearchParameters.SexId != null)
             {
                 SearchParamsExist = true;
                 draftsIQ = service.FilterBySex(draftsIQ, (int) SearchParameters.SexId);
                 nonDraftsIQ = service.FilterBySex(nonDraftsIQ, (int) SearchParameters.SexId);
             }
 
-            if (PartialDob != null)
+            if (SearchParameters.PartialDob != null)
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterByPartialDate(draftsIQ, PartialDob);
-                nonDraftsIQ = service.FilterByPartialDate(nonDraftsIQ, PartialDob);
+                draftsIQ = service.FilterByPartialDate(draftsIQ, SearchParameters.PartialDob);
+                nonDraftsIQ = service.FilterByPartialDate(nonDraftsIQ, SearchParameters.PartialDob);
             }
 
             IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
