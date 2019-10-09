@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
 using ntbs_service.Data.Legacy;
 using ntbs_service.Models;
@@ -13,17 +17,21 @@ using ntbs_service.Services;
 using System.Globalization;
 using EFAuditer;
 using ntbs_service.Middleware;
+using Microsoft.AspNetCore.Authentication.WsFederation;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ntbs_service
 {
-    public class Startup
+  public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,7 +44,36 @@ namespace ntbs_service
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var setupDevAuth = Env.IsDevelopment();
+            IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
+            var authSetup = services.AddAuthentication(sharedOptions =>
+                    {
+                        sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                    }).AddWsFederation(options =>
+                    {
+                        options.MetadataAddress = adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
+                        options.Wtrealm = adfsConfig["Wtrealm"];
+                    })
+                    .AddCookie(options =>
+                    {   
+                        options.ForwardAuthenticate = setupDevAuth ? DevAuthHandler.DevAuthName : null;
+                    });
+
+            if (setupDevAuth) {
+                authSetup.AddScheme<AuthenticationSchemeOptions, DevAuthHandler>(DevAuthHandler.DevAuthName, o => { });
+            }
+
+            services.AddMvc(options => 
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
+                                .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
@@ -64,6 +101,9 @@ namespace ntbs_service
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.Configure<AdfsOptions>(adfsConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,9 +126,9 @@ namespace ntbs_service
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseMiddleware<AuditGetRequestMiddleWare>();
             app.UseMvc();
 

@@ -9997,7 +9997,17 @@ namespace ntbs_service.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
+                    b.Property<string>("PHECAdGroup")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("ServiceAdGroup")
+                        .HasMaxLength(64);
+
                     b.HasKey("Code");
+
+                    b.HasIndex("ServiceAdGroup")
+                        .IsUnique()
+                        .HasFilter("[ServiceAdGroup] IS NOT NULL");
 
                     b.ToTable("TBService");
 
