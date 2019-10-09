@@ -125,7 +125,21 @@ namespace ntbs_service.Models
                 new Ethnicity { EthnicityId = 17, Code = "Z", Label = "Not stated", Order = 15 }
             );
 
-            modelBuilder.Entity<TBService>().HasData(GetTBServicesList());
+            modelBuilder.Entity<TBService>(entity =>
+            {
+                entity.HasKey(e => e.Code);
+                entity.Property(e => e.Name).HasMaxLength(200);
+                /*
+                    TB services have TB service AD groups associated with them in a 1-1
+                    mapping and PHEC AD groups associated with them in a many-1 mapping.
+                    AD groups have a length limit if 64 characters, see
+                    https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc756101(v=ws.10)?redirectedfrom=MSDN#fqdn-length-limitations
+                 */
+                entity.Property(e => e.PHECAdGroup).HasMaxLength(64);
+                entity.Property(e => e.ServiceAdGroup).HasMaxLength(64);
+                entity.HasIndex(e => e.ServiceAdGroup).IsUnique();
+                entity.HasData(GetTBServicesList());
+            });
 
             modelBuilder.Entity<Hospital>().HasData(GetHospitalsList());
 
