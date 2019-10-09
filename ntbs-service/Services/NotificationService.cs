@@ -34,6 +34,8 @@ namespace ntbs_service.Services
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
+        Task<IEnumerable<Notification>> GetNotificationsWithDetailsById(IList<int> ids);
+        Task<List<int>> GetPaginatedIdsAsync(IQueryable<int> source, PaginationParameters paginationParameters);
     }
 
     public class NotificationService : INotificationService
@@ -265,13 +267,28 @@ namespace ntbs_service.Services
         }
 
         public IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter) {
-            return IQ.Where(s => s.NotificationId.Equals(Int32.Parse(IdFilter)) 
+            int parsedIdFilter;
+            int.TryParse(IdFilter, out parsedIdFilter);
+            return IQ.Where(s => s.NotificationId.Equals(parsedIdFilter) 
                     || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
         }
 
         public IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) {
             return query.OrderByDescending(n => n.CreationDate)
                 .OrderByDescending(n => n.SubmissionDate);
+        }
+
+        public async Task<IEnumerable<Notification>> GetNotificationsWithDetailsById(IList<int> ids)
+        {
+            return await repository.GetNotificationsWithDetailsById(ids);
+        }
+
+        public async Task<List<int>> GetPaginatedIdsAsync(
+            IQueryable<int> notificationIdsIQ, PaginationParameters paginationParameters)
+        {
+            var items = await notificationIdsIQ.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
+                .Take(paginationParameters.PageSize).ToListAsync();
+            return new List<int>(items);
         }
     }
 }

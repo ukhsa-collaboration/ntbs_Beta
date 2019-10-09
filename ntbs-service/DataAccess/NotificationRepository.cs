@@ -23,6 +23,7 @@ namespace ntbs_service.DataAccess
         Task AddNotificationAsync(Notification Notification);
         Task DeleteNotificationAsync(Notification Notification);
         Task<Notification> GetNotificationAsync(int? NotificationId);
+        Task<List<Notification>> GetNotificationsWithDetailsById(IList<int> ids);
         bool NotificationExists(int NotificationId);
     }
     
@@ -145,6 +146,13 @@ namespace ntbs_service.DataAccess
 
         public IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses) {
             return GetBaseNotificationIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
+        }
+
+        public Task<List<Notification>> GetNotificationsWithDetailsById(IList<int> ids)
+        {
+            return GetBaseNotificationIQueryable()
+                        .Where(n => ids.Contains(n.NotificationId))
+                        .ToListAsync();
         }
     }
 }

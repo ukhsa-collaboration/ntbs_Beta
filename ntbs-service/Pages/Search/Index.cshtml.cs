@@ -22,6 +22,7 @@ namespace ntbs_service.Pages_Search
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
+        public PaginationParameters PaginationParameters;
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
@@ -40,7 +41,8 @@ namespace ntbs_service.Pages_Search
                 return Page();
             }
 
-            var pageSize = 50;
+            PaginationParameters = new PaginationParameters() {PageSize = 50, PageIndex = pageIndex ?? 1};
+
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
@@ -54,12 +56,14 @@ namespace ntbs_service.Pages_Search
                 nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
             }
 
-            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
+            IQueryable<Notification> notificationIdsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
 
-            var notifications = await PaginatedList<Notification>.CreateAsync(
-                notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
+            var notificationIds = await service.GetPaginatedIdsAsync(notificationIdsIQ.Select(n => n.NotificationId), PaginationParameters);
+            var count = await notificationIdsIQ.CountAsync();
+            IEnumerable<Notification> notifications = await service.GetNotificationsWithDetailsById(notificationIds);
+            var paginatedList = new PaginatedList<Notification>(notifications, count, PaginationParameters);
 
-            SearchResults = notifications.SelectItems(NotificationBannerModel.WithLink);
+            SearchResults = paginatedList.SelectItems(NotificationBannerModel.WithLink);
 
             SetPaginationDetails();
 
