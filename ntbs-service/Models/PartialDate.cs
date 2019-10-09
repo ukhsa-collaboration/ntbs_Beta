@@ -24,33 +24,44 @@ namespace ntbs_service.Models
             int parsedMonth = 1;
             int parsedYear = 1;
 
-            bool missingMonth = false;
-            bool missingDay = false;
+            bool yearOnly = false;
+            bool monthAndYearOnly = false;
+
+            if(!checkFormatIsValid(Day, Month, Year)) {
+                return false;
+            }
+
+            if(string.IsNullOrEmpty(Day)) {
+                if(string.IsNullOrEmpty(Month)) {
+                    yearOnly = true;
+                } else {
+                    monthAndYearOnly = true;
+                }
+            }
 
             if(!int.TryParse(Year, out parsedYear)) {
                 return false;
-            } 
-            if(!int.TryParse(Month, out parsedMonth)) {
-                parsedMonth = 1;
-                missingMonth = true;
             }
-            if(!int.TryParse(Day, out parsedDay)) {
-                parsedDay = 1;
-                missingDay = true;
+            if(!string.IsNullOrEmpty(Month) && !int.TryParse(Month, out parsedMonth)) {
+                return false;
             }
+            if(!string.IsNullOrEmpty(Day) && !int.TryParse(Day, out parsedDay)) {
+                return false;
+            }
+
             try
             {
                 dateTimeStart = new DateTime(parsedYear, parsedMonth, parsedDay);
-                if(!missingDay && !missingMonth) {
+                if(yearOnly) {
                     dateTimeEnd = dateTimeStart?.AddYears(1);
                 }
-                if(missingDay)
-                {
-                    dateTimeEnd = dateTimeStart?.AddDays(1);
-                } 
-                else if(missingMonth) 
+                else if(monthAndYearOnly)
                 {
                     dateTimeEnd = dateTimeStart?.AddMonths(1);
+                } 
+                else 
+                {
+                    dateTimeEnd = dateTimeStart?.AddDays(1);
                 }
                 return true;
             }
@@ -58,22 +69,17 @@ namespace ntbs_service.Models
             {
                 return false;
             }
-            
-            return false;
         }
 
-         public bool tryParseDate(int year, int month, int day, out DateTime? dateRangeStart, out DateTime? dateRangeEnd) {
-            try
-            {
-                dateRangeStart = new DateTime(year, month, day);
-                dateRangeEnd = dateRangeStart?.AddDays(1);
-                return true;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                dateRangeStart = null;
-                dateRangeEnd = null;
+        public bool checkFormatIsValid(string Day, string Month, string Year) {
+            if(string.IsNullOrEmpty(Year)) {
                 return false;
+            }
+            if(string.IsNullOrEmpty(Month) && !string.IsNullOrEmpty(Day)) {
+                return false;
+            }
+            else {
+                return true;
             }
         }
     }

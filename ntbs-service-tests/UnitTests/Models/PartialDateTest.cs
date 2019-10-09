@@ -9,9 +9,9 @@ namespace ntbs_service_tests.UnitTests.Models
     {
         public static IEnumerable<object[]> InvalidDates()
         {
-            yield return new object[] { new FormattedDate() { Day = null, Month = "2", Year = null}};
-            yield return new object[] { new FormattedDate() { Day = "hello", Month = "2", Year = "2000"}};
-            yield return new object[] { new FormattedDate() { Day = "31", Month = null, Year = "2000"}};
+            yield return new object[] { new PartialDate() { Day = null, Month = "2", Year = null}};
+            yield return new object[] { new PartialDate() { Day = "hello", Month = "2", Year = "2000"}};
+            yield return new object[] { new PartialDate() { Day = "31", Month = null, Year = "2000"}};
         }
 
         [Theory, MemberData(nameof(InvalidDates))]
@@ -32,9 +32,9 @@ namespace ntbs_service_tests.UnitTests.Models
         public void ParseableYearOnlyDate_CanConvertReturnsTrueAndDateTimeRange()
         {
             // Arrange
-            var partialDate = new PartialDate() { Day = "", Month = "", Year = "2000"};
-            var expectedResultRangeStart = new DateTime(2000, 2, 28);
-            var expectedResultRangeEnd = new DateTime(2000, 2, 28);
+            var partialDate = new PartialDate() { Day = null, Month = null, Year = "2000"};
+            var expectedResultRangeStart = new DateTime(2000, 1, 1);
+            var expectedResultRangeEnd = new DateTime(2001, 1, 1);
             DateTime? resultRangeStart;
             DateTime? resultRangeEnd;
 
@@ -43,39 +43,46 @@ namespace ntbs_service_tests.UnitTests.Models
 
             // Assert
             Assert.True(canConvert);
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedResultRangeStart, resultRangeStart);
+            Assert.Equal(expectedResultRangeEnd, resultRangeEnd);
         }
 
         [Fact]
         public void ParseableYearAndMonthDate_CanConvertReturnsTrueAndDateTimeRange()
         {
             // Arrange
-            var formattedDate = new FormattedDate() { Day = "", Month = "2", Year = "2000"};
-            var expectedResult = new DateTime(2000, 2, 28);
-            DateTime? result;
+            var partialDate = new PartialDate() { Day = null, Month = "2", Year = "2000"};
+            var expectedResultRangeStart = new DateTime(2000, 2, 1);
+            var expectedResultRangeEnd = new DateTime(2000, 3, 1);
+            DateTime? resultRangeStart;
+            DateTime? resultRangeEnd;
 
             // Act
-            var canConvert = formattedDate.TryConvertToDateTime(out result);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out resultRangeStart, out resultRangeEnd);
 
             // Assert
             Assert.True(canConvert);
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedResultRangeStart, resultRangeStart);
+            Assert.Equal(expectedResultRangeEnd, resultRangeEnd);
         }
 
         [Fact]
         public void ParseableFullDate_CanConvertReturnsTrueAndDateTimeRange()
         {
             // Arrange
-            var formattedDate = new FormattedDate() { Day = "28", Month = "2", Year = "2000"};
-            var expectedResult = new DateTime(2000, 2, 28);
-            DateTime? result;
+            var partialDate = new PartialDate() { Day = "20", Month = "3", Year = "2000"};
+            var expectedResultRangeStart = new DateTime(2000, 3, 20);
+            var expectedResultRangeEnd = new DateTime(2000, 3, 21);
+            DateTime? resultRangeStart;
+            DateTime? resultRangeEnd;
 
             // Act
-            var canConvert = formattedDate.TryConvertToDateTime(out result);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out resultRangeStart, out resultRangeEnd);
 
             // Assert
             Assert.True(canConvert);
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedResultRangeStart, resultRangeStart);
+            Assert.Equal(expectedResultRangeEnd, resultRangeEnd);
         }
     }
 }
