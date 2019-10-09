@@ -7,19 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 using ntbs_service.Models;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using ntbs_service.Models.Validations;
-using ntbs_service.Pages;
 using ntbs_service.Models.Enums;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace ntbs_service.Pages_Search
 {
-    public class IndexModel : ValidationModel
+    public class IndexModel : PageModel
     {
         private readonly NtbsContext context;
-        public INotificationService service;
+        public ValidationService validationService;
+        public INotificationService notificationService;
+        public ISearchService searchService;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
@@ -27,16 +25,18 @@ namespace ntbs_service.Pages_Search
         public string PreviousPageUrl;
         public string PreviousPageText;
         public List<Sex> Sexes { get; set; }
+        public PaginationParameters PaginationParameters;
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
         
         public bool? SearchParamsExist { get; set; }
 
-        public IndexModel(INotificationService service, NtbsContext context)
+        public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
         {
             this.context = context;
-            this.service = service;
+            this.notificationService = notificationService;
+            validationService = new ValidationService(this);
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
@@ -47,40 +47,43 @@ namespace ntbs_service.Pages_Search
                 return Page();
             }
 
-            var pageSize = 50;
+            PaginationParameters = new PaginationParameters() {PageSize = 50, PageIndex = pageIndex ?? 1};
+
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-            IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
-            IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
+            IQueryable<Notification> draftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(draftStatusList);
+            IQueryable<Notification> nonDraftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
             if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterById(draftsIQ, SearchParameters.IdFilter);
-                nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
+                draftsQueryable = notificationService.FilterById(draftsQueryable, SearchParameters.IdFilter);
+                nonDraftsQueryable = notificationService.FilterById(nonDraftsQueryable, SearchParameters.IdFilter);
             }
 
             if (SearchParameters.SexId != null)
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterBySex(draftsIQ, (int) SearchParameters.SexId);
-                nonDraftsIQ = service.FilterBySex(nonDraftsIQ, (int) SearchParameters.SexId);
+                draftsQueryable = notificationService.FilterBySex(draftsQueryable, (int) SearchParameters.SexId);
+                nonDraftsQueryable = notificationService.FilterBySex(nonDraftsQueryable, (int) SearchParameters.SexId);
             }
 
             if (SearchParameters.PartialDob != null && SearchParameters.PartialDob.Year != null)
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterByPartialDate(draftsIQ, SearchParameters.PartialDob);
-                nonDraftsIQ = service.FilterByPartialDate(nonDraftsIQ, SearchParameters.PartialDob);
+                draftsQueryable = notificationService.FilterByPartialDate(draftsQueryable, SearchParameters.PartialDob);
+                nonDraftsQueryable = notificationService.FilterByPartialDate(nonDraftsQueryable, SearchParameters.PartialDob);
             }
 
-            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
+            IQueryable<Notification> notificationIdsQueryable = notificationService.OrderQueryableByNotificationDate(draftsQueryable)
+                                                                .Union(notificationService.OrderQueryableByNotificationDate(nonDraftsQueryable));
 
-            var notifications = await PaginatedList<Notification>.CreateAsync(
-                notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
-
-            SearchResults = notifications.SelectItems(NotificationBannerModel.WithLink);
+            var notificationIds = await notificationService.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
+            var count = await notificationIdsQueryable.CountAsync();
+            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
+            var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();
 
@@ -89,7 +92,7 @@ namespace ntbs_service.Pages_Search
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            return ValidateProperty(new IndexModel(service, context), key, value);
+            return validationService.ValidateProperty(new IndexModel(notificationService, searchService, context), key, value);
         }
 
         public void SetPaginationDetails() {

@@ -1,27 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
-using System.Linq;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class SocialRiskFactorsModel : NotificationModelBase
+    public class SocialRiskFactorsModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
-        
         public List<Status> StatusList { get; set; }
 
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public SocialRiskFactorsModel(INotificationService service, NtbsContext context) : base(service)
-        {
-            this.context = context;
-        }
+        public SocialRiskFactorsModel(INotificationService service) : base(service) {}
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
@@ -33,19 +29,17 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             SocialRiskFactors = Notification.SocialRiskFactors;
-            if (SocialRiskFactors == null)
-            {
-                return NotFound();
-            }
-            
-            SetNotificationProperties<SocialRiskFactors>(isBeingSubmitted, SocialRiskFactors);
+            await SetNotificationProperties(isBeingSubmitted, SocialRiskFactors);
 
             StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
+
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave() {            
-            if (!ModelState.IsValid)
+        protected override async Task<bool> ValidateAndSave() 
+        {
+            SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);   
+            if (!TryValidateModel(SocialRiskFactors))
             {
                 return false;
             }
@@ -54,9 +48,9 @@ namespace ntbs_service.Pages_Notifications
             return true;
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Travel", new {id = notificationId});
+            return RedirectToPage("./Travel", new { id = notificationId, isBeingSubmitted });
         }
     }
 }

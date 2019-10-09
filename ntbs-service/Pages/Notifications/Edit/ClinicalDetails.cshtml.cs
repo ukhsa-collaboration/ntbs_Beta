@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
     [BindProperties]
-    public class ClinicalDetailsModel : NotificationModelBase
+    public class ClinicalDetailsModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
 
@@ -47,11 +48,7 @@ namespace ntbs_service.Pages_Notifications
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             ClinicalDetails = Notification.ClinicalDetails;
-            if (ClinicalDetails == null) {
-                ClinicalDetails = new ClinicalDetails();
-            }
-
-            SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
             SetupNotificationSiteMap(notificationSites);
@@ -71,6 +68,7 @@ namespace ntbs_service.Pages_Notifications
             {
                 TryValidateModel(this);
             }
+
             return Page();
         }
 
@@ -83,58 +81,77 @@ namespace ntbs_service.Pages_Notifications
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId) {
-            return RedirectToPage("./ContactTracing", new {id = notificationId});
-        } 
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        {
+            return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
+        }
 
-        protected override async Task<bool> ValidateAndSave() {
+        protected override async Task<bool> ValidateAndSave()
+        {
             UpdateFlags();
 
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
-            SetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
-            ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
+            validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             
-            if (!ModelState.IsValid)
+            ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
+
+            var notificationSites = CreateNotificationSitesFromModel(Notification.NotificationId);
+
+            // Separate notification with notification sites only is needed to check if notification sites are valid,
+            // and to avoid updating notification site when updating Clinical Details
+            var notificationWithSitesOnly = new Notification {
+                ShouldValidateFull = Notification.ShouldValidateFull,
+                NotificationSites = notificationSites.ToList()
+            };
+            
+            if (!TryValidateModel(this) && !TryValidateModel(notificationWithSitesOnly))
             {
                 return false;
             }
 
             await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-            await service.UpdateSitesAsync(Notification, CreateNotificationSitesFromModel(Notification.NotificationId));
+            await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
 
             return true;
         }
 
-        private void UpdateFlags() {
-            if (ClinicalDetails.DidNotStartTreatment) {
+        private void UpdateFlags()
+        {
+            if (ClinicalDetails.DidNotStartTreatment)
+            {
                 ClinicalDetails.TreatmentStartDate = null;
                 FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.TreatmentStartDate");
             }
-            
-            if (!ClinicalDetails.IsPostMortem) {
+
+            if (!ClinicalDetails.IsPostMortem)
+            {
                 ClinicalDetails.DeathDate = null;
                 FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.DeathDate");
             }
 
-            if (ClinicalDetails.BCGVaccinationState != Status.Yes) {
+            if (ClinicalDetails.BCGVaccinationState != Status.Yes)
+            {
                 ClinicalDetails.BCGVaccinationYear = null;
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }
 
-            if (ClinicalDetails.IsMDRTreatment.HasValue && !ClinicalDetails.IsMDRTreatment.Value) {
+            if (ClinicalDetails.IsMDRTreatment.HasValue && !ClinicalDetails.IsMDRTreatment.Value)
+            {
                 ClinicalDetails.MDRTreatmentStartDate = null;
                 FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
-            
-            if (!NotificationSiteMap[SiteId.OTHER]) {
+
+            if (!NotificationSiteMap[SiteId.OTHER])
+            {
                 OtherSite.SiteDescription = null;
                 ModelState.Remove("OtherSite.SiteDescription");
             }
@@ -142,8 +159,9 @@ namespace ntbs_service.Pages_Notifications
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(int notificationId)
         {
-            foreach (var item in NotificationSiteMap) {
-                if (item.Value) 
+            foreach (var item in NotificationSiteMap)
+            {
+                if (item.Value)
                 {
                     yield return new NotificationSite
                     {
@@ -157,50 +175,53 @@ namespace ntbs_service.Pages_Notifications
 
         public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
+            return validationService.ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            return ValidateDate(new ClinicalDetails(), key, day, month, year);
+            return validationService.ValidateDate<ClinicalDetails>(key, day, month, year);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
         {
-            string key = "NotificationSites";
-            List<NotificationSite> notificationSites = new List<NotificationSite>();
-            foreach (string value in valueList)
+            const string key = "NotificationSites";
+            var notificationSites = new List<NotificationSite>();
+            foreach (var value in valueList)
             {
-                notificationSites.Add(new NotificationSite {
-                    SiteId = (int) Enum.Parse(typeof(SiteId), value)
+                notificationSites.Add(new NotificationSite
+                {
+                    SiteId = (int)Enum.Parse(typeof(SiteId), value)
                 });
             }
-            
-            return ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
+
+            return validationService.ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
         {
             var notification = new Notification { ShouldValidateFull = shouldValidateFull };
-            var notificationSite = new NotificationSite { 
+            var notificationSite = new NotificationSite
+            {
                 Notification = notification,
-                SiteId = (int) SiteId.OTHER
+                SiteId = (int)SiteId.OTHER
             };
-            return ValidateProperty(notificationSite, key, value);
+            return validationService.ValidateProperty(notificationSite, key, value);
         }
 
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
-            return ValidateYearComparison(newYear, existingYear);
+            return validationService.ValidateYearComparison(newYear, existingYear);
         }
-        
+
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
         {
             var propertyValueTuples = new List<Tuple<string, object>>();
-            foreach (var keyValuePair in keyValuePairs) {
+            foreach (var keyValuePair in keyValuePairs)
+            {
                 propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], keyValuePair["value"]));
             }
-            return ValidateMultipleProperties(new ClinicalDetails(), propertyValueTuples);
+            return validationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
         }
     }
 }

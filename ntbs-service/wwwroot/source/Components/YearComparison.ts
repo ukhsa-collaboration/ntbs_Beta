@@ -3,45 +3,45 @@ import { getHeaders, getValidationPath } from '../helpers';
 import axios from 'axios';
 
 const YearComparison = Vue.extend({
-  props: ['model', 'yeartocompare', 'shouldValidateFull'],
-  methods: {
-    validate: function (event: FocusEvent) {
-        // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
-        const inputField = event.target as HTMLInputElement
-        const newValue = inputField.value;
-        
-        let requestConfig = {
-          url: `${getValidationPath(this.$props.model)}YearComparison`,
-          headers: getHeaders(),
-          params: {
-            "newYear": newValue,
-            "shouldValidateFull": this.$props.shouldvalidatefull,
-            "existingYear": this.$props.yeartocompare
-          }
-        }
-        axios.request(requestConfig)
-        .then((response: any) => {
-            console.log(response);
-            var errorMessage = response.data;
-            var hasError = errorMessage != '';
-            this.$refs["errorField"].textContent = errorMessage;
-            if (hasError) {
-              this.$el.classList.add('nhsuk-form-group--error');
-              if (this.$refs["inputField"]) {
-                this.$refs["inputField"].classList.add('nhsuk-input--error')
-              }
-            } else {
-              this.$el.classList.remove('nhsuk-form-group--error')
-              if (this.$refs["inputField"]) {
-                this.$refs["inputField"].classList.remove('nhsuk-input--error')
-              }
+    props: ['model', 'yeartocompare', 'shouldvalidatefull'],
+    methods: {
+        validate: function (event: FocusEvent) {
+            // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
+            const inputField = event.target as HTMLInputElement;
+            const newValue = inputField.value;
+
+            let requestConfig = {
+                url: `${getValidationPath(this.$props.model)}YearComparison`,
+                headers: getHeaders(),
+                params: {
+                    "newYear": newValue,
+                    "shouldValidateFull": this.$props.shouldvalidatefull,
+                    "existingYear": this.$props.yeartocompare
+                }
             }
-          })
-        .catch((error: any) => {
-            console.log(error.response)
-        });
+            axios.request(requestConfig)
+                .then((response: any) => {
+                    console.log(response);
+                    var errorMessage = response.data;
+                    var hasError = errorMessage != '';
+                    this.$refs["errorField"].textContent = errorMessage;
+                    if (hasError) {
+                        this.$el.classList.add('nhsuk-form-group--error');
+                        if (this.$refs["inputField"]) {
+                            this.$refs["inputField"].classList.add('nhsuk-input--error');
+                        }
+                    } else {
+                        this.$el.classList.remove('nhsuk-form-group--error');
+                        if (this.$refs["inputField"]) {
+                            this.$refs["inputField"].classList.remove('nhsuk-input--error');
+                        }
+                    }
+                })
+                .catch((error: any) => {
+                    console.log(error.response);
+                });
+        }
     }
-  }
 });
 
 export {

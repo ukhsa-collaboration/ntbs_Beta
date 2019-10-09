@@ -18,7 +18,7 @@ type ContactTracingVariables = {
 };
 
 const ValidateContactTracing = Vue.extend({
-    props: ['model', 'property', 'name'],
+    props: ['model', 'property'],
     methods: {
         validateAndCalculateTotals: function () {
             var contactTracingVariables: ContactTracingVariables = this.getContactTracingVariables();
@@ -64,16 +64,19 @@ const ValidateContactTracing = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    console.log(response);
                     var data = response.data;
-                    for(let key in data) {
-                        let value = data[key];
-                        var errorRef = key + "ErrorRef";
-                        var formGroupRef = key + "FormGroup";
-                        let lowerCaseFirstLetterString = key.charAt(0).toLowerCase() + key.substring(1);
-                        this.$refs[formGroupRef].classList.add("nhsuk-form-group--error");
-                        this.$refs[lowerCaseFirstLetterString].classList.add("nhsuk-input--error");
-                        this.$refs[errorRef].textContent = value;
+                    for (let key in data) {
+                        // Model errors can be double counted as 'Model.Property' and 'Property'.
+                        // Here it's convenient to act on 'Property' only
+                        if (key.indexOf('.') === -1) {
+                            let value = data[key];
+                            var errorRef = key + "ErrorRef";
+                            var formGroupRef = key + "FormGroup";
+                            let lowerCaseFirstLetterString = key.charAt(0).toLowerCase() + key.substring(1);
+                            this.$refs[formGroupRef].classList.add("nhsuk-form-group--error");
+                            this.$refs[lowerCaseFirstLetterString].classList.add("nhsuk-input--error");
+                            this.$refs[errorRef].textContent = value;
+                        }
                     }
                 })
                 .catch((error: any) => {

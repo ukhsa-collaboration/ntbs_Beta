@@ -25,6 +25,8 @@ spec:
               secretKeyRef:
                 name: research-audit-db-connection-string
                 key: connectionString
+          - name: AdfsOptions__Wtrealm
+            value: "https://ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io"
       imagePullSecrets:
       - name: registery-password
 ---
@@ -49,6 +51,10 @@ metadata:
     nginx.ingress.kubernetes.io/auth-secret: research-basic-auth
     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - ntbsBeta"
 spec:
+  tls:
+    - hosts:
+      - ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
+      secretName: phe-ntbs-research-tls
   rules:
   - host: ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
     http:

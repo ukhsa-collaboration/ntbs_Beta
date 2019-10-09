@@ -13,21 +13,21 @@ namespace EFAuditer
 
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
-        public async Task AuditOperationAsync(int primaryKeyId, string entity, string details, string eventType)
+        public async Task AuditOperationAsync(int primaryKeyId, string entity, string details, string eventType, string userName)
         {
-            var log = CreateAuditLog(primaryKeyId, entity, details, eventType);
+            var log = CreateAuditLog(primaryKeyId, entity, details, eventType, userName);
             AuditLogs.Add(log);
             await SaveChangesAsync();
         }
 
-        private AuditLog CreateAuditLog(int primaryKeyId, string entity, string details, string eventType)
+        private AuditLog CreateAuditLog(int primaryKeyId, string entity, string details, string eventType, string userName)
         {
             return new AuditLog() {
                 OriginalId = primaryKeyId,
                 EntityType = entity,
                 EventType = eventType,
                 AuditDateTime = DateTime.Now,
-                AuditUser = Environment.UserName,
+                AuditUser = userName,
                 AuditDetails = details
             };
         }

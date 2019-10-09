@@ -1,37 +1,36 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
+using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications.Edit
 {
     // TODO - To complete when spec is ready for this page
-    public class TravelModel : NotificationModelBase
+    public class TravelModel : NotificationEditModelBase
     {
-        public TravelModel(INotificationService service) : base(service) {}
+        public TravelModel(INotificationService service) : base(service) { }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             Notification = await service.GetNotificationAsync(id);
-            if (Notification == null) 
+            if (Notification == null)
             {
                 return NotFound();
             }
-            
+
+            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             NotificationBannerModel = new NotificationBannerModel(Notification);
             NotificationId = id;
 
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Comorbidities", new { id = notificationId });
+            return RedirectToPage("./Comorbidities", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
-        {
-            return true;
-        }
+        protected override async Task<bool> ValidateAndSave() => await Task.FromResult(true);
     }
 }

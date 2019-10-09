@@ -15,3 +15,6 @@
 
 /wwwroot/dist
 /out
+
+.vs/
+dist/

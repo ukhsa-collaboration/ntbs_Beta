@@ -1,4 +1,3 @@
-@using ntbs_service.Models.Enums;
 @{
     var NotificationStatusBannerCssClass = "";
     switch(@Model.NotificationStatus)
@@ -23,7 +22,7 @@
                     
                 @if(@Model.ShowLink) 
                 {
-                    <a href="/Notifications/Overview?id=@Model.NotificationId" class="notification-banner-id-link"> #@Model.NotificationId </a>
+                    <a href="@Model.RedirectPath" class="notification-banner-id-link"> #@Model.NotificationId </a>
                 } else 
                 {
                     <div> #@Model.NotificationId </div>

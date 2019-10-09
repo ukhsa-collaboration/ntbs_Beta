@@ -18,7 +18,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
-                    var IdFilterError = !Model.IsValid("SearchParameters.IdFilter");
+                    var IdFilterError = !Model.validationService.IsValid("SearchParameters.IdFilter");
                     var IdFilterGroupState = IdFilterError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@IdFilterGroupState>
@@ -34,7 +34,7 @@
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
-                    var DobError = !Model.IsValid("SearchParameters.Dob");
+                    var DobError = !Model.validationService.IsValid("SearchParameters.Dob");
                     var DobGroupState = DobError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@DobGroupState>
@@ -76,7 +76,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
-                    var SexIdError = !Model.IsValid("SexId");
+                    var SexIdError = !Model.validationService.IsValid("SexId");
                     var SexIdGroupState = SexIdError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@SexIdGroupState>
