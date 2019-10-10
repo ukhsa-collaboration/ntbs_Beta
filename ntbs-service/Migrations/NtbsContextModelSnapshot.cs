@@ -11934,17 +11934,11 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<int?>("Country1CountryId");
+                            b1.Property<int?>("Country1Id");
 
-                            b1.Property<int?>("Country2CountryId");
+                            b1.Property<int?>("Country2Id");
 
-                            b1.Property<int?>("Country3CountryId");
-
-                            b1.Property<int?>("CountryId1");
-
-                            b1.Property<int?>("CountryId2");
-
-                            b1.Property<int?>("CountryId3");
+                            b1.Property<int?>("Country3Id");
 
                             b1.Property<bool?>("HasTravel");
 
@@ -11954,27 +11948,29 @@ namespace ntbs_service.Migrations
 
                             b1.Property<int?>("StayLengthInMonths3");
 
+                            b1.Property<int?>("TotalNumberOfCountries");
+
                             b1.HasKey("NotificationId");
 
-                            b1.HasIndex("Country1CountryId");
+                            b1.HasIndex("Country1Id");
 
-                            b1.HasIndex("Country2CountryId");
+                            b1.HasIndex("Country2Id");
 
-                            b1.HasIndex("Country3CountryId");
+                            b1.HasIndex("Country3Id");
 
                             b1.ToTable("TravelDetails");
 
                             b1.HasOne("ntbs_service.Models.Country", "Country1")
                                 .WithMany()
-                                .HasForeignKey("Country1CountryId");
+                                .HasForeignKey("Country1Id");
 
                             b1.HasOne("ntbs_service.Models.Country", "Country2")
                                 .WithMany()
-                                .HasForeignKey("Country2CountryId");
+                                .HasForeignKey("Country2Id");
 
                             b1.HasOne("ntbs_service.Models.Country", "Country3")
                                 .WithMany()
-                                .HasForeignKey("Country3CountryId");
+                                .HasForeignKey("Country3Id");
 
                             b1.HasOne("ntbs_service.Models.Notification")
                                 .WithOne("TravelDetails")
@@ -11986,17 +11982,11 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<int?>("Country1CountryId");
+                            b1.Property<int?>("Country1Id");
 
-                            b1.Property<int?>("Country2CountryId");
+                            b1.Property<int?>("Country2Id");
 
-                            b1.Property<int?>("Country3CountryId");
-
-                            b1.Property<int?>("CountryId1");
-
-                            b1.Property<int?>("CountryId2");
-
-                            b1.Property<int?>("CountryId3");
+                            b1.Property<int?>("Country3Id");
 
                             b1.Property<bool?>("HasVisitor");
 
@@ -12006,27 +11996,29 @@ namespace ntbs_service.Migrations
 
                             b1.Property<int?>("StayLengthInMonths3");
 
+                            b1.Property<int?>("TotalNumberOfCountries");
+
                             b1.HasKey("NotificationId");
 
-                            b1.HasIndex("Country1CountryId");
+                            b1.HasIndex("Country1Id");
 
-                            b1.HasIndex("Country2CountryId");
+                            b1.HasIndex("Country2Id");
 
-                            b1.HasIndex("Country3CountryId");
+                            b1.HasIndex("Country3Id");
 
                             b1.ToTable("VisitorDetails");
 
                             b1.HasOne("ntbs_service.Models.Country", "Country1")
                                 .WithMany()
-                                .HasForeignKey("Country1CountryId");
+                                .HasForeignKey("Country1Id");
 
                             b1.HasOne("ntbs_service.Models.Country", "Country2")
                                 .WithMany()
-                                .HasForeignKey("Country2CountryId");
+                                .HasForeignKey("Country2Id");
 
                             b1.HasOne("ntbs_service.Models.Country", "Country3")
                                 .WithMany()
-                                .HasForeignKey("Country3CountryId");
+                                .HasForeignKey("Country3Id");
 
                             b1.HasOne("ntbs_service.Models.Notification")
                                 .WithOne("VisitorDetails")

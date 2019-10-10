@@ -63,6 +63,8 @@ namespace ntbs_service.Models
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
+        public string HasRecentVisitor => TrueFalseToYesNo(VisitorDetails.HasVisitor);
+        public string HasRecentTravel => TrueFalseToYesNo(TravelDetails.HasTravel);
         public string FormattedNhsNumber => FormatNhsNumberString();
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();

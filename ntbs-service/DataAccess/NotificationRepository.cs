@@ -136,6 +136,12 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.ContactTracing)
                 .Include(n => n.PatientTBHistory)
                 .Include(n => n.ImmunosuppressionDetails)
+                .Include(n => n.TravelDetails.Country1)
+                .Include(n => n.TravelDetails.Country2)
+                .Include(n => n.TravelDetails.Country3)
+                .Include(n => n.VisitorDetails.Country1)
+                .Include(n => n.VisitorDetails.Country2)
+                .Include(n => n.VisitorDetails.Country3)
                 .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
         }
 

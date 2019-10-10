@@ -1,62 +1,81 @@
-﻿using ExpressiveAnnotations.Attributes;
+﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
-    [Owned]
-    public class VisitorDetails : ModelBase
+    [NotMapped]
+    public class VisitorDetails : ModelBase, ITravelOrVisitorDetails
     {
+        private const int MaxTotalLengthOfStay = 24;
+
         public bool? HasVisitor { get; set; }
+
+        [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired)]
+        [Range(1, 50)]
+        [AssertThat("TotalNumberGreaterOrEqualToInputCountries == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber)]
+        public int? TotalNumberOfCountries { get; set; }
 
 
         // First country block
-        [RequiredIf("!ShouldValidateFull || HasTravel == true")]
-        public int? CountryId1 { get; set; }
+        [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.VisitMostRecentCountryRequired)]
+        public int? Country1Id { get; set; }
 
         public virtual Country Country1 { get; set; }
 
-        [RequiredIf("!ShouldValidateFull || HasTravel == true")]
-        [AssertThat(@"StayLengthInMonths1.GetValueOrDefault() != 0
-            (
-                StayLengthInMonths1.GetValueOrDefault() 
-                + StayLengthInMonths2.GetValueOrDefault()
-                + StayLengthInMonths3.GetValueOrDefault()
-            ) <= 24")]
+        [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.VisitCountryRequiresDuration)]
+        [Range(1, MaxTotalLengthOfStay)]
+        [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
         public int? StayLengthInMonths1 { get; set; }
 
 
         // Second country block
-        [AssertThat("!ShouldValidateFull || CountryId1 != null")]
-        [AssertThat("CountryId2 != CountryId1")]
-        public int? CountryId2 { get; set; }
+        [AssertThat("!ShouldValidateFull || Country1Id != null", ErrorMessage = ValidationMessages.VisitIsChronological)]
+        [AssertThat("Country2Id != Country1Id", ErrorMessage = ValidationMessages.VisitUniqueCountry)]
+        public int? Country2Id { get; set; }
 
         public Country Country2 { get; set; }
 
-        [AssertThat("!ShouldValidateFull || CountryId2 != null")]
-        [AssertThat(@"StayLengthInMonths2.GetValueOrDefault() != 0
-            (
-                StayLengthInMonths1.GetValueOrDefault() 
-                + StayLengthInMonths2.GetValueOrDefault()
-                + StayLengthInMonths3.GetValueOrDefault()
-            ) <= 24")]
+        [RequiredIf("ShouldValidateFull && Country2Id != null", ErrorMessage = ValidationMessages.VisitCountryRequiresDuration)]
+        [AssertThat("!ShouldValidateFull || Country2Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
+        [Range(1, MaxTotalLengthOfStay)]
+        [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
         public int? StayLengthInMonths2 { get; set; }
 
 
         // Third country block
-        [AssertThat("!ShouldValidateFull || CountryId2 != null")]
-        [AssertThat("CountryId3 != CountryId1 && CountryId3 != CountryId2")]
-        public int? CountryId3 { get; set; }
+        [AssertThat("!ShouldValidateFull || Country2Id != null", ErrorMessage = ValidationMessages.VisitIsChronological)]
+        [AssertThat("Country3Id != Country1Id && Country3Id != Country2Id", ErrorMessage = ValidationMessages.VisitUniqueCountry)]
+        public int? Country3Id { get; set; }
 
         public Country Country3 { get; set; }
 
-        [AssertThat("!ShouldValidateFull || CountryId3 != null")]
-        [AssertThat(@"StayLengthInMonths3.GetValueOrDefault() != 0
-            (
-                StayLengthInMonths1.GetValueOrDefault() 
-                + StayLengthInMonths2.GetValueOrDefault()
-                + StayLengthInMonths3.GetValueOrDefault()
-            ) <= 24")]
+        [RequiredIf("ShouldValidateFull && Country3Id != null", ErrorMessage = ValidationMessages.VisitCountryRequiresDuration)]
+        [AssertThat("!ShouldValidateFull || Country3Id != null", ErrorMessage = ValidationMessages.VisitIsChronological)]
+        [Range(1, MaxTotalLengthOfStay)]
+        [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
         public int? StayLengthInMonths3 { get; set; }
 
+        // Helper properties for use in expressive annotations
+        [NotMapped]
+        public bool TotalNumberGreaterOrEqualToInputCountries =>
+            TotalNumberOfCountries >=
+                Convert.ToInt32(Country1Id.HasValue) +
+                Convert.ToInt32(Country2Id.HasValue) +
+                Convert.ToInt32(Country3Id.HasValue);
+
+        [NotMapped]
+        public bool TotalLengthWithinLimit =>
+            MaxTotalLengthOfStay >= TotalDurationOfTravel;
+
+        [NotMapped]
+        public int TotalDurationOfTravel =>
+            Convert.ToInt32(StayLengthInMonths1) +
+            Convert.ToInt32(StayLengthInMonths2) +
+            Convert.ToInt32(StayLengthInMonths3);
     }
 }

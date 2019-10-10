@@ -1,8 +1,8 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ntbs_service.Pages_Notifications;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ntbs_service.Helpers
 {
@@ -28,9 +28,6 @@ namespace ntbs_service.Helpers
                         break;
                     // NotificationSites is part of Clinical Details page despite being property of Notification
                     case "NotificationSites":
-                        url = getUrl("ClinicalDetails", notificationId);
-                        displayName = "Clinical Details";
-                        break;
                     case "ClinicalDetails":
                         url = getUrl("ClinicalDetails", notificationId);
                         displayName = "Clinical Details";
@@ -43,18 +40,27 @@ namespace ntbs_service.Helpers
                         url = getUrl("PreviousHistory", notificationId);
                         displayName = "Previous History";
                         break;
+                    case "ImmunosuppressionDetails":
+                        url = getUrl("Immunosuppression", notificationId);
+                        displayName = "Immunosuppression Details";
+                        break;
+                    case "TravelDetails":
+                    case "VisitorDetails":
+                        url = getUrl("Travel", notificationId);
+                        displayName = "Travel/visitor History";
+                        break;
                     default:
                         continue;
                 }
 
-                AddErrorMessagesIntoDictonary(displayName, url, 
+                AddErrorMessagesIntoDictionary(displayName, url, 
                     modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList());
             }
 
             return NotifyErrorDictionary;
         }
 
-        private static void AddErrorMessagesIntoDictonary(string displayName, string url, List<string> errorMessages) {
+        private static void AddErrorMessagesIntoDictionary(string displayName, string url, List<string> errorMessages) {
             if (errorMessages == null || errorMessages.Count == 0) {
                 return;
             }

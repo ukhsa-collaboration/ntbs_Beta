@@ -46,6 +46,13 @@ namespace ntbs_service.Models
             return await Country.ToListAsync();
         }
 
+        public virtual async Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync()
+        {
+            return await Country
+                            .Where(c => c.HasHighTbOccurence)
+                            .ToListAsync();
+        }
+
         public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
         {
             return await Country.FindAsync(countryId);
@@ -238,7 +245,7 @@ namespace ntbs_service.Models
                     i.ToTable("ImmunosuppressionDetails");
                 });
 
-                entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails");;
+                entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails"); ;
                 entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails"); ;
             });
 
