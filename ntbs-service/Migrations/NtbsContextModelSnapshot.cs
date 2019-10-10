@@ -11681,7 +11681,7 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Notification", "Notification")
+                    b.HasOne("ntbs_service.Models.Notification")
                         .WithMany("NotificationSites")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);

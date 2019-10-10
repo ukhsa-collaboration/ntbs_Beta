@@ -126,6 +126,7 @@
                             <nhs-form-group nhs-form-group-type=@SiteDescriptionGroupState aria-describedby="other-site-error">
                                 <span nhs-span-type="ErrorMessage" ref="errorField"
                                       asp-validation-for="OtherSite.SiteDescription" id="other-site-error"></span>
+                                <input type="hidden" asp-for="OtherSite.SiteId" />
                                 <input ref="inputField" v-on:blur="validate" is-error-input=@SiteDescriptionError nhs-input-type="Standard"
                                        classes="nhsuk-input--width-10" asp-for="OtherSite.SiteDescription" type="text">
                             </nhs-form-group>

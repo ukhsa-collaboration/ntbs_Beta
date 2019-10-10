@@ -22,6 +22,7 @@ namespace ntbs_service.Pages_Search
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
+        public PaginationParameters PaginationParameters;
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
@@ -39,35 +40,37 @@ namespace ntbs_service.Pages_Search
                 return Page();
             }
 
-            var pageSize = 50;
+            PaginationParameters = new PaginationParameters() {PageSize = 50, PageIndex = pageIndex ?? 1};
+
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-            IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
-            IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
+            IQueryable<Notification> draftsQueryable = service.GetBaseQueryableNotificationByStatus(draftStatusList);
+            IQueryable<Notification> nonDraftsQueryable = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
-            NotificationSearchBuilder draftSearchBuilder = new NotificationSearchBuilder(draftsIQ);
-            NotificationSearchBuilder nonDraftsSearchBuilder = new NotificationSearchBuilder(nonDraftsIQ);
+            NotificationSearchBuilder draftSearchBuilder = new NotificationSearchBuilder(draftsQueryable);
+            NotificationSearchBuilder nonDraftsSearchBuilder = new NotificationSearchBuilder(nonDraftsQueryable);
             
-            var filteredDraftsIQ = draftSearchBuilder
+            var filteredDrafts = draftSearchBuilder
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
                 .GetResult();
 
-            var filteredNonDraftsIQ = nonDraftsSearchBuilder
+            var filteredNonDrafts = nonDraftsSearchBuilder
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
                 .GetResult();
 
-            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(filteredDraftsIQ)
-                .Union(service.OrderQueryableByNotificationDate(filteredNonDraftsIQ));
+            IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(filteredDrafts)
+                                                                .Union(service.OrderQueryableByNotificationDate(filteredNonDrafts));
 
-            var notifications = await PaginatedList<Notification>.CreateAsync(
-                notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
-
-            SearchResults = notifications.SelectItems(NotificationBannerModel.WithLink);
+            var notificationIds = await service.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
+            var count = await notificationIdsQueryable.CountAsync();
+            IEnumerable<Notification> notifications = await service.GetNotificationsByIdAsync(notificationIds);
+            var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();
 

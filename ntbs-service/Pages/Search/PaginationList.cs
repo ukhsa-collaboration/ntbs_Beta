@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models;
 
 namespace ntbs_service.Pages_Search
 {
@@ -12,10 +13,10 @@ namespace ntbs_service.Pages_Search
         public int TotalPages { get; private set; }
         public int NumberOfResults { get; private set; }
 
-        public PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
+        public PaginatedList(IEnumerable<T> items, int count, PaginationParameters paginationParameters)
         {
-            PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            PageIndex = paginationParameters.PageIndex;
+            TotalPages = (int)Math.Ceiling(count / (double)paginationParameters.PageSize);
             NumberOfResults = count;
 
             this.AddRange(items);
@@ -23,15 +24,6 @@ namespace ntbs_service.Pages_Search
         private PaginatedList(IEnumerable<T> items)
         {
             this.AddRange(items);
-        }
-
-        public PaginatedList<TResult> SelectItems<TResult>(Func<T, TResult> selector) {
-            var newItems = this.Select(selector);
-            return new PaginatedList<TResult>(newItems) {
-                PageIndex = this.PageIndex,
-                TotalPages = this.TotalPages,
-                NumberOfResults = this.NumberOfResults
-            };
         }
 
         public bool HasPreviousPage
@@ -48,15 +40,6 @@ namespace ntbs_service.Pages_Search
             {
                 return (PageIndex < TotalPages);
             }
-        }
-
-        public static async Task<PaginatedList<T>> CreateAsync(
-            IQueryable<T> source, int pageIndex, int pageSize)
-        {
-            var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize).ToListAsync();
-            return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }
 }
