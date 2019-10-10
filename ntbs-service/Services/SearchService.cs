@@ -16,17 +16,11 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
         IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
+        Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
     }
 
     public class SearchService : ISearchService
     {
-        private readonly INotificationRepository repository;
-        private readonly NtbsContext context;
-
-        public SearchService(INotificationRepository repository, NtbsContext context) {
-            this.repository = repository;
-            this.context = context;
-        }
 
         public IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter) 
         {
@@ -36,9 +30,7 @@ namespace ntbs_service.Services
 
         public IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate) 
         {
-            DateTime? dateRangeStart;
-            DateTime? dateRangeEnd;
-            partialDate.TryConvertToDateTimeRange(out dateRangeStart, out dateRangeEnd);
+            partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
             return IQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
         }
 
@@ -51,6 +43,12 @@ namespace ntbs_service.Services
         {
             return query.OrderByDescending(n => n.CreationDate)
                 .OrderByDescending(n => n.SubmissionDate);
+        }
+
+        public async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
+        {
+            return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
+                .Take(paginationParameters.PageSize).ToListAsync();
         }
     }
 }

@@ -35,6 +35,7 @@ namespace ntbs_service.Pages_Search
         public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
         {
             this.context = context;
+            this.searchService = searchService;
             this.notificationService = notificationService;
             validationService = new ValidationService(this);
         }
@@ -58,15 +59,15 @@ namespace ntbs_service.Pages_Search
             if (!string.IsNullOrEmpty(SearchParameters.IdFilter))
             {
                 SearchParamsExist = true;
-                draftsQueryable = notificationService.FilterById(draftsQueryable, SearchParameters.IdFilter);
-                nonDraftsQueryable = notificationService.FilterById(nonDraftsQueryable, SearchParameters.IdFilter);
+                draftsQueryable = searchService.FilterById(draftsQueryable, SearchParameters.IdFilter);
+                nonDraftsQueryable = searchService.FilterById(nonDraftsQueryable, SearchParameters.IdFilter);
             }
 
             if (SearchParameters.SexId != null)
             {
                 SearchParamsExist = true;
-                draftsQueryable = notificationService.FilterBySex(draftsQueryable, (int) SearchParameters.SexId);
-                nonDraftsQueryable = notificationService.FilterBySex(nonDraftsQueryable, (int) SearchParameters.SexId);
+                draftsQueryable = searchService.FilterBySex(draftsQueryable, (int) SearchParameters.SexId);
+                nonDraftsQueryable = searchService.FilterBySex(nonDraftsQueryable, (int) SearchParameters.SexId);
             }
 
             if (SearchParameters.PartialDob != null && SearchParameters.PartialDob.Year != null)
@@ -74,14 +75,14 @@ namespace ntbs_service.Pages_Search
                 SearchParamsExist = true;
                 SearchParameters.PartialDob.TryConvertToDateTimeRange(out DateTime? start, out DateTime? end);
 
-                draftsQueryable = notificationService.FilterByPartialDate(draftsQueryable, SearchParameters.PartialDob);
-                nonDraftsQueryable = notificationService.FilterByPartialDate(nonDraftsQueryable, SearchParameters.PartialDob);
+                draftsQueryable = searchService.FilterByPartialDate(draftsQueryable, SearchParameters.PartialDob);
+                nonDraftsQueryable = searchService.FilterByPartialDate(nonDraftsQueryable, SearchParameters.PartialDob);
             }
 
-            IQueryable<Notification> notificationIdsQueryable = notificationService.OrderQueryableByNotificationDate(draftsQueryable)
-                                                                .Union(notificationService.OrderQueryableByNotificationDate(nonDraftsQueryable));
+            IQueryable<Notification> notificationIdsQueryable = searchService.OrderQueryableByNotificationDate(draftsQueryable)
+                                                                .Union(searchService.OrderQueryableByNotificationDate(nonDraftsQueryable));
 
-            var notificationIds = await notificationService.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
+            var notificationIds = await searchService.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
             var count = await notificationIdsQueryable.CountAsync();
             IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
             var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);

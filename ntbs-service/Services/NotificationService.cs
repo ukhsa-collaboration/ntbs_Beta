@@ -32,12 +32,7 @@ namespace ntbs_service.Services
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
-        IQueryable<Notification> FilterBySex(IQueryable<Notification> notifications, int sexId);
-        IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> notifications, PartialDate partialDate);
-        IQueryable<Notification> FilterById(IQueryable<Notification> notifications, string IdFilter);
-        IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
-        Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
     }
 
     public class NotificationService : INotificationService
@@ -295,12 +290,6 @@ namespace ntbs_service.Services
         public async Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids)
         {
             return await repository.GetNotificationsByIdsAsync(ids);
-        }
-
-        public async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
-        {
-            return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
-                .Take(paginationParameters.PageSize).ToListAsync();
         }
     }
 }
