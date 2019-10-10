@@ -44,14 +44,16 @@
 
     <validate-date model="Patient" property="Dob" inline-template>
         @{
-            var DobError = !Model.IsValid("Patient.Dob");
+            var DobError = !Model.IsValid("Patient.Dob") || !Model.IsValid("FormattedDob");
             var DobGroupState = DobError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type=@DobGroupState>
             <nhs-fieldset aria-describedby="dob-error" role="group">
                 <nhs-fieldset-legend nhs-legend-size="Standard">Date of birth</nhs-fieldset-legend>
-                <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="Patient.Dob"
-                      id="dob-error"></span>
+                <span nhs-span-type="ErrorMessage" ref="errorField" id="dob-error">
+                    <span style="display:block" asp-validation-for="Patient.Dob"></span>
+                    <span style="display:block" asp-validation-for="FormattedDob"></span>
+                </span>
                 <nhs-date-input id="dob">
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">

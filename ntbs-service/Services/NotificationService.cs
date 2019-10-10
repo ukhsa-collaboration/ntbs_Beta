@@ -277,9 +277,7 @@ namespace ntbs_service.Services
 
         public IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> notifications, PartialDate partialDate) 
         {
-            DateTime? dateRangeStart;
-            DateTime? dateRangeEnd;
-            partialDate.TryConvertToDateTimeRange(out dateRangeStart, out dateRangeEnd);
+            partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
             return notifications.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
         }
 

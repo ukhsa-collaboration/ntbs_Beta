@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Validations;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -22,6 +23,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public PatientDetails Patient { get; set; }
 
         [BindProperty]
+        [ValidFormattedDateCanConvertToDatetime]
         public FormattedDate FormattedDob { get; set; }
 
         public PatientModel(INotificationService service, NtbsContext context) : base(service)

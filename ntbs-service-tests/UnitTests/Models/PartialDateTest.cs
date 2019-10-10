@@ -10,19 +10,14 @@ namespace ntbs_service_tests.UnitTests.Models
         public static IEnumerable<object[]> InvalidDates()
         {
             yield return new object[] { new PartialDate() { Day = null, Month = "2", Year = null}};
-            yield return new object[] { new PartialDate() { Day = "hello", Month = "2", Year = "2000"}};
-            yield return new object[] { new PartialDate() { Day = "31", Month = null, Year = "2000"}};
         }
 
         [Theory, MemberData(nameof(InvalidDates))]
-        public void IfDateUnparseable_CanConvertReturnsFalse(PartialDate partialDate)
+        public void IfDateHasNoYear_CanConvertReturnsFalse(PartialDate partialDate)
         {
-            // Arrange
-            DateTime? dateTimeRangeStart;
-            DateTime? dateTimeRangeEnd;
 
             //Act
-            var canConvert = partialDate.TryConvertToDateTimeRange(out dateTimeRangeStart, out dateTimeRangeEnd);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
 
             // Assert
             Assert.False(canConvert);

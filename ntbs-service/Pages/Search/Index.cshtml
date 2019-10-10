@@ -27,14 +27,15 @@
                         Search by NTBS, ETS, LTBR or NHS number
                     </span>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="id-error"
-                        asp-validation-for="SearchParameters.IdFilter"></span>
+                        asp-validation-for="SearchParameters.IdFilter" >
+                    </span>
                     <input is-error-input=@IdFilterError nhs-input-type="Standard"
                         asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" />
                 </nhs-form-group>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
-                    var DobError = !Model.validationService.IsValid("SearchParameters.Dob");
+                    var DobError = !Model.validationService.IsValid("SearchParameters.PartialDob");
                     var DobGroupState = DobError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@DobGroupState>
@@ -43,7 +44,7 @@
                         Dates can be partial, enter year at minimum
                     </span>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
-                        asp-validation-for="SearchParameters.Dob"></span>
+                        asp-validation-for="SearchParameters.PartialDob"></span>
                     <nhs-date-input id="dob">
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
@@ -82,7 +83,7 @@
                 <nhs-form-group nhs-form-group-type=@SexIdGroupState>
                     <label nhs-label-type="Standard"> Sex </label>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="sexId-error"
-                        asp-validation-for="SearchParameters.SexId"></span>
+                        asp-validation-for="SearchParameters.SexId" ></span>
                     <nhs-radios nhs-radios-type="Standard">
                         @foreach (var sex in Model.Sexes)
                         {

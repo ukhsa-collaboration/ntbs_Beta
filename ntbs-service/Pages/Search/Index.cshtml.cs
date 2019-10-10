@@ -55,7 +55,7 @@ namespace ntbs_service.Pages_Search
             IQueryable<Notification> draftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
-            if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
+            if (!string.IsNullOrEmpty(SearchParameters.IdFilter))
             {
                 SearchParamsExist = true;
                 draftsQueryable = notificationService.FilterById(draftsQueryable, SearchParameters.IdFilter);
@@ -72,6 +72,8 @@ namespace ntbs_service.Pages_Search
             if (SearchParameters.PartialDob != null && SearchParameters.PartialDob.Year != null)
             {
                 SearchParamsExist = true;
+                SearchParameters.PartialDob.TryConvertToDateTimeRange(out DateTime? start, out DateTime? end);
+
                 draftsQueryable = notificationService.FilterByPartialDate(draftsQueryable, SearchParameters.PartialDob);
                 nonDraftsQueryable = notificationService.FilterByPartialDate(nonDraftsQueryable, SearchParameters.PartialDob);
             }

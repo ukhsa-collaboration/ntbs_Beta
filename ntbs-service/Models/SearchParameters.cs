@@ -13,7 +13,6 @@ namespace ntbs_service.Models
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
-        public DateTime? Dob;
         public PartialDate PartialDob { get; set; }
     }
 }
