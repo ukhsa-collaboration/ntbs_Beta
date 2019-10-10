@@ -127,14 +127,14 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void UpdateFlags()
         {
-            if (ClinicalDetails.DidNotStartTreatment ?? false)
+            if (ClinicalDetails.DidNotStartTreatment == true)
             {
                 ClinicalDetails.TreatmentStartDate = null;
                 FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.TreatmentStartDate");
             }
 
-            if (!ClinicalDetails.IsPostMortem ?? false)
+            if (ClinicalDetails.IsPostMortem == false)
             {
                 ClinicalDetails.DeathDate = null;
                 FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
