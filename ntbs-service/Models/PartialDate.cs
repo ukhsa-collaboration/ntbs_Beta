@@ -12,6 +12,11 @@ namespace ntbs_service.Models
         public string Month {get; set; }
         public string Year  {get; set; }
 
+        public bool IsEmpty()
+        {
+            return string.IsNullOrEmpty(Year) && string.IsNullOrEmpty(Month) && string.IsNullOrEmpty(Day);
+        }
+
         public bool TryConvertToDateTimeRange(out DateTime? dateTimeStart, out DateTime? dateTimeEnd)
         {
             dateTimeStart = null;
