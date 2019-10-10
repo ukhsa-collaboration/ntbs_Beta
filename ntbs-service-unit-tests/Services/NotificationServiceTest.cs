@@ -9,7 +9,7 @@ using ntbs_service.Models.Enums;
 
 using Xunit;
 
-namespace ntbs_service_tests.UnitTests.ntbs_service_tests
+namespace ntbs_service_unit_tests.Services
 {
     public class NotificationServiceTest
     {

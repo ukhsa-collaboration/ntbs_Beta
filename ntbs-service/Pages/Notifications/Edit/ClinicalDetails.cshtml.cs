@@ -96,8 +96,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
-            validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
-                ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
+            if (ClinicalDetails.BCGVaccinationYear != null)
+            {
+                validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+                (int)ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
+            }
             
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
 
@@ -173,6 +176,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
+        // TODO: Check whether this is actually used by anything!
         public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
             return validationService.ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);

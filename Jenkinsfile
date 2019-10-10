@@ -8,7 +8,7 @@ pipeline {
             sh(script: '''
               # Workaround from https://stackoverflow.com/a/57212491/2363767
               export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
-              cd ntbs-service-tests
+              cd ntbs-service-unit-tests
               echo "Running unit tests"
               dotnet test
             ''')

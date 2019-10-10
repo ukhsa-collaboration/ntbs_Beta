@@ -89,7 +89,11 @@ namespace ntbs_service
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMiddleware<AuditGetRequestMiddleWare>();
+            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            {
+                app.UseMiddleware<AuditGetRequestMiddleWare>();
+            }
+
             app.UseMvc();
 
             var cultureInfo = new CultureInfo("en-GB");

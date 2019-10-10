@@ -178,20 +178,18 @@ namespace ntbs_service.Services
 
         public ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare)
         {
-            if (IsValidYear(yearToValidate))
+            if (!IsValidYear(yearToValidate))
             {
-                if (yearToValidate < yearToCompare)
-                {
-                    return pageModel.Content(ValidationMessages.ValidYearLaterThanBirthYear(yearToCompare));
-                }
-                else
-                {
-                    return ValidContent();
-                }
+                return pageModel.Content(ValidationMessages.ValidYear);
+            }
+
+            if (yearToValidate < yearToCompare)
+            {
+                return pageModel.Content(ValidationMessages.ValidYearLaterThanBirthYear(yearToCompare));
             }
             else
             {
-                return pageModel.Content(ValidationMessages.ValidYear);
+                return ValidContent();
             }
         }
 
@@ -202,26 +200,19 @@ namespace ntbs_service.Services
             return year >= ValidDates.EarliestYear && year <= DateTime.Now.Year;
         }
 
-        public void ValidateYearComparisonOnModel(object model, string key, int? yearToValidate, int? yearToCompare)
+        public void ValidateYearComparisonOnModel(object model, string key, int yearToValidate, int? yearToCompare)
         {
-            if (yearToValidate == null || yearToCompare == null)
+            string modelTypeName = model.GetType().Name;
+
+            if (!IsValidYear(yearToValidate))
             {
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
                 return;
             }
 
-            string modelTypeName = model.GetType().Name;
-
-            if (IsValidYear((int)yearToValidate))
+            if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                if ((int)yearToValidate < (int)yearToCompare)
-                {
-                    ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
-                    return;
-                }
-            }
-            else
-            {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
                 return;
             }
         }

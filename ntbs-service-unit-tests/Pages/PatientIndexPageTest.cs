@@ -10,12 +10,12 @@ using ntbs_service.Pages;
 using ntbs_service.Pages_Notifications;
 using Xunit;
 
-namespace ntbs_service_tests.UnitTests.Patients
+namespace ntbs_service_unit_tests.Pages
 {
-    public class IndexPageTest
+    public class PatientIndexPageTest
     {
         private Mock<INotificationService> mockService;
-        public IndexPageTest() 
+        public PatientIndexPageTest() 
         {
             mockService = new Mock<INotificationService>();
         }
