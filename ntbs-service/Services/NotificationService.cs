@@ -32,7 +32,6 @@ namespace ntbs_service.Services
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
-        IQueryable<Notification> FilterById(IQueryable<Notification> notifications, string IdFilter);
         IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
         Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
@@ -264,13 +263,6 @@ namespace ntbs_service.Services
         {
             context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await context.SaveChangesAsync();
-        }
-
-        public IQueryable<Notification> FilterById(IQueryable<Notification> notifications, string IdFilter) {
-            int parsedIdFilter;
-            int.TryParse(IdFilter, out parsedIdFilter);
-            return notifications.Where(s => s.NotificationId.Equals(parsedIdFilter) 
-                    || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
         }
 
         public IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) {
