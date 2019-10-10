@@ -11,9 +11,10 @@ namespace ntbs_service_tests.UnitTests.Models
         [Fact]
         public void IfDateHasNoYear_CanConvertReturnsFalse()
         {
+            // Arrange
             var partialDate = new PartialDate() { Day = null, Month = "2", Year = null};
 
-            //Act
+            // Act
             var canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
 
             // Assert
