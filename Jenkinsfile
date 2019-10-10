@@ -9,7 +9,10 @@ pipeline {
               # Workaround from https://stackoverflow.com/a/57212491/2363767
               export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
               cd ntbs-service-tests
-              echo "Running unit tests"
+              echo "Running service unit tests"
+              dotnet test
+              cd ../EFAuditer-tests
+              echo "Running EFAuditer unit tests"
               dotnet test
             ''')
           }

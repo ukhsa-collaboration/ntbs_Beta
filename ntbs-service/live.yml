@@ -1,0 +1,64 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ntbs-live
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ntbs-live
+    spec:
+      containers:
+      - name: ntbs-live
+        image: # ???
+        ports:
+        - containerPort: 80
+        env:
+          - name: ConnectionStrings__ntbsContext
+            valueFrom:
+              secretKeyRef:
+                name: live-db-connection-string # ???
+                key: connectionString
+          - name: ConnectionStrings__auditContext
+            valueFrom:
+              secretKeyRef:
+                name: live-audit-db-connection-string # ???
+                key: connectionString
+          - name: AdfsOptions__Wtrealm
+            value: # ???
+          - name: AdfsOptions__AdGroupsPrefix
+            value: ""
+      imagePullSecrets:
+      - name: registery-password # ???
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ntbs-live
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: ntbs-live
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ntbs-live
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  tls:
+    - hosts:
+      - # ???
+      secretName: phe-ntbs-live-tls # ???
+  rules:
+  - host: # ???
+    http:
+      paths:
+      - backend:
+          serviceName: ntbs-live
+          servicePort: 80
+        path: /
