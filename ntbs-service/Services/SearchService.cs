@@ -22,21 +22,22 @@ namespace ntbs_service.Services
     public class SearchService : ISearchService
     {
 
-        public IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter) 
+        public IQueryable<Notification> FilterById(IQueryable<Notification> notifications, string IdFilter) 
         {
-            return IQ.Where(s => s.NotificationId.Equals(Int32.Parse(IdFilter)) 
+            int.TryParse(IdFilter, out int parsedIdFilter);
+            return notifications.Where(s => s.NotificationId.Equals(parsedIdFilter) 
                     || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
         }
 
-        public IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate) 
+        public IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> notifications, PartialDate partialDate) 
         {
             partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
-            return IQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
+            return notifications.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
         }
 
-        public IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId) 
+        public IQueryable<Notification> FilterBySex(IQueryable<Notification> notifications, int sexId) 
         {
-            return IQ.Where(s => s.PatientDetails.SexId.Equals(sexId));
+            return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
         }
 
         public IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 

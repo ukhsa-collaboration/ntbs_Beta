@@ -7,14 +7,11 @@ namespace ntbs_service_tests.UnitTests.Models
 {
     public class PartialDateTest
     {
-        public static IEnumerable<object[]> InvalidDates()
-        {
-            yield return new object[] { new PartialDate() { Day = null, Month = "2", Year = null}};
-        }
 
-        [Theory, MemberData(nameof(InvalidDates))]
-        public void IfDateHasNoYear_CanConvertReturnsFalse(PartialDate partialDate)
+        [Fact]
+        public void IfDateHasNoYear_CanConvertReturnsFalse()
         {
+            var partialDate = new PartialDate() { Day = null, Month = "2", Year = null};
 
             //Act
             var canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);

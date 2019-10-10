@@ -51,7 +51,7 @@ namespace ntbs_service.Models.Validations
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             PartialDate valueCopy = (PartialDate) value;
-            if(valueCopy==null || valueCopy.IsEmpty()) {
+            if(valueCopy == null || valueCopy.IsEmpty()) {
                 return null;
             }
             if (!string.IsNullOrEmpty(valueCopy.Day)) {
@@ -78,7 +78,7 @@ namespace ntbs_service.Models.Validations
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             FormattedDate valueCopy = (FormattedDate) value;
-            if(valueCopy==null || valueCopy.IsEmpty()) {
+            if(valueCopy == null || valueCopy.IsEmpty()) {
                 return null;
             }
             bool canConvert = valueCopy.TryConvertToDateTime(out DateTime? x);

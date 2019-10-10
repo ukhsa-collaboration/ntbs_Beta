@@ -262,31 +262,7 @@ namespace ntbs_service.Services
             context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await context.SaveChangesAsync();
         }
-
-        public IQueryable<Notification> FilterById(IQueryable<Notification> notifications, string IdFilter) {
-            int parsedIdFilter;
-            int.TryParse(IdFilter, out parsedIdFilter);
-            return notifications.Where(s => s.NotificationId.Equals(parsedIdFilter) 
-                    || s.ETSID.Equals(IdFilter) || s.LTBRID.Equals(IdFilter) || s.PatientDetails.NhsNumber.Equals(IdFilter));
-        }
-
-        public IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> notifications, PartialDate partialDate) 
-        {
-            partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
-            return notifications.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
-        }
-
-        public IQueryable<Notification> FilterBySex(IQueryable<Notification> notifications, int sexId) 
-        {
-            return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
-        }
-
-        public IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 
-        {
-            return query.OrderByDescending(n => n.CreationDate)
-                .OrderByDescending(n => n.SubmissionDate);
-        }
-
+        
         public async Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids)
         {
             return await repository.GetNotificationsByIdsAsync(ids);
