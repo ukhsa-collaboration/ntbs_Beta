@@ -66,7 +66,7 @@ namespace ntbs_service.Models.Validations
             }
             bool canConvert = valueCopy.TryConvertToDateTimeRange(out DateTime? x, out DateTime? y);
             if (!canConvert) {
-                return new ValidationResult("Invalid date selection");
+                return new ValidationResult(ErrorMessage);
             }
             return null;
         }
@@ -83,7 +83,7 @@ namespace ntbs_service.Models.Validations
             }
             bool canConvert = valueCopy.TryConvertToDateTime(out DateTime? x);
             if (!canConvert) {
-                return new ValidationResult("Invalid date selection");
+                return new ValidationResult(ErrorMessage);
             }
             return null;
         }

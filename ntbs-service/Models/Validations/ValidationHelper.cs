@@ -56,6 +56,7 @@ namespace ntbs_service.Models.Validations
         public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
         public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
         public const string ImmunosuppressionDetailRequired = "Details is a mandatory field";
+        public const string InvalidDate = "Invalid Date Selection";
     }
 
     public static class ValidDates

@@ -23,7 +23,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public PatientDetails Patient { get; set; }
 
         [BindProperty]
-        [ValidFormattedDateCanConvertToDatetime]
+        [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
 
         public PatientModel(INotificationService service, NtbsContext context) : base(service)
