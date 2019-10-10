@@ -51,8 +51,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
+            notificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
+            
             SetupNotificationSiteMap(notificationSites);
-            OtherSite = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER);
+            OtherSite = new NotificationSite {
+                SiteId = (int) SiteId.OTHER,
+                SiteDescription = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER)?.SiteDescription,
+                ShouldValidateFull = Notification.ShouldValidateFull
+            };
             Sites = (await context.GetAllSitesAsync()).ToList();
 
             PatientBirthYear = Notification.PatientDetails.Dob?.Year;
@@ -99,10 +105,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             
+            var notificationSites = CreateNotificationSitesFromModel(Notification);
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
-
-            var notificationSites = CreateNotificationSitesFromModel(Notification.NotificationId);
-
+            OtherSite?.SetFullValidation(Notification.NotificationStatus);
             // Separate notification with notification sites only is needed to check if notification sites are valid,
             // and to avoid updating notification site when updating Clinical Details
             var notificationWithSitesOnly = new Notification {
@@ -110,15 +115,14 @@ namespace ntbs_service.Pages.Notifications.Edit
                 NotificationSites = notificationSites.ToList()
             };
             
-            if (!TryValidateModel(this) && !TryValidateModel(notificationWithSitesOnly))
+            var isValid = TryValidateModel(this) && TryValidateModel(notificationWithSitesOnly, notificationWithSitesOnly.GetType().Name);
+            if (isValid)
             {
-                return false;
+                await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
+                await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
 
-            await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-            await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
-
-            return true;
+            return isValid;
         }
 
         private void UpdateFlags()
@@ -152,12 +156,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (!NotificationSiteMap[SiteId.OTHER])
             {
-                OtherSite.SiteDescription = null;
+                OtherSite = null;
                 ModelState.Remove("OtherSite.SiteDescription");
             }
         }
 
-        private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(int notificationId)
+        private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
         {
             foreach (var item in NotificationSiteMap)
             {
@@ -165,7 +169,8 @@ namespace ntbs_service.Pages.Notifications.Edit
                 {
                     yield return new NotificationSite
                     {
-                        NotificationId = notificationId,
+                        ShouldValidateFull = notification.ShouldValidateFull,
+                        NotificationId = notification.NotificationId,
                         SiteId = (int)item.Key,
                         SiteDescription = item.Key == SiteId.OTHER ? OtherSite.SiteDescription : null
                     };
@@ -203,7 +208,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             var notification = new Notification { ShouldValidateFull = shouldValidateFull };
             var notificationSite = new NotificationSite
             {
-                Notification = notification,
+                ShouldValidateFull = shouldValidateFull,
                 SiteId = (int)SiteId.OTHER
             };
             return validationService.ValidateProperty(notificationSite, key, value);
