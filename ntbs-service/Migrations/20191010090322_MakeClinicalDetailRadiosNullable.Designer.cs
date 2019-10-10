@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191010090322_MakeClinicalDetailRadiosNullable")]
+    partial class MakeClinicalDetailRadiosNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -9997,17 +9999,7 @@ namespace ntbs_service.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
-                    b.Property<string>("PHECAdGroup")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("ServiceAdGroup")
-                        .HasMaxLength(64);
-
                     b.HasKey("Code");
-
-                    b.HasIndex("ServiceAdGroup")
-                        .IsUnique()
-                        .HasFilter("[ServiceAdGroup] IS NOT NULL");
 
                     b.ToTable("TBService");
 
@@ -11477,8 +11469,7 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("HasTransplantation");
 
-                            b1.Property<string>("OtherDescription")
-                                .HasMaxLength(100);
+                            b1.Property<string>("OtherDescription");
 
                             b1.Property<string>("Status")
                                 .HasMaxLength(30);
@@ -11681,7 +11672,7 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Notification")
+                    b.HasOne("ntbs_service.Models.Notification", "Notification")
                         .WithMany("NotificationSites")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);

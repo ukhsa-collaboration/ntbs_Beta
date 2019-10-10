@@ -44,7 +44,7 @@ namespace ntbs_service.Models.Validations
         public const string PostcodeIsRequired = "Postcode is a mandatory field";
         public const string TBServiceIsRequired = "TB Service is a mandatory field";
         public const string HospitalIsRequired = "Hospital is a mandatory field";
-        public const string DiseaseSiteIsRequired = "Please choose at least one site disease";
+        public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
         public const string DiseaseSiteOtherIsRequired = "Other Field is a mandatory field";
         public const string SampleTakenIsRequired = "Sample taken is a mandatory field";
         public const string NotificationDateIsRequired = "Notification Date is a mandatory field";

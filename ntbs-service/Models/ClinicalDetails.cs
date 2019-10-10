@@ -21,12 +21,12 @@ namespace ntbs_service.Models
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? TreatmentStartDate { get; set; }
 
-        [RequiredIf(@"ShouldValidateFull && IsPostMortem", ErrorMessage = ValidationMessages.DeathDateIsRequired)]
+        [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.DeathDateIsRequired)]
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? DeathDate { get; set; }
 
-        public bool DidNotStartTreatment { get; set; }
-        public bool IsPostMortem { get; set; }
+        public bool? DidNotStartTreatment { get; set; }
+        public bool? IsPostMortem { get; set; }
 
         public bool NoSampleTaken { get; set; }
 
