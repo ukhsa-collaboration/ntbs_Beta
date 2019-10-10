@@ -323,11 +323,12 @@
 
             <nhs-form-group nhs-form-group-type="Standard">
                 <nhs-fieldset>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Patient started treatment</nhs-fieldset-legend>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
                             <input asp-for="ClinicalDetails.DidNotStartTreatment" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-treatment-conditional">
                             <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.DidNotStartTreatment">
-                                Patient started treatment
+                                Yes
                             </label>
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-treatment-conditional">
@@ -369,7 +370,7 @@
                         <div class="nhsuk-radios__item">
                             <input asp-for="ClinicalDetails.DidNotStartTreatment" class="nhsuk-radios__input" type="radio" value="true">
                             <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.DidNotStartTreatment">
-                                Patient did not start treatment
+                                No
                             </label>
                         </div>
                     </div>
