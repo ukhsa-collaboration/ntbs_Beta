@@ -28,7 +28,7 @@
                     </span>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.IdFilter"></span>
-                    <input v-on:blur="validate" is-error-input=@IdFilterError nhs-input-type="Standard"
+                    <input is-error-input=@IdFilterError nhs-input-type="Standard"
                         asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" />
                 </nhs-form-group>
             </nhs-grid-column>

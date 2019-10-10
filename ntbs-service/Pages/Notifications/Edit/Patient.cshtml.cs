@@ -84,9 +84,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Episode", new { id = notificationId });
+            return RedirectToPage("./Episode", new { id = notificationId, isBeingSubmitted });
         }
 
         public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)

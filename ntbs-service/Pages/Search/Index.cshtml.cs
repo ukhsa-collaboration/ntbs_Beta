@@ -22,6 +22,7 @@ namespace ntbs_service.Pages_Search
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
+        public PaginationParameters PaginationParameters;
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
@@ -40,26 +41,29 @@ namespace ntbs_service.Pages_Search
                 return Page();
             }
 
-            var pageSize = 50;
+            PaginationParameters = new PaginationParameters() {PageSize = 50, PageIndex = pageIndex ?? 1};
+
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-            IQueryable<Notification> draftsIQ = service.GetBaseQueryableNotificationByStatus(draftStatusList);
-            IQueryable<Notification> nonDraftsIQ = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
+            IQueryable<Notification> draftsQueryable = service.GetBaseQueryableNotificationByStatus(draftStatusList);
+            IQueryable<Notification> nonDraftsQueryable = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
             if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
             {
                 SearchParamsExist = true;
-                draftsIQ = service.FilterById(draftsIQ, SearchParameters.IdFilter);
-                nonDraftsIQ = service.FilterById(nonDraftsIQ, SearchParameters.IdFilter);
+                draftsQueryable = service.FilterById(draftsQueryable, SearchParameters.IdFilter);
+                nonDraftsQueryable = service.FilterById(nonDraftsQueryable, SearchParameters.IdFilter);
             }
 
-            IQueryable<Notification> notificationsIQ = service.OrderQueryableByNotificationDate(draftsIQ).Union(service.OrderQueryableByNotificationDate(nonDraftsIQ));
+            IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(draftsQueryable)
+                                                                .Union(service.OrderQueryableByNotificationDate(nonDraftsQueryable));
 
-            var notifications = await PaginatedList<Notification>.CreateAsync(
-                notificationsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
-
-            SearchResults = notifications.SelectItems(NotificationBannerModel.WithLink);
+            var notificationIds = await service.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
+            var count = await notificationIdsQueryable.CountAsync();
+            IEnumerable<Notification> notifications = await service.GetNotificationsByIdAsync(notificationIds);
+            var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();
 

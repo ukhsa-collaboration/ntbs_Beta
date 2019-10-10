@@ -18,6 +18,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
+
+            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
             NotificationId = id;
@@ -25,9 +27,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId)
+        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Immunosuppression", new { id = notificationId });
+            return RedirectToPage("./Immunosuppression", new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task<bool> ValidateAndSave() => await Task.FromResult(true);
