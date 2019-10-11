@@ -164,7 +164,8 @@ namespace ntbs_service.Services
                     var modelStateVal = modelState[modelStateKey];
                     foreach (var error in modelStateVal.Errors)
                     {
-                        keyErrorDictionary.Add(modelStateKey, error.ErrorMessage);
+                        // Only add the first error per key to the dictionary.
+                        keyErrorDictionary.TryAdd(modelStateKey, error.ErrorMessage);
                     }
                 }
                 return pageModel.Content(JsonConvert.SerializeObject(keyErrorDictionary));

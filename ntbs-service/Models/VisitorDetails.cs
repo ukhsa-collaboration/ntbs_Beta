@@ -18,6 +18,7 @@ namespace ntbs_service.Models
         [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired)]
         [Range(1, 50)]
         [AssertThat("TotalNumberGreaterOrEqualToInputCountries == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber)]
+        [DisplayName("total number of countries")]
         public int? TotalNumberOfCountries { get; set; }
 
 
@@ -30,6 +31,7 @@ namespace ntbs_service.Models
         [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.VisitCountryRequiresDuration)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
+        [DisplayName("duration of travel")]
         public int? StayLengthInMonths1 { get; set; }
 
 
@@ -44,6 +46,7 @@ namespace ntbs_service.Models
         [AssertThat("!ShouldValidateFull || Country2Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
+        [DisplayName("duration of travel")]
         public int? StayLengthInMonths2 { get; set; }
 
 
@@ -58,6 +61,7 @@ namespace ntbs_service.Models
         [AssertThat("!ShouldValidateFull || Country3Id != null", ErrorMessage = ValidationMessages.VisitIsChronological)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
+        [DisplayName("duration of travel")]
         public int? StayLengthInMonths3 { get; set; }
 
         // Helper properties for use in expressive annotations

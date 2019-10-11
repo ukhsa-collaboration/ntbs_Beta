@@ -68,13 +68,15 @@ namespace ntbs_service.Pages.Notifications.Edit
             return true;
         }
 
-        public IActionResult OnGetValidate(TravelDetails travelDetails)
+        public IActionResult OnGetValidateTravel(TravelDetails travelDetails, bool? hasData)
         {
+            travelDetails.HasTravel = hasData;
             return validationService.ValidateFullModel(travelDetails);
         }
 
-        public IActionResult OnGetValidate(VisitorDetails visitorDetails)
+        public IActionResult OnGetValidateVisitor(VisitorDetails visitorDetails, bool? hasData)
         {
+            visitorDetails.HasVisitor = hasData;
             return validationService.ValidateFullModel(visitorDetails);
         }
     }
