@@ -177,8 +177,19 @@
     </validate-input>
     <br />
 
-    <div class="nhsuk-form-group">
-        <fieldset class="nhsuk-fieldset" aria-describedby="postcode-error">
+    <validate-input model="Patient" property="Address" shouldvalidatefull="@fullValidation" inline-template>
+        <nhs-form-group nhs-form-group-type="Standard">
+            <label asp-for="Patient.Address" nhs-label-type="Standard">
+                Address
+            </label>
+            <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField"></span>
+            <textarea asp-for="Patient.Address" nhs-textarea-type="Standard" rows="2" aria-describedby="address-error"
+                      autocomplete="street-address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+        </nhs-form-group>
+    </validate-input>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset aria-describedby="postcode-error">
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
                     <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="false"
@@ -208,7 +219,8 @@
                     </label>
                 </div>
             </div>
-            <br />
-    </div>
+        </nhs-fieldset>
+    </nhs-form-group>
+    <br />
     <partial name="_PaginationPartial" for="Notification" />
 </div>
