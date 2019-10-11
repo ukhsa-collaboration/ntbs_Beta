@@ -101,8 +101,7 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 ```
 
 ## Maintanance
-- see ip address: `kubectl get service/ntbs-int -w`
-- dashboard: `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
+- dashboard - access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 
 ## Basic auth securing
