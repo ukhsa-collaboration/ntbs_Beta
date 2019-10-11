@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191010090322_MakeClinicalDetailRadiosNullable")]
+    partial class MakeClinicalDetailRadiosNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,8 +26,6 @@ namespace ntbs_service.Migrations
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("HasHighTbOccurence");
 
                     b.Property<string>("IsoCode");
 
@@ -40,1750 +40,1500 @@ namespace ntbs_service.Migrations
                         new
                         {
                             CountryId = 1,
-                            HasHighTbOccurence = true,
                             IsoCode = "AF",
                             Name = "Afghanistan"
                         },
                         new
                         {
                             CountryId = 2,
-                            HasHighTbOccurence = true,
                             IsoCode = "AX",
                             Name = "Åland Islands"
                         },
                         new
                         {
                             CountryId = 3,
-                            HasHighTbOccurence = true,
                             IsoCode = "AL",
                             Name = "Albania"
                         },
                         new
                         {
                             CountryId = 4,
-                            HasHighTbOccurence = true,
                             IsoCode = "DZ",
                             Name = "Algeria"
                         },
                         new
                         {
                             CountryId = 5,
-                            HasHighTbOccurence = true,
                             IsoCode = "AS",
                             Name = "American Samoa"
                         },
                         new
                         {
                             CountryId = 6,
-                            HasHighTbOccurence = false,
                             IsoCode = "AD",
                             Name = "Andorra"
                         },
                         new
                         {
                             CountryId = 7,
-                            HasHighTbOccurence = true,
                             IsoCode = "AO",
                             Name = "Angola"
                         },
                         new
                         {
                             CountryId = 8,
-                            HasHighTbOccurence = true,
                             IsoCode = "AI",
                             Name = "Anguilla"
                         },
                         new
                         {
                             CountryId = 9,
-                            HasHighTbOccurence = true,
                             IsoCode = "AQ",
                             Name = "Antarctica"
                         },
                         new
                         {
                             CountryId = 10,
-                            HasHighTbOccurence = true,
                             IsoCode = "AG",
                             Name = "Antigua and Barbuda"
                         },
                         new
                         {
                             CountryId = 11,
-                            HasHighTbOccurence = true,
                             IsoCode = "AR",
                             Name = "Argentina"
                         },
                         new
                         {
                             CountryId = 12,
-                            HasHighTbOccurence = true,
                             IsoCode = "AM",
                             Name = "Armenia"
                         },
                         new
                         {
                             CountryId = 13,
-                            HasHighTbOccurence = true,
                             IsoCode = "AW",
                             Name = "Aruba"
                         },
                         new
                         {
                             CountryId = 14,
-                            HasHighTbOccurence = false,
                             IsoCode = "AU",
                             Name = "Australia"
                         },
                         new
                         {
                             CountryId = 15,
-                            HasHighTbOccurence = false,
                             IsoCode = "AT",
                             Name = "Austria"
                         },
                         new
                         {
                             CountryId = 16,
-                            HasHighTbOccurence = true,
                             IsoCode = "AZ",
                             Name = "Azerbaijan"
                         },
                         new
                         {
                             CountryId = 17,
-                            HasHighTbOccurence = true,
                             IsoCode = "BS",
                             Name = "Bahamas"
                         },
                         new
                         {
                             CountryId = 18,
-                            HasHighTbOccurence = true,
                             IsoCode = "BH",
                             Name = "Bahrain"
                         },
                         new
                         {
                             CountryId = 19,
-                            HasHighTbOccurence = true,
                             IsoCode = "BD",
                             Name = "Bangladesh"
                         },
                         new
                         {
                             CountryId = 20,
-                            HasHighTbOccurence = true,
                             IsoCode = "BB",
                             Name = "Barbados"
                         },
                         new
                         {
                             CountryId = 21,
-                            HasHighTbOccurence = true,
                             IsoCode = "BY",
                             Name = "Belarus"
                         },
                         new
                         {
                             CountryId = 22,
-                            HasHighTbOccurence = false,
                             IsoCode = "BE",
                             Name = "Belgium"
                         },
                         new
                         {
                             CountryId = 23,
-                            HasHighTbOccurence = true,
                             IsoCode = "BZ",
                             Name = "Belize"
                         },
                         new
                         {
                             CountryId = 24,
-                            HasHighTbOccurence = true,
                             IsoCode = "BJ",
                             Name = "Benin"
                         },
                         new
                         {
                             CountryId = 25,
-                            HasHighTbOccurence = true,
                             IsoCode = "BM",
                             Name = "Bermuda"
                         },
                         new
                         {
                             CountryId = 26,
-                            HasHighTbOccurence = true,
                             IsoCode = "BT",
                             Name = "Bhutan"
                         },
                         new
                         {
                             CountryId = 27,
-                            HasHighTbOccurence = true,
                             IsoCode = "BO",
                             Name = "Bolivia"
                         },
                         new
                         {
                             CountryId = 28,
-                            HasHighTbOccurence = true,
                             IsoCode = "BA",
                             Name = "Bosnia and Herzegovina"
                         },
                         new
                         {
                             CountryId = 29,
-                            HasHighTbOccurence = true,
                             IsoCode = "BW",
                             Name = "Botswana"
                         },
                         new
                         {
                             CountryId = 30,
-                            HasHighTbOccurence = true,
                             IsoCode = "BV",
                             Name = "Bouvet Island"
                         },
                         new
                         {
                             CountryId = 31,
-                            HasHighTbOccurence = true,
                             IsoCode = "BR",
                             Name = "Brazil"
                         },
                         new
                         {
                             CountryId = 32,
-                            HasHighTbOccurence = true,
                             IsoCode = "IO",
                             Name = "British Indian Ocean Territory"
                         },
                         new
                         {
                             CountryId = 33,
-                            HasHighTbOccurence = true,
                             IsoCode = "BN",
                             Name = "Brunei Darussalam"
                         },
                         new
                         {
                             CountryId = 34,
-                            HasHighTbOccurence = true,
                             IsoCode = "BG",
                             Name = "Bulgaria"
                         },
                         new
                         {
                             CountryId = 35,
-                            HasHighTbOccurence = true,
                             IsoCode = "BF",
                             Name = "Burkina Faso"
                         },
                         new
                         {
                             CountryId = 36,
-                            HasHighTbOccurence = true,
                             IsoCode = "BI",
                             Name = "Burundi"
                         },
                         new
                         {
                             CountryId = 37,
-                            HasHighTbOccurence = true,
                             IsoCode = "KH",
                             Name = "Cambodia"
                         },
                         new
                         {
                             CountryId = 38,
-                            HasHighTbOccurence = true,
                             IsoCode = "CM",
                             Name = "Cameroon"
                         },
                         new
                         {
                             CountryId = 39,
-                            HasHighTbOccurence = false,
                             IsoCode = "CA",
                             Name = "Canada"
                         },
                         new
                         {
                             CountryId = 40,
-                            HasHighTbOccurence = true,
                             IsoCode = "CV",
                             Name = "Cape Verde"
                         },
                         new
                         {
                             CountryId = 41,
-                            HasHighTbOccurence = true,
                             IsoCode = "KY",
                             Name = "Cayman Islands"
                         },
                         new
                         {
                             CountryId = 42,
-                            HasHighTbOccurence = true,
                             IsoCode = "CF",
                             Name = "Central African Republic"
                         },
                         new
                         {
                             CountryId = 43,
-                            HasHighTbOccurence = true,
                             IsoCode = "TD",
                             Name = "Chad"
                         },
                         new
                         {
                             CountryId = 44,
-                            HasHighTbOccurence = true,
                             IsoCode = "CL",
                             Name = "Chile"
                         },
                         new
                         {
                             CountryId = 45,
-                            HasHighTbOccurence = true,
                             IsoCode = "CN",
                             Name = "China"
                         },
                         new
                         {
                             CountryId = 46,
-                            HasHighTbOccurence = true,
                             IsoCode = "CX",
                             Name = "Christmas Island"
                         },
                         new
                         {
                             CountryId = 47,
-                            HasHighTbOccurence = true,
                             IsoCode = "CC",
                             Name = "Cocos (Keeling) Islands"
                         },
                         new
                         {
                             CountryId = 48,
-                            HasHighTbOccurence = true,
                             IsoCode = "CO",
                             Name = "Colombia"
                         },
                         new
                         {
                             CountryId = 49,
-                            HasHighTbOccurence = true,
                             IsoCode = "KM",
                             Name = "Comoros"
                         },
                         new
                         {
                             CountryId = 50,
-                            HasHighTbOccurence = true,
                             IsoCode = "CG",
                             Name = "Congo"
                         },
                         new
                         {
                             CountryId = 51,
-                            HasHighTbOccurence = true,
                             IsoCode = "CD",
                             Name = "Congo, The Democratic Republic of the"
                         },
                         new
                         {
                             CountryId = 52,
-                            HasHighTbOccurence = true,
                             IsoCode = "CK",
                             Name = "Cook Islands"
                         },
                         new
                         {
                             CountryId = 53,
-                            HasHighTbOccurence = true,
                             IsoCode = "CR",
                             Name = "Costa Rica"
                         },
                         new
                         {
                             CountryId = 54,
-                            HasHighTbOccurence = true,
                             IsoCode = "CI",
                             Name = "Côte D'ivoire"
                         },
                         new
                         {
                             CountryId = 55,
-                            HasHighTbOccurence = true,
                             IsoCode = "HR",
                             Name = "Croatia"
                         },
                         new
                         {
                             CountryId = 56,
-                            HasHighTbOccurence = true,
                             IsoCode = "CU",
                             Name = "Cuba"
                         },
                         new
                         {
                             CountryId = 57,
-                            HasHighTbOccurence = false,
                             IsoCode = "CY",
                             Name = "Cyprus"
                         },
                         new
                         {
                             CountryId = 58,
-                            HasHighTbOccurence = true,
                             IsoCode = "CZ",
                             Name = "Czech Republic"
                         },
                         new
                         {
                             CountryId = 59,
-                            HasHighTbOccurence = false,
                             IsoCode = "DK",
                             Name = "Denmark"
                         },
                         new
                         {
                             CountryId = 60,
-                            HasHighTbOccurence = true,
                             IsoCode = "DJ",
                             Name = "Djibouti"
                         },
                         new
                         {
                             CountryId = 61,
-                            HasHighTbOccurence = true,
                             IsoCode = "DM",
                             Name = "Dominica"
                         },
                         new
                         {
                             CountryId = 62,
-                            HasHighTbOccurence = true,
                             IsoCode = "DO",
                             Name = "Dominican Republic"
                         },
                         new
                         {
                             CountryId = 63,
-                            HasHighTbOccurence = true,
                             IsoCode = "EC",
                             Name = "Ecuador"
                         },
                         new
                         {
                             CountryId = 64,
-                            HasHighTbOccurence = true,
                             IsoCode = "EG",
                             Name = "Egypt"
                         },
                         new
                         {
                             CountryId = 65,
-                            HasHighTbOccurence = true,
                             IsoCode = "SV",
                             Name = "El Salvador"
                         },
                         new
                         {
                             CountryId = 66,
-                            HasHighTbOccurence = true,
                             IsoCode = "GQ",
                             Name = "Equatorial Guinea"
                         },
                         new
                         {
                             CountryId = 67,
-                            HasHighTbOccurence = true,
                             IsoCode = "ER",
                             Name = "Eritrea"
                         },
                         new
                         {
                             CountryId = 68,
-                            HasHighTbOccurence = true,
                             IsoCode = "EE",
                             Name = "Estonia"
                         },
                         new
                         {
                             CountryId = 69,
-                            HasHighTbOccurence = true,
                             IsoCode = "ET",
                             Name = "Ethiopia"
                         },
                         new
                         {
                             CountryId = 70,
-                            HasHighTbOccurence = true,
                             IsoCode = "FK",
                             Name = "Falkland Islands (Malvinas)"
                         },
                         new
                         {
                             CountryId = 71,
-                            HasHighTbOccurence = true,
                             IsoCode = "FO",
                             Name = "Faroe Islands"
                         },
                         new
                         {
                             CountryId = 72,
-                            HasHighTbOccurence = true,
                             IsoCode = "FJ",
                             Name = "Fiji"
                         },
                         new
                         {
                             CountryId = 73,
-                            HasHighTbOccurence = false,
                             IsoCode = "FI",
                             Name = "Finland"
                         },
                         new
                         {
                             CountryId = 74,
-                            HasHighTbOccurence = false,
                             IsoCode = "FR",
                             Name = "France"
                         },
                         new
                         {
                             CountryId = 75,
-                            HasHighTbOccurence = true,
                             IsoCode = "GF",
                             Name = "French Guiana"
                         },
                         new
                         {
                             CountryId = 76,
-                            HasHighTbOccurence = true,
                             IsoCode = "PF",
                             Name = "French Polynesia"
                         },
                         new
                         {
                             CountryId = 77,
-                            HasHighTbOccurence = true,
                             IsoCode = "TF",
                             Name = "French Southern Territories"
                         },
                         new
                         {
                             CountryId = 78,
-                            HasHighTbOccurence = true,
                             IsoCode = "GA",
                             Name = "Gabon"
                         },
                         new
                         {
                             CountryId = 79,
-                            HasHighTbOccurence = true,
                             IsoCode = "GM",
                             Name = "Gambia"
                         },
                         new
                         {
                             CountryId = 80,
-                            HasHighTbOccurence = true,
                             IsoCode = "GE",
                             Name = "Georgia"
                         },
                         new
                         {
                             CountryId = 81,
-                            HasHighTbOccurence = false,
                             IsoCode = "DE",
                             Name = "Germany"
                         },
                         new
                         {
                             CountryId = 82,
-                            HasHighTbOccurence = true,
                             IsoCode = "GH",
                             Name = "Ghana"
                         },
                         new
                         {
                             CountryId = 83,
-                            HasHighTbOccurence = true,
                             IsoCode = "GI",
                             Name = "Gibraltar"
                         },
                         new
                         {
                             CountryId = 84,
-                            HasHighTbOccurence = false,
                             IsoCode = "GR",
                             Name = "Greece"
                         },
                         new
                         {
                             CountryId = 85,
-                            HasHighTbOccurence = false,
                             IsoCode = "GL",
                             Name = "Greenland"
                         },
                         new
                         {
                             CountryId = 86,
-                            HasHighTbOccurence = true,
                             IsoCode = "GD",
                             Name = "Grenada"
                         },
                         new
                         {
                             CountryId = 87,
-                            HasHighTbOccurence = true,
                             IsoCode = "GP",
                             Name = "Guadeloupe"
                         },
                         new
                         {
                             CountryId = 88,
-                            HasHighTbOccurence = true,
                             IsoCode = "GU",
                             Name = "Guam"
                         },
                         new
                         {
                             CountryId = 89,
-                            HasHighTbOccurence = true,
                             IsoCode = "GT",
                             Name = "Guatemala"
                         },
                         new
                         {
                             CountryId = 90,
-                            HasHighTbOccurence = false,
                             IsoCode = "GG",
                             Name = "Guernsey"
                         },
                         new
                         {
                             CountryId = 91,
-                            HasHighTbOccurence = true,
                             IsoCode = "GN",
                             Name = "Guinea"
                         },
                         new
                         {
                             CountryId = 92,
-                            HasHighTbOccurence = true,
                             IsoCode = "GW",
                             Name = "Guinea-Bissau"
                         },
                         new
                         {
                             CountryId = 93,
-                            HasHighTbOccurence = true,
                             IsoCode = "GY",
                             Name = "Guyana"
                         },
                         new
                         {
                             CountryId = 94,
-                            HasHighTbOccurence = true,
                             IsoCode = "HT",
                             Name = "Haiti"
                         },
                         new
                         {
                             CountryId = 95,
-                            HasHighTbOccurence = true,
                             IsoCode = "HM",
                             Name = "Heard Island and Mcdonald Islands"
                         },
                         new
                         {
                             CountryId = 96,
-                            HasHighTbOccurence = false,
                             IsoCode = "VA",
                             Name = "Holy See (Vatican City State)"
                         },
                         new
                         {
                             CountryId = 97,
-                            HasHighTbOccurence = true,
                             IsoCode = "HN",
                             Name = "Honduras"
                         },
                         new
                         {
                             CountryId = 98,
-                            HasHighTbOccurence = true,
                             IsoCode = "HK",
                             Name = "Hong Kong"
                         },
                         new
                         {
                             CountryId = 99,
-                            HasHighTbOccurence = true,
                             IsoCode = "HU",
                             Name = "Hungary"
                         },
                         new
                         {
                             CountryId = 100,
-                            HasHighTbOccurence = false,
                             IsoCode = "IS",
                             Name = "Iceland"
                         },
                         new
                         {
                             CountryId = 101,
-                            HasHighTbOccurence = true,
                             IsoCode = "IN",
                             Name = "India"
                         },
                         new
                         {
                             CountryId = 102,
-                            HasHighTbOccurence = true,
                             IsoCode = "ID",
                             Name = "Indonesia"
                         },
                         new
                         {
                             CountryId = 103,
-                            HasHighTbOccurence = true,
                             IsoCode = "IR",
                             Name = "Iran, Islamic Republic of"
                         },
                         new
                         {
                             CountryId = 104,
-                            HasHighTbOccurence = true,
                             IsoCode = "IQ",
                             Name = "Iraq"
                         },
                         new
                         {
                             CountryId = 105,
-                            HasHighTbOccurence = false,
                             IsoCode = "IE",
                             Name = "Ireland"
                         },
                         new
                         {
                             CountryId = 106,
-                            HasHighTbOccurence = false,
                             IsoCode = "IM",
                             Name = "Isle Of Man"
                         },
                         new
                         {
                             CountryId = 107,
-                            HasHighTbOccurence = true,
                             IsoCode = "IL",
                             Name = "Israel"
                         },
                         new
                         {
                             CountryId = 108,
-                            HasHighTbOccurence = false,
                             IsoCode = "IT",
                             Name = "Italy"
                         },
                         new
                         {
                             CountryId = 109,
-                            HasHighTbOccurence = true,
                             IsoCode = "JM",
                             Name = "Jamaica"
                         },
                         new
                         {
                             CountryId = 110,
-                            HasHighTbOccurence = true,
                             IsoCode = "JP",
                             Name = "Japan"
                         },
                         new
                         {
                             CountryId = 111,
-                            HasHighTbOccurence = false,
                             IsoCode = "JE",
                             Name = "Jersey"
                         },
                         new
                         {
                             CountryId = 112,
-                            HasHighTbOccurence = true,
                             IsoCode = "JO",
                             Name = "Jordan"
                         },
                         new
                         {
                             CountryId = 113,
-                            HasHighTbOccurence = true,
                             IsoCode = "KZ",
                             Name = "Kazakhstan"
                         },
                         new
                         {
                             CountryId = 114,
-                            HasHighTbOccurence = true,
                             IsoCode = "KE",
                             Name = "Kenya"
                         },
                         new
                         {
                             CountryId = 115,
-                            HasHighTbOccurence = true,
                             IsoCode = "KI",
                             Name = "Kiribati"
                         },
                         new
                         {
                             CountryId = 116,
-                            HasHighTbOccurence = true,
                             IsoCode = "KP",
                             Name = "Korea, Democratic People's Republic of"
                         },
                         new
                         {
                             CountryId = 117,
-                            HasHighTbOccurence = true,
                             IsoCode = "KR",
                             Name = "Korea, Republic of"
                         },
                         new
                         {
                             CountryId = 118,
-                            HasHighTbOccurence = true,
                             IsoCode = "XK",
                             Name = "Kosovo"
                         },
                         new
                         {
                             CountryId = 119,
-                            HasHighTbOccurence = true,
                             IsoCode = "KW",
                             Name = "Kuwait"
                         },
                         new
                         {
                             CountryId = 120,
-                            HasHighTbOccurence = true,
                             IsoCode = "KG",
                             Name = "Kyrgyzstan"
                         },
                         new
                         {
                             CountryId = 121,
-                            HasHighTbOccurence = true,
                             IsoCode = "LA",
                             Name = "Lao People's Democratic Republic"
                         },
                         new
                         {
                             CountryId = 122,
-                            HasHighTbOccurence = true,
                             IsoCode = "LV",
                             Name = "Latvia"
                         },
                         new
                         {
                             CountryId = 123,
-                            HasHighTbOccurence = true,
                             IsoCode = "LB",
                             Name = "Lebanon"
                         },
                         new
                         {
                             CountryId = 124,
-                            HasHighTbOccurence = true,
                             IsoCode = "LS",
                             Name = "Lesotho"
                         },
                         new
                         {
                             CountryId = 125,
-                            HasHighTbOccurence = true,
                             IsoCode = "LR",
                             Name = "Liberia"
                         },
                         new
                         {
                             CountryId = 126,
-                            HasHighTbOccurence = true,
                             IsoCode = "LY",
                             Name = "Libyan Arab Jamahiriya"
                         },
                         new
                         {
                             CountryId = 127,
-                            HasHighTbOccurence = false,
                             IsoCode = "LI",
                             Name = "Liechtenstein"
                         },
                         new
                         {
                             CountryId = 128,
-                            HasHighTbOccurence = true,
                             IsoCode = "LT",
                             Name = "Lithuania"
                         },
                         new
                         {
                             CountryId = 129,
-                            HasHighTbOccurence = false,
                             IsoCode = "LU",
                             Name = "Luxembourg"
                         },
                         new
                         {
                             CountryId = 130,
-                            HasHighTbOccurence = true,
                             IsoCode = "MO",
                             Name = "Macao"
                         },
                         new
                         {
                             CountryId = 131,
-                            HasHighTbOccurence = true,
                             IsoCode = "MK",
                             Name = "Macedonia, The Former Yugoslav Republic of"
                         },
                         new
                         {
                             CountryId = 132,
-                            HasHighTbOccurence = true,
                             IsoCode = "MG",
                             Name = "Madagascar"
                         },
                         new
                         {
                             CountryId = 133,
-                            HasHighTbOccurence = true,
                             IsoCode = "MW",
                             Name = "Malawi"
                         },
                         new
                         {
                             CountryId = 134,
-                            HasHighTbOccurence = true,
                             IsoCode = "MY",
                             Name = "Malaysia"
                         },
                         new
                         {
                             CountryId = 135,
-                            HasHighTbOccurence = true,
                             IsoCode = "MV",
                             Name = "Maldives"
                         },
                         new
                         {
                             CountryId = 136,
-                            HasHighTbOccurence = true,
                             IsoCode = "ML",
                             Name = "Mali"
                         },
                         new
                         {
                             CountryId = 137,
-                            HasHighTbOccurence = true,
                             IsoCode = "MT",
                             Name = "Malta"
                         },
                         new
                         {
                             CountryId = 138,
-                            HasHighTbOccurence = true,
                             IsoCode = "MH",
                             Name = "Marshall Islands"
                         },
                         new
                         {
                             CountryId = 139,
-                            HasHighTbOccurence = true,
                             IsoCode = "MQ",
                             Name = "Martinique"
                         },
                         new
                         {
                             CountryId = 140,
-                            HasHighTbOccurence = true,
                             IsoCode = "MR",
                             Name = "Mauritania"
                         },
                         new
                         {
                             CountryId = 141,
-                            HasHighTbOccurence = true,
                             IsoCode = "MU",
                             Name = "Mauritius"
                         },
                         new
                         {
                             CountryId = 142,
-                            HasHighTbOccurence = true,
                             IsoCode = "YT",
                             Name = "Mayotte"
                         },
                         new
                         {
                             CountryId = 143,
-                            HasHighTbOccurence = true,
                             IsoCode = "MX",
                             Name = "Mexico"
                         },
                         new
                         {
                             CountryId = 144,
-                            HasHighTbOccurence = true,
                             IsoCode = "FM",
                             Name = "Micronesia, Federated States of"
                         },
                         new
                         {
                             CountryId = 145,
-                            HasHighTbOccurence = true,
                             IsoCode = "MD",
                             Name = "Moldova"
                         },
                         new
                         {
                             CountryId = 146,
-                            HasHighTbOccurence = false,
                             IsoCode = "MC",
                             Name = "Monaco"
                         },
                         new
                         {
                             CountryId = 147,
-                            HasHighTbOccurence = true,
                             IsoCode = "MN",
                             Name = "Mongolia"
                         },
                         new
                         {
                             CountryId = 148,
-                            HasHighTbOccurence = true,
                             IsoCode = "ME",
                             Name = "Montenegro"
                         },
                         new
                         {
                             CountryId = 149,
-                            HasHighTbOccurence = true,
                             IsoCode = "MS",
                             Name = "Montserrat"
                         },
                         new
                         {
                             CountryId = 150,
-                            HasHighTbOccurence = true,
                             IsoCode = "MA",
                             Name = "Morocco"
                         },
                         new
                         {
                             CountryId = 151,
-                            HasHighTbOccurence = true,
                             IsoCode = "MZ",
                             Name = "Mozambique"
                         },
                         new
                         {
                             CountryId = 152,
-                            HasHighTbOccurence = true,
                             IsoCode = "MM",
                             Name = "Myanmar"
                         },
                         new
                         {
                             CountryId = 153,
-                            HasHighTbOccurence = true,
                             IsoCode = "NA",
                             Name = "Namibia"
                         },
                         new
                         {
                             CountryId = 154,
-                            HasHighTbOccurence = true,
                             IsoCode = "NR",
                             Name = "Nauru"
                         },
                         new
                         {
                             CountryId = 155,
-                            HasHighTbOccurence = true,
                             IsoCode = "NP",
                             Name = "Nepal"
                         },
                         new
                         {
                             CountryId = 156,
-                            HasHighTbOccurence = false,
                             IsoCode = "NL",
                             Name = "Netherlands"
                         },
                         new
                         {
                             CountryId = 157,
-                            HasHighTbOccurence = true,
                             IsoCode = "AN",
                             Name = "Netherlands Antilles"
                         },
                         new
                         {
                             CountryId = 158,
-                            HasHighTbOccurence = true,
                             IsoCode = "NC",
                             Name = "New Caledonia"
                         },
                         new
                         {
                             CountryId = 159,
-                            HasHighTbOccurence = false,
                             IsoCode = "NZ",
                             Name = "New Zealand"
                         },
                         new
                         {
                             CountryId = 160,
-                            HasHighTbOccurence = true,
                             IsoCode = "NI",
                             Name = "Nicaragua"
                         },
                         new
                         {
                             CountryId = 161,
-                            HasHighTbOccurence = true,
                             IsoCode = "NE",
                             Name = "Niger"
                         },
                         new
                         {
                             CountryId = 162,
-                            HasHighTbOccurence = true,
                             IsoCode = "NG",
                             Name = "Nigeria"
                         },
                         new
                         {
                             CountryId = 163,
-                            HasHighTbOccurence = true,
                             IsoCode = "NU",
                             Name = "Niue"
                         },
                         new
                         {
                             CountryId = 164,
-                            HasHighTbOccurence = true,
                             IsoCode = "NF",
                             Name = "Norfolk Island"
                         },
                         new
                         {
                             CountryId = 165,
-                            HasHighTbOccurence = true,
                             IsoCode = "MP",
                             Name = "Northern Mariana Islands"
                         },
                         new
                         {
                             CountryId = 166,
-                            HasHighTbOccurence = false,
                             IsoCode = "NO",
                             Name = "Norway"
                         },
                         new
                         {
                             CountryId = 167,
-                            HasHighTbOccurence = true,
                             IsoCode = "OM",
                             Name = "Oman"
                         },
                         new
                         {
                             CountryId = 168,
-                            HasHighTbOccurence = true,
                             IsoCode = "  ",
                             Name = "Other"
                         },
                         new
                         {
                             CountryId = 169,
-                            HasHighTbOccurence = true,
                             IsoCode = "PK",
                             Name = "Pakistan"
                         },
                         new
                         {
                             CountryId = 170,
-                            HasHighTbOccurence = true,
                             IsoCode = "PW",
                             Name = "Palau"
                         },
                         new
                         {
                             CountryId = 171,
-                            HasHighTbOccurence = true,
                             IsoCode = "PS",
                             Name = "Palestinian Territory, Occupied"
                         },
                         new
                         {
                             CountryId = 172,
-                            HasHighTbOccurence = true,
                             IsoCode = "PA",
                             Name = "Panama"
                         },
                         new
                         {
                             CountryId = 173,
-                            HasHighTbOccurence = true,
                             IsoCode = "PG",
                             Name = "Papua New Guinea"
                         },
                         new
                         {
                             CountryId = 174,
-                            HasHighTbOccurence = true,
                             IsoCode = "PY",
                             Name = "Paraguay"
                         },
                         new
                         {
                             CountryId = 175,
-                            HasHighTbOccurence = true,
                             IsoCode = "PE",
                             Name = "Peru"
                         },
                         new
                         {
                             CountryId = 176,
-                            HasHighTbOccurence = true,
                             IsoCode = "PH",
                             Name = "Philippines"
                         },
                         new
                         {
                             CountryId = 177,
-                            HasHighTbOccurence = true,
                             IsoCode = "PN",
                             Name = "Pitcairn"
                         },
                         new
                         {
                             CountryId = 178,
-                            HasHighTbOccurence = true,
                             IsoCode = "PL",
                             Name = "Poland"
                         },
                         new
                         {
                             CountryId = 179,
-                            HasHighTbOccurence = false,
                             IsoCode = "PT",
                             Name = "Portugal"
                         },
                         new
                         {
                             CountryId = 180,
-                            HasHighTbOccurence = true,
                             IsoCode = "PR",
                             Name = "Puerto Rico"
                         },
                         new
                         {
                             CountryId = 181,
-                            HasHighTbOccurence = true,
                             IsoCode = "QA",
                             Name = "Qatar"
                         },
                         new
                         {
                             CountryId = 182,
-                            HasHighTbOccurence = true,
                             IsoCode = "RE",
                             Name = "Reunion"
                         },
                         new
                         {
                             CountryId = 183,
-                            HasHighTbOccurence = true,
                             IsoCode = "RO",
                             Name = "Romania"
                         },
                         new
                         {
                             CountryId = 184,
-                            HasHighTbOccurence = true,
                             IsoCode = "RU",
                             Name = "Russian Federation"
                         },
                         new
                         {
                             CountryId = 185,
-                            HasHighTbOccurence = true,
                             IsoCode = "RW",
                             Name = "Rwanda"
                         },
                         new
                         {
                             CountryId = 186,
-                            HasHighTbOccurence = true,
                             IsoCode = "BL",
                             Name = "Saint Barthélemy"
                         },
                         new
                         {
                             CountryId = 187,
-                            HasHighTbOccurence = true,
                             IsoCode = "SH",
                             Name = "Saint Helena"
                         },
                         new
                         {
                             CountryId = 188,
-                            HasHighTbOccurence = true,
                             IsoCode = "KN",
                             Name = "Saint Kitts and Nevis"
                         },
                         new
                         {
                             CountryId = 189,
-                            HasHighTbOccurence = true,
                             IsoCode = "LC",
                             Name = "Saint Lucia"
                         },
                         new
                         {
                             CountryId = 190,
-                            HasHighTbOccurence = true,
                             IsoCode = "MF",
                             Name = "Saint Martin"
                         },
                         new
                         {
                             CountryId = 191,
-                            HasHighTbOccurence = true,
                             IsoCode = "PM",
                             Name = "Saint Pierre and Miquelon"
                         },
                         new
                         {
                             CountryId = 192,
-                            HasHighTbOccurence = true,
                             IsoCode = "VC",
                             Name = "Saint Vincent and The Grenadines"
                         },
                         new
                         {
                             CountryId = 193,
-                            HasHighTbOccurence = true,
                             IsoCode = "WS",
                             Name = "Samoa"
                         },
                         new
                         {
                             CountryId = 194,
-                            HasHighTbOccurence = true,
                             IsoCode = "SM",
                             Name = "San Marino"
                         },
                         new
                         {
                             CountryId = 195,
-                            HasHighTbOccurence = true,
                             IsoCode = "ST",
                             Name = "Sao Tome and Principe"
                         },
                         new
                         {
                             CountryId = 196,
-                            HasHighTbOccurence = true,
                             IsoCode = "SA",
                             Name = "Saudi Arabia"
                         },
                         new
                         {
                             CountryId = 197,
-                            HasHighTbOccurence = true,
                             IsoCode = "SN",
                             Name = "Senegal"
                         },
                         new
                         {
                             CountryId = 198,
-                            HasHighTbOccurence = true,
                             IsoCode = "RS",
                             Name = "Serbia"
                         },
                         new
                         {
                             CountryId = 199,
-                            HasHighTbOccurence = true,
                             IsoCode = "SC",
                             Name = "Seychelles"
                         },
                         new
                         {
                             CountryId = 200,
-                            HasHighTbOccurence = true,
                             IsoCode = "SL",
                             Name = "Sierra Leone"
                         },
                         new
                         {
                             CountryId = 201,
-                            HasHighTbOccurence = true,
                             IsoCode = "SG",
                             Name = "Singapore"
                         },
                         new
                         {
                             CountryId = 202,
-                            HasHighTbOccurence = true,
                             IsoCode = "SK",
                             Name = "Slovakia"
                         },
                         new
                         {
                             CountryId = 203,
-                            HasHighTbOccurence = true,
                             IsoCode = "SI",
                             Name = "Slovenia"
                         },
                         new
                         {
                             CountryId = 204,
-                            HasHighTbOccurence = true,
                             IsoCode = "SB",
                             Name = "Solomon Islands"
                         },
                         new
                         {
                             CountryId = 205,
-                            HasHighTbOccurence = true,
                             IsoCode = "SO",
                             Name = "Somalia"
                         },
                         new
                         {
                             CountryId = 206,
-                            HasHighTbOccurence = true,
                             IsoCode = "ZA",
                             Name = "South Africa"
                         },
                         new
                         {
                             CountryId = 207,
-                            HasHighTbOccurence = true,
                             IsoCode = "GS",
                             Name = "South Georgia and the South Sandwich Islands"
                         },
                         new
                         {
                             CountryId = 208,
-                            HasHighTbOccurence = true,
                             IsoCode = "SSD",
                             Name = "South Sudan"
                         },
                         new
                         {
                             CountryId = 209,
-                            HasHighTbOccurence = false,
                             IsoCode = "ES",
                             Name = "Spain"
                         },
                         new
                         {
                             CountryId = 210,
-                            HasHighTbOccurence = true,
                             IsoCode = "LK",
                             Name = "Sri Lanka"
                         },
                         new
                         {
                             CountryId = 211,
-                            HasHighTbOccurence = true,
                             IsoCode = "SD",
                             Name = "Sudan"
                         },
                         new
                         {
                             CountryId = 212,
-                            HasHighTbOccurence = true,
                             IsoCode = "SR",
                             Name = "Suriname"
                         },
                         new
                         {
                             CountryId = 213,
-                            HasHighTbOccurence = true,
                             IsoCode = "SJ",
                             Name = "Svalbard and Jan Mayen"
                         },
                         new
                         {
                             CountryId = 214,
-                            HasHighTbOccurence = true,
                             IsoCode = "SZ",
                             Name = "Swaziland"
                         },
                         new
                         {
                             CountryId = 215,
-                            HasHighTbOccurence = false,
                             IsoCode = "SE",
                             Name = "Sweden"
                         },
                         new
                         {
                             CountryId = 216,
-                            HasHighTbOccurence = false,
                             IsoCode = "CH",
                             Name = "Switzerland"
                         },
                         new
                         {
                             CountryId = 217,
-                            HasHighTbOccurence = true,
                             IsoCode = "SY",
                             Name = "Syrian Arab Republic"
                         },
                         new
                         {
                             CountryId = 218,
-                            HasHighTbOccurence = true,
                             IsoCode = "TW",
                             Name = "Taiwan, Province of China"
                         },
                         new
                         {
                             CountryId = 219,
-                            HasHighTbOccurence = true,
                             IsoCode = "TJ",
                             Name = "Tajikistan"
                         },
                         new
                         {
                             CountryId = 220,
-                            HasHighTbOccurence = true,
                             IsoCode = "TZ",
                             Name = "Tanzania, United Republic of"
                         },
                         new
                         {
                             CountryId = 221,
-                            HasHighTbOccurence = true,
                             IsoCode = "TH",
                             Name = "Thailand"
                         },
                         new
                         {
                             CountryId = 222,
-                            HasHighTbOccurence = true,
                             IsoCode = "TL",
                             Name = "Timor-Leste"
                         },
                         new
                         {
                             CountryId = 223,
-                            HasHighTbOccurence = true,
                             IsoCode = "TG",
                             Name = "Togo"
                         },
                         new
                         {
                             CountryId = 224,
-                            HasHighTbOccurence = true,
                             IsoCode = "TK",
                             Name = "Tokelau"
                         },
                         new
                         {
                             CountryId = 225,
-                            HasHighTbOccurence = true,
                             IsoCode = "TO",
                             Name = "Tonga"
                         },
                         new
                         {
                             CountryId = 226,
-                            HasHighTbOccurence = true,
                             IsoCode = "TT",
                             Name = "Trinidad and Tobago"
                         },
                         new
                         {
                             CountryId = 227,
-                            HasHighTbOccurence = true,
                             IsoCode = "TN",
                             Name = "Tunisia"
                         },
                         new
                         {
                             CountryId = 228,
-                            HasHighTbOccurence = true,
                             IsoCode = "TR",
                             Name = "Turkey"
                         },
                         new
                         {
                             CountryId = 229,
-                            HasHighTbOccurence = true,
                             IsoCode = "TM",
                             Name = "Turkmenistan"
                         },
                         new
                         {
                             CountryId = 230,
-                            HasHighTbOccurence = true,
                             IsoCode = "TC",
                             Name = "Turks and Caicos Islands"
                         },
                         new
                         {
                             CountryId = 231,
-                            HasHighTbOccurence = true,
                             IsoCode = "TV",
                             Name = "Tuvalu"
                         },
                         new
                         {
                             CountryId = 232,
-                            HasHighTbOccurence = true,
                             IsoCode = "UG",
                             Name = "Uganda"
                         },
                         new
                         {
                             CountryId = 233,
-                            HasHighTbOccurence = true,
                             IsoCode = "UA",
                             Name = "Ukraine"
                         },
                         new
                         {
                             CountryId = 234,
-                            HasHighTbOccurence = true,
                             IsoCode = "AE",
                             Name = "United Arab Emirates"
                         },
                         new
                         {
                             CountryId = 235,
-                            HasHighTbOccurence = false,
                             IsoCode = "GB",
                             Name = "United Kingdom"
                         },
                         new
                         {
                             CountryId = 236,
-                            HasHighTbOccurence = false,
                             IsoCode = "US",
                             Name = "United States"
                         },
                         new
                         {
                             CountryId = 237,
-                            HasHighTbOccurence = false,
                             IsoCode = "UM",
                             Name = "United States Minor Outlying Islands"
                         },
                         new
                         {
                             CountryId = 238,
-                            HasHighTbOccurence = true,
                             IsoCode = "-",
                             Name = "Unknown"
                         },
                         new
                         {
                             CountryId = 239,
-                            HasHighTbOccurence = true,
                             IsoCode = "UY",
                             Name = "Uruguay"
                         },
                         new
                         {
                             CountryId = 240,
-                            HasHighTbOccurence = true,
                             IsoCode = "UZ",
                             Name = "Uzbekistan"
                         },
                         new
                         {
                             CountryId = 241,
-                            HasHighTbOccurence = true,
                             IsoCode = "VU",
                             Name = "Vanuatu"
                         },
                         new
                         {
                             CountryId = 242,
-                            HasHighTbOccurence = true,
                             IsoCode = "VE",
                             Name = "Venezuela"
                         },
                         new
                         {
                             CountryId = 243,
-                            HasHighTbOccurence = true,
                             IsoCode = "VN",
                             Name = "Viet Nam"
                         },
                         new
                         {
                             CountryId = 244,
-                            HasHighTbOccurence = true,
                             IsoCode = "VG",
                             Name = "Virgin Islands, British"
                         },
                         new
                         {
                             CountryId = 245,
-                            HasHighTbOccurence = true,
                             IsoCode = "VI",
                             Name = "Virgin Islands, U.S."
                         },
                         new
                         {
                             CountryId = 246,
-                            HasHighTbOccurence = true,
                             IsoCode = "WF",
                             Name = "Wallis and Futuna"
                         },
                         new
                         {
                             CountryId = 247,
-                            HasHighTbOccurence = true,
                             IsoCode = "EH",
                             Name = "Western Sahara"
                         },
                         new
                         {
                             CountryId = 248,
-                            HasHighTbOccurence = true,
                             IsoCode = "YE",
                             Name = "Yemen"
                         },
                         new
                         {
                             CountryId = 249,
-                            HasHighTbOccurence = true,
                             IsoCode = "ZM",
                             Name = "Zambia"
                         },
                         new
                         {
                             CountryId = 250,
-                            HasHighTbOccurence = true,
                             IsoCode = "ZW",
                             Name = "Zimbabwe"
                         });
@@ -10249,17 +9999,7 @@ namespace ntbs_service.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
-                    b.Property<string>("PHECAdGroup")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("ServiceAdGroup")
-                        .HasMaxLength(64);
-
                     b.HasKey("Code");
-
-                    b.HasIndex("ServiceAdGroup")
-                        .IsUnique()
-                        .HasFilter("[ServiceAdGroup] IS NOT NULL");
 
                     b.ToTable("TBService");
 
@@ -11729,8 +11469,7 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("HasTransplantation");
 
-                            b1.Property<string>("OtherDescription")
-                                .HasMaxLength(100);
+                            b1.Property<string>("OtherDescription");
 
                             b1.Property<string>("Status")
                                 .HasMaxLength(30);
@@ -11929,107 +11668,11 @@ namespace ntbs_service.Migrations
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });
-
-                    b.OwnsOne("ntbs_service.Models.TravelDetails", "TravelDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<int?>("Country1Id");
-
-                            b1.Property<int?>("Country2Id");
-
-                            b1.Property<int?>("Country3Id");
-
-                            b1.Property<bool?>("HasTravel");
-
-                            b1.Property<int?>("StayLengthInMonths1");
-
-                            b1.Property<int?>("StayLengthInMonths2");
-
-                            b1.Property<int?>("StayLengthInMonths3");
-
-                            b1.Property<int?>("TotalNumberOfCountries");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.HasIndex("Country1Id");
-
-                            b1.HasIndex("Country2Id");
-
-                            b1.HasIndex("Country3Id");
-
-                            b1.ToTable("TravelDetails");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country1")
-                                .WithMany()
-                                .HasForeignKey("Country1Id");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country2")
-                                .WithMany()
-                                .HasForeignKey("Country2Id");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country3")
-                                .WithMany()
-                                .HasForeignKey("Country3Id");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("TravelDetails")
-                                .HasForeignKey("ntbs_service.Models.TravelDetails", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.VisitorDetails", "VisitorDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<int?>("Country1Id");
-
-                            b1.Property<int?>("Country2Id");
-
-                            b1.Property<int?>("Country3Id");
-
-                            b1.Property<bool?>("HasVisitor");
-
-                            b1.Property<int?>("StayLengthInMonths1");
-
-                            b1.Property<int?>("StayLengthInMonths2");
-
-                            b1.Property<int?>("StayLengthInMonths3");
-
-                            b1.Property<int?>("TotalNumberOfCountries");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.HasIndex("Country1Id");
-
-                            b1.HasIndex("Country2Id");
-
-                            b1.HasIndex("Country3Id");
-
-                            b1.ToTable("VisitorDetails");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country1")
-                                .WithMany()
-                                .HasForeignKey("Country1Id");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country2")
-                                .WithMany()
-                                .HasForeignKey("Country2Id");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country3")
-                                .WithMany()
-                                .HasForeignKey("Country3Id");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("VisitorDetails")
-                                .HasForeignKey("ntbs_service.Models.VisitorDetails", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
                 });
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Notification")
+                    b.HasOne("ntbs_service.Models.Notification", "Notification")
                         .WithMany("NotificationSites")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);

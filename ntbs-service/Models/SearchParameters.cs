@@ -11,5 +11,15 @@ namespace ntbs_service.Models
         
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         public string IdFilter { get; set; }
+
+        [MinLength(2)]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        public string FamilyName { get; set; }
+
+        [MinLength(2)]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        public string GivenName { get; set; }
+
+        public bool SearchParamsExist => !String.IsNullOrEmpty(GivenName) || !String.IsNullOrEmpty(FamilyName) || !String.IsNullOrEmpty(IdFilter);
     }
 }

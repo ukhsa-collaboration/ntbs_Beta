@@ -26,7 +26,6 @@ namespace ntbs_service.Pages_Search
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
-        public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService service)
         {
@@ -49,15 +48,23 @@ namespace ntbs_service.Pages_Search
             IQueryable<Notification> draftsQueryable = service.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsQueryable = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
-            if (!String.IsNullOrEmpty(SearchParameters.IdFilter))
-            {
-                SearchParamsExist = true;
-                draftsQueryable = service.FilterById(draftsQueryable, SearchParameters.IdFilter);
-                nonDraftsQueryable = service.FilterById(nonDraftsQueryable, SearchParameters.IdFilter);
-            }
+            NotificationSearchBuilder draftSearchBuilder = new NotificationSearchBuilder(draftsQueryable);
+            NotificationSearchBuilder nonDraftsSearchBuilder = new NotificationSearchBuilder(nonDraftsQueryable);
+            
+            var filteredDrafts = draftSearchBuilder
+                .FilterById(SearchParameters.IdFilter)
+                .FilterByFamilyName(SearchParameters.FamilyName)
+                .FilterByGivenName(SearchParameters.GivenName)
+                .GetResult();
 
-            IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(draftsQueryable)
-                                                                .Union(service.OrderQueryableByNotificationDate(nonDraftsQueryable));
+            var filteredNonDrafts = nonDraftsSearchBuilder
+                .FilterById(SearchParameters.IdFilter)
+                .FilterByFamilyName(SearchParameters.FamilyName)
+                .FilterByGivenName(SearchParameters.GivenName)
+                .GetResult();
+
+            IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(filteredDrafts)
+                                                                .Union(service.OrderQueryableByNotificationDate(filteredNonDrafts));
 
             var notificationIds = await service.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
             var count = await notificationIdsQueryable.CountAsync();

@@ -270,10 +270,6 @@ namespace ntbs_service.Models
             {
                 entity.HasKey(e => new { e.NotificationId, e.SiteId });
 
-                entity.HasOne(e => e.Notification)
-                    .WithMany(n => n.NotificationSites)
-                    .HasForeignKey(ns => ns.NotificationId);
-
                 entity.HasOne(e => e.Site)
                     .WithMany(s => s.NotificationSites)
                     .HasForeignKey(ns => ns.SiteId);
