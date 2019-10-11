@@ -201,6 +201,15 @@
     </nhs-form-group>
     <br />
 
+    <nhs-form-group nhs-form-group-type="Standard">
+        <label nhs-label-type="Standard" asp-for="ClinicalDetails.HIVTestState">HIV test offered</label>
+        <select nhs-select-type="Standard" asp-for="ClinicalDetails.HIVTestState" aria-describedby="HIV-test-status-hint" 
+                asp-items="@Html.GetEnumSelectList<HIVTestStatus>()">
+            <option value="" selected> Choose an option </option>
+        </select>
+    </nhs-form-group>
+    <br />
+
     <h2>Clinical Dates</h2>
     <date-comparison inline-template>
         <div>
