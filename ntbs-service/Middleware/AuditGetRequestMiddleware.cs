@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ntbs_service.Services;
@@ -30,8 +31,11 @@ namespace ntbs_service.Middleware
             if (response.StatusCode == StatusCodes.Status200OK && request.Method == "GET" && request.Query.ContainsKey("id"))
             {
                 var id = int.Parse(request.Query["id"].ToString());
+                var userName = context.User.FindFirstValue(ClaimTypes.Email);
+                // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
+                if (string.IsNullOrEmpty(userName)) userName = context.User.Identity.Name;
                 // TODO: Differentiate between Cluster and Full view.
-                await auditService.OnGetAuditAsync(id, model: "Notification", viewType: "Full", context.User.Identity.Name);
+                await auditService.OnGetAuditAsync(id, model: "Notification", viewType: "Full", userName: userName);
             }
         }
     }

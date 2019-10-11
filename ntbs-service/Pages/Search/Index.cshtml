@@ -26,11 +26,24 @@
                     <span class="nhsuk-hint " id="example-hint">
                         Search by NTBS, ETS, LTBR or NHS number
                     </span>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="id-error"
-                        asp-validation-for="SearchParameters.IdFilter" >
-                    </span>
+                    <span nhs-span-type="ErrorMessage" id="id-error"
+                        asp-validation-for="SearchParameters.IdFilter"></span>
                     <input is-error-input=@IdFilterError nhs-input-type="Standard"
                         asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" />
+                </nhs-form-group>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                @{
+                    var FamilyNameError = !Model.validationService.IsValid("SearchParameters.FamilyName");
+                    var FamilyNameGroupState = FamilyNameError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@FamilyNameGroupState>
+                    <label nhs-label-type="Standard"> Family Name</label>
+                    <span class="nhsuk-hint" id="example-hint">Enter at least two characters</span>
+                    <span nhs-span-type="ErrorMessage" id="id-error"
+                        asp-validation-for="SearchParameters.FamilyName"></span>
+                    <input is-error-input=@FamilyNameError nhs-input-type="Standard"
+                        asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10" />
                 </nhs-form-group>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
@@ -105,6 +118,20 @@
                     </nhs-radios>
                 </nhs-form-group>
             </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                @{
+                    var GivenNameError = !Model.validationService.IsValid("SearchParameters.GivenName");
+                    var GivenNameGroupState = GivenNameError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@GivenNameGroupState>
+                    <label nhs-label-type="Standard"> Given Name</label>
+                    <span class="nhsuk-hint" id="example-hint">Enter at least two characters</span>
+                    <span nhs-span-type="ErrorMessage" id="id-error"
+                        asp-validation-for="SearchParameters.GivenName"></span>
+                    <input is-error-input=@GivenNameError nhs-input-type="Standard"
+                        asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" />
+                </nhs-form-group>
+            </nhs-grid-column>
         </nhs-grid-row>
         <div class="submit-search-button-container">
             <input type="submit" value="Search" class="nhsuk-button submit-search-button"/>
@@ -112,7 +139,7 @@
     </form>
 </div>
 <hr />
-@if(Model.SearchParamsExist ?? false) 
+@if(Model.SearchParameters?.SearchParamsExist == true) 
 {
     <div>
         <div class="clear-search-button-container">

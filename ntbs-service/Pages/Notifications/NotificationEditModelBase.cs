@@ -87,7 +87,7 @@ namespace ntbs_service.Pages_Notifications
                     ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
                 }
             }
-            Notification.NotificationSites.ForEach(x => x.Notification = Notification);
+            Notification.NotificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
         }
 
         public async Task<IActionResult> Save(bool isBeingSubmitted)

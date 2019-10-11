@@ -4,10 +4,11 @@ using Audit.Core;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-  public static class EFAuditServiceExtensions
+    public static class EFAuditServiceExtensions
     {
         public static void AddEFAuditer(this IServiceCollection services, string connectionString)
         {
@@ -21,32 +22,40 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 // Get user from http context
                 // Solution follows idea from https://github.com/thepirat000/Audit.NET/issues/136#issuecomment-402532587
-                var userName = svcProvider.GetService<IHttpContextAccessor>().HttpContext?.User?.Identity?.Name;
-                scope.SetCustomField(CustomFields.AppUser, userName);
+                var user = svcProvider.GetService<IHttpContextAccessor>().HttpContext?.User;
+                if (user != null) {
+                    var userName = user?.FindFirstValue(ClaimTypes.Email);
+                    // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
+                    if (string.IsNullOrEmpty(userName)) userName = user.Identity.Name;
+                    scope.SetCustomField(CustomFields.AppUser, userName);
+                }
             });
 
             Audit.Core.Configuration.Setup()
                 .UseEntityFramework(ef => ef
                     .UseDbContext<AuditDatabaseContext>(contextOptions)
                     .AuditTypeMapper(t => typeof(AuditLog))
-                    .AuditEntityAction<AuditLog>((ev, entry, audit) =>
-                    {
-                        audit.AuditData = entry.ToJson();
-                        audit.OriginalId = int.Parse(entry.PrimaryKey.First().Value.ToString());
-                        audit.EntityType = entry.EntityType.Name;
-                        audit.EventType = entry.Action;
-                        audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);
-                        audit.AuditDateTime = DateTime.Now;
-                        audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
-                    })
-                    .IgnoreMatchedProperties(true));
+                    .AuditEntityAction<AuditLog>(AuditAction)
+                    .IgnoreMatchedProperties(true)
+                );
         }
 
-        private static string GetCustomKey(AuditEvent ev, string auditDetails)
+        public static void AuditAction(AuditEvent ev, Audit.EntityFramework.EventEntry entry, AuditLog audit)
         {
-            if (ev.CustomFields.ContainsKey(CustomFields.AuditDetails))
+            audit.AuditData = entry.ToJson();
+            audit.OriginalId = int.Parse(entry.PrimaryKey.First().Value.ToString());
+            audit.EntityType = entry.EntityType.Name;
+            audit.EventType = entry.Action;
+            audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);
+            audit.AuditDateTime = DateTime.Now;
+            audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
+        }
+
+        private static string GetCustomKey(AuditEvent ev, string key)
+        {
+            if (ev.CustomFields.ContainsKey(key))
             {
-                return ev.CustomFields[CustomFields.AuditDetails].ToString();
+                return ev.CustomFields[key].ToString();
             }
             else return null;
         }
