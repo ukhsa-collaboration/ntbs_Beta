@@ -33,6 +33,7 @@ namespace ntbs_service.Models
         public Status? BCGVaccinationState { get; set; }
         [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.BCGYearIsRequired)]
         public int? BCGVaccinationYear { get; set; }
+        public HIVTestStatus? HIVTestState { get; set; }
 
         [OnlyOneTrue("IsMDRTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
         public bool? IsShortCourseTreatment { get; set; }

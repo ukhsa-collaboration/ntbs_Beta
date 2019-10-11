@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191010153554_AddHivTestStatus")]
+    partial class AddHivTestStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -11365,13 +11367,13 @@ namespace ntbs_service.Migrations
 
                             b1.Property<DateTime?>("DiagnosisDate");
 
-                            b1.Property<bool?>("DidNotStartTreatment");
+                            b1.Property<bool>("DidNotStartTreatment");
 
                             b1.Property<int?>("HIVTestState");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
-                            b1.Property<bool?>("IsPostMortem");
+                            b1.Property<bool>("IsPostMortem");
 
                             b1.Property<bool?>("IsShortCourseTreatment");
 
@@ -11683,7 +11685,7 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Notification")
+                    b.HasOne("ntbs_service.Models.Notification", "Notification")
                         .WithMany("NotificationSites")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
