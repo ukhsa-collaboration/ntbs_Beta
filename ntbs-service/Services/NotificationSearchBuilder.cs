@@ -26,7 +26,8 @@ namespace ntbs_service.Services
         {
             if (!String.IsNullOrEmpty(id))
             {
-                notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(Int32.Parse(id)) 
+                int.TryParse(id, out int parsedId);
+                notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(parsedId) 
                     || s.ETSID.Equals(id) || s.LTBRID.Equals(id) || s.PatientDetails.NhsNumber.Equals(id));
             }
             return this;
