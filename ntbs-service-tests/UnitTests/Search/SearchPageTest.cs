@@ -8,6 +8,10 @@ using ntbs_service.Pages_Search;
 using Xunit;
 using ntbs_service.Models.Enums;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ntbs_service_tests.UnitTests.Search
 {
@@ -27,37 +31,50 @@ namespace ntbs_service_tests.UnitTests.Search
         public async Task OnGetAsync_PopulatesPageModel_WithSearchResults()
         {
             // Arrange
-            var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
-            var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(draftStatusList)).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
-            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(nonDraftStatusList)).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
-            
-            mockSearchService.Setup(s => s.OrderQueryableByNotificationDate(It.IsAny<IQueryable<Notification>>())).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
-            var notificationIds = Task.FromResult(GetNotificationIds());
-            mockSearchService.Setup(s => s.GetPaginatedItemsAsync(It.IsAny<IQueryable<int>>(), It.IsAny<PaginationParameters>())).Returns(notificationIds);
-
-            var y = Task.FromResult(GetNotifications());
-            mockNotificationService.Setup(s => s.GetNotificationsByIdAsync(new List<int>() {1})).Returns(y);
-
             IList<Sex> sexes = new List<Sex> {};
             var sexList = Task.FromResult(sexes);
             mockContext.Setup(s => s.GetAllSexesAsync()).Returns(sexList);
 
+            var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
+            var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
+
+            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(draftStatusList)).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
+            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(nonDraftStatusList)).Returns(new List<Notification> { new Notification() {NotificationId = 2}}.AsQueryable());
+            
+            var unionAndPaginateResult = Task.FromResult(new KeyValuePair<IList<int>, int>(new List<int>() {1, 2}, 2));
+            mockSearchService.Setup(s => s.UnionAndPaginateQueryables(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(), 
+                It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
+
+            var y = Task.FromResult(GetNotifications());
+            mockNotificationService.Setup(s => s.GetNotificationsByIdAsync(new List<int>() {1, 2})).Returns(y);
+
+            
+
+            //TODO fix mocking request?
+
+            var httpContext = new DefaultHttpContext() {};
+            var modelState = new ModelStateDictionary();
+            var actionContext = new ActionContext(httpContext, new Microsoft.AspNetCore.Routing.RouteData(), new PageActionDescriptor(), modelState);
+            var pageContext = new PageContext(actionContext) {};
+
             var pageModel = new IndexModel(mockNotificationService.Object, mockSearchService.Object, mockContext.Object) {
-                SearchParameters = new SearchParameters() {IdFilter = "1"}
+                SearchParameters = new SearchParameters() {IdFilter = "1"},
+                PageContext = pageContext
             };
+
 
             // Act
             await pageModel.OnGetAsync(1);
-            var results = Assert.IsAssignableFrom<PaginatedList<NotificationBannerModel>>(pageModel.SearchResults);
 
             // Assert
-            Assert.True(results.Count == 1);
+            var results = Assert.IsAssignableFrom<PaginatedList<NotificationBannerModel>>(pageModel.SearchResults);
+            Assert.True(results.Count == 2);
             Assert.Equal("Bob", results[0].Name);
+            Assert.Equal("Ross", results[1].Name);
         }
 
         public IList<int> GetNotificationIds() {
-            return new List<int>() {1};
+            return new List<int>() {1, 2};
         }
 
         public IEnumerable<Notification> GetNotifications()

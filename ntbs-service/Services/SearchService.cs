@@ -15,8 +15,8 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
-        IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
-        Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
+        Task<KeyValuePair<IList<int>, int>> UnionAndPaginateQueryables(IQueryable<Notification> firstQueryable, 
+            IQueryable<Notification> secondQueryable, PaginationParameters paginationParameters);
     }
 
     public class SearchService : ISearchService
@@ -40,13 +40,24 @@ namespace ntbs_service.Services
             return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
         }
 
-        public IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 
+        public async Task<KeyValuePair<IList<int>, int>> UnionAndPaginateQueryables(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
+            PaginationParameters paginationParameters)
+        {
+            IQueryable<Notification> notificationIdsQueryable = OrderQueryableByNotificationDate(firstQueryable)
+                                                                .Union(OrderQueryableByNotificationDate(secondQueryable));
+
+            var notificationIds = await GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), paginationParameters);
+            var count = await notificationIdsQueryable.CountAsync();
+            return new KeyValuePair<IList<int>, int> (notificationIds, count);
+        }
+
+        private IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 
         {
             return query.OrderByDescending(n => n.CreationDate)
                 .OrderByDescending(n => n.SubmissionDate);
         }
 
-        public async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
+        private async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
         {
             return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
                 .Take(paginationParameters.PageSize).ToListAsync();

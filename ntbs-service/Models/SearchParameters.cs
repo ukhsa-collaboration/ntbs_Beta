@@ -24,6 +24,6 @@ namespace ntbs_service.Models
         public string GivenName { get; set; }
 
         public bool SearchParamsExist => !string.IsNullOrEmpty(GivenName) || !string.IsNullOrEmpty(FamilyName) || !string.IsNullOrEmpty(IdFilter) || 
-                                          SexId != null || (PartialDob == null ? true : !PartialDob.IsEmpty());
+                                          SexId != null || (PartialDob == null ? false : !PartialDob.IsEmpty());
     }
 }

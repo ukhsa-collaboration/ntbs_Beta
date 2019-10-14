@@ -29,8 +29,6 @@ namespace ntbs_service.Pages_Search
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
-        
-        public bool? SearchParamsExist { get; set; }
 
         public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
         {
@@ -75,14 +73,11 @@ namespace ntbs_service.Pages_Search
                 .FilterBySex(SearchParameters.SexId)
                 .GetResult();
 
-            IQueryable<Notification> notificationIdsQueryable = searchService.OrderQueryableByNotificationDate(filteredDrafts)
-                                                                .Union(searchService.OrderQueryableByNotificationDate(filteredNonDrafts));
-
-            var notificationIds = await searchService.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
-            var count = await notificationIdsQueryable.CountAsync();
-            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
+            KeyValuePair<IList<int>, int> notificationIdsAndCount = await searchService.UnionAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
+            
+            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIdsAndCount.Key);
             var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
-            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, notificationIdsAndCount.Value, PaginationParameters);
 
             SetPaginationDetails();
 
