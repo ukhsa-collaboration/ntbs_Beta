@@ -50,21 +50,21 @@ namespace ntbs_service.Models.Validations
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            PartialDate valueCopy = (PartialDate) value;
-            if(valueCopy == null || valueCopy.IsEmpty()) {
+            if (!(value is PartialDate partialDate) || partialDate.IsEmpty())
+            {
                 return null;
             }
-            if (!string.IsNullOrEmpty(valueCopy.Day)) {
-                if(string.IsNullOrEmpty(valueCopy.Month) || string.IsNullOrEmpty(valueCopy.Year)) {
-                    return new ValidationResult("Year and month must be provided if a day has been provided");
+            if (!string.IsNullOrEmpty(partialDate.Day)) {
+                if(string.IsNullOrEmpty(partialDate.Month) || string.IsNullOrEmpty(partialDate.Year)) {
+                    return new ValidationResult(ValidationMessages.YearIfMonthRequired);
                 }
             }
-            if(!string.IsNullOrEmpty(valueCopy.Month)) {
-                if(string.IsNullOrEmpty(valueCopy.Year)) {
-                    return new ValidationResult("A year must be provided");
+            if(!string.IsNullOrEmpty(partialDate.Month)) {
+                if(string.IsNullOrEmpty(partialDate.Year)) {
+                    return new ValidationResult(ValidationMessages.YearRequired);
                 }
             }
-            bool canConvert = valueCopy.TryConvertToDateTimeRange(out DateTime? x, out DateTime? y);
+            bool canConvert = partialDate.TryConvertToDateTimeRange(out DateTime? x, out DateTime? y);
             if (!canConvert) {
                 return new ValidationResult(ErrorMessage);
             }
@@ -77,11 +77,11 @@ namespace ntbs_service.Models.Validations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            FormattedDate valueCopy = (FormattedDate) value;
-            if(valueCopy == null || valueCopy.IsEmpty()) {
+            if (!(value is FormattedDate formattedDate) || formattedDate.IsEmpty())
+            {
                 return null;
             }
-            bool canConvert = valueCopy.TryConvertToDateTime(out DateTime? x);
+            bool canConvert = formattedDate.TryConvertToDateTime(out DateTime? x);
             if (!canConvert) {
                 return new ValidationResult(ErrorMessage);
             }

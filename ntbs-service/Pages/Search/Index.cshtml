@@ -23,9 +23,9 @@
                 }
                 <nhs-form-group nhs-form-group-type=@IdFilterGroupState>
                     <label nhs-label-type="Standard"> ID number </label>
-                    <span class="nhsuk-hint " id="example-hint">
+                    <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
                         Search by NTBS, ETS, LTBR or NHS number
-                    </span>
+                    </nhs-hint>
                     <span nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.IdFilter"></span>
                     <input is-error-input=@IdFilterError nhs-input-type="Standard"
@@ -39,7 +39,9 @@
                 }
                 <nhs-form-group nhs-form-group-type=@FamilyNameGroupState>
                     <label nhs-label-type="Standard"> Family Name</label>
-                    <span class="nhsuk-hint" id="example-hint">Enter at least two characters</span>
+                    <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint">
+                        Enter at least two characters
+                    </nhs-hint>
                     <span nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.FamilyName"></span>
                     <input is-error-input=@FamilyNameError nhs-input-type="Standard"
@@ -53,9 +55,9 @@
                 }
                 <nhs-form-group nhs-form-group-type=@DobGroupState>
                     <label nhs-label-type="Standard"> Date of birth </label>
-                    <span class="nhsuk-hint " id="example-hint">
+                    <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
                         Dates can be partial, enter year at minimum
-                    </span>
+                    </nhs-hint>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
                         asp-validation-for="SearchParameters.PartialDob"></span>
                     <nhs-date-input id="dob">
@@ -125,7 +127,9 @@
                 }
                 <nhs-form-group nhs-form-group-type=@GivenNameGroupState>
                     <label nhs-label-type="Standard"> Given Name</label>
-                    <span class="nhsuk-hint" id="example-hint">Enter at least two characters</span>
+                    <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint">
+                        Enter at least two characters
+                    </nhs-hint>
                     <span nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.GivenName"></span>
                     <input is-error-input=@GivenNameError nhs-input-type="Standard"

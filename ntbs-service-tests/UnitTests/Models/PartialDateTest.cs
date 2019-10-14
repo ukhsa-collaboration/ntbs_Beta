@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ntbs_service.Models;
 using Xunit;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service_tests.UnitTests.Models
 {
@@ -21,18 +22,19 @@ namespace ntbs_service_tests.UnitTests.Models
             Assert.False(canConvert);
         }
 
-        [Fact]
-        public void ParseableYearOnlyDate_CanConvertReturnsTrueAndDateTimeRange()
+        public static IEnumerable<object[]> Dates()
+        {
+            yield return new object[] { new PartialDate() { Day = null, Month = null, Year = "2000"}, new DateTime(2000, 1, 1), new DateTime(2001, 1, 1)};
+            yield return new object[] { new PartialDate() { Day = null, Month = "2", Year = "2000"}, new DateTime(2000, 2, 1), new DateTime(2000, 3, 1)};
+            yield return new object[] { new PartialDate() { Day = "20", Month = "3", Year = "2000"}, new DateTime(2000, 3, 20), new DateTime(2000, 3, 21)};
+        }
+
+        [Theory, MemberData(nameof(Dates))]
+        public void ParseableYearOnlyDate_CanConvertReturnsTrueAndDateTimeRange(PartialDate partialDate, DateTime expectedResultRangeStart, DateTime expectedResultRangeEnd)
         {
             // Arrange
-            var partialDate = new PartialDate() { Day = null, Month = null, Year = "2000"};
-            var expectedResultRangeStart = new DateTime(2000, 1, 1);
-            var expectedResultRangeEnd = new DateTime(2001, 1, 1);
-            DateTime? resultRangeStart;
-            DateTime? resultRangeEnd;
-
             // Act
-            var canConvert = partialDate.TryConvertToDateTimeRange(out resultRangeStart, out resultRangeEnd);
+            var canConvert = partialDate.TryConvertToDateTimeRange(out DateTime? resultRangeStart, out DateTime? resultRangeEnd);
 
             // Assert
             Assert.True(canConvert);
@@ -41,41 +43,21 @@ namespace ntbs_service_tests.UnitTests.Models
         }
 
         [Fact]
-        public void ParseableYearAndMonthDate_CanConvertReturnsTrueAndDateTimeRange()
-        {
-            // Arrange
-            var partialDate = new PartialDate() { Day = null, Month = "2", Year = "2000"};
-            var expectedResultRangeStart = new DateTime(2000, 2, 1);
-            var expectedResultRangeEnd = new DateTime(2000, 3, 1);
-            DateTime? resultRangeStart;
-            DateTime? resultRangeEnd;
+        public void CheckPartialDateAttributeReturnsFalseForNoYear() {
+            var partialDate = new PartialDate() {Day = "1", Month = "2", Year = null};
+            var attribute = new ValidPartialDateCanConvertToDatetimeAttribute();
+            var result = attribute.IsValid(partialDate);
 
-            // Act
-            var canConvert = partialDate.TryConvertToDateTimeRange(out resultRangeStart, out resultRangeEnd);
-
-            // Assert
-            Assert.True(canConvert);
-            Assert.Equal(expectedResultRangeStart, resultRangeStart);
-            Assert.Equal(expectedResultRangeEnd, resultRangeEnd);
+            Assert.False(result);
         }
 
         [Fact]
-        public void ParseableFullDate_CanConvertReturnsTrueAndDateTimeRange()
-        {
-            // Arrange
-            var partialDate = new PartialDate() { Day = "20", Month = "3", Year = "2000"};
-            var expectedResultRangeStart = new DateTime(2000, 3, 20);
-            var expectedResultRangeEnd = new DateTime(2000, 3, 21);
-            DateTime? resultRangeStart;
-            DateTime? resultRangeEnd;
+        public void CheckPartialDateAttributeReturnsFalseForDayButNoMonth() {
+            var partialDate = new PartialDate() {Day = "1", Month = null, Year = "1990"};
+            var attribute = new ValidPartialDateCanConvertToDatetimeAttribute();
+            var result = attribute.IsValid(partialDate);
 
-            // Act
-            var canConvert = partialDate.TryConvertToDateTimeRange(out resultRangeStart, out resultRangeEnd);
-
-            // Assert
-            Assert.True(canConvert);
-            Assert.Equal(expectedResultRangeStart, resultRangeStart);
-            Assert.Equal(expectedResultRangeEnd, resultRangeEnd);
+            Assert.False(result);
         }
     }
 }

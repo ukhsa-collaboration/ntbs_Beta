@@ -38,11 +38,11 @@ namespace ntbs_service.Pages_Search
             this.searchService = searchService;
             this.notificationService = notificationService;
             validationService = new ValidationService(this);
+            Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
-            Sexes = context.GetAllSexesAsync().Result.ToList();
             if(!ModelState.IsValid) 
             {
                 return Page();
@@ -91,7 +91,7 @@ namespace ntbs_service.Pages_Search
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            return validationService.ValidateProperty(new IndexModel(notificationService, searchService, context), key, value);
+            return validationService.ValidateProperty(this, key, value);
         }
 
         public void SetPaginationDetails() {

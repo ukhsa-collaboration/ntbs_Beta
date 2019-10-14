@@ -22,18 +22,13 @@ namespace ntbs_service.Models
             dateTimeStart = null;
             dateTimeEnd = null;
 
+            if(!ParseDateStrings(out int parsedYear, out int parsedMonth, out int parsedDay)) 
+            {
+                return false;
+            }
+
             try
             {
-                if (!int.TryParse(Year, out int parsedYear)) {
-                    return false;
-                }
-                if (!int.TryParse(Month, out int parsedMonth)) {
-                    parsedMonth = 1;
-                };
-                if (!int.TryParse(Day, out int parsedDay)) {
-                    parsedDay = 1;
-                };
-
                 dateTimeStart = new DateTime(parsedYear, parsedMonth, parsedDay);
 
                 if (!string.IsNullOrEmpty(Day)) 
@@ -54,6 +49,23 @@ namespace ntbs_service.Models
             {
                 return false;
             }
+        }
+
+        public bool ParseDateStrings(out int year, out int month, out int day) {
+            var canParseYear = true;
+            if (!int.TryParse(Year, out int parsedYear)) {
+                canParseYear = false;
+            }
+            if (!int.TryParse(Month, out int parsedMonth)) {
+                parsedMonth = 1;
+            };
+            if (!int.TryParse(Day, out int parsedDay)) {
+                parsedDay = 1;
+            };
+            year = parsedYear;
+            month = parsedMonth;
+            day = parsedDay;
+            return canParseYear;
         }
     }
 }
