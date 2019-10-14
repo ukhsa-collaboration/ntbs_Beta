@@ -6,6 +6,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models
 {
     [NotMapped]
+    [AtLeastOneProperty("IdFilter", "FamilyName", ErrorMessage="You must supply at least one of the required search parameters")]
     public class SearchParameters
     {
         

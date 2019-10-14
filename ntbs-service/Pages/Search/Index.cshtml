@@ -12,9 +12,17 @@
 <div>
     <form method="get">
         <div asp-validation-summary="ModelOnly"></div>
-        <span class="enter-search-details-tip">
-            To search enter at least one of the following fields
-        </span>
+        @{
+            var SearchParametersError = !Model.validationService.IsValid("SearchParameters");
+            var SearchParametersGroupState = SearchParametersError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@SearchParametersGroupState>
+            <span class="enter-search-details-tip">
+                To search enter at least one of the following fields
+            </span>
+            <span nhs-span-type="ErrorMessage" id="id-error"
+                asp-validation-for="SearchParameters"></span>
+        </nhs-form-group>
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
