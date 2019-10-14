@@ -64,35 +64,35 @@
     @if (!(bool)ViewData["IsLinkedNotificationsPage"])
     {
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsPatientPage"] ? "contents-list-item--current" : ""))">
+            <ul class="sub-nav-left">
+                <li class="@("contents-list-item " + ((bool)ViewData["IsPatientPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.PatientEditPath">Personal details</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsEpisodePage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsEpisodePage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.EpisodeEditPath">Hospital details</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsClinicalDetailsPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsClinicalDetailsPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ClinicalDetailsEditPath">Clinical Details</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsContactTracingPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsContactTracingPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ContactTracingEditPath">Contact Tracing</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsSocialRiskFactorsPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsSocialRiskFactorsPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.SocialRiskFactorsEditPath">Social Risk Factors</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsTravelPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsTravelPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.TravelEditPath">Travel/visitor history</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsComorbiditiesPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsComorbiditiesPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ComorbiditiesEditPath">Co-morbidities</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsImmunosuppressionPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsImmunosuppressionPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.ImmunosuppressionEditPath">Immunosuppression</a>
-                </div>
-                <div class="@("contents-list-item " + ((bool)ViewData["IsPreviousHistoryPage"] ? "contents-list-item--current" : ""))">
+                </li>
+                <li class="@("contents-list-item " + ((bool)ViewData["IsPreviousHistoryPage"] ? "contents-list-item--current" : ""))">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.PreviousHistoryEditPath">Previous History</a>
-                </div>
-            </div>
+                </li>
+            </ul>
         </nhs-grid-column>
     }
     <nhs-grid-column grid-column-width=@MainGridWidth>
