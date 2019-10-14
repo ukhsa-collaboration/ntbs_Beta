@@ -5,6 +5,7 @@ using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
+using System.Reflection;
 
 namespace ntbs_service.Models
 {
@@ -85,7 +86,7 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-
+        public string HIVTestState => ClinicalDetails.HIVTestState == null ? string.Empty : GetAttribute<DisplayAttribute>(ClinicalDetails.HIVTestState).Name;
         public string PatientEditPath => GetNotificationEditPath("Patient");
         public string EpisodeEditPath => GetNotificationEditPath("Episode");
         public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");
@@ -97,6 +98,15 @@ namespace ntbs_service.Models
         public string PreviousHistoryEditPath => GetNotificationEditPath("PreviousHistory");
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
+
+        public TAttribute GetAttribute<TAttribute>(Enum enumValue) 
+            where TAttribute : Attribute
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<TAttribute>();
+        }
 
         private string GetNotificationEditPath(string subPath)
         {

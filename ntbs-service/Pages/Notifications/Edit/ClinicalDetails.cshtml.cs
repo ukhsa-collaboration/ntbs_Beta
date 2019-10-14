@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -15,6 +16,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class ClinicalDetailsModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
+        public HIVTestStatus HivTestStatuses;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
