@@ -22,6 +22,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         public TravelModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
+            HighTbIncidenceCountries = new SelectList(
+                context.GetAllHighTbIncidenceCountriesAsync().Result,
+                nameof(Country.CountryId),
+                nameof(Country.Name));
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
@@ -38,10 +42,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             await SetNotificationProperties(isBeingSubmitted, TravelDetails);
             await SetNotificationProperties(isBeingSubmitted, VisitorDetails);
 
-            HighTbIncidenceCountries = new SelectList(
-                context.GetAllHighTbIncidenceCountriesAsync().Result,
-                nameof(Country.CountryId),
-                nameof(Country.Name));
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
             if (TravelDetails.ShouldValidateFull)

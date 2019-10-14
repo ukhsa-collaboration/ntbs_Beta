@@ -27,6 +27,7 @@ namespace ntbs_service.Helpers
                         displayName = "Patient Details";
                         break;
                     // NotificationSites is part of Clinical Details page despite being property of Notification
+                    // Fall-through is intentional
                     case "NotificationSites":
                     case "ClinicalDetails":
                         url = getUrl("ClinicalDetails", notificationId);
@@ -44,6 +45,8 @@ namespace ntbs_service.Helpers
                         url = getUrl("Immunosuppression", notificationId);
                         displayName = "Immunosuppression Details";
                         break;
+                    // Travel Details and Visitor Details are editable on the Travel/visitor history screen
+                    // Fall-through is intentional
                     case "TravelDetails":
                     case "VisitorDetails":
                         url = getUrl("Travel", notificationId);

@@ -107,16 +107,7 @@ const ValidateTravelOrVisit = Vue.extend({
                 stayLengthInMonths1: this.$refs["stayLengthInMonths1"].value,
                 stayLengthInMonths2: this.$refs["stayLengthInMonths2"].value,
                 stayLengthInMonths3: this.$refs["stayLengthInMonths3"].value
-            }) as {
-                hasData: string;
-                totalNumberOfCountries: string;
-                country1Id: string;
-                country2Id: string;
-                country3Id: string;
-                stayLengthInMonths1: string;
-                stayLengthInMonths2: string;
-                stayLengthInMonths3: string
-            };
+            });
 
             return variables;
         },
