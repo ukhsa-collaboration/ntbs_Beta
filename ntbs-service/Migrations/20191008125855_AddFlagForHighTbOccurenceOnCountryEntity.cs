@@ -4,6 +4,7 @@ namespace ntbs_service.Migrations
 {
     public partial class AddFlagForHighTbOccurenceOnCountryEntity : Migration
     {
+        // Logic for initial population of HasHighTbOccurence is found in SeedData/Countries.cs
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Audit.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using ntbs_service.Helpers;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
-using Audit.EntityFramework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Models
 {
@@ -108,8 +108,9 @@ namespace ntbs_service.Models
                 entity.Property(e => e.Name).HasMaxLength(200);
             });
 
+
             modelBuilder.Entity<Country>().HasData(
-                Countries.GetCountriesArray()
+                ntbs_service.Models.SeedData.Countries.GetCountriesArray()
             );
 
             modelBuilder.Entity<Ethnicity>(entity =>
