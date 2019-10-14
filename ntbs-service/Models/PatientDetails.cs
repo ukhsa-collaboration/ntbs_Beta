@@ -30,6 +30,12 @@ namespace ntbs_service.Models
         public DateTime? Dob { get; set; }
         public bool? UkBorn { get; set; }
 
+        [MaxLength(150)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, 
+            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+        public string Address { get; set; }
+
         [RequiredIf(@"ShouldValidateFull && !NoFixedAbode", ErrorMessage = ValidationMessages.PostcodeIsRequired)]
         public string Postcode {get; set; }
 

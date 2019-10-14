@@ -61,6 +61,7 @@ namespace ntbs_service.Models
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
         public string FormattedNhsNumber => FormatNhsNumberString();
+        public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
@@ -189,7 +190,7 @@ namespace ntbs_service.Models
         {
             if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
             {
-                return "";
+                return "Not known";
             }
             return string.Join(" ",
                 PatientDetails.NhsNumber.ToString().Substring(0, 3),

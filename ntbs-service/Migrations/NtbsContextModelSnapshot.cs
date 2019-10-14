@@ -11499,6 +11499,9 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
+                            b1.Property<string>("Address")
+                                .HasMaxLength(150);
+
                             b1.Property<int?>("CountryId");
 
                             b1.Property<DateTime?>("Dob");
