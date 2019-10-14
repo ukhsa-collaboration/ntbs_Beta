@@ -56,7 +56,20 @@ namespace ntbs_service.Models.Validations
         public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
         public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
-        public const string ImmunosuppressionDetailRequired = "Details is a mandatory field";
+        public const string ImmunosuppressionDetailRequired = "Please supply immunosuppression other details";
+        public const string TravelOrVisitTotalNumberOfCountriesRequired = "Please supply total number of countries";
+        public const string TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber = "Total number of countries must be greater or equal to number of input countries";
+        public const string TravelMostRecentCountryRequired = "Please supply most recent country visited";
+        public const string VisitMostRecentCountryRequired = "Please supply most recent country visited from";
+        public const string TravelTotalDurationWithinLimit = "Total duration of travel must not exceed 24 months";
+        public const string VisitTotalDurationWithinLimit = "Total duration of visits must not exceed 24 months";
+        public const string TravelUniqueCountry = "Multiple visits to same country - record as single period of travel";
+        public const string VisitUniqueCountry = "Multiple visits from same country - record as single visit";
+        public const string TravelIsChronological = "Travel must be recorded in chronological order";
+        public const string VisitIsChronological = "Visits must be recorded in chronological order";
+        public const string TravelOrVisitDurationHasCountry = "Duration cannot be added without a corresponding country";
+        public const string VisitCountryRequiresDuration = "Please supply a duration for visit";
+        public const string TravelCountryRequiresDuration = "Please supply a duration for travel";
     }
 
     public static class ValidDates

@@ -21,6 +21,8 @@ namespace ntbs_service.Models
             PatientTBHistory = new PatientTBHistory();
             ContactTracing = new ContactTracing();
             ImmunosuppressionDetails = new ImmunosuppressionDetails();
+            TravelDetails = new TravelDetails();
+            VisitorDetails = new VisitorDetails();
         }
 
         [Display(Name = "Notification Id")]
@@ -43,6 +45,8 @@ namespace ntbs_service.Models
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
         public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
+        public virtual TravelDetails TravelDetails { get; set; }
+        public virtual VisitorDetails VisitorDetails { get; set; }
         public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
@@ -60,6 +64,8 @@ namespace ntbs_service.Models
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
+        public string HasRecentVisitor => TrueFalseToYesNo(VisitorDetails.HasVisitor);
+        public string HasRecentTravel => TrueFalseToYesNo(TravelDetails.HasTravel);
         public string FormattedNhsNumber => FormatNhsNumberString();
         public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();

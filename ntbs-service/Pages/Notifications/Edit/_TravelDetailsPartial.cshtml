@@ -1,0 +1,143 @@
+﻿@model TravelModel
+@using NHSUK.FrontEndLibrary.TagHelpers
+@using ntbs_service.Models
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+<validate-travel-or-visit model-type="travel" inline-template>
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Travel to one or more high TB incidence countries within last 24 months
+            </nhs-fieldset-legend>
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="true" 
+                           id="travelDetails-hasTravelYes" ref="hasDataYes" data-aria-controls="conditional-has-travel" />
+                    <label for="travelDetails-hasTravelYes" nhs-label-type="Radios">
+                        Yes
+                    </label>
+                </div>
+
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-has-travel">
+                    <nhs-fieldset>
+
+                        @{
+                            var hasTotalError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.TotalNumberOfCountries)}");
+                            var totalFormGroup = hasTotalError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@totalFormGroup" ref="totalNumberOfCountriesFormGroup">
+                            <label asp-for="TravelDetails.TotalNumberOfCountries" nhs-label-type="Standard">
+                                Total number of countries visited
+                            </label>
+                            <span asp-validation-for="TravelDetails.TotalNumberOfCountries" nhs-span-type="ErrorMessage"
+                                  id="travel-total-error" ref="totalNumberOfCountriesErrorRef"></span>
+                            <input asp-for="TravelDetails.TotalNumberOfCountries" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasTotalError"
+                                   ref="totalNumberOfCountries" aria-describedby="travel-total-error" />
+                        </nhs-form-group>
+
+                        @{
+                            var hasCountry1IdError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country1Id)}");
+                            var country1FormGroup = hasCountry1IdError ? Error : Standard;
+                            var country1SelectType = hasCountry1IdError ? SelectType.Error : SelectType.Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@country1FormGroup" ref="country1IdFormGroup">
+                            <label asp-for="TravelDetails.Country1Id" nhs-label-type="Standard">
+                                Most recent country visited
+                            </label>
+                            <span asp-validation-for="TravelDetails.Country1Id" nhs-span-type="ErrorMessage"
+                                  id="travel-country1Id-error" ref="country1IdErrorRef"></span>
+                            <select asp-for="TravelDetails.Country1Id" nhs-select-type="@country1SelectType" asp-items="Model.HighTbIncidenceCountries"
+                                    ref="country1Id" aria-describedby="travel-country1Id-error">
+                                <option value="" selected>Select from list</option>
+                            </select>
+                        </nhs-form-group>
+
+                        @{
+                            var hasStayLength1Error = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.StayLengthInMonths1)}");
+                            var length1FormGroup = hasStayLength1Error ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@length1FormGroup" ref="stayLengthInMonths1FormGroup">
+                            <label asp-for="TravelDetails.StayLengthInMonths1" nhs-label-type="Standard">
+                                Duration of travel in months
+                            </label>
+                            <span asp-validation-for="TravelDetails.StayLengthInMonths1" nhs-span-type="ErrorMessage"
+                                  id="travel-length1-error" ref="stayLengthInMonths1ErrorRef"></span>
+                            <input asp-for="TravelDetails.StayLengthInMonths1" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength1Error"
+                                   ref="stayLengthInMonths1" aria-describedby="travel-length1-error" />
+                        </nhs-form-group>
+
+                        @{
+                            var hasCountry2IdError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country2Id)}");
+                            var country2FormGroup = hasCountry2IdError ? Error : Standard;
+                            var country2SelectType = hasCountry2IdError ? SelectType.Error : SelectType.Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@country2FormGroup" ref="country2IdFormGroup">
+                            <label asp-for="TravelDetails.Country2Id" nhs-label-type="Standard">
+                                2nd most recent country visited
+                            </label>
+                            <span asp-validation-for="TravelDetails.Country2Id" nhs-span-type="ErrorMessage"
+                                  id="travel-country2Id-error" ref="country2IdErrorRef"></span>
+                            <select asp-for="TravelDetails.Country2Id" nhs-select-type="@country2SelectType" asp-items="Model.HighTbIncidenceCountries"
+                                    ref="country2Id" aria-describedby="travel-country2Id-error">
+                                <option value="" selected>Select from list</option>
+                            </select>
+                        </nhs-form-group>
+
+                        @{
+                            var hasStayLength2Error = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.StayLengthInMonths2)}");
+                            var length2FormGroup = hasStayLength2Error ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@length2FormGroup" ref="stayLengthInMonths2FormGroup">
+                            <label asp-for="TravelDetails.StayLengthInMonths2" nhs-label-type="Standard">
+                                Duration of travel in months
+                            </label>
+                            <span asp-validation-for="TravelDetails.StayLengthInMonths2" nhs-span-type="ErrorMessage"
+                                  id="travel-length2-error" ref="stayLengthInMonths2ErrorRef"></span>
+                            <input asp-for="TravelDetails.StayLengthInMonths2" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength2Error"
+                                   ref="stayLengthInMonths2" aria-describedby="travel-length2-error" />
+                        </nhs-form-group>
+
+                        @{
+                            var hasCountry3IdError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country3Id)}");
+                            var country3FormGroup = hasCountry3IdError ? Error : Standard;
+                            var country3SelectType = hasCountry3IdError ? SelectType.Error : SelectType.Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@country3FormGroup" ref="country3IdFormGroup">
+                            <label asp-for="TravelDetails.Country3Id" nhs-label-type="Standard">
+                                3rd most recent country visited
+                            </label>
+                            <span asp-validation-for="TravelDetails.Country3Id" nhs-span-type="ErrorMessage"
+                                  id="travel-country3Id-error" ref="country3IdErrorRef"></span>
+                            <select asp-for="TravelDetails.Country3Id" nhs-select-type="@country3SelectType" asp-items="Model.HighTbIncidenceCountries"
+                                    ref="country3Id" aria-describedby="travel-country3Id-error">
+                                <option value="" selected>Select from list</option>
+                            </select>
+                        </nhs-form-group>
+
+                        @{
+                            var hasStayLength3Error = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.StayLengthInMonths3)}");
+                            var length3FormGroup = hasStayLength3Error ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@length3FormGroup" ref="stayLengthInMonths3FormGroup">
+                            <label asp-for="TravelDetails.StayLengthInMonths3" nhs-label-type="Standard">
+                                Duration of travel in months
+                            </label>
+                            <span asp-validation-for="TravelDetails.StayLengthInMonths3" nhs-span-type="ErrorMessage"
+                                  id="travel-length3-error" ref="stayLengthInMonths3ErrorRef"></span>
+                            <input asp-for="TravelDetails.StayLengthInMonths3" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength3Error"
+                                   ref="stayLengthInMonths3" aria-describedby="travel-length3-error" />
+                        </nhs-form-group>
+                    </nhs-fieldset>
+                </div>
+
+                <div class="nhsuk-radios__item">
+                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="false"
+                            id="travelDetails-hasTravelNo" ref="hasDataNo" />
+                    <label for="travelDetails-hasTravelNo" nhs-label-type="Radios">
+                        No
+                    </label>
+                </div>
+            </div>
+        </nhs-fieldset>
+    </nhs-form-group>
+</validate-travel-or-visit>

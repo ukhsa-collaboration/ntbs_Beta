@@ -8,9 +8,10 @@ import { ValidateInput } from './Components/ValidateInput';
 import { ValidateDate } from './Components/ValidateDate';
 import { DateComparison } from './Components/DateComparison';
 import { YearComparison } from './Components/YearComparison';
-import { CascadingDropwdowns } from './Components/CascadingDropdowns';
+import { CascadingDropdowns } from './Components/CascadingDropdowns';
 import { ValidateContactTracing } from './Components/ValidateContactTracing';
 import ValidateImmunosuppression from './Components/ValidateImmunosuppression';
+import ValidateTravelOrVisit from "./Components/ValidateTravelOrVisit";
 import { ValidateMultiple } from './Components/ValidateMultiple';
 import { ValidateRequiredCheckboxes } from './Components/ValidateRequiredCheckboxes';
 // Vue needs to be the first thing to load!
@@ -20,9 +21,10 @@ import { ValidateRequiredCheckboxes } from './Components/ValidateRequiredCheckbo
 Vue.component('validate-input', ValidateInput);
 Vue.component('validate-date', ValidateDate);
 Vue.component('date-comparison', DateComparison);
-Vue.component('cascading-dropdowns', CascadingDropwdowns);
+Vue.component('cascading-dropdowns', CascadingDropdowns);
 Vue.component('validate-contact-tracing', ValidateContactTracing);
 Vue.component('validate-immunosuppression', ValidateImmunosuppression);
+Vue.component('validate-travel-or-visit', ValidateTravelOrVisit);
 Vue.component('year-comparison', YearComparison);
 Vue.component('validate-multiple', ValidateMultiple);
 Vue.component('validate-required-checkboxes', ValidateRequiredCheckboxes);
