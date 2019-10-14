@@ -3,7 +3,8 @@ import { getHeaders } from '../helpers';
 import axios from 'axios';
 
 type TravelOrVisitVariables = {
-    hasData: string,
+    hasVisitor?: string,
+    hasTravel?: string,
     totalNumberOfCountries: string,
     country1Id: string,
     country2Id: string,
@@ -98,8 +99,7 @@ const ValidateTravelOrVisit = Vue.extend({
         },
 
         getTravelOrVisitVariables: function () {
-            const variables: TravelOrVisitVariables = ({
-                hasData: this.getHasDataValue(),
+            const variables: TravelOrVisitVariables = {
                 totalNumberOfCountries: this.$refs["totalNumberOfCountries"].value,
                 country1Id: this.$refs["country1Id"].value,
                 country2Id: this.$refs["country2Id"].value,
@@ -107,7 +107,14 @@ const ValidateTravelOrVisit = Vue.extend({
                 stayLengthInMonths1: this.$refs["stayLengthInMonths1"].value,
                 stayLengthInMonths2: this.$refs["stayLengthInMonths2"].value,
                 stayLengthInMonths3: this.$refs["stayLengthInMonths3"].value
-            });
+            };
+
+            const lowerModelType = this.$props.modelType.toLowerCase();
+            if (lowerModelType === "visitor") {
+                variables.hasVisitor = this.getHasDataValue();
+            } else if (lowerModelType === "travel") {
+                variables.hasTravel = this.getHasDataValue();
+            }
 
             return variables;
         },
