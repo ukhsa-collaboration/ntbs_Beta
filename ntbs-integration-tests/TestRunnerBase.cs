@@ -45,14 +45,14 @@ namespace ntbs_integration_tests
             return $"{route}?id={id}";
         }
 
+        protected string GetRedirectLocation(HttpResponseMessage response)
+        {
+            return response.Headers.Location.OriginalString;
+        }
+
         protected IEnumerable<char> FullErrorMessage(string validationMessage)
         {
             return $"Error:{validationMessage}";
-        }
-
-        protected IElement GetRadioWithValue(IHtmlDocument document, string id, string value)
-        {
-            return document.QuerySelectorAll($"input[id='{id}']").First(q => ((IHtmlInputElement)q).Value == value);
         }
 
         protected async Task<HttpResponseMessage> SendFormWithData(IHtmlDocument document, Dictionary<string, string> formData)

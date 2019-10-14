@@ -19,11 +19,11 @@ namespace ntbs_integration_tests
         public ClinicalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 
         [Fact]
-        public async Task Post_ReturnsPageWithAllModelErrors_IfModelNotValid()
+        public async Task PostDraft_ReturnsPageWithAllModelErrors_IfModelNotValid()
         {
             // Arrange
-            var response = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var document = await GetDocumentAsync(response);
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -57,11 +57,38 @@ namespace ntbs_integration_tests
         }
 
         [Fact]
+        public async Task PostNotified_ReturnsPageWithAllModelErrors_IfModelNotValid()
+        {
+            // Arrange
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var document = await GetDocumentAsync(initialPage);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                ["NotificationSiteMap[OTHER]"] = "true",
+                ["ClinicalDetails.BCGVaccinationState"] = "Yes",
+                ["ClinicalDetails.IsPostMortem"] = "true"
+            };
+
+            // Act
+            var result = await SendFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            // TODO: Check site error here after merging
+            Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), resultDocument.QuerySelector("span[id='bcg-vaccination-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), resultDocument.QuerySelector("span[id='postmortem-error']").TextContent);
+        }
+
+        [Fact]
         public async Task Post_RedirectsToNextPageAndSavesContent_IfModelValid()
         {
             // Arrange
-            var response = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var document = await GetDocumentAsync(response);
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -81,34 +108,34 @@ namespace ntbs_integration_tests
             };
 
             // Act
-            var result = await SendFormWithData(document, formData);
+            var result = await SendFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(result.Headers.Location.OriginalString, BuildRoute(Routes.ContactTracing, Utilities.DRAFT_ID));
+            Assert.Equal(GetRedirectLocation(result), BuildRoute(Routes.ContactTracing, Utilities.DRAFT_ID));
 
-            response = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            document = await GetDocumentAsync(response);
-            Assert.True(((IHtmlInputElement)document.GetElementById("NotificationSiteMap_PULMONARY_")).IsChecked);
-            Assert.True(((IHtmlInputElement)document.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
-            Assert.Equal("tissue", ((IHtmlInputElement)document.GetElementById("OtherSite_SiteDescription")).Value);
-            Assert.True(((IHtmlInputElement)document.GetElementById("ClinicalDetails_NoSampleTaken")).IsChecked);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_BCGVaccinationState", "Yes")).IsChecked);
-            Assert.Equal("2000", ((IHtmlInputElement)document.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
-            Assert.Equal("1", ((IHtmlInputElement)document.GetElementById("FormattedPresentationDate_Day")).Value);
-            Assert.Equal("1", ((IHtmlInputElement)document.GetElementById("FormattedPresentationDate_Month")).Value);
-            Assert.Equal("2012", ((IHtmlInputElement)document.GetElementById("FormattedPresentationDate_Year")).Value);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_IsPostMortem", "false")).IsChecked);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_IsShortCourseTreatment", "true")).IsChecked);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_IsMDRTreatment", "false")).IsChecked);
+            var reloadedPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var reloadedDocument = await GetDocumentAsync(reloadedPage);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_PULMONARY_")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
+            Assert.Equal("tissue", ((IHtmlInputElement)reloadedDocument.GetElementById("OtherSite_SiteDescription")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_NoSampleTaken")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("bcg-vaccination-yes")).IsChecked);
+            Assert.Equal("2000", ((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
+            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Day")).Value);
+            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Month")).Value);
+            Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Year")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("short-course-yes")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("mdr-no")).IsChecked);
         }
 
         [Fact]
         public async Task Post_ClearsConditionalInputValues_IfRadiosSetToOtherValue()
         {
             // Arrange
-            var response = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var document = await GetDocumentAsync(response);
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -128,46 +155,128 @@ namespace ntbs_integration_tests
             };
 
             // Act
-            var result = await SendFormWithData(document, formData);
+            var result = await SendFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Equal(result.Headers.Location.OriginalString, BuildRoute(Routes.ContactTracing, Utilities.DRAFT_ID));
 
-            response = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            document = await GetDocumentAsync(response);
-            Assert.False(((IHtmlInputElement)document.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("OtherSite_SiteDescription")).Value);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_BCGVaccinationState", "No")).IsChecked);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_DidNotStartTreatment", "true")).IsChecked);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("FormattedTreatmentDate_Day")).Value);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("FormattedTreatmentDate_Month")).Value);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("FormattedTreatmentDate_Year")).Value);
-            Assert.True(((IHtmlInputElement)GetRadioWithValue(document, "ClinicalDetails_IsPostMortem", "false")).IsChecked);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("FormattedDeathDate_Day")).Value);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("FormattedDeathDate_Month")).Value);
-            Assert.Equal("", ((IHtmlInputElement)document.GetElementById("FormattedDeathDate_Year")).Value);
+            var reloadedPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var reloadedDocument = await GetDocumentAsync(reloadedPage);
+            Assert.False(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("OtherSite_SiteDescription")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("bcg-vaccination-no")).IsChecked);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("treatment-no")).IsChecked);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTreatmentDate_Day")).Value);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTreatmentDate_Month")).Value);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTreatmentDate_Year")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Day")).Value);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Month")).Value);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Year")).Value);
         }
 
-        [Fact]
-        public async Task ValidateDate_ReturnsCorrectErrorMessage()
+        public static IEnumerable<object[]> InvalidDates()
+        {
+            yield return new object[] { "1", "0", "2009", ValidationMessages.ValidDate };
+            yield return new object[] { "1", "1", "2009", ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate) };
+        }
+
+
+        [Theory, MemberData(nameof(InvalidDates))]
+        public async Task ValidateClinicalDetailsDate_ReturnsAppropriateErrorMessage(string day, string month, string year, string errorMessage)
         {
             // Arrange
             var formData = new Dictionary<string, string>
             {
                 ["key"] = "DiagnosisDate",
-                ["day"] = "1",
-                ["month"] = "1",
-                ["year"] = "1"
+                ["day"] = day,
+                ["month"] = month,
+                ["year"] = year
             };
 
             // Act
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsDate"));
-            var result = (await response.Content.ReadAsStringAsync());
-            Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate), result);
-        } 
 
-        // TODO: Tests for full validation, all onget validate methods
+            // Assert
+            var result = (await response.Content.ReadAsStringAsync());
+            Assert.Equal(errorMessage, result);
+        }
+
+        [Theory]
+        [InlineData("true", ValidationMessages.DiseaseSiteIsRequired)]
+        [InlineData("false", "")]
+        public async Task ValidateNotificationSites_ReturnsExpectedResult(string shouldValidateFull, string validationResult)
+        {
+            // Arrange
+            var formData = new Dictionary<string, string>
+            {
+                ["shouldValidateFull"] = shouldValidateFull
+            };
+
+            // Act
+            var response = await client.GetAsync(BuildValidationPath(formData, "ValidateNotificationSites"));
+
+            // Assert
+            var result = (await response.Content.ReadAsStringAsync());
+            Assert.Equal(validationResult, result);
+        }
+
+        [Theory]
+        [InlineData("false", "123", ValidationMessages.StandardStringFormat)]
+        [InlineData("true", "", ValidationMessages.DiseaseSiteOtherIsRequired)]
+        [InlineData("false", "", "")]
+        public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(string shouldValidateFull, string value, string validationResult)
+        {
+            // Arrange
+            var formData = new Dictionary<string, string>
+            {
+                ["key"] = "SiteDescription",
+                ["value"] = value,
+                ["shouldValidateFull"] = shouldValidateFull
+            };
+
+            // Act
+            var response = await client.GetAsync(BuildValidationPath(formData, "ValidateNotificationSiteProperty"));
+
+            // Assert
+            var result = (await response.Content.ReadAsStringAsync());
+            Assert.Equal(validationResult, result);
+        }
+
+        [Fact]
+        public async Task ValidateClinicalDetailsYearComparison_ReturnsErrorIfNewYearEarlierThanExisting()
+        {
+             // Arrange
+            var existingYear = 1990; 
+            var formData = new Dictionary<string, string>
+            {
+                ["newYear"] = "1960",
+                ["existingYear"] = existingYear.ToString()
+            };
+
+            // Act
+            var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
+
+            // Assert
+            var result = (await response.Content.ReadAsStringAsync());
+            Assert.Equal(ValidationMessages.ValidYearLaterThanBirthYear(existingYear), result);
+        }
+
+        [Fact]
+        public async Task ValidateClinicalDetailsProperties_ReturnsErrorIfBothTreatmentsSetToTrue()
+        {
+             // Arrange
+            var keyValuePairs = "keyValuePairs[0][key]=IsShortCourseTreatment&keyValuePairs[0][value]=true&keyValuePairs[1][key]=IsMDRTreatment&keyValuePairs[1][value]=true";
+
+            // Act
+            var response = await client.GetAsync($"{PageRoute}/ValidateClinicalDetailsProperties?{keyValuePairs}");
+
+            // Assert check just response.Content
+            var result = (await response.Content.ReadAsStringAsync());
+            
+            Assert.True(result.Contains(ValidationMessages.ValidTreatmentOptions));
+        }
     }
 }

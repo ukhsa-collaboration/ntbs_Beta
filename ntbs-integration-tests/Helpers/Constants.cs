@@ -4,6 +4,8 @@ namespace ntbs_integration_tests.Helpers
 {
     public static class Routes
     {
+        public const string HomePage = "/";
+        public const string SearchPage = "/Search";
         public static string Patient = RouteHelper.GetNotificationEditPath("Patient");
         public static string Episode = RouteHelper.GetNotificationEditPath("Episode");
         public static string ClinicalDetails = RouteHelper.GetNotificationEditPath("ClinicalDetails");
@@ -13,5 +15,7 @@ namespace ntbs_integration_tests.Helpers
         public static string Comorbidities = RouteHelper.GetNotificationEditPath("Comorbidities");
         public static string Immunosuppression = RouteHelper.GetNotificationEditPath("Immunosupression");
         public static string PreviousHistory = RouteHelper.GetNotificationEditPath("PreviousHistory");
+        public static string Overview = RouteHelper.GetNotificationPath("Overview");
+        public static string LinkedNotifications = RouteHelper.GetNotificationPath("LinkedNotifications");
     }
 }

@@ -38,7 +38,7 @@ namespace ntbs_integration_tests.Helpers
         {
             foreach (var kvp in formValues)
             {
-                if ((IHtmlInputElement)form[kvp.Key] == null)
+                if (form[kvp.Key] == null)
                 {
                     throw new HtmlElementParseException($"Cannot find element {kvp.Key} on form");
                 }

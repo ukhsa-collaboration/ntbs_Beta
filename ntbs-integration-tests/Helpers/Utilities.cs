@@ -7,6 +7,8 @@ namespace ntbs_integration_tests.Helpers
     public static class Utilities
     {
         public const int DRAFT_ID = 1;
+        public const int NOTIFIED_ID = 2;
+        public const int DENOTIFIED_ID = 3;
         public const int NEW_ID = 1000;
         public static void SeedDatabase(NtbsContext db)
         {
@@ -19,6 +21,8 @@ namespace ntbs_integration_tests.Helpers
             return new List<Notification>()
             {
                 new Notification(){ NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft },
+                new Notification(){ NotificationId = NOTIFIED_ID, NotificationStatus = NotificationStatus.Notified },
+                new Notification(){ NotificationId = DENOTIFIED_ID, NotificationStatus = NotificationStatus.Denotified },
             };
         }
     }

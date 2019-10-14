@@ -8,6 +8,7 @@ using Xunit;
 
 namespace ntbs_integration_tests
 {
+    // TODO: Complete tests for this page, c.f. ClinicalDetailsPageTests
     public class PatientPageTests : TestRunnerBase
     {
         protected override string PageRoute
@@ -21,14 +22,14 @@ namespace ntbs_integration_tests
         public async Task Post_ReturnsPageWithModelErrors_IfModelNotValid()
         {
             // Arrange
-            var response = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var pageContent = await GetDocumentAsync(response);
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var pageContent = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
+                // TODO: Add all the fields that can lead to model errors
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["Patient.FamilyName"] = "111",
-                ["Patient.SexId"] = "1",
             };
 
             // Act
@@ -36,13 +37,7 @@ namespace ntbs_integration_tests
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.True(resultDocument.QuerySelector("span[id='family-name-error']").TextContent.Contains(ValidationMessages.StandardStringFormat));
-        }
-
-        [Fact]
-        public async Task Post_RedirectsToNextPage_IfModelValid()
-        {
-            
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='family-name-error']").TextContent);
         }
     }
 }

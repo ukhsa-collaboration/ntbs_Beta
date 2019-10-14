@@ -153,7 +153,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
 
-            if (!NotificationSiteMap[SiteId.OTHER])
+            if (!NotificationSiteMap.ContainsKey(SiteId.OTHER) || !NotificationSiteMap[SiteId.OTHER])
             {
                 OtherSite.SiteDescription = null;
                 ModelState.Remove("OtherSite.SiteDescription");
@@ -174,12 +174,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                     };
                 }
             }
-        }
-
-        // TODO: Check whether this is actually used by anything!
-        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
-        {
-            return validationService.ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)

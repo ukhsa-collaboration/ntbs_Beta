@@ -164,8 +164,8 @@
             <nhs-fieldset-legend nhs-legend-size="Standard">BCG Vaccination</nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">
-                    <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" for="bcg-vaccination-yes">
                         Yes
                     </label>
                 </div>
@@ -185,14 +185,14 @@
                     </year-comparison>
                 </div>
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@Status.No">
-                    <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                    <label class="nhsuk-label nhsuk-radios__label" for="bcg-vaccination-no">
                         No
                     </label>
                 </div>
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.BCGVaccinationState" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
-                    <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.BCGVaccinationState">
+                    <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                    <label class="nhsuk-label nhsuk-radios__label" for="bcg-vaccination-unknown">
                         Unknown
                     </label>
                 </div>
@@ -324,8 +324,8 @@
                 <nhs-fieldset>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.DidNotStartTreatment" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-treatment-conditional">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.DidNotStartTreatment">
+                            <input asp-for="ClinicalDetails.DidNotStartTreatment" id="treatment-yes" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-treatment-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" for="treatment-yes">
                                 Patient started treatment
                             </label>
                         </div>
@@ -366,8 +366,8 @@
                             </validate-date>
                         </div>
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.DidNotStartTreatment" class="nhsuk-radios__input" type="radio" value="true">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.DidNotStartTreatment">
+                            <input asp-for="ClinicalDetails.DidNotStartTreatment" id="treatment-no" class="nhsuk-radios__input" type="radio" value="true">
+                            <label class="nhsuk-label nhsuk-radios__label" for="treatment-no">
                                 Patient did not start treatment
                             </label>
                         </div>
@@ -381,8 +381,8 @@
                 <nhs-fieldset>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
+                            <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-postmortem-conditional">
+                            <label class="nhsuk-label nhsuk-radios__label" for="postmortem-yes">
                                 Yes
                             </label>
                         </div>
@@ -424,8 +424,8 @@
                             </validate-date>
                         </div>
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.IsPostMortem" class="nhsuk-radios__input" type="radio" value="false">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsPostMortem">
+                            <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-no" class="nhsuk-radios__input" type="radio" value="false">
+                            <label class="nhsuk-label nhsuk-radios__label" for="postmortem-no">
                                 No
                             </label>
                         </div>
@@ -446,12 +446,12 @@
                     <span ref="errorField[0]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-error"></span>
                     <nhs-radios nhs-radios-type="Standard">
                         <nhs-radios-item>
-                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" type="radio" value="true" ref="input[0]" v-on:change="validate" />
-                            <label nhs-label-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment">Yes</label>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-yes" type="radio" value="true" ref="input[0]" v-on:change="validate" />
+                            <label nhs-label-type="Radios" for="short-course-yes">Yes</label>
                         </nhs-radios-item>
                         <nhs-radios-item>
-                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" type="radio" value="false" v-on:change="validate" />
-                            <label nhs-label-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment">No</label>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-no" type="radio" value="false" v-on:change="validate" />
+                            <label nhs-label-type="Radios" for="short-course-no">No</label>
                         </nhs-radios-item>
                     </nhs-radios>
                 </nhs-fieldset>
@@ -463,8 +463,8 @@
                     <span ref="errorField[1]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment" id="mdr-error"></span>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.IsMDRTreatment" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-mdr-conditional" ref="input[1]" v-on:change="validate">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsMDRTreatment">
+                            <input asp-for="ClinicalDetails.IsMDRTreatment" id="mdr-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-mdr-conditional" ref="input[1]" v-on:change="validate">
+                            <label class="nhsuk-label nhsuk-radios__label" for="mdr-yes">
                                 Yes
                             </label>
                         </div>
@@ -508,8 +508,8 @@
                             </validate-date>
                         </div>
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.IsMDRTreatment" class="nhsuk-radios__input" type="radio" value="false" v-on:change="validate">
-                            <label class="nhsuk-label nhsuk-radios__label" asp-for="ClinicalDetails.IsMDRTreatment">
+                            <input asp-for="ClinicalDetails.IsMDRTreatment" id="mdr-no" class="nhsuk-radios__input" type="radio" value="false" v-on:change="validate">
+                            <label class="nhsuk-label nhsuk-radios__label" for="mdr-no">
                                 No
                             </label>
                         </div>

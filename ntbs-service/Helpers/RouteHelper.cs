@@ -14,7 +14,12 @@ namespace ntbs_service.Helpers
 
         public static string GetFullNotificationPath(string subPath, int id)
         {
-            return $"/Notifications/{subPath}?id={id}";
+            return $"{GetNotificationPath(subPath)}?id={id}";
+        }
+
+        public static string GetNotificationPath(string subPath)
+        {
+            return $"/Notifications/{subPath}";
         }
     }
 }
