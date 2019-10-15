@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using ntbs_service.Helpers;
+using ntbs_service.Models;
+using Xunit;
+
+namespace ntbs_service_tests.UnitTests.Helpers
+{
+    public class EnumExtensionsTest
+    {
+
+        private enum TestEnum {
+            [Display(Name = "display name")]
+            withDisplayAttribute,
+            withoutDisplayAttribute
+        };
+
+        [Fact]
+        public void GetDisplayName_ReturnsNameFromDisplayAttribute() 
+        {
+            // Act
+            var displayName = TestEnum.withDisplayAttribute.GetDisplayName();
+
+            // Assert
+            Assert.Equal("display name", displayName);
+        }
+
+        [Fact]
+        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayAttribute() 
+        {
+            // Act
+            var displayName = TestEnum.withoutDisplayAttribute.GetDisplayName();
+
+            // Assert
+            Assert.Equal(string.Empty, displayName);
+        }
+    }
+}
