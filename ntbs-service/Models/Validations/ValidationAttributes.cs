@@ -46,7 +46,7 @@ namespace ntbs_service.Models.Validations
         }
     }
 
-    public class ValidPartialDateCanConvertToDatetimeAttribute : ValidationAttribute
+    public class ValidPartialDateAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

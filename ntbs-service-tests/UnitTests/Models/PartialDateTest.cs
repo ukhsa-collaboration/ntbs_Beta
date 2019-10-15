@@ -24,8 +24,16 @@ namespace ntbs_service_tests.UnitTests.Models
 
         public static IEnumerable<object[]> Dates()
         {
-            yield return new object[] { new PartialDate() { Day = null, Month = null, Year = "2000"}, new DateTime(2000, 1, 1), new DateTime(2001, 1, 1)};
-            yield return new object[] { new PartialDate() { Day = null, Month = "2", Year = "2000"}, new DateTime(2000, 2, 1), new DateTime(2000, 3, 1)};
+            yield return new object[] { 
+                new PartialDate() { Day = null, Month = null, Year = "2000"}, 
+                new DateTime(2000, 1, 1), 
+                new DateTime(2001, 1, 1)
+            };
+            yield return new object[] { 
+                new PartialDate() { Day = null, Month = "2", Year = "2000"},
+                new DateTime(2000, 2, 1), 
+                new DateTime(2000, 3, 1)
+            };
             yield return new object[] { new PartialDate() { Day = "20", Month = "3", Year = "2000"}, new DateTime(2000, 3, 20), new DateTime(2000, 3, 21)};
         }
 
@@ -45,7 +53,7 @@ namespace ntbs_service_tests.UnitTests.Models
         [Fact]
         public void CheckPartialDateAttributeReturnsFalseForNoYear() {
             var partialDate = new PartialDate() {Day = "1", Month = "2", Year = null};
-            var attribute = new ValidPartialDateCanConvertToDatetimeAttribute();
+            var attribute = new ValidPartialDateAttribute();
             var result = attribute.IsValid(partialDate);
 
             Assert.False(result);
@@ -54,7 +62,7 @@ namespace ntbs_service_tests.UnitTests.Models
         [Fact]
         public void CheckPartialDateAttributeReturnsFalseForDayButNoMonth() {
             var partialDate = new PartialDate() {Day = "1", Month = null, Year = "1990"};
-            var attribute = new ValidPartialDateCanConvertToDatetimeAttribute();
+            var attribute = new ValidPartialDateAttribute();
             var result = attribute.IsValid(partialDate);
 
             Assert.False(result);

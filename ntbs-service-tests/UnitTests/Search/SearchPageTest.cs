@@ -35,22 +35,14 @@ namespace ntbs_service_tests.UnitTests.Search
             var sexList = Task.FromResult(sexes);
             mockContext.Setup(s => s.GetAllSexesAsync()).Returns(sexList);
 
-            var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
-            var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-
-            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(draftStatusList)).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
-            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(nonDraftStatusList)).Returns(new List<Notification> { new Notification() {NotificationId = 2}}.AsQueryable());
+            mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
             
-            var unionAndPaginateResult = Task.FromResult(new KeyValuePair<IList<int>, int>(new List<int>() {1, 2}, 2));
+            var unionAndPaginateResult = Task.FromResult(new Tuple<IList<int>, int>(new List<int>() {1}, 1)); 
             mockSearchService.Setup(s => s.UnionAndPaginateQueryables(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(), 
                 It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
 
-            var y = Task.FromResult(GetNotifications());
-            mockNotificationService.Setup(s => s.GetNotificationsByIdAsync(new List<int>() {1, 2})).Returns(y);
-
-            
-
-            //TODO fix mocking request?
+            var notifications = Task.FromResult(GetNotifications());
+            mockNotificationService.Setup(s => s.GetNotificationsByIdAsync(It.IsAny<List<int>>())).Returns(notifications);
 
             var httpContext = new DefaultHttpContext() {};
             var modelState = new ModelStateDictionary();

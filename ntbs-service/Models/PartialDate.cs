@@ -5,7 +5,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models
 {
     [NotMapped]
-    [ValidPartialDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
+    [ValidPartialDate(ErrorMessage = ValidationMessages.InvalidDate)]
     public class PartialDate
     {
         public string Day {get; set; }

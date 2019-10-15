@@ -54,7 +54,7 @@ namespace ntbs_service.Services
 
         public INotificationSearchBuilder FilterByPartialDate(PartialDate partialDate) 
         {
-            if(partialDate != null ? !partialDate.IsEmpty() : false) {
+            if(!(partialDate == null || partialDate.IsEmpty())) {
                 partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
             }

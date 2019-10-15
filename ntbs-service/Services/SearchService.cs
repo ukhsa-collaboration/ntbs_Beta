@@ -15,7 +15,7 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
-        Task<KeyValuePair<IList<int>, int>> UnionAndPaginateQueryables(IQueryable<Notification> firstQueryable, 
+        Task<Tuple<IList<int>, int>> UnionAndPaginateQueryables(IQueryable<Notification> firstQueryable, 
             IQueryable<Notification> secondQueryable, PaginationParameters paginationParameters);
     }
 
@@ -40,7 +40,7 @@ namespace ntbs_service.Services
             return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
         }
 
-        public async Task<KeyValuePair<IList<int>, int>> UnionAndPaginateQueryables(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
+        public async Task<Tuple<IList<int>, int>> UnionAndPaginateQueryables(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
             PaginationParameters paginationParameters)
         {
             IQueryable<Notification> notificationIdsQueryable = OrderQueryableByNotificationDate(firstQueryable)
@@ -48,7 +48,7 @@ namespace ntbs_service.Services
 
             var notificationIds = await GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), paginationParameters);
             var count = await notificationIdsQueryable.CountAsync();
-            return new KeyValuePair<IList<int>, int> (notificationIds, count);
+            return new Tuple<IList<int>, int> (notificationIds, count);
         }
 
         private IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 

@@ -23,7 +23,11 @@ namespace ntbs_service.Models
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }
 
-        public bool SearchParamsExist => !string.IsNullOrEmpty(GivenName) || !string.IsNullOrEmpty(FamilyName) || !string.IsNullOrEmpty(IdFilter) || 
-                                          SexId != null || (PartialDob == null ? false : !PartialDob.IsEmpty());
+        public bool SearchParamsExist => 
+            !string.IsNullOrEmpty(GivenName) || 
+            !string.IsNullOrEmpty(FamilyName) || 
+            !string.IsNullOrEmpty(IdFilter) ||
+            SexId != null || 
+            !(PartialDob == null || PartialDob.IsEmpty());
     }
 }

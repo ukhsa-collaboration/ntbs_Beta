@@ -73,11 +73,13 @@ namespace ntbs_service.Pages_Search
                 .FilterBySex(SearchParameters.SexId)
                 .GetResult();
 
-            KeyValuePair<IList<int>, int> notificationIdsAndCount = await searchService.UnionAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
+            Tuple<IList<int>, int> notificationIdsAndCount = await searchService.UnionAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
+            var notificationIds = notificationIdsAndCount.Item1;
+            var count = notificationIdsAndCount.Item2;
             
-            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIdsAndCount.Key);
+            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
             var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
-            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, notificationIdsAndCount.Value, PaginationParameters);
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();
 

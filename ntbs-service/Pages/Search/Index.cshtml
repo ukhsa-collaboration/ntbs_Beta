@@ -29,7 +29,7 @@
                     <span nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.IdFilter"></span>
                     <input is-error-input=@IdFilterError nhs-input-type="Standard"
-                        asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" />
+                        asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" aria-describedby="id-types-hint"/>
                 </nhs-form-group>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
@@ -45,7 +45,7 @@
                     <span nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.FamilyName"></span>
                     <input is-error-input=@FamilyNameError nhs-input-type="Standard"
-                        asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10" />
+                        asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10" aria-describedby="two-character-family-name-hint"/>
                 </nhs-form-group>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
@@ -72,14 +72,14 @@
                             <nhs-form-group nhs-form-group-type="Standard">
                                 <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
                                 <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month" />
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month"/>
                             </nhs-form-group>
                         </nhs-date-input-item>
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
                                 <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
                                 <input nhs-input-type="Date" fixed-width="Four"
-                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year" />
+                                    is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year"/>
                             </nhs-form-group>
                         </nhs-date-input-item>
                     </nhs-date-input>
@@ -133,7 +133,7 @@
                     <span nhs-span-type="ErrorMessage" id="id-error"
                         asp-validation-for="SearchParameters.GivenName"></span>
                     <input is-error-input=@GivenNameError nhs-input-type="Standard"
-                        asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" />
+                        asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" aria-describedby="two-character-given-name-hint"/>
                 </nhs-form-group>
             </nhs-grid-column>
         </nhs-grid-row>
