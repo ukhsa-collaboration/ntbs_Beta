@@ -13,7 +13,10 @@ namespace ntbs_service.Models
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
+        public int? CountryId { get; set; }
+        public string TBServiceCode { get; set; }
         public PartialDate PartialDob { get; set; }
+        public PartialDate PartialNotificationDate { get; set; }
 
         [MinLength(2)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
@@ -27,7 +30,10 @@ namespace ntbs_service.Models
             !string.IsNullOrEmpty(GivenName) || 
             !string.IsNullOrEmpty(FamilyName) || 
             !string.IsNullOrEmpty(IdFilter) ||
+            !string.IsNullOrEmpty(TBServiceCode) ||
+            CountryId != null ||
             SexId != null || 
-            !(PartialDob == null || PartialDob.IsEmpty());
+            !(PartialDob == null || PartialDob.IsEmpty()) ||
+            !(PartialNotificationDate == null || PartialNotificationDate.IsEmpty());
     }
 }

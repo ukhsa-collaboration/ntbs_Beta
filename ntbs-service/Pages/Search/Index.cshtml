@@ -92,6 +92,59 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 @{
+                    var NotificationDateError = !Model.validationService.IsValid("SearchParameters.PartialNotificationDate");
+                    var NotificationDateGroupState = NotificationDateError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@NotificationDateGroupState>
+                    <label nhs-label-type="Standard"> Notification Date </label>
+                    <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
+                        Dates can be partial, enter year at minimum
+                    </nhs-hint>
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
+                        asp-validation-for="SearchParameters.PartialNotificationDate"></span>
+                    <nhs-date-input id="dob">
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Day">Day</label>
+                                <input nhs-input-type="Date" fixed-width="Two"
+                                    is-error-input=@NotificationDateError asp-for="SearchParameters.PartialNotificationDate.Day"/>
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Month">Month</label>
+                                <input nhs-input-type="Date" fixed-width="Two"
+                                    is-error-input=@NotificationDateError asp-for="SearchParameters.PartialNotificationDate.Month"/>
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                        <nhs-date-input-item>
+                            <nhs-form-group nhs-form-group-type="Standard">
+                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Year">Year</label>
+                                <input nhs-input-type="Date" fixed-width="Four"
+                                    is-error-input=@NotificationDateError asp-for="SearchParameters.PartialNotificationDate.Year"/>
+                            </nhs-form-group>
+                        </nhs-date-input-item>
+                    </nhs-date-input>
+                </nhs-form-group>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                @{
+                    var GivenNameError = !Model.validationService.IsValid("SearchParameters.GivenName");
+                    var GivenNameGroupState = GivenNameError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type=@GivenNameGroupState>
+                    <label nhs-label-type="Standard"> Given Name</label>
+                    <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint">
+                        Enter at least two characters
+                    </nhs-hint>
+                    <span nhs-span-type="ErrorMessage" id="id-error"
+                        asp-validation-for="SearchParameters.GivenName"></span>
+                    <input is-error-input=@GivenNameError nhs-input-type="Standard"
+                        asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" aria-describedby="two-character-given-name-hint"/>
+                </nhs-form-group>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                @{
                     var SexIdError = !Model.validationService.IsValid("SexId");
                     var SexIdGroupState = SexIdError ? Error : Standard;
                 }
@@ -121,20 +174,18 @@
                 </nhs-form-group>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
-                @{
-                    var GivenNameError = !Model.validationService.IsValid("SearchParameters.GivenName");
-                    var GivenNameGroupState = GivenNameError ? Error : Standard;
-                }
-                <nhs-form-group nhs-form-group-type=@GivenNameGroupState>
-                    <label nhs-label-type="Standard"> Given Name</label>
-                    <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint">
-                        Enter at least two characters
-                    </nhs-hint>
-                    <span nhs-span-type="ErrorMessage" id="id-error"
-                        asp-validation-for="SearchParameters.GivenName"></span>
-                    <input is-error-input=@GivenNameError nhs-input-type="Standard"
-                        asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" aria-describedby="two-character-given-name-hint"/>
-                </nhs-form-group>
+                <label nhs-label-type="Standard"> TB service </label>
+                <select nhs-select-type="Standard" asp-for="SearchParameters.TBServiceCode"
+                        asp-items="Model.TBServices">
+                    <option value="" selected>Select TB Service</option>
+                </select>
+                <br>
+                <br>
+                <label nhs-label-type="Standard"> Country of birth </label>
+                <select nhs-select-type="Standard" asp-for="SearchParameters.CountryId"
+                        asp-items="Model.Countries">
+                    <option value="" selected>Select TB Service</option>
+                </select>
             </nhs-grid-column>
         </nhs-grid-row>
         <div class="submit-search-button-container">
