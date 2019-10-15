@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 namespace ntbs_service.Data.Legacy
 {
 
-    public interface ISearchService
+    public interface ISearchServiceLegacy
     {
         IEnumerable<SearchResult> Search(SearchRequest request);
     }
 
 
-    public class SearchService : ISearchService
+    public class SearchServiceLegacy : ISearchServiceLegacy
     {
         private readonly IETSSearchService etsSearcher;
         private readonly ILTBRSearchService ltbrSearcher;
         private readonly IAnnualReportSearchService annualReportSearchService;
 
-        public SearchService(
+        public SearchServiceLegacy(
             IETSSearchService etsSearcher,
             ILTBRSearchService ltbrSearcher,
             IAnnualReportSearchService annualReportSearchService)

@@ -33,9 +33,7 @@ namespace ntbs_service.Services
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
-        IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
-        Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> source, PaginationParameters paginationParameters);
     }
 
     public class NotificationService : INotificationService
@@ -305,21 +303,10 @@ namespace ntbs_service.Services
             context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await context.SaveChangesAsync();
         }
-
-        public IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) {
-            return query.OrderByDescending(n => n.CreationDate)
-                .OrderByDescending(n => n.SubmissionDate);
-        }
-
+        
         public async Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids)
         {
             return await repository.GetNotificationsByIdsAsync(ids);
-        }
-
-        public async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
-        {
-            return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
-                .Take(paginationParameters.PageSize).ToListAsync();
         }
     }
 }

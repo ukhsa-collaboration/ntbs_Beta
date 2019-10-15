@@ -14,23 +14,29 @@ namespace ntbs_service.Pages_Search
 {
     public class IndexModel : PageModel
     {
+        private readonly NtbsContext context;
         public ValidationService validationService;
-        public INotificationService service;
+        public INotificationService notificationService;
+        public ISearchService searchService;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
         public string NextPageText;
         public string PreviousPageUrl;
         public string PreviousPageText;
+        public List<Sex> Sexes { get; set; }
         public PaginationParameters PaginationParameters;
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
 
-        public IndexModel(INotificationService service)
+        public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
         {
-            this.service = service;
+            this.context = context;
+            this.searchService = searchService;
+            this.notificationService = notificationService;
             validationService = new ValidationService(this);
+            Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
@@ -45,30 +51,33 @@ namespace ntbs_service.Pages_Search
 
             var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
             var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
-            IQueryable<Notification> draftsQueryable = service.GetBaseQueryableNotificationByStatus(draftStatusList);
-            IQueryable<Notification> nonDraftsQueryable = service.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
+            IQueryable<Notification> draftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(draftStatusList);
+            IQueryable<Notification> nonDraftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
             NotificationSearchBuilder draftSearchBuilder = new NotificationSearchBuilder(draftsQueryable);
             NotificationSearchBuilder nonDraftsSearchBuilder = new NotificationSearchBuilder(nonDraftsQueryable);
-            
+
             var filteredDrafts = draftSearchBuilder
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
+                .FilterByPartialDate(SearchParameters.PartialDob)
+                .FilterBySex(SearchParameters.SexId)
                 .GetResult();
 
             var filteredNonDrafts = nonDraftsSearchBuilder
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
+                .FilterByPartialDate(SearchParameters.PartialDob)
+                .FilterBySex(SearchParameters.SexId)
                 .GetResult();
 
-            IQueryable<Notification> notificationIdsQueryable = service.OrderQueryableByNotificationDate(filteredDrafts)
-                                                                .Union(service.OrderQueryableByNotificationDate(filteredNonDrafts));
-
-            var notificationIds = await service.GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), PaginationParameters);
-            var count = await notificationIdsQueryable.CountAsync();
-            IEnumerable<Notification> notifications = await service.GetNotificationsByIdAsync(notificationIds);
+            Tuple<IList<int>, int> notificationIdsAndCount = await searchService.UnionAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
+            var notificationIds = notificationIdsAndCount.Item1;
+            var count = notificationIdsAndCount.Item2;
+            
+            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
             var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
             SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
@@ -79,7 +88,7 @@ namespace ntbs_service.Pages_Search
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            return validationService.ValidateProperty(new IndexModel(service), key, value);
+            return validationService.ValidateProperty(this, key, value);
         }
 
         public void SetPaginationDetails() {

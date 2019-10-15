@@ -10,6 +10,8 @@ namespace ntbs_service.Services
         INotificationSearchBuilder FilterById(string id);
         INotificationSearchBuilder FilterByFamilyName(string familyName);
         INotificationSearchBuilder FilterByGivenName(string givenName);
+        INotificationSearchBuilder FilterByPartialDate(PartialDate partialDate);
+        INotificationSearchBuilder FilterBySex(int? sexId);
         IQueryable<Notification> GetResult();
     }
 
@@ -47,6 +49,24 @@ namespace ntbs_service.Services
             if (!String.IsNullOrEmpty(givenName))
             {
                 notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.GivenName, $"%{givenName}%"));
+            }
+            return this;
+        }
+
+        public INotificationSearchBuilder FilterByPartialDate(PartialDate partialDate) 
+        {
+            if(!(partialDate == null || partialDate.IsEmpty())) {
+                partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                notificationIQ = notificationIQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
+            }
+            
+            return this;
+        }
+
+        public INotificationSearchBuilder FilterBySex(int? sexId) 
+        {
+            if(sexId != null) {
+                notificationIQ = notificationIQ.Where(s => s.PatientDetails.SexId.Equals(sexId));
             }
             return this;
         }
