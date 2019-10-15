@@ -54,7 +54,8 @@ Secrets are project specific so run these commands in the root of a project.
 
 ## Testing
 
-We are using the [xunit](https://xunit.net/) frameworkTo run unit tests. To run tests, cd into the ntbs-service-tests project and run "dotnet test".
+We are using the [xunit](https://xunit.net/) framework for testing.
+To run unit/integration tests, cd into the ntbs-service-unit-tests/ntbs-integration-tests project and run "dotnet test".
 
 ## Database migrations
 

@@ -104,8 +104,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
-            validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
-                ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
+            if (ClinicalDetails.BCGVaccinationYear != null)
+            {
+                validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+                (int)ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
+            }
             
             var notificationSites = CreateNotificationSitesFromModel(Notification);
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
@@ -156,7 +159,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
 
-            if (!NotificationSiteMap[SiteId.OTHER])
+            if (!NotificationSiteMap.ContainsKey(SiteId.OTHER) || !NotificationSiteMap[SiteId.OTHER])
             {
                 OtherSite = null;
                 ModelState.Remove("OtherSite.SiteDescription");
@@ -178,11 +181,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                     };
                 }
             }
-        }
-
-        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
-        {
-            return validationService.ValidateModelProperty<ClinicalDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)

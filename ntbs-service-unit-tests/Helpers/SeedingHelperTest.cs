@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using Xunit;
 
-namespace ntbs_service_tests.UnitTests.Helpers
+namespace ntbs_service_unit_tests.Helpers
 {
     public class SeedingHelperTest
     {
         [Fact]
         public void GetRecordsFromCSV_GetsTBServicesData() {
-            var results = SeedingHelper.GetRecordsFromCSV<TBService>("../../../UnitTests/TestData/tbservices.csv");
+            var results = SeedingHelper.GetRecordsFromCSV<TBService>("../../../TestData/tbservices.csv");
             var firstEntryInTBServicesList = new TBService {
                 Code = "TBS0001",
                 Name = "Abingdon Community Hospital"

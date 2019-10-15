@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ntbs_service.Models;
 using Xunit;
 
-namespace ntbs_service_tests.UnitTests.Models
+namespace ntbs_service_unit_tests.Models
 {
     public class FormattedDateTest
     {

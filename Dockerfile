@@ -1,11 +1,11 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /app
 
-# restore audit lib (in a sperater layer to speed up the build)
+# restore audit lib (in a separate layer to speed up the build)
 COPY EFAuditer/EFAuditer.csproj ./EFAuditer/
 RUN dotnet restore EFAuditer/EFAuditer.csproj
 
-# restore app (in a sperater layer to speed up the build)
+# restore app (in a separate layer to speed up the build)
 COPY ntbs-service/ntbs-service.csproj ./ntbs-service/
 RUN dotnet restore ntbs-service/ntbs-service.csproj
 

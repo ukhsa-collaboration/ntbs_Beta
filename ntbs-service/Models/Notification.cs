@@ -6,6 +6,7 @@ using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
 using System.Reflection;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Models
 {
@@ -111,12 +112,12 @@ namespace ntbs_service.Models
 
         private string GetNotificationEditPath(string subPath)
         {
-            return $"/Notifications/Edit/{subPath}?id={NotificationId}&isBeingSubmitted={ShouldValidateFull}";
+            return RouteHelper.GetFullNotificationEditPath(subPath, NotificationId, ShouldValidateFull);
         }
 
         private string GetNotificationPath(string subPath)
         {
-            return $"/Notifications/{subPath}?id={NotificationId}";
+            return RouteHelper.GetFullNotificationPath(subPath, NotificationId);
         }
 
         private string GetNotificationStatusString()
