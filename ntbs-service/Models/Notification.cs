@@ -80,7 +80,7 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-        public string HIVTestState => ClinicalDetails.HIVTestState == null ? string.Empty : EnumExtension.GetAttribute<DisplayAttribute>(ClinicalDetails.HIVTestState).Name;
+        public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
         public string PatientEditPath => GetNotificationEditPath("Patient");
         public string EpisodeEditPath => GetNotificationEditPath("Episode");
         public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using ntbs_service.Models;
@@ -13,15 +14,5 @@ namespace ntbs_service.Helpers
         }
     }
 
-    public static class EnumExtension
-    {
-        public static TAttribute GetAttribute<TAttribute>(Enum enumValue) 
-            where TAttribute : Attribute
-        {
-            return enumValue.GetType()
-                            .GetMember(enumValue.ToString())
-                            .First()
-                            .GetCustomAttribute<TAttribute>();
-        }
-    }
+    
 }
