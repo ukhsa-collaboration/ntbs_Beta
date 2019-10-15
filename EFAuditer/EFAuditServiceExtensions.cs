@@ -5,6 +5,7 @@ using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Audit.EntityFramework;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -31,11 +32,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             });
 
+            Action<AuditEvent, EventEntry, AuditLog> auditAction = AuditAction;
+
             Audit.Core.Configuration.Setup()
                 .UseEntityFramework(ef => ef
                     .UseDbContext<AuditDatabaseContext>(contextOptions)
                     .AuditTypeMapper(t => typeof(AuditLog))
-                    .AuditEntityAction<AuditLog>(AuditAction)
+                    .AuditEntityAction<AuditLog>(auditAction)
                     .IgnoreMatchedProperties(true)
                 );
         }
