@@ -177,23 +177,16 @@ namespace ntbs_integration_tests
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Year")).Value);
         }
 
-        public static IEnumerable<object[]> InvalidDates()
-        {
-            yield return new object[] { "1", "0", "2009", ValidationMessages.ValidDate };
-            yield return new object[] { "1", "1", "2009", ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate) };
-        }
-
-
-        [Theory, MemberData(nameof(InvalidDates))]
-        public async Task ValidateClinicalDetailsDate_ReturnsAppropriateErrorMessage(string day, string month, string year, string errorMessage)
+        [Fact]
+        public async Task IfInvalidDate_ValidateClinicalDetailsDate_ReturnsValidDateErrorMessage()
         {
             // Arrange
             var formData = new Dictionary<string, string>
             {
                 ["key"] = "DiagnosisDate",
-                ["day"] = day,
-                ["month"] = month,
-                ["year"] = year
+                ["day"] = "1",
+                ["month"] = "0",
+                ["year"] = "2009"
             };
 
             // Act
@@ -201,7 +194,27 @@ namespace ntbs_integration_tests
 
             // Assert
             var result = (await response.Content.ReadAsStringAsync());
-            Assert.Equal(errorMessage, result);
+            Assert.Equal(ValidationMessages.ValidDate, result);
+        }
+
+        [Fact]
+        public async Task IfDateTooEarly_ValidateClinicalDetailsDate_ReturnsEarliestClinicalDateErrorMessage()
+        {
+            // Arrange
+            var formData = new Dictionary<string, string>
+            {
+                ["key"] = "DiagnosisDate",
+                ["day"] = "1",
+                ["month"] = "1",
+                ["year"] = "2009"
+            };
+
+            // Act
+            var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsDate"));
+
+            // Assert
+            var result = (await response.Content.ReadAsStringAsync());
+            Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate), result);
         }
 
         [Theory]
