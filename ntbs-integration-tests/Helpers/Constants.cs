@@ -6,16 +6,16 @@ namespace ntbs_integration_tests.Helpers
     {
         public const string HomePage = "/";
         public const string SearchPage = "/Search";
-        public static string Patient = RouteHelper.GetNotificationEditPath("Patient");
-        public static string Episode = RouteHelper.GetNotificationEditPath("Episode");
-        public static string ClinicalDetails = RouteHelper.GetNotificationEditPath("ClinicalDetails");
-        public static string ContactTracing = RouteHelper.GetNotificationEditPath("ContactTracing");
-        public static string SocialRiskFactors = RouteHelper.GetNotificationEditPath("SocialRiskFactors");
-        public static string Travel = RouteHelper.GetNotificationEditPath("Travel");
-        public static string Comorbidities = RouteHelper.GetNotificationEditPath("Comorbidities");
-        public static string Immunosuppression = RouteHelper.GetNotificationEditPath("Immunosupression");
-        public static string PreviousHistory = RouteHelper.GetNotificationEditPath("PreviousHistory");
-        public static string Overview = RouteHelper.GetNotificationPath("Overview");
-        public static string LinkedNotifications = RouteHelper.GetNotificationPath("LinkedNotifications");
+        public static string Patient = RouteHelper.GetNotificationEditBasePath("Patient");
+        public static string Episode = RouteHelper.GetNotificationEditBasePath("Episode");
+        public static string ClinicalDetails = RouteHelper.GetNotificationEditBasePath("ClinicalDetails");
+        public static string ContactTracing = RouteHelper.GetNotificationEditBasePath("ContactTracing");
+        public static string SocialRiskFactors = RouteHelper.GetNotificationEditBasePath("SocialRiskFactors");
+        public static string Travel = RouteHelper.GetNotificationEditBasePath("Travel");
+        public static string Comorbidities = RouteHelper.GetNotificationEditBasePath("Comorbidities");
+        public static string Immunosuppression = RouteHelper.GetNotificationEditBasePath("Immunosupression");
+        public static string PreviousHistory = RouteHelper.GetNotificationEditBasePath("PreviousHistory");
+        public static string Overview = RouteHelper.GetNotificationBasePath("Overview");
+        public static string LinkedNotifications = RouteHelper.GetNotificationBasePath("LinkedNotifications");
     }
 }

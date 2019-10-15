@@ -268,10 +268,16 @@ namespace ntbs_integration_tests
         public async Task ValidateClinicalDetailsProperties_ReturnsErrorIfBothTreatmentsSetToTrue()
         {
              // Arrange
-            var keyValuePairs = "keyValuePairs[0][key]=IsShortCourseTreatment&keyValuePairs[0][value]=true&keyValuePairs[1][key]=IsMDRTreatment&keyValuePairs[1][value]=true";
+            var keyValuePairs = new string[]
+            {
+                "keyValuePairs[0][key]=IsShortCourseTreatment",
+                "keyValuePairs[0][value]=true",
+                "keyValuePairs[1][key]=IsMDRTreatment",
+                "keyValuePairs[1][value]=true"
+            };
 
             // Act
-            var response = await client.GetAsync($"{PageRoute}/ValidateClinicalDetailsProperties?{keyValuePairs}");
+            var response = await client.GetAsync($"{PageRoute}/ValidateClinicalDetailsProperties?{string.Join("&", keyValuePairs)}");
 
             // Assert check just response.Content
             var result = (await response.Content.ReadAsStringAsync());

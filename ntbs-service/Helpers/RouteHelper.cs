@@ -4,20 +4,20 @@ namespace ntbs_service.Helpers
     {
         public static string GetFullNotificationEditPath(string subPath, int id, bool isBeingSubmitted)
         {
-            return $"{GetNotificationEditPath(subPath)}?id={id}&isBeingSubmitted={isBeingSubmitted}";
+            return $"{GetNotificationEditBasePath(subPath)}?id={id}&isBeingSubmitted={isBeingSubmitted}";
         }
 
-        public static string GetNotificationEditPath(string subPath)
+        public static string GetNotificationEditBasePath(string subPath)
         {
             return $"/Notifications/Edit/{subPath}";
         }
 
         public static string GetFullNotificationPath(string subPath, int id)
         {
-            return $"{GetNotificationPath(subPath)}?id={id}";
+            return $"{GetNotificationBasePath(subPath)}?id={id}";
         }
 
-        public static string GetNotificationPath(string subPath)
+        public static string GetNotificationBasePath(string subPath)
         {
             return $"/Notifications/{subPath}";
         }

@@ -16,6 +16,21 @@ pipeline {
         }
       }
     }
+    stage('run integration tests') {
+      steps {
+        script {
+          docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2').inside {
+            sh(script: '''
+              # Workaround from https://stackoverflow.com/a/57212491/2363767
+              export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
+              cd ntbs-integration-tests
+              echo "Running integration tests"
+              dotnet test
+            ''')
+          }
+        }
+      }
+    }
     stage('build and publish image') {
       steps {
         script {
@@ -23,7 +38,7 @@ pipeline {
             ntbsImage = docker.build("ntbs-service:build-${env.BUILD_ID}",  ".")
             echo "Uploading build image build-${env.BUILD_ID}"
             ntbsImage.push()
-            echo "Uploading latest imagine"
+            echo "Uploading latest image"
             ntbsImage.push("latest")
           }
         }

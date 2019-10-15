@@ -28,7 +28,7 @@ namespace ntbs_integration_tests
         public async Task GetOverviewPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync($"{Routes.Overview}?id={id}");
+            var response = await client.GetAsync(GetPageRouteForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
