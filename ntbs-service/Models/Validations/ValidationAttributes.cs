@@ -56,7 +56,7 @@ namespace ntbs_service.Models.Validations
             this.PropertyList  = propertyList;
         }
 
-        public override bool IsValid(object value) {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
             
             PropertyInfo propertyInfo;
 
@@ -65,10 +65,10 @@ namespace ntbs_service.Models.Validations
                 propertyInfo = value.GetType().GetProperty(propertyName);
                 if (propertyInfo != null && propertyInfo.GetValue(value, null) != null)
                 {
-                    return true;
+                    return null;
                 }
             }
-        return false;
+            return new ValidationResult(ErrorMessage);
         }
     }
 }
