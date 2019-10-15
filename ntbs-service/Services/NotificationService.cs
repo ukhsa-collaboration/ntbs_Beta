@@ -28,6 +28,7 @@ namespace ntbs_service.Services
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task SubmitNotification(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
+        Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
@@ -119,6 +120,46 @@ namespace ntbs_service.Services
             context.Entry(notification.ContactTracing).CurrentValues.SetValues(contactTracing);
 
             await UpdateDatabase();
+        }
+
+        public async Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails)
+        {
+            UpdateTravelDetails(notification, travelDetails);
+            UpdateVisitorDetails(notification, visitorDetails);
+
+            await UpdateDatabase();
+        }
+
+        private void UpdateTravelDetails(Notification notification, TravelDetails travelDetails)
+        {
+            if (travelDetails.HasTravel != true)
+            {
+                ClearTravelOrVisitorFields(travelDetails);
+            }
+            context.Entry(notification.TravelDetails).CurrentValues.SetValues(travelDetails);
+        }
+
+        private void UpdateVisitorDetails(Notification notification, VisitorDetails visitorDetails)
+        {
+            if (visitorDetails.HasVisitor != true)
+            {
+                ClearTravelOrVisitorFields(visitorDetails);
+            }
+            context.Entry(notification.VisitorDetails).CurrentValues.SetValues(visitorDetails);
+        }
+
+        private void ClearTravelOrVisitorFields(ITravelOrVisitorDetails travelOrVisitorDetails)
+        {
+            travelOrVisitorDetails.TotalNumberOfCountries = null;
+            travelOrVisitorDetails.Country1 = null;
+            travelOrVisitorDetails.Country1Id = null;
+            travelOrVisitorDetails.StayLengthInMonths1 = null;
+            travelOrVisitorDetails.Country2 = null;
+            travelOrVisitorDetails.Country2Id = null;
+            travelOrVisitorDetails.StayLengthInMonths2 = null;
+            travelOrVisitorDetails.Country3 = null;
+            travelOrVisitorDetails.Country3Id = null;
+            travelOrVisitorDetails.StayLengthInMonths3 = null;
         }
 
         public async Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory tBHistory)

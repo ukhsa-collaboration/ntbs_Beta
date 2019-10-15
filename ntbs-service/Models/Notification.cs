@@ -5,6 +5,7 @@ using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
+using System.Reflection;
 
 namespace ntbs_service.Models
 {
@@ -20,6 +21,8 @@ namespace ntbs_service.Models
             PatientTBHistory = new PatientTBHistory();
             ContactTracing = new ContactTracing();
             ImmunosuppressionDetails = new ImmunosuppressionDetails();
+            TravelDetails = new TravelDetails();
+            VisitorDetails = new VisitorDetails();
         }
 
         [Display(Name = "Notification Id")]
@@ -42,6 +45,8 @@ namespace ntbs_service.Models
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
         public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
+        public virtual TravelDetails TravelDetails { get; set; }
+        public virtual VisitorDetails VisitorDetails { get; set; }
         public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
@@ -59,7 +64,10 @@ namespace ntbs_service.Models
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
+        public string HasRecentVisitor => TrueFalseToYesNo(VisitorDetails.HasVisitor);
+        public string HasRecentTravel => TrueFalseToYesNo(TravelDetails.HasTravel);
         public string FormattedNhsNumber => FormatNhsNumberString();
+        public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
@@ -79,7 +87,7 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-
+        public string HIVTestState => ClinicalDetails.HIVTestState == null ? string.Empty : GetAttribute<DisplayAttribute>(ClinicalDetails.HIVTestState).Name;
         public string PatientEditPath => GetNotificationEditPath("Patient");
         public string EpisodeEditPath => GetNotificationEditPath("Episode");
         public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");
@@ -91,6 +99,15 @@ namespace ntbs_service.Models
         public string PreviousHistoryEditPath => GetNotificationEditPath("PreviousHistory");
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
+
+        public TAttribute GetAttribute<TAttribute>(Enum enumValue) 
+            where TAttribute : Attribute
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<TAttribute>();
+        }
 
         private string GetNotificationEditPath(string subPath)
         {
@@ -179,7 +196,7 @@ namespace ntbs_service.Models
         {
             if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
             {
-                return "";
+                return "Not known";
             }
             return string.Join(" ",
                 PatientDetails.NhsNumber.ToString().Substring(0, 3),

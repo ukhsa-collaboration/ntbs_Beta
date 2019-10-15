@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Audit.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using ntbs_service.Helpers;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
-using Audit.EntityFramework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Models
 {
@@ -38,10 +38,19 @@ namespace ntbs_service.Models
         public virtual DbSet<Episode> Episode { get; set; }
         public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
         public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
+        public virtual DbSet<TravelDetails> TravelDetails { get; set; }
+        public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
             return await Country.ToListAsync();
+        }
+
+        public virtual async Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync()
+        {
+            return await Country
+                            .Where(c => c.HasHighTbOccurence)
+                            .ToListAsync();
         }
 
         public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
@@ -99,8 +108,9 @@ namespace ntbs_service.Models
                 entity.Property(e => e.Name).HasMaxLength(200);
             });
 
+
             modelBuilder.Entity<Country>().HasData(
-                Countries.GetCountriesArray()
+                ntbs_service.Models.SeedData.Countries.GetCountriesArray()
             );
 
             modelBuilder.Entity<Ethnicity>(entity =>
@@ -235,6 +245,9 @@ namespace ntbs_service.Models
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("ImmunosuppressionDetails");
                 });
+
+                entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails"); ;
+                entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails"); ;
             });
 
             modelBuilder.Entity<Region>(entity =>
