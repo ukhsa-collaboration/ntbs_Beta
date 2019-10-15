@@ -16,3 +16,5 @@
 
 ### Visual Studios ###
 .vs/
+/ntbs-service-tests/bin
+/ntbs-service-tests/obj
