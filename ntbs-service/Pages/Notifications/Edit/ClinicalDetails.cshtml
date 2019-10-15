@@ -23,7 +23,7 @@
     <validate-required-checkboxes property="NotificationSites" shouldvalidatefull="@fullValidation" inline-template>
         <nhs-form-group v-on:change="validate" ref="checkboxgroup" nhs-form-group-type="@NotificationSitesGroupState">
             <nhs-fieldset>
-                <span class="nhsuk-error-message" id="notification-sites-id"
+                <span class="nhsuk-error-message" id="notification-sites-error"
                       ref="errorField" asp-validation-for="Notification.NotificationSites"></span>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>

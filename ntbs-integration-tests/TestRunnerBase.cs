@@ -55,7 +55,7 @@ namespace ntbs_integration_tests
             return response.Headers.Location.OriginalString;
         }
 
-        protected IEnumerable<char> FullErrorMessage(string validationMessage)
+        protected string FullErrorMessage(string validationMessage)
         {
             return $"Error:{validationMessage}";
         }
