@@ -54,7 +54,7 @@ pipeline {
           kubectl.inside("--entrypoint=''") {
             withCredentials([[$class: 'FileBinding', credentialsId: 'kubeconfig', variable: 'KUBECONFIG']]) {
               echo "Deploying to int"
-              sh "kubectl apply -f ./ntbs-service/int.yml"
+              sh "kubectl apply -f ./ntbs-service/deployments/int.yml"
               // This sets the image to current build. Should be the same as "latest", but triggers pull of the image.
               sh "kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:build-${env.BUILD_ID}"
               echo "Deployed!"
