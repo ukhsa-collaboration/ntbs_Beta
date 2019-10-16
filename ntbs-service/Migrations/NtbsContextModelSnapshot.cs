@@ -11685,6 +11685,29 @@ namespace ntbs_service.Migrations
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
+                    b.OwnsOne("ntbs_service.Models.DenotificationDetails", "DenotificationDetails", b1 =>
+                        {
+                            b1.Property<int>("NotificationId");
+
+                            b1.Property<DateTime>("DateOfDenotification");
+
+                            b1.Property<string>("OtherDescription")
+                                .HasMaxLength(150);
+
+                            b1.Property<string>("Reason")
+                                .IsRequired()
+                                .HasMaxLength(30);
+
+                            b1.HasKey("NotificationId");
+
+                            b1.ToTable("DenotificationDetails");
+
+                            b1.HasOne("ntbs_service.Models.Notification")
+                                .WithOne("DenotificationDetails")
+                                .HasForeignKey("ntbs_service.Models.DenotificationDetails", "NotificationId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
                     b.OwnsOne("ntbs_service.Models.Episode", "Episode", b1 =>
                         {
                             b1.Property<int>("NotificationId");
