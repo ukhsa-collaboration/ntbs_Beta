@@ -4,7 +4,7 @@ using ntbs_service.Models;
 using Xunit;
 using ntbs_service.Models.Validations;
 
-namespace ntbs_service_tests.UnitTests.Models
+namespace ntbs_service_unit_tests.Models
 {
     public class PartialDateTest
     {
