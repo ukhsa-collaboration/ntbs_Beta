@@ -4,19 +4,17 @@
     Layout = "./_Form_Layout.cshtml";
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
     var currentPage = splitUrlPath[splitUrlPath.Length - 1];
-    var NotificationStatusTriangleCssClass = "";
+    var notificationStatusTriangleCssClass = "";
     switch (@Model.Notification.NotificationStatus)
     {
         case NotificationStatus.Draft:
-            NotificationStatusTriangleCssClass = "notification-banner-triangle--draft";
+            notificationStatusTriangleCssClass = "notification-banner-triangle--draft";
             break;
         case NotificationStatus.Notified:
-            NotificationStatusTriangleCssClass = "notification-banner-triangle--notified";
+            notificationStatusTriangleCssClass = "notification-banner-triangle--notified";
             break;
         case NotificationStatus.Denotified:
-            NotificationStatusTriangleCssClass = "notification-banner-triangle--denotified";
-            break;
-        default:
+            notificationStatusTriangleCssClass = "notification-banner-triangle--denotified";
             break;
     }
 
@@ -32,14 +30,14 @@
     ViewData["IsPreviousHistoryPage"] = currentPage == "PreviousHistory";
     ViewData["IsLinkedNotificationsPage"] = currentPage == "LinkedNotifications";
 
-    var MainGridWidth = (bool)ViewData["IsLinkedNotificationsPage"] ? Full : ThreeQuarters;
+    var mainGridWidth = (bool)ViewData["IsLinkedNotificationsPage"] ? Full : ThreeQuarters;
 }
 
 <nhs-grid-row>
     <nhs-grid-column grid-column-width="Full">
         <div class="notification-banner-container">
             <partial name="./_NotificationBanner.cshtml" model="@Model.NotificationBannerModel" />
-            <div class="notification-banner-triangle @NotificationStatusTriangleCssClass"> </div>
+            <div class="notification-banner-triangle @notificationStatusTriangleCssClass"> </div>
         </div>
         <div class="notification-banner-links">
             @if (@Model.Notification.NotificationStatus == NotificationStatus.Notified)
@@ -95,7 +93,7 @@
             </ul>
         </nhs-grid-column>
     }
-    <nhs-grid-column grid-column-width=@MainGridWidth>
+    <nhs-grid-column grid-column-width=@mainGridWidth>
         <input type="hidden" asp-for="NotificationId" />
         @RenderBody()
     </nhs-grid-column>
@@ -113,5 +111,9 @@
     else if ((bool)ViewData["IsOverviewPage"])
     {
         <button nhs-button-type="Standard" asp-page-handler="CreateLink">New notification for this person</button>
+        @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
+        {
+            <a href="@Model.Notification.DenotifyPath" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning">Denotify</a>
+        }
     }
 }

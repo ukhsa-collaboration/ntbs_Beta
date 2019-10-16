@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Services
 {
@@ -34,6 +34,7 @@ namespace ntbs_service.Services
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
+        Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails);
     }
 
     public class NotificationService : INotificationService
@@ -303,10 +304,26 @@ namespace ntbs_service.Services
             context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await context.SaveChangesAsync();
         }
-        
+
         public async Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids)
         {
             return await repository.GetNotificationsByIdsAsync(ids);
+        }
+
+        public async Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails)
+        {
+            var notification = await repository.GetNotificationWithDenotificationDetailsAsync(notificationId);
+            if (notification.DenotificationDetails == null)
+            {
+                notification.DenotificationDetails = denotificationDetails;
+            }
+            else
+            {
+                context.Entry(notification.DenotificationDetails).CurrentValues.SetValues(denotificationDetails);
+            }
+
+            notification.NotificationStatus = NotificationStatus.Denotified;
+            await UpdateDatabase(AuditType.Denotified);
         }
     }
 }
