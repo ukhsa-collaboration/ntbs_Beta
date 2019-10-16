@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using ntbs_service.Models;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Validations
 {
@@ -43,6 +46,30 @@ namespace ntbs_service.Models.Validations
         private bool isTruthy(object value)
         {
             return value != null && (bool)value;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class AtLeastOnePropertyAttribute : ValidationAttribute
+    {
+        private string[] PropertyList { get; set; }
+
+        public AtLeastOnePropertyAttribute(params string[] propertyList)
+        {
+            this.PropertyList  = propertyList;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext) 
+        {
+            foreach (var propertyName in PropertyList)
+            {
+                var propertyInfo = value.GetType().GetProperty(propertyName);
+                if (propertyInfo != null && propertyInfo.GetValue(value, null) != null)
+                {
+                    return null;
+                }
+            }
+            return new ValidationResult(ErrorMessage);
         }
     }
 
