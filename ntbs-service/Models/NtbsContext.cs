@@ -40,6 +40,7 @@ namespace ntbs_service.Models
         public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
         public virtual DbSet<TravelDetails> TravelDetails { get; set; }
         public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
+        public virtual DbSet<DenotificationDetails> DenotificationDetails { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -161,6 +162,7 @@ namespace ntbs_service.Models
             var statusEnumConverter = new EnumToStringConverter<Status>();
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
+            var denotificationReasonEnumConverter = new EnumToStringConverter<DenotificationReason>();
 
             modelBuilder.Entity<Notification>(entity =>
             {
@@ -248,6 +250,14 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails"); ;
                 entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails"); ;
+
+                entity.OwnsOne(e => e.DenotificationDetails, i =>
+                {
+                    i.Property(e => e.Reason)
+                        .HasConversion(denotificationReasonEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    i.ToTable("DenotificationDetails");
+                });
             });
 
             modelBuilder.Entity<Region>(entity =>
