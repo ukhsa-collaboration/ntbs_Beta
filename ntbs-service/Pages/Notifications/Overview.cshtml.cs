@@ -21,6 +21,7 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
+            NotificationId = Notification.NotificationId;
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
                 return RedirectToPage("./Edit/Patient", new { id = NotificationId });
@@ -29,7 +30,6 @@ namespace ntbs_service.Pages.Notifications
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
             await GetLinkedNotifications();
-            NotificationId = Notification.NotificationId;
 
             return Page();
         }
