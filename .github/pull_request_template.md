@@ -11,5 +11,5 @@
 - [ ] Check the feature looks and works correctly in IE11
 - [ ] Zoom page to 400% - content still visible?
 - [ ] Test feature works with keyboard only operation
-- [ ] Test with one screen reader - logical flow, no unexpected content
+- [ ] Test with one screen reader (e.g. [NVDA](https://www.nvaccess.org/): see [getting started](https://webaim.org/articles/nvda/)) - logical flow, no unexpected content. 
 - [ ] Passes automated checker (e.g. [WAVE](https://chrome.google.com/webstore/detail/wave-evaluation-tool/jbbplnpkjmmeebjpijfedlgcdilocofh))
