@@ -12,6 +12,8 @@ namespace ntbs_integration_tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Test");
+
             builder.ConfigureServices(services =>
             {
                 var serviceProvider = new ServiceCollection()

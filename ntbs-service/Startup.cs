@@ -44,7 +44,7 @@ namespace ntbs_service
             });
 
 
-            var setupDevAuth = Env.IsDevelopment();
+            var setupDummyAuth = Env.IsDevelopment() || Env.IsEnvironment("Test");
             IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
             var authSetup = services.AddAuthentication(sharedOptions =>
                     {
@@ -58,11 +58,12 @@ namespace ntbs_service
                     })
                     .AddCookie(options =>
                     {   
-                        options.ForwardAuthenticate = setupDevAuth ? DevAuthHandler.DevAuthName : null;
+                        options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
                     });
 
-            if (setupDevAuth) {
-                authSetup.AddScheme<AuthenticationSchemeOptions, DevAuthHandler>(DevAuthHandler.DevAuthName, o => { });
+            if (setupDummyAuth)
+            {
+                authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
             }
 
             services.AddMvc(options => 
