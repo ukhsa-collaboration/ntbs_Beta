@@ -116,7 +116,7 @@
                   asp-validation-for="Patient.EthnicityId"></span>
             <select v-on:change="validate" ref="selectField" nhs-select-type="@SelectErrorState"
                     asp-for="Patient.EthnicityId" asp-items="Model.Ethnicities">
-                <option value="" selected>Select Ethnic group</option>
+                <option value="">Select Ethnic group</option>
             </select>
         </nhs-form-group>
     </validate-input>
@@ -172,7 +172,7 @@
                       ref="errorField" asp-validation-for="Patient.CountryId"></span>
                 <select ref="selectField" v-on:change="validate" nhs-select-type="@CountrySelectErrorState"
                         asp-for="Patient.CountryId" asp-items="Model.Countries">
-                    <option value="" selected>Select a Birth Country</option>
+                    <option value="">Select a Birth Country</option>
                 </select>
             </nhs-fieldset>
         </nhs-form-group>
@@ -184,7 +184,7 @@
             <label asp-for="Patient.Address" nhs-label-type="Standard">
                 Address
             </label>
-            <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField"></span>
+            <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField" asp-validation-for="Patient.Address"></span>
             <textarea asp-for="Patient.Address" nhs-textarea-type="Standard" rows="2" aria-describedby="address-error"
                       autocomplete="street-address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
         </nhs-form-group>
@@ -194,7 +194,7 @@
         <nhs-fieldset aria-describedby="postcode-error">
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="false"
+                    <input asp-for="Patient.NoFixedAbode" id="postcode-yes" class="nhsuk-radios__input" type="radio" value="false"
                            data-aria-controls="conditional-postcode-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
                         Postcode
@@ -216,7 +216,7 @@
                 </div>
                 <div class="nhsuk-radios__item">
                     <input asp-for="Patient.NoFixedAbode" class="nhsuk-radios__input" type="radio" value="true">
-                    <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
+                    <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode" id="postcode-no">
                         No fixed abode
                     </label>
                 </div>

@@ -7,15 +7,12 @@ using ntbs_service;
 using ntbs_service.Models.Validations;
 using Xunit;
 
-namespace ntbs_integration_tests
+namespace ntbs_integration_tests.NotificationPages
 {
     public class ClinicalDetailsPageTests : TestRunnerBase
     {
-        protected override string PageRoute
-        {
-            get { return Routes.ClinicalDetails; }
-        }
-        
+        protected override string PageRoute => Routes.ClinicalDetails;
+
         public ClinicalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 
         [Fact]
@@ -78,9 +75,33 @@ namespace ntbs_integration_tests
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            // TODO: Check site error here after merging
+            Assert.Equal(FullErrorMessage(ValidationMessages.DiseaseSiteOtherIsRequired), resultDocument.QuerySelector("span[id='other-site-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), resultDocument.QuerySelector("span[id='bcg-vaccination-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), resultDocument.QuerySelector("span[id='postmortem-error']").TextContent);
+        }
+
+        [Fact]
+        public async Task PostNotified_ReturnsPageWithDiseaseSiteRequiredError_IfDiseaseSiteNotSet()
+        {
+            // Arrange
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var document = await GetDocumentAsync(initialPage);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                // There is an enum conversion error when not sending any value for notificationSiteMap, so use false
+                ["NotificationSiteMap[OTHER]"] = "false",
+            };
+
+            // Act
+            var result = await SendFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, resultDocument.QuerySelector("span[id='notification-sites-error']").TextContent);
         }
 
         [Fact]
@@ -193,7 +214,7 @@ namespace ntbs_integration_tests
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.ValidDate, result);
         }
 
@@ -213,7 +234,7 @@ namespace ntbs_integration_tests
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate), result);
         }
 
@@ -232,7 +253,7 @@ namespace ntbs_integration_tests
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateNotificationSites"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
         }
 
@@ -254,7 +275,7 @@ namespace ntbs_integration_tests
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateNotificationSiteProperty"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
         }
 
@@ -262,7 +283,7 @@ namespace ntbs_integration_tests
         public async Task ValidateClinicalDetailsYearComparison_ReturnsErrorIfNewYearEarlierThanExisting()
         {
              // Arrange
-            var existingYear = 1990; 
+            var existingYear = 1990;
             var formData = new Dictionary<string, string>
             {
                 ["newYear"] = "1960",
@@ -273,7 +294,7 @@ namespace ntbs_integration_tests
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.ValidYearLaterThanBirthYear(existingYear), result);
         }
 
@@ -293,9 +314,8 @@ namespace ntbs_integration_tests
             var response = await client.GetAsync($"{PageRoute}/ValidateClinicalDetailsProperties?{string.Join("&", keyValuePairs)}");
 
             // Assert check just response.Content
-            var result = (await response.Content.ReadAsStringAsync());
-            
-            Assert.True(result.Contains(ValidationMessages.ValidTreatmentOptions));
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains(ValidationMessages.ValidTreatmentOptions, result);
         }
     }
 }

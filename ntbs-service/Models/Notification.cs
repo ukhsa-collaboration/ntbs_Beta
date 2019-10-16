@@ -23,6 +23,7 @@ namespace ntbs_service.Models
             ImmunosuppressionDetails = new ImmunosuppressionDetails();
             TravelDetails = new TravelDetails();
             VisitorDetails = new VisitorDetails();
+            ComorbidityDetails = new ComorbidityDetails();
         }
 
         [Display(Name = "Notification Id")]
@@ -48,7 +49,7 @@ namespace ntbs_service.Models
         public virtual TravelDetails TravelDetails { get; set; }
         public virtual VisitorDetails VisitorDetails { get; set; }
         public virtual DenotificationDetails DenotificationDetails { get; set; }
-
+        public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();

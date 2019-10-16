@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
-            Notification = await service.GetNotificationWithImmunosuppressionDetailsAsync(id);
+            Notification = await service.GetNotificationAsync(id);
             if (Notification == null) 
             {
                 return NotFound();

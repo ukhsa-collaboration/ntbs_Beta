@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191015164032_AddComorbidityDetails")]
+    partial class AddComorbidityDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -11711,29 +11713,6 @@ namespace ntbs_service.Migrations
                             b1.HasOne("ntbs_service.Models.Notification")
                                 .WithOne("ContactTracing")
                                 .HasForeignKey("ntbs_service.Models.ContactTracing", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.DenotificationDetails", "DenotificationDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<DateTime>("DateOfDenotification");
-
-                            b1.Property<string>("OtherDescription")
-                                .HasMaxLength(150);
-
-                            b1.Property<string>("Reason")
-                                .IsRequired()
-                                .HasMaxLength(30);
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("DenotificationDetails");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("DenotificationDetails")
-                                .HasForeignKey("ntbs_service.Models.DenotificationDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 

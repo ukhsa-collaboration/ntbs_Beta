@@ -12,8 +12,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class SocialRiskFactorsModel : NotificationEditModelBase
     {
-        public List<Status> StatusList { get; set; }
-
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
@@ -21,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationWithSocialRisksAsync(id);
+            Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
             {
                 return NotFound();
@@ -30,8 +28,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             NotificationBannerModel = new NotificationBannerModel(Notification);
             SocialRiskFactors = Notification.SocialRiskFactors;
             await SetNotificationProperties(isBeingSubmitted, SocialRiskFactors);
-
-            StatusList = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
 
             return Page();
         }
