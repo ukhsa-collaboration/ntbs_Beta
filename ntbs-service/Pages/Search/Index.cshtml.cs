@@ -9,6 +9,7 @@ using ntbs_service.Models;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ntbs_service.Pages_Search
 {
@@ -25,6 +26,8 @@ namespace ntbs_service.Pages_Search
         public string PreviousPageUrl;
         public string PreviousPageText;
         public List<Sex> Sexes { get; set; }
+        public SelectList Countries { get; set; }
+        public SelectList TBServices { get; set; }
         public PaginationParameters PaginationParameters;
 
         [BindProperty(SupportsGet = true)]
@@ -37,6 +40,12 @@ namespace ntbs_service.Pages_Search
             this.notificationService = notificationService;
             validationService = new ValidationService(this);
             Sexes = context.GetAllSexesAsync().Result.ToList();
+            TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
+                                        nameof(TBService.Code),
+                                        nameof(TBService.Name));
+            Countries = new SelectList(context.GetAllCountriesAsync().Result,
+                                        nameof(Country.CountryId),
+                                        nameof(Country.Name));
         }
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
@@ -61,16 +70,22 @@ namespace ntbs_service.Pages_Search
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
-                .FilterByPartialDate(SearchParameters.PartialDob)
+                .FilterByPartialDob(SearchParameters.PartialDob)
+                .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
+                .FilterByBirthCountry(SearchParameters.CountryId)
+                .FilterByTBService(SearchParameters.TBServiceCode)
                 .GetResult();
 
             var filteredNonDrafts = nonDraftsSearchBuilder
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
-                .FilterByPartialDate(SearchParameters.PartialDob)
+                .FilterByPartialDob(SearchParameters.PartialDob)
+                .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
+                .FilterByBirthCountry(SearchParameters.CountryId)
+                .FilterByTBService(SearchParameters.TBServiceCode)
                 .GetResult();
 
             Tuple<IList<int>, int> notificationIdsAndCount = await searchService.UnionAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);

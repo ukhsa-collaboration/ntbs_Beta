@@ -10,8 +10,11 @@ namespace ntbs_service.Services
         INotificationSearchBuilder FilterById(string id);
         INotificationSearchBuilder FilterByFamilyName(string familyName);
         INotificationSearchBuilder FilterByGivenName(string givenName);
-        INotificationSearchBuilder FilterByPartialDate(PartialDate partialDate);
+        INotificationSearchBuilder FilterByPartialDob(PartialDate partialDob);
+        INotificationSearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate);
         INotificationSearchBuilder FilterBySex(int? sexId);
+        INotificationSearchBuilder FilterByBirthCountry(int? countryId);
+        INotificationSearchBuilder FilterByTBService(string TBService);
         IQueryable<Notification> GetResult();
     }
 
@@ -53,11 +56,21 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByPartialDate(PartialDate partialDate) 
+        public INotificationSearchBuilder FilterByPartialDob(PartialDate partialDob) 
         {
-            if(!(partialDate == null || partialDate.IsEmpty())) {
-                partialDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+            if(!(partialDob == null || partialDob.IsEmpty())) {
+                partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
+            }
+            
+            return this;
+        }
+
+        public INotificationSearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
+        {
+            if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
+                partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                notificationIQ = notificationIQ.Where(s => s.SubmissionDate >= dateRangeStart && s.SubmissionDate < dateRangeEnd);
             }
             
             return this;
@@ -67,6 +80,22 @@ namespace ntbs_service.Services
         {
             if(sexId != null) {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.SexId.Equals(sexId));
+            }
+            return this;
+        }
+
+        public INotificationSearchBuilder FilterByBirthCountry(int? countryId) 
+        {
+            if(countryId != null) {
+                notificationIQ = notificationIQ.Where(s => s.PatientDetails.CountryId.Equals(countryId));
+            }
+            return this;
+        }
+
+        public INotificationSearchBuilder FilterByTBService(string TBService) 
+        {
+            if(TBService != null) {
+                notificationIQ = notificationIQ.Where(s => s.Episode.TBServiceCode.Equals(TBService));
             }
             return this;
         }
