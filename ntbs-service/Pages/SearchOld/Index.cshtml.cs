@@ -8,9 +8,9 @@ namespace ntbs_service.Pages_SearchOld
 {
     public class IndexModel : PageModel
     {
-        private readonly ISearchService _searcher;
+        private readonly ISearchServiceLegacy _searcher;
 
-        public IndexModel(ISearchService searcher)
+        public IndexModel(ISearchServiceLegacy searcher)
         {
             _searcher = searcher;
             Results = new List<SearchResult>();

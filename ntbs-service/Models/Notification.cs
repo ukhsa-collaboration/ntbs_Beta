@@ -6,6 +6,7 @@ using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Validations;
 using System.Reflection;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Models
 {
@@ -87,7 +88,7 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-        public string HIVTestState => ClinicalDetails.HIVTestState == null ? string.Empty : GetAttribute<DisplayAttribute>(ClinicalDetails.HIVTestState).Name;
+        public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
         public string PatientEditPath => GetNotificationEditPath("Patient");
         public string EpisodeEditPath => GetNotificationEditPath("Episode");
         public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");
@@ -100,23 +101,14 @@ namespace ntbs_service.Models
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
 
-        public TAttribute GetAttribute<TAttribute>(Enum enumValue) 
-            where TAttribute : Attribute
-        {
-            return enumValue.GetType()
-                            .GetMember(enumValue.ToString())
-                            .First()
-                            .GetCustomAttribute<TAttribute>();
-        }
-
         private string GetNotificationEditPath(string subPath)
         {
-            return $"/Notifications/Edit/{subPath}?id={NotificationId}&isBeingSubmitted={ShouldValidateFull}";
+            return RouteHelper.GetFullNotificationEditPath(subPath, NotificationId, ShouldValidateFull);
         }
 
         private string GetNotificationPath(string subPath)
         {
-            return $"/Notifications/{subPath}?id={NotificationId}";
+            return RouteHelper.GetFullNotificationPath(subPath, NotificationId);
         }
 
         private string GetNotificationStatusString()

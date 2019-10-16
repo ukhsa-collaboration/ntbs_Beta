@@ -56,6 +56,9 @@ namespace ntbs_service.Models.Validations
         public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
         public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
+        public const string InvalidDate = "Invalid date selection";
+        public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
+        public const string YearRequired = "A year must be provided";
         public const string ImmunosuppressionDetailRequired = "Please supply immunosuppression other details";
         public const string TravelOrVisitTotalNumberOfCountriesRequired = "Please supply total number of countries";
         public const string TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber = "Total number of countries must be greater or equal to number of input countries";
