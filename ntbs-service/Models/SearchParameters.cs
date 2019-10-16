@@ -7,7 +7,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models
 {
     [NotMapped]
-    [AtLeastOneProperty("IdFilter", "FamilyName", ErrorMessage = ValidationMessages.SupplyAParameter)]
+    [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDob", ErrorMessage = ValidationMessages.SupplyAParameter)]
     public class SearchParameters
     {
         
