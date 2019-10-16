@@ -186,9 +186,12 @@ namespace ntbs_service.Models
 
         private string FormatNhsNumberString()
         {
+            if (PatientDetails.NhsNumberNotKnown) {
+                return "Not known";
+            }
             if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
             {
-                return "Not known";
+                return "";
             }
             return string.Join(" ",
                 PatientDetails.NhsNumber.ToString().Substring(0, 3),
