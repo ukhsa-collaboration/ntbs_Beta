@@ -24,7 +24,7 @@
         <nhs-fieldset aria-describedby="dateError" role="group">
             <nhs-fieldset-legend nhs-legend-size="Standard">Date of denotification</nhs-fieldset-legend>
             <span id="dateError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.DateOfDenotification" has-error="@hasDateError"></span>
-            <nhs-date-input id="dob">
+            <nhs-date-input>
                 <nhs-date-input-item>
                     <nhs-form-group nhs-form-group-type="Standard">
                         <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Day">Day</label>
