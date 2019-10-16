@@ -92,7 +92,9 @@ namespace ntbs_service.Services
         {
             pageModel.TryValidateModel(model);
 
-            return ModelState()[key] == null ? ValidContent() : pageModel.Content(ModelState()[key].Errors[0].ErrorMessage);
+            return (ModelState()[key] == null || ModelState()[key].ValidationState == ModelValidationState.Valid)
+                    ? ValidContent() 
+                    : pageModel.Content(ModelState()[key].Errors[0].ErrorMessage);
         }
 
         private ContentResult GetValidationResult(object model, IEnumerable<string> keys)

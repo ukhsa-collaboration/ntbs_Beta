@@ -201,12 +201,12 @@
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">
-                    <validate-input model="Patient" property="Postcode" shouldvalidatefull="@fullValidation" inline-template>
+                    <validate-postcode shouldvalidatefull="@fullValidation" inline-template>
                         @{
                             var PostcodeError = !Model.IsValid("Patient.Postcode");
                             var PostcodeErrorGroup = PostcodeError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@PostcodeErrorGroup" aria-describedby="postcode-error">
+                        <nhs-form-group ref="formGroup" nhs-form-group-type="@PostcodeErrorGroup" aria-describedby="postcode-error">
                             <span nhs-span-type="ErrorMessage" id="postcode-error" ref="errorField"
                                   asp-validation-for="Patient.Postcode"></span>
                             <input ref="inputField" v-on:blur="validate" is-error-input=@PostcodeError nhs-input-type="Standard"
