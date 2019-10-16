@@ -16,16 +16,16 @@ namespace ntbs_service.Pages.Notifications
         public DenotificationDetails DenotificationDetails { get; set; }
 
         [BindProperty]
-        public FormattedDate FormattedDateOfDenotification { get; set; }
+        public FormattedDate FormattedDenotificationDate { get; set; }
 
         public DenotifyModel(INotificationService service) : base(service)
         {
             ValidationService = new ValidationService(this);
 
-            if (FormattedDateOfDenotification == null)
+            if (FormattedDenotificationDate == null)
             {
                 var now = DateTime.Now;
-                FormattedDateOfDenotification = new FormattedDate()
+                FormattedDenotificationDate = new FormattedDate()
                 {
                     Day = now.Day.ToString(),
                     Month = now.Month.ToString(),
@@ -59,7 +59,7 @@ namespace ntbs_service.Pages.Notifications
         {
             Notification = await service.GetNotificationAsync(NotificationId);
             DenotificationDetails.DateOfNotification = Notification.SubmissionDate;
-            ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDateOfDenotification);
+            ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
             if (!ModelState.IsValid)
             {
                 NotificationBannerModel = new NotificationBannerModel(Notification);

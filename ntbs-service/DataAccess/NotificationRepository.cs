@@ -18,7 +18,6 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
         Task<Notification> GetNotificationWithImmunosuppresionDetailsAsync(int? NotificationId);
-        Task<Notification> GetNotificationWithDenotificationDetailsAsync(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
@@ -121,13 +120,6 @@ namespace ntbs_service.DataAccess
             return await GetBaseNotificationIQueryable()
                 .Include(n => n.ImmunosuppressionDetails)
                 .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
-        }
-
-        public async Task<Notification> GetNotificationWithDenotificationDetailsAsync(int notificationId)
-        {
-            return await GetBaseNotificationIQueryable()
-                .Include(n => n.DenotificationDetails)
-                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId)

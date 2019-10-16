@@ -312,7 +312,7 @@ namespace ntbs_service.Services
 
         public async Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails)
         {
-            var notification = await repository.GetNotificationWithDenotificationDetailsAsync(notificationId);
+            var notification = await repository.GetNotificationAsync(notificationId);
             if (notification.DenotificationDetails == null)
             {
                 notification.DenotificationDetails = denotificationDetails;

@@ -27,20 +27,20 @@
             <nhs-date-input id="dob">
                 <nhs-date-input-item>
                     <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Date" asp-for="FormattedDateOfDenotification.Day">Day</label>
-                        <input ref="dayInput" nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDateOfDenotification.Day" is-error-input="@hasDateError" />
+                        <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Day">Day</label>
+                        <input nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDenotificationDate.Day" is-error-input="@hasDateError" />
                     </nhs-form-group>
                 </nhs-date-input-item>
                 <nhs-date-input-item>
                     <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Date" asp-for="FormattedDateOfDenotification.Month">Month</label>
-                        <input ref="monthInput" nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDateOfDenotification.Month" is-error-input="@hasDateError" />
+                        <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Month">Month</label>
+                        <input nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDenotificationDate.Month" is-error-input="@hasDateError" />
                     </nhs-form-group>
                 </nhs-date-input-item>
                 <nhs-date-input-item>
                     <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Date" asp-for="FormattedDateOfDenotification.Year">Year</label>
-                        <input ref="yearInput" nhs-input-type="Date" asp-for="FormattedDateOfDenotification.Year" is-error-input="@hasDateError" />
+                        <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Year">Year</label>
+                        <input nhs-input-type="Date" asp-for="FormattedDenotificationDate.Year" is-error-input="@hasDateError" />
                     </nhs-form-group>
                 </nhs-date-input-item>
             </nhs-date-input>
