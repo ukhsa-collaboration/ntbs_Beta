@@ -40,7 +40,6 @@ namespace ntbs_service.Models
         public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
         public virtual DbSet<TravelDetails> TravelDetails { get; set; }
         public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
-        public virtual DbSet<DenotificationDetails> DenotificationDetails { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {

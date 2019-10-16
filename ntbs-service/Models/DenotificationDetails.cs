@@ -25,17 +25,7 @@ namespace ntbs_service.Models
         /// If DateOfNotification has not been supplied default to passing this test.
         /// </summary>
         [NotMapped]
-        public bool DenotificationAfterNotification
-        {
-            get
-            {
-                if (DateOfNotification == null)
-                {
-                    return true;
-                }
-                return DateOfDenotification.Date >= DateOfNotification.Value.Date;
-            }
-        }
+        public bool DenotificationAfterNotification => (DateOfNotification == null) || DateOfDenotification.Date >= DateOfNotification.Value.Date;
 
         [NotMapped]
         public bool DenotificationNotAfterToday => DateOfDenotification.Date <= DateTime.Now.Date;
