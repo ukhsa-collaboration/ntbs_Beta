@@ -10,10 +10,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class ComorbidityPageTests : TestRunnerBase
     {
-        protected override string PageRoute
-        {
-            get { return Routes.Comorbidities; }
-        }
+        protected override string PageRoute => Routes.Comorbidities;
 
         public ComorbidityPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 

@@ -12,10 +12,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class ImmunosuppressionPageTests : TestRunnerBase
     {
-        protected override string PageRoute
-        {
-            get { return Routes.Immunosuppression; }
-        }
+        protected override string PageRoute => Routes.Immunosuppression;
 
         public ImmunosuppressionPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 
@@ -116,7 +113,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "Validate"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             if (!string.IsNullOrEmpty(result))
             {
                 var mappedResult = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);

@@ -11,10 +11,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class PatientPageTests : TestRunnerBase
     {
-        protected override string PageRoute
-        {
-            get { return Routes.Patient; }
-        }
+        protected override string PageRoute => Routes.Patient;
 
         public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 
@@ -45,7 +42,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='given-name-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='family-name-error']").TextContent);
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
-            Assert.True(resultDocument.QuerySelector("span[id='dob-error']").TextContent.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate)));
+            Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.QuerySelector("span[id='dob-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.QuerySelector("span[id='nhs-number-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.QuerySelector("span[id='address-error']").TextContent);
         }
@@ -73,7 +70,7 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
             Assert.Equal(FullErrorMessage(ValidationMessages.FamilyNameIsRequired), resultDocument.QuerySelector("span[id='family-name-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.GivenNameIsRequired), resultDocument.QuerySelector("span[id='given-name-error']").TextContent);
-            Assert.True(resultDocument.QuerySelector("span[id='dob-error']").TextContent.Contains(ValidationMessages.BirthDateIsRequired));
+            Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.QuerySelector("span[id='dob-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), resultDocument.QuerySelector("span[id='nhs-number-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), resultDocument.QuerySelector("span[id='postcode-error']").TextContent);
             Assert.Equal(ValidationMessages.SexIsRequired, resultDocument.QuerySelector("span[id='sex-error']").TextContent);
@@ -153,7 +150,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidatePatientDate"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), result);
         }
 
@@ -173,7 +170,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidatePatientProperty"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
         }
 
@@ -193,7 +190,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidatePatientProperty"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
         }
     }

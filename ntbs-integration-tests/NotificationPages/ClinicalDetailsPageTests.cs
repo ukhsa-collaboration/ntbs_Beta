@@ -11,10 +11,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class ClinicalDetailsPageTests : TestRunnerBase
     {
-        protected override string PageRoute
-        {
-            get { return Routes.ClinicalDetails; }
-        }
+        protected override string PageRoute => Routes.ClinicalDetails;
 
         public ClinicalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 
@@ -217,7 +214,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.ValidDate, result);
         }
 
@@ -237,7 +234,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate), result);
         }
 
@@ -256,7 +253,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateNotificationSites"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
         }
 
@@ -278,7 +275,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateNotificationSiteProperty"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
         }
 
@@ -297,7 +294,7 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync(BuildValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
 
             // Assert
-            var result = (await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(ValidationMessages.ValidYearLaterThanBirthYear(existingYear), result);
         }
 
@@ -317,8 +314,8 @@ namespace ntbs_integration_tests.NotificationPages
             var response = await client.GetAsync($"{PageRoute}/ValidateClinicalDetailsProperties?{string.Join("&", keyValuePairs)}");
 
             // Assert check just response.Content
-            var result = (await response.Content.ReadAsStringAsync());
-            Assert.True(result.Contains(ValidationMessages.ValidTreatmentOptions));
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains(ValidationMessages.ValidTreatmentOptions, result);
         }
     }
 }
