@@ -1,13 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
     [NotMapped]
-    [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDob", ErrorMessage = ValidationMessages.SupplyAParameter)]
+    [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDobExists", ErrorMessage = ValidationMessages.SupplyAParameter)]
     public class SearchParameters
     {
         
@@ -26,6 +25,9 @@ namespace ntbs_service.Models
         [MinLength(2)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }
+
+        // This returns null or a dummy value to be used in the [AtLeastOneProperty] attribute
+        public string PartialDobExists => (PartialDob == null || PartialDob.IsEmpty()) ?  null : "exists";
 
         public bool SearchParamsExist => 
             !string.IsNullOrEmpty(GivenName) || 

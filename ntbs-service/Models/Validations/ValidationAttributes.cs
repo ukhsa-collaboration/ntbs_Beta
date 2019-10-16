@@ -64,16 +64,7 @@ namespace ntbs_service.Models.Validations
             foreach (var propertyName in PropertyList)
             {
                 var propertyInfo = value.GetType().GetProperty(propertyName);
-                var property = propertyInfo.GetValue(value, null);
-                Type partialDateType = typeof(PartialDate);
-                if(property != null && property.GetType() == partialDateType) {
-                    MethodInfo partialDateIsEmptyMethod = partialDateType.GetMethod("IsEmpty");
-                    var isEmpty = partialDateIsEmptyMethod.Invoke(property, new object[] {});
-                    if(isEmpty.Equals(false)) {
-                        return null;
-                    }
-                }
-                else if (property != null)
+                if (propertyInfo != null && propertyInfo.GetValue(value, null) != null)
                 {
                     return null;
                 }
