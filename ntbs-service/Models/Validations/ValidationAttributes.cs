@@ -56,13 +56,11 @@ namespace ntbs_service.Models.Validations
             this.PropertyList  = propertyList;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
-            
-            PropertyInfo propertyInfo;
-
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext) 
+        {
             foreach (var propertyName in PropertyList)
             {
-                propertyInfo = value.GetType().GetProperty(propertyName);
+                var propertyInfo = value.GetType().GetProperty(propertyName);
                 if (propertyInfo != null && propertyInfo.GetValue(value, null) != null)
                 {
                     return null;

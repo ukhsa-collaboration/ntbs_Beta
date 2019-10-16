@@ -70,7 +70,7 @@ namespace ntbs_service.Models.Validations
         public const string TravelOrVisitDurationHasCountry = "Duration cannot be added without a corresponding country";
         public const string VisitCountryRequiresDuration = "Please supply a duration for visit";
         public const string TravelCountryRequiresDuration = "Please supply a duration for travel";
-        public const string SupplyARequiredParam = "You must supply at least one of the required parameters";
+        public const string SupplyAParameter = "Please supply at least one of these parameters";
     }
 
     public static class ValidDates
