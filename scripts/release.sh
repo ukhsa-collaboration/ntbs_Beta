@@ -19,10 +19,10 @@ maxAttempts=20
 while [[ $attempts -lt $maxAttempts ]]; do
   ((attempts=attempts+1))
   sleep .5
-  unavailableReplicas=$(kubectl get deployment ntbs-int -o jsonpath="{.status.unavailableReplicas}")
-  echo "Attempt $attempts/$maxAttempts - unavailable replicas found: ${notReady}"
+  unavailableReplicas=$(kubectl get deployment ntbs-$env -o jsonpath="{.status.unavailableReplicas}")
+  echo "Attempt $attempts/$maxAttempts - unavailable replicas found: ${unavailableReplicas}"
   
-  if [[ $unavailableReplicas -eq 0 ]]; then
+  if [[ -z $unavailableReplicas ]] || [[ $unavailableReplicas -eq 0 ]]; then
     echo "Deployment done"
     exit 0
   fi
