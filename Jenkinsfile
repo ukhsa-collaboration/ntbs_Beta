@@ -56,7 +56,7 @@ pipeline {
           kubectl = docker.image('bitnami/kubectl')
           kubectl.inside("--entrypoint=''") {
             withCredentials([[$class: 'FileBinding', credentialsId: 'kubeconfig', variable: 'KUBECONFIG']]) {
-              sh "./scriptss/release.sh int ${NTBS_BUILD}"
+              sh "./scripts/release.sh int ${NTBS_BUILD}"
             }
           }
         }
