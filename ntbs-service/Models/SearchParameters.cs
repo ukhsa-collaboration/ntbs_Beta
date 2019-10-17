@@ -19,7 +19,7 @@ namespace ntbs_service.Models
         public PartialDate PartialNotificationDate { get; set; }
         
         [MinLength(2)]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbers, ErrorMessage = ValidationMessages.StandardStringWithNumbersFormat)]
         public string Postcode { get; set; }
 
         [MinLength(2)]

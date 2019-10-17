@@ -17,6 +17,7 @@ namespace ntbs_service.Models.Validations
         }
 
         public const string StandardStringFormat = "Can only contain letters and ' - . ,";
+        public const string StandardStringWithNumbersFormat = "Can only contain letters, numbers and ' - . ,";
         public const string StringWithNumbersAndForwardSlashFormat = "Can only contain letters, numbers and ' - . , /";
         public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
         public const string NumberFormat = "Can only contain digits 0-9";
@@ -92,6 +93,7 @@ namespace ntbs_service.Models.Validations
     public static class ValidationRegexes
     {
         public const string CharacterValidation = @"[a-zA-Z \-,.']+";
+        public const string CharacterValidationWithNumbers = @"[0-9a-zA-z \-,.']+";
         public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
     }

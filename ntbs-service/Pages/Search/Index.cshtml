@@ -49,7 +49,7 @@
                             <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint">
                                 Enter at least two characters
                             </nhs-hint>
-                            <span nhs-span-type="ErrorMessage" id="id-error"
+                            <span nhs-span-type="ErrorMessage" id="family-name-error"
                                 asp-validation-for="SearchParameters.FamilyName"></span>
                             <input is-error-input=@FamilyNameError nhs-input-type="Standard"
                                 asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10" aria-describedby="two-character-family-name-hint"/>
@@ -102,7 +102,7 @@
                             <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint">
                                 Enter at least two characters
                             </nhs-hint>
-                            <span nhs-span-type="ErrorMessage" id="id-error"
+                            <span nhs-span-type="ErrorMessage" id="postcode-error"
                                 asp-validation-for="SearchParameters.Postcode"></span>
                             <input is-error-input=@PostcodeError nhs-input-type="Standard"
                                 asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10" 
@@ -126,7 +126,7 @@
                     <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
                         Dates can be partial, enter year at minimum
                     </nhs-hint>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
+                    <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error"
                         asp-validation-for="SearchParameters.PartialNotificationDate"></span>
                     <nhs-date-input id="dob">
                         <nhs-date-input-item>
