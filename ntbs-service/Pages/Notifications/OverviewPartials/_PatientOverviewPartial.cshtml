@@ -72,11 +72,11 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Local Authority </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height"> @Model.Notification.LocalAuthorityName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Residence PHEC </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height"> @Model.Notification.PHECName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Treatment PHEC </div>

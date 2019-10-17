@@ -13,7 +13,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PatientModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
 
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
@@ -25,10 +24,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
+        public IPostcodeService PostcodeService { get; set; }
 
-        public PatientModel(INotificationService service, NtbsContext context) : base(service)
+        public PatientModel(INotificationService service, IPostcodeService postcodeService, NtbsContext context) : base(service)
         {
-            this.context = context;
+            PostcodeService = postcodeService;
             Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
@@ -60,8 +60,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             UpdatePatientFlags();
             Patient.SetFullValidation(Notification.NotificationStatus);
-            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            await FindAndSetPostcodeAsync();
 
+            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            
             if (!TryValidateModel(this))
             {
                 return false;
@@ -71,6 +73,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             return true;
         }
 
+        private async Task FindAndSetPostcodeAsync()
+        {
+            var foundPostcode = await PostcodeService.FindPostcode(Patient.Postcode);
+            Patient.PostcodeToLookup = foundPostcode?.Postcode;
+        }
+        
         private void UpdatePatientFlags()
         {
             if (Patient.NhsNumberNotKnown)
@@ -84,6 +92,18 @@ namespace ntbs_service.Pages.Notifications.Edit
                 Patient.Postcode = null;
                 ModelState.Remove("Patient.Postcode");
             }
+        }
+
+
+        public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
+        {   
+            var foundPostcode = await PostcodeService.FindPostcode(postcode);
+            var patientDetails = new PatientDetails() {
+                PostcodeToLookup = foundPostcode?.Postcode,
+                ShouldValidateFull = shouldValidateFull
+            };
+
+            return validationService.ValidateProperty(patientDetails, "Postcode", postcode);
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)

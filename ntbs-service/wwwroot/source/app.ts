@@ -14,6 +14,7 @@ import ValidateImmunosuppression from './Components/ValidateImmunosuppression';
 import ValidateTravelOrVisit from "./Components/ValidateTravelOrVisit";
 import { ValidateMultiple } from './Components/ValidateMultiple';
 import { ValidateRequiredCheckboxes } from './Components/ValidateRequiredCheckboxes';
+import { ValidatePostcode } from './Components/ValidatePostcode';
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 
@@ -28,6 +29,7 @@ Vue.component('validate-travel-or-visit', ValidateTravelOrVisit);
 Vue.component('year-comparison', YearComparison);
 Vue.component('validate-multiple', ValidateMultiple);
 Vue.component('validate-required-checkboxes', ValidateRequiredCheckboxes);
+Vue.component('validate-postcode', ValidatePostcode);
 
 new Vue({
   el: '#app',
