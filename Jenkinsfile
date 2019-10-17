@@ -1,6 +1,6 @@
 pipeline {
   environemnt {
-    NTBS_BUILD = "${env.BUILD_ID}:${env.GIT_COMMIT:0:6}"
+    NTBS_BUILD = "${env.BUILD_ID}:${env.GIT_COMMIT.substring(0, 6)}"
   }
   agent { label 'linux' }
   stages {
