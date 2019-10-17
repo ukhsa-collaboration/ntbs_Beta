@@ -26,7 +26,7 @@ namespace ntbs_service_unit_tests.Services
                         SexId = 1,
                         CountryId = 1,
                         Dob = new DateTime(1990, 1, 1),
-                        Postcode = "SW12RT"
+                        PostcodeToLookup = "SW12RT"
                     },
                     Episode = new Episode {
                         TBServiceCode = "Ashford hospital"
@@ -44,7 +44,7 @@ namespace ntbs_service_unit_tests.Services
                         SexId = 2,
                         CountryId = 2,
                         Dob = new DateTime(1991, 1, 1),
-                        Postcode = "SW294FB"
+                        PostcodeToLookup = "SW294FB"
                     },
                     Episode = new Episode {
                         TBServiceCode = "Not Ashford"
@@ -193,7 +193,7 @@ namespace ntbs_service_unit_tests.Services
             var result = builder.FilterByPostcode("SW1 2RT").GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.Postcode);       
+            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.PostcodeToLookup);       
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace ntbs_service_unit_tests.Services
             var result = builder.FilterByPostcode("SW1").GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.Postcode);       
+            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.PostcodeToLookup);       
         }
 
         [Fact]

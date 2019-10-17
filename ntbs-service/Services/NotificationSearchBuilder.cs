@@ -62,7 +62,7 @@ namespace ntbs_service.Services
             if (!String.IsNullOrEmpty(postcode))
             {
                 var postcodeNoWhitespace = postcode.Replace(" ", "");
-                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.Postcode, $"{postcodeNoWhitespace}%"));
+                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.PostcodeToLookup, $"{postcodeNoWhitespace}%"));
             }
             return this;
         }
