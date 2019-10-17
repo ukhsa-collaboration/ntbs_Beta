@@ -1,5 +1,5 @@
 pipeline {
-  environemnt {
+  environment {
     NTBS_BUILD = "${env.BUILD_ID}:${env.GIT_COMMIT.substring(0, 6)}"
   }
   agent { label 'linux' }
