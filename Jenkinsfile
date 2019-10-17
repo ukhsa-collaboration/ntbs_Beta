@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    NTBS_BUILD = "${env.BUILD_ID}-${env.GIT_COMMIT.substring(0, 6)}"
+    NTBS_BUILD = "build-${env.BUILD_ID}-${env.GIT_COMMIT.substring(0, 6)}"
   }
   agent { label 'linux' }
   stages {
@@ -41,8 +41,8 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://ntbscontainerregistry.azurecr.io', 'ntbs-registery-credentials') {
-            ntbsImage = docker.build("ntbs-service:build-${NTBS_BUILD}",  ".")
-            echo "Uploading build image build-${NTBS_BUILD}"
+            ntbsImage = docker.build("ntbs-service:${NTBS_BUILD}",  ".")
+            echo "Uploading build image ${NTBS_BUILD}"
             ntbsImage.push()
             echo "Uploading latest image"
             ntbsImage.push("latest")
@@ -66,7 +66,7 @@ pipeline {
   }
   post {
     success {
-      notifySlack(":green_heart: Build succeeded. New deployment on int: build-${NTBS_BUILD}")
+      notifySlack(":green_heart: Build succeeded. New deployment on int: ${NTBS_BUILD}")
     }
     failure {
       notifySlack(":red_circle: Build failed")
