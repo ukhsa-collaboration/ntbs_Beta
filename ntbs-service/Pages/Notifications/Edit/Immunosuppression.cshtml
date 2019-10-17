@@ -23,8 +23,8 @@
 
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input ref="statusYes" asp-for="ImmunosuppressionDetails.Status" id="radio-button-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
-                            <label class="nhsuk-label nhsuk-radios__label" for="radio-button-yes">
+                            <input ref="statusYes" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
+                            <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-yes">
                                 @Status.Yes
                             </label>
                         </div>
@@ -36,7 +36,7 @@
 
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
                             <nhs-form-group ref="statusFormGroup" nhs-form-group-type="@statusFormGroupType" aria-describedby="status-error">
-                                <span ref="statusError" name="status-error" nhs-span-type="ErrorMessage" asp-validation-for="@Model.ImmunosuppressionDetails.Status"></span>
+                                <span ref="statusError" id="status-error" nhs-span-type="ErrorMessage" asp-validation-for="@Model.ImmunosuppressionDetails.Status"></span>
                                 <nhs-fieldset>
                                     <div class="nhsuk-checkboxes" data-module="govuk-checkboxes">
                                         <div class="nhsuk-checkboxes__item">
@@ -63,7 +63,7 @@
                                                     <label nhs-label-type="Standard" asp-for="ImmunosuppressionDetails.OtherDescription">
                                                         Specify Details
                                                     </label>
-                                                    <span ref="descriptionError" name="description-error" nhs-span-type="ErrorMessage" asp-validation-for="ImmunosuppressionDetails.OtherDescription"></span>
+                                                    <span ref="descriptionError" id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="ImmunosuppressionDetails.OtherDescription"></span>
                                                     <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription" 
                                                            nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error"  />
                                                 </nhs-fieldset>
@@ -75,15 +75,15 @@
                         </div>
 
                         <div class="nhsuk-radios__item">
-                            <input ref="statusNo" asp-for="ImmunosuppressionDetails.Status" id="radio-button-no" class="nhsuk-radios__input" value="No" type="radio">
-                            <label class="nhsuk-label nhsuk-radios__label" for="radio-button-no">
+                            <input ref="statusNo" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-no" class="nhsuk-radios__input" value="No" type="radio">
+                            <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-no">
                                 @Status.No
                             </label>
                         </div>
 
                         <div class="nhsuk-radios__item">
-                            <input ref="statusUnknown" asp-for="ImmunosuppressionDetails.Status" id="radio-button-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
-                            <label class="nhsuk-label nhsuk-radios__label" for="radio-button-unknown">
+                            <input ref="statusUnknown" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
+                            <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-unknown">
                                 @Status.Unknown
                             </label>
                         </div>

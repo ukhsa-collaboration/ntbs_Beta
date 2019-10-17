@@ -5,15 +5,12 @@ using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using Xunit;
 
-namespace ntbs_integration_tests
+namespace ntbs_integration_tests.NotificationPages
 {
     // TODO: Complete tests for this page
     public class OverviewPageTests : TestRunnerBase
     {
-        protected override string PageRoute
-        {
-            get { return Routes.Overview; }
-        }
+        protected override string PageRoute => Routes.Overview;
 
         public OverviewPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
 

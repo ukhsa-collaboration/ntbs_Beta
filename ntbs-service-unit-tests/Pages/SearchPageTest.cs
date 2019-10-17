@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ntbs_service_tests.UnitTests.Search
+namespace ntbs_service_unit_tests.Pages
 {
     public class SearchPageTest
     {

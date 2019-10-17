@@ -75,6 +75,10 @@ namespace ntbs_service.Models.Validations
         public const string TravelOrVisitDurationHasCountry = "Duration cannot be added without a corresponding country";
         public const string VisitCountryRequiresDuration = "Please supply a duration for visit";
         public const string TravelCountryRequiresDuration = "Please supply a duration for travel";
+        public const string DenotificationDateAfterNotification = "Date of denotification must be after the date of notification";
+        public const string DenotificationDateLatestToday = "Date of denotification cannot be later than today";
+        public const string DenotificationReasonRequired = "Please supply a reason for denotification";
+        public const string DenotificationReasonOtherRequired = "Please supply additional details for the denotification reason";
         public const string SupplyAParameter = "Please supply at least one of these parameters";
     }
 
@@ -88,6 +92,7 @@ namespace ntbs_service.Models.Validations
     public static class ValidationRegexes
     {
         public const string CharacterValidation = @"[a-zA-Z \-,.']+";
+        public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
     }
 }

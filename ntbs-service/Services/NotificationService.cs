@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Services
 {
@@ -17,14 +17,13 @@ namespace ntbs_service.Services
         Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices);
         Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
-        Task<Notification> GetNotificationWithSocialRisksAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
-        Task<Notification> GetNotificationWithImmunosuppressionDetailsAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task<NotificationGroup> GetNotificationGroupAsync(int id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
+        Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
         Task SubmitNotification(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
@@ -34,6 +33,7 @@ namespace ntbs_service.Services
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
+        Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails);
     }
 
     public class NotificationService : INotificationService
@@ -200,19 +200,9 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task<Notification> GetNotificationWithSocialRisksAsync(int? id)
-        {
-            return await repository.GetNotificationWithSocialRiskFactorsAsync(id);
-        }
-
         public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? id) 
         {
             return await repository.GetNotificationWithNotificationSitesAsync(id);
-        }
-
-        public async Task<Notification> GetNotificationWithImmunosuppressionDetailsAsync(int? id)
-        {
-            return await repository.GetNotificationWithImmunosuppresionDetailsAsync(id);
         }
 
         public async Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails)
@@ -303,10 +293,32 @@ namespace ntbs_service.Services
             context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await context.SaveChangesAsync();
         }
-        
+
         public async Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids)
         {
             return await repository.GetNotificationsByIdsAsync(ids);
+        }
+
+        public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)
+        {
+            context.Entry(notification.ComorbidityDetails).CurrentValues.SetValues(comorbidityDetails);
+            await UpdateDatabase();
+        }
+
+        public async Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails)
+        {
+            var notification = await repository.GetNotificationAsync(notificationId);
+            if (notification.DenotificationDetails == null)
+            {
+                notification.DenotificationDetails = denotificationDetails;
+            }
+            else
+            {
+                context.Entry(notification.DenotificationDetails).CurrentValues.SetValues(denotificationDetails);
+            }
+
+            notification.NotificationStatus = NotificationStatus.Denotified;
+            await UpdateDatabase(AuditType.Denotified);
         }
     }
 }

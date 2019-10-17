@@ -15,9 +15,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices);
         Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices);
         Task<IList<Notification>> GetNotificationsWithPatientsAsync();
-        Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
-        Task<Notification> GetNotificationWithImmunosuppresionDetailsAsync(int? NotificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
         Task UpdateNotificationAsync(Notification Notification);
         Task AddNotificationAsync(Notification Notification);
@@ -106,22 +104,6 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(m => m.NotificationId == NotificationId);
         }
 
-        public async Task<Notification> GetNotificationWithSocialRiskFactorsAsync(int? NotificationId)
-        {
-            return await GetBaseNotificationIQueryable()
-                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
-                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
-                    .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
-                    .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
-        }
-
-        public async Task<Notification> GetNotificationWithImmunosuppresionDetailsAsync(int? NotificationId)
-        {
-            return await GetBaseNotificationIQueryable()
-                .Include(n => n.ImmunosuppressionDetails)
-                .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
-        }
-
         public async Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId)
         {
             return await GetBaseNotificationIQueryable()
@@ -137,10 +119,6 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
-                .Include(n => n.ClinicalDetails)
-                .Include(n => n.ContactTracing)
-                .Include(n => n.PatientTBHistory)
-                .Include(n => n.ImmunosuppressionDetails)
                 .Include(n => n.TravelDetails.Country1)
                 .Include(n => n.TravelDetails.Country2)
                 .Include(n => n.TravelDetails.Country3)

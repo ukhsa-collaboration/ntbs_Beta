@@ -5,7 +5,7 @@ using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using Xunit;
 
-namespace ntbs_integration_tests
+namespace ntbs_integration_tests.NotificationPages
 {
     public class BasicEditPageTests : TestRunnerBase
     {

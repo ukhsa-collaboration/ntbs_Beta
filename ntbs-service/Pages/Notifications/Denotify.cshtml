@@ -1,0 +1,117 @@
+@page "{handler?}"
+@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@model ntbs_service.Pages.Notifications.DenotifyModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"Denotify - {Model.NotificationId}";
+}
+
+<div>
+    <nhs-warning-callout title-text="You are about to denotify this notification">
+        <p>
+            This action will be recorded in the audit log
+        </p>
+    </nhs-warning-callout>
+
+    @{
+        var hasDateError = !Model.ValidationService.IsValid("DenotificationDetails.DateOfDenotification");
+        var dateFormGroupType = hasDateError ? Error : Standard;
+    }
+
+    <nhs-form-group nhs-form-group-type="@dateFormGroupType">
+        <nhs-fieldset aria-describedby="dateError" role="group">
+            <nhs-fieldset-legend nhs-legend-size="Standard">Date of denotification</nhs-fieldset-legend>
+            <span id="dateError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.DateOfDenotification" has-error="@hasDateError"></span>
+            <nhs-date-input id="dob">
+                <nhs-date-input-item>
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Day">Day</label>
+                        <input nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDenotificationDate.Day" is-error-input="@hasDateError" />
+                    </nhs-form-group>
+                </nhs-date-input-item>
+                <nhs-date-input-item>
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Month">Month</label>
+                        <input nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDenotificationDate.Month" is-error-input="@hasDateError" />
+                    </nhs-form-group>
+                </nhs-date-input-item>
+                <nhs-date-input-item>
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Year">Year</label>
+                        <input nhs-input-type="Date" asp-for="FormattedDenotificationDate.Year" is-error-input="@hasDateError" />
+                    </nhs-form-group>
+                </nhs-date-input-item>
+            </nhs-date-input>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    @{
+        var hasReasonError = !Model.ValidationService.IsValid("DenotificationDetails.Reason");
+        var reasonFormGroupType = hasReasonError ? Error : Standard;
+    }
+
+    <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
+        <nhs-fieldset aria-describedby="reasonError">
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Reason for denotification
+            </nhs-fieldset-legend>
+
+            <span id="reasonError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.Reason" has-error="@hasReasonError"></span>
+
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                @foreach (DenotificationReason reason in Enum.GetValues(typeof(DenotificationReason)))
+                {
+                    if (reason != DenotificationReason.NotSelected)
+                    {
+
+                        var id = $"denotify-radio-{reason}";
+                        var displayText = reason.GetDisplayName();
+                        if (reason != DenotificationReason.Other)
+                        {
+
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="DenotificationDetails.Reason" nhs-input-type="Radios" type="radio"
+                                       value="@reason" id="@id" aria-describedby="reasonError">
+                                <label nhs-label-type="Radios" for="@id">
+                                    @displayText
+                                </label>
+                            </div>
+                        }
+                        else if (reason == DenotificationReason.Other)
+                        {
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="DenotificationDetails.Reason" nhs-input-type="Radios" type="radio"
+                                       value="@reason" id="@id" data-aria-controls="conditional-radio" aria-describedby="reasonError">
+                                <label nhs-label-type="Radios" for="@id">
+                                    @displayText
+                                </label>
+                            </div>
+                        }
+                    }
+                }
+
+                @{
+                    var hasDescriptionError = !Model.ValidationService.IsValid("DenotificationDetails.OtherDescription");
+                    var descriptionFormGroupType = hasDescriptionError ? Error : Standard;
+                }
+
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
+                    <nhs-form-group nhs-form-group-type="@descriptionFormGroupType">
+                        <label asp-for="DenotificationDetails.OtherDescription" nhs-label-type="Standard">
+                            Provide reason
+                        </label>
+                        <span id="descriptionError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.OtherDescription" has-error="@hasDescriptionError"></span>
+                        <input asp-for="DenotificationDetails.OtherDescription" nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="descriptionError" />
+                    </nhs-form-group>
+                </div>
+            </div>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    <button nhs-button-type="Standard" asp-page-handler="Confirm">Confirm denotification</button>
+
+    <nhs-back-link href="@Model.Notification.OverviewPath">Cancel & go back</nhs-back-link>
+
+</div>

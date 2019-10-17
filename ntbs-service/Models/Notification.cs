@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ExpressiveAnnotations.Attributes;
-using ntbs_service.Models.Enums;
-using System.ComponentModel.DataAnnotations;
-using ntbs_service.Models.Validations;
-using System.Reflection;
+﻿using ExpressiveAnnotations.Attributes;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace ntbs_service.Models
 {
@@ -24,6 +23,7 @@ namespace ntbs_service.Models
             ImmunosuppressionDetails = new ImmunosuppressionDetails();
             TravelDetails = new TravelDetails();
             VisitorDetails = new VisitorDetails();
+            ComorbidityDetails = new ComorbidityDetails();
         }
 
         [Display(Name = "Notification Id")]
@@ -48,12 +48,14 @@ namespace ntbs_service.Models
         public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
         public virtual TravelDetails TravelDetails { get; set; }
         public virtual VisitorDetails VisitorDetails { get; set; }
+        public virtual DenotificationDetails DenotificationDetails { get; set; }
+        public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
         public string FormattedSubmissionDate => FormatDate(SubmissionDate);
-        public string FullName => string.Join(", ", new string[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
+        public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
@@ -89,6 +91,7 @@ namespace ntbs_service.Models
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
+
         public string PatientEditPath => GetNotificationEditPath("Patient");
         public string EpisodeEditPath => GetNotificationEditPath("Episode");
         public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");
@@ -100,6 +103,7 @@ namespace ntbs_service.Models
         public string PreviousHistoryEditPath => GetNotificationEditPath("PreviousHistory");
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
+        public string DenotifyPath => GetNotificationPath("Denotify");
 
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string PHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
@@ -170,7 +174,7 @@ namespace ntbs_service.Models
                 return "";
             }
 
-            var siteNames = NotificationSites.Select(ns => ns.Site)?
+            var siteNames = NotificationSites.Select(ns => ns.Site)
                 .Where(ns => ns != null)
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
@@ -198,9 +202,9 @@ namespace ntbs_service.Models
                 return "";
             }
             return string.Join(" ",
-                PatientDetails.NhsNumber.ToString().Substring(0, 3),
-                PatientDetails.NhsNumber.ToString().Substring(3, 3),
-                PatientDetails.NhsNumber.ToString().Substring(6, 4)
+                PatientDetails.NhsNumber.Substring(0, 3),
+                PatientDetails.NhsNumber.Substring(3, 3),
+                PatientDetails.NhsNumber.Substring(6, 4)
             );
         }
 
