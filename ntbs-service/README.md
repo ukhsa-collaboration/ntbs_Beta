@@ -104,9 +104,9 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 ## Maintanance
 - See current deployments, including build versions:
   - `kubectl get deployment -o wide` - all envs
-  - `kubectl get deployment ntbs-int -o wide` - specific env (here int)
-- dashboard - access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
-- logs: `kuebctl logs deployment/ntbs-int`
+  - `kubectl get deployment ntbs-<env> -o wide` - specific <env>
+- logs: `kuebctl logs deployment/ntbs-<env>` - specific <env>
+- dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 
 ## Basic auth securing
