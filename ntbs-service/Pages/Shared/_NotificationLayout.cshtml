@@ -5,7 +5,7 @@
     var splitUrlPath = Context.Request.Path.ToString().Split("/");
     var currentPage = splitUrlPath[splitUrlPath.Length - 1];
     var notificationStatusTriangleCssClass = "";
-    switch (@Model.Notification.NotificationStatus)
+    switch (Model.Notification.NotificationStatus)
     {
         case NotificationStatus.Draft:
             notificationStatusTriangleCssClass = "notification-banner-triangle--draft";
@@ -40,16 +40,16 @@
             <div class="notification-banner-triangle @notificationStatusTriangleCssClass"> </div>
         </div>
         <div class="notification-banner-links">
-            @if (@Model.Notification.NotificationStatus == NotificationStatus.Notified)
+            @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
             {
-                <div class="@((bool)ViewData["IsOverviewPage"] ? "notification-banner-links--current" : "")">
+                <div class="@((bool) ViewData["IsOverviewPage"] ? "notification-banner-links--current" : "")">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.OverviewPath"> Notification details </a>
                 </div>
                 <div class="notification-banner-link-separator"> </div>
             }
-            @if (@Model.NumberOfLinkedNotifications > 0)
+            @if (Model.NumberOfLinkedNotifications > 0)
             {
-                <div class="@((bool)ViewData["IsLinkedNotificationsPage"] ? "notification-banner-links--current" : "")">
+                <div class="@((bool) ViewData["IsLinkedNotificationsPage"] ? "notification-banner-links--current" : "")">
                     <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@Model.Notification.LinkedNotificationsPath"> Linked Notifications (@Model.NumberOfLinkedNotifications) </a>
                 </div>
                 <div class="notification-banner-link-separator"> </div>
@@ -111,7 +111,7 @@
     else if ((bool)ViewData["IsOverviewPage"])
     {
         <button nhs-button-type="Standard" asp-page-handler="CreateLink">New notification for this person</button>
-        @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
+        if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
         {
             <a href="@Model.Notification.DenotifyPath" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning">Denotify</a>
         }

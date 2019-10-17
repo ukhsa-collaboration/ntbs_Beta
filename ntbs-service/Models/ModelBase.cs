@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Models.Enums;
 
@@ -17,7 +15,7 @@ namespace ntbs_service.Models
         */ 
         public void SetFullValidation(NotificationStatus notificationStatus, bool isBeingSubmitted = false) 
         {
-            ShouldValidateFull = isBeingSubmitted || notificationStatus == NotificationStatus.Notified;
+            ShouldValidateFull = isBeingSubmitted || notificationStatus != NotificationStatus.Draft;
         }
     }
 }

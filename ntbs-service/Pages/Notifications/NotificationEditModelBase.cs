@@ -100,7 +100,7 @@ namespace ntbs_service.Pages_Notifications
                 return await OnGetAsync(NotificationId);
             }
 
-            if (Notification?.NotificationStatus == NotificationStatus.Notified) 
+            if (Notification.NotificationStatus != NotificationStatus.Draft) 
             {
                 return RedirectToOverview();
             }
