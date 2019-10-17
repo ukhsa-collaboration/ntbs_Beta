@@ -6,7 +6,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models
 {
     [NotMapped]
-    [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDobExists", ErrorMessage = ValidationMessages.SupplyAParameter)]
+    [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDobExists", "Postcode", ErrorMessage = ValidationMessages.SupplyAParameter)]
     public class SearchParameters
     {
         
@@ -17,6 +17,10 @@ namespace ntbs_service.Models
         public string TBServiceCode { get; set; }
         public PartialDate PartialDob { get; set; }
         public PartialDate PartialNotificationDate { get; set; }
+        
+        [MinLength(2)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        public string Postcode { get; set; }
 
         [MinLength(2)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
@@ -34,6 +38,7 @@ namespace ntbs_service.Models
             !string.IsNullOrEmpty(FamilyName) || 
             !string.IsNullOrEmpty(IdFilter) ||
             !string.IsNullOrEmpty(TBServiceCode) ||
+            !string.IsNullOrEmpty(Postcode) ||
             CountryId != null ||
             SexId != null || 
             !(PartialDob == null || PartialDob.IsEmpty()) ||

@@ -25,7 +25,8 @@ namespace ntbs_service_unit_tests.Services
                         NhsNumber = "1234567890",
                         SexId = 1,
                         CountryId = 1,
-                        Dob = new DateTime(1990, 1, 1)
+                        Dob = new DateTime(1990, 1, 1),
+                        Postcode = "SW12RT"
                     },
                     Episode = new Episode {
                         TBServiceCode = "Ashford hospital"
@@ -42,7 +43,8 @@ namespace ntbs_service_unit_tests.Services
                         NhsNumber = "1234567891",
                         SexId = 2,
                         CountryId = 2,
-                        Dob = new DateTime(1991, 1, 1)
+                        Dob = new DateTime(1991, 1, 1),
+                        Postcode = "SW294FB"
                     },
                     Episode = new Episode {
                         TBServiceCode = "Not Ashford"
@@ -181,6 +183,32 @@ namespace ntbs_service_unit_tests.Services
         public void SearchByGivenName_NoResults()
         {
             var result = builder.FilterByGivenName("NonexistingName").GetResult().ToList();
+
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void SearchByPostcode_FullPostcode()
+        {
+            var result = builder.FilterByPostcode("SW1 2RT").GetResult().ToList();
+
+            Assert.Single(result);
+            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.Postcode);       
+        }
+
+        [Fact]
+        public void SearchByPostcode_WildcardedSuffix()
+        {
+            var result = builder.FilterByPostcode("SW1").GetResult().ToList();
+
+            Assert.Single(result);
+            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.Postcode);       
+        }
+
+        [Fact]
+        public void SearchByPostcode_NoResults()
+        {
+            var result = builder.FilterByPostcode("Wrongpostcode").GetResult().ToList();
 
             Assert.Empty(result);
         }

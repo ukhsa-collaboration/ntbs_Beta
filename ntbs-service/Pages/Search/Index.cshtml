@@ -92,6 +92,23 @@
                             </nhs-date-input>
                         </nhs-form-group>
                     </nhs-grid-column>
+                    <nhs-grid-column grid-column-width="OneQuarter">
+                        @{
+                            var PostcodeError = !Model.validationService.IsValid("SearchParameters.Postcode");
+                            var PostcodeGroupState = PostcodeError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type=@PostcodeGroupState>
+                            <label nhs-label-type="Standard"> Postcode </label>
+                            <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint">
+                                Enter at least two characters
+                            </nhs-hint>
+                            <span nhs-span-type="ErrorMessage" id="id-error"
+                                asp-validation-for="SearchParameters.Postcode"></span>
+                            <input is-error-input=@PostcodeError nhs-input-type="Standard"
+                                asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10" 
+                                aria-describedby="two-character-postcode-hint"/>
+                        </nhs-form-group>
+                    </nhs-grid-column>
                 </nhs-grid-row>
             </nhs-fieldset>
         </nhs-form-group>
