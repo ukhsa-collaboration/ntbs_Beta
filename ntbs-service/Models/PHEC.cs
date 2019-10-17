@@ -11,7 +11,5 @@ namespace ntbs_service.Models
 
         [MaxLength(50)]
         public string Name { get; set; }
-        
-        public virtual LocalAuthorityToPHEC LocalAuthorityToPHEC { get; set; }
     }
 }

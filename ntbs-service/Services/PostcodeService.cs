@@ -21,7 +21,7 @@ namespace ntbs_service.Services
 
         public async Task<PostcodeLookup> FindPostcode(string postcode)
         {
-            return await repository.FindPostcode(postcode.Replace(" ", "").ToUpper());
+            return await repository.FindPostcode(postcode?.Replace(" ", "").ToUpper());
         }
     }
 }

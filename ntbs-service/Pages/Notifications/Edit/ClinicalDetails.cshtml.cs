@@ -205,7 +205,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
         {
-            var notification = new Notification { ShouldValidateFull = shouldValidateFull };
             var notificationSite = new NotificationSite
             {
                 ShouldValidateFull = shouldValidateFull,

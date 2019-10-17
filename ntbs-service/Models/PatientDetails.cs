@@ -37,7 +37,7 @@ namespace ntbs_service.Models
         public string Address { get; set; }
 
         [RequiredIf(@"ShouldValidateFull && !NoFixedAbode", ErrorMessage = ValidationMessages.PostcodeIsRequired)]
-        [AssertThat(@"PostcodeToLookup != null || !ShouldValidateFull", ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
+        [AssertThat(@"PostcodeToLookup != null", ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
         public string Postcode { get; set; }
 
         public string PostcodeToLookup { get; set; }

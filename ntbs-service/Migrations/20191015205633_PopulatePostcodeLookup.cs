@@ -10,6 +10,8 @@ using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
+    // Postcode lookup has around 3 million records, seeding with FluentApi is very time consuming with large data.
+    // Therefore, this migration is solely responsible for adding data into postcode lookup
     public partial class PopulatePostcodeLookup : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +20,7 @@ namespace ntbs_service.Migrations
             const int itemsPerUpdate = 1000;
 
             var records = new string[itemsPerUpdate,3];
-            int countPerUpdate = 0;
+            int index = 0;
 
             using (StreamReader reader = new StreamReader(pathToFile)) 
             using (CsvReader csvReader = new CsvReader(reader)) {
@@ -26,12 +28,12 @@ namespace ntbs_service.Migrations
                 csvReader.ReadHeader();
                 while (csvReader.Read())
                 {
-                    records[countPerUpdate, 0] = csvReader.GetField("Pcode");
-                    records[countPerUpdate, 1] = csvReader.GetField("Country");
-                    records[countPerUpdate, 2] = csvReader.GetField("LA_Code");
-                    countPerUpdate++;
+                    records[index, 0] = csvReader.GetField("Pcode");
+                    records[index, 1] = csvReader.GetField("Country");
+                    records[index, 2] = csvReader.GetField("LA_Code");
+                    index++;
 
-                    if (countPerUpdate == itemsPerUpdate)
+                    if (index == itemsPerUpdate)
                     {
                         migrationBuilder.InsertData(
                             table: "PostcodeLookup",
@@ -39,19 +41,19 @@ namespace ntbs_service.Migrations
                             values: records
                         );
                         records = new string[itemsPerUpdate, 3];
-                        countPerUpdate = 0;                    
+                        index = 0;                    
                     }
                 }
             }
 
-            if (countPerUpdate > 0) 
+            if (index > 0) 
             {
-                var finalBatch = new string[countPerUpdate,3]; 
-                for (int index=0; index<countPerUpdate; index++)
+                var finalBatch = new string[index,3]; 
+                for (int i=0; i<index; i++)
                 {
-                    finalBatch[index,0] = records[index,0];
-                    finalBatch[index,1] = records[index,1];
-                    finalBatch[index,2] = records[index,2];
+                    finalBatch[i,0] = records[i,0];
+                    finalBatch[i,1] = records[i,1];
+                    finalBatch[i,2] = records[i,2];
                 }
                 
                 migrationBuilder.InsertData(
@@ -65,7 +67,7 @@ namespace ntbs_service.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.Sql("DELETE FROM [PostcodeLookup]", true);
         }
     }
 }

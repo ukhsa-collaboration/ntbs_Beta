@@ -181,7 +181,7 @@ namespace ntbs_service.Models
                     .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode);
 
                 entity.HasOne(e => e.PHEC)
-                    .WithOne(x => x.LocalAuthorityToPHEC)
+                    .WithOne()
                     .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode);
 
 
