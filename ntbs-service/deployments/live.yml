@@ -1,3 +1,4 @@
+# To be deployed on PHE Kubernetes
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -12,6 +13,10 @@ spec:
       containers:
       - name: ntbs-live
         image: # ???
+        resources:
+          requests:
+            memory: "2GiB"
+            cpu: "1000m" # Given in milicores, this is 1 core
         ports:
         - containerPort: 80
         env:

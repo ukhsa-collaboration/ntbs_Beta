@@ -162,6 +162,7 @@ namespace ntbs_service.Models
             var statusEnumConverter = new EnumToStringConverter<Status>();
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
+            var denotificationReasonEnumConverter = new EnumToStringConverter<DenotificationReason>();
 
             modelBuilder.Entity<PHEC>(entity => {
                 entity.HasKey(e => e.Code);
@@ -286,7 +287,35 @@ namespace ntbs_service.Models
                 });
 
                 entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails"); ;
-                entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails"); ;
+                entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails");
+                entity.OwnsOne(e => e.ComorbidityDetails, cd =>
+                {
+                    cd.Property(e => e.DiabetesStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    cd.Property(e => e.HepatitisBStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    cd.Property(e => e.HepatitisCStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    cd.Property(e => e.LiverDiseaseStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    cd.Property(e => e.RenalDiseaseStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    
+                    cd.ToTable("ComorbidityDetails");
+                });
+
+                entity.OwnsOne(e => e.DenotificationDetails, i =>
+                {
+                    i.Property(e => e.Reason)
+                        .HasConversion(denotificationReasonEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    i.ToTable("DenotificationDetails");
+                });
             });
 
             modelBuilder.Entity<Region>(entity =>

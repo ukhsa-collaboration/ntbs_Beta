@@ -12,8 +12,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ntbs_service_tests.UnitTests.Search
+namespace ntbs_service_unit_tests.Pages
 {
     public class SearchPageTest
     {
@@ -34,6 +35,14 @@ namespace ntbs_service_tests.UnitTests.Search
             IList<Sex> sexes = new List<Sex> {};
             var sexList = Task.FromResult(sexes);
             mockContext.Setup(s => s.GetAllSexesAsync()).Returns(sexList);
+
+            IList<Country> countries = new List<Country> {};
+            var countrySelectList = Task.FromResult(countries);
+            mockContext.Setup(s => s.GetAllCountriesAsync()).Returns(countrySelectList);
+
+            IList<TBService> tbServices = new List<TBService> {};
+            var tbServiceList = Task.FromResult(tbServices);
+            mockContext.Setup(s => s.GetAllTbServicesAsync()).Returns(tbServiceList);
 
             mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
             

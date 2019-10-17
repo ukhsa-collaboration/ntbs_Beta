@@ -87,7 +87,7 @@ We're using ACR to store docker images. When logged in to Azure, run this comman
 
 For `test` and `research` environments, pick the docker image <TAG> of the build from registery and from root directory run:
 
-`.\scripts\release.ps1 -env <ENV> -build <TAG>`
+`.\scripts\release.sh <ENV> <TAG>`
 
 ## Running the app in Docker (builds in produciton mode)
 ```
@@ -102,7 +102,11 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 ```
 
 ## Maintanance
-- dashboard - access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
+- See current deployments, including build versions:
+  - `kubectl get deployment -o wide` - all envs
+  - `kubectl get deployment ntbs-<env> -o wide` - specific <env>
+- logs: `kuebctl logs deployment/ntbs-<env>` - specific <env>
+- dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 
 ## Basic auth securing

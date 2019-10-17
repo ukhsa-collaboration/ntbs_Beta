@@ -1,21 +1,17 @@
-using System;
-using System.Globalization;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Pages;
-using ntbs_service.Services;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages_Notifications;
+using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
-        public OverviewModel(INotificationService service) : base(service) {}
+        public OverviewModel(INotificationService service) : base(service)
+        {
+        }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -24,15 +20,16 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
+
+            NotificationId = Notification.NotificationId;
+            if (Notification.NotificationStatus == NotificationStatus.Draft)
+            {
+                return RedirectToPage("./Edit/Patient", new { id = NotificationId });
+            }
+
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
             await GetLinkedNotifications();
-            NotificationId = Notification.NotificationId;
-
-            if (Notification.NotificationStatus == NotificationStatus.Draft)
-            {
-                return RedirectToPage("./Edit/Patient", new {id = NotificationId});
-            }
 
             return Page();
         }
@@ -42,7 +39,7 @@ namespace ntbs_service.Pages_Notifications
             var notification = await service.GetNotificationAsync(NotificationId);
             var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
 
-            return RedirectToPage("/Notifications/Edit/Patient", new {id = linkedNotification.NotificationId});
+            return RedirectToPage("/Notifications/Edit/Patient", new { id = linkedNotification.NotificationId });
         }
     }
 }

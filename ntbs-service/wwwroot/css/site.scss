@@ -16,50 +16,52 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
-  background-color: white;
+    position: relative;
+    min-height: 100%;
+    background-color: white;
 }
 
 body {
-  /* Padding bottom by footer height */
-  padding-bottom: 80px;
-  background-color: white;  
+    /* Padding bottom by footer height */
+    padding-bottom: 80px;
+    background-color: white;
 }
 
 .contents-list-item {
@@ -102,4 +104,17 @@ body {
     font-size: 16px;
     padding-left: 0;
     line-height: 24px;
+}
+
+.hidden, .hidden * {
+    display: none;
+}
+
+.ntbsuk-button--warning {
+    background-color: #d4351c;
+    box-shadow: 0 4px 0 #003317;
+
+    &:hover, &:focus {
+        background-color: #aa2a16;
+    }
 }

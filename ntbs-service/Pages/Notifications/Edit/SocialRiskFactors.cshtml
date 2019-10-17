@@ -1,5 +1,6 @@
 @page "{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.SocialRiskFactorsModel
+@using ntbs_service.Models.Enums
 
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
@@ -17,7 +18,7 @@
                 Patient's ability to self-administer treatment is affected by alcohol misuse or abuse
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in Model.StatusList)
+                @foreach (var status in StatusHelper.GetAll())
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="SocialRiskFactors.AlcoholMisuseStatus" id="alcohol-radio-button-@status" type="radio" value="@status" />
@@ -72,7 +73,7 @@
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">Patient has mental health issues</nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in Model.StatusList)
+                @foreach (var status in StatusHelper.GetAll())
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="SocialRiskFactors.MentalHealthStatus" id="mentalhealth-radio-button-@status" type="radio" value="@status" />
@@ -87,7 +88,7 @@
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">Patient is a current smoker</nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in Model.StatusList)
+                @foreach (var status in StatusHelper.GetAll())
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="SocialRiskFactors.SmokingStatus" id="smoking-radio-button-@status" type="radio" value="@status" />
