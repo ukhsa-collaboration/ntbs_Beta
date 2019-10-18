@@ -22,7 +22,7 @@ const ValidatePostcode = Vue.extend({
             axios.request(requestConfig)
                 .then((response: any) => {
                     var errorMessages = response.data;
-                    if (errorMessages != '') {
+                    if (errorMessages) {
                         this.$refs["formGroup"].classList.add('nhsuk-form-group--error');
                         this.$refs["inputField"].classList.add('nhsuk-input--error')
                     } else {
