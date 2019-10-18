@@ -35,6 +35,12 @@ namespace ntbs_service.Models
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
+        public virtual DbSet<Episode> Episode { get; set; }
+        public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
+        public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
+        public virtual DbSet<TravelDetails> TravelDetails { get; set; }
+        public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
+        public virtual DbSet<PostcodeLookup> PostcodeLookup { get;  set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -158,6 +164,38 @@ namespace ntbs_service.Models
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
             var denotificationReasonEnumConverter = new EnumToStringConverter<DenotificationReason>();
 
+            modelBuilder.Entity<PHEC>(entity => {
+                entity.HasKey(e => e.Code);
+                entity.HasData(GetPHECList());
+            });
+
+            modelBuilder.Entity<LocalAuthority>(entity => {
+                entity.HasKey(e => e.Code);
+                entity.HasData(GetLocalAuthoritiesList());
+            });
+            
+            modelBuilder.Entity<LocalAuthorityToPHEC>(entity => {
+                entity.HasKey(e => new { e.PHECCode, e.LocalAuthorityCode });
+
+                entity.HasOne(e => e.LocalAuthority)
+                    .WithOne(x => x.LocalAuthorityToPHEC)
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode);
+
+                entity.HasOne(e => e.PHEC)
+                    .WithOne()
+                    .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode);
+
+
+                entity.HasData(GetPHECtoLA());
+            });
+
+            modelBuilder.Entity<PostcodeLookup>(entity => {
+                entity.HasKey(e => e.Postcode);
+                entity.HasOne(e => e.LocalAuthority)
+                    .WithMany(c => c.PostcodeLookups)
+                    .HasForeignKey(ns => ns.LocalAuthorityCode);
+            });
+
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.HasOne<NotificationGroup>()
@@ -166,7 +204,13 @@ namespace ntbs_service.Models
 
                 entity.OwnsOne(e => e.Episode).ToTable("Episode");
 
-                entity.OwnsOne(e => e.PatientDetails).ToTable("Patients");
+                entity.OwnsOne(e => e.PatientDetails, x => {
+                    x.HasOne(pd => pd.PostcodeLookup)
+                    .WithOne()
+                    .HasForeignKey<PatientDetails>(ns => ns.PostcodeToLookup);
+
+                    x.ToTable("Patients");
+                });
 
                 entity.OwnsOne(e => e.ClinicalDetails, e =>
                 {
@@ -322,14 +366,29 @@ namespace ntbs_service.Models
             );
         }
 
-        private List<Object> GetHospitalsList()
+        private List<TBService> GetTBServicesList()
+        {
+            return SeedingHelper.GetRecordsFromCSV<TBService>("Models/SeedData/tbservices.csv");
+        }
+
+        private List<object> GetPHECtoLA()
+        {
+            return SeedingHelper.GetLAtoPHEC("Models/SeedData/LA_to_PHEC.csv");
+        }
+
+        private List<object> GetHospitalsList()
         {
             return SeedingHelper.GetHospitalsList("Models/SeedData/hospitals.csv");
         }
 
-        private List<TBService> GetTBServicesList()
+        private List<object> GetPHECList()
         {
-            return SeedingHelper.GetRecordsFromCSV<TBService>("Models/SeedData/tbservices.csv");
+            return SeedingHelper.GetPHECList("Models/SeedData/phec.csv");
+        }
+
+        private List<object> GetLocalAuthoritiesList()
+        {
+            return SeedingHelper.GetLocalAuthorities("Models/SeedData/LocalAuthorities.csv");
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PatientModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
 
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
@@ -25,10 +25,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
+        private IPostcodeService PostcodeService { get; set; }
 
-        public PatientModel(INotificationService service, NtbsContext context) : base(service)
+        public PatientModel(INotificationService service, IPostcodeService postcodeService, NtbsContext context) : base(service)
         {
-            this.context = context;
+            PostcodeService = postcodeService;
             Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
@@ -59,10 +60,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<bool> ValidateAndSave()
         {
             UpdatePatientFlags();
-            Patient.SetFullValidation(Notification.NotificationStatus);
-            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            ModelState.ClearValidationState("Patient.Postcode");
 
-            if (!TryValidateModel(this))
+            Patient.SetFullValidation(Notification.NotificationStatus);
+            await FindAndSetPostcodeAsync();
+            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            
+            if (!TryValidateModel(Patient, "Patient"))
             {
                 return false;
             }
@@ -71,6 +75,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             return true;
         }
 
+        private async Task FindAndSetPostcodeAsync()
+        {
+            var foundPostcode = await PostcodeService.FindPostcode(Patient.Postcode);
+            Patient.PostcodeToLookup = foundPostcode?.Postcode;
+        }
+        
         private void UpdatePatientFlags()
         {
             if (Patient.NhsNumberNotKnown)
@@ -84,6 +94,19 @@ namespace ntbs_service.Pages.Notifications.Edit
                 Patient.Postcode = null;
                 ModelState.Remove("Patient.Postcode");
             }
+        }
+
+
+        public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
+        {   
+            var foundPostcode = await PostcodeService.FindPostcode(postcode);
+            var propertyValueTuples = new List<Tuple<string, object>>
+            {
+                new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
+                new Tuple<string, object>("Postcode", postcode)
+            };
+
+            return validationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
