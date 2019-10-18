@@ -22,7 +22,7 @@
                     
                 @if(@Model.ShowLink) 
                 {
-                    <a href="@Model.RedirectPath" class="notification-banner-id-link"> #@Model.NotificationId </a>
+                    <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id"> #@Model.NotificationId </a>
                 } else 
                 {
                     <div> #@Model.NotificationId </div>

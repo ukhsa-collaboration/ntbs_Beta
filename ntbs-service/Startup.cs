@@ -112,7 +112,11 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (Env.IsEnvironment("Test"))
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions

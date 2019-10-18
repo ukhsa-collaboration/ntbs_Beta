@@ -67,6 +67,13 @@ namespace ntbs_integration_tests
             return await client.SendAsync(form, formData, PageRoute);
         }
 
+        protected async Task<HttpResponseMessage> SendGetFormWithData(IHtmlDocument document, Dictionary<string, string> formData)
+        {
+            var form = (IHtmlFormElement)document.QuerySelector("form");
+
+            return await client.SendGetAsync(form, formData, PageRoute);
+        }
+
         protected string BuildValidationPath(Dictionary<string, string> formData, string subPath)
         {
             var queryString = string.Join("&", formData.Select(kvp =>

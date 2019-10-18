@@ -34,6 +34,25 @@ namespace ntbs_integration_tests.Helpers
             return client.SendAsync(submission);
         }
 
+        public static Task<HttpResponseMessage> SendGetAsync(
+            this HttpClient client,
+            IHtmlFormElement form,
+            Dictionary<string, string> formValues,
+            string path,
+            string submitType = "Save")
+        {
+            VerifyFormElementsExist(form, formValues);
+
+            formValues.Add("actionName", submitType);
+
+            var submission = new HttpRequestMessage(HttpMethod.Get, path)
+            {
+                Content = new FormUrlEncodedContent(formValues)
+            };
+
+            return client.SendAsync(submission);
+        }
+
         private static void VerifyFormElementsExist(IHtmlFormElement form, Dictionary<string, string> formValues)
         {
             foreach (var kvp in formValues)
