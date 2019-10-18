@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using EFAuditer;
-using Microsoft.Extensions.Configuration;
-using ntbs_service.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 
 namespace ntbs_service.Services
@@ -13,15 +11,17 @@ namespace ntbs_service.Services
 
     public class PostcodeService : IPostcodeService
     {
-        private readonly IPostcodeRepository repository;
+        private readonly NtbsContext context;
 
-        public PostcodeService(IPostcodeRepository repository) {
-            this.repository = repository;
+        public PostcodeService(NtbsContext context) {
+            this.context = context;
         }
 
         public async Task<PostcodeLookup> FindPostcode(string postcode)
         {
-            return await repository.FindPostcode(postcode.Replace(" ", "").ToUpper());
+            postcode = postcode?.Replace(" ", "").ToUpper();
+            return await context.PostcodeLookup.FirstOrDefaultAsync(x => x.Postcode == postcode);
+
         }
     }
 }

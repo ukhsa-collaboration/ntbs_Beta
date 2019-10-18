@@ -32,7 +32,7 @@ namespace ntbs_service.Helpers
             }           
         }
 
-        // Data seeding does not works with Entities that have Navigation (foreign key)
+        // Data seeding does not work with Entities that have Navigation (foreign key)
         // Therefore manual mapping is required
         public static List<object> GetRecordsFromCSV(string relativePathToFile, Func<CsvReader,object> getRecord) {
             var filePath = GetFullFilePath(relativePathToFile);

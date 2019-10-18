@@ -1,4 +1,7 @@
 pipeline {
+  environment {
+    NTBS_BUILD = "build-${env.BUILD_ID}-${env.GIT_COMMIT.substring(0, 6)}"
+  }
   agent { label 'linux' }
   stages {
     stage('run unit tests') {
@@ -38,8 +41,8 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://ntbscontainerregistry.azurecr.io', 'ntbs-registery-credentials') {
-            ntbsImage = docker.build("ntbs-service:build-${env.BUILD_ID}",  ".")
-            echo "Uploading build image build-${env.BUILD_ID}"
+            ntbsImage = docker.build("ntbs-service:${NTBS_BUILD}",  ".")
+            echo "Uploading build image ${NTBS_BUILD}"
             ntbsImage.push()
             echo "Uploading latest image"
             ntbsImage.push("latest")
@@ -53,11 +56,8 @@ pipeline {
           kubectl = docker.image('bitnami/kubectl')
           kubectl.inside("--entrypoint=''") {
             withCredentials([[$class: 'FileBinding', credentialsId: 'kubeconfig', variable: 'KUBECONFIG']]) {
-              echo "Deploying to int"
-              sh "kubectl apply -f ./ntbs-service/int.yml"
-              // This sets the image to current build. Should be the same as "latest", but triggers pull of the image.
-              sh "kubectl set image deployment/ntbs-int ntbs-int=ntbscontainerregistry.azurecr.io/ntbs-service:build-${env.BUILD_ID}"
-              echo "Deployed!"
+              sh "chmod +x ./scripts/release.sh"
+              sh "./scripts/release.sh int ${NTBS_BUILD}"
             }
           }
         }
@@ -66,7 +66,7 @@ pipeline {
   }
   post {
     success {
-      notifySlack(":green_heart: Build succeeded. New deployment on int: build-${env.BUILD_ID}")
+      notifySlack(":green_heart: Build succeeded. New deployment on int: ${NTBS_BUILD}")
     }
     failure {
       notifySlack(":red_circle: Build failed")
@@ -80,6 +80,6 @@ pipeline {
 
 def notifySlack(message) {
     withCredentials([string(credentialsId: 'slack-token', variable: 'SLACKTOKEN')]) {
-        slackSend teamDomain: "phe-ntbs", channel: "#dev-ci", token: "$SLACKTOKEN", message: "*${message}* - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        slackSend teamDomain: "phe-ntbs", channel: "#dev-ci", token: "$SLACKTOKEN", message: "*${message}* - ${env.JOB_NAME} ${NTBS_BUILD} (<${env.BUILD_URL}|Open>)"
     }
 }

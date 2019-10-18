@@ -35,6 +35,9 @@ namespace ntbs_service.Models
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
+        public virtual DbSet<Episode> Episode { get; set; }
+        public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
+        public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
         public virtual DbSet<TravelDetails> TravelDetails { get; set; }
         public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get;  set; }
@@ -179,7 +182,7 @@ namespace ntbs_service.Models
                     .HasForeignKey<LocalAuthorityToPHEC>(la => la.LocalAuthorityCode);
 
                 entity.HasOne(e => e.PHEC)
-                    .WithOne(x => x.LocalAuthorityToPHEC)
+                    .WithOne()
                     .HasForeignKey<LocalAuthorityToPHEC>(la => la.PHECCode);
 
 

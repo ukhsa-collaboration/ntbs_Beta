@@ -32,9 +32,11 @@ namespace ntbs_service.Services
             return GetValidationResult(model, key);
         }
 
-        public ContentResult ValidateMultipleProperties<T>(IEnumerable<Tuple<string, object>> propertyValueTuples)
+        public ContentResult ValidateMultipleProperties<T>(IEnumerable<Tuple<string, object>> propertyValueTuples, bool shouldValidateFull=false) where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));
+            model.ShouldValidateFull = shouldValidateFull;
+
             var keys = new List<string>();
             foreach (var tuple in propertyValueTuples)
             {
@@ -92,28 +94,38 @@ namespace ntbs_service.Services
         {
             pageModel.TryValidateModel(model);
 
-            return (ModelState()[key] == null || ModelState()[key].ValidationState == ModelValidationState.Valid)
-                    ? ValidContent() 
-                    : pageModel.Content(ModelState()[key].Errors[0].ErrorMessage);
+            var modelStateByKey = ModelState()[key];
+
+            if (modelStateByKey?.ValidationState == ModelValidationState.Invalid)
+            {
+                return pageModel.Content(modelStateByKey.Errors[0].ErrorMessage);
+            }
+            return ValidContent();
         }
 
         private ContentResult GetValidationResult(object model, IEnumerable<string> keys)
         {
-            if (pageModel.TryValidateModel(model))
-            {
-                return ValidContent();
-            }
-            else
+            if (!pageModel.TryValidateModel(model))
             {
                 var errorMessageMap = new Dictionary<int, string>();
                 var errorIndex = 0;
+
                 foreach (var key in keys)
                 {
-                    errorMessageMap.Add(errorIndex, ModelState()[key].Errors[0].ErrorMessage);
-                    errorIndex++;
+                    var modelStateByKey = ModelState()[key];
+                    if (modelStateByKey?.ValidationState == ModelValidationState.Invalid)
+                    {
+                        errorMessageMap.Add(errorIndex, modelStateByKey.Errors[0].ErrorMessage);
+                        errorIndex++;
+                    }
                 }
-                return pageModel.Content(JsonConvert.SerializeObject(errorMessageMap), "application/json");
+                if (errorIndex > 0)
+                {
+                    return pageModel.Content(JsonConvert.SerializeObject(errorMessageMap), "application/json");
+                }
             }
+
+            return ValidContent();
         }
 
         private ContentResult ValidContent()

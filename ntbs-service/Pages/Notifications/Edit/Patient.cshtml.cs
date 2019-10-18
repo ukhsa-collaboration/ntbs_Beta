@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
-        public IPostcodeService PostcodeService { get; set; }
+        private IPostcodeService PostcodeService { get; set; }
 
         public PatientModel(INotificationService service, IPostcodeService postcodeService, NtbsContext context) : base(service)
         {
@@ -59,12 +60,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<bool> ValidateAndSave()
         {
             UpdatePatientFlags();
+            ModelState.ClearValidationState("Patient.Postcode");
+
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
-
             validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
-            if (!TryValidateModel(this))
+            if (!TryValidateModel(Patient, "Patient"))
             {
                 return false;
             }
@@ -98,12 +100,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {   
             var foundPostcode = await PostcodeService.FindPostcode(postcode);
-            var patientDetails = new PatientDetails() {
-                PostcodeToLookup = foundPostcode?.Postcode,
-                ShouldValidateFull = shouldValidateFull
+            var propertyValueTuples = new List<Tuple<string, object>>
+            {
+                new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
+                new Tuple<string, object>("Postcode", postcode)
             };
 
-            return validationService.ValidateProperty(patientDetails, "Postcode", postcode);
+            return validationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
