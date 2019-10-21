@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             NotificationId = Notification.NotificationId;
-            if (Notification.NotificationStatus == NotificationStatus.Denotified)
+            if (Notification.NotificationStatus != NotificationStatus.Notified)
             {
                 return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
             }
@@ -66,7 +66,10 @@ namespace ntbs_service.Pages.Notifications
                 return Page();
             }
 
-            await service.DenotifyNotification(NotificationId, DenotificationDetails);
+            if (Notification.NotificationStatus == NotificationStatus.Notified)
+            {
+                await service.DenotifyNotification(NotificationId, DenotificationDetails);
+            }
 
             return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
         }

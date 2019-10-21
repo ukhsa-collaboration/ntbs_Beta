@@ -18,6 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             yield return new object[] { Utilities.DRAFT_ID, HttpStatusCode.Redirect };
             yield return new object[] { Utilities.NOTIFIED_ID, HttpStatusCode.OK };
+            yield return new object[] { Utilities.DENOTIFIED_ID, HttpStatusCode.OK };
             yield return new object[] { Utilities.NEW_ID, HttpStatusCode.NotFound };
         }
 
@@ -32,7 +33,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             if (response.StatusCode == HttpStatusCode.Redirect)
             {
-                Assert.Equal(BuildRoute(Routes.Patient, Utilities.DRAFT_ID), GetRedirectLocation(response));
+                Assert.Equal(BuildRoute(Routes.Patient, id), GetRedirectLocation(response));
             }
         }
     }
