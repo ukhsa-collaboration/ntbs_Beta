@@ -17,8 +17,10 @@ namespace ntbs_integration_tests.Helpers
 
         public static void SeedDatabase(NtbsContext db)
         {
+            // General purpose entities extensively shared between tests
             db.Notification.AddRange(GetSeedingNotifications());
 
+            // Entities required for specific test suites
             db.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
 
             db.SaveChanges();

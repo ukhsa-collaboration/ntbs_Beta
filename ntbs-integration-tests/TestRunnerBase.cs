@@ -58,15 +58,10 @@ namespace ntbs_integration_tests
             return $"Error:{validationMessage}";
         }
 
-        protected async Task<HttpResponseMessage> SendFormWithData(IHtmlDocument document, Dictionary<string, string> formData)
-        {
-            return await SendFormWithData(document, formData, null);
-        }
-
         protected async Task<HttpResponseMessage> SendFormWithData(
             IHtmlDocument document,
             Dictionary<string, string> formData,
-            string postRoute)
+            string postRoute = null)
         {
             var form = (IHtmlFormElement)document.QuerySelector("form");
 

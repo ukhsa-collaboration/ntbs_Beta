@@ -26,7 +26,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForExistingIds(string route, int id)
         {
             //Act
-            var response = await client.GetAsync($"{route[0]}?id={id}");
+            var response = await client.GetAsync($"{route}?id={id}");
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
