@@ -20,7 +20,7 @@
     <PackageReference Include="ExpressiveAnnotations" Version="2.9.6" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Models/SeedData/*.*">
+    <Content Include="Models/SeedData/*.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
