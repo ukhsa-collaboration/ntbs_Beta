@@ -13,6 +13,7 @@ namespace ntbs_service.Services
         INotificationSearchBuilder FilterByPartialDob(PartialDate partialDob);
         INotificationSearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate);
         INotificationSearchBuilder FilterBySex(int? sexId);
+        INotificationSearchBuilder FilterByPostcode(string postcode);
         INotificationSearchBuilder FilterByBirthCountry(int? countryId);
         INotificationSearchBuilder FilterByTBService(string TBService);
         IQueryable<Notification> GetResult();
@@ -33,7 +34,7 @@ namespace ntbs_service.Services
             {
                 int.TryParse(id, out int parsedId);
                 notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(parsedId) 
-                    || s.ETSID.Equals(id) || s.LTBRID.Equals(id) || s.PatientDetails.NhsNumber.Equals(id));
+                    || (s.ETSID != null && s.ETSID.Equals(id)) || (s.LTBRID != null && s.LTBRID.Equals(id)) || s.PatientDetails.NhsNumber.Equals(id));
             }
             return this;
         }
@@ -52,6 +53,16 @@ namespace ntbs_service.Services
             if (!String.IsNullOrEmpty(givenName))
             {
                 notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.GivenName, $"%{givenName}%"));
+            }
+            return this;
+        }
+
+        public INotificationSearchBuilder FilterByPostcode(string postcode)
+        {
+            if (!String.IsNullOrEmpty(postcode))
+            {
+                var postcodeNoWhitespace = postcode.Replace(" ", "");
+                notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.PostcodeToLookup, $"{postcodeNoWhitespace}%"));
             }
             return this;
         }

@@ -38,19 +38,19 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(document, formData);
+            var result = await SendPostFormWithData(document, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='other-site-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), resultDocument.QuerySelector("span[id='bcg-vaccination-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.QuerySelector("span[id='symptom-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("other-site"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), resultDocument.GetError("bcg-vaccination"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("symptom"));
             Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                resultDocument.QuerySelector("span[id='presentation-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.QuerySelector("span[id='short-course-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.QuerySelector("span[id='mdr-error']").TextContent);
+                resultDocument.GetError("presentation"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("short-course"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("mdr"));
         }
 
         [Fact]
@@ -69,15 +69,15 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(document, formData);
+            var result = await SendPostFormWithData(document, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DiseaseSiteOtherIsRequired), resultDocument.QuerySelector("span[id='other-site-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), resultDocument.QuerySelector("span[id='bcg-vaccination-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), resultDocument.QuerySelector("span[id='postmortem-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.DiseaseSiteOtherIsRequired), resultDocument.GetError("other-site"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), resultDocument.GetError("bcg-vaccination"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), resultDocument.GetError("postmortem"));
         }
 
         [Fact]
@@ -95,13 +95,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(document, formData);
+            var result = await SendPostFormWithData(document, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, resultDocument.QuerySelector("span[id='notification-sites-error']").TextContent);
+            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, resultDocument.GetError("notification-sites"));
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -176,7 +176,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);

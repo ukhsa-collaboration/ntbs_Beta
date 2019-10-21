@@ -30,13 +30,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            Assert.Equal(FullErrorMessage(ValidationMessages.ImmunosuppressionTypeRequired), resultDocument.QuerySelector("span[id='status-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.ImmunosuppressionTypeRequired), resultDocument.GetError("status"));
         }
 
         [Fact]
@@ -54,13 +54,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            Assert.Equal(FullErrorMessage(ValidationMessages.ImmunosuppressionDetailRequired), resultDocument.QuerySelector("span[id='description-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.ImmunosuppressionDetailRequired), resultDocument.GetError("description"));
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);

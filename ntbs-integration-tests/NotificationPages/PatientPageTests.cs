@@ -35,16 +35,16 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(pageContent, formData);
+            var result = await SendPostFormWithData(pageContent, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='given-name-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='family-name-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("given-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("family-name"));
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
-            Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.QuerySelector("span[id='dob-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.QuerySelector("span[id='nhs-number-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.QuerySelector("span[id='address-error']").TextContent);
+            Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.GetError("dob"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.GetError("nhs-number"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("address"));
         }
 
         [Fact]
@@ -62,20 +62,20 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(document, formData);
+            var result = await SendPostFormWithData(document, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.FamilyNameIsRequired), resultDocument.QuerySelector("span[id='family-name-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.GivenNameIsRequired), resultDocument.QuerySelector("span[id='given-name-error']").TextContent);
-            Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.QuerySelector("span[id='dob-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), resultDocument.QuerySelector("span[id='nhs-number-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), resultDocument.QuerySelector("span[id='postcode-error']").TextContent);
-            Assert.Equal(ValidationMessages.SexIsRequired, resultDocument.QuerySelector("span[id='sex-error']").TextContent);
-            Assert.Equal(ValidationMessages.EthnicGroupIsRequired, resultDocument.QuerySelector("span[id='ethnicity-error']").TextContent);
-            Assert.Equal(ValidationMessages.BirthCountryIsRequired, resultDocument.QuerySelector("span[id='birth-country-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.FamilyNameIsRequired), resultDocument.GetError("family-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.GivenNameIsRequired), resultDocument.GetError("given-name"));
+            Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.GetError("dob"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), resultDocument.GetError("nhs-number"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), resultDocument.GetError("postcode"));
+            Assert.Equal(ValidationMessages.SexIsRequired, resultDocument.GetError("sex"));
+            Assert.Equal(ValidationMessages.EthnicGroupIsRequired, resultDocument.GetError("ethnicity"));
+            Assert.Equal(ValidationMessages.BirthCountryIsRequired, resultDocument.GetError("birth-country"));
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);

@@ -21,16 +21,16 @@
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
                 <h1 class="notification-banner-title-text">
-                    <div> @Model.NotificationStatusString </div>
-
-                    @if (@Model.ShowLink)
-                    {
-                        <a href="@Model.RedirectPath" class="notification-banner-id-link"> #@Model.NotificationId </a>
-                    }
-                    else
-                    {
-                        <div> #@Model.NotificationId </div>
-                    }
+                <div> @Model.NotificationStatusString </div>
+                    
+                @if(@Model.ShowLink) 
+                {
+                    <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id"> #@Model.NotificationId </a>
+                }
+                else 
+                {
+                    <div> #@Model.NotificationId </div>
+                }
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
