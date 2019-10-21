@@ -1,4 +1,4 @@
-using ExpressiveAnnotations.Attributes;
+﻿using ExpressiveAnnotations.Attributes;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
@@ -113,6 +113,7 @@ namespace ntbs_service.Models
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string PHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
 
+        public int AgeAtNotification => GetAgeAtTimeOfNotification();
 
         private string GetNotificationEditPath(string subPath)
         {
@@ -231,6 +232,15 @@ namespace ntbs_service.Models
                 timeStrings.Add("more than 5 years ago");
             }
             return string.Join(", ", timeStrings);
+        }
+
+        private int GetAgeAtTimeOfNotification()
+        {
+            if (NotificationDate == null || PatientDetails?.Dob == null) 
+            {
+                return 0;
+            }
+            return (int) Math.Floor(((DateTime) NotificationDate - (DateTime) PatientDetails.Dob).Days / 365.2425);
         }
     }
 }
