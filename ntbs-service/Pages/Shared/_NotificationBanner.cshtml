@@ -1,32 +1,36 @@
 @{
-    var NotificationStatusBannerCssClass = "";
-    switch(@Model.NotificationStatus)
+    var notificationStatusBannerCssClass = "";
+    switch (@Model.NotificationStatus)
     {
-        case NotificationStatus.Draft: NotificationStatusBannerCssClass = "notification-banner--draft";
+        case NotificationStatus.Draft:
+            notificationStatusBannerCssClass = "notification-banner--draft";
             break;
-        case NotificationStatus.Notified: NotificationStatusBannerCssClass = "notification-banner--notified";
+        case NotificationStatus.Notified:
+            notificationStatusBannerCssClass = "notification-banner--notified";
             break;
-        case NotificationStatus.Denotified: NotificationStatusBannerCssClass = "notification-banner--denotified";
+        case NotificationStatus.Denotified:
+            notificationStatusBannerCssClass = "notification-banner--denotified";
             break;
         default:
             break;
     }
 }
 
-<dl class="notification-banner @NotificationStatusBannerCssClass">
+<dl class="notification-banner @notificationStatusBannerCssClass">
     <div class="notification-banner-head">
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
                 <h1 class="notification-banner-title-text">
-                        <div> @Model.NotificationStatusString </div>
-                    
-                @if(@Model.ShowLink) 
-                {
-                    <a href="@Model.RedirectPath" class="notification-banner-id-link"> #@Model.NotificationId </a>
-                } else 
-                {
-                    <div> #@Model.NotificationId </div>
-                }
+                    <div> @Model.NotificationStatusString </div>
+
+                    @if (@Model.ShowLink)
+                    {
+                        <a href="@Model.RedirectPath" class="notification-banner-id-link"> #@Model.NotificationId </a>
+                    }
+                    else
+                    {
+                        <div> #@Model.NotificationId </div>
+                    }
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
@@ -71,6 +75,6 @@
                 <div class="bold-label"> Sex </div>
                 <div class="cell-min-height"> @Model.Sex </div>
             </nhs-grid-column>
-        </nhs-grid-row> 
+        </nhs-grid-row>
     </div>
 </dl>

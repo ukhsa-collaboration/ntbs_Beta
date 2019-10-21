@@ -8,8 +8,6 @@ using ntbs_service;
 using Xunit;
 using AngleSharp;
 using System.Linq;
-using AngleSharp.Dom;
-using System.Web;
 
 namespace ntbs_integration_tests
 {
@@ -19,13 +17,13 @@ namespace ntbs_integration_tests
         protected readonly NtbsWebApplicationFactory<Startup> factory;
         protected virtual string PageRoute { get; }
 
-        public TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
+        protected TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
             client = this.factory.CreateClient(new WebApplicationFactoryClientOptions
-                {
-                    AllowAutoRedirect = false
-                });
+            {
+                AllowAutoRedirect = false
+            });
         }
 
         protected async Task<IHtmlDocument> GetDocumentAsync(HttpResponseMessage response)
@@ -62,15 +60,28 @@ namespace ntbs_integration_tests
 
         protected async Task<HttpResponseMessage> SendFormWithData(IHtmlDocument document, Dictionary<string, string> formData)
         {
+            return await SendFormWithData(document, formData, null);
+        }
+
+        protected async Task<HttpResponseMessage> SendFormWithData(
+            IHtmlDocument document,
+            Dictionary<string, string> formData,
+            string postRoute)
+        {
             var form = (IHtmlFormElement)document.QuerySelector("form");
 
-            return await client.SendAsync(form, formData, PageRoute);
+            var submissionRoute = PageRoute;
+            if (!string.IsNullOrEmpty(postRoute))
+            {
+                submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
+            }
+
+            return await client.SendAsync(form, formData, submissionRoute);
         }
 
         protected string BuildValidationPath(Dictionary<string, string> formData, string subPath)
         {
-            var queryString = string.Join("&", formData.Select(kvp =>
-                            string.Format("{0}={1}", kvp.Key, kvp.Value)));
+            var queryString = string.Join("&", formData.Select(kvp => $"{kvp.Key}={kvp.Value}"));
             return $"{PageRoute}/{subPath}?{queryString}";
         }
     }

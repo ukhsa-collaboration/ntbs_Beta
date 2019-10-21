@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ntbs_integration_tests.NotificationPages;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 
@@ -10,9 +11,16 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFIED_ID = 2;
         public const int DENOTIFIED_ID = 3;
         public const int NEW_ID = 1000;
+
+        public const int DENOTIFY_WITH_DESCRIPTION = 10;
+        public const int DENOTIFY_NO_DESCRIPTION = 11;
+
         public static void SeedDatabase(NtbsContext db)
         {
             db.Notification.AddRange(GetSeedingNotifications());
+
+            db.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
+
             db.SaveChanges();
         }
 
