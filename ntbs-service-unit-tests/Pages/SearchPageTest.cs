@@ -18,9 +18,9 @@ namespace ntbs_service_unit_tests.Pages
 {
     public class SearchPageTest
     {
-        private Mock<INotificationService> mockNotificationService;
-        private Mock<ISearchService> mockSearchService;
-        private Mock<NtbsContext> mockContext;
+        private readonly Mock<INotificationService> mockNotificationService;
+        private readonly Mock<ISearchService> mockSearchService;
+        private readonly Mock<NtbsContext> mockContext;
         public SearchPageTest() 
         {
             mockNotificationService = new Mock<INotificationService>();

@@ -21,10 +21,6 @@ namespace ntbs_service.Pages_Search
 
             this.AddRange(items);
         }
-        private PaginatedList(IEnumerable<T> items)
-        {
-            this.AddRange(items);
-        }
 
         public bool HasPreviousPage
         {

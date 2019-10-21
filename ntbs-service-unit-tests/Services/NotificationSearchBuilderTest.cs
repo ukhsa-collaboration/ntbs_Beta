@@ -9,7 +9,7 @@ namespace ntbs_service_unit_tests.Services
 {
     public class NotificationSearchBuilderTest
     {
-        NotificationSearchBuilder builder;
+        readonly NotificationSearchBuilder builder;
 
         public NotificationSearchBuilderTest()
         {

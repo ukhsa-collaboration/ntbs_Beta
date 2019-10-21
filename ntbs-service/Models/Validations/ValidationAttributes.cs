@@ -9,7 +9,7 @@ namespace ntbs_service.Models.Validations
 {
     public class ValidDateAttribute : RangeAttribute
     {
-        private string StartDate;
+        private readonly string StartDate;
         public ValidDateAttribute(string startDateString) : base(typeof(DateTime),
             startDateString, DateTime.Now.ToShortDateString())
         {
@@ -37,13 +37,13 @@ namespace ntbs_service.Models.Validations
             var propertyToCompare = instance.GetType().GetProperty(ComparisonValue);
             object valueToCompare = propertyToCompare.GetValue(instance);
 
-            if (isTruthy(valueToCompare) && isTruthy(value)) {
+            if (IsTruthy(valueToCompare) && IsTruthy(value)) {
                 return new ValidationResult(ErrorMessage);
             }
             return null;
         }
 
-        private bool isTruthy(object value)
+        private bool IsTruthy(object value)
         {
             return value != null && (bool)value;
         }
@@ -91,7 +91,8 @@ namespace ntbs_service.Models.Validations
                     return new ValidationResult(ValidationMessages.YearRequired);
                 }
             }
-            bool canConvert = partialDate.TryConvertToDateTimeRange(out DateTime? x, out DateTime? y);
+
+            bool canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
             if (!canConvert) {
                 return new ValidationResult(ErrorMessage);
             }
@@ -108,7 +109,8 @@ namespace ntbs_service.Models.Validations
             {
                 return null;
             }
-            bool canConvert = formattedDate.TryConvertToDateTime(out DateTime? x);
+
+            bool canConvert = formattedDate.TryConvertToDateTime(out _);
             if (!canConvert) {
                 return new ValidationResult(ErrorMessage);
             }

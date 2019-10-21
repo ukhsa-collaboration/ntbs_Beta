@@ -14,8 +14,8 @@ namespace ntbs_service_unit_tests.Pages
 {
     public class PatientIndexPageTest
     {
-        private Mock<INotificationService> mockNotificationService;
-        private Mock<IUserService> mockUserService;
+        private readonly Mock<INotificationService> mockNotificationService;
+        private readonly Mock<IUserService> mockUserService;
         public PatientIndexPageTest() 
         {
             mockNotificationService = new Mock<INotificationService>();
