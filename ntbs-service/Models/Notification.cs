@@ -1,4 +1,4 @@
-﻿using ExpressiveAnnotations.Attributes;
+using ExpressiveAnnotations.Attributes;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
@@ -34,6 +34,11 @@ namespace ntbs_service.Models
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
+
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateRequired)]
+        [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.ShouldBeLaterThanDob)]
+        [ValidDate(ValidDates.EarliestClinicalDate)]
+        public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
 
         public virtual PatientDetails PatientDetails { get; set; }
