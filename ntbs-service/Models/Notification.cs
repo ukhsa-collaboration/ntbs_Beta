@@ -129,10 +129,12 @@ namespace ntbs_service.Models
             {
                 return "Notification";
             }
-            else
+            else if (NotificationStatus == NotificationStatus.Denotified)
             {
                 return "Denotified";
             }
+
+            throw new InvalidOperationException("Notification status is not currently set");
         }
 
         private string FormatDate(DateTime? date)

@@ -25,11 +25,12 @@ const ValidatePostcode = Vue.extend({
                     if (errorMessages) {
                         this.$refs["formGroup"].classList.add('nhsuk-form-group--error');
                         this.$refs["inputField"].classList.add('nhsuk-input--error')
+                        this.$refs["errorField"].textContent = errorMessages[0];
                     } else {
                         this.$refs["formGroup"].classList.remove('nhsuk-form-group--error')
                         this.$refs["inputField"].classList.remove('nhsuk-input--error')
+                        this.$refs["errorField"].textContent = "";
                     }
-                    this.$refs["errorField"].textContent = errorMessages[0];
                 })
                 .catch((error: any) => {
                     console.log(error.response)

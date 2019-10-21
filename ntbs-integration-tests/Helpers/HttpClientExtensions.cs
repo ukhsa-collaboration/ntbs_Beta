@@ -73,12 +73,13 @@ namespace ntbs_integration_tests.Helpers
 
         private static string GetAntiForgeryToken(IHtmlFormElement form)
         {
-            StreamReader reader = new StreamReader(form.GetSubmission().Body);
-            string submitBody = reader.ReadToEnd();
-
-            var tokenMatch = TOKEN_REGEX.Match(submitBody);
-            var token = tokenMatch.Success ? tokenMatch.Groups[1].Captures[0].Value : null;
-            return token;
+            using (var reader = new StreamReader(form.GetSubmission().Body))
+            {
+                var submitBody = reader.ReadToEnd();
+                var tokenMatch = TOKEN_REGEX.Match(submitBody);
+                var token = tokenMatch.Success ? tokenMatch.Groups[1].Captures[0].Value : null;
+                return token;
+            }
         }
     }
 }
