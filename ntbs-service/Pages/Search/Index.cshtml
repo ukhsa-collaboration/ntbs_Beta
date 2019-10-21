@@ -21,7 +21,7 @@
                     To search enter at least one of the following fields
                 </nhs-fieldset-legend>
                 <span nhs-span-type="ErrorMessage" id="one-parameter-required-error"
-                    asp-validation-for="SearchParameters"></span>
+                    asp-validation-for="SearchParameters" has-error="@SearchParametersError"></span>
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="OneQuarter">
                         @{
@@ -34,7 +34,7 @@
                                 Search by NTBS, ETS, LTBR or NHS number
                             </nhs-hint>
                             <span nhs-span-type="ErrorMessage" id="id-error"
-                                asp-validation-for="SearchParameters.IdFilter"></span>
+                                asp-validation-for="SearchParameters.IdFilter" has-error="@IdFilterError"></span>
                             <input is-error-input=@IdFilterError nhs-input-type="Standard"
                                 asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" aria-describedby="id-types-hint"/>
                         </nhs-form-group>
@@ -50,7 +50,7 @@
                                 Enter at least two characters
                             </nhs-hint>
                             <span nhs-span-type="ErrorMessage" id="family-name-error"
-                                asp-validation-for="SearchParameters.FamilyName"></span>
+                                asp-validation-for="SearchParameters.FamilyName" has-error="@FamilyNameError"></span>
                             <input is-error-input=@FamilyNameError nhs-input-type="Standard"
                                 asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10" aria-describedby="two-character-family-name-hint"/>
                         </nhs-form-group>
@@ -66,7 +66,7 @@
                                 Dates can be partial, enter year at minimum
                             </nhs-hint>
                             <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
-                                asp-validation-for="SearchParameters.PartialDob"></span>
+                                asp-validation-for="SearchParameters.PartialDob" has-error="@DobError"></span>
                             <nhs-date-input id="dob">
                                 <nhs-date-input-item>
                                     <nhs-form-group nhs-form-group-type="Standard">
@@ -103,7 +103,7 @@
                                 Enter at least two characters
                             </nhs-hint>
                             <span nhs-span-type="ErrorMessage" id="postcode-error"
-                                asp-validation-for="SearchParameters.Postcode"></span>
+                                asp-validation-for="SearchParameters.Postcode" has-error="@PostcodeError"></span>
                             <input is-error-input=@PostcodeError nhs-input-type="Standard"
                                 asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10" 
                                 aria-describedby="two-character-postcode-hint"/>
@@ -127,7 +127,7 @@
                         Dates can be partial, enter year at minimum
                     </nhs-hint>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error"
-                        asp-validation-for="SearchParameters.PartialNotificationDate"></span>
+                        asp-validation-for="SearchParameters.PartialNotificationDate"  has-error="@NotificationDateError"></span>
                     <nhs-date-input id="dob">
                         <nhs-date-input-item>
                             <nhs-form-group nhs-form-group-type="Standard">
@@ -164,7 +164,7 @@
                         Enter at least two characters
                     </nhs-hint>
                     <span nhs-span-type="ErrorMessage" id="given-name-error"
-                        asp-validation-for="SearchParameters.GivenName"></span>
+                        asp-validation-for="SearchParameters.GivenName" has-error="@GivenNameError"></span>
                     <input is-error-input=@GivenNameError nhs-input-type="Standard"
                         asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" aria-describedby="two-character-given-name-hint"/>
                 </nhs-form-group>
@@ -177,7 +177,7 @@
                 <nhs-form-group nhs-form-group-type=@SexIdGroupState>
                     <label nhs-label-type="Standard"> Sex </label>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="sexId-error"
-                        asp-validation-for="SearchParameters.SexId" ></span>
+                        asp-validation-for="SearchParameters.SexId" has-error="@SexIdError"></span>
                     <nhs-radios nhs-radios-type="Standard">
                         @foreach (var sex in Model.Sexes)
                         {

@@ -27,9 +27,10 @@ namespace ntbs_integration_tests.Helpers
             this HttpClient client,
             IHtmlFormElement form,
             Dictionary<string, string> formValues,
-            string path)
+            string path,
+            string submitType = "Save")
         {
-            return SendAsync(client, form, formValues, path, HttpMethod.Post, "Save");
+            return SendAsync(client, form, formValues, path, HttpMethod.Post, submitType);
         }
 
         private static Task<HttpResponseMessage> SendAsync(
