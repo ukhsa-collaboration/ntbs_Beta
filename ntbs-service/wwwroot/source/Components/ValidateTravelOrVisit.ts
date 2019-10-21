@@ -11,12 +11,16 @@ type TravelOrVisitVariables = {
     country3Id: string,
     stayLengthInMonths1: string,
     stayLengthInMonths2: string,
-    stayLengthInMonths3: string
+    stayLengthInMonths3: string,
+    shouldValidateFull: string
 };
 
 const ValidateTravelOrVisit = Vue.extend({
     props: {
         modelType: {
+            type: String
+        },
+        shouldvalidatefull: {
             type: String
         }
     },
@@ -62,6 +66,7 @@ const ValidateTravelOrVisit = Vue.extend({
                                     this.$refs[baseRef].classList.add("nhsuk-select--error");
                                 }
 
+                                this.$refs[errorRef].classList.remove("hidden");
                                 this.$refs[errorRef].textContent = errorMessage;
                                 this.$refs[formGroupRef].classList.add("nhsuk-form-group--error");
                             }
@@ -93,6 +98,7 @@ const ValidateTravelOrVisit = Vue.extend({
                     this.$refs[ref].classList.remove("nhsuk-select--error");
                 }
 
+                this.$refs[errorRef].classList.add("hidden");
                 this.$refs[errorRef].textContent = "";
                 this.$refs[formGroupRef].classList.remove("nhsuk-form-group--error");
             }
@@ -106,7 +112,8 @@ const ValidateTravelOrVisit = Vue.extend({
                 country3Id: this.$refs["country3Id"].value,
                 stayLengthInMonths1: this.$refs["stayLengthInMonths1"].value,
                 stayLengthInMonths2: this.$refs["stayLengthInMonths2"].value,
-                stayLengthInMonths3: this.$refs["stayLengthInMonths3"].value
+                stayLengthInMonths3: this.$refs["stayLengthInMonths3"].value,
+                shouldValidateFull: this.$props.shouldvalidatefull
             };
 
             const lowerModelType = this.$props.modelType.toLowerCase();
