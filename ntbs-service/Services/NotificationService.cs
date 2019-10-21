@@ -28,6 +28,7 @@ namespace ntbs_service.Services
         Task SubmitNotification(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails);
+        void ClearTravelOrVisitorFields(ITravelOrVisitorDetails travelOrVisitorDetails);
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
@@ -148,7 +149,7 @@ namespace ntbs_service.Services
             context.Entry(notification.VisitorDetails).CurrentValues.SetValues(visitorDetails);
         }
 
-        private void ClearTravelOrVisitorFields(ITravelOrVisitorDetails travelOrVisitorDetails)
+        public void ClearTravelOrVisitorFields(ITravelOrVisitorDetails travelOrVisitorDetails)
         {
             travelOrVisitorDetails.TotalNumberOfCountries = null;
             travelOrVisitorDetails.Country1 = null;

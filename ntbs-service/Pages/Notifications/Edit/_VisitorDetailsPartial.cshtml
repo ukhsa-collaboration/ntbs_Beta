@@ -3,8 +3,7 @@
 @using ntbs_service.Models
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
-<validate-travel-or-visit model-type="visitor" inline-template>
-
+<validate-travel-or-visit model-type="visitor" shouldvalidatefull="@Model.TravelDetails.ShouldValidateFull" inline-template>
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -31,7 +30,7 @@
                                 Total number of countries visited from
                             </label>
                             <span asp-validation-for="VisitorDetails.TotalNumberOfCountries" nhs-span-type="ErrorMessage"
-                                  id="visitor-total-error" ref="totalNumberOfCountriesErrorRef"></span>
+                                  id="visitor-total-error" ref="totalNumberOfCountriesErrorRef" has-error="@hasTotalError"></span>
                             <input asp-for="VisitorDetails.TotalNumberOfCountries" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasTotalError"
                                    ref="totalNumberOfCountries" aria-describedby="visitor-total-error" />
                         </nhs-form-group>
@@ -46,7 +45,7 @@
                                 Most recent country visited from
                             </label>
                             <span asp-validation-for="VisitorDetails.Country1Id" nhs-span-type="ErrorMessage"
-                                  id="visitor-country1Id-error" ref="country1IdErrorRef"></span>
+                                  id="visitor-country1Id-error" ref="country1IdErrorRef" has-error="@hasCountry1IdError"></span>
                             <select asp-for="VisitorDetails.Country1Id" nhs-select-type="@country1SelectType" asp-items="Model.HighTbIncidenceCountries"
                                     ref="country1Id" aria-describedby="visitor-country1Id-error">
                                 <option value="" selected>Select from list</option>
@@ -62,7 +61,7 @@
                                 Duration of visit in months
                             </label>
                             <span asp-validation-for="VisitorDetails.StayLengthInMonths1" nhs-span-type="ErrorMessage"
-                                  id="visitor-length1-error" ref="stayLengthInMonths1ErrorRef"></span>
+                                  id="visitor-length1-error" ref="stayLengthInMonths1ErrorRef" has-error="@hasStayLength1Error"></span>
                             <input asp-for="VisitorDetails.StayLengthInMonths1" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength1Error"
                                    ref="stayLengthInMonths1" aria-describedby="visitor-length1-error" />
                         </nhs-form-group>
@@ -77,7 +76,7 @@
                                 2nd most recent country visited from
                             </label>
                             <span asp-validation-for="VisitorDetails.Country2Id" nhs-span-type="ErrorMessage"
-                                  id="visitor-country2Id-error" ref="country2IdErrorRef"></span>
+                                  id="visitor-country2Id-error" ref="country2IdErrorRef" has-error="@hasCountry2IdError"></span>
                             <select asp-for="VisitorDetails.Country2Id" nhs-select-type="@country2SelectType" asp-items="Model.HighTbIncidenceCountries"
                                     ref="country2Id" aria-describedby="visitor-country2Id-error">
                                 <option value="" selected>Select from list</option>
@@ -93,7 +92,7 @@
                                 Duration of visit in months
                             </label>
                             <span asp-validation-for="VisitorDetails.StayLengthInMonths2" nhs-span-type="ErrorMessage"
-                                  id="visitor-length2-error" ref="stayLengthInMonths2ErrorRef"></span>
+                                  id="visitor-length2-error" ref="stayLengthInMonths2ErrorRef" has-error="@hasStayLength2Error"></span>
                             <input asp-for="VisitorDetails.StayLengthInMonths2" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength2Error"
                                    ref="stayLengthInMonths2" aria-describedby="visitor-length2-error" />
                         </nhs-form-group>
@@ -108,7 +107,7 @@
                                 3rd most recent country visited from
                             </label>
                             <span asp-validation-for="VisitorDetails.Country3Id" nhs-span-type="ErrorMessage"
-                                  id="visitor-country3Id-error" ref="country3IdErrorRef"></span>
+                                  id="visitor-country3Id-error" ref="country3IdErrorRef" has-error="@hasCountry3IdError"></span>
                             <select asp-for="VisitorDetails.Country3Id" nhs-select-type="@country3SelectType" asp-items="Model.HighTbIncidenceCountries"
                                     ref="country3Id" aria-describedby="visitor-country3Id-error">
                                 <option value="" selected>Select from list</option>
@@ -124,7 +123,7 @@
                                 Duration of visit in months
                             </label>
                             <span asp-validation-for="VisitorDetails.StayLengthInMonths3" nhs-span-type="ErrorMessage"
-                                  id="visitor-length3-error" ref="stayLengthInMonths3ErrorRef"></span>
+                                  id="visitor-length3-error" ref="stayLengthInMonths3ErrorRef" has-error="@hasStayLength3Error"></span>
                             <input asp-for="VisitorDetails.StayLengthInMonths3" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength3Error"
                                    ref="stayLengthInMonths3" aria-describedby="visitor-length3-error" />
                         </nhs-form-group>
