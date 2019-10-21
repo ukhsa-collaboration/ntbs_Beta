@@ -44,13 +44,13 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "other-site"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), DocumentExtensions.GetError(resultDocument, "bcg-vaccination"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), DocumentExtensions.GetError(resultDocument, "symptom"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("other-site"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), resultDocument.GetError("bcg-vaccination"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("symptom"));
             Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                DocumentExtensions.GetError(resultDocument, "presentation"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), DocumentExtensions.GetError(resultDocument, "short-course"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), DocumentExtensions.GetError(resultDocument, "mdr"));
+                resultDocument.GetError("presentation"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("short-course"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("mdr"));
         }
 
         [Fact]
@@ -75,9 +75,9 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DiseaseSiteOtherIsRequired), DocumentExtensions.GetError(resultDocument, "other-site"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), DocumentExtensions.GetError(resultDocument, "bcg-vaccination"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), DocumentExtensions.GetError(resultDocument, "postmortem"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.DiseaseSiteOtherIsRequired), resultDocument.GetError("other-site"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), resultDocument.GetError("bcg-vaccination"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), resultDocument.GetError("postmortem"));
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, DocumentExtensions.GetError(resultDocument, "notification-sites"));
+            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, resultDocument.GetError("notification-sites"));
         }
 
         [Fact]

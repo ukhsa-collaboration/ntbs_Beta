@@ -39,12 +39,12 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "given-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "family-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("given-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("family-name"));
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
-            Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), DocumentExtensions.GetError(resultDocument, "dob"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), DocumentExtensions.GetError(resultDocument, "nhs-number"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), DocumentExtensions.GetError(resultDocument, "address"));
+            Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.GetError("dob"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.GetError("nhs-number"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("address"));
         }
 
         [Fact]
@@ -68,14 +68,14 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.FamilyNameIsRequired), DocumentExtensions.GetError(resultDocument, "family-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.GivenNameIsRequired), DocumentExtensions.GetError(resultDocument, "given-name"));
-            Assert.Contains(ValidationMessages.BirthDateIsRequired, DocumentExtensions.GetError(resultDocument, "dob"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), DocumentExtensions.GetError(resultDocument, "nhs-number"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), DocumentExtensions.GetError(resultDocument, "postcode"));
-            Assert.Equal(ValidationMessages.SexIsRequired, DocumentExtensions.GetError(resultDocument, "sex"));
-            Assert.Equal(ValidationMessages.EthnicGroupIsRequired, DocumentExtensions.GetError(resultDocument, "ethnicity"));
-            Assert.Equal(ValidationMessages.BirthCountryIsRequired, DocumentExtensions.GetError(resultDocument, "birth-country"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.FamilyNameIsRequired), resultDocument.GetError("family-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.GivenNameIsRequired), resultDocument.GetError("given-name"));
+            Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.GetError("dob"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), resultDocument.GetError("nhs-number"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), resultDocument.GetError("postcode"));
+            Assert.Equal(ValidationMessages.SexIsRequired, resultDocument.GetError("sex"));
+            Assert.Equal(ValidationMessages.EthnicGroupIsRequired, resultDocument.GetError("ethnicity"));
+            Assert.Equal(ValidationMessages.BirthCountryIsRequired, resultDocument.GetError("birth-country"));
         }
 
         [Fact]

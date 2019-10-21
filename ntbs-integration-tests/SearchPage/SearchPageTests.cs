@@ -41,12 +41,12 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.NumberFormat), DocumentExtensions.GetError(resultDocument, "id"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "family-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "given-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringWithNumbersFormat), DocumentExtensions.GetError(resultDocument, "postcode"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), DocumentExtensions.GetError(resultDocument, "dob"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), DocumentExtensions.GetError(resultDocument, "notification-date"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.NumberFormat), resultDocument.GetError("id"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("family-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("given-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringWithNumbersFormat), resultDocument.GetError("postcode"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), resultDocument.GetError("dob"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), resultDocument.GetError("notification-date"));
         }
 
 
