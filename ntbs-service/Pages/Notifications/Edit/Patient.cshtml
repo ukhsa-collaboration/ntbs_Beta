@@ -160,6 +160,21 @@
     </div>
     <br />
 
+    <validate-input model="Patient" property="LocalPatientId" inline-template>
+        @{
+            var LocalPatientIdError = !Model.IsValid("Patient.LocalPatientId");
+            var LocalPatientIdGroupState = LocalPatientIdError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@LocalPatientIdGroupState>
+            <label nhs-label-type="Standard" asp-for="Patient.LocalPatientId">Local patient Id</label>
+            <span ref="errorField" nhs-span-type="ErrorMessage" id="local-patient-id-error"
+                  asp-validation-for="Patient.LocalPatientId" has-error="@LocalPatientIdError"></span>
+            <input ref="inputField" v-on:blur="validate" is-error-input=@LocalPatientIdError
+                   nhs-input-type="Standard" asp-for="Patient.LocalPatientId" classes="nhsuk-input--width-10" />
+        </nhs-form-group>
+    </validate-input>
+    <br />
+
     @{
         var CountryErrorGroupState = !Model.IsValid("Patient.CountryId") ? Error : Standard;
         var CountrySelectErrorState = !Model.IsValid("Patient.CountryId") ? SelectType.Error : SelectType.Standard;

@@ -94,5 +94,6 @@ namespace ntbs_service.Models.Validations
         public const string CharacterValidation = @"[a-zA-Z \-,.']+";
         public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
+        public const string CharacterValidationWithNumbersForwardSlashAndNewLineExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?\n\r]+";
     }
 }
