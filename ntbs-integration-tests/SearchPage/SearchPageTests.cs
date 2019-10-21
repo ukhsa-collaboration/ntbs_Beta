@@ -41,12 +41,12 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.NumberFormat), resultDocument.QuerySelector("span[id='id-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='family-name-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.QuerySelector("span[id='given-name-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringWithNumbersFormat), resultDocument.QuerySelector("span[id='postcode-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), resultDocument.QuerySelector("span[id='dob-error']").TextContent);
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), resultDocument.QuerySelector("span[id='notification-date-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.NumberFormat), DocumentExtensions.GetError(resultDocument, "id"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "family-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), DocumentExtensions.GetError(resultDocument, "given-name"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringWithNumbersFormat), DocumentExtensions.GetError(resultDocument, "postcode"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), DocumentExtensions.GetError(resultDocument, "dob"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), DocumentExtensions.GetError(resultDocument, "notification-date"));
         }
 
 
@@ -70,5 +70,6 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(" #1 ", resultDocument.QuerySelector("a[id='notification-banner-id']").TextContent);
             
         }
+
     }
 }
