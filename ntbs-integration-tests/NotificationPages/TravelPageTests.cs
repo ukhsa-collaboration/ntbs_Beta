@@ -30,7 +30,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -53,7 +53,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -84,7 +84,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -92,11 +92,11 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber),
-                resultDocument.QuerySelector("span[id='travel-total-error']").TextContent);
+                resultDocument.GetError("travel-total"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber),
-                resultDocument.QuerySelector("span[id='visitor-total-error']").TextContent);
+                resultDocument.GetError("visitor-total"));
         }
 
         [Theory]
@@ -131,7 +131,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -139,23 +139,23 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelTotalDurationWithinLimit),
-                resultDocument.QuerySelector("span[id='travel-length1-error']").TextContent);
+                resultDocument.GetError("travel-length1"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelTotalDurationWithinLimit),
-                resultDocument.QuerySelector("span[id='travel-length2-error']").TextContent);
+                resultDocument.GetError("travel-length2"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelTotalDurationWithinLimit),
-                resultDocument.QuerySelector("span[id='travel-length3-error']").TextContent);
+                resultDocument.GetError("travel-length3"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitTotalDurationWithinLimit),
-                resultDocument.QuerySelector("span[id='visitor-length1-error']").TextContent);
+                resultDocument.GetError("visitor-length1"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitTotalDurationWithinLimit),
-                resultDocument.QuerySelector("span[id='visitor-length2-error']").TextContent);
+                resultDocument.GetError("visitor-length2"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitTotalDurationWithinLimit),
-                resultDocument.QuerySelector("span[id='visitor-length3-error']").TextContent);
+                resultDocument.GetError("visitor-length3"));
         }
 
         [Theory]
@@ -184,7 +184,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -192,17 +192,17 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelUniqueCountry),
-                resultDocument.QuerySelector("span[id='travel-country2Id-error']").TextContent);
+                resultDocument.GetError("travel-country2Id"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelUniqueCountry),
-                resultDocument.QuerySelector("span[id='travel-country3Id-error']").TextContent);
+                resultDocument.GetError("travel-country3Id"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitUniqueCountry),
-                resultDocument.QuerySelector("span[id='visitor-country2Id-error']").TextContent);
+                resultDocument.GetError("visitor-country2Id"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitUniqueCountry),
-                resultDocument.QuerySelector("span[id='visitor-country3Id-error']").TextContent);
+                resultDocument.GetError("visitor-country3Id"));
         }
 
         [Fact]
@@ -221,7 +221,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -229,23 +229,23 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired),
-                resultDocument.QuerySelector("span[id='travel-total-error']").TextContent);
+                resultDocument.GetError("travel-total"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelMostRecentCountryRequired),
-                resultDocument.QuerySelector("span[id='travel-country1Id-error']").TextContent);
+                resultDocument.GetError("travel-country1Id"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelCountryRequiresDuration),
-                resultDocument.QuerySelector("span[id='travel-length1-error']").TextContent);
+                resultDocument.GetError("travel-length1"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired),
-                resultDocument.QuerySelector("span[id='visitor-total-error']").TextContent);
+                resultDocument.GetError("visitor-total"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitMostRecentCountryRequired),
-                resultDocument.QuerySelector("span[id='visitor-country1Id-error']").TextContent);
+                resultDocument.GetError("visitor-country1Id"));
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitCountryRequiresDuration),
-                resultDocument.QuerySelector("span[id='visitor-length1-error']").TextContent);
+                resultDocument.GetError("visitor-length1"));
         }
 
         [Fact]
@@ -273,7 +273,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -281,11 +281,11 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelIsChronological),
-                resultDocument.QuerySelector("span[id='travel-country3Id-error']").TextContent);
+                resultDocument.GetError("travel-country3Id"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitIsChronological),
-                resultDocument.QuerySelector("span[id='visitor-country3Id-error']").TextContent);
+                resultDocument.GetError("visitor-country3Id"));
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -323,11 +323,11 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelOrVisitDurationHasCountry),
-                resultDocument.QuerySelector("span[id='travel-length2-error']").TextContent);
+                resultDocument.GetError("travel-length2"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelOrVisitDurationHasCountry),
-                resultDocument.QuerySelector("span[id='visitor-length2-error']").TextContent);
+                resultDocument.GetError("visitor-length2"));
         }
 
         [Fact]
@@ -357,7 +357,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -365,11 +365,11 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.TravelCountryRequiresDuration),
-                resultDocument.QuerySelector("span[id='travel-length2-error']").TextContent);
+                resultDocument.GetError("travel-length2"));
 
             Assert.Equal(
                 FullErrorMessage(ValidationMessages.VisitCountryRequiresDuration),
-                resultDocument.QuerySelector("span[id='visitor-length2-error']").TextContent);
+                resultDocument.GetError("visitor-length2"));
         }
 
         [Fact]
