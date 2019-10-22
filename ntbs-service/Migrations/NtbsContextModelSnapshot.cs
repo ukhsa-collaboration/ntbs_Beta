@@ -13916,7 +13916,7 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ntbs_service.Models.PHEC", "PHEC")
-                        .WithOne("LocalAuthorityToPHEC")
+                        .WithOne()
                         .HasForeignKey("ntbs_service.Models.LocalAuthorityToPHEC", "PHECCode")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

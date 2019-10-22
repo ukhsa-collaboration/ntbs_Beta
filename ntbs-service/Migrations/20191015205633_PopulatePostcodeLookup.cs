@@ -16,7 +16,7 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var pathToFile = Path.Combine(Environment.CurrentDirectory, "Models/SeedData/ReducedPostcode.csv");
+            var pathToFile = Path.Combine(Environment.CurrentDirectory, "Models/SeedData/Postcodes.csv");
             const int itemsPerUpdate = 1000;
 
             var records = new string[itemsPerUpdate,3];
@@ -62,7 +62,6 @@ namespace ntbs_service.Migrations
                     values: finalBatch
                 );                        
             }
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
