@@ -15,24 +15,42 @@ namespace ntbs_integration_tests.Helpers
         public const int DENOTIFY_WITH_DESCRIPTION = 10;
         public const int DENOTIFY_NO_DESCRIPTION = 11;
 
-        public static void SeedDatabase(NtbsContext db)
+        public static void SeedDatabase(NtbsContext context)
         {
             // General purpose entities extensively shared between tests
-            db.Notification.AddRange(GetSeedingNotifications());
+            context.Notification.AddRange(GetSeedingNotifications(context));
 
             // Entities required for specific test suites
-            db.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
 
-            db.SaveChanges();
+            context.SaveChanges();
         }
 
-        public static List<Notification> GetSeedingNotifications()
+        public static List<Notification> GetSeedingNotifications(NtbsContext context)
         {
-            return new List<Notification>()
+            return new List<Notification>
             {
-                new Notification(){ NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft },
-                new Notification(){ NotificationId = NOTIFIED_ID, NotificationStatus = NotificationStatus.Notified },
-                new Notification(){ NotificationId = DENOTIFIED_ID, NotificationStatus = NotificationStatus.Denotified },
+                new Notification{ NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft },
+                new Notification
+                {
+                    NotificationId = NOTIFIED_ID,
+                    NotificationStatus = NotificationStatus.Notified,
+                    // Requires a notification site to pass full validation
+                    NotificationSites = new List<NotificationSite>
+                    {
+                        new NotificationSite { NotificationId = NOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
+                    }
+                },
+                new Notification()
+                {
+                    NotificationId = DENOTIFIED_ID,
+                    NotificationStatus = NotificationStatus.Denotified,
+                    // Requires a notification site to pass full validation
+                    NotificationSites = new List<NotificationSite>
+                    {
+                        new NotificationSite { NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
+                    }
+                },
             };
         }
     }

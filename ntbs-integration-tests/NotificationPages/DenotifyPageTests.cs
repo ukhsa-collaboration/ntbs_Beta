@@ -79,7 +79,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             var redirectPage = await client.GetAsync(GetRedirectLocation(result));
             var redirectDocument = await GetDocumentAsync(redirectPage);
-            Assert.Contains("notification-banner--denotified", redirectDocument.QuerySelector("dl.notification-banner")?.ClassList);
+            Assert.Contains("notification-banner--denotified", redirectDocument?.QuerySelector("dl.notification-banner")?.ClassList);
         }
 
         [Fact]
@@ -115,14 +115,14 @@ namespace ntbs_integration_tests.NotificationPages
 
             var redirectPage = await client.GetAsync(GetRedirectLocation(result));
             var redirectDocument = await GetDocumentAsync(redirectPage);
-            Assert.Contains("notification-banner--denotified", redirectDocument.QuerySelector("dl.notification-banner")?.ClassList);
+            Assert.Contains("notification-banner--denotified", redirectDocument?.QuerySelector("dl.notification-banner")?.ClassList);
         }
 
         [Fact]
         public async Task Post_ReturnsPageWithModelErrors_IfDateInvalid()
         {
             // Arrange
-            var id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID;
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
@@ -147,14 +147,14 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.QuerySelector("span[id='date-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("date"));
         }
 
         [Fact]
         public async Task Post_ReturnsPageWithModelErrors_IfDateInFuture()
         {
             // Arrange
-            var id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID;
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
@@ -179,14 +179,14 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateLatestToday), resultDocument.QuerySelector("span[id='date-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateLatestToday), resultDocument.GetError("date"));
         }
 
         [Fact(Skip = "Requires NotificationDate to be implemented")]
         public async Task Post_ReturnsPageWithModelErrors_IfDateIsBeforeDateOfNotification()
         {
             // Arrange
-            var id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID;
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
@@ -211,14 +211,14 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateAfterNotification), resultDocument.QuerySelector("span[id='date-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateAfterNotification), resultDocument.GetError("date"));
         }
 
         [Fact]
         public async Task Post_ReturnsPageWithModelErrors_IfMissingReason()
         {
             // Arrange
-            var id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID;
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
@@ -241,14 +241,14 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationReasonRequired), resultDocument.QuerySelector("span[id='reason-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationReasonRequired), resultDocument.GetError("reason"));
         }
 
         [Fact]
         public async Task Post_ReturnsPageWithModelErrors_IfReasonOtherMissingDescription()
         {
             // Arrange
-            var id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID;
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
@@ -273,7 +273,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationReasonOtherRequired), resultDocument.QuerySelector("span[id='description-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationReasonOtherRequired), resultDocument.GetError("description"));
         }
     }
 }
