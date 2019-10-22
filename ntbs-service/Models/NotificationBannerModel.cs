@@ -47,7 +47,7 @@ namespace ntbs_service.Models
             RedirectPath = notification.OverviewPath;
         }
 
-        static public NotificationBannerModel WithLink(Notification notification) {
+        public static NotificationBannerModel WithLink(Notification notification) {
             return new NotificationBannerModel(notification)
             {
                 ShowLink = true

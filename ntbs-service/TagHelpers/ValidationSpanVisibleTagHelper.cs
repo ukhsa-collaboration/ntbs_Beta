@@ -16,7 +16,7 @@ namespace ntbs_service.TagHelpers
             // If more helpers are to be run in conjunction will need to investigate tag helper 'order'
             if (!output.Content.IsModified)
             {
-                var unused = await output.GetChildContentAsync();
+                _ = await output.GetChildContentAsync();
             }
 
             if (!HasError)

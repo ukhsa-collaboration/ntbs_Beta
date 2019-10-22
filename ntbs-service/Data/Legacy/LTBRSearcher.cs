@@ -15,7 +15,7 @@ namespace ntbs_service.Data.Legacy
 
     public class LTBRSearcher : ILTBRSearchService
     {
-        const string query = @"
+        const string Query = @"
 SELECT DISTINCT 'tbc' AS 'NotificationId'
 	,p.pt_NHSNo AS 'NHSNumber'
 	,pe.pe_Forename AS 'GivenNames'
@@ -31,7 +31,7 @@ JOIN dbt_DiseasePeriod dp
 WHERE 1 = 1
 ";
 
-        const string nhsNumber = @"
+        const string NhsNumber = @"
 AND p.pt_NHSNo LIKE @NhsNumber
 ";
         private readonly string connectionString;
@@ -46,10 +46,10 @@ AND p.pt_NHSNo LIKE @NhsNumber
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var sql = query;
+                var sql = Query;
                 if (!string.IsNullOrWhiteSpace(request.NhsNumber))
                 {
-                    sql += nhsNumber;
+                    sql += NhsNumber;
                 }
 
                 var results = await connection.QueryAsync(sql, new

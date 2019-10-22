@@ -17,11 +17,8 @@ namespace ntbs_service_unit_tests.Models
         [Theory, MemberData(nameof(InvalidDates))]
         public void IfDateUnparsable_CanConvertReturnsFalse(FormattedDate formattedDate)
         {
-            // Arrange
-            DateTime? dateTime;
-
             // Act
-            var canConvert = formattedDate.TryConvertToDateTime(out dateTime);
+            var canConvert = formattedDate.TryConvertToDateTime(out _);
 
             // Assert
             Assert.False(canConvert);
@@ -33,10 +30,9 @@ namespace ntbs_service_unit_tests.Models
             // Arrange
             var formattedDate = new FormattedDate() { Day = "28", Month = "2", Year = "2000"};
             var expectedResult = new DateTime(2000, 2, 28);
-            DateTime? result;
 
             // Act
-            var canConvert = formattedDate.TryConvertToDateTime(out result);
+            var canConvert = formattedDate.TryConvertToDateTime(out DateTime? result);
 
             // Assert
             Assert.True(canConvert);

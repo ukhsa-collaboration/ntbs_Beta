@@ -20,12 +20,10 @@ namespace ntbs_service.Models.Validations
             PropertyInfo property = type.GetProperty(ComparisonValue);
             if (property != null)
             {
-                int valueToValidate;
-                int maxValue;
                 object propertyValue = property.GetValue(instance);
                 // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
-                Int32.TryParse(propertyValue?.ToString(), out maxValue);
-                Int32.TryParse(value?.ToString(), out valueToValidate);
+                int.TryParse(propertyValue?.ToString(), out int maxValue);
+                int.TryParse(value?.ToString(), out int valueToValidate);
                 if(valueToValidate >= 0 && valueToValidate <= maxValue) {
                     return null;
                 }
@@ -52,16 +50,13 @@ namespace ntbs_service.Models.Validations
             PropertyInfo propertyToSum = type.GetProperty(SummedComparisonValue);
             if (propertyMax != null && propertyToSum != null)
             {
-                int valueToValidate;
-                int valueToSum;
-                int maxValue;
                 object propertyValueMax = propertyMax.GetValue(instance);
                 object propertyValueToSum = propertyToSum.GetValue(instance);
 
                 // TryParse will set the value to 0 if it is given null to parse (this is to allow for input field being empty)
-                Int32.TryParse(propertyValueMax?.ToString(), out maxValue);
-                Int32.TryParse(propertyValueToSum?.ToString(), out valueToSum);
-                Int32.TryParse(value?.ToString(), out valueToValidate);
+                int.TryParse(propertyValueMax?.ToString(), out int maxValue);
+                int.TryParse(propertyValueToSum?.ToString(), out int valueToSum);
+                int.TryParse(value?.ToString(), out int valueToValidate);
 
                 if(valueToValidate >= 0 && valueToValidate <= maxValue - valueToSum) {
                     return null;

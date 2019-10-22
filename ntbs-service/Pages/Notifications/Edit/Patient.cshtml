@@ -19,7 +19,9 @@
             var GivenNameGroupState = GivenNameError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type=@GivenNameGroupState>
-            <label nhs-label-type="Standard" asp-for="Patient.GivenName">Given name</label>
+            <label nhs-label-type="Standard" asp-for="Patient.GivenName">
+                Given name (required)
+            </label>
             <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error"
                   asp-validation-for="Patient.GivenName"></span>
             <input ref="inputField" v-on:blur="validate" is-error-input=@GivenNameError
@@ -33,7 +35,9 @@
             var FamilyNameGroupState = FamilyNameError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type=@FamilyNameGroupState>
-            <label nhs-label-type="Standard" asp-for="Patient.FamilyName">Family name</label>
+            <label nhs-label-type="Standard" asp-for="Patient.FamilyName">
+                Family name (required)
+            </label>
             <span ref="errorField" nhs-span-type="ErrorMessage" id="family-name-error"
                   asp-validation-for="Patient.FamilyName"></span>
             <input ref="inputField" v-on:blur="validate" is-error-input=@FamilyNameError
@@ -49,7 +53,9 @@
         }
         <nhs-form-group nhs-form-group-type=@DobGroupState>
             <nhs-fieldset aria-describedby="dob-error" role="group">
-                <nhs-fieldset-legend nhs-legend-size="Standard">Date of birth</nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Date of birth (required)
+                </nhs-fieldset-legend>
                 <span nhs-span-type="ErrorMessage" ref="errorField" id="dob-error">
                     <span style="display:block" asp-validation-for="Patient.Dob"></span>
                     <span style="display:block" asp-validation-for="FormattedDob"></span>
@@ -89,7 +95,9 @@
     <validate-input model="Patient" property="SexId" shouldvalidatefull="@fullValidation" inline-template>
         <nhs-form-group nhs-form-group-type="@SexErrorGroupState">
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Sex</nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Sex (required)
+                </nhs-fieldset-legend>
                 <span class="nhsuk-error-message" id="sex-error" ref="errorField" asp-validation-for="Patient.SexId"></span>
                 <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
                     @foreach (var sex in Model.Sexes)
@@ -111,7 +119,9 @@
     }
     <validate-input model="Patient" property="EthnicityId" shouldvalidatefull="@fullValidation" inline-template>
         <nhs-form-group nhs-form-group-type="@EthnicityErrorGroupState">
-            <label nhs-label-type="Standard" asp-for="Patient.EthnicityId">Ethnic group</label>
+            <label nhs-label-type="Standard" asp-for="Patient.EthnicityId">
+                Ethnic group (required)
+            </label>
             <span class="nhsuk-error-message" id="ethnicity-error" ref="errorField"
                   asp-validation-for="Patient.EthnicityId"></span>
             <select v-on:change="validate" ref="selectField" nhs-select-type="@SelectErrorState"
@@ -124,12 +134,15 @@
 
     <div class="nhsuk-form-group">
         <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                NHS Number (required)
+            </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
                     <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
                            value="false" data-aria-controls="conditional-nhs-number-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
-                        NHS Number
+                        Known
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
@@ -152,7 +165,7 @@
                     <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
                            value="true">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NhsNumberNotKnown">
-                        NHS number is not known
+                        Not known
                     </label>
                 </div>
             </div>
@@ -181,8 +194,11 @@
     }
     <validate-input model="Patient" property="CountryId" shouldvalidatefull="@fullValidation" inline-template>
         <nhs-form-group nhs-form-group-type="@CountryErrorGroupState">
+            
             <nhs-fieldset>
-                <label nhs-label-type="Standard" asp-for="Patient.CountryId">Birth country</label>
+                <label nhs-label-type="Standard" asp-for="Patient.CountryId">
+                    Birth country (required)
+                </label>
                 <span class="nhsuk-error-message" id="birth-country-error"
                       ref="errorField" asp-validation-for="Patient.CountryId"></span>
                 <select ref="selectField" v-on:change="validate" nhs-select-type="@CountrySelectErrorState"
@@ -212,7 +228,7 @@
                     <input asp-for="Patient.NoFixedAbode" id="postcode-yes" class="nhsuk-radios__input" type="radio" value="false"
                            data-aria-controls="conditional-postcode-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" asp-for="Patient.NoFixedAbode">
-                        Postcode
+                        Postcode (required)
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">

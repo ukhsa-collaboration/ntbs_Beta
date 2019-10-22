@@ -58,7 +58,7 @@ namespace ntbs_service.Models
         public Country Country3 { get; set; }
 
         [RequiredIf("ShouldValidateFull && Country3Id != null", ErrorMessage = ValidationMessages.TravelCountryRequiresDuration)]
-        [AssertThat("!ShouldValidateFull || Country3Id != null", ErrorMessage = ValidationMessages.TravelIsChronological)]
+        [AssertThat("!ShouldValidateFull || Country3Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.TravelTotalDurationWithinLimit)]
         [DisplayName("duration of travel")]

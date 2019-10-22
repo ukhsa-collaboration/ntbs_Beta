@@ -18,8 +18,10 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var notification = new Notification();
-            notification.CreationDate = DateTime.Now;
+            var notification = new Notification
+            {
+                CreationDate = DateTime.Now
+            };
             await repository.AddNotificationAsync(notification);
 
             return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });
