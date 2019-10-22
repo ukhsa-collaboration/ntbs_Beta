@@ -14,7 +14,7 @@ namespace ntbs_service.Data.Legacy
 
     public class ETSSearcher : IETSSearchService
     {
-        const string query = @"
+        const string Query = @"
 SELECT LegacyId AS 'NotificationId'
 	,p.NhsNumber AS 'NHSNumber'
 	,p.Forename AS 'GivenNames'
@@ -27,7 +27,7 @@ JOIN ets_Notification n ON p.Id = n.PatientId
 WHERE 1 = 1
 ";
 
-        const string nhsNumber = @"
+        const string NhsNumber = @"
 AND p.NhsNumber LIKE @NhsNumber
 ";
         private readonly string connectionString;
@@ -42,10 +42,10 @@ AND p.NhsNumber LIKE @NhsNumber
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var sql = query;
+                var sql = Query;
                 if (!string.IsNullOrWhiteSpace(request.NhsNumber))
                 {
-                    sql += nhsNumber;
+                    sql += NhsNumber;
                 }
 
                 var results = await connection.QueryAsync(sql, new
