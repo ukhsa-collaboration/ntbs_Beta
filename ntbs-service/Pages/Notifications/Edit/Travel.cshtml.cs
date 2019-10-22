@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -59,7 +59,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<bool> ValidateAndSave()
         {
-            if (!ModelState.IsValid)
+            TravelDetails.SetFullValidation(Notification.NotificationStatus);
+            VisitorDetails.SetFullValidation(Notification.NotificationStatus);
+
+            CleanModel();
+
+            if (!TryValidateModel(this))
             {
                 return false;
             }
@@ -68,13 +73,28 @@ namespace ntbs_service.Pages.Notifications.Edit
             return true;
         }
 
+        private void CleanModel()
+        {
+            if (TravelDetails.HasTravel != true)
+            {
+                service.ClearTravelOrVisitorFields(TravelDetails);
+            }
+
+            if (VisitorDetails.HasVisitor != true)
+            {
+                service.ClearTravelOrVisitorFields(VisitorDetails);
+            }
+        }
+
         public IActionResult OnGetValidateTravel(TravelDetails travelDetails)
         {
+            service.ClearTravelOrVisitorFields(travelDetails);
             return validationService.ValidateFullModel(travelDetails);
         }
 
         public IActionResult OnGetValidateVisitor(VisitorDetails visitorDetails)
         {
+            service.ClearTravelOrVisitorFields(visitorDetails);
             return validationService.ValidateFullModel(visitorDetails);
         }
     }

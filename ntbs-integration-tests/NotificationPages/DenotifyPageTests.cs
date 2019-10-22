@@ -71,7 +71,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -107,7 +107,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -141,7 +141,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -173,7 +173,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -205,7 +205,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -235,7 +235,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -267,7 +267,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

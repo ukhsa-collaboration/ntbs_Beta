@@ -31,7 +31,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);

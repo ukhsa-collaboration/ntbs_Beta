@@ -58,9 +58,9 @@ namespace ntbs_integration_tests
             return $"Error:{validationMessage}";
         }
 
-        protected async Task<HttpResponseMessage> SendFormWithData(
+        protected async Task<HttpResponseMessage> SendPostFormWithData(
             IHtmlDocument document,
-            Dictionary<string, string> formData,
+            Dictionary<string, string> formData, 
             string postRoute = null)
         {
             var form = (IHtmlFormElement)document.QuerySelector("form");
@@ -71,7 +71,23 @@ namespace ntbs_integration_tests
                 submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
             }
 
-            return await client.SendAsync(form, formData, submissionRoute);
+            return await client.SendPostAsync(form, formData, submissionRoute);
+        }
+
+        protected async Task<HttpResponseMessage> SendGetFormWithData(
+            IHtmlDocument document, 
+            Dictionary<string, string> formData, 
+            string postRoute = null)
+        {
+            var form = (IHtmlFormElement)document.QuerySelector("form");
+
+            var submissionRoute = PageRoute;
+            if (!string.IsNullOrEmpty(postRoute))
+            {
+                submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
+            }
+
+            return await client.SendGetAsync(form, formData, submissionRoute);
         }
 
         protected string BuildValidationPath(Dictionary<string, string> formData, string subPath)
