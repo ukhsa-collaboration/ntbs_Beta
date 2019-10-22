@@ -46,7 +46,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.GetError("dob"));
             Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.GetError("nhs-number"));
             Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("address"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("local-patient-id"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidCharacter), resultDocument.GetError("local-patient-id"));
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(EthnicityId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_EthnicityId")).SelectedIndex.ToString());
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("sexId-2")).IsChecked);
             Assert.Equal(CountryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
-            Assert.Equal(LocalPatientId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).SelectedIndex.ToString());
+            Assert.Equal(LocalPatientId, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).Value);
         }
 
         [Fact]
