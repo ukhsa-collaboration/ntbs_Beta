@@ -32,6 +32,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDob.Year"] = "1899",
                 ["Patient.NhsNumber"] = "123",
                 ["Patient.Address"] = "$$$",
+                ["Patient.LocalPatientId"] = "|||"
             };
 
             // Act
@@ -45,6 +46,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.QuerySelector("span[id='dob-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.QuerySelector("span[id='nhs-number-error']").TextContent);
             Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.QuerySelector("span[id='address-error']").TextContent);
+            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.QuerySelector("span[id='local-patient-id-error']").TextContent);
         }
 
         [Fact]
@@ -95,6 +97,7 @@ namespace ntbs_integration_tests.NotificationPages
             const string EthnicityId = "1";
             const string SexId = "2";
             const string CountryId = "3";
+            const string LocalPatientId = "123#";
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
@@ -109,7 +112,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Patient.Postcode"] = "NW5 1TL",
                 ["Patient.EthnicityId"] = EthnicityId,
                 ["Patient.SexId"] = SexId,
-                ["Patient.CountryId"] = CountryId
+                ["Patient.CountryId"] = CountryId,
+                ["Patient.LocalPatientId"] = LocalPatientId
             };
 
             // Act
@@ -132,6 +136,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(EthnicityId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_EthnicityId")).SelectedIndex.ToString());
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("sexId-2")).IsChecked);
             Assert.Equal(CountryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
+            Assert.Equal(LocalPatientId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).SelectedIndex.ToString());
         }
 
         [Fact]

@@ -27,8 +27,8 @@ namespace ntbs_service.Models
 
         [MaxLength(50)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLineExtended, 
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, 
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string LocalPatientId { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.BirthDateIsRequired)]

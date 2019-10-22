@@ -169,7 +169,7 @@
             <label nhs-label-type="Standard" asp-for="Patient.LocalPatientId">Local patient Id</label>
             <span ref="errorField" nhs-span-type="ErrorMessage" id="local-patient-id-error"
                   asp-validation-for="Patient.LocalPatientId" has-error="@LocalPatientIdError"></span>
-            <input ref="inputField" v-on:blur="validate" is-error-input=@LocalPatientIdError
+            <input ref="inputField" v-on:input="validate" is-error-input=@LocalPatientIdError
                    nhs-input-type="Standard" asp-for="Patient.LocalPatientId" classes="nhsuk-input--width-10" />
         </nhs-form-group>
     </validate-input>

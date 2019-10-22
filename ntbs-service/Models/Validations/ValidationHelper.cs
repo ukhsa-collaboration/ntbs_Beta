@@ -18,6 +18,7 @@ namespace ntbs_service.Models.Validations
 
         public const string StandardStringFormat = "Can only contain letters and ' - . ,";
         public const string StringWithNumbersAndForwardSlashFormat = "Can only contain letters, numbers and ' - . , /";
+        public const string InvalidCharacter = "Invalid character found";
         public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
         public const string NumberFormat = "Can only contain digits 0-9";
         public const string NhsNumberLength = "NHS Number needs to be 10 digits long";
@@ -94,6 +95,6 @@ namespace ntbs_service.Models.Validations
         public const string CharacterValidation = @"[a-zA-Z \-,.']+";
         public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
-        public const string CharacterValidationWithNumbersForwardSlashAndNewLineExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?\n\r]+";
+        public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?]+";
     }
 }
