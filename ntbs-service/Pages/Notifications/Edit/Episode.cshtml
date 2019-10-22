@@ -24,7 +24,9 @@
                 var TBServiceCodeSelectErrorState = TBServiceCodeError ? SelectType.Error : SelectType.Standard;
             }
             <nhs-form-group ref="formGroupTBServiceCode" nhs-form-group-type=@TBServiceCodeGroupState>
-                <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">Notifying TB service</label>
+                <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
+                    Notifying TB service (required)
+                </label>
                 <span class="nhsuk-error-message" id="tb-service-error"
                       ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
                 <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
@@ -39,7 +41,9 @@
                 var HospitalSelectErrorState = HospitalError ? SelectType.Error : SelectType.Standard;
             }
             <nhs-form-group ref="formGroupHospitalId" nhs-form-group-type=@HospitalGroupState>
-                <label nhs-label-type="Standard" asp-for="Episode.HospitalId">Hospital</label>
+                <label nhs-label-type="Standard" asp-for="Episode.HospitalId">
+                    Hospital (required)
+                </label>
                 <span class="nhsuk-error-message" id="hospital-error"
                       ref="errorFieldHospitalId" asp-validation-for="Episode.HospitalId"></span>
                 <select ref="selectFieldHospitalId" nhs-select-type="@HospitalSelectErrorState" asp-for="Episode.HospitalId"

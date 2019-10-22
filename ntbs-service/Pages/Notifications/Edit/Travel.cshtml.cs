@@ -1,15 +1,14 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
     public class TravelModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
 
         [BindProperty]
         public TravelDetails TravelDetails { get; set; }
@@ -21,7 +20,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public TravelModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.context = context;
             HighTbIncidenceCountries = new SelectList(
                 context.GetAllHighTbIncidenceCountriesAsync().Result,
                 nameof(Country.CountryId),
@@ -59,7 +57,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<bool> ValidateAndSave()
         {
-            if (!ModelState.IsValid)
+            TravelDetails.SetFullValidation(Notification.NotificationStatus);
+            VisitorDetails.SetFullValidation(Notification.NotificationStatus);
+
+            CleanModel();
+
+            if (!TryValidateModel(this))
             {
                 return false;
             }
@@ -68,13 +71,28 @@ namespace ntbs_service.Pages.Notifications.Edit
             return true;
         }
 
+        private void CleanModel()
+        {
+            if (TravelDetails.HasTravel != true)
+            {
+                service.ClearTravelOrVisitorFields(TravelDetails);
+            }
+
+            if (VisitorDetails.HasVisitor != true)
+            {
+                service.ClearTravelOrVisitorFields(VisitorDetails);
+            }
+        }
+
         public IActionResult OnGetValidateTravel(TravelDetails travelDetails)
         {
+            service.ClearTravelOrVisitorFields(travelDetails);
             return validationService.ValidateFullModel(travelDetails);
         }
 
         public IActionResult OnGetValidateVisitor(VisitorDetails visitorDetails)
         {
+            service.ClearTravelOrVisitorFields(visitorDetails);
             return validationService.ValidateFullModel(visitorDetails);
         }
     }

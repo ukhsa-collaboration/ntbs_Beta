@@ -8,8 +8,7 @@ namespace ntbs_service_unit_tests.Models
 {
     public class NotificationTest
     {
-
-        Notification TestNotification = new Notification {
+        readonly Notification TestNotification = new Notification {
             PatientDetails = new PatientDetails {},
             ClinicalDetails = new ClinicalDetails {},
             SocialRiskFactors = new SocialRiskFactors {}

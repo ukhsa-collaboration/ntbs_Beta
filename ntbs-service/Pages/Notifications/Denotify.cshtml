@@ -21,10 +21,10 @@
     }
 
     <nhs-form-group nhs-form-group-type="@dateFormGroupType">
-        <nhs-fieldset aria-describedby="dateError" role="group">
+        <nhs-fieldset aria-describedby="date-error" role="group">
             <nhs-fieldset-legend nhs-legend-size="Standard">Date of denotification</nhs-fieldset-legend>
-            <span id="dateError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.DateOfDenotification" has-error="@hasDateError"></span>
-            <nhs-date-input id="dob">
+            <span id="date-error" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.DateOfDenotification" has-error="@hasDateError"></span>
+            <nhs-date-input>
                 <nhs-date-input-item>
                     <nhs-form-group nhs-form-group-type="Standard">
                         <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Day">Day</label>
@@ -40,7 +40,7 @@
                 <nhs-date-input-item>
                     <nhs-form-group nhs-form-group-type="Standard">
                         <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Year">Year</label>
-                        <input nhs-input-type="Date" asp-for="FormattedDenotificationDate.Year" is-error-input="@hasDateError" />
+                        <input nhs-input-type="Date" fixed-width="Four" asp-for="FormattedDenotificationDate.Year" is-error-input="@hasDateError" />
                     </nhs-form-group>
                 </nhs-date-input-item>
             </nhs-date-input>
@@ -53,12 +53,12 @@
     }
 
     <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
-        <nhs-fieldset aria-describedby="reasonError">
+        <nhs-fieldset aria-describedby="reason-error">
             <nhs-fieldset-legend nhs-legend-size="Standard">
                 Reason for denotification
             </nhs-fieldset-legend>
 
-            <span id="reasonError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.Reason" has-error="@hasReasonError"></span>
+            <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.Reason" has-error="@hasReasonError"></span>
 
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 @foreach (DenotificationReason reason in Enum.GetValues(typeof(DenotificationReason)))
@@ -73,7 +73,7 @@
 
                             <div class="nhsuk-radios__item">
                                 <input asp-for="DenotificationDetails.Reason" nhs-input-type="Radios" type="radio"
-                                       value="@reason" id="@id" aria-describedby="reasonError">
+                                       value="@reason" id="@id" aria-describedby="reason-error">
                                 <label nhs-label-type="Radios" for="@id">
                                     @displayText
                                 </label>
@@ -83,7 +83,7 @@
                         {
                             <div class="nhsuk-radios__item">
                                 <input asp-for="DenotificationDetails.Reason" nhs-input-type="Radios" type="radio"
-                                       value="@reason" id="@id" data-aria-controls="conditional-radio" aria-describedby="reasonError">
+                                       value="@reason" id="@id" data-aria-controls="conditional-radio" aria-describedby="reason-error">
                                 <label nhs-label-type="Radios" for="@id">
                                     @displayText
                                 </label>
@@ -102,8 +102,8 @@
                         <label asp-for="DenotificationDetails.OtherDescription" nhs-label-type="Standard">
                             Provide reason
                         </label>
-                        <span id="descriptionError" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.OtherDescription" has-error="@hasDescriptionError"></span>
-                        <input asp-for="DenotificationDetails.OtherDescription" nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="descriptionError" />
+                        <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.OtherDescription" has-error="@hasDescriptionError"></span>
+                        <input asp-for="DenotificationDetails.OtherDescription" nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
                     </nhs-form-group>
                 </div>
             </div>

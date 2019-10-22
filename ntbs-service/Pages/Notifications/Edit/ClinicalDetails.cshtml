@@ -14,7 +14,7 @@
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="PatientBirthYear" />
-    <h2>Sites of disease</h2>
+    <h2>Sites of disease (required)</h2>
     @{
         var NotificationSitesError = !Model.IsValid("Notification.NotificationSites");
         var NotificationSitesGroupState = NotificationSitesError ? Error : Standard;
@@ -146,7 +146,7 @@
 
     <br />
 
-    <h2>Sample Details</h2>
+    <h2>Sample Details (required)</h2>
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-checkboxes>
@@ -300,7 +300,9 @@
                 }
                 <nhs-form-group nhs-form-group-type=@DiagnosisGroupState>
                     <nhs-fieldset aria-describedby="diagnosis-error" role="group">
-                        <nhs-fieldset-legend nhs-legend-size="Standard">Diagnosis Date</nhs-fieldset-legend>
+                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                            Diagnosis Date (required)
+                        </nhs-fieldset-legend>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DiagnosisDate" id="diagnosis-error"></span>
                         <nhs-date-input id="diagnosis">
                             <nhs-date-input-item>

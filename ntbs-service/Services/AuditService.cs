@@ -14,7 +14,6 @@ namespace ntbs_service.Services
         private readonly AuditDatabaseContext auditContext;
 
         private const string READ_EVENT = "Read";
-        private readonly bool shouldAudit;
 
         public AuditService(AuditDatabaseContext auditContext)
         {

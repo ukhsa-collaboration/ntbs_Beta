@@ -1,0 +1,2 @@
+# See https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auto-purge
+az acr run -r ntbsContainerRegistry --cmd "mcr.microsoft.com/acr/acr-cli:0.1 purge --registry {{.Run.Registry}} --filter 'ntbs-service:.*' --ago 30d --untagged --dry-run "  /dev/null

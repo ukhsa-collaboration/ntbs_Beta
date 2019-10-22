@@ -15,7 +15,6 @@ namespace ntbs_service.Pages_Search
 {
     public class IndexModel : PageModel
     {
-        private readonly NtbsContext context;
         public ValidationService validationService;
         public INotificationService notificationService;
         public ISearchService searchService;
@@ -35,7 +34,6 @@ namespace ntbs_service.Pages_Search
 
         public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
         {
-            this.context = context;
             this.searchService = searchService;
             this.notificationService = notificationService;
             validationService = new ValidationService(this);
@@ -71,6 +69,7 @@ namespace ntbs_service.Pages_Search
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
                 .FilterByPartialDob(SearchParameters.PartialDob)
+                .FilterByPostcode(SearchParameters.Postcode)
                 .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
                 .FilterByBirthCountry(SearchParameters.CountryId)
@@ -82,6 +81,7 @@ namespace ntbs_service.Pages_Search
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
                 .FilterByPartialDob(SearchParameters.PartialDob)
+                .FilterByPostcode(SearchParameters.Postcode)
                 .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
                 .FilterByBirthCountry(SearchParameters.CountryId)
