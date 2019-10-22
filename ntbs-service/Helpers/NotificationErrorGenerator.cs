@@ -23,33 +23,33 @@ namespace ntbs_service.Helpers
                 string displayName;
                 switch (propertyKey) {
                     case "PatientDetails":
-                        url = getUrl("Patient", notificationId);
+                        url = GetUrl("Patient", notificationId);
                         displayName = "Patient Details";
                         break;
                     // NotificationSites is part of Clinical Details page despite being property of Notification
                     // Fall-through is intentional
                     case "NotificationSites":
                     case "ClinicalDetails":
-                        url = getUrl("ClinicalDetails", notificationId);
+                        url = GetUrl("ClinicalDetails", notificationId);
                         displayName = "Clinical Details";
                         break;
                     case "Episode":
-                        url = getUrl("Episode", notificationId);
+                        url = GetUrl("Episode", notificationId);
                         displayName = "Hospital Details";
                         break;
                     case "PatientTBHistory":
-                        url = getUrl("PreviousHistory", notificationId);
+                        url = GetUrl("PreviousHistory", notificationId);
                         displayName = "Previous History";
                         break;
                     case "ImmunosuppressionDetails":
-                        url = getUrl("Immunosuppression", notificationId);
+                        url = GetUrl("Immunosuppression", notificationId);
                         displayName = "Immunosuppression Details";
                         break;
                     // Travel Details and Visitor Details are editable on the Travel/visitor history screen
                     // Fall-through is intentional
                     case "TravelDetails":
                     case "VisitorDetails":
-                        url = getUrl("Travel", notificationId);
+                        url = GetUrl("Travel", notificationId);
                         displayName = "Travel/visitor History";
                         break;
                     default:
@@ -82,7 +82,7 @@ namespace ntbs_service.Helpers
         }
 
 
-        private static string getUrl(string viewModelName, int? notificationId) => 
+        private static string GetUrl(string viewModelName, int? notificationId) => 
             $"/Notifications/Edit/{viewModelName}?id={notificationId}&isBeingSubmitted=True";
     }
 }

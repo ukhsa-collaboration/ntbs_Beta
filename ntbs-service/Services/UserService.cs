@@ -23,7 +23,7 @@ namespace ntbs_service.Services
       this.context = context;
       config = options.CurrentValue;
     }
-    async public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
+    public async Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
     {
       var tbServices = await context.TBService.ToListAsync();
       // National Team users have access to all services' records

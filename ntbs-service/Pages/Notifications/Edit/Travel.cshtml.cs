@@ -9,7 +9,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class TravelModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
 
         [BindProperty]
         public TravelDetails TravelDetails { get; set; }
@@ -21,7 +20,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public TravelModel(INotificationService service, NtbsContext context) : base(service)
         {
-            this.context = context;
             HighTbIncidenceCountries = new SelectList(
                 context.GetAllHighTbIncidenceCountriesAsync().Result,
                 nameof(Country.CountryId),

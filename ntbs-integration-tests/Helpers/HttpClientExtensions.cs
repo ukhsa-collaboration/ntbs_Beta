@@ -11,7 +11,7 @@ namespace ntbs_integration_tests.Helpers
     public static class HttpClientExtensions
     {
         private const string TOKEN = "__RequestVerificationToken";
-        private static Regex TOKEN_REGEX = new Regex($"{TOKEN}=([^&]*)");
+        private static readonly Regex TOKEN_REGEX = new Regex($"{TOKEN}=([^&]*)");
 
 
         public static Task<HttpResponseMessage> SendGetAsync(
