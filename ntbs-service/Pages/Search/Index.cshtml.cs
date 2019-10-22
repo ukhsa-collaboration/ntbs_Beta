@@ -90,9 +90,9 @@ namespace ntbs_service.Pages_Search
                 .FilterByTBService(SearchParameters.TBServiceCode)
                 .GetResult();
 
-            Tuple<IList<int>, int> notificationIdsAndCount = await searchService.OrderAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
-            var orderedNotificationIds = notificationIdsAndCount.Item1;
-            var count = notificationIdsAndCount.Item2;
+            var notificationIdsAndCount = await searchService.OrderAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
+            var orderedNotificationIds = notificationIdsAndCount.notificationIds;
+            var count = notificationIdsAndCount.count;
             
             IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(orderedNotificationIds);
             var orderedNotifications = notifications.OrderBy(d => orderedNotificationIds.IndexOf(d.NotificationId)).ToList();
