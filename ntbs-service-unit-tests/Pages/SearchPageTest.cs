@@ -47,7 +47,7 @@ namespace ntbs_service_unit_tests.Pages
             mockNotificationService.Setup(s => s.GetBaseQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() {NotificationId = 1}}.AsQueryable());
             
             var unionAndPaginateResult = Task.FromResult(new Tuple<IList<int>, int>(new List<int>() {1}, 1)); 
-            mockSearchService.Setup(s => s.UnionAndPaginateQueryables(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(), 
+            mockSearchService.Setup(s => s.OrderAndPaginateQueryables(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(), 
                 It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
 
             var notifications = Task.FromResult(GetNotifications());
