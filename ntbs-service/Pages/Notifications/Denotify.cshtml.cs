@@ -18,7 +18,7 @@ namespace ntbs_service.Pages.Notifications
         [BindProperty]
         public FormattedDate FormattedDenotificationDate { get; set; }
 
-        public DenotifyModel(INotificationService service) : base(service)
+        public DenotifyModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
         {
             ValidationService = new ValidationService(this);
 
@@ -42,13 +42,18 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                // Should not be able to get onto the denotify page for a notification user does not have edit access to
+                return Forbid();
+            }
+
             NotificationId = Notification.NotificationId;
             if (Notification.NotificationStatus == NotificationStatus.Denotified)
             {
                 return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
             }
-
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             await GetLinkedNotifications();
 
@@ -58,6 +63,11 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await service.GetNotificationAsync(NotificationId);
+            if (!(await authorizationService.CanEdit(User, Notification)))
+            {
+                return Forbid();
+            }
+
             DenotificationDetails.DateOfNotification = Notification.SubmissionDate;
             ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
             if (!ModelState.IsValid)

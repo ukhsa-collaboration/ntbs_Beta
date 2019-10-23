@@ -9,9 +9,7 @@ namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
-        public OverviewModel(INotificationService service) : base(service)
-        {
-        }
+        public OverviewModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -22,14 +20,18 @@ namespace ntbs_service.Pages.Notifications
             }
 
             NotificationId = Notification.NotificationId;
+            await GetLinkedNotifications();
+
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return Partial("./NotEditableWarning", this);
+            }
+
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
                 return RedirectToPage("./Edit/Patient", new { id = NotificationId });
             }
-
-            NotificationBannerModel = new NotificationBannerModel(Notification);
-
-            await GetLinkedNotifications();
 
             return Page();
         }
@@ -37,7 +39,7 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostCreateLinkAsync()
         {
             var notification = await service.GetNotificationAsync(NotificationId);
-            var linkedNotification = await service.CreateLinkedNotificationAsync(notification);
+            var linkedNotification = await service.CreateLinkedNotificationAsync(notification, User);
 
             return RedirectToPage("/Notifications/Edit/Patient", new { id = linkedNotification.NotificationId });
         }

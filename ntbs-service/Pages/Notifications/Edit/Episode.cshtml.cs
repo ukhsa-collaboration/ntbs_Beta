@@ -18,7 +18,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
+        public EpisodeModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
         }
@@ -31,9 +31,14 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
             Episode = Notification.Episode;
-            await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
+            await SetNotificationProperties(isBeingSubmitted, Episode);
 
             TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
                                         nameof(TBService.Code),

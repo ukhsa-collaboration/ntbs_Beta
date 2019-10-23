@@ -8,7 +8,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class ContactTracingModel : NotificationEditModelBase
     {
-        public ContactTracingModel(INotificationService service) : base(service) {}
+        public ContactTracingModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
@@ -21,7 +21,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
             ContactTracing = Notification.ContactTracing;
             await SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
 

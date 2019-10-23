@@ -13,20 +13,25 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
 
-        public ImmunosuppressionModel(INotificationService service) : base(service)
+        public ImmunosuppressionModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
         {
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
             Notification = await service.GetNotificationAsync(id);
-            if (Notification == null) 
+            if (Notification == null)
             {
                 return NotFound();
             }
-            ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
+            ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
             await SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
             
             return Page();

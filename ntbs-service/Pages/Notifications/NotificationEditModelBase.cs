@@ -18,7 +18,7 @@ namespace ntbs_service.Pages_Notifications
     {
         protected ValidationService validationService;
 
-        public NotificationEditModelBase(INotificationService service) : base(service)
+        public NotificationEditModelBase(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
         {
             validationService = new ValidationService(this);
         }
@@ -39,6 +39,11 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
+            else if (!(await authorizationService.CanEdit(User, Notification)))
+            {
+                return Forbid();
+            }
+
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
             switch (actionName) 
@@ -73,7 +78,7 @@ namespace ntbs_service.Pages_Notifications
 
             await service.SubmitNotification(Notification);
             
-            return RedirectToOverview();
+            return RedirectToOverview(NotificationId);
         }
 
         private void SetShouldValidateFull() 
@@ -102,15 +107,15 @@ namespace ntbs_service.Pages_Notifications
 
             if (Notification?.NotificationStatus == NotificationStatus.Notified) 
             {
-                return RedirectToOverview();
+                return RedirectToOverview(NotificationId);
             }
 
             return RedirectToNextPage(NotificationId, isBeingSubmitted);
         }
 
-        private IActionResult RedirectToOverview() 
+        protected IActionResult RedirectToOverview(int id)
         {
-            return RedirectToPage("../Overview", new {id = NotificationId});
+            return RedirectToPage("../Overview", new {id});
         }
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase

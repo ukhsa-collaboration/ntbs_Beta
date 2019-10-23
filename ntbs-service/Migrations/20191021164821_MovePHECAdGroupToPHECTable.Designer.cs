@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191021164821_MovePHECAdGroupToPHECTable")]
+    partial class MovePHECAdGroupToPHECTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -12328,73 +12330,61 @@ namespace ntbs_service.Migrations
                         new
                         {
                             Code = "E45000001",
-                            AdGroup = "Global.NIS.NTBS.LON",
                             Name = "London"
                         },
                         new
                         {
                             Code = "E45000005",
-                            AdGroup = "Global.NIS.NTBS.WMS",
                             Name = "West Midlands"
                         },
                         new
                         {
                             Code = "E45000009",
-                            AdGroup = "Global.NIS.NTBS.NoE",
                             Name = "North East"
                         },
                         new
                         {
                             Code = "E45000010",
-                            AdGroup = "Global.NIS.NTBS.YHR",
                             Name = "Yorkshire and Humber"
                         },
                         new
                         {
                             Code = "E45000016",
-                            AdGroup = "Global.NIS.NTBS.EMS",
                             Name = "East Midlands"
                         },
                         new
                         {
                             Code = "E45000017",
-                            AdGroup = "Global.NIS.NTBS.EoE",
                             Name = "East of England"
                         },
                         new
                         {
                             Code = "E45000018",
-                            AdGroup = "Global.NIS.NTBS.NoW",
                             Name = "North West"
                         },
                         new
                         {
                             Code = "E45000019",
-                            AdGroup = "Global.NIS.NTBS.SoE",
                             Name = "South East"
                         },
                         new
                         {
                             Code = "E45000020",
-                            AdGroup = "Global.NIS.NTBS.SoW",
                             Name = "South West"
                         },
                         new
                         {
                             Code = "PHECNI",
-                            AdGroup = "",
                             Name = "Northern Ireland"
                         },
                         new
                         {
                             Code = "PHECSCOT",
-                            AdGroup = "",
                             Name = "Scotland"
                         },
                         new
                         {
                             Code = "PHECWAL",
-                            AdGroup = "",
                             Name = "Wales"
                         });
                 });

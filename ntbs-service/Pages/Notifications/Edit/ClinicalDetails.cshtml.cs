@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -35,7 +34,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
+        public ClinicalDetailsModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
         }
@@ -48,9 +47,14 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
             ClinicalDetails = Notification.ClinicalDetails;
-            await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            await SetNotificationProperties(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
             notificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);

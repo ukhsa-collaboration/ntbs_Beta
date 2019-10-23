@@ -9,7 +9,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class PreviousHistoryModel : NotificationEditModelBase
     {
 
-        public PreviousHistoryModel(INotificationService service) : base(service) {}
+        public PreviousHistoryModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
@@ -22,9 +22,14 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
             PatientTBHistory = Notification.PatientTBHistory;
-            await SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+            await SetNotificationProperties(isBeingSubmitted, PatientTBHistory);
 
             if (PatientTBHistory.ShouldValidateFull)
             {

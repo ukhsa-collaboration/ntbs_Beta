@@ -11,7 +11,7 @@ namespace ntbs_service.Pages_Notifications
     {
         public List<NotificationBannerModel> LinkedNotifications { get; set; }
 
-        public LinkedNotificationsModel(INotificationService service) : base(service) {}
+        public LinkedNotificationsModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -20,10 +20,11 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
-            await GetLinkedNotifications();
+            await AuthorizeAndSetBannerAsync();
+
             NotificationId = Notification.NotificationId;
+            await GetLinkedNotifications();
 
             if (Group == null)
             {
@@ -31,7 +32,8 @@ namespace ntbs_service.Pages_Notifications
             }
 
             LinkedNotifications = Group.Notifications.Where(n => n.NotificationId != NotificationId)
-                .Select(n => NotificationBannerModel.WithLink(n)).ToList();
+                .Select(async n => NotificationBannerModel.WithLink(n, await authorizationService.CanEdit(User, n)))
+                                                        .Select(t => t.Result).ToList();
 
             return Page();
         }

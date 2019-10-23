@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public SelectList HighTbIncidenceCountries { get; set; }
 
-        public TravelModel(INotificationService service, NtbsContext context) : base(service)
+        public TravelModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
             HighTbIncidenceCountries = new SelectList(
@@ -35,14 +35,17 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
+
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
             TravelDetails = Notification.TravelDetails;
             VisitorDetails = Notification.VisitorDetails;
-            NotificationBannerModel = new NotificationBannerModel(Notification);
-
             await SetNotificationProperties(isBeingSubmitted, TravelDetails);
             await SetNotificationProperties(isBeingSubmitted, VisitorDetails);
-
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             if (TravelDetails.ShouldValidateFull)
                 TryValidateModel(TravelDetails, TravelDetails.GetType().Name);

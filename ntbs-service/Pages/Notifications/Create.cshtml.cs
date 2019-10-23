@@ -1,26 +1,22 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.DataAccess;
-using ntbs_service.Models;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
 {
     public class CreateModel : PageModel
     {
-        private readonly INotificationRepository repository;
+        private readonly INotificationService service;
 
-        public CreateModel(INotificationRepository repository)
+        public CreateModel(INotificationService service)
         {
-            this.repository = repository;
+            this.service = service;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var notification = new Notification();
-            notification.CreationDate = DateTime.Now;
-            await repository.AddNotificationAsync(notification);
+            var notification = await service.CreateNewNotificationForUser(User);
 
             return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });
         }

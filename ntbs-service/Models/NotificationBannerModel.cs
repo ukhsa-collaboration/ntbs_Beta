@@ -23,9 +23,10 @@ namespace ntbs_service.Models
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
         public bool ShowLink = false;
+        public bool IsEditable;
         public string RedirectPath;
 
-        public NotificationBannerModel(Notification notification) {
+        public NotificationBannerModel(Notification notification, bool isEditable = true) {
             NotificationId = notification.NotificationId;
             if (notification.NotificationStatus == Enums.NotificationStatus.Draft) {
                 SortByDate = notification.FormattedCreationDate;
@@ -44,11 +45,13 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatusString;
             // TODO most likely need an enum for the different origins of notifications
             Origin = "ntbs";
+            IsEditable = isEditable;
             RedirectPath = notification.OverviewPath;
         }
 
-        static public NotificationBannerModel WithLink(Notification notification) {
-            return new NotificationBannerModel(notification)
+        static public NotificationBannerModel WithLink(Notification notification, bool isEditable = true)
+        {
+            return new NotificationBannerModel(notification, isEditable)
             {
                 ShowLink = true
             };

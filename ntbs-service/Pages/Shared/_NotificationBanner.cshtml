@@ -27,6 +27,10 @@
                 {
                     <div> #@Model.NotificationId </div>
                 }
+                @if(!@Model.IsEditable)
+                {
+                    <p> (not editable) </p>
+                }
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">

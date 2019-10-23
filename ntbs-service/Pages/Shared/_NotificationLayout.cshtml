@@ -59,7 +59,7 @@
             </div>
         </div>
     </nhs-grid-column>
-    @if (!(bool)ViewData["IsLinkedNotificationsPage"])
+    @if (!(bool)ViewData["IsLinkedNotificationsPage"] && Model.HasEditPermission)
     {
         <nhs-grid-column grid-column-width="OneQuarter">
             <ul class="sub-nav-left">
@@ -104,7 +104,7 @@
     <h2 class="govuk-heading-s" id="manage-notification-title">
         Manage Notification
     </h2>
-    @if (Model.Notification.NotificationStatus == NotificationStatus.Draft)
+    @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
     {
         <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
     }

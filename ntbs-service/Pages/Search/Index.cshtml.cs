@@ -15,10 +15,10 @@ namespace ntbs_service.Pages_Search
 {
     public class IndexModel : PageModel
     {
-        private readonly NtbsContext context;
         public ValidationService validationService;
-        public INotificationService notificationService;
-        public ISearchService searchService;
+        private readonly INotificationService notificationService;
+        private readonly ISearchService searchService;
+        private readonly IAuthorizationService authorizationService;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
@@ -33,9 +33,9 @@ namespace ntbs_service.Pages_Search
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
 
-        public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
+        public IndexModel(INotificationService notificationService, ISearchService searchService, IAuthorizationService authorizationService, NtbsContext context)
         {
-            this.context = context;
+            this.authorizationService = authorizationService;
             this.searchService = searchService;
             this.notificationService = notificationService;
             validationService = new ValidationService(this);
@@ -93,7 +93,8 @@ namespace ntbs_service.Pages_Search
             var count = notificationIdsAndCount.Item2;
             
             IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
-            var notificationBannerModels = notifications.Select(NotificationBannerModel.WithLink);
+            var notificationBannerModels = notifications.Select(async n => NotificationBannerModel.WithLink(n, await authorizationService.CanEdit(User, n)))
+                                                        .Select(n => n.Result);
             SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();

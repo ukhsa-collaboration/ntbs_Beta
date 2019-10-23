@@ -25,11 +25,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
-        private IPostcodeService PostcodeService { get; set; }
+        private readonly IPostcodeService postcodeService;
 
-        public PatientModel(INotificationService service, IPostcodeService postcodeService, NtbsContext context) : base(service)
+        public PatientModel(INotificationService service, IPostcodeService postcodeService, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
-            PostcodeService = postcodeService;
+            this.postcodeService = postcodeService;
             Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
@@ -43,9 +43,14 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(id);
+            }
+
             Patient = Notification.PatientDetails;
-            await SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
+            await SetNotificationProperties(isBeingSubmitted, Patient);
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
 
@@ -77,7 +82,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task FindAndSetPostcodeAsync()
         {
-            var foundPostcode = await PostcodeService.FindPostcode(Patient.Postcode);
+            var foundPostcode = await postcodeService.FindPostcode(Patient.Postcode);
             Patient.PostcodeToLookup = foundPostcode?.Postcode;
         }
         
@@ -99,7 +104,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {   
-            var foundPostcode = await PostcodeService.FindPostcode(postcode);
+            var foundPostcode = await postcodeService.FindPostcode(postcode);
             var propertyValueTuples = new List<Tuple<string, object>>
             {
                 new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
