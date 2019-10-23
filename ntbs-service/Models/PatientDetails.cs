@@ -25,6 +25,12 @@ namespace ntbs_service.Models
         [StringLength(10, MinimumLength = 10, ErrorMessage = ValidationMessages.NhsNumberLength)]
         public string NhsNumber { get; set; }
 
+        [MaxLength(50)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, 
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
+        public string LocalPatientId { get; set; }
+
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.BirthDateIsRequired)]
         [ValidDate(ValidDates.EarliestBirthDate)]
         public DateTime? Dob { get; set; }

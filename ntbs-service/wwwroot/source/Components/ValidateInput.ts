@@ -24,6 +24,7 @@ const ValidateInput = Vue.extend({
                     var errorMessage = response.data;
                     if (errorMessage) {
                         this.$el.classList.add("nhsuk-form-group--error");
+                        this.$refs["errorField"].classList.remove("hidden");
                         if (this.$refs["inputField"]) {
                             this.$refs["inputField"].classList.add("nhsuk-input--error");
                         }
@@ -35,6 +36,7 @@ const ValidateInput = Vue.extend({
                         }
                     } else {
                         this.$el.classList.remove("nhsuk-form-group--error");
+                        this.$refs["errorField"].classList.add("hidden");
                         if (this.$refs["inputField"]) {
                             this.$refs["inputField"].classList.remove("nhsuk-input--error");
                         }
