@@ -51,6 +51,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (Episode.ShouldValidateFull)
             {
+                validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
                 TryValidateModel(Episode, Episode.GetType().Name);
             }
 

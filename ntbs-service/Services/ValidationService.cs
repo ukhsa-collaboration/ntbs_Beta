@@ -149,11 +149,6 @@ namespace ntbs_service.Services
 
         public void TrySetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
         {
-            if (formattedDate.IsEmpty())
-            {
-                return;
-            }
-
             string modelTypeName = model.GetType().Name;
 
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))

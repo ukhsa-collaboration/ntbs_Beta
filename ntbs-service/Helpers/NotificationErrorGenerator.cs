@@ -33,6 +33,7 @@ namespace ntbs_service.Helpers
                         url = getUrl("ClinicalDetails", notificationId);
                         displayName = "Clinical Details";
                         break;
+                    case "NotificationDate":
                     case "Episode":
                         url = getUrl("Episode", notificationId);
                         displayName = "Hospital Details";
