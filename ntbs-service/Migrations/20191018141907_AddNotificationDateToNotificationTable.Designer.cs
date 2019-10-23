@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191018141907_AddNotificationDateToNotificationTable")]
+    partial class AddNotificationDateToNotificationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -14142,9 +14144,6 @@ namespace ntbs_service.Migrations
 
                             b1.Property<string>("GivenName")
                                 .HasMaxLength(35);
-
-                            b1.Property<string>("LocalPatientId")
-                                .HasMaxLength(50);
 
                             b1.Property<string>("NhsNumber")
                                 .HasMaxLength(10);

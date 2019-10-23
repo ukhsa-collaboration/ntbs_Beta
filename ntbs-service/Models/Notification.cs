@@ -34,6 +34,11 @@ namespace ntbs_service.Models
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
+
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
+        [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
+        [ValidDate(ValidDates.EarliestClinicalDate)]
+        public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
 
         public virtual PatientDetails PatientDetails { get; set; }
@@ -108,6 +113,7 @@ namespace ntbs_service.Models
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string PHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
 
+        public int? AgeAtNotification => GetAgeAtTimeOfNotification();
 
         private string GetNotificationEditPath(string subPath)
         {
@@ -226,6 +232,16 @@ namespace ntbs_service.Models
                 timeStrings.Add("more than 5 years ago");
             }
             return string.Join(", ", timeStrings);
+        }
+
+        private int? GetAgeAtTimeOfNotification()
+        {
+            if (NotificationDate == null || PatientDetails?.Dob == null) 
+            {
+                return null;
+            }
+            var daysDiff = ((DateTime) NotificationDate - (DateTime) PatientDetails.Dob).Days;
+            return (int) Math.Floor(daysDiff / 365.2425);
         }
     }
 }

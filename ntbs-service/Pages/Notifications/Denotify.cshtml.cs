@@ -58,7 +58,7 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await service.GetNotificationAsync(NotificationId);
-            DenotificationDetails.DateOfNotification = Notification.SubmissionDate;
+            DenotificationDetails.DateOfNotification = Notification.NotificationDate;
             ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
             if (!ModelState.IsValid)
             {

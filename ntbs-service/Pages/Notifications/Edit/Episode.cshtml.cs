@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
+    
     public class EpisodeModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
@@ -14,13 +16,23 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SelectList TBServices { get; set; }
         public SelectList Hospitals { get; set; }
 
-
+        [BindProperty]
+        public FormattedDate FormattedNotificationDate { get; set; }
+        
         [BindProperty]
         public Episode Episode { get; set; }
 
         public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
         {
             this.context = context;
+            
+            TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
+                                        nameof(TBService.Code),
+                                        nameof(TBService.Name));
+
+            Hospitals = new SelectList(context.GetAllHospitalsAsync().Result,
+                                        nameof(Hospital.HospitalId),
+                                        nameof(Hospital.Name));
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
@@ -35,16 +47,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             Episode = Notification.Episode;
             await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
 
-            TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
-                                        nameof(TBService.Code),
-                                        nameof(TBService.Name));
-
-            Hospitals = new SelectList(context.GetAllHospitalsAsync().Result,
-                                        nameof(Hospital.HospitalId),
-                                        nameof(Hospital.Name));
+            FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
             if (Episode.ShouldValidateFull)
             {
+                validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
                 TryValidateModel(Episode, Episode.GetType().Name);
             }
 
@@ -65,7 +72,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<bool> ValidateAndSave() 
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
-            if (!TryValidateModel(this))
+            validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+
+            if (!TryValidateModel(Episode, Episode.GetType().Name))
             {
                 return false;
             }
@@ -77,6 +86,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)
         {
             return validationService.ValidateModelProperty<Episode>(key, value, shouldValidateFull);
+        }
+
+        public async Task<ContentResult> OnGetValidateNotificationDateAsync(string key, string day, string month, string year, int notificationId)
+        {
+            // Query notification by Id when date validation depends on other properties of model
+            Notification notification = await service.GetNotificationAsync(notificationId);
+            return validationService.ValidateDate(notification, key, day, month, year);
         }
     }
 }

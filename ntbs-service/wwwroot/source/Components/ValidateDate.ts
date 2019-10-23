@@ -3,7 +3,7 @@ import { getHeaders, getValidationPath as getValidationPath, FormattedDate, conv
 const axios = require('axios');
 
 const ValidateDate = Vue.extend({
-    props: ['model', 'property', 'name', 'rank'],
+    props: ['model', 'property', 'notification_id', 'name', 'rank'],
     mounted: function () {
         if (this.rank) {
             // v-model binds to the input event, so this gets picked up by the containing DateComparison component, if present
@@ -25,8 +25,20 @@ const ValidateDate = Vue.extend({
                 return;
             }
 
-            axios.get(`${getValidationPath(this.$props.model)}Date?key=${this.$props.property}&day=${date.day}&month=${date.month}&year=${date.year}`, 
-                    null, { headers: getHeaders() })
+            let requestConfig = {
+                url: `${getValidationPath(this.$props.model)}Date`,
+                headers: getHeaders(),
+                params: {
+                    "day": date.day,
+                    "month": date.month,
+                    "year": date.year,
+                    "key": this.$props.property,
+                    // This is an optional parameter. Pass this if the property validation depends on other properties.
+                    "notificationId": this.$props.notification_id
+                }
+            }
+
+            axios.request(requestConfig)
                 .then((response: any) => {
                     console.log(response);
                     var errorMessage = response.data;
@@ -38,6 +50,7 @@ const ValidateDate = Vue.extend({
                         this.$refs["dayInput"].classList.add('nhsuk-input--error')
                         this.$refs["monthInput"].classList.add('nhsuk-input--error')
                         this.$refs["yearInput"].classList.add('nhsuk-input--error')
+                        this.$refs["errorField"].classList.remove("hidden");
                     } else {
                         if (this.rank) {
                             this.$emit('input', convertFormattedDateToDate(date));
@@ -47,6 +60,7 @@ const ValidateDate = Vue.extend({
                         this.$refs["dayInput"].classList.remove('nhsuk-input--error')
                         this.$refs["monthInput"].classList.remove('nhsuk-input--error')
                         this.$refs["yearInput"].classList.remove('nhsuk-input--error')
+                        this.$refs["errorField"].classList.add("hidden");
                     }
 
                     

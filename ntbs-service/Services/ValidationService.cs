@@ -78,6 +78,11 @@ namespace ntbs_service.Services
         public ContentResult ValidateDate<T>(string key, string day, string month, string year)
         {
             T model = (T)Activator.CreateInstance(typeof(T));
+            return ValidateDate<T>(model, key, day, month, year);
+        }
+
+        public ContentResult ValidateDate<T>(T model, string key, string day, string month, string year)
+        {
             var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
@@ -144,11 +149,6 @@ namespace ntbs_service.Services
 
         public void TrySetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
         {
-            if (formattedDate.IsEmpty())
-            {
-                return;
-            }
-
             string modelTypeName = model.GetType().Name;
 
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
