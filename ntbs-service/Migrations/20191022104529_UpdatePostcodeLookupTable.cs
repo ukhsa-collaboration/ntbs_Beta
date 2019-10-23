@@ -5,6 +5,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ntbs_service.Migrations
 {
+    /*  
+    Previous version of Postcodes file had dummy LA codes for postcodes which were missing LA codes.
+    Current (up to date) version has LA codes as NULL/empty string for some postcodes.
+    This migration updates only postcodes that should have NULL value for LA codes
+    */  
     public partial class UpdatePostcodeLookupTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,10 +29,13 @@ namespace ntbs_service.Migrations
                 while (csvReader.Read())
                 {
                     var laCode = csvReader.GetField<string>("LA_Code");
+                    
+                    // Skip postcodes that have LA_Code defined in Postcode csv 
                     if (!string.IsNullOrEmpty(laCode)) 
                     {
                         continue;
                     }
+
                     laCode = null;
 
                     postcodeArray[index] = csvReader.GetField("Pcode");
