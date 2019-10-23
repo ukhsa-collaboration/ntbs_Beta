@@ -59,7 +59,7 @@
         <nhs-form-group nhs-form-group-type=@ConsultantGroupState>
             <label nhs-label-type="Standard" asp-for="Episode.Consultant">Add details of consultant</label>
             <span ref="errorField" nhs-span-type="ErrorMessage" id="consultant-error" asp-validation-for="Episode.Consultant"></span>
-            <input v-on:blur="validate" is-error-input=@ConsultantError nhs-input-type="Standard"
+            <input v-on:blur="validate" is-error-input=@ConsultantError nhs-input-type="Standard" aria-describedby="consultant-error"
                    asp-for="Episode.Consultant" classes="nhsuk-input--width-10" />
         </nhs-form-group>
     </validate-input>
@@ -72,7 +72,7 @@
         <nhs-form-group nhs-form-group-type=@CaseManagerGroupState>
             <label nhs-label-type="Standard" asp-for="Episode.CaseManager">Add details of case manager</label>
             <span ref="errorField" nhs-span-type="ErrorMessage" id="case-manager-error" asp-validation-for="Episode.CaseManager"></span>
-            <input v-on:blur="validate" is-error-input=@CaseManagerError nhs-input-type="Standard"
+            <input v-on:blur="validate" is-error-input=@CaseManagerError nhs-input-type="Standard" aria-describedby="case-manager-error"
                    asp-for="Episode.CaseManager" classes="nhsuk-input--width-10" />
         </nhs-form-group>
     </validate-input>
