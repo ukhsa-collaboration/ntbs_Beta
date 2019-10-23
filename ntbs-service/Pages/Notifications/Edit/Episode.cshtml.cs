@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -5,8 +7,6 @@ using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
-using System;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -15,6 +15,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class EpisodeModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
+        private readonly IUserService userService;
 
         public SelectList TBServices { get; set; }
         public SelectList Hospitals { get; set; }
@@ -25,29 +26,24 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
+        public EpisodeModel(INotificationService service,
+                            IAuthorizationService authorizationService,
+                            NtbsContext context,
+                            IUserService userService) : base(service, authorizationService)
         {
             this.context = context;
-
-            TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
-                                        nameof(TBService.Code),
-                                        nameof(TBService.Name));
-
-            Hospitals = new SelectList(context.GetAllHospitalsAsync().Result,
-                                        nameof(Hospital.HospitalId),
-                                        nameof(Hospital.Name));
+            this.userService = userService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             return await base.OnGetAsync(id, isBeingSubmitted);
         }
-
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
-            await SetNotificationProperties(isBeingSubmitted, Episode);
-
+            await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
+            await SetTbServiceAndHospitalListsAsync();
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
             if (Episode.ShouldValidateFull)
@@ -59,9 +55,18 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        public JsonResult OnGetHospitalsByTBService(string tbServiceCode)
+        private async Task SetTbServiceAndHospitalListsAsync()
         {
-            var tbServices = context.GetHospitalsByTbService(tbServiceCode).Result;
+            var services = await userService.GetTbServicesAsync(User);
+            var hospitals = await context.GetHospitalsByTbServiceCodesAsync(services.Select(s => s.Code));
+
+            TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
+            Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
+        }
+
+        public async Task<JsonResult> OnGetHospitalsByTBService(string tbServiceCode)
+        {
+            var tbServices = await context.GetHospitalsByTbServiceCodesAsync(new List<string> { tbServiceCode });
             return new JsonResult(tbServices);
         }
 

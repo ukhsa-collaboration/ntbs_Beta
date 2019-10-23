@@ -60,16 +60,11 @@ namespace ntbs_service.Models
             return await TbService.ToListAsync();
         }
 
-        public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
-        {
-            return await Hospital.ToListAsync();
-        }
-
-        public virtual async Task<List<Hospital>> GetHospitalsByTbService(string tbServiceCode)
+        public virtual async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
             return await Hospital
-                        .Where(x => x.TBServiceCode == tbServiceCode)
-                        .ToListAsync();
+                .Where(h => tbServices.Contains(h.TBServiceCode))
+                .ToListAsync();
         }
 
         public virtual async Task<IList<Sex>> GetAllSexesAsync()
