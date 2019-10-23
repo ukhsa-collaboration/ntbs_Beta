@@ -50,6 +50,7 @@ const ValidateDate = Vue.extend({
                         this.$refs["dayInput"].classList.add('nhsuk-input--error')
                         this.$refs["monthInput"].classList.add('nhsuk-input--error')
                         this.$refs["yearInput"].classList.add('nhsuk-input--error')
+                        this.$refs["errorField"].classList.remove("hidden");
                     } else {
                         if (this.rank) {
                             this.$emit('input', convertFormattedDateToDate(date));
@@ -59,6 +60,7 @@ const ValidateDate = Vue.extend({
                         this.$refs["dayInput"].classList.remove('nhsuk-input--error')
                         this.$refs["monthInput"].classList.remove('nhsuk-input--error')
                         this.$refs["yearInput"].classList.remove('nhsuk-input--error')
+                        this.$refs["errorField"].classList.add("hidden");
                     }
 
                     

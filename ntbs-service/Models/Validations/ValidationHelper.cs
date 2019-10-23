@@ -80,8 +80,7 @@ namespace ntbs_service.Models.Validations
         public const string DenotificationDateLatestToday = "Date of denotification cannot be later than today";
         public const string DenotificationReasonRequired = "Please supply a reason for denotification";
         public const string DenotificationReasonOtherRequired = "Please supply additional details for the denotification reason";
-        public const string NotificationDateRequired = "Please supply notification date";
-        public const string ShouldBeLaterThanDob = "Notification date must be later than date of birth";
+        public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
         public const string SupplyAParameter = "Please supply at least one of these parameters";
     }
 

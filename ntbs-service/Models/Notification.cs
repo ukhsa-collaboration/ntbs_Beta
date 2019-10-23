@@ -35,8 +35,8 @@ namespace ntbs_service.Models
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
 
-        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateRequired)]
-        [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.ShouldBeLaterThanDob)]
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
+        [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
@@ -113,7 +113,7 @@ namespace ntbs_service.Models
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string PHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
 
-        public int AgeAtNotification => GetAgeAtTimeOfNotification();
+        public int? AgeAtNotification => GetAgeAtTimeOfNotification();
 
         private string GetNotificationEditPath(string subPath)
         {
@@ -234,13 +234,14 @@ namespace ntbs_service.Models
             return string.Join(", ", timeStrings);
         }
 
-        private int GetAgeAtTimeOfNotification()
+        private int? GetAgeAtTimeOfNotification()
         {
             if (NotificationDate == null || PatientDetails?.Dob == null) 
             {
-                return 0;
+                return null;
             }
-            return (int) Math.Floor(((DateTime) NotificationDate - (DateTime) PatientDetails.Dob).Days / 365.2425);
+            var daysDiff = ((DateTime) NotificationDate - (DateTime) PatientDetails.Dob).Days;
+            return (int) Math.Floor(daysDiff / 365.2425);
         }
     }
 }

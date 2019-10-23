@@ -73,7 +73,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Episode.SetFullValidation(Notification.NotificationStatus);
             validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
 
-            if (!TryValidateModel(this))
+            if (!TryValidateModel(Episode, Episode.GetType().Name))
             {
                 return false;
             }
