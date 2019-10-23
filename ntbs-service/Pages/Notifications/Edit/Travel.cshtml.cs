@@ -62,13 +62,16 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             CleanModel();
 
-            if (!TryValidateModel(this))
+            var isValid = TryValidateModel(TravelDetails, TravelDetails.GetType().Name);
+            // Validate notification with sites regardless previous validation result
+            isValid = TryValidateModel(VisitorDetails, VisitorDetails.GetType().Name) && isValid;
+            
+            if (isValid)
             {
-                return false;
+                await service.UpdateTravelAndVisitorAsync(Notification, TravelDetails, VisitorDetails);
             }
 
-            await service.UpdateTravelAndVisitorAsync(Notification, TravelDetails, VisitorDetails);
-            return true;
+            return isValid;
         }
 
         private void CleanModel()
