@@ -120,7 +120,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 NotificationSites = notificationSites.ToList()
             };
             
-            var isValid = TryValidateModel(this) && TryValidateModel(notificationWithSitesOnly, notificationWithSitesOnly.GetType().Name);
+            var isValid = TryValidateModel(this);
+            // Validate notification with sites regardless previous validation result
+            isValid = TryValidateModel(notificationWithSitesOnly, notificationWithSitesOnly.GetType().Name) && isValid;
+
             if (isValid)
             {
                 await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
