@@ -10,25 +10,25 @@ spec:
         app: ntbs-research
     spec:
       containers:
-      - name: ntbs-research
-        image: "ntbscontainerregistry.azurecr.io/ntbs-service"
-        ports:
-        - containerPort: 80
-        env:
-          - name: ConnectionStrings__ntbsContext
-            valueFrom:
-              secretKeyRef:
-                name: research-db-connection-string
-                key: connectionString
-          - name: ConnectionStrings__auditContext
-            valueFrom:
-              secretKeyRef:
-                name: research-audit-db-connection-string
-                key: connectionString
-          - name: AdfsOptions__Wtrealm
-            value: "https://ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io"
+        - name: ntbs-research
+          image: "ntbscontainerregistry.azurecr.io/ntbs-service"
+          ports:
+            - containerPort: 80
+          env:
+            - name: ConnectionStrings__ntbsContext
+              valueFrom:
+                secretKeyRef:
+                  name: research-db-connection-string
+                  key: connectionString
+            - name: ConnectionStrings__auditContext
+              valueFrom:
+                secretKeyRef:
+                  name: research-audit-db-connection-string
+                  key: connectionString
+            - name: AdfsOptions__Wtrealm
+              value: "https://ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io"
       imagePullSecrets:
-      - name: registery-password
+        - name: registery-password
 ---
 apiVersion: v1
 kind: Service
@@ -37,7 +37,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+    - port: 80
   selector:
     app: ntbs-research
 ---
@@ -47,19 +47,19 @@ metadata:
   name: ntbs-research
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: research-basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - ntbsBeta"
+    # nginx.ingress.kubernetes.io/auth-type: basic
+    # nginx.ingress.kubernetes.io/auth-secret: research-basic-auth
+    # nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - ntbsBeta"
 spec:
   tls:
     - hosts:
-      - ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
+        - ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
       secretName: phe-ntbs-research-tls
   rules:
-  - host: ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
-    http:
-      paths:
-      - backend:
-          serviceName: ntbs-research
-          servicePort: 80
-        path: /
+    - host: ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io
+      http:
+        paths:
+          - backend:
+              serviceName: ntbs-research
+              servicePort: 80
+            path: /
