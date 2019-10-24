@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ntbs_service.Models
 {
-    public partial class NtbsContext : AuditDbContext
+    public class NtbsContext : AuditDbContext
     {
         // Max Length for fields with enum -> string conversion configured.
         // Without this defaults to NVARCHAR(MAX) as field length.
@@ -26,7 +26,7 @@ namespace ntbs_service.Models
 
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
-        public virtual DbSet<TBService> TBService { get; set; }
+        public virtual DbSet<TBService> TbService { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
@@ -34,11 +34,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
-        public virtual DbSet<Episode> Episode { get; set; }
-        public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
-        public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
-        public virtual DbSet<TravelDetails> TravelDetails { get; set; }
-        public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
+
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
@@ -60,7 +56,7 @@ namespace ntbs_service.Models
 
         public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
         {
-            return await TBService.ToListAsync();
+            return await TbService.ToListAsync();
         }
 
         public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
@@ -68,7 +64,7 @@ namespace ntbs_service.Models
             return await Hospital.ToListAsync();
         }
 
-        public virtual async Task<List<Hospital>> GetHospitalsByTBService(string tbServiceCode)
+        public virtual async Task<List<Hospital>> GetHospitalsByTbService(string tbServiceCode)
         {
             return await Hospital
                         .Where(x => x.TBServiceCode == tbServiceCode)
