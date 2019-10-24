@@ -12269,8 +12269,6 @@ namespace ntbs_service.Migrations
                     b.Property<string>("LTBRID")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime?>("NotificationDate");
-
                     b.Property<string>("NotificationStatus")
                         .IsRequired()
                         .HasMaxLength(30);
@@ -14146,9 +14144,6 @@ namespace ntbs_service.Migrations
 
                             b1.Property<string>("GivenName")
                                 .HasMaxLength(35);
-
-                            b1.Property<string>("LocalPatientId")
-                                .HasMaxLength(50);
 
                             b1.Property<string>("NhsNumber")
                                 .HasMaxLength(10);

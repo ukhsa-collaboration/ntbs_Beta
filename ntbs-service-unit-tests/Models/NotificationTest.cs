@@ -60,7 +60,7 @@ namespace ntbs_service_unit_tests.Models
         {
             // Arrange
             TestNotification.ClinicalDetails.SymptomStartDate = new DateTime(2000, 1, 1);
-            TestNotification.ClinicalDetails.PresentationToAnyHealthServiceDate = new DateTime(2000, 1, 4);
+            TestNotification.ClinicalDetails.FirstPresentationDate = new DateTime(2000, 1, 4);
             
             // Act
             var days = TestNotification.DaysFromOnsetToFirstPresentation;

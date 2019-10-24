@@ -14,10 +14,10 @@ namespace ntbs_service.Models
         public DateTime? SymptomStartDate { get; set; }
 
         [ValidDate(ValidDates.EarliestClinicalDate)]
-        public DateTime? PresentationToAnyHealthServiceDate { get; set; }
+        public DateTime? FirstPresentationDate { get; set; }
         
         [ValidDate(ValidDates.EarliestClinicalDate)]
-        public DateTime? PresentationToTBServiceDate { get; set; }
+        public DateTime? TBServicePresentationDate { get; set; }
 
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? DiagnosisDate { get; set; }

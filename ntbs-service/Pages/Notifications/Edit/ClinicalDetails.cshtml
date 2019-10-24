@@ -233,7 +233,7 @@
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-symptomatic-conditional">
                                 @{
                                     var hasSymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
-                                    var symptomGroupState = SymptomError ? Error : Standard;
+                                    var symptomGroupState = hasSymptomError ? Error : Standard;
                                 }
                                 <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
                                     <nhs-form-group nhs-form-group-type=@symptomGroupState>
@@ -245,21 +245,21 @@
                                                     <nhs-form-group nhs-form-group-type="Standard">
                                                         <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Day">Day</label>
                                                         <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                            is-error-input=@SymptomError asp-for="FormattedSymptomDate.Day" />
+                                                            is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Day" />
                                                     </nhs-form-group>
                                                 </nhs-date-input-item>
                                                 <nhs-date-input-item>
                                                     <nhs-form-group nhs-form-group-type="Standard">
                                                         <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Month">Month</label>
                                                         <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                            is-error-input=@SymptomError asp-for="FormattedSymptomDate.Month" />
+                                                            is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Month" />
                                                     </nhs-form-group>
                                                 </nhs-date-input-item>
                                                 <nhs-date-input-item>
                                                     <nhs-form-group nhs-form-group-type="Standard">
                                                         <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Year">Year</label>
                                                         <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                            is-error-input=@SymptomError asp-for="FormattedSymptomDate.Year" />
+                                                            is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Year" />
                                                     </nhs-form-group>
                                                 </nhs-date-input-item>
                                             </nhs-date-input>
@@ -278,36 +278,36 @@
             </nhs-form-group>
             <br />
 
-            <validate-date ref="date1" name="Presentation To Any Health Service Date" model="ClinicalDetails" property="PresentationToAnyHealthServiceDate" rank="1" v-model="dates[1]" inline-template>
+            <validate-date ref="date1" name="Presentation To Any Health Service Date" model="ClinicalDetails" property="FirstPresentationDate" rank="1" v-model="dates[1]" inline-template>
                 @{
                     var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.PresentationToAnyHealthServiceDate");
-                    var PresentationAnyHealthServiceGroupState = PresentationAnyHealthServiceError ? Error : Standard;
+                    var presentationAnyHealthServiceGroupState = hasPresentationAnyHealthServiceError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@presentationAnyHealthServiceGroupState>
                     <nhs-fieldset aria-describedby="presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to any health service</nhs-fieldset-legend>
-                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationToAnyHealthServiceDate" 
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.FirstPresentationDate" 
                             id="presentation-error" has-error="@hasPresentationAnyHealthServiceError"></span>
                         <nhs-date-input id="presentation-to-any-health-service">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
-                                    <label nhs-label-type="Date" asp-for="FormattedPresentationToAnyHealthServiceDate.Day">Day</label>
+                                    <label nhs-label-type="Date" asp-for="FormattedFirstPresentationDate.Day">Day</label>
                                     <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                           is-error-input=@PresentationAnyHealthServiceError asp-for="FormattedPresentationToAnyHealthServiceDate.Day" />
+                                           is-error-input=@hasPresentationAnyHealthServiceError asp-for="FormattedFirstPresentationDate.Day" />
                                 </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
-                                    <label nhs-label-type="Date" asp-for="FormattedPresentationToAnyHealthServiceDate.Month">Month</label>
+                                    <label nhs-label-type="Date" asp-for="FormattedFirstPresentationDate.Month">Month</label>
                                     <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                           is-error-input=@PresentationAnyHealthServiceError asp-for="FormattedPresentationToAnyHealthServiceDate.Month" />
+                                           is-error-input=@hasPresentationAnyHealthServiceError asp-for="FormattedFirstPresentationDate.Month" />
                                 </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
-                                    <label nhs-label-type="Date" asp-for="FormattedPresentationToAnyHealthServiceDate.Year">Year</label>
+                                    <label nhs-label-type="Date" asp-for="FormattedFirstPresentationDate.Year">Year</label>
                                     <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                           is-error-input=@PresentationAnyHealthServiceError asp-for="FormattedPresentationToAnyHealthServiceDate.Year" />
+                                           is-error-input=@hasPresentationAnyHealthServiceError asp-for="FormattedFirstPresentationDate.Year" />
                                 </nhs-form-group>
                             </nhs-date-input-item>
                         </nhs-date-input>
@@ -316,36 +316,36 @@
             </validate-date>
             <br />
 
-            <validate-date ref="date2" name="Presentation To TB Service Date" model="ClinicalDetails" property="PresentationToTBServiceDate" rank="2" v-model="dates[2]" inline-template>
+            <validate-date ref="date2" name="Presentation To TB Service Date" model="ClinicalDetails" property="TBServicePresentationDate" rank="2" v-model="dates[2]" inline-template>
                 @{
-                    var hasPresentationTBServiceError = !Model.IsValid("ClinicalDetails.PresentationToTBServiceDate");
-                    var presentationTBServiceGroupState = PresentationTBServiceError ? Error : Standard;
+                    var hasPresentationTBServiceError = !Model.IsValid("ClinicalDetails.TBServicePresentationDate");
+                    var presentationTBServiceGroupState = hasPresentationTBServiceError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@presentationTBServiceGroupState>
                     <nhs-fieldset aria-describedby="presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to TB service</nhs-fieldset-legend>
-                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationToTBServiceDate" 
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TBServicePresentationDate" 
                             id="presentation-error" has-error="@hasPresentationTBServiceError"></span>
                         <nhs-date-input id="presentation-to-TB-service">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
-                                    <label nhs-label-type="Date" asp-for="FormattedPresentationToTBServiceDate.Day">Day</label>
+                                    <label nhs-label-type="Date" asp-for="FormattedTBServicePresentationDate.Day">Day</label>
                                     <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                           is-error-input=@PresentationTBServiceError asp-for="FormattedPresentationToTBServiceDate.Day" />
+                                           is-error-input=@hasPresentationTBServiceError asp-for="FormattedTBServicePresentationDate.Day" />
                                 </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
-                                    <label nhs-label-type="Date" asp-for="FormattedPresentationToTBServiceDate.Month">Month</label>
+                                    <label nhs-label-type="Date" asp-for="FormattedTBServicePresentationDate.Month">Month</label>
                                     <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                           is-error-input=@PresentationTBServiceError asp-for="FormattedPresentationToTBServiceDate.Month" />
+                                           is-error-input=@hasPresentationTBServiceError asp-for="FormattedTBServicePresentationDate.Month" />
                                 </nhs-form-group>
                             </nhs-date-input-item>
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
-                                    <label nhs-label-type="Date" asp-for="FormattedPresentationToTBServiceDate.Year">Year</label>
+                                    <label nhs-label-type="Date" asp-for="FormattedTBServicePresentationDate.Year">Year</label>
                                     <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                           is-error-input=@PresentationTBServiceError asp-for="FormattedPresentationToTBServiceDate.Year" />
+                                           is-error-input=@hasPresentationTBServiceError asp-for="FormattedTBServicePresentationDate.Year" />
                                 </nhs-form-group>
                             </nhs-date-input-item>
                         </nhs-date-input>

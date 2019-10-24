@@ -10,10 +10,10 @@ namespace ntbs_service.Migrations
             migrationBuilder.RenameColumn(
                 name: "PresentationDate",
                 table: "ClinicalDetails",
-                newName: "PresentationToAnyHealthServiceDate");
+                newName: "FirstPresentationDate");
 
             migrationBuilder.AddColumn<DateTime>(
-                name: "PresentationToTBServiceDate",
+                name: "TBServicePresentationDate",
                 table: "ClinicalDetails",
                 nullable: true);
         }
@@ -21,11 +21,11 @@ namespace ntbs_service.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PresentationToTBServiceDate",
+                name: "TBServicePresentationDate",
                 table: "ClinicalDetails");
 
             migrationBuilder.RenameColumn(
-                name: "PresentationToAnyHealthServiceDate",
+                name: "FirstPresentationDate",
                 table: "ClinicalDetails",
                 newName: "PresentationDate");
         }
