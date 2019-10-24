@@ -232,13 +232,14 @@
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-symptomatic-conditional">
                                 @{
-                                    var SymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
-                                    var SymptomGroupState = SymptomError ? Error : Standard;
+                                    var hasSymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
+                                    var symptomGroupState = SymptomError ? Error : Standard;
                                 }
                                 <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
-                                    <nhs-form-group nhs-form-group-type=@SymptomGroupState>
+                                    <nhs-form-group nhs-form-group-type=@symptomGroupState>
                                         <nhs-fieldset aria-describedby="symptom-error" role="group">
-                                            <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate" id="symptom-error"></span>
+                                            <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate" 
+                                                id="symptom-error" has-error="@hasSymptomError"></span>
                                             <nhs-date-input id="symptom">
                                                 <nhs-date-input-item>
                                                     <nhs-form-group nhs-form-group-type="Standard">
@@ -279,13 +280,14 @@
 
             <validate-date ref="date1" name="Presentation To Any Health Service Date" model="ClinicalDetails" property="PresentationToAnyHealthServiceDate" rank="1" v-model="dates[1]" inline-template>
                 @{
-                    var PresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.PresentationToAnyHealthServiceDate");
+                    var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.PresentationToAnyHealthServiceDate");
                     var PresentationAnyHealthServiceGroupState = PresentationAnyHealthServiceError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@PresentationAnyHealthServiceGroupState>
+                <nhs-form-group nhs-form-group-type=@presentationAnyHealthServiceGroupState>
                     <nhs-fieldset aria-describedby="presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to any health service</nhs-fieldset-legend>
-                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationToAnyHealthServiceDate" id="presentation-error"></span>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationToAnyHealthServiceDate" 
+                            id="presentation-error" has-error="@hasPresentationAnyHealthServiceError"></span>
                         <nhs-date-input id="presentation-to-any-health-service">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
@@ -316,13 +318,14 @@
 
             <validate-date ref="date2" name="Presentation To TB Service Date" model="ClinicalDetails" property="PresentationToTBServiceDate" rank="2" v-model="dates[2]" inline-template>
                 @{
-                    var PresentationTBServiceError = !Model.IsValid("ClinicalDetails.PresentationToTBServiceDate");
-                    var PresentationTBServiceGroupState = PresentationTBServiceError ? Error : Standard;
+                    var hasPresentationTBServiceError = !Model.IsValid("ClinicalDetails.PresentationToTBServiceDate");
+                    var presentationTBServiceGroupState = PresentationTBServiceError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@PresentationTBServiceGroupState>
+                <nhs-form-group nhs-form-group-type=@presentationTBServiceGroupState>
                     <nhs-fieldset aria-describedby="presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to TB service</nhs-fieldset-legend>
-                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationToTBServiceDate" id="presentation-error"></span>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.PresentationToTBServiceDate" 
+                            id="presentation-error" has-error="@hasPresentationTBServiceError"></span>
                         <nhs-date-input id="presentation-to-TB-service">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
