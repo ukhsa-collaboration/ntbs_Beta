@@ -17,9 +17,9 @@ namespace ntbs_service_unit_tests.Helpers
             const int expectedCount = 6;
 
             Assert.Equal(results.Count, expectedCount);
-            Assert.Equal(((TBService)results[0]).Code, firstEntryInTBServicesList.Code);
-            Assert.Equal(((TBService)results[0]).Name, firstEntryInTBServicesList.Name);
-            Assert.Equal(((TBService)results[0]).PHECCode, firstEntryInTBServicesList.PHECCode);
+            Assert.Equal(firstEntryInTBServicesList.Code, ((TBService)results[0]).Code);
+            Assert.Equal(firstEntryInTBServicesList.Name, ((TBService)results[0]).Name);
+            Assert.Equal(firstEntryInTBServicesList.PHECCode, ((TBService)results[0]).PHECCode);
         }
 
     }

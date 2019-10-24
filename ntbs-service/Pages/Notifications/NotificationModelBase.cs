@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
+using ntbs_service.Pages.Exceptions;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -36,10 +38,24 @@ namespace ntbs_service.Pages_Notifications
             NotificationBannerModel = new NotificationBannerModel(Notification, HasEditPermission);
         }
 
+        protected async Task TryGetLinkedNotifications()
+        {
+            await GetLinkedNotifications();
+            if (Group == null)
+            {
+                throw new NoLinkedNotificationsException();
+            }
+        }
+
         protected async Task GetLinkedNotifications()
         {
             Group = await GetNotificationGroupAsync();
-            NumberOfLinkedNotifications = Group != null ? ( Group.Notifications.Count - 1 ) : 0;
+            NumberOfLinkedNotifications = Group?.Notifications.Count - 1 ?? 0;
+        }
+
+        protected IActionResult ForbiddenResult()
+        {
+            return StatusCode((int)HttpStatusCode.Forbidden);
         }
 
         private async Task<NotificationGroup> GetNotificationGroupAsync()

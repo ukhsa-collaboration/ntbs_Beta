@@ -41,7 +41,7 @@ namespace ntbs_service.Pages_Notifications
             }
             else if (!(await authorizationService.CanEdit(User, Notification)))
             {
-                return Forbid();
+                return ForbiddenResult();
             }
 
             NotificationBannerModel = new NotificationBannerModel(Notification);

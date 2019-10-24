@@ -7,27 +7,20 @@
     ViewData["NotificationId"] = @Model.NotificationId;
 }
 
-@if (Model.HasEditPermission)
-{
-    <partial name="./OverviewPartials/_PatientOverviewPartial" model="@Model"/>
+<partial name="./OverviewPartials/_PatientOverviewPartial" model="@Model"/>
 
-    <partial name="./OverviewPartials/_EpisodeOverviewPartial" model="@Model"/>
+<partial name="./OverviewPartials/_EpisodeOverviewPartial" model="@Model"/>
 
-    <partial name="./OverviewPartials/_ClinicalDetailsOverviewPartial" model="@Model" />
+<partial name="./OverviewPartials/_ClinicalDetailsOverviewPartial" model="@Model" />
 
-    <partial name="./OverviewPartials/_ContactTracingOverviewPartial" for="Notification.ContactTracing" />
+<partial name="./OverviewPartials/_ContactTracingOverviewPartial" for="Notification.ContactTracing" />
 
-    <partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial" model="@Model" />
+<partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial" model="@Model" />
 
-    <partial name="./OverviewPartials/_TravelOverviewPartial" model="@Model" />
+<partial name="./OverviewPartials/_TravelOverviewPartial" model="@Model" />
 
-    <partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial" model="@Model" />
+<partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial" model="@Model" />
 
-    <partial name="./OverviewPartials/_PreviousHistoryOverviewPartial" model="@Model" />
+<partial name="./OverviewPartials/_PreviousHistoryOverviewPartial" model="@Model" />
 
-    <a href='#top' class="govuk-link--no-visited-state"> Back to top </a>
-}
-else
-{
-    <p>"You do not have permission to view the full details of this record"</p>
-}
+<a href='#top' class="govuk-link--no-visited-state"> Back to top </a>

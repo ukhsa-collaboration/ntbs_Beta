@@ -45,8 +45,7 @@ namespace ntbs_service.Pages.Notifications
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {
-                // Should not be able to get onto the denotify page for a notification user does not have edit access to
-                return Forbid();
+                return RedirectToPage("./Overview", new {id});
             }
 
             NotificationId = Notification.NotificationId;
@@ -65,7 +64,7 @@ namespace ntbs_service.Pages.Notifications
             Notification = await service.GetNotificationAsync(NotificationId);
             if (!(await authorizationService.CanEdit(User, Notification)))
             {
-                return Forbid();
+                return ForbiddenResult();
             }
 
             DenotificationDetails.DateOfNotification = Notification.SubmissionDate;

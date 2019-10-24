@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
+using ntbs_service.Pages.Exceptions;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages_Notifications
@@ -21,15 +22,17 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
-            await AuthorizeAndSetBannerAsync();
-
-            NotificationId = Notification.NotificationId;
-            await GetLinkedNotifications();
-
-            if (Group == null)
+            try
+            {
+                await TryGetLinkedNotifications();
+            }
+            catch (NoLinkedNotificationsException)
             {
                 return NotFound();
             }
+
+            await AuthorizeAndSetBannerAsync();
+            NotificationId = Notification.NotificationId;
 
             LinkedNotifications = Group.Notifications.Where(n => n.NotificationId != NotificationId)
                 .Select(async n => NotificationBannerModel.WithLink(n, await authorizationService.CanEdit(User, n)))

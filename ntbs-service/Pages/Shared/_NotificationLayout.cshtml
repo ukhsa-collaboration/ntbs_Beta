@@ -108,7 +108,7 @@
     {
         <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
     }
-    else if ((bool)ViewData["IsOverviewPage"])
+    else if ((bool)ViewData["IsOverviewPage"] && Model.HasEditPermission)
     {
         <button nhs-button-type="Standard" asp-page-handler="CreateLink">New notification for this person</button>
         @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
