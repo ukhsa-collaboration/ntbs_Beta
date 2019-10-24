@@ -18,6 +18,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
         public List<Sex> Sexes { get; set; }
+        public List<string> DomesticOrUnknownCountryIds { get; set; }
 
         [BindProperty]
         public PatientDetails Patient { get; set; }
@@ -31,7 +32,15 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             PostcodeService = postcodeService;
             Ethnicities = new SelectList(context.GetAllOrderedEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
-            Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
+
+            var countries = context.GetAllCountriesAsync().Result;
+            Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
+            DomesticOrUnknownCountryIds = countries
+                .Where(c =>
+                    c.IsoCode == Models.Countries.UkCode
+                    || c.IsoCode == Models.Countries.UnknownCode)
+                .Select(c => c.CountryId.ToString()).ToList();
+
             Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
@@ -59,13 +68,14 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<bool> ValidateAndSave()
         {
-            UpdatePatientFlags();
+            await service.UpdatePatientFlags(Patient);
             ModelState.ClearValidationState("Patient.Postcode");
+            ModelState.ClearValidationState("Patient.YearOfUkEntry");
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
             validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-            
+
             if (!TryValidateModel(Patient, "Patient"))
             {
                 return false;
@@ -80,25 +90,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             var foundPostcode = await PostcodeService.FindPostcode(Patient.Postcode);
             Patient.PostcodeToLookup = foundPostcode?.Postcode;
         }
-        
-        private void UpdatePatientFlags()
-        {
-            if (Patient.NhsNumberNotKnown)
-            {
-                Patient.NhsNumber = null;
-                ModelState.Remove("Patient.NhsNumber");
-            }
-
-            if (Patient.NoFixedAbode)
-            {
-                Patient.Postcode = null;
-                ModelState.Remove("Patient.Postcode");
-            }
-        }
-
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
-        {   
+        {
             var foundPostcode = await PostcodeService.FindPostcode(postcode);
             var propertyValueTuples = new List<Tuple<string, object>>
             {
@@ -122,6 +116,20 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
             return validationService.ValidateDate<PatientDetails>(key, day, month, year);
+        }
+
+        public ContentResult OnGetValidateYearOfUkEntry(int? yearOfUkEntry)
+        {
+            var patientDetails = new PatientDetails
+            {
+                // It should only be possible to get here through normal application use if not uk born (and not unknown)
+                UkBorn = false
+            };
+
+            return validationService.ValidateProperty(
+                patientDetails,
+                nameof(PatientDetails.YearOfUkEntry),
+                yearOfUkEntry);
         }
     }
 }
