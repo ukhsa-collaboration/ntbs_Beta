@@ -70,6 +70,8 @@ namespace ntbs_service.Models
         public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
         public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
+        public string IsDOT => TrueFalseToYesNo(ClinicalDetails.IsDOT);
+        public string IsEnhancedCaseManagement => TrueFalseToYesNo(ClinicalDetails.IsEnhancedCaseManagement);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
         public string HasRecentVisitor => TrueFalseToYesNo(VisitorDetails.HasVisitor);

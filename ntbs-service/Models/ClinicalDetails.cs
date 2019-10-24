@@ -43,7 +43,7 @@ namespace ntbs_service.Models
         [ValidDate(ValidDates.EarliestClinicalDate)]
 
         public DateTime? MDRTreatmentStartDate { get; set; }
-        public bool? isDOT { get; set; }
-        public bool? isEnhancedCaseManagement { get; set; }
+        public bool? IsDOT { get; set; }
+        public bool? IsEnhancedCaseManagement { get; set; }
     }
 }

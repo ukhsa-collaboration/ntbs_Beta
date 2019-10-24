@@ -7,12 +7,12 @@ namespace ntbs_service.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "isDOT",
+                name: "IsDOT",
                 table: "ClinicalDetails",
                 nullable: true);
 
             migrationBuilder.AddColumn<bool>(
-                name: "isEnhancedCaseManagement",
+                name: "IsEnhancedCaseManagement",
                 table: "ClinicalDetails",
                 nullable: true);
         }
@@ -20,11 +20,11 @@ namespace ntbs_service.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "isDOT",
+                name: "IsDOT",
                 table: "ClinicalDetails");
 
             migrationBuilder.DropColumn(
-                name: "isEnhancedCaseManagement",
+                name: "IsEnhancedCaseManagement",
                 table: "ClinicalDetails");
         }
     }
