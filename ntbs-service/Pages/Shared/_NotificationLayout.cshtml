@@ -106,7 +106,7 @@
     </h2>
     @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
     {
-        <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
+        <button nhs-button-type="Standard" name="actionName" value="Submit" id="submit-button">Submit</button>
     }
     else if ((bool)ViewData["IsOverviewPage"] && Model.HasEditPermission)
     {

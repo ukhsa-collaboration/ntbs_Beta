@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 using ntbs_service.Models;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Mvc.Rendering;
