@@ -44,7 +44,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
             Notification = await service.GetNotificationAsync(id);
             if (Notification == null)
@@ -54,7 +54,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             Patient = Notification.PatientDetails;
-            await SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
+            await SetNotificationProperties(isBeingSubmitted, Patient);
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
 
