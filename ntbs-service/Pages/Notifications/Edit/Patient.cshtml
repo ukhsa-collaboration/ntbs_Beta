@@ -132,8 +132,8 @@
     </validate-input>
     <br />
 
-    <div class="nhsuk-form-group">
-        <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-error">
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset aria-describedby="nhs-number-error">
             <nhs-fieldset-legend nhs-legend-size="Standard">
                 NHS Number (required)
             </nhs-fieldset-legend>
@@ -169,8 +169,8 @@
                     </label>
                 </div>
             </div>
-        </fieldset>
-    </div>
+        </nhs-fieldset>
+    </nhs-form-group>
     <br />
 
     <validate-input model="Patient" property="LocalPatientId" inline-template>
