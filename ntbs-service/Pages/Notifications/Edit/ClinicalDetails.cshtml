@@ -469,6 +469,41 @@
                     </nhs-radios>
                 </nhs-fieldset>
             </nhs-form-group>
+
+            <nhs-form-group nhs-form-group-type="@ShortCourseGroupState">
+                <nhs-fieldset>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Directly observed treatment? (including VOT)</nhs-fieldset-legend>
+                    <span ref="errorField[0]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-error"></span>
+                    <nhs-radios nhs-radios-type="Standard">
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-yes" type="radio" value="true" ref="input[0]" v-on:change="validate" />
+                            <label nhs-label-type="Radios" for="short-course-yes">Yes</label>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-no" type="radio" value="false" v-on:change="validate" />
+                            <label nhs-label-type="Radios" for="short-course-no">No</label>
+                        </nhs-radios-item>
+                    </nhs-radios>
+                </nhs-fieldset>
+            </nhs-form-group>
+
+            <nhs-form-group nhs-form-group-type="@ShortCourseGroupState">
+                <nhs-fieldset>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
+                    <span ref="errorField[0]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-error"></span>
+                    <nhs-radios nhs-radios-type="Standard">
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-yes" type="radio" value="true" ref="input[0]" v-on:change="validate" />
+                            <label nhs-label-type="Radios" for="short-course-yes">Yes</label>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-no" type="radio" value="false" v-on:change="validate" />
+                            <label nhs-label-type="Radios" for="short-course-no">No</label>
+                        </nhs-radios-item>
+                    </nhs-radios>
+                </nhs-fieldset>
+            </nhs-form-group>
+
             @{ var MDRGroupState = !Model.IsValid("ClinicalDetails.IsMDRTreatment") ? Error : Standard; }
             <nhs-form-group nhs-form-group-type="@MDRGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                 <nhs-fieldset>
