@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public PatientModel(INotificationService service, IPostcodeService postcodeService, NtbsContext context) : base(service)
         {
             PostcodeService = postcodeService;
-            Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
+            Ethnicities = new SelectList(context.GetAllOrderedEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
             Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
             Sexes = context.GetAllSexesAsync().Result.ToList();
         }
