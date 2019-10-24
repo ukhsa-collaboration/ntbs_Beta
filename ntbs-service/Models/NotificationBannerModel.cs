@@ -42,6 +42,7 @@ namespace ntbs_service.Models
             Sex = notification.SexLabel;
             NotificationStatus = notification.NotificationStatus;
             NotificationStatusString = notification.NotificationStatusString;
+            NotificationDate = notification.FormattedNotificationDate;
             // TODO most likely need an enum for the different origins of notifications
             Origin = "ntbs";
             RedirectPath = notification.OverviewPath;
