@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CsvHelper;
 using Microsoft.EntityFrameworkCore.Migrations;
-using ntbs_service.Helpers;
-using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
@@ -19,18 +14,20 @@ namespace ntbs_service.Migrations
             var pathToFile = Path.Combine(Environment.CurrentDirectory, "Models/SeedData/Postcodes.csv");
             const int itemsPerUpdate = 1000;
 
-            var records = new string[itemsPerUpdate,3];
+            var records = new string[itemsPerUpdate, 3];
             int index = 0;
 
-            using (StreamReader reader = new StreamReader(pathToFile)) 
-            using (CsvReader csvReader = new CsvReader(reader)) {
+            using (StreamReader reader = new StreamReader(pathToFile))
+            using (CsvReader csvReader = new CsvReader(reader))
+            {
                 csvReader.Read();
                 csvReader.ReadHeader();
                 while (csvReader.Read())
                 {
                     records[index, 0] = csvReader.GetField("Pcode");
                     records[index, 1] = csvReader.GetField("Country");
-                    records[index, 2] = csvReader.GetField("LA_Code");
+                    var laCode = csvReader.GetField("LA_Code");
+                    records[index, 2] = string.IsNullOrWhiteSpace(laCode) ? null : laCode;
                     index++;
 
                     if (index == itemsPerUpdate)
@@ -41,26 +38,26 @@ namespace ntbs_service.Migrations
                             values: records
                         );
                         records = new string[itemsPerUpdate, 3];
-                        index = 0;                    
+                        index = 0;
                     }
                 }
             }
 
-            if (index > 0) 
+            if (index > 0)
             {
-                var finalBatch = new string[index,3]; 
-                for (int i=0; i<index; i++)
+                var finalBatch = new string[index, 3];
+                for (int i = 0; i < index; i++)
                 {
-                    finalBatch[i,0] = records[i,0];
-                    finalBatch[i,1] = records[i,1];
-                    finalBatch[i,2] = records[i,2];
+                    finalBatch[i, 0] = records[i, 0];
+                    finalBatch[i, 1] = records[i, 1];
+                    finalBatch[i, 2] = records[i, 2];
                 }
-                
+
                 migrationBuilder.InsertData(
                     table: "PostcodeLookup",
                     columns: new[] { "Postcode", "CountryCode", "LocalAuthorityCode" },
                     values: finalBatch
-                );                        
+                );
             }
         }
 
