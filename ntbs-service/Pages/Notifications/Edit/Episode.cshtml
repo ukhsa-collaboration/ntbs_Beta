@@ -82,7 +82,7 @@
     </validate-input>
     <br />
 
-    <h2>Notification Date</h2>
+    <h2>Notification Date (required)</h2>
     <validate-date model="Notification" property="NotificationDate" notification_id="@Model.Notification.NotificationId" inline-template>
         @{
             var notificationDateError = !Model.IsValid("Notification.NotificationDate");
