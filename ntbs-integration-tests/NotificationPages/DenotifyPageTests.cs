@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using Xunit;
+using System;
 
 namespace ntbs_integration_tests.NotificationPages
 {
@@ -21,7 +22,12 @@ namespace ntbs_integration_tests.NotificationPages
             return new List<Notification>()
             {
                 new Notification(){ NotificationId = Utilities.DENOTIFY_WITH_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
-                new Notification(){ NotificationId = Utilities.DENOTIFY_NO_DESCRIPTION, NotificationStatus = NotificationStatus.Notified }
+                new Notification(){ NotificationId = Utilities.DENOTIFY_NO_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
+                new Notification(){ 
+                    NotificationId = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE, 
+                    NotificationStatus = NotificationStatus.Notified, 
+                    NotificationDate = new DateTime(2011, 1, 1) 
+                }
             };
         }
 
@@ -92,7 +98,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
-            const string denotifyDateYear = "2000";
+            const string denotifyDateYear = "2010";
             const string reason = "DuplicateEntry";
             const string description = "Test Description";
 
@@ -182,17 +188,17 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateLatestToday), resultDocument.GetError("date"));
         }
 
-        [Fact(Skip = "Requires NotificationDate to be implemented")]
+        [Fact]
         public async Task Post_ReturnsPageWithModelErrors_IfDateIsBeforeDateOfNotification()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_ID;
+            const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
-            const string denotifyDateYear = "1910";
+            const string denotifyDateYear = "2010";
             const string reason = "DuplicateEntry";
 
             var formData = new Dictionary<string, string>
@@ -209,7 +215,6 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-
             result.EnsureSuccessStatusCode();
             Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateAfterNotification), resultDocument.GetError("date"));
         }
