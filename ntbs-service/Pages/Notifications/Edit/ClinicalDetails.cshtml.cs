@@ -29,7 +29,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         public int? PatientBirthYear { get; set; }
 
         public FormattedDate FormattedSymptomDate { get; set; }
-        public FormattedDate FormattedPresentationDate { get; set; }
+        public FormattedDate FormattedPresentationToAnyHealthServiceDate { get; set; }
+        public FormattedDate FormattedPresentationToTBServiceDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
@@ -66,7 +67,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             PatientBirthYear = Notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
-            FormattedPresentationDate = ClinicalDetails.PresentationDate.ConvertToFormattedDate();
+            FormattedPresentationToAnyHealthServiceDate = ClinicalDetails.PresentationToAnyHealthServiceDate.ConvertToFormattedDate();
+            FormattedPresentationToTBServiceDate = ClinicalDetails.PresentationToTBServiceDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
@@ -99,7 +101,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             UpdateFlags();
 
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationToAnyHealthServiceDate), FormattedPresentationToAnyHealthServiceDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationToTBServiceDate), FormattedPresentationToTBServiceDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);

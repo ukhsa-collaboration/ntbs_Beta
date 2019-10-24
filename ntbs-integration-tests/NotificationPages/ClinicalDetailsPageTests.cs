@@ -30,9 +30,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "1",
                 ["FormattedSymptomDate.Day"] = "10",
-                ["FormattedPresentationDate.Day"] = "1",
-                ["FormattedPresentationDate.Month"] = "1",
-                ["FormattedPresentationDate.Year"] = "2000",
+                ["FormattedPresentationToAnyHealthServiceDate.Day"] = "1",
+                ["FormattedPresentationToAnyHealthServiceDate.Month"] = "1",
+                ["FormattedPresentationToAnyHealthServiceDate.Year"] = "2000",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "true",
             };
@@ -120,9 +120,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["ClinicalDetails.NoSampleTaken"] = "true",
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "2000",
-                ["FormattedPresentationDate.Day"] = "1",
-                ["FormattedPresentationDate.Month"] = "1",
-                ["FormattedPresentationDate.Year"] = "2012",
+                ["FormattedPresentationToAnyHealthServiceDate.Day"] = "1",
+                ["FormattedPresentationToAnyHealthServiceDate.Month"] = "1",
+                ["FormattedPresentationToAnyHealthServiceDate.Year"] = "2012",
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "false",
@@ -143,9 +143,9 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_NoSampleTaken")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("bcg-vaccination-yes")).IsChecked);
             Assert.Equal("2000", ((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
-            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Day")).Value);
-            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Month")).Value);
-            Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Year")).Value);
+            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationToAnyHealthServiceDate_Day")).Value);
+            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationToAnyHealthServiceDate_Month")).Value);
+            Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationToAnyHealthServiceDate_Year")).Value);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("short-course-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("mdr-no")).IsChecked);
