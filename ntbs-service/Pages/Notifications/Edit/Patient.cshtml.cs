@@ -69,6 +69,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<bool> ValidateAndSave()
         {
             await service.UpdatePatientFlags(Patient);
+            // Remove already invalidated states from modelState as rely
+            // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
             ModelState.ClearValidationState("Patient.YearOfUkEntry");
 

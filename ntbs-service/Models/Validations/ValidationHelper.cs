@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace ntbs_service.Models.Validations
 {
@@ -45,7 +45,6 @@ namespace ntbs_service.Models.Validations
         public const string NHSNumberIsRequired = "NHS number is a mandatory field";
         public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
         public const string PostcodeIsRequired = "Postcode is a mandatory field";
-        
         public const string PostcodeIsNotValid = "Postcode is not valid";
         public const string TBServiceIsRequired = "TB Service is a mandatory field";
         public const string HospitalIsRequired = "Hospital is a mandatory field";
@@ -83,6 +82,10 @@ namespace ntbs_service.Models.Validations
         public const string DenotificationReasonOtherRequired = "Please supply additional details for the denotification reason";
         public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
         public const string SupplyAParameter = "Please supply at least one of these parameters";
+        public const string YearOfUkEntryNotNeededIfDomesticOrUnknown = "Year of entry to the uk is not required if birth country is the uk or unknown";
+        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the uk must be after patient's date of birth.";
+        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the uk must be no later than this year.";
+        public const string ValidYearRange = "Year must be provided between {1} and {2}";
     }
 
     public static class ValidDates
