@@ -95,6 +95,7 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
+        public string FormattedNotificationDate => FormatDate(NotificationDate);
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
 
         public string PatientEditPath => GetNotificationEditPath("Patient");
@@ -109,7 +110,6 @@ namespace ntbs_service.Models
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
         public string DenotifyPath => GetNotificationPath("Denotify");
-        public string FormattedNotificationDate => FormatDate(NotificationDate);
 
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string PHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
