@@ -95,6 +95,7 @@ namespace ntbs_service.Models
         public string FormattedDob => FormatDate(PatientDetails.Dob);
         [Display(Name = "Date created")]
         public string FormattedCreationDate => FormatDate(CreationDate);
+        public string FormattedNotificationDate => FormatDate(NotificationDate);
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
 
         public string PatientEditPath => GetNotificationEditPath("Patient");
