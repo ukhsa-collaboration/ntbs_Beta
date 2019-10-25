@@ -72,6 +72,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Remove already invalidated states from modelState as rely
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
+            ModelState.ClearValidationState("Patient.NHSNumber");
             ModelState.ClearValidationState("Patient.YearOfUkEntry");
 
             Patient.SetFullValidation(Notification.NotificationStatus);
