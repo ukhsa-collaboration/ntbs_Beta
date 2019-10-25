@@ -24,13 +24,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (FormattedDenotificationDate == null)
             {
-                var now = DateTime.Now;
-                FormattedDenotificationDate = new FormattedDate()
-                {
-                    Day = now.Day.ToString(),
-                    Month = now.Month.ToString(),
-                    Year = now.Year.ToString()
-                };
+                FormattedDenotificationDate = FormattedDate.Today();
             }
         }
 

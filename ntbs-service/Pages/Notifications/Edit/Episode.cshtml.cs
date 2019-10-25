@@ -5,6 +5,9 @@ using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -46,8 +49,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             NotificationBannerModel = new NotificationBannerModel(Notification);
             Episode = Notification.Episode;
             await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
-
-            FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
+            
+            FormattedNotificationDate = Notification.NotificationDate == null 
+                ? FormattedDate.Today() 
+                : Notification.NotificationDate.ConvertToFormattedDate();
 
             if (Episode.ShouldValidateFull)
             {
@@ -76,6 +81,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (!TryValidateModel(Episode, Episode.GetType().Name))
             {
+                // Detach notification to avoid getting cached notification when retrieving from context
+                context.Entry(Notification).State = EntityState.Detached;
                 return false;
             }
 
