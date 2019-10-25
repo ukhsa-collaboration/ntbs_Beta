@@ -14147,6 +14147,8 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool?>("UkBorn");
 
+                            b1.Property<int?>("YearOfUkEntry");
+
                             b1.HasKey("NotificationId");
 
                             b1.HasIndex("CountryId");
