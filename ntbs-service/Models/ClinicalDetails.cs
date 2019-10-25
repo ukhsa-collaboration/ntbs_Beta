@@ -15,6 +15,7 @@ namespace ntbs_service.Models
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? PresentationDate { get; set; }
 
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.DiagnosisDateIsRequired)]
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? DiagnosisDate { get; set; }
 
