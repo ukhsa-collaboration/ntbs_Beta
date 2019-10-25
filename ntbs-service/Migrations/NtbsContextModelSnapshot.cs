@@ -1811,78 +1811,43 @@ namespace ntbs_service.Migrations
                         new
                         {
                             EthnicityId = 1,
-                            Code = "A",
-                            Label = "White British",
-                            Order = 16
-                        },
-                        new
-                        {
-                            EthnicityId = 2,
-                            Code = "B",
-                            Label = "White Irish",
-                            Order = 17
-                        },
-                        new
-                        {
-                            EthnicityId = 3,
-                            Code = "C",
-                            Label = "Any other White background",
-                            Order = 3
-                        },
-                        new
-                        {
-                            EthnicityId = 4,
-                            Code = "D",
-                            Label = "Mixed - White and Black Caribbean",
-                            Order = 14
-                        },
-                        new
-                        {
-                            EthnicityId = 5,
-                            Code = "E",
-                            Label = "Mixed - White and Black African",
-                            Order = 13
-                        },
-                        new
-                        {
-                            EthnicityId = 6,
-                            Code = "F",
-                            Label = "Mixed - White and Asian",
-                            Order = 12
-                        },
-                        new
-                        {
-                            EthnicityId = 7,
-                            Code = "G",
-                            Label = "Any other mixed background",
-                            Order = 9
+                            Code = "WW",
+                            Label = "White",
+                            Order = 1
                         },
                         new
                         {
                             EthnicityId = 8,
                             Code = "H",
                             Label = "Indian",
-                            Order = 1
+                            Order = 2
                         },
                         new
                         {
                             EthnicityId = 9,
                             Code = "J",
                             Label = "Pakistani",
-                            Order = 2
+                            Order = 3
                         },
                         new
                         {
                             EthnicityId = 10,
                             Code = "K",
                             Label = "Bangladeshi",
-                            Order = 10
+                            Order = 4
                         },
                         new
                         {
                             EthnicityId = 11,
                             Code = "L",
                             Label = "Any other Asian background",
+                            Order = 5
+                        },
+                        new
+                        {
+                            EthnicityId = 13,
+                            Code = "N",
+                            Label = "Black African",
                             Order = 6
                         },
                         new
@@ -1890,27 +1855,13 @@ namespace ntbs_service.Migrations
                             EthnicityId = 12,
                             Code = "M",
                             Label = "Black Caribbean",
-                            Order = 11
-                        },
-                        new
-                        {
-                            EthnicityId = 13,
-                            Code = "N",
-                            Label = "Black African",
-                            Order = 5
+                            Order = 7
                         },
                         new
                         {
                             EthnicityId = 14,
                             Code = "P",
                             Label = "Any other Black Background",
-                            Order = 7
-                        },
-                        new
-                        {
-                            EthnicityId = 15,
-                            Code = "S",
-                            Label = "Any other ethnic group",
                             Order = 8
                         },
                         new
@@ -1918,7 +1869,42 @@ namespace ntbs_service.Migrations
                             EthnicityId = 16,
                             Code = "R",
                             Label = "Chinese",
-                            Order = 4
+                            Order = 9
+                        },
+                        new
+                        {
+                            EthnicityId = 6,
+                            Code = "F",
+                            Label = "Mixed - White and Asian",
+                            Order = 10
+                        },
+                        new
+                        {
+                            EthnicityId = 5,
+                            Code = "E",
+                            Label = "Mixed - White and Black African",
+                            Order = 11
+                        },
+                        new
+                        {
+                            EthnicityId = 4,
+                            Code = "D",
+                            Label = "Mixed - White and Black Caribbean",
+                            Order = 12
+                        },
+                        new
+                        {
+                            EthnicityId = 7,
+                            Code = "G",
+                            Label = "Any other mixed background",
+                            Order = 13
+                        },
+                        new
+                        {
+                            EthnicityId = 15,
+                            Code = "S",
+                            Label = "Any other ethnic group",
+                            Order = 14
                         },
                         new
                         {
