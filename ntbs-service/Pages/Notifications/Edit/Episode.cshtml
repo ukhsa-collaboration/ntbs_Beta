@@ -62,7 +62,7 @@
                 <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
                     Notifying TB service (required)
                 </label>
-                <span class="nhsuk-error-message" id="tb-service-error"
+                <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
                       ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
                 <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
                         asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
@@ -79,7 +79,7 @@
                 <label nhs-label-type="Standard" asp-for="Episode.HospitalId">
                     Hospital (required)
                 </label>
-                <span class="nhsuk-error-message" id="hospital-error"
+                <span nhs-span-type="ErrorMessage" id="hospital-error" has-error="@HospitalError"
                       ref="errorFieldHospitalId" asp-validation-for="Episode.HospitalId"></span>
                 <select ref="selectFieldHospitalId" nhs-select-type="@HospitalSelectErrorState" asp-for="Episode.HospitalId"
                         asp-items="Model.Hospitals" v-on:change="function(ev) { validate('HospitalId')(ev); }">

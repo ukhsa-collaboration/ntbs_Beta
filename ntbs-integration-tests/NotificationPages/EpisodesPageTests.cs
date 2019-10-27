@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Models.Validations;
@@ -13,7 +12,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string PageRoute => Routes.Episode;
 
-        public EpisodesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public EpisodesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task PostDraft_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
@@ -36,7 +35,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate),
                         resultDocument.GetError("notification-date"));
         }
 
@@ -61,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
                         resultDocument.GetError("notification-date"));
         }
 
@@ -83,7 +82,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired),
                         resultDocument.GetError("notification-date"));
         }
 
@@ -108,7 +107,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate),
                         resultDocument.GetError("notification-date"));
         }
 
@@ -133,7 +132,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
                         resultDocument.GetError("notification-date"));
         }
 
@@ -155,11 +154,11 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired),
                         resultDocument.GetError("notification-date"));
-            Assert.Equal(ValidationMessages.TBServiceIsRequired, resultDocument.GetError("tb-service"));
-            Assert.Equal(ValidationMessages.HospitalIsRequired, resultDocument.GetError("hospital"));
-        }        
+            Assert.Equal(FullErrorMessage(ValidationMessages.TBServiceIsRequired), resultDocument.GetError("tb-service"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.HospitalIsRequired), resultDocument.GetError("hospital"));
+        }
 
         [Fact]
         public async Task PostNotified_ReturnsPageWithTextFieldInputError_IfTextIsInvalid()
@@ -181,9 +180,9 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat),
                         resultDocument.GetError("consultant"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), 
+            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat),
                         resultDocument.GetError("case-manager"));
         }
 
@@ -197,8 +196,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["Episode.HospitalId"] = "1EE2B39A-428F-44C7-B4BB-000649636591",
-                ["Episode.TBServiceCode"] = "TBS0181",
+                ["Episode.HospitalId"] = Utilities.HOSPITAL_FLEETWOOD_HOSPITAL_ID,
+                ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_DERBY_HOSPITAL_ID,
                 ["Episode.Consultant"] = "Consultant",
                 ["Episode.CaseManager"] = "CaseManager",
                 ["FormattedNotificationDate.Day"] = "1",
@@ -214,6 +213,29 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(BuildEditRoute(Routes.ClinicalDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
         }
 
+        [Fact]
+        public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValdationError()
+        {
+            // Arrange
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var document = await GetDocumentAsync(initialPage);
 
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["Episode.HospitalId"] = Utilities.HOSPITAL_FLEETWOOD_HOSPITAL_ID,
+                ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
+            };
+
+            // Act
+            var result = await SendPostFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            result.EnsureSuccessStatusCode();
+            // TODO NTBS-130 Get error messages assertions commonised
+            Assert.Equal(FullErrorMessage(ValidationMessages.HospitalMustBelongToSelectedTbSerice),
+                        resultDocument.GetError("hospital"));
+        }
     }
 }

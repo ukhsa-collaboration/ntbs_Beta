@@ -42,7 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
-            await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
+            await SetNotificationProperties(isBeingSubmitted, Episode);
             await SetTbServiceAndHospitalListsAsync();
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
@@ -77,8 +77,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            Episode.SetFullValidation(Notification.NotificationStatus);
-            validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            SetValuesForValidation();
 
             if (TryValidateModel(Episode, Episode.GetType().Name))
             {
@@ -102,6 +101,30 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Query notification by Id when date validation depends on other properties of model
             Notification notification = await service.GetNotificationAsync(notificationId);
             return validationService.ValidateDate(notification, key, day, month, year);
+        }
+        
+        private void SetValuesForValidation()
+        {
+            Episode.SetFullValidation(Notification.NotificationStatus);
+            validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            /*
+            Binding only sets the entity ids, but not the actual entitie.
+            There's a validation rule that needs to check the relationship between the entities,
+            therefore we need fetch the reference data from the db before validating
+            */
+            SetHospitalAndTbService();
+        }
+
+        private void SetHospitalAndTbService()
+        {
+            if (Episode.HospitalId != null)
+            {
+                Episode.Hospital = context.Hospital.Where(h => h.HospitalId == Episode.HospitalId).FirstOrDefault();
+            }
+            if (Episode.TBServiceCode != null)
+            {
+                Episode.TBService = context.TbService.Where(s => s.Code == Episode.TBServiceCode).FirstOrDefault();
+            }
         }
     }
 }

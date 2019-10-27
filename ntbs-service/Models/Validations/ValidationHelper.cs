@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 
 namespace ntbs_service.Models.Validations
 {
@@ -76,8 +76,10 @@ namespace ntbs_service.Models.Validations
         #region Hospital Details
         public const string TBServiceIsRequired = "TB Service is a mandatory field";
         public const string HospitalIsRequired = "Hospital is a mandatory field";
+        public const string HospitalMustBelongToSelectedTbSerice = "Hospital must belong to selected TB Service";
         public const string NotificationDateIsRequired = "Notification Date is a mandatory field";
         public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
+
         #endregion
         
         #region Travel History
