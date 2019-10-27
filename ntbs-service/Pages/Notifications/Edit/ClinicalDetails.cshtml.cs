@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -111,26 +111,31 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             
             var notificationSites = CreateNotificationSitesFromModel(Notification);
+            
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
             OtherSite?.SetFullValidation(Notification.NotificationStatus);
-            // Separate notification with notification sites only is needed to check if notification sites are valid,
-            // and to avoid updating notification site when updating Clinical Details
-            var notificationWithSitesOnly = new Notification {
-                ShouldValidateFull = Notification.ShouldValidateFull,
-                NotificationSites = notificationSites.ToList()
-            };
             
-            var isValid = TryValidateModel(this);
-            // Validate notification with sites regardless previous validation result
-            isValid = TryValidateModel(notificationWithSitesOnly, notificationWithSitesOnly.GetType().Name) && isValid;
+            // Since notification has other properties which are not populated by this page but have validation rules, 
+            // validation of a whole Notification model will result in validation errors.
+            // Therefore we need to manually validate NotificationSites and TryValidate other models
+            if (Notification.ShouldValidateFull && notificationSites.Count() == 0) 
+            {
+                ModelState.AddModelError("Notification.NotificationSites", ValidationMessages.DiseaseSiteIsRequired);
+            }
+            
+            TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
+            if (OtherSite != null) 
+            {
+                TryValidateModel(OtherSite, OtherSite.GetType().Name);
+            }
 
-            if (isValid)
+            if (ModelState.IsValid)
             {
                 await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
 
-            return isValid;
+            return ModelState.IsValid;
         }
 
         private void UpdateFlags()
