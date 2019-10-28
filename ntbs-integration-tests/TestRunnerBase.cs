@@ -55,7 +55,7 @@ namespace ntbs_integration_tests
 
         protected string FullErrorMessage(string validationMessage)
         {
-            return $"Error:{validationMessage}";
+            return HtmlDocumentHelpers.FullErrorMessage(validationMessage);
         }
 
         protected async Task<HttpResponseMessage> SendPostFormWithData(

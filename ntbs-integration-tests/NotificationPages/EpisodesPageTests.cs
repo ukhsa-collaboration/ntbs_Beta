@@ -35,8 +35,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate),
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
         }
 
         [Fact]
@@ -60,8 +59,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                        resultDocument.GetError("notification-date"));
+            var expectedMessage = ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate);
+            resultDocument.AssertErrorMessage("notification-date", expectedMessage);
         }
 
         [Fact]
@@ -82,8 +81,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired),
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
         }
 
         [Fact]
@@ -107,8 +105,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate),
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
         }
 
         [Fact]
@@ -132,8 +129,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate));
         }
 
         [Fact]
@@ -154,10 +150,9 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired),
-                        resultDocument.GetError("notification-date"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.TBServiceIsRequired), resultDocument.GetError("tb-service"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.HospitalIsRequired), resultDocument.GetError("hospital"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
+            resultDocument.AssertErrorMessage("tb-service", ValidationMessages.TBServiceIsRequired);
+            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalIsRequired);
         }
 
         [Fact]
@@ -180,10 +175,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat),
-                        resultDocument.GetError("consultant"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat),
-                        resultDocument.GetError("case-manager"));
+            resultDocument.AssertErrorMessage("consultant", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("case-manager", ValidationMessages.StandardStringFormat);
         }
 
         [Fact]
@@ -233,9 +226,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            // TODO NTBS-130 Get error messages assertions commonised
-            Assert.Equal(FullErrorMessage(ValidationMessages.HospitalMustBelongToSelectedTbSerice),
-                        resultDocument.GetError("hospital"));
+            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalMustBelongToSelectedTbSerice);
         }
     }
 }
