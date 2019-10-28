@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages.Exceptions;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -42,19 +41,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            try
-            {
-                await SetNotificationAndAuthorize(id);
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-            catch (NotAuthorizedException)
-            {
-                return RedirectToOverview(id);
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             ClinicalDetails = Notification.ClinicalDetails;
             await SetNotificationProperties(isBeingSubmitted, ClinicalDetails);
 
@@ -84,6 +75,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             return Page();
+        }
+
+        protected override async Task<Notification> GetNotification(int notificationId)
+        {
+            return await service.GetNotificationWithNotificationSitesAsync(notificationId);
         }
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)

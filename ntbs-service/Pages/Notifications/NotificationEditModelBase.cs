@@ -5,7 +5,6 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Models;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
-using ntbs_service.Pages.Exceptions;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -27,27 +26,27 @@ namespace ntbs_service.Pages_Notifications
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
-        protected async Task SetNotificationAndAuthorize(int notificationId)
+        public virtual async Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false)
         {
-            if (HttpContext.Request.Path.Value.Contains("ClinicalDetails"))
-            {
-                Notification = await service.GetNotificationWithNotificationSitesAsync(notificationId);
-            }
-            else
-            {
-                Notification = await service.GetNotificationAsync(notificationId);
-            }
+            Notification = await GetNotification(notificationId);
 
             if (Notification == null)
             {
-                throw new NotFoundException();
+                return NotFound();
             }
 
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {
-                throw new NotAuthorizedException();
+                return RedirectToOverview(notificationId);
             }
+
+            return await PreparePageForGet(notificationId, isBeingSubmitted);
+        }
+
+        protected virtual async Task<Notification> GetNotification(int notificationId)
+        {
+            return await service.GetNotificationAsync(notificationId);
         }
 
         /*
@@ -156,10 +155,8 @@ namespace ntbs_service.Pages_Notifications
             return validationService.IsValid(key);
         }
 
+        protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
         protected abstract Task<bool> ValidateAndSave();
-
-        public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
-
         protected abstract IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted);
     }
 }

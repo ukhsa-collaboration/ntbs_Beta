@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
-using ntbs_service.Pages.Exceptions;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -29,21 +28,13 @@ namespace ntbs_service.Pages.Notifications.Edit
                 nameof(Country.Name));
         }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            try
-            {
-                await SetNotificationAndAuthorize(id);
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-            catch (NotAuthorizedException)
-            {
-                return RedirectToOverview(id);
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             TravelDetails = Notification.TravelDetails;
             VisitorDetails = Notification.VisitorDetails;
             await SetNotificationProperties(isBeingSubmitted, TravelDetails);
