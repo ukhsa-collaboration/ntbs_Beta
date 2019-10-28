@@ -25,31 +25,14 @@ namespace ntbs_service.Services
 
         public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)
         {
-            if (filter == null)
-            {
-                filter = await SetUserPermissionsFilterAsync(user);
-            }
-
-            if (filter.Type == UserType.NationalTeam)
-            {
-                return true;
-            }
-
-            if (filter.FilterByTBService)
-            {
-                return MatchesTBServiceCode(filter, notification);
-            }
-            else
-            {
-                return MatchesPHECCode(filter, notification);
-            }
+            return (await FilterNotificationsByUserAsync(user, new Notification[] { notification })).Count() == 1;
         }
 
         public async Task<IEnumerable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IEnumerable<Notification> notifications)
         {
             if (filter == null)
             {
-                filter = await SetUserPermissionsFilterAsync(user);
+                filter = await GetUserPermissionsFilterAsync(user);
             }
     
             if (filter.FilterByTBService)
@@ -63,7 +46,7 @@ namespace ntbs_service.Services
             return notifications;
         }
 
-        private async Task<UserPermissionsFilter> SetUserPermissionsFilterAsync(ClaimsPrincipal user)
+        private async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return await userService.GetUserPermissionsFilterAsync(user);
         }

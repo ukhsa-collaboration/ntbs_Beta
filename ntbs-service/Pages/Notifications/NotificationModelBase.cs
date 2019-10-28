@@ -38,13 +38,10 @@ namespace ntbs_service.Pages_Notifications
             NotificationBannerModel = new NotificationBannerModel(Notification, HasEditPermission);
         }
 
-        protected async Task TryGetLinkedNotifications()
+        protected async Task<bool> TryGetLinkedNotifications()
         {
             await GetLinkedNotifications();
-            if (Group == null)
-            {
-                throw new NoLinkedNotificationsException();
-            }
+            return Group != null;
         }
 
         protected async Task GetLinkedNotifications()

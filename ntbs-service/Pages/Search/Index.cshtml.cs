@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages_Search
 {
@@ -50,16 +51,16 @@ namespace ntbs_service.Pages_Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
-            if(!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            PaginationParameters = new PaginationParameters() {PageSize = 50, PageIndex = pageIndex ?? 1};
+            PaginationParameters = new PaginationParameters() { PageSize = 50, PageIndex = pageIndex ?? 1 };
 
 
-            var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
-            var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
+            var draftStatusList = new List<NotificationStatus>() { NotificationStatus.Draft };
+            var nonDraftStatusList = new List<NotificationStatus>() { NotificationStatus.Notified, NotificationStatus.Denotified };
             IQueryable<Notification> draftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
@@ -91,10 +92,9 @@ namespace ntbs_service.Pages_Search
             Tuple<IList<int>, int> notificationIdsAndCount = await searchService.UnionAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
             var notificationIds = notificationIdsAndCount.Item1;
             var count = notificationIdsAndCount.Item2;
-            
+
             IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(notificationIds);
-            var notificationBannerModels = notifications.Select(async n => NotificationBannerModel.WithLink(n, await authorizationService.CanEdit(User, n)))
-                                                        .Select(n => n.Result);
+            IEnumerable<NotificationBannerModel> notificationBannerModels = notifications.CreateNotificationBanners(User, authorizationService);
             SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();

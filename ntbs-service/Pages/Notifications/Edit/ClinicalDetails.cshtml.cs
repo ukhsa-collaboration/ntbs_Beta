@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages.Exceptions;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -41,14 +42,15 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationWithNotificationSitesAsync(id);
-            if (Notification == null)
+            try
+            {
+                await SetNotificationAndAuthorize(id);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            await AuthorizeAndSetBannerAsync();
-            if (!HasEditPermission)
+            catch (NotAuthorizedException)
             {
                 return RedirectToOverview(id);
             }

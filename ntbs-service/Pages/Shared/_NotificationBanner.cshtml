@@ -27,9 +27,9 @@
                 {
                     <div> #@Model.NotificationId </div>
                 }
-                @if(!@Model.IsEditable)
+                @if(!@Model.FullAccess)
                 {
-                    <p> (not editable) </p>
+                    <p> (Limited access) </p>
                 }
                 </h1>
             </nhs-grid-column>

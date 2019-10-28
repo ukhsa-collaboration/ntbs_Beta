@@ -5,6 +5,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Models;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
+using ntbs_service.Pages.Exceptions;
 
 namespace ntbs_service.Pages_Notifications
 {
@@ -25,6 +26,29 @@ namespace ntbs_service.Pages_Notifications
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+
+        protected async Task SetNotificationAndAuthorize(int notificationId)
+        {
+            if (HttpContext.Request.Path.Value.Contains("ClinicalDetails"))
+            {
+                Notification = await service.GetNotificationWithNotificationSitesAsync(notificationId);
+            }
+            else
+            {
+                Notification = await service.GetNotificationAsync(notificationId);
+            }
+
+            if (Notification == null)
+            {
+                throw new NotFoundException();
+            }
+
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                throw new NotAuthorizedException();
+            }
+        }
 
         /*
         Post method accepts name of action specified by button clicked.
