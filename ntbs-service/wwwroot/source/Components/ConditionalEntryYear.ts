@@ -24,7 +24,7 @@ const ConditionalEntryYear = Vue.extend({
             this.hideOrShowControlBasedOnValue(inputValue);
         },
         hideOrShowControlBasedOnValue: function (value: String) {
-            if (!value || this.$props.domesticOrUnknownValues.includes(value)) {
+            if (!value || this.$props.domesticOrUnknownValues.indexOf(value) !== -1) {
                 this.$refs["year-of-entry-conditional"].classList.add("hidden");
             } else {
                 this.$refs["year-of-entry-conditional"].classList.remove("hidden");
@@ -37,7 +37,7 @@ const ConditionalEntryYear = Vue.extend({
             // If countryId not populated or domestic/unknown then no point continuing as
             // conditional control should not be visible.
             const countryId = this.getCountryIdFromChild();
-            if (!countryId || this.$props.domesticOrUnknownValues.includes(countryId))
+            if (!countryId || this.$props.domesticOrUnknownValues.indexOf(countryId) !== -1)
                 return;
 
             const requestConfig = {
