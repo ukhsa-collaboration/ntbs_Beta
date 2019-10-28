@@ -10,6 +10,7 @@ namespace ntbs_service.Models
     public class ClinicalDetails : ModelBase
     {
         public bool? IsSymptomatic { get; set; }
+         
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
 

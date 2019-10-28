@@ -138,6 +138,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void UpdateFlags()
         {
+            if (ClinicalDetails.IsSymptomatic == false)
+            {
+                ClinicalDetails.SymptomStartDate = null;
+                FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.SymptomStartDate");
+            }
+
             if (ClinicalDetails.DidNotStartTreatment == true)
             {
                 ClinicalDetails.TreatmentStartDate = null;

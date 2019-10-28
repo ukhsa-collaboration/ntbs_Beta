@@ -287,7 +287,7 @@
                     <nhs-fieldset aria-describedby="presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to any health service</nhs-fieldset-legend>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.FirstPresentationDate" 
-                            id="presentation-error" has-error="@hasPresentationAnyHealthServiceError"></span>
+                            id="first-presentation-error" has-error="@hasPresentationAnyHealthServiceError"></span>
                         <nhs-date-input id="presentation-to-any-health-service">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
@@ -325,7 +325,7 @@
                     <nhs-fieldset aria-describedby="presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to TB service</nhs-fieldset-legend>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TBServicePresentationDate" 
-                            id="presentation-error" has-error="@hasPresentationTBServiceError"></span>
+                            id="tb-service-presentation-error" has-error="@hasPresentationTBServiceError"></span>
                         <nhs-date-input id="presentation-to-TB-service">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard">
