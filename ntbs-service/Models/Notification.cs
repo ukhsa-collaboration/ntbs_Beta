@@ -115,6 +115,7 @@ namespace ntbs_service.Models
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
         public string DenotifyPath => GetNotificationPath("Denotify");
+        public string DeletePath => GetNotificationPath("Delete");
 
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string PHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
