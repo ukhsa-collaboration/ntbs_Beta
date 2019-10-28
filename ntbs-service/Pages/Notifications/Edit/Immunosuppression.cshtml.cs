@@ -35,15 +35,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return false;
+                await service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
             }
-
-            await service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
-            return true;
         }
 
         public IActionResult OnGetValidate(

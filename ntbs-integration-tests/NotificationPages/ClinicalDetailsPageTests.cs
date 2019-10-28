@@ -119,6 +119,33 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostNotified_ReturnsPageWithDiagnosisDateRequiredError_IfDiagnosisDateNotSet()
+        {
+            // Arrange
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var document = await GetDocumentAsync(initialPage);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                // There is an enum conversion error when not sending any value for notificationSiteMap, so use false
+                ["NotificationSiteMap[OTHER]"] = "false",
+                ["FormattedDiagnosisDate.Day"] = "",
+                ["FormattedDiagnosisDate.Month"] = "",
+                ["FormattedDiagnosisDate.Year"] = ""
+            };
+
+            // Act
+            var result = await SendPostFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            Assert.Equal(FullErrorMessage(ValidationMessages.DiagnosisDateIsRequired), resultDocument.GetError("diagnosis"));
+        }
+
+        [Fact]
         public async Task Post_RedirectsToNextPageAndSavesContent_IfModelValid()
         {
             // Arrange

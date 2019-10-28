@@ -67,18 +67,15 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave() 
+        protected override async Task ValidateAndSave() 
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
             validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
 
-            if (!TryValidateModel(Episode, Episode.GetType().Name))
+            if (TryValidateModel(Episode, Episode.GetType().Name))
             {
-                return false;
+                await service.UpdateEpisodeAsync(Notification, Episode);
             }
-
-            await service.UpdateEpisodeAsync(Notification, Episode);
-            return true;
         }
 
         public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)

@@ -31,15 +31,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./SocialRiskFactors", new {id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave() {
+        protected override async Task ValidateAndSave() {
             ContactTracing.SetFullValidation(Notification.NotificationStatus);
-            if (!TryValidateModel(this))
+            if (TryValidateModel(ContactTracing, ContactTracing.GetType().Name))
             {
-                return false;
+                await service.UpdateContactTracingAsync(Notification, ContactTracing);
             }
-
-            await service.UpdateContactTracingAsync(Notification, ContactTracing);
-            return true;
         }
 
         public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)

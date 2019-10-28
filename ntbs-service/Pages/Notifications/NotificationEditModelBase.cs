@@ -83,8 +83,8 @@ namespace ntbs_service.Pages_Notifications
         public async Task<IActionResult> Submit()
         {
             // First Validate and Save current page details
-            bool isValid = await ValidateAndSave();
-            if (!isValid) 
+            await ValidateAndSave();
+            if (!ModelState.IsValid) 
             {
                 return await OnGetAsync(NotificationId);
             }
@@ -121,9 +121,9 @@ namespace ntbs_service.Pages_Notifications
         public async Task<IActionResult> Save(bool isBeingSubmitted)
         {           
             Notification.SetFullValidation(Notification.NotificationStatus);
-            bool isValid = await ValidateAndSave();
+            await ValidateAndSave();
 
-            if (!isValid) 
+            if (!ModelState.IsValid) 
             {
                 return await OnGetAsync(NotificationId);
             }
@@ -155,8 +155,8 @@ namespace ntbs_service.Pages_Notifications
             return validationService.IsValid(key);
         }
 
+        protected abstract Task ValidateAndSave();
         protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
-        protected abstract Task<bool> ValidateAndSave();
         protected abstract IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted);
     }
 }

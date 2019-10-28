@@ -64,7 +64,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             await service.UpdatePatientFlags(Patient);
             // Remove already invalidated states from modelState as rely
@@ -75,15 +75,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
+            
             validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-
-            if (!TryValidateModel(Patient, "Patient"))
+            
+            if (TryValidateModel(Patient, "Patient"))
             {
-                return false;
+                await service.UpdatePatientAsync(Notification, Patient);
             }
-
-            await service.UpdatePatientAsync(Notification, Patient);
-            return true;
         }
 
         private async Task FindAndSetPostcodeAsync()
