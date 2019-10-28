@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -36,22 +35,20 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
+        public ClinicalDetailsModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationWithNotificationSitesAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             ClinicalDetails = Notification.ClinicalDetails;
-            await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            await SetNotificationProperties(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
             notificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
@@ -80,6 +77,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             return Page();
+        }
+
+        protected override async Task<Notification> GetNotification(int notificationId)
+        {
+            return await service.GetNotificationWithNotificationSitesAsync(notificationId);
         }
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)

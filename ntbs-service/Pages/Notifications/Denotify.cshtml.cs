@@ -18,7 +18,7 @@ namespace ntbs_service.Pages.Notifications
         [BindProperty]
         public FormattedDate FormattedDenotificationDate { get; set; }
 
-        public DenotifyModel(INotificationService service) : base(service)
+        public DenotifyModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
         {
             ValidationService = new ValidationService(this);
 
@@ -42,13 +42,17 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToPage("./Overview", new {id});
+            }
+
             NotificationId = Notification.NotificationId;
             if (Notification.NotificationStatus != NotificationStatus.Notified)
             {
                 return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
             }
-
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             await GetLinkedNotifications();
 
@@ -58,6 +62,11 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await service.GetNotificationAsync(NotificationId);
+            if (!(await authorizationService.CanEdit(User, Notification)))
+            {
+                return ForbiddenResult();
+            }
+
             DenotificationDetails.DateOfNotification = Notification.NotificationDate;
             ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
             if (!ModelState.IsValid)

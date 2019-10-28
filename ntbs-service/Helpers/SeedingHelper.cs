@@ -13,25 +13,6 @@ namespace ntbs_service.Helpers
         private static string GetFullFilePath(string relativePathToFile) 
             => Path.Combine(Environment.CurrentDirectory, relativePathToFile);
 
-        private static CsvReader GetInitialisedCsvReader(CsvReader csvReader) {
-            csvReader.Configuration.Delimiter = ",";
-            csvReader.Configuration.HasHeaderRecord = true;
-            csvReader.Configuration.HeaderValidated = null;
-            csvReader.Configuration.MissingFieldFound = null;
-
-            return csvReader;
-        }
-
-        public static List<T> GetRecordsFromCSV<T>(string relativePathToFile)
-        {
-            var filePath = Path.Combine(Environment.CurrentDirectory, relativePathToFile);
-            
-            using (StreamReader reader = new StreamReader(filePath)) 
-            using (CsvReader csvReader = GetInitialisedCsvReader(new CsvReader(reader))) {
-                return csvReader.GetRecords<T>().ToList();
-            }           
-        }
-
         // Data seeding does not work with Entities that have Navigation (foreign key)
         // Therefore manual mapping is required
         public static List<object> GetRecordsFromCSV(string relativePathToFile, Func<CsvReader,object> getRecord) {
@@ -64,9 +45,20 @@ namespace ntbs_service.Helpers
             );
         }
 
-        public static List<object> GetLAtoPHEC(string relativePathToFile)
+        public static List<object> GetTBServices(string relativePathToFile)
         {
             return GetRecordsFromCSV(relativePathToFile, 
+                (CsvReader csvReader) => new TBService {
+                    Code = csvReader.GetField("Code"),
+                    Name = csvReader.GetField("Name"),
+                    PHECCode = csvReader.GetField("PHEC_Code")
+                }
+            );
+        }
+
+        public static List<object> GetLAtoPHEC(string relativePathToFile)
+        {
+            return GetRecordsFromCSV(relativePathToFile,
                 (CsvReader csvReader) => new LocalAuthorityToPHEC {
                     PHECCode = csvReader.GetField("PHEC_Code"),
                     LocalAuthorityCode = csvReader.GetField("LA_Code")
@@ -90,7 +82,8 @@ namespace ntbs_service.Helpers
             return GetRecordsFromCSV(relativePathToFile, 
                 (CsvReader csvReader) => new PHEC {
                     Name = csvReader.GetField("PHEC_Name"),
-                    Code = csvReader.GetField("PHEC_Code")
+                    Code = csvReader.GetField("PHEC_Code"),
+                    AdGroup = csvReader.GetField("Ad_Group")
                 }
             );
         }

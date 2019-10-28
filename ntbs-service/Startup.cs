@@ -105,6 +105,7 @@ namespace ntbs_service
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostcodeService, PostcodeService>();
+            services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }

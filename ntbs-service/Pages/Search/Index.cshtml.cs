@@ -10,14 +10,16 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages_Search
 {
     public class IndexModel : PageModel
     {
         public ValidationService validationService;
-        public INotificationService notificationService;
-        public ISearchService searchService;
+        private readonly INotificationService notificationService;
+        private readonly ISearchService searchService;
+        private readonly IAuthorizationService authorizationService;
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
@@ -32,8 +34,9 @@ namespace ntbs_service.Pages_Search
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
 
-        public IndexModel(INotificationService notificationService, ISearchService searchService, NtbsContext context)
+        public IndexModel(INotificationService notificationService, ISearchService searchService, IAuthorizationService authorizationService, NtbsContext context)
         {
+            this.authorizationService = authorizationService;
             this.searchService = searchService;
             this.notificationService = notificationService;
             validationService = new ValidationService(this);
@@ -48,16 +51,16 @@ namespace ntbs_service.Pages_Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
-            if(!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            PaginationParameters = new PaginationParameters() {PageSize = 50, PageIndex = pageIndex ?? 1};
+            PaginationParameters = new PaginationParameters() { PageSize = 50, PageIndex = pageIndex ?? 1 };
 
 
-            var draftStatusList = new List<NotificationStatus>() {NotificationStatus.Draft};
-            var nonDraftStatusList = new List<NotificationStatus>() {NotificationStatus.Notified, NotificationStatus.Denotified};
+            var draftStatusList = new List<NotificationStatus>() { NotificationStatus.Draft };
+            var nonDraftStatusList = new List<NotificationStatus>() { NotificationStatus.Notified, NotificationStatus.Denotified };
             IQueryable<Notification> draftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(draftStatusList);
             IQueryable<Notification> nonDraftsQueryable = notificationService.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
 
@@ -91,10 +94,10 @@ namespace ntbs_service.Pages_Search
             var notificationIdsAndCount = await searchService.OrderAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
             var orderedNotificationIds = notificationIdsAndCount.notificationIds;
             var count = notificationIdsAndCount.count;
-            
-            IEnumerable<Notification> notifications = await notificationService.GetNotificationsByIdAsync(orderedNotificationIds);
+
+            var notifications = await notificationService.GetNotificationsByIdAsync(orderedNotificationIds);
             var orderedNotifications = notifications.OrderBy(d => orderedNotificationIds.IndexOf(d.NotificationId)).ToList();
-            var notificationBannerModels = orderedNotifications.Select(NotificationBannerModel.WithLink);
+            var notificationBannerModels = orderedNotifications.CreateNotificationBanners(User, authorizationService);
             SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, count, PaginationParameters);
 
             SetPaginationDetails();

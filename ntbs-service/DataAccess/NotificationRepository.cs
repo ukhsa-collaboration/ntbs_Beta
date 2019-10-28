@@ -10,11 +10,9 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        IQueryable<Notification> GetBaseNotificationIQueryable();
         IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
-        Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices);
-        Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices);
-        Task<IList<Notification>> GetNotificationsWithPatientsAsync();
+        Task<IEnumerable<Notification>> GetRecentNotificationsAsync();
+        Task<IEnumerable<Notification>> GetDraftNotificationsAsync();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? NotificationId);
         Task UpdateNotificationAsync(Notification Notification);
@@ -33,40 +31,18 @@ namespace ntbs_service.DataAccess
             this.context = context;
         }
 
-        public async Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices)
+        public async Task<IEnumerable<Notification>> GetRecentNotificationsAsync()
         {
-            var serviceNames = TBServices.Select(tbs => tbs.Name);
-            return await context.Notification
-                .Include(n => n.Episode).ThenInclude(p => p.TBService)
-                .Where(n => serviceNames.Contains(n.Episode.TBService.Name))
+            return await GetBaseNotificationIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .OrderByDescending(n => n.SubmissionDate)
-                .Take(10)
-                .ToListAsync();
+                .OrderByDescending(n => n.SubmissionDate).ToListAsync();
         }
 
-        public async Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices)
+        public async Task<IEnumerable<Notification>> GetDraftNotificationsAsync()
         {
-            var serviceNames = TBServices.Select(tbs => tbs.Name);
-            return await context.Notification
-                .Include(n => n.Episode).ThenInclude(p => p.TBService)
-                .Where(n => serviceNames.Contains(n.Episode.TBService.Name))
+            return await GetBaseNotificationIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .OrderByDescending(n => n.CreationDate)
-                .ToListAsync();
-        }
-        
-        public async Task<IList<Notification>> GetNotificationsWithPatientsAsync()
-        {
-            // This is to ensure all the relationships on patients are eagerly fetched
-            // We are attempting to load these relationships lazily, but this does not currently seem to work -
-            // Country, Sex and Ethnicity are always null. Might be related to PatientDetails being Owned?
-            return await context.Notification
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
-                .OrderByDescending(notification => notification.NotificationId)
-                .ToListAsync();
+                .OrderByDescending(n => n.SubmissionDate).ToListAsync();
         }
 
         public async Task UpdateNotificationAsync(Notification Notification) 
@@ -128,13 +104,6 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(n => n.NotificationId == NotificationId);
         }
 
-        public IQueryable<Notification> GetBaseNotificationIQueryable() {
-            return context.Notification
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Sex)
-                .Include(n => n.PatientDetails).ThenInclude(p => p.Country)
-                .Include(n => n.Episode).ThenInclude(p => p.TBService);
-        }
-
         public IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses) {
             return GetBaseNotificationIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
         }
@@ -144,6 +113,21 @@ namespace ntbs_service.DataAccess
             return await GetBaseNotificationIQueryable()
                         .Where(n => ids.Contains(n.NotificationId))
                         .ToListAsync();
+        }
+
+        private IQueryable<Notification> GetBaseNotificationIQueryable()
+        {
+            return context.Notification
+                .Include(n => n.PatientDetails)
+                    .ThenInclude(p => p.Sex)
+                .Include(n => n.PatientDetails)
+                    .ThenInclude(p => p.Country)
+                .Include(n => n.PatientDetails)
+                    .ThenInclude(p => p.PostcodeLookup)
+                        .ThenInclude(pc => pc.LocalAuthority)
+                            .ThenInclude(la => la.LocalAuthorityToPHEC)
+                .Include(n => n.Episode)
+                    .ThenInclude(p => p.TBService);
         }
     }
 }
