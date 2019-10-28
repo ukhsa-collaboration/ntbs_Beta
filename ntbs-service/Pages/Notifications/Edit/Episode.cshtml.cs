@@ -50,9 +50,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Episode = Notification.Episode;
             await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
             
-            FormattedNotificationDate = Notification.NotificationDate == null 
-                ? FormattedDate.Today() 
-                : Notification.NotificationDate.ConvertToFormattedDate();
+            FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
             if (Episode.ShouldValidateFull)
             {
@@ -81,7 +79,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (!TryValidateModel(Episode, Episode.GetType().Name))
             {
-                // Detach notification to avoid getting cached notification when retrieving from context
+                // Detach notification to avoid getting cached notification when retrieving from context,
+                // because cached notification date will change notification date on a banner even when invalid
                 context.Entry(Notification).State = EntityState.Detached;
                 return false;
             }

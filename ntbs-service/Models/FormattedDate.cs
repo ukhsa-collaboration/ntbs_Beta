@@ -20,17 +20,6 @@ namespace ntbs_service.Models
             return string.IsNullOrEmpty(Year) || string.IsNullOrEmpty(Month) || string.IsNullOrEmpty(Day);
         }
 
-        public static FormattedDate Today()
-        {
-            var now = DateTime.Now;
-            return new FormattedDate()
-            {
-                Day = now.Day.ToString(),
-                Month = now.Month.ToString(),
-                Year = now.Year.ToString()
-            };
-        }
-
         public bool TryConvertToDateTime(out DateTime? dateTime)
         {
             dateTime = null;
