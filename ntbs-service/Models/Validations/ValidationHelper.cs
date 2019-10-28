@@ -42,7 +42,6 @@ namespace ntbs_service.Models.Validations
         public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
         public const string PostcodeIsRequired = "Postcode is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
-        public const string YearOfUkEntryNotNeededIfDomesticOrUnknown = "Year of entry to the uk is not required if birth country is the uk or unknown";
         public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the uk must be after patient's date of birth.";
         public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the uk must be no later than this year.";
         #endregion

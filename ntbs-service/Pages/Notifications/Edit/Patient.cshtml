@@ -206,7 +206,7 @@
                         <label nhs-label-type="Standard" asp-for="Patient.CountryId">
                             Birth country (required)
                         </label>
-                        <span class="nhsuk-error-message" id="birth-country-error"
+                        <span nhs-span-type="ErrorMessage" id="birth-country-error"
                               ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
                         <select ref="selectField" v-on:change="validate" nhs-select-type="@countrySelectErrorState"
                                 asp-for="Patient.CountryId" asp-items="Model.Countries"
