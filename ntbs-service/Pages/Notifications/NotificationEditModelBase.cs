@@ -156,7 +156,6 @@ namespace ntbs_service.Pages_Notifications
         }
 
         protected abstract Task ValidateAndSave();
-        public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
         protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
         protected abstract IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted);
     }
