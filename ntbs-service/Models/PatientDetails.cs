@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +51,16 @@ namespace ntbs_service.Models
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.BirthCountryIsRequired)]
         public int? CountryId { get; set;}
         public virtual Country Country { get; set; }
+
+        [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYearRange)]
+        [AssertThat("ForeignBorn == true", ErrorMessage = ValidationMessages.YearOfUkEntryNotNeededIfDomesticOrUnknown)]
+        [AssertThat("UkEntryAfterBirth == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustBeAfterDob)]
+        [AssertThat("UkEntryNotInFuture == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
+        public int? YearOfUkEntry { get; set; }
+
+        public bool ForeignBorn => UkBorn == false;
+        public bool UkEntryAfterBirth => !Dob.HasValue || YearOfUkEntry >= Dob.Value.Year;
+        public bool UkEntryNotInFuture => YearOfUkEntry <= DateTime.Now.Year;
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.EthnicGroupIsRequired)]
         public int? EthnicityId { get; set; }
