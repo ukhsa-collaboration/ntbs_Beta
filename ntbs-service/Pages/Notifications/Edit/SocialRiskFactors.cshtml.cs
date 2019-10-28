@@ -32,16 +32,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave() 
+        protected override async Task ValidateAndSave() 
         {
             SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);   
-            if (!TryValidateModel(SocialRiskFactors))
+            if (TryValidateModel(SocialRiskFactors))
             {
-                return false;
+                await service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
             }
-
-            await service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
-            return true;
         }
 
         protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)

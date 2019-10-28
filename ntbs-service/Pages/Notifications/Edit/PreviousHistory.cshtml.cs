@@ -40,18 +40,15 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             UpdateFlags();
-            
             PatientTBHistory.SetFullValidation(Notification.NotificationStatus);
-            if (!TryValidateModel(this))
-            {
-                return false;
-            }
 
-            await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
-            return true;
+            if (TryValidateModel(PatientTBHistory.GetType().Name))
+            {
+                await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
+            }
         }
 
         private void UpdateFlags()

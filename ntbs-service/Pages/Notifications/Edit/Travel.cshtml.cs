@@ -55,23 +55,20 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./Comorbidities", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             TravelDetails.SetFullValidation(Notification.NotificationStatus);
             VisitorDetails.SetFullValidation(Notification.NotificationStatus);
 
             CleanModel();
 
-            var isValid = TryValidateModel(TravelDetails, TravelDetails.GetType().Name);
-            // Validate notification with sites regardless previous validation result
-            isValid = TryValidateModel(VisitorDetails, VisitorDetails.GetType().Name) && isValid;
+            TryValidateModel(TravelDetails, TravelDetails.GetType().Name);
+            TryValidateModel(VisitorDetails, VisitorDetails.GetType().Name);
             
-            if (isValid)
+            if (ModelState.IsValid)
             {
                 await service.UpdateTravelAndVisitorAsync(Notification, TravelDetails, VisitorDetails);
             }
-
-            return isValid;
         }
 
         private void CleanModel()

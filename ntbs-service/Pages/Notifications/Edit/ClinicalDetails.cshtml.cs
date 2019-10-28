@@ -94,7 +94,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             UpdateFlags();
 
@@ -134,8 +134,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
-
-            return ModelState.IsValid;
         }
 
         private void UpdateFlags()
