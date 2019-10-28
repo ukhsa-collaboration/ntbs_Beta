@@ -1,3 +1,4 @@
+@model OverviewModel
 @{
     var notificationId = ViewData["NotificationId"];
 }
@@ -38,7 +39,13 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Address </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height">
+                @foreach (var line in Model.Notification.FormattedAddress)
+                {
+                    @line
+                    <br />
+                }
+            </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Postcode </div>
@@ -58,16 +65,13 @@
             <div class="notification-details-label"> Country of birth </div>
             <div class="cell-min-height"> @Model.Notification.CountryName </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Year of first entry to UK </div>
-            <div class="cell-min-height">
-                @foreach (var line in Model.Notification.FormattedAddress)
-                {
-                    @line
-                    <br />
-                }
-            </div>
-        </nhs-grid-column>
+        @if (Model.Notification.PatientDetails.UkBorn == false)
+        {
+            <nhs-grid-column grid-column-width="OneThird">
+                <div class="notification-details-label"> Year of first entry to UK </div>
+                <div class="cell-min-height"> @Model.Notification.PatientDetails?.YearOfUkEntry </div>
+            </nhs-grid-column>
+        }
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
@@ -90,7 +94,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Local Patient ID </div>
-            <div class="cell-min-height"> @Model.Notification.PatientDetails.LocalPatientId </div>
+            <div class="cell-min-height"> @Model.Notification.PatientDetails?.LocalPatientId </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>

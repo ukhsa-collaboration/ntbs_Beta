@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace ntbs_service.Models.Validations
 {
@@ -27,6 +27,7 @@ namespace ntbs_service.Models.Validations
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";            
         public const string SupplyAParameter = "Please supply at least one of these parameters";
+        public const string ValidYearRange = "Year must be provided between {1} and {2}";
         #endregion
 
         #region Patient Details
@@ -41,6 +42,9 @@ namespace ntbs_service.Models.Validations
         public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
         public const string PostcodeIsRequired = "Postcode is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
+        public const string YearOfUkEntryNotNeededIfDomesticOrUnknown = "Year of entry to the uk is not required if birth country is the uk or unknown";
+        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the uk must be after patient's date of birth.";
+        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the uk must be no later than this year.";
         #endregion
 
         #region Clinical Details

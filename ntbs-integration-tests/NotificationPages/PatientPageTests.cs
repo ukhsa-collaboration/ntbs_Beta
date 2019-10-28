@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
@@ -13,7 +13,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string PageRoute => Routes.Patient;
 
-        public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task PostDraft_ReturnsPageWithModelErrors_IfModelNotValid()
@@ -47,6 +47,31 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.GetError("nhs-number"));
             Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("address"));
             Assert.Equal(FullErrorMessage(ValidationMessages.InvalidCharacter), resultDocument.GetError("local-patient-id"));
+        }
+
+        [Fact]
+        public async Task PostDraft_ReturnsPageWithModelErrors_IfYearOfUkEntryBeforeDob()
+        {
+            // Arrange
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var pageContent = await GetDocumentAsync(initialPage);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["FormattedDob.Day"] = "31",
+                ["FormattedDob.Month"] = "12",
+                ["FormattedDob.Year"] = "2000",
+                ["Patient.CountryId"] = "1",
+                ["Patient.YearOfUkEntry"] = "1999"
+            };
+
+            // Act
+            var result = await SendPostFormWithData(pageContent, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            Assert.Equal(FullErrorMessage(ValidationMessages.YearOfUkEntryMustBeAfterDob), resultDocument.GetError("year-of-entry"));
         }
 
         [Fact]
@@ -197,6 +222,39 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
+        }
+
+        [Theory]
+        [InlineData("2100", ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
+        [InlineData("2010", "")]
+        public async Task Validate_EntryToUkYear_ReturnsExpectedResult(string year, string validationResult)
+        {
+            // Arrange
+            var formData = new Dictionary<string, string> { [""] = year };
+
+            // Act
+            var response = await client.GetAsync(BuildValidationPath(formData, "ValidateYearOfUkEntry"));
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Equal(validationResult, result);
+        }
+
+        [Theory]
+        [InlineData("1899")]
+        [InlineData("2101")]
+        public async Task Validate_EntryToUkYear_ReturnsExpectedResultForRange(string year)
+        {
+            // Arrange
+            var expectedValidationResult = string.Format(ValidationMessages.ValidYearRange, null, 1900, 2100);
+            var formData = new Dictionary<string, string> { [""] = year };
+
+            // Act
+            var response = await client.GetAsync(BuildValidationPath(formData, "ValidateYearOfUkEntry"));
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Equal(expectedValidationResult, result);
         }
     }
 }
