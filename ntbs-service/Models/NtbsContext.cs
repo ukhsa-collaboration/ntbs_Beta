@@ -34,6 +34,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
+        public virtual DbSet<PHEC> PHEC { get; set; }
 
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
 
@@ -139,14 +140,16 @@ namespace ntbs_service.Models
                 entity.HasKey(e => e.Code);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 /*
-                    TB services have TB service AD groups associated with them in a 1-1
-                    mapping and PHEC AD groups associated with them in a many-1 mapping.
+                    TB services have TB service AD group associated with them in a 1-1
+                    mapping. PHEC AD groups are defined on the PHEC model itself, which has a many-to-one mapping to TB Service through TBServiceToPHEC.
                     AD groups have a length limit if 64 characters, see
                     https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc756101(v=ws.10)?redirectedfrom=MSDN#fqdn-length-limitations
                  */
-                entity.Property(e => e.PHECAdGroup).HasMaxLength(64);
                 entity.Property(e => e.ServiceAdGroup).HasMaxLength(64);
                 entity.HasIndex(e => e.ServiceAdGroup).IsUnique();
+                entity.HasOne(e => e.PHEC)
+                    .WithMany()
+                    .HasForeignKey(tb => tb.PHECCode);
                 entity.HasData(GetTBServicesList());
             });
 
@@ -364,9 +367,9 @@ namespace ntbs_service.Models
             );
         }
 
-        private List<TBService> GetTBServicesList()
+        private List<object> GetTBServicesList()
         {
-            return SeedingHelper.GetRecordsFromCSV<TBService>("Models/SeedData/tbservices.csv");
+            return SeedingHelper.GetTBServices("Models/SeedData/tbservices.csv");
         }
 
         private List<object> GetPHECtoLA()

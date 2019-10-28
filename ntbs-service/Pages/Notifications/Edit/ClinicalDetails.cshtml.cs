@@ -29,28 +29,27 @@ namespace ntbs_service.Pages.Notifications.Edit
         public int? PatientBirthYear { get; set; }
 
         public FormattedDate FormattedSymptomDate { get; set; }
-        public FormattedDate FormattedPresentationDate { get; set; }
+        public FormattedDate FormattedFirstPresentationDate { get; set; }
+        public FormattedDate FormattedTBServicePresentationDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
+        public ClinicalDetailsModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationWithNotificationSitesAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             ClinicalDetails = Notification.ClinicalDetails;
-            await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            await SetNotificationProperties(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
             notificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
@@ -66,7 +65,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             PatientBirthYear = Notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
-            FormattedPresentationDate = ClinicalDetails.PresentationDate.ConvertToFormattedDate();
+            FormattedFirstPresentationDate = ClinicalDetails.FirstPresentationDate.ConvertToFormattedDate();
+            FormattedTBServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
@@ -78,6 +78,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             return Page();
+        }
+
+        protected override async Task<Notification> GetNotification(int notificationId)
+        {
+            return await service.GetNotificationWithNotificationSitesAsync(notificationId);
         }
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)
@@ -99,7 +104,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             UpdateFlags();
 
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TBServicePresentationDate), FormattedTBServicePresentationDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
@@ -138,6 +144,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void UpdateFlags()
         {
+            if (ClinicalDetails.IsSymptomatic == false)
+            {
+                ClinicalDetails.SymptomStartDate = null;
+                FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.SymptomStartDate");
+            }
+
             if (ClinicalDetails.DidNotStartTreatment == true)
             {
                 ClinicalDetails.TreatmentStartDate = null;

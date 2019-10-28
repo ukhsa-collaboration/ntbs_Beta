@@ -9,22 +9,20 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class PreviousHistoryModel : NotificationEditModelBase
     {
 
-        public PreviousHistoryModel(INotificationService service) : base(service) {}
+        public PreviousHistoryModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             PatientTBHistory = Notification.PatientTBHistory;
-            await SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+            await SetNotificationProperties(isBeingSubmitted, PatientTBHistory);
 
             if (PatientTBHistory.ShouldValidateFull)
             {

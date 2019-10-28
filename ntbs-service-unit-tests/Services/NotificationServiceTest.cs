@@ -14,13 +14,15 @@ namespace ntbs_service_unit_tests.Services
     {
         private readonly INotificationService service;
         private readonly Mock<INotificationRepository> mockRepository;
+        private readonly Mock<IUserService> mockUserService;
         private readonly Mock<NtbsContext> mockContext;
 
         public NotificationServiceTest()
         {
             mockRepository = new Mock<INotificationRepository>();
+            mockUserService = new Mock<IUserService>();
             mockContext = new Mock<NtbsContext>();
-            service = new NotificationService(mockRepository.Object, mockContext.Object);
+            service = new NotificationService(mockRepository.Object, mockUserService.Object, mockContext.Object);
         }
 
         [Fact]

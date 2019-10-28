@@ -23,11 +23,12 @@ namespace ntbs_service.Models
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
         public bool ShowLink = false;
+        public bool FullAccess;
         public string RedirectPath;
 
-        public NotificationBannerModel(Notification notification) {
+        public NotificationBannerModel(Notification notification, bool fullAccess = true, bool showLink = false) {
             NotificationId = notification.NotificationId;
-            if (notification.NotificationStatus == Enums.NotificationStatus.Draft) {
+            if (notification.NotificationStatus == NotificationStatus.Draft) {
                 SortByDate = notification.FormattedCreationDate;
             } else {
                 SortByDate = notification.FormattedSubmissionDate;
@@ -45,14 +46,9 @@ namespace ntbs_service.Models
             NotificationDate = notification.FormattedNotificationDate;
             // TODO most likely need an enum for the different origins of notifications
             Origin = "ntbs";
+            ShowLink = showLink;
+            FullAccess = fullAccess;
             RedirectPath = notification.OverviewPath;
-        }
-
-        public static NotificationBannerModel WithLink(Notification notification) {
-            return new NotificationBannerModel(notification)
-            {
-                ShowLink = true
-            };
         }
     }
 }

@@ -10,18 +10,16 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         [BindProperty]
         public ComorbidityDetails ComorbidityDetails { get; set; }
-        public ComorbiditiesModel(INotificationService service) : base(service) { }
+        public ComorbiditiesModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             ComorbidityDetails = Notification.ComorbidityDetails;
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             await SetNotificationProperties(isBeingSubmitted, ComorbidityDetails);
             if (ComorbidityDetails.ShouldValidateFull)

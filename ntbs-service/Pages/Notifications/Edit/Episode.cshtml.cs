@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
@@ -22,7 +22,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
+        public EpisodeModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
             
@@ -37,15 +37,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             Episode = Notification.Episode;
-            await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
+            await SetNotificationProperties(isBeingSubmitted, Episode);
 
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 

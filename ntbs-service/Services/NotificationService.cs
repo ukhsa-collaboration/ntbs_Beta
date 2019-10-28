@@ -6,16 +6,14 @@ using ntbs_service.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ntbs_service.Services
 {
     public interface INotificationService
     {
-        IQueryable<Notification> GetBaseNotificationIQueryable();
         IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
-        Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices);
-        Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices);
         Task<Notification> GetNotificationAsync(int? id);
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? id);
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
@@ -33,35 +31,22 @@ namespace ntbs_service.Services
         Task UpdatePatientTBHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
-        Task<Notification> CreateLinkedNotificationAsync(Notification notification);
+        Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
         Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails);
+        Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
     }
 
     public class NotificationService : INotificationService
     {
         private readonly INotificationRepository repository;
+        private readonly IUserService userService;
         private readonly NtbsContext context;
 
-        public NotificationService(INotificationRepository repository, NtbsContext context)
-        {
+        public NotificationService(INotificationRepository repository, IUserService userService, NtbsContext context) {
             this.repository = repository;
+            this.userService = userService;
             this.context = context;
-        }
-
-        public IQueryable<Notification> GetBaseNotificationIQueryable()
-        {
-            return repository.GetBaseNotificationIQueryable();
-        }
-
-        public async Task<IList<Notification>> GetRecentNotificationsAsync(IEnumerable<TBService> TBServices)
-        {
-            return await repository.GetRecentNotificationsAsync(TBServices);
-        }
-
-        public async Task<IList<Notification>> GetDraftNotificationsAsync(IEnumerable<TBService> TBServices)
-        {
-            return await repository.GetDraftNotificationsAsync(TBServices);
         }
 
         public async Task<Notification> GetNotificationAsync(int? id)
@@ -295,10 +280,10 @@ namespace ntbs_service.Services
             return repository.GetBaseQueryableNotificationByStatus(statuses);
         }
 
-        public async Task<Notification> CreateLinkedNotificationAsync(Notification notification)
+        public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
         {
-            var linkedNotification = new Notification();
-            context.Notification.Add(linkedNotification);
+            var linkedNotification = await CreateNewNotificationForUser(user);
+            context.Attach(linkedNotification);
             context.Entry(linkedNotification.PatientDetails).CurrentValues.SetValues(notification.PatientDetails);
 
             if (notification.GroupId != null)
@@ -317,6 +302,19 @@ namespace ntbs_service.Services
             await context.SaveChangesAsync();
 
             return linkedNotification;
+        }
+
+        public async Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user)
+        {
+            var notification = new Notification
+            {
+                CreationDate = DateTime.Now
+            };
+
+            // We need to set a default value for TBService for users that do not have full permissions
+            notification.Episode.TBService = await userService.GetDefaultTBService(user);
+            await repository.AddNotificationAsync(notification);
+            return notification;
         }
 
         private async Task UpdateDatabase(AuditType auditType = AuditType.Edit)

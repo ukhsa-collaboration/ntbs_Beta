@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
-using ntbs_service.Models.Enums;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -15,17 +11,15 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public SocialRiskFactorsModel(INotificationService service) : base(service) {}
+        public SocialRiskFactorsModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             SocialRiskFactors = Notification.SocialRiskFactors;
             await SetNotificationProperties(isBeingSubmitted, SocialRiskFactors);
 
