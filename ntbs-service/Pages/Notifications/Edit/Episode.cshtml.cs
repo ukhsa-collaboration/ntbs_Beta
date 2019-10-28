@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
@@ -60,7 +60,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public JsonResult OnGetHospitalsByTBService(string tbServiceCode)
         {
-            var tbServices = context.GetHospitalsByTBService(tbServiceCode).Result;
+            var tbServices = context.GetHospitalsByTbService(tbServiceCode).Result;
             return new JsonResult(tbServices);
         }
 

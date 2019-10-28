@@ -530,6 +530,39 @@
                     </nhs-radios>
                 </nhs-fieldset>
             </nhs-form-group>
+
+            <nhs-form-group nhs-form-group-type="Standard">
+                <nhs-fieldset>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Directly observed treatment? (including VOT)</nhs-fieldset-legend>
+                    <nhs-radios nhs-radios-type="Standard">
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsDOT" id="dot-yes" type="radio" value="true" />
+                            <label nhs-label-type="Radios" for="dot-yes">Yes</label>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsDOT" id="dot-no" type="radio" value="false" />
+                            <label nhs-label-type="Radios" for="dot-no">No</label>
+                        </nhs-radios-item>
+                    </nhs-radios>
+                </nhs-fieldset>
+            </nhs-form-group>
+
+            <nhs-form-group nhs-form-group-type="Standard">
+                <nhs-fieldset>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
+                    <nhs-radios nhs-radios-type="Standard">
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsEnhancedCaseManagement" id="enhanced-case-management-yes" type="radio" value="true" />
+                            <label nhs-label-type="Radios" for="enhanced-case-management-yes">Yes</label>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsEnhancedCaseManagement" id="enhanced-case-management-no" type="radio" value="false" />
+                            <label nhs-label-type="Radios" for="enhanced-case-management-no">No</label>
+                        </nhs-radios-item>
+                    </nhs-radios>
+                </nhs-fieldset>
+            </nhs-form-group>
+
             @{ var MDRGroupState = !Model.IsValid("ClinicalDetails.IsMDRTreatment") ? Error : Standard; }
             <nhs-form-group nhs-form-group-type="@MDRGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                 <nhs-fieldset>

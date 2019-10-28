@@ -4,11 +4,15 @@ import axios from "axios";
 
 const ValidateInput = Vue.extend({
     props: ["model", "property", "shouldvalidatefull"],
+    mounted: function() {
+        this.$emit("mounted");
+    },
     methods: {
         validate: function (event: FocusEvent) {
             // Our onBlur validate events happen on input fields
             const inputField = event.target as HTMLInputElement;
             const newValue = inputField.value;
+            this.$emit("validate", event);
 
             let requestConfig = {
                 url: `${getValidationPath(this.$props.model)}Property`,
