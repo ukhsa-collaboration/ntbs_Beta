@@ -29,10 +29,19 @@ namespace ntbs_integration_tests.NotificationPages
                 ["OtherSite.SiteDescription"] = "123",
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "1",
+                ["ClinicalDetails.IsSymptomatic"] = "true",
                 ["FormattedSymptomDate.Day"] = "10",
-                ["FormattedPresentationDate.Day"] = "1",
-                ["FormattedPresentationDate.Month"] = "1",
-                ["FormattedPresentationDate.Year"] = "2000",
+                ["FormattedFirstPresentationDate.Day"] = "1",
+                ["FormattedFirstPresentationDate.Month"] = "1",
+                ["FormattedFirstPresentationDate.Year"] = "2000",
+                ["FormattedTBServicePresentationDate.Day"] = "1",
+                ["FormattedTBServicePresentationDate.Month"] = "1",
+                ["FormattedTBServicePresentationDate.Year"] = "2000",
+                ["FormattedDiagnosisDate.Day"] = "1",
+                ["FormattedDiagnosisDate.Month"] = "1",
+                ["FormattedDiagnosisDate.Year"] = "2000",
+                ["ClinicalDetails.DidNotStartTreatment"] = "false",
+                ["FormattedTreatmentDate.Day"] = "1",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "true",
             };
@@ -48,7 +57,12 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), resultDocument.GetError("bcg-vaccination"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("symptom"));
             Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                resultDocument.GetError("presentation"));
+                resultDocument.GetError("first-presentation"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
+                resultDocument.GetError("tb-service-presentation"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
+                resultDocument.GetError("diagnosis"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("treatment"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("short-course"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("mdr"));
         }
@@ -105,6 +119,33 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task PostNotified_ReturnsPageWithDiagnosisDateRequiredError_IfDiagnosisDateNotSet()
+        {
+            // Arrange
+            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var document = await GetDocumentAsync(initialPage);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                // There is an enum conversion error when not sending any value for notificationSiteMap, so use false
+                ["NotificationSiteMap[OTHER]"] = "false",
+                ["FormattedDiagnosisDate.Day"] = "",
+                ["FormattedDiagnosisDate.Month"] = "",
+                ["FormattedDiagnosisDate.Year"] = ""
+            };
+
+            // Act
+            var result = await SendPostFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            Assert.Equal(FullErrorMessage(ValidationMessages.DiagnosisDateIsRequired), resultDocument.GetError("diagnosis"));
+        }
+
+        [Fact]
         public async Task Post_RedirectsToNextPageAndSavesContent_IfModelValid()
         {
             // Arrange
@@ -120,12 +161,24 @@ namespace ntbs_integration_tests.NotificationPages
                 ["ClinicalDetails.NoSampleTaken"] = "true",
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "2000",
-                ["FormattedPresentationDate.Day"] = "1",
-                ["FormattedPresentationDate.Month"] = "1",
-                ["FormattedPresentationDate.Year"] = "2012",
+                ["ClinicalDetails.IsSymptomatic"] = "true",
+                ["FormattedSymptomDate.Day"] = "1",
+                ["FormattedSymptomDate.Month"] = "1",
+                ["FormattedSymptomDate.Year"] = "2011",
+                ["FormattedFirstPresentationDate.Day"] = "2",
+                ["FormattedFirstPresentationDate.Month"] = "2",
+                ["FormattedFirstPresentationDate.Year"] = "2012",
+                ["FormattedTBServicePresentationDate.Day"] = "3",
+                ["FormattedTBServicePresentationDate.Month"] = "3",
+                ["FormattedTBServicePresentationDate.Year"] = "2013",
+                ["FormattedDiagnosisDate.Day"] = "4",
+                ["FormattedDiagnosisDate.Month"] = "4",
+                ["FormattedDiagnosisDate.Year"] = "2014",
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "false",
+                ["ClinicalDetails.IsDOT"] = "true",
+                ["ClinicalDetails.IsEnhancedCaseManagement"] = "true"
             };
 
             // Act
@@ -143,12 +196,23 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_NoSampleTaken")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("bcg-vaccination-yes")).IsChecked);
             Assert.Equal("2000", ((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
-            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Day")).Value);
-            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Month")).Value);
-            Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedPresentationDate_Year")).Value);
+            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Day")).Value);
+            Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Month")).Value);
+            Assert.Equal("2011", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Year")).Value);
+            Assert.Equal("2", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Day")).Value);
+            Assert.Equal("2", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Month")).Value);
+            Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Year")).Value);
+            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Day")).Value);
+            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Month")).Value);
+            Assert.Equal("2013", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Year")).Value);
+            Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Day")).Value);
+            Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Month")).Value);
+            Assert.Equal("2014", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Year")).Value);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("short-course-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("mdr-no")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("dot-yes")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("enhanced-case-management-yes")).IsChecked);
         }
 
         [Fact]
@@ -172,7 +236,11 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDeathDate.Day"] = "1",
                 ["FormattedDeathDate.Month"] = "1",
                 ["FormattedDeathDate.Year"] = "2012",
-                ["ClinicalDetails.IsPostMortem"] = "false"
+                ["ClinicalDetails.IsPostMortem"] = "false",
+                ["FormattedSymptomDate.Day"] = "10",
+                ["FormattedSymptomDate.Month"] = "10",
+                ["FormattedSymptomDate.Year"] = "2012",
+                ["ClinicalDetails.IsSymptomatic"] = "false"
             };
 
             // Act
@@ -196,6 +264,10 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Day")).Value);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Month")).Value);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Year")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("symptomatic-no")).IsChecked);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Day")).Value);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Month")).Value);
+            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Year")).Value);
         }
 
         [Fact]

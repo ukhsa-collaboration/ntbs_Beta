@@ -9,12 +9,18 @@ namespace ntbs_service.Models
     [Owned]
     public class ClinicalDetails : ModelBase
     {
+        public bool? IsSymptomatic { get; set; }
+         
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
 
         [ValidDate(ValidDates.EarliestClinicalDate)]
-        public DateTime? PresentationDate { get; set; }
+        public DateTime? FirstPresentationDate { get; set; }
+        
+        [ValidDate(ValidDates.EarliestClinicalDate)]
+        public DateTime? TBServicePresentationDate { get; set; }
 
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.DiagnosisDateIsRequired)]
         [ValidDate(ValidDates.EarliestClinicalDate)]
         public DateTime? DiagnosisDate { get; set; }
 
@@ -43,5 +49,7 @@ namespace ntbs_service.Models
         [ValidDate(ValidDates.EarliestClinicalDate)]
 
         public DateTime? MDRTreatmentStartDate { get; set; }
+        public bool? IsDOT { get; set; }
+        public bool? IsEnhancedCaseManagement { get; set; }
     }
 }

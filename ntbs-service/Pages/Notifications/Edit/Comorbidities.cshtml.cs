@@ -10,18 +10,16 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         [BindProperty]
         public ComorbidityDetails ComorbidityDetails { get; set; }
-        public ComorbiditiesModel(INotificationService service) : base(service) { }
+        public ComorbiditiesModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             ComorbidityDetails = Notification.ComorbidityDetails;
-            NotificationBannerModel = new NotificationBannerModel(Notification);
 
             await SetNotificationProperties(isBeingSubmitted, ComorbidityDetails);
             if (ComorbidityDetails.ShouldValidateFull)
@@ -37,16 +35,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./Immunosuppression", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
-            if (!TryValidateModel(this))
+            if (TryValidateModel(ComorbidityDetails, ComorbidityDetails.GetType().Name))
             {
-                return false;
+                await service.UpdateComorbidityAsync(Notification, ComorbidityDetails);
             }
-
-            await service.UpdateComorbidityAsync(Notification, ComorbidityDetails);
-            return true;
         }
     }
 }

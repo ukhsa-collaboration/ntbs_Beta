@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
@@ -29,28 +29,27 @@ namespace ntbs_service.Pages.Notifications.Edit
         public int? PatientBirthYear { get; set; }
 
         public FormattedDate FormattedSymptomDate { get; set; }
-        public FormattedDate FormattedPresentationDate { get; set; }
+        public FormattedDate FormattedFirstPresentationDate { get; set; }
+        public FormattedDate FormattedTBServicePresentationDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMDRTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, NtbsContext context) : base(service)
+        public ClinicalDetailsModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationWithNotificationSitesAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             ClinicalDetails = Notification.ClinicalDetails;
-            await SetNotificationProperties<ClinicalDetails>(isBeingSubmitted, ClinicalDetails);
+            await SetNotificationProperties(isBeingSubmitted, ClinicalDetails);
 
             var notificationSites = Notification.NotificationSites;
             notificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
@@ -66,7 +65,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             PatientBirthYear = Notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
-            FormattedPresentationDate = ClinicalDetails.PresentationDate.ConvertToFormattedDate();
+            FormattedFirstPresentationDate = ClinicalDetails.FirstPresentationDate.ConvertToFormattedDate();
+            FormattedTBServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
@@ -78,6 +78,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             return Page();
+        }
+
+        protected override async Task<Notification> GetNotification(int notificationId)
+        {
+            return await service.GetNotificationWithNotificationSitesAsync(notificationId);
         }
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)
@@ -94,12 +99,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             UpdateFlags();
 
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.PresentationDate), FormattedPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate);
+            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TBServicePresentationDate), FormattedTBServicePresentationDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
             validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
@@ -111,30 +117,40 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             
             var notificationSites = CreateNotificationSitesFromModel(Notification);
+            
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
             OtherSite?.SetFullValidation(Notification.NotificationStatus);
-            // Separate notification with notification sites only is needed to check if notification sites are valid,
-            // and to avoid updating notification site when updating Clinical Details
-            var notificationWithSitesOnly = new Notification {
-                ShouldValidateFull = Notification.ShouldValidateFull,
-                NotificationSites = notificationSites.ToList()
-            };
             
-            var isValid = TryValidateModel(this);
-            // Validate notification with sites regardless previous validation result
-            isValid = TryValidateModel(notificationWithSitesOnly, notificationWithSitesOnly.GetType().Name) && isValid;
+            // Since notification has other properties which are not populated by this page but have validation rules, 
+            // validation of a whole Notification model will result in validation errors.
+            // Therefore we need to manually validate NotificationSites and TryValidate other models
+            if (Notification.ShouldValidateFull && notificationSites.Count() == 0) 
+            {
+                ModelState.AddModelError("Notification.NotificationSites", ValidationMessages.DiseaseSiteIsRequired);
+            }
+            
+            TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
+            if (OtherSite != null) 
+            {
+                TryValidateModel(OtherSite, OtherSite.GetType().Name);
+            }
 
-            if (isValid)
+            if (ModelState.IsValid)
             {
                 await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
-
-            return isValid;
         }
 
         private void UpdateFlags()
         {
+            if (ClinicalDetails.IsSymptomatic == false)
+            {
+                ClinicalDetails.SymptomStartDate = null;
+                FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.SymptomStartDate");
+            }
+
             if (ClinicalDetails.DidNotStartTreatment == true)
             {
                 ClinicalDetails.TreatmentStartDate = null;

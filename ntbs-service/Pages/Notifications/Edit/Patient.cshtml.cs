@@ -18,6 +18,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
         public List<Sex> Sexes { get; set; }
+        public List<string> DomesticOrUnknownCountryIds { get; set; }
 
         [BindProperty]
         public PatientDetails Patient { get; set; }
@@ -25,27 +26,33 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
-        private IPostcodeService PostcodeService { get; set; }
+        private readonly IPostcodeService postcodeService;
 
-        public PatientModel(INotificationService service, IPostcodeService postcodeService, NtbsContext context) : base(service)
+        public PatientModel(INotificationService service, IPostcodeService postcodeService, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
-            PostcodeService = postcodeService;
-            Ethnicities = new SelectList(context.GetAllEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
-            Countries = new SelectList(context.GetAllCountriesAsync().Result, nameof(Country.CountryId), nameof(Country.Name));
+            this.postcodeService = postcodeService;
+            Ethnicities = new SelectList(context.GetAllOrderedEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
+
+            var countries = context.GetAllCountriesAsync().Result;
+            Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
+            DomesticOrUnknownCountryIds = countries
+                .Where(c =>
+                    c.IsoCode == Models.Countries.UkCode
+                    || c.IsoCode == Models.Countries.UnknownCode)
+                .Select(c => c.CountryId.ToString()).ToList();
+
             Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
+        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             Patient = Notification.PatientDetails;
-            await SetNotificationProperties<PatientDetails>(isBeingSubmitted, Patient);
+            await SetNotificationProperties(isBeingSubmitted, Patient);
 
             FormattedDob = Patient.Dob.ConvertToFormattedDate();
 
@@ -57,49 +64,35 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
-            UpdatePatientFlags();
+            await service.UpdatePatientFlags(Patient);
+            // Remove already invalidated states from modelState as rely
+            // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
+            ModelState.ClearValidationState("Patient.NHSNumber");
+            ModelState.ClearValidationState("Patient.YearOfUkEntry");
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
+            
             validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
             
-            if (!TryValidateModel(Patient, "Patient"))
+            if (TryValidateModel(Patient, "Patient"))
             {
-                return false;
+                await service.UpdatePatientAsync(Notification, Patient);
             }
-
-            await service.UpdatePatientAsync(Notification, Patient);
-            return true;
         }
 
         private async Task FindAndSetPostcodeAsync()
         {
-            var foundPostcode = await PostcodeService.FindPostcode(Patient.Postcode);
+            var foundPostcode = await postcodeService.FindPostcode(Patient.Postcode);
             Patient.PostcodeToLookup = foundPostcode?.Postcode;
         }
-        
-        private void UpdatePatientFlags()
-        {
-            if (Patient.NhsNumberNotKnown)
-            {
-                Patient.NhsNumber = null;
-                ModelState.Remove("Patient.NhsNumber");
-            }
-
-            if (Patient.NoFixedAbode)
-            {
-                Patient.Postcode = null;
-                ModelState.Remove("Patient.Postcode");
-            }
-        }
-
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
-        {   
-            var foundPostcode = await PostcodeService.FindPostcode(postcode);
+        {
+            var foundPostcode = await postcodeService.FindPostcode(postcode);
             var propertyValueTuples = new List<Tuple<string, object>>
             {
                 new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
@@ -122,6 +115,20 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
             return validationService.ValidateDate<PatientDetails>(key, day, month, year);
+        }
+
+        public ContentResult OnGetValidateYearOfUkEntry(int? yearOfUkEntry)
+        {
+            var patientDetails = new PatientDetails
+            {
+                // It should only be possible to get here through normal application use if not uk born (and not unknown)
+                UkBorn = false
+            };
+
+            return validationService.ValidateProperty(
+                patientDetails,
+                nameof(PatientDetails.YearOfUkEntry),
+                yearOfUkEntry);
         }
     }
 }

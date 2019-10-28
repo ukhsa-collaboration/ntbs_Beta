@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ntbs_service.Models
 {
-    public partial class NtbsContext : AuditDbContext
+    public class NtbsContext : AuditDbContext
     {
         // Max Length for fields with enum -> string conversion configured.
         // Without this defaults to NVARCHAR(MAX) as field length.
@@ -26,7 +26,7 @@ namespace ntbs_service.Models
 
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Ethnicity> Ethnicity { get; set; }
-        public virtual DbSet<TBService> TBService { get; set; }
+        public virtual DbSet<TBService> TbService { get; set; }
         public virtual DbSet<Hospital> Hospital { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
@@ -34,11 +34,8 @@ namespace ntbs_service.Models
         public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
-        public virtual DbSet<Episode> Episode { get; set; }
-        public virtual DbSet<SocialRiskFactors> SocialRiskFactors { get; set; }
-        public virtual DbSet<ImmunosuppressionDetails> ImmunosuppressionDetails { get; set; }
-        public virtual DbSet<TravelDetails> TravelDetails { get; set; }
-        public virtual DbSet<VisitorDetails> VisitDetails { get; set; }
+        public virtual DbSet<PHEC> PHEC { get; set; }
+
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
@@ -60,7 +57,7 @@ namespace ntbs_service.Models
 
         public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
         {
-            return await TBService.ToListAsync();
+            return await TbService.ToListAsync();
         }
 
         public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
@@ -68,7 +65,7 @@ namespace ntbs_service.Models
             return await Hospital.ToListAsync();
         }
 
-        public virtual async Task<List<Hospital>> GetHospitalsByTBService(string tbServiceCode)
+        public virtual async Task<List<Hospital>> GetHospitalsByTbService(string tbServiceCode)
         {
             return await Hospital
                         .Where(x => x.TBServiceCode == tbServiceCode)
@@ -79,10 +76,10 @@ namespace ntbs_service.Models
         {
             return await Sex.ToListAsync();
         }
-
-        public virtual async Task<IList<Ethnicity>> GetAllEthnicitiesAsync()
+        
+        public virtual async Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync()
         {
-            return await Ethnicity.ToListAsync();
+            return await Ethnicity.OrderBy(e => e.Order).ToListAsync();
         }
 
         public virtual async Task<IList<Site>> GetAllSitesAsync()
@@ -121,22 +118,20 @@ namespace ntbs_service.Models
             });
 
             modelBuilder.Entity<Ethnicity>().HasData(
-                new Ethnicity { EthnicityId = 1, Code = "A", Label = "White British", Order = 16 },
-                new Ethnicity { EthnicityId = 2, Code = "B", Label = "White Irish", Order = 17 },
-                new Ethnicity { EthnicityId = 3, Code = "C", Label = "Any other White background", Order = 3 },
-                new Ethnicity { EthnicityId = 4, Code = "D", Label = "Mixed - White and Black Caribbean", Order = 14 },
-                new Ethnicity { EthnicityId = 5, Code = "E", Label = "Mixed - White and Black African", Order = 13 },
-                new Ethnicity { EthnicityId = 6, Code = "F", Label = "Mixed - White and Asian", Order = 12 },
-                new Ethnicity { EthnicityId = 7, Code = "G", Label = "Any other mixed background", Order = 9 },
-                new Ethnicity { EthnicityId = 8, Code = "H", Label = "Indian", Order = 1 },
-                new Ethnicity { EthnicityId = 9, Code = "J", Label = "Pakistani", Order = 2 },
-                new Ethnicity { EthnicityId = 10, Code = "K", Label = "Bangladeshi", Order = 10 },
-                new Ethnicity { EthnicityId = 11, Code = "L", Label = "Any other Asian background", Order = 6 },
-                new Ethnicity { EthnicityId = 12, Code = "M", Label = "Black Caribbean", Order = 11 },
-                new Ethnicity { EthnicityId = 13, Code = "N", Label = "Black African", Order = 5 },
-                new Ethnicity { EthnicityId = 14, Code = "P", Label = "Any other Black Background", Order = 7 },
-                new Ethnicity { EthnicityId = 15, Code = "S", Label = "Any other ethnic group", Order = 8 },
-                new Ethnicity { EthnicityId = 16, Code = "R", Label = "Chinese", Order = 4 },
+                new Ethnicity { EthnicityId = 1, Code = "WW", Label = "White", Order = 1 },
+                new Ethnicity { EthnicityId = 8, Code = "H", Label = "Indian", Order = 2 },
+                new Ethnicity { EthnicityId = 9, Code = "J", Label = "Pakistani", Order = 3 },
+                new Ethnicity { EthnicityId = 10, Code = "K", Label = "Bangladeshi", Order = 4 },
+                new Ethnicity { EthnicityId = 11, Code = "L", Label = "Any other Asian background", Order = 5 },
+                new Ethnicity { EthnicityId = 13, Code = "N", Label = "Black African", Order = 6 },
+                new Ethnicity { EthnicityId = 12, Code = "M", Label = "Black Caribbean", Order = 7 },
+                new Ethnicity { EthnicityId = 14, Code = "P", Label = "Any other Black Background", Order = 8 },
+                new Ethnicity { EthnicityId = 16, Code = "R", Label = "Chinese", Order = 9 },
+                new Ethnicity { EthnicityId = 6, Code = "F", Label = "Mixed - White and Asian", Order = 10 },
+                new Ethnicity { EthnicityId = 5, Code = "E", Label = "Mixed - White and Black African", Order = 11 },
+                new Ethnicity { EthnicityId = 4, Code = "D", Label = "Mixed - White and Black Caribbean", Order = 12 },
+                new Ethnicity { EthnicityId = 7, Code = "G", Label = "Any other mixed background", Order = 13 },
+                new Ethnicity { EthnicityId = 15, Code = "S", Label = "Any other ethnic group", Order = 14 },
                 new Ethnicity { EthnicityId = 17, Code = "Z", Label = "Not stated", Order = 15 }
             );
 
@@ -145,14 +140,16 @@ namespace ntbs_service.Models
                 entity.HasKey(e => e.Code);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 /*
-                    TB services have TB service AD groups associated with them in a 1-1
-                    mapping and PHEC AD groups associated with them in a many-1 mapping.
+                    TB services have TB service AD group associated with them in a 1-1
+                    mapping. PHEC AD groups are defined on the PHEC model itself, which has a many-to-one mapping to TB Service through TBServiceToPHEC.
                     AD groups have a length limit if 64 characters, see
                     https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc756101(v=ws.10)?redirectedfrom=MSDN#fqdn-length-limitations
                  */
-                entity.Property(e => e.PHECAdGroup).HasMaxLength(64);
                 entity.Property(e => e.ServiceAdGroup).HasMaxLength(64);
                 entity.HasIndex(e => e.ServiceAdGroup).IsUnique();
+                entity.HasOne(e => e.PHEC)
+                    .WithMany()
+                    .HasForeignKey(tb => tb.PHECCode);
                 entity.HasData(GetTBServicesList());
             });
 
@@ -370,9 +367,9 @@ namespace ntbs_service.Models
             );
         }
 
-        private List<TBService> GetTBServicesList()
+        private List<object> GetTBServicesList()
         {
-            return SeedingHelper.GetRecordsFromCSV<TBService>("Models/SeedData/tbservices.csv");
+            return SeedingHelper.GetTBServices("Models/SeedData/tbservices.csv");
         }
 
         private List<object> GetPHECtoLA()

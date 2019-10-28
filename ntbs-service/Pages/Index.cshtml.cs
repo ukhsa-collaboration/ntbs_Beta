@@ -3,18 +3,20 @@ using System.Threading.Tasks;
 using ntbs_service.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
+using ntbs_service.DataAccess;
+using System.Linq;
 
 namespace ntbs_service.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly INotificationService notificationService;
-        private readonly IUserService userService;
+        private readonly INotificationRepository notificationRepository;
+        private readonly IAuthorizationService authorizationService;
 
-        public IndexModel(INotificationService notificationService, IUserService userService)
+        public IndexModel(INotificationRepository notificationRepository, IAuthorizationService authorizationService)
         {
-            this.notificationService = notificationService;
-            this.userService = userService;
+            this.notificationRepository = notificationRepository;
+            this.authorizationService = authorizationService;
         }
 
         public IList<Notification> DraftNotifications { get;set; }
@@ -22,9 +24,10 @@ namespace ntbs_service.Pages
 
         public async Task OnGetAsync()
         {
-            var tbServices = await userService.GetTbServicesAsync(User);
-            DraftNotifications = await notificationService.GetDraftNotificationsAsync(tbServices);
-            RecentNotifications = await notificationService.GetRecentNotificationsAsync(tbServices);
+            var draftNotificationsQueryable = await notificationRepository.GetDraftNotificationsAsync();
+            var recentNotifications = await notificationRepository.GetRecentNotificationsAsync();
+            DraftNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable)).Take(10).ToList();
+            RecentNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, recentNotifications)).Take(10).ToList();
         }
     }
 }

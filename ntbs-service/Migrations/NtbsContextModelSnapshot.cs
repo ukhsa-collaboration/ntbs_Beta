@@ -1811,78 +1811,43 @@ namespace ntbs_service.Migrations
                         new
                         {
                             EthnicityId = 1,
-                            Code = "A",
-                            Label = "White British",
-                            Order = 16
-                        },
-                        new
-                        {
-                            EthnicityId = 2,
-                            Code = "B",
-                            Label = "White Irish",
-                            Order = 17
-                        },
-                        new
-                        {
-                            EthnicityId = 3,
-                            Code = "C",
-                            Label = "Any other White background",
-                            Order = 3
-                        },
-                        new
-                        {
-                            EthnicityId = 4,
-                            Code = "D",
-                            Label = "Mixed - White and Black Caribbean",
-                            Order = 14
-                        },
-                        new
-                        {
-                            EthnicityId = 5,
-                            Code = "E",
-                            Label = "Mixed - White and Black African",
-                            Order = 13
-                        },
-                        new
-                        {
-                            EthnicityId = 6,
-                            Code = "F",
-                            Label = "Mixed - White and Asian",
-                            Order = 12
-                        },
-                        new
-                        {
-                            EthnicityId = 7,
-                            Code = "G",
-                            Label = "Any other mixed background",
-                            Order = 9
+                            Code = "WW",
+                            Label = "White",
+                            Order = 1
                         },
                         new
                         {
                             EthnicityId = 8,
                             Code = "H",
                             Label = "Indian",
-                            Order = 1
+                            Order = 2
                         },
                         new
                         {
                             EthnicityId = 9,
                             Code = "J",
                             Label = "Pakistani",
-                            Order = 2
+                            Order = 3
                         },
                         new
                         {
                             EthnicityId = 10,
                             Code = "K",
                             Label = "Bangladeshi",
-                            Order = 10
+                            Order = 4
                         },
                         new
                         {
                             EthnicityId = 11,
                             Code = "L",
                             Label = "Any other Asian background",
+                            Order = 5
+                        },
+                        new
+                        {
+                            EthnicityId = 13,
+                            Code = "N",
+                            Label = "Black African",
                             Order = 6
                         },
                         new
@@ -1890,27 +1855,13 @@ namespace ntbs_service.Migrations
                             EthnicityId = 12,
                             Code = "M",
                             Label = "Black Caribbean",
-                            Order = 11
-                        },
-                        new
-                        {
-                            EthnicityId = 13,
-                            Code = "N",
-                            Label = "Black African",
-                            Order = 5
+                            Order = 7
                         },
                         new
                         {
                             EthnicityId = 14,
                             Code = "P",
                             Label = "Any other Black Background",
-                            Order = 7
-                        },
-                        new
-                        {
-                            EthnicityId = 15,
-                            Code = "S",
-                            Label = "Any other ethnic group",
                             Order = 8
                         },
                         new
@@ -1918,7 +1869,42 @@ namespace ntbs_service.Migrations
                             EthnicityId = 16,
                             Code = "R",
                             Label = "Chinese",
-                            Order = 4
+                            Order = 9
+                        },
+                        new
+                        {
+                            EthnicityId = 6,
+                            Code = "F",
+                            Label = "Mixed - White and Asian",
+                            Order = 10
+                        },
+                        new
+                        {
+                            EthnicityId = 5,
+                            Code = "E",
+                            Label = "Mixed - White and Black African",
+                            Order = 11
+                        },
+                        new
+                        {
+                            EthnicityId = 4,
+                            Code = "D",
+                            Label = "Mixed - White and Black Caribbean",
+                            Order = 12
+                        },
+                        new
+                        {
+                            EthnicityId = 7,
+                            Code = "G",
+                            Label = "Any other mixed background",
+                            Order = 13
+                        },
+                        new
+                        {
+                            EthnicityId = 15,
+                            Code = "S",
+                            Label = "Any other ethnic group",
+                            Order = 14
                         },
                         new
                         {
@@ -12269,8 +12255,6 @@ namespace ntbs_service.Migrations
                     b.Property<string>("LTBRID")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime?>("NotificationDate");
-
                     b.Property<string>("NotificationStatus")
                         .IsRequired()
                         .HasMaxLength(30);
@@ -12316,6 +12300,9 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50);
 
+                    b.Property<string>("AdGroup")
+                        .HasMaxLength(64);
+
                     b.Property<string>("Name")
                         .HasMaxLength(50);
 
@@ -12327,61 +12314,73 @@ namespace ntbs_service.Migrations
                         new
                         {
                             Code = "E45000001",
+                            AdGroup = "Global.NIS.NTBS.LON",
                             Name = "London"
                         },
                         new
                         {
                             Code = "E45000005",
+                            AdGroup = "Global.NIS.NTBS.WMS",
                             Name = "West Midlands"
                         },
                         new
                         {
                             Code = "E45000009",
+                            AdGroup = "Global.NIS.NTBS.NoE",
                             Name = "North East"
                         },
                         new
                         {
                             Code = "E45000010",
+                            AdGroup = "Global.NIS.NTBS.YHR",
                             Name = "Yorkshire and Humber"
                         },
                         new
                         {
                             Code = "E45000016",
+                            AdGroup = "Global.NIS.NTBS.EMS",
                             Name = "East Midlands"
                         },
                         new
                         {
                             Code = "E45000017",
+                            AdGroup = "Global.NIS.NTBS.EoE",
                             Name = "East of England"
                         },
                         new
                         {
                             Code = "E45000018",
+                            AdGroup = "Global.NIS.NTBS.NoW",
                             Name = "North West"
                         },
                         new
                         {
                             Code = "E45000019",
+                            AdGroup = "Global.NIS.NTBS.SoE",
                             Name = "South East"
                         },
                         new
                         {
                             Code = "E45000020",
+                            AdGroup = "Global.NIS.NTBS.SoW",
                             Name = "South West"
                         },
                         new
                         {
                             Code = "PHECNI",
+                            AdGroup = "",
                             Name = "Northern Ireland"
                         },
                         new
                         {
                             Code = "PHECSCOT",
+                            AdGroup = "",
                             Name = "Scotland"
                         },
                         new
                         {
                             Code = "PHECWAL",
+                            AdGroup = "",
                             Name = "Wales"
                         });
                 });
@@ -12561,13 +12560,15 @@ namespace ntbs_service.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
-                    b.Property<string>("PHECAdGroup")
-                        .HasMaxLength(64);
+                    b.Property<string>("PHECCode")
+                        .HasMaxLength(50);
 
                     b.Property<string>("ServiceAdGroup")
                         .HasMaxLength(64);
 
                     b.HasKey("Code");
+
+                    b.HasIndex("PHECCode");
 
                     b.HasIndex("ServiceAdGroup")
                         .IsUnique()
@@ -12579,1327 +12580,1592 @@ namespace ntbs_service.Migrations
                         new
                         {
                             Code = "TBS0001",
-                            Name = "Abingdon Community Hospital"
+                            Name = "Abingdon Community Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0002",
-                            Name = "Addenbrooke's Hospital"
+                            Name = "Addenbrooke's Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0003",
-                            Name = "Airedale NHS Foundation Trust"
+                            Name = "Airedale NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0004",
-                            Name = "Amersham Hospital"
+                            Name = "Amersham Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0005",
-                            Name = "Andover War Memorial Hospital"
+                            Name = "Andover War Memorial Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0006",
-                            Name = "Arrowe Park Hospital"
+                            Name = "Arrowe Park Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0007",
-                            Name = "Ashford & St Peter's Hospital (Chertsey)"
+                            Name = "Ashford & St Peter's Hospital (Chertsey)",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0008",
-                            Name = "Ashford Hospital"
+                            Name = "Ashford Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0009",
-                            Name = "Barnet Hospital"
+                            Name = "Barnet Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0010",
-                            Name = "Basildon & Thurrock University Hospitals"
+                            Name = "Basildon & Thurrock University Hospitals",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0011",
-                            Name = "Baskingstoke and North Hampshire Hospital"
+                            Name = "Baskingstoke and North Hampshire Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0012",
-                            Name = "Bath"
+                            Name = "Bath",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0013",
-                            Name = "Battle Hospital"
+                            Name = "Battle Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0014",
-                            Name = "Bedford Hospital"
+                            Name = "Bedford Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0015",
-                            Name = "Benenden Hospital"
+                            Name = "Benenden Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0016",
-                            Name = "Berkshire Independent Hospital"
+                            Name = "Berkshire Independent Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0017",
-                            Name = "Beverley Westwood Hospital"
+                            Name = "Beverley Westwood Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0018",
-                            Name = "BHR University Hospitals NHS Trust"
+                            Name = "BHR University Hospitals NHS Trust",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0019",
-                            Name = "Birmingham & Solihull"
+                            Name = "Birmingham & Solihull",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0020",
-                            Name = "Blackheath Hospital"
+                            Name = "Blackheath Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0021",
-                            Name = "Bognor Regis War Memorial Hospital"
+                            Name = "Bognor Regis War Memorial Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0022",
-                            Name = "Bradford Royal Infirmary"
+                            Name = "Bradford Royal Infirmary",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0023",
-                            Name = "Bradford Teaching Hospitals NHS Foundation Trust"
+                            Name = "Bradford Teaching Hospitals NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0024",
-                            Name = "Brentwood Community Hospital"
+                            Name = "Brentwood Community Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0025",
-                            Name = "Bridgewater Community Healthcare"
+                            Name = "Bridgewater Community Healthcare",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0026",
-                            Name = "Bridlington & District Hospital"
+                            Name = "Bridlington & District Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0027",
-                            Name = "Brighton General Hospital"
+                            Name = "Brighton General Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0028",
-                            Name = "Bristol"
+                            Name = "Bristol",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0029",
-                            Name = "Bromley TB Service"
+                            Name = "Bromley TB Service",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0030",
-                            Name = "Broomfield Hospital"
+                            Name = "Broomfield Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0031",
-                            Name = "Buckingham Hospital"
+                            Name = "Buckingham Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0032",
-                            Name = "Buckland Hospital"
+                            Name = "Buckland Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0033",
-                            Name = "Burton"
+                            Name = "Burton",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0034",
-                            Name = "Calderdale & Huddersfield NHS FT"
+                            Name = "Calderdale & Huddersfield NHS FT",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0035",
-                            Name = "Cavell Hospital"
+                            Name = "Cavell Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0036",
-                            Name = "Central & North Lancashire (LTHTR/LCFT)"
+                            Name = "Central & North Lancashire (LTHTR/LCFT)",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0037",
-                            Name = "Charter Medical Centre"
+                            Name = "Charter Medical Centre",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0038",
-                            Name = "Chase Farm Hospital"
+                            Name = "Chase Farm Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0039",
-                            Name = "Chaucer Hospital"
+                            Name = "Chaucer Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0040",
-                            Name = "CHCP (City Health Care Partnership)"
+                            Name = "CHCP (City Health Care Partnership)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0041",
-                            Name = "Chelsea & Westminster"
+                            Name = "Chelsea & Westminster",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0042",
-                            Name = "Chelsfield Park Hospital"
+                            Name = "Chelsfield Park Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0043",
-                            Name = "Cheshire East"
+                            Name = "Cheshire East",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0044",
-                            Name = "Chesterfield Royal Hospital"
+                            Name = "Chesterfield Royal Hospital",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0045",
-                            Name = "Chiltern Hospital"
+                            Name = "Chiltern Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0046",
-                            Name = "Church Hill House Hospital"
+                            Name = "Church Hill House Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0047",
-                            Name = "Clacton And District Hospital"
+                            Name = "Clacton And District Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0048",
-                            Name = "Clementine Churchill Hospital"
+                            Name = "Clementine Churchill Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0049",
-                            Name = "Colchester Hospital"
+                            Name = "Colchester Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0050",
-                            Name = "Conquest Hospital"
+                            Name = "Conquest Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0051",
-                            Name = "Cornwall"
+                            Name = "Cornwall",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0052",
-                            Name = "Countess of Chester Hospital"
+                            Name = "Countess of Chester Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0053",
-                            Name = "County Durham and Darlington NHS Foundation Trust TB Nursing Service"
+                            Name = "County Durham and Darlington NHS Foundation Trust TB Nursing Service",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0054",
-                            Name = "Coventry & Warwickshire"
+                            Name = "Coventry & Warwickshire",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0055",
-                            Name = "Crawley Hospital"
+                            Name = "Crawley Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0056",
-                            Name = "Cumbria: Morecambe Bay Trust"
+                            Name = "Cumbria: Morecambe Bay Trust",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0057",
-                            Name = "Cumbria: North Cumbria UHT"
+                            Name = "Cumbria: North Cumbria UHT",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0058",
-                            Name = "Darent Valley Hospital"
+                            Name = "Darent Valley Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0059",
-                            Name = "Doncaster & Bassetlaw"
+                            Name = "Doncaster & Bassetlaw",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0060",
-                            Name = "Dorset"
+                            Name = "Dorset",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0061",
-                            Name = "Duchess of Kent Hospital"
+                            Name = "Duchess of Kent Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0062",
-                            Name = "Dudley"
+                            Name = "Dudley",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0063",
-                            Name = "East & North Hertfordshire Hospitals"
+                            Name = "East & North Hertfordshire Hospitals",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0064",
-                            Name = "East Dorset"
+                            Name = "East Dorset",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0065",
-                            Name = "East Lancashire Health Trust"
+                            Name = "East Lancashire Health Trust",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0066",
-                            Name = "East Surrey Hospital"
+                            Name = "East Surrey Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0067",
-                            Name = "Eastbourne District General Hospital"
+                            Name = "Eastbourne District General Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0068",
-                            Name = "Epsom and St Helier NHS Trust"
+                            Name = "Epsom and St Helier NHS Trust",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0069",
-                            Name = "Erith & District Hospital"
+                            Name = "Erith & District Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0070",
-                            Name = "Esperance Hospital"
+                            Name = "Esperance Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0071",
-                            Name = "Essex County Hospital"
+                            Name = "Essex County Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0072",
-                            Name = "Fawkham Manor Hospital"
+                            Name = "Fawkham Manor Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0073",
-                            Name = "Fishermead Medical Centre"
+                            Name = "Fishermead Medical Centre",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0074",
-                            Name = "Fitzwilliam Hospital"
+                            Name = "Fitzwilliam Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0075",
-                            Name = "Frimley Park Hospital"
+                            Name = "Frimley Park Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0076",
-                            Name = "Gateshead- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead"
+                            Name = "Gateshead- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0077",
-                            Name = "Gloucestershire"
+                            Name = "Gloucestershire",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0078",
-                            Name = "Goole District Hospital"
+                            Name = "Goole District Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0079",
-                            Name = "Gravesend and North Kent Hospital"
+                            Name = "Gravesend and North Kent Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0080",
-                            Name = "Great Ormond Street Hospital Central London Site"
+                            Name = "Great Ormond Street Hospital Central London Site",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0081",
-                            Name = "Guy's Hospital"
+                            Name = "Guy's Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0082",
-                            Name = "Halton Hospital"
+                            Name = "Halton Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0083",
-                            Name = "Hampshire Clinic"
+                            Name = "Hampshire Clinic",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0084",
-                            Name = "Harefield Hospital"
+                            Name = "Harefield Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0085",
-                            Name = "Harold Wood Hospital"
+                            Name = "Harold Wood Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0086",
-                            Name = "Harrogate and District NHS Foundation Trust"
+                            Name = "Harrogate and District NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0087",
-                            Name = "Heart Hospital"
+                            Name = "Heart Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0088",
-                            Name = "Heatherwood Hospital"
+                            Name = "Heatherwood Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0089",
-                            Name = "Herefordshire"
+                            Name = "Herefordshire",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0090",
-                            Name = "Hillingdon Hospital"
+                            Name = "Hillingdon Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0091",
-                            Name = "Holly House Hospital"
+                            Name = "Holly House Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0092",
-                            Name = "Homerton"
+                            Name = "Homerton",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0093",
-                            Name = "Horsham Hospital"
+                            Name = "Horsham Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0094",
-                            Name = "Hospital for Tropical Diseases"
+                            Name = "Hospital for Tropical Diseases",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0095",
-                            Name = "Imperial College Healthcare"
+                            Name = "Imperial College Healthcare",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0096",
-                            Name = "Ipswich Hospital"
+                            Name = "Ipswich Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0097",
-                            Name = "James Paget Hospital"
+                            Name = "James Paget Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0098",
-                            Name = "Joyce Green Hospital"
+                            Name = "Joyce Green Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0099",
-                            Name = "Kent & Sussex Hospital"
+                            Name = "Kent & Sussex Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0100",
-                            Name = "Kent Community Health NHS Foundation Trust"
+                            Name = "Kent Community Health NHS Foundation Trust",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0101",
-                            Name = "Kings College Hospital"
+                            Name = "Kings College Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0102",
-                            Name = "King'S College Hospital (Dulwich)"
+                            Name = "King'S College Hospital (Dulwich)",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0103",
-                            Name = "Kings Oak Hospital"
+                            Name = "Kings Oak Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0104",
-                            Name = "Kings Park Hospital"
+                            Name = "Kings Park Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0105",
-                            Name = "Kingston Hospital"
+                            Name = "Kingston Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0106",
-                            Name = "LCHC (Leeds Community Healthcare NHS Trust)"
+                            Name = "LCHC (Leeds Community Healthcare NHS Trust)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0107",
-                            Name = "Leicester Royal Infirmary"
+                            Name = "Leicester Royal Infirmary",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0108",
-                            Name = "Lincolnshire"
+                            Name = "Lincolnshire",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0109",
-                            Name = "Liverpool"
+                            Name = "Liverpool",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0110",
-                            Name = "Locala Community Partnerships (Greater Huddersfield)"
+                            Name = "Locala Community Partnerships (Greater Huddersfield)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0111",
-                            Name = "Locala Community Partnerships (North Kirklees)"
+                            Name = "Locala Community Partnerships (North Kirklees)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0112",
-                            Name = "London Independent Hospital"
+                            Name = "London Independent Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0113",
-                            Name = "London NW Healthcare Central Middlesex"
+                            Name = "London NW Healthcare Central Middlesex",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0114",
-                            Name = "London NW Healthcare Ealing"
+                            Name = "London NW Healthcare Ealing",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0115",
-                            Name = "London NW Healthcare Northwick Park"
+                            Name = "London NW Healthcare Northwick Park",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0116",
-                            Name = "Luton & Dunstable Hospital"
+                            Name = "Luton & Dunstable Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0117",
-                            Name = "Lymington Hospital (Peripheral Clinic)"
+                            Name = "Lymington Hospital (Peripheral Clinic)",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0118",
-                            Name = "Maidstone District General Hospital"
+                            Name = "Maidstone District General Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0119",
-                            Name = "Manchester University NHS Foundation Trust (MFT)"
+                            Name = "Manchester University NHS Foundation Trust (MFT)",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0120",
-                            Name = "Mayday University Hospital"
+                            Name = "Mayday University Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0121",
-                            Name = "Medway Maritime Hospital"
+                            Name = "Medway Maritime Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0122",
-                            Name = "Memorial Hospital"
+                            Name = "Memorial Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0123",
-                            Name = "Mid Notts"
+                            Name = "Mid Notts",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0124",
-                            Name = "Mile End Hospital"
+                            Name = "Mile End Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0125",
-                            Name = "Milton Keynes University Hospital"
+                            Name = "Milton Keynes University Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0126",
-                            Name = "Mount Alvernia Hospital"
+                            Name = "Mount Alvernia Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0127",
-                            Name = "Mount Vernon Hospital"
+                            Name = "Mount Vernon Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0128",
-                            Name = "National Hospital for Neurology & Neurosciences - Queen Square"
+                            Name = "National Hospital for Neurology & Neurosciences - Queen Square",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0129",
-                            Name = "Nelson Hospital"
+                            Name = "Nelson Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0130",
-                            Name = "Newham Chest Clinic"
+                            Name = "Newham Chest Clinic",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0131",
-                            Name = "Queen's Hospital [Croydon]"
+                            Name = "Queen's Hospital [Croydon]",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0132",
-                            Name = "Norfolk & Norwich University Hospital"
+                            Name = "Norfolk & Norwich University Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0133",
-                            Name = "North Devon"
+                            Name = "North Devon",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0134",
-                            Name = "North Downs Hospital"
+                            Name = "North Downs Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0135",
-                            Name = "North Hampshire Hospital"
+                            Name = "North Hampshire Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0136",
-                            Name = "North Middlesex Hospital"
+                            Name = "North Middlesex Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0137",
-                            Name = "North of Tyne TB Service"
+                            Name = "North of Tyne TB Service",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0138",
-                            Name = "North Tees and Hartlepool"
+                            Name = "North Tees and Hartlepool",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0139",
-                            Name = "North West Anglia Foundation Trust"
+                            Name = "North West Anglia Foundation Trust",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0140",
-                            Name = "Northamptonshire"
+                            Name = "Northamptonshire",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0141",
-                            Name = "Northern Lincolnshire & Goole NHS Foundation Trust"
+                            Name = "Northern Lincolnshire & Goole NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0142",
-                            Name = "Nottingham"
+                            Name = "Nottingham",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0143",
-                            Name = "Nuffield Health Brentwood Hospital"
+                            Name = "Nuffield Health Brentwood Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0144",
-                            Name = "Nuffield Health Cambridge Hospital"
+                            Name = "Nuffield Health Cambridge Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0145",
-                            Name = "Nuffield Health Chichester Hospital"
+                            Name = "Nuffield Health Chichester Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0146",
-                            Name = "Nuffield Health Guildford Hospital"
+                            Name = "Nuffield Health Guildford Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0147",
-                            Name = "Nuffield Health Haywards Heath Hospital"
+                            Name = "Nuffield Health Haywards Heath Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0148",
-                            Name = "Nuffield Health Leeds Hospital"
+                            Name = "Nuffield Health Leeds Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0149",
-                            Name = "Nuffield Health Tunbridge Wells Hospital"
+                            Name = "Nuffield Health Tunbridge Wells Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0150",
-                            Name = "Nuffield Health Woking Hospital"
+                            Name = "Nuffield Health Woking Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0151",
-                            Name = "Nuffield Health York Hospital"
+                            Name = "Nuffield Health York Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0152",
-                            Name = "Oldchurch Hospital"
+                            Name = "Oldchurch Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0153",
-                            Name = "Open Door (Health)"
+                            Name = "Open Door (Health)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0154",
-                            Name = "Ormskirk & District General Hospital"
+                            Name = "Ormskirk & District General Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0155",
-                            Name = "Orpington Hospital"
+                            Name = "Orpington Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0156",
-                            Name = "Orsett Hospital"
+                            Name = "Orsett Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0157",
-                            Name = "Oxford University Hospitals NHS Foundation Trust"
+                            Name = "Oxford University Hospitals NHS Foundation Trust",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0158",
-                            Name = "Papworth Hospital"
+                            Name = "Papworth Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0159",
-                            Name = "Parkside Hospital"
+                            Name = "Parkside Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0160",
-                            Name = "Pennine Acute Hospitals NHS Trust"
+                            Name = "Pennine Acute Hospitals NHS Trust",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0161",
-                            Name = "Pinehill Hospital"
+                            Name = "Pinehill Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0162",
-                            Name = "Pontefract General Infirmary"
+                            Name = "Pontefract General Infirmary",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0163",
-                            Name = "Portland Hospital"
+                            Name = "Portland Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0164",
-                            Name = "Preston Hall Hospital"
+                            Name = "Preston Hall Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0165",
-                            Name = "Princess Alexandra Hospital"
+                            Name = "Princess Alexandra Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0166",
-                            Name = "Princess Royal Hospital [West Sussex]"
+                            Name = "Princess Royal Hospital [West Sussex]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0167",
-                            Name = "Priory Hospital"
+                            Name = "Priory Hospital",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0168",
-                            Name = "Queen Alexandra Hospital"
+                            Name = "Queen Alexandra Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0169",
-                            Name = "Queen Elizabeth Hospital"
+                            Name = "Queen Elizabeth Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0170",
-                            Name = "Queen Elizabeth Hospital, King's Lynn"
+                            Name = "Queen Elizabeth Hospital, King's Lynn",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0171",
-                            Name = "Queen Mary'S Hospital [London]"
+                            Name = "Queen Mary'S Hospital [London]",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0172",
-                            Name = "Queen Mary'S Hospital [Sidcup]"
+                            Name = "Queen Mary'S Hospital [Sidcup]",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0173",
-                            Name = "Queen Victoria Hospital [East Grinstead]"
+                            Name = "Queen Victoria Hospital [East Grinstead]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0174",
-                            Name = "Radcliffe Infirmary"
+                            Name = "Radcliffe Infirmary",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0175",
-                            Name = "Royal Devon & Exeter"
+                            Name = "Royal Devon & Exeter",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0176",
-                            Name = "RDASH NHS Foundation Trust"
+                            Name = "RDASH NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0177",
-                            Name = "Royal Berkshire Hospital"
+                            Name = "Royal Berkshire Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0178",
-                            Name = "Royal Bolton Hospital"
+                            Name = "Royal Bolton Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0179",
-                            Name = "Royal Brompton"
+                            Name = "Royal Brompton",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0180",
-                            Name = "Royal Buckinghamshire Hospital"
+                            Name = "Royal Buckinghamshire Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0181",
-                            Name = "Royal Derby Hospital"
+                            Name = "Royal Derby Hospital",
+                            PHECCode = "E45000016"
                         },
                         new
                         {
                             Code = "TBS0182",
-                            Name = "Royal Free London TB Service"
+                            Name = "Royal Free London TB Service",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0183",
-                            Name = "Royal Hampshire County Hospital"
+                            Name = "Royal Hampshire County Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0184",
-                            Name = "Royal Hospital Haslar"
+                            Name = "Royal Hospital Haslar",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0185",
-                            Name = "Royal London Hospital"
+                            Name = "Royal London Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0186",
-                            Name = "Royal Marsden Chelsea"
+                            Name = "Royal Marsden Chelsea",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0187",
-                            Name = "Royal National Orthopaedic Hospital (Stanmore)"
+                            Name = "Royal National Orthopaedic Hospital (Stanmore)",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0188",
-                            Name = "Royal South Hants Hospital"
+                            Name = "Royal South Hants Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0189",
-                            Name = "Royal Surrey County Hospital"
+                            Name = "Royal Surrey County Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0190",
-                            Name = "Royal Sussex County Hospital"
+                            Name = "Royal Sussex County Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0191",
-                            Name = "Royal Victoria Hospital [Folkestone]"
+                            Name = "Royal Victoria Hospital [Folkestone]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0192",
-                            Name = "Runneymede Hospital"
+                            Name = "Runneymede Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0193",
-                            Name = "Salford Royal"
+                            Name = "Salford Royal",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0194",
-                            Name = "Sandwell"
+                            Name = "Sandwell",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0195",
-                            Name = "Sheffield Teaching Hospitals NHS Foundation Trust"
+                            Name = "Sheffield Teaching Hospitals NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0196",
-                            Name = "Shropshire & Telford"
+                            Name = "Shropshire & Telford",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0197",
-                            Name = "Sloane Hospital"
+                            Name = "Sloane Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0198",
-                            Name = "Somerfield Hospital"
+                            Name = "Somerfield Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0199",
-                            Name = "Somerset"
+                            Name = "Somerset",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0200",
-                            Name = "South Tees NHS TB Trust TB Team"
+                            Name = "South Tees NHS TB Trust TB Team",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0201",
-                            Name = "South Tyneside- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead"
+                            Name = "South Tyneside- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0202",
-                            Name = "South West Yorkshire Partnership NHS Foundation Trust (Barnsley)"
+                            Name = "South West Yorkshire Partnership NHS Foundation Trust (Barnsley)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0203",
-                            Name = "South West Yorkshire Partnership NHS Foundation Trust (Wakefield)"
+                            Name = "South West Yorkshire Partnership NHS Foundation Trust (Wakefield)",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0204",
-                            Name = "Southampton General Hospital"
+                            Name = "Southampton General Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0205",
-                            Name = "Southend Hospital"
+                            Name = "Southend Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0206",
-                            Name = "Southport & Formby District General Hospital"
+                            Name = "Southport & Formby District General Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0207",
-                            Name = "Spire Alexandra Hospital"
+                            Name = "Spire Alexandra Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0208",
-                            Name = "Spire Harpenden Hospital"
+                            Name = "Spire Harpenden Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0209",
-                            Name = "Spire Hartswood Hospital"
+                            Name = "Spire Hartswood Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0210",
-                            Name = "Spire Lea Cambridge Hospital"
+                            Name = "Spire Lea Cambridge Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0211",
-                            Name = "Spire Longlands Consulting Rooms"
+                            Name = "Spire Longlands Consulting Rooms",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0212",
-                            Name = "Spire St Saviour's Hospital"
+                            Name = "Spire St Saviour's Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0213",
-                            Name = "Spire Tunbridge Wells Hospital"
+                            Name = "Spire Tunbridge Wells Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0214",
-                            Name = "Spire Wellesley Hospital"
+                            Name = "Spire Wellesley Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0215",
-                            Name = "St Albans City Hospital"
+                            Name = "St Albans City Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0216",
-                            Name = "St Anns Hospital [London]"
+                            Name = "St Anns Hospital [London]",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0217",
-                            Name = "St Anthonys Hospital"
+                            Name = "St Anthonys Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0218",
-                            Name = "St Bartholomew's Hospital [London]"
+                            Name = "St Bartholomew's Hospital [London]",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0219",
-                            Name = "St Bartholomews Hospital [Rochester]"
+                            Name = "St Bartholomews Hospital [Rochester]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0220",
-                            Name = "St George's Hospital"
+                            Name = "St George's Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0221",
-                            Name = "St George's Hospital [Stafford]"
+                            Name = "St George's Hospital [Stafford]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0222",
-                            Name = "St Helens Hospital [Merseyside]"
+                            Name = "St Helens Hospital [Merseyside]",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0223",
-                            Name = "St James Hospital [Southsea]"
+                            Name = "St James Hospital [Southsea]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0224",
-                            Name = "St John & St Elizabeth Hospital"
+                            Name = "St John & St Elizabeth Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0225",
-                            Name = "St Mary's Hospital (Isle of Wight)"
+                            Name = "St Mary's Hospital (Isle of Wight)",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0226",
-                            Name = "St Mary's Hospital [Portsmouth]"
+                            Name = "St Mary's Hospital [Portsmouth]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0227",
-                            Name = "St Michael's Hospital [Braintree]"
+                            Name = "St Michael's Hospital [Braintree]",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0228",
-                            Name = "St Pancras Hospital"
+                            Name = "St Pancras Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0229",
-                            Name = "St Richard's Hospital"
+                            Name = "St Richard's Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0230",
-                            Name = "St Thomas' Hospital"
+                            Name = "St Thomas' Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0231",
-                            Name = "St. Margaret's Hospital"
+                            Name = "St. Margaret's Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0232",
-                            Name = "Staffordshire & Stoke-on-Trent"
+                            Name = "Staffordshire & Stoke-on-Trent",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0233",
-                            Name = "Stepping Hill Hospital"
+                            Name = "Stepping Hill Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0234",
-                            Name = "Stoke Mandeveille/Wycombe Hospitals"
+                            Name = "Stoke Mandeveille/Wycombe Hospitals",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0235",
-                            Name = "Sunderland"
+                            Name = "Sunderland",
+                            PHECCode = "E45000009"
                         },
                         new
                         {
                             Code = "TBS0236",
-                            Name = "Swindon"
+                            Name = "Swindon",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0237",
-                            Name = "Swindon & Wiltshire"
+                            Name = "Swindon & Wiltshire",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0238",
-                            Name = "Tameside General Hospital"
+                            Name = "Tameside General Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0239",
-                            Name = "TB Service NCL - South Hub"
+                            Name = "TB Service NCL - South Hub",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0240",
-                            Name = "The London Clinic"
+                            Name = "The London Clinic",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0241",
-                            Name = "The Rotherham NHS Foundation Trust"
+                            Name = "The Rotherham NHS Foundation Trust",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0242",
-                            Name = "Tickhill Road Hospital"
+                            Name = "Tickhill Road Hospital",
+                            PHECCode = "E45000010"
                         },
                         new
                         {
                             Code = "TBS0243",
-                            Name = "Torbay"
+                            Name = "Torbay",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0244",
-                            Name = "Townlands Hospital"
+                            Name = "Townlands Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0245",
-                            Name = "Tunbridge Wells Hospital [Pembury]"
+                            Name = "Tunbridge Wells Hospital [Pembury]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0246",
-                            Name = "University Hospital Lewisham"
+                            Name = "University Hospital Lewisham",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0247",
-                            Name = "Upton Hospital [Slough]"
+                            Name = "Upton Hospital [Slough]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0248",
-                            Name = "Victoria Hospital [Romford]"
+                            Name = "Victoria Hospital [Romford]",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0249",
-                            Name = "Walsall"
+                            Name = "Walsall",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0250",
-                            Name = "Warders Medical Centre"
+                            Name = "Warders Medical Centre",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0251",
-                            Name = "Warrington Hospital"
+                            Name = "Warrington Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0252",
-                            Name = "Water Eaton Health Centre"
+                            Name = "Water Eaton Health Centre",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0253",
-                            Name = "West Hertfordshire Hospitals"
+                            Name = "West Hertfordshire Hospitals",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0254",
-                            Name = "West Middlesex University Hospital"
+                            Name = "West Middlesex University Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0255",
-                            Name = "West Park Hospital [Epsom]"
+                            Name = "West Park Hospital [Epsom]",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0256",
-                            Name = "West Suffolk Hospital"
+                            Name = "West Suffolk Hospital",
+                            PHECCode = "E45000017"
                         },
                         new
                         {
                             Code = "TBS0257",
-                            Name = "Western Community Hospital"
+                            Name = "Western Community Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0258",
-                            Name = "Weston"
+                            Name = "Weston",
+                            PHECCode = "E45000020"
                         },
                         new
                         {
                             Code = "TBS0259",
-                            Name = "Wexham Park/King Edward VII Hospitals"
+                            Name = "Wexham Park/King Edward VII Hospitals",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0260",
-                            Name = "Whipps Cross University Hospital"
+                            Name = "Whipps Cross University Hospital",
+                            PHECCode = "E45000001"
                         },
                         new
                         {
                             Code = "TBS0261",
-                            Name = "Whiston Hospital"
+                            Name = "Whiston Hospital",
+                            PHECCode = "E45000018"
                         },
                         new
                         {
                             Code = "TBS0262",
-                            Name = "Wolverhampton"
+                            Name = "Wolverhampton",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0263",
-                            Name = "Worcestershire"
+                            Name = "Worcestershire",
+                            PHECCode = "E45000005"
                         },
                         new
                         {
                             Code = "TBS0264",
-                            Name = "Worthing Hospital"
+                            Name = "Worthing Hospital",
+                            PHECCode = "E45000019"
                         },
                         new
                         {
                             Code = "TBS0265",
-                            Name = "Yeovil"
+                            Name = "Yeovil",
+                            PHECCode = "E45000020"
                         });
                 });
 
@@ -13952,15 +14218,23 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool?>("IsShortCourseTreatment");
 
+                            b1.Property<bool?>("IsSymptomatic");
+
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
 
                             b1.Property<bool>("NoSampleTaken");
 
-                            b1.Property<DateTime?>("PresentationDate");
+                            b1.Property<DateTime?>("PresentationToAnyHealthServiceDate");
+
+                            b1.Property<DateTime?>("PresentationToTBServiceDate");
 
                             b1.Property<DateTime?>("SymptomStartDate");
 
                             b1.Property<DateTime?>("TreatmentStartDate");
+
+                            b1.Property<bool?>("isDOT");
+
+                            b1.Property<bool?>("isEnhancedCaseManagement");
 
                             b1.HasKey("NotificationId");
 
@@ -14143,9 +14417,6 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("GivenName")
                                 .HasMaxLength(35);
 
-                            b1.Property<string>("LocalPatientId")
-                                .HasMaxLength(50);
-
                             b1.Property<string>("NhsNumber")
                                 .HasMaxLength(10);
 
@@ -14160,6 +14431,8 @@ namespace ntbs_service.Migrations
                             b1.Property<int?>("SexId");
 
                             b1.Property<bool?>("UkBorn");
+
+                            b1.Property<int?>("YearOfUkEntry");
 
                             b1.HasKey("NotificationId");
 
@@ -14440,6 +14713,13 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.LocalAuthority", "LocalAuthority")
                         .WithMany("PostcodeLookups")
                         .HasForeignKey("LocalAuthorityCode");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.TBService", b =>
+                {
+                    b.HasOne("ntbs_service.Models.PHEC", "PHEC")
+                        .WithMany()
+                        .HasForeignKey("PHECCode");
                 });
 #pragma warning restore 612, 618
         }

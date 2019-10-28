@@ -25,6 +25,21 @@ spec:
               secretKeyRef:
                 name: int-audit-db-connection-string
                 key: connectionString
+          - name: ConnectionStrings__ltbr
+            valueFrom:
+              secretKeyRef:
+                name: lgeacy-and-migration-connection-strings
+                key: ltbr
+          - name: ConnectionStrings__ets
+            valueFrom:
+              secretKeyRef:
+                name: lgeacy-and-migration-connection-strings
+                key: ets
+          - name: ConnectionStrings__migration
+            valueFrom:
+              secretKeyRef:
+                name: lgeacy-and-migration-connection-strings
+                key: migration
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-int.da0c702c3b574e3185f6.uksouth.aksapp.io"
       imagePullSecrets:

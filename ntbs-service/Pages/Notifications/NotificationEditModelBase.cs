@@ -18,13 +18,36 @@ namespace ntbs_service.Pages_Notifications
     {
         protected ValidationService validationService;
 
-        public NotificationEditModelBase(INotificationService service) : base(service)
+        public NotificationEditModelBase(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
         {
             validationService = new ValidationService(this);
         }
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+
+        public virtual async Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false)
+        {
+            Notification = await GetNotification(notificationId);
+
+            if (Notification == null)
+            {
+                return NotFound();
+            }
+
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission)
+            {
+                return RedirectToOverview(notificationId);
+            }
+
+            return await PreparePageForGet(notificationId, isBeingSubmitted);
+        }
+
+        protected virtual async Task<Notification> GetNotification(int notificationId)
+        {
+            return await service.GetNotificationAsync(notificationId);
+        }
 
         /*
         Post method accepts name of action specified by button clicked.
@@ -39,6 +62,11 @@ namespace ntbs_service.Pages_Notifications
             {
                 return NotFound();
             }
+            else if (!(await authorizationService.CanEdit(User, Notification)))
+            {
+                return ForbiddenResult();
+            }
+
             NotificationBannerModel = new NotificationBannerModel(Notification);
 
             switch (actionName) 
@@ -55,8 +83,8 @@ namespace ntbs_service.Pages_Notifications
         public async Task<IActionResult> Submit()
         {
             // First Validate and Save current page details
-            bool isValid = await ValidateAndSave();
-            if (!isValid) 
+            await ValidateAndSave();
+            if (!ModelState.IsValid) 
             {
                 return await OnGetAsync(NotificationId);
             }
@@ -73,7 +101,7 @@ namespace ntbs_service.Pages_Notifications
 
             await service.SubmitNotification(Notification);
             
-            return RedirectToOverview();
+            return RedirectToOverview(NotificationId);
         }
 
         private void SetShouldValidateFull() 
@@ -93,24 +121,24 @@ namespace ntbs_service.Pages_Notifications
         public async Task<IActionResult> Save(bool isBeingSubmitted)
         {           
             Notification.SetFullValidation(Notification.NotificationStatus);
-            bool isValid = await ValidateAndSave();
+            await ValidateAndSave();
 
-            if (!isValid) 
+            if (!ModelState.IsValid) 
             {
                 return await OnGetAsync(NotificationId);
             }
 
             if (Notification.NotificationStatus != NotificationStatus.Draft) 
             {
-                return RedirectToOverview();
+                return RedirectToOverview(NotificationId);
             }
 
             return RedirectToNextPage(NotificationId, isBeingSubmitted);
         }
 
-        private IActionResult RedirectToOverview() 
+        protected IActionResult RedirectToOverview(int id)
         {
-            return RedirectToPage("../Overview", new {id = NotificationId});
+            return RedirectToPage("../Overview", new {id});
         }
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
@@ -127,10 +155,8 @@ namespace ntbs_service.Pages_Notifications
             return validationService.IsValid(key);
         }
 
-        protected abstract Task<bool> ValidateAndSave();
-
-        public abstract Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false);
-
+        protected abstract Task ValidateAndSave();
+        protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
         protected abstract IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted);
     }
 }
