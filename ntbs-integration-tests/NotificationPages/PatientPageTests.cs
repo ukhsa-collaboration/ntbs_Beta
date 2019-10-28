@@ -100,9 +100,9 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.GetError("dob"));
             Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), resultDocument.GetError("nhs-number"));
             Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), resultDocument.GetError("postcode"));
-            Assert.Equal(ValidationMessages.SexIsRequired, resultDocument.GetError("sex"));
-            Assert.Equal(ValidationMessages.EthnicGroupIsRequired, resultDocument.GetError("ethnicity"));
-            Assert.Equal(ValidationMessages.BirthCountryIsRequired, resultDocument.GetError("birth-country"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.SexIsRequired), resultDocument.GetError("sex"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.EthnicGroupIsRequired), resultDocument.GetError("ethnicity"));
+            Assert.Equal(FullErrorMessage(ValidationMessages.BirthCountryIsRequired), resultDocument.GetError("birth-country"));
         }
 
         [Fact]
