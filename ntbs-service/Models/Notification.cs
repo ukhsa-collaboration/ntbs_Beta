@@ -68,6 +68,7 @@ namespace ntbs_service.Models
         public string TBServiceName => Episode.TBService?.Name;
         public string HospitalName => Episode.Hospital?.Name;
         public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
+        public string IsSymptomatic => TrueFalseToYesNo(ClinicalDetails.IsSymptomatic);
         public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
         public string IsDOTYesNo => TrueFalseToYesNo(ClinicalDetails.IsDOT);
@@ -84,13 +85,15 @@ namespace ntbs_service.Models
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
         public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
         public int? DaysFromOnsetToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
-        public int? DaysFromOnsetToPresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.PresentationDate, ClinicalDetails.SymptomStartDate);
-        public int? DaysFromPresentationToDiagnosis => CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.PresentationDate);
+        public int? DaysFromOnsetToFirstPresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.FirstPresentationDate, ClinicalDetails.SymptomStartDate);
+        public int? DaysFromFirstPresentationToTBServicePresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.TBServicePresentationDate, ClinicalDetails.FirstPresentationDate);
+        public int? DaysFromTBServicePresentationToDiagnosis => CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
         public int? DaysFromDiagnosisToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
         public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
         public string FormattedSymptomStartDate => FormatDate(ClinicalDetails.SymptomStartDate);
-        public string FormattedPresentationDate => FormatDate(ClinicalDetails.PresentationDate);
+        public string FormattedPresentationToAnyHealthServiceDate => FormatDate(ClinicalDetails.FirstPresentationDate);
+        public string FormattedPresentationToTBServiceDate => FormatDate(ClinicalDetails.TBServicePresentationDate);
         public string FormattedDiagnosisDate => FormatDate(ClinicalDetails.DiagnosisDate);
         public string FormattedTreatmentStartDate => FormatDate(ClinicalDetails.TreatmentStartDate);
         public string FormattedDeathDate => FormatDate(ClinicalDetails.DeathDate);
