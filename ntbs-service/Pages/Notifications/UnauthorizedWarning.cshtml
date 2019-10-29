@@ -1,0 +1,9 @@
+@model ntbs_service.Pages_Notifications.NotificationModelBase
+@using ntbs_service.Models.Validations
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+}
+<div id="unauthorized-warning">
+    <p>@(ValidationMessages.UnauthorizedWarning)</p>
+</div>

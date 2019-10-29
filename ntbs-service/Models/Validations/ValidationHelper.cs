@@ -86,6 +86,8 @@ namespace ntbs_service.Models.Validations
         public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the uk must be after patient's date of birth.";
         public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the uk must be no later than this year.";
         public const string ValidYearRange = "Year must be provided between {1} and {2}";
+
+        public const string UnauthorizedWarning = "You do not have permission to view the full details of this record";
     }
 
     public static class ValidDates

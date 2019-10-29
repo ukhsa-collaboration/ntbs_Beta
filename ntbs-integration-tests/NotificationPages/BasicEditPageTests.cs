@@ -32,6 +32,108 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsOk_ForNhsUserWithPermission(string route)
+        {
+            // Arrange
+            var idToServiceCodeMap = new Dictionary<int, string>
+            {
+                { Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE }
+            };
+            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string route)
+        {
+            // Arrange
+            var idToServiceCodeMap = new Dictionary<int, string>
+            {
+                { Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE }
+            };
+            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string route)
+        {
+            // Arrange
+            var idToServiceCodeMap = new Dictionary<int, string>
+            {
+                { Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE }
+            };
+            var client = factory.WithPheUserBuilder(idToServiceCodeMap, null).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string route)
+        {
+            // Arrange
+            var idToPostcodeMap = new Dictionary<int, string>
+            {
+                { Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE }
+            };
+            var client = factory.WithPheUserBuilder(null, idToPostcodeMap).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string route)
+        {
+            // Arrange
+            var idToServiceCodeMap = new Dictionary<int, string>
+            {
+                { Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE }
+            };
+            var client = factory.WithPheUserBuilder(idToServiceCodeMap, null).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string route)
+        {
+            // Arrange
+            var idToPostcodeMap = new Dictionary<int, string>
+            {
+                { Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE }
+            };
+            var client = factory.WithPheUserBuilder(null, idToPostcodeMap).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        }
+
         private static readonly List<string> Routes = new List<string>()
         {
             Helpers.Routes.Patient,
@@ -63,6 +165,5 @@ namespace ntbs_integration_tests.NotificationPages
                 OkNotificationIds.Select(id => new object[] { route, id })
             );
         }
-
     }
 }

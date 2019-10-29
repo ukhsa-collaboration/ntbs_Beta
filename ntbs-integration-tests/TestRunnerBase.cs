@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
-using Microsoft.AspNetCore.Mvc.Testing;
 using ntbs_service;
 using Xunit;
 using AngleSharp;
@@ -20,10 +19,7 @@ namespace ntbs_integration_tests
         protected TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
-            client = this.factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            client = this.factory.WithoutRedirects();
         }
 
         protected async Task<IHtmlDocument> GetDocumentAsync(HttpResponseMessage response)

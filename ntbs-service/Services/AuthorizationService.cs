@@ -59,7 +59,7 @@ namespace ntbs_service.Services
         private bool MatchesPHECCode(UserPermissionsFilter filter, Notification notification)
         {
             return filter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode)
-                || filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority.LocalAuthorityToPHEC.PHECCode);
+                || filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
         }
     }
 }

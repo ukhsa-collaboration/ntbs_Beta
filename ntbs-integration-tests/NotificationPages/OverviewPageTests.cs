@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -35,6 +37,45 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 Assert.Equal(BuildRoute(Routes.Patient, id), GetRedirectLocation(response));
             }
+        }
+
+        [Fact]
+        public async Task Get_ReturnsOverviewPage_ForUserWithPermission()
+        {
+            // Arrange
+            var idToServiceCodeMap = new Dictionary<int, string>
+            {
+                { Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE }
+            };
+            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var document = await GetDocumentAsync(response);
+            // There are 8 sections on the overview page
+            Assert.Equal(8, document.GetElementsByClassName("notification-overview-type-and-edit-container").Length);
+        }
+
+        [Fact]
+        public async Task Get_ShowsWarning_ForUserWithoutPermission()
+        {
+            // Arrange
+            var idToServiceCodeMap = new Dictionary<int, string>
+            {
+                { Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE }
+            };
+            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
+
+            //Act
+            var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var document = await GetDocumentAsync(response);
+            Assert.Equal(ValidationMessages.UnauthorizedWarning, document.GetElementById("unauthorized-warning").FirstElementChild.TextContent);
         }
     }
 }
