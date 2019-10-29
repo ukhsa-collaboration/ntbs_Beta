@@ -16,6 +16,9 @@ namespace ntbs_integration_tests.Helpers
         public const int DENOTIFY_WITH_DESCRIPTION = 10;
         public const int DENOTIFY_NO_DESCRIPTION = 11;
 
+        public const int DELETE_WITH_DESCRIPTION = 20;
+        public const int DELETE_NO_DESCRIPTION = 21;
+
         public static void SeedDatabase(NtbsContext context)
         {
             // General purpose entities extensively shared between tests
@@ -23,6 +26,7 @@ namespace ntbs_integration_tests.Helpers
 
             // Entities required for specific test suites
             context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
 
             context.SaveChanges();
         }

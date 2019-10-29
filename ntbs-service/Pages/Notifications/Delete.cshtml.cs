@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ntbs_service.Pages.Notifications
@@ -13,25 +15,15 @@ namespace ntbs_service.Pages.Notifications
         public ValidationService  ValidationService { get; set; }
 
         [BindProperty]
-        public DenotificationDetails DenotificationDetails { get; set; }
-
-        [BindProperty]
-        public FormattedDate FormattedDenotificationDate { get; set; }
+        [MaxLength(150)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, 
+            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+        public string DeletionReason { get; set; }
 
         public DeleteModel(INotificationService service) : base(service)
         {
             ValidationService = new ValidationService(this);
-
-            if (FormattedDenotificationDate == null)
-            {
-                var now = DateTime.Now;
-                FormattedDenotificationDate = new FormattedDate()
-                {
-                    Day = now.Day.ToString(),
-                    Month = now.Month.ToString(),
-                    Year = now.Year.ToString()
-                };
-            }
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -43,14 +35,12 @@ namespace ntbs_service.Pages.Notifications
             }
 
             NotificationId = Notification.NotificationId;
-            if (Notification.NotificationStatus != NotificationStatus.Notified)
+            if (Notification.NotificationStatus != NotificationStatus.Draft)
             {
                 return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
             }
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
-
-            await GetLinkedNotifications();
 
             return Page();
         }
@@ -58,20 +48,21 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await service.GetNotificationAsync(NotificationId);
-            DenotificationDetails.DateOfNotification = Notification.NotificationDate;
-            ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
+            // Validate DeletionReason here
+            // TryValidateModel(Notification.DeletionReason, DeletionReason);
+            
             if (!ModelState.IsValid)
             {
                 NotificationBannerModel = new NotificationBannerModel(Notification);
                 return Page();
             }
 
-            if (Notification.NotificationStatus == NotificationStatus.Notified)
+            if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
-                await service.DenotifyNotification(NotificationId, DenotificationDetails);
+                await service.DeleteNotification(NotificationId, DeletionReason);
             }
 
-            return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
+            return RedirectToPage("./DeleteConfirmation");
         }
     }
 }

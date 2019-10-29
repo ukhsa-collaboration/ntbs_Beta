@@ -20,5 +20,7 @@ namespace ntbs_integration_tests.Helpers
         public static string Overview = RouteHelper.GetNotificationBasePath("Overview");
         public static string LinkedNotifications = RouteHelper.GetNotificationBasePath("LinkedNotifications");
         public static string Denotify = RouteHelper.GetNotificationBasePath("Denotify");
+        public static string Delete = RouteHelper.GetNotificationBasePath("Delete");
+        public static string DeleteConfirmation = RouteHelper.GetNotificationBasePath("DeleteConfirmation");
     }
 }
