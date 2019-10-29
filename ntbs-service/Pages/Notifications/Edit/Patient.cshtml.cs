@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,6 +71,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
             ModelState.ClearValidationState("Patient.NHSNumber");
+            if (Patient.UkBorn != false)
+            {
+                ModelState.ClearValidationState("Patient.YearOfUkEntry");
+            }
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
