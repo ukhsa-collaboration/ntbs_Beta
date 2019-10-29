@@ -66,13 +66,12 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
+            
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(Routes.DeleteConfirmation, GetRedirectLocation(result));
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-            var redirectPage = await client.GetAsync(GetRedirectLocation(result));
-            var redirectDocument = await GetDocumentAsync(redirectPage);
-            Assert.NotNull(redirectDocument?.QuerySelector(".return-to-homepage-link"));
+            var postFormSubmissionResult = await GetDocumentAsync(result);
+            Assert.NotNull(postFormSubmissionResult?.QuerySelector(".return-to-homepage-link"));
         }
 
         [Fact]
@@ -95,13 +94,12 @@ namespace ntbs_integration_tests.NotificationPages
             // Act
             var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
 
+            
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(Routes.DeleteConfirmation, GetRedirectLocation(result));
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-            var redirectPage = await client.GetAsync(GetRedirectLocation(result));
-            var redirectDocument = await GetDocumentAsync(redirectPage);
-            Assert.NotNull(redirectDocument?.QuerySelector(".return-to-homepage-link"));
+            var postFormSubmissionResult = await GetDocumentAsync(result);
+            Assert.NotNull(postFormSubmissionResult?.QuerySelector(".return-to-homepage-link"));
         }
 
         [Fact]
