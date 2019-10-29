@@ -6,6 +6,13 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Set legacy deleted white categories to be the default White
+            migrationBuilder.Sql(@"
+                UPDATE Patients 
+                SET EthnicityId = 1
+                WHERE EthnicityId IN (2, 3)"
+            );
+
             migrationBuilder.DeleteData(
                 table: "Ethnicity",
                 keyColumn: "EthnicityId",

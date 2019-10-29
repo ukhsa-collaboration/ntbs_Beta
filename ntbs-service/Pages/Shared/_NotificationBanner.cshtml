@@ -31,6 +31,10 @@
                 {
                     <div> #@Model.NotificationId </div>
                 }
+                @if(!@Model.FullAccess)
+                {
+                    <p> (Limited access) </p>
+                }
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">

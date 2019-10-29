@@ -9,22 +9,20 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class PreviousHistoryModel : NotificationEditModelBase
     {
 
-        public PreviousHistoryModel(INotificationService service) : base(service) {}
+        public PreviousHistoryModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
 
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             PatientTBHistory = Notification.PatientTBHistory;
-            await SetNotificationProperties<PatientTBHistory>(isBeingSubmitted, PatientTBHistory);
+            await SetNotificationProperties(isBeingSubmitted, PatientTBHistory);
 
             if (PatientTBHistory.ShouldValidateFull)
             {
@@ -40,18 +38,15 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave()
+        protected override async Task ValidateAndSave()
         {
             UpdateFlags();
-            
             PatientTBHistory.SetFullValidation(Notification.NotificationStatus);
-            if (!TryValidateModel(this))
-            {
-                return false;
-            }
 
-            await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
-            return true;
+            if (TryValidateModel(PatientTBHistory.GetType().Name))
+            {
+                await service.UpdatePatientTBHistoryAsync(Notification, PatientTBHistory);
+            }
         }
 
         private void UpdateFlags()

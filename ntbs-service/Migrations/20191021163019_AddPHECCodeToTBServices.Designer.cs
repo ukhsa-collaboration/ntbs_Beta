@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191021163019_AddPHECCodeToTBServices")]
+    partial class AddPHECCodeToTBServices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1811,85 +1813,43 @@ namespace ntbs_service.Migrations
                         new
                         {
                             EthnicityId = 1,
-                            Code = "WW",
-                            Label = "White",
-                            Order = 1
+                            Code = "A",
+                            Label = "White British",
+                            Order = 16
                         },
                         new
                         {
-                            EthnicityId = 8,
-                            Code = "H",
-                            Label = "Indian",
-                            Order = 2
+                            EthnicityId = 2,
+                            Code = "B",
+                            Label = "White Irish",
+                            Order = 17
                         },
                         new
                         {
-                            EthnicityId = 9,
-                            Code = "J",
-                            Label = "Pakistani",
+                            EthnicityId = 3,
+                            Code = "C",
+                            Label = "Any other White background",
                             Order = 3
-                        },
-                        new
-                        {
-                            EthnicityId = 10,
-                            Code = "K",
-                            Label = "Bangladeshi",
-                            Order = 4
-                        },
-                        new
-                        {
-                            EthnicityId = 11,
-                            Code = "L",
-                            Label = "Any other Asian background",
-                            Order = 5
-                        },
-                        new
-                        {
-                            EthnicityId = 13,
-                            Code = "N",
-                            Label = "Black African",
-                            Order = 6
-                        },
-                        new
-                        {
-                            EthnicityId = 12,
-                            Code = "M",
-                            Label = "Black Caribbean",
-                            Order = 7
-                        },
-                        new
-                        {
-                            EthnicityId = 14,
-                            Code = "P",
-                            Label = "Any other Black Background",
-                            Order = 8
-                        },
-                        new
-                        {
-                            EthnicityId = 16,
-                            Code = "R",
-                            Label = "Chinese",
-                            Order = 9
-                        },
-                        new
-                        {
-                            EthnicityId = 6,
-                            Code = "F",
-                            Label = "Mixed - White and Asian",
-                            Order = 10
-                        },
-                        new
-                        {
-                            EthnicityId = 5,
-                            Code = "E",
-                            Label = "Mixed - White and Black African",
-                            Order = 11
                         },
                         new
                         {
                             EthnicityId = 4,
                             Code = "D",
                             Label = "Mixed - White and Black Caribbean",
+                            Order = 14
+                        },
+                        new
+                        {
+                            EthnicityId = 5,
+                            Code = "E",
+                            Label = "Mixed - White and Black African",
+                            Order = 13
+                        },
+                        new
+                        {
+                            EthnicityId = 6,
+                            Code = "F",
+                            Label = "Mixed - White and Asian",
                             Order = 12
                         },
                         new
@@ -1897,14 +1857,70 @@ namespace ntbs_service.Migrations
                             EthnicityId = 7,
                             Code = "G",
                             Label = "Any other mixed background",
-                            Order = 13
+                            Order = 9
+                        },
+                        new
+                        {
+                            EthnicityId = 8,
+                            Code = "H",
+                            Label = "Indian",
+                            Order = 1
+                        },
+                        new
+                        {
+                            EthnicityId = 9,
+                            Code = "J",
+                            Label = "Pakistani",
+                            Order = 2
+                        },
+                        new
+                        {
+                            EthnicityId = 10,
+                            Code = "K",
+                            Label = "Bangladeshi",
+                            Order = 10
+                        },
+                        new
+                        {
+                            EthnicityId = 11,
+                            Code = "L",
+                            Label = "Any other Asian background",
+                            Order = 6
+                        },
+                        new
+                        {
+                            EthnicityId = 12,
+                            Code = "M",
+                            Label = "Black Caribbean",
+                            Order = 11
+                        },
+                        new
+                        {
+                            EthnicityId = 13,
+                            Code = "N",
+                            Label = "Black African",
+                            Order = 5
+                        },
+                        new
+                        {
+                            EthnicityId = 14,
+                            Code = "P",
+                            Label = "Any other Black Background",
+                            Order = 7
                         },
                         new
                         {
                             EthnicityId = 15,
                             Code = "S",
                             Label = "Any other ethnic group",
-                            Order = 14
+                            Order = 8
+                        },
+                        new
+                        {
+                            EthnicityId = 16,
+                            Code = "R",
+                            Label = "Chinese",
+                            Order = 4
                         },
                         new
                         {
@@ -12247,9 +12263,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("DeletionReason")
-                        .HasMaxLength(150);
-
                     b.Property<string>("ETSID")
                         .HasMaxLength(50);
 
@@ -12257,8 +12270,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("LTBRID")
                         .HasMaxLength(50);
-
-                    b.Property<DateTime?>("NotificationDate");
 
                     b.Property<string>("NotificationStatus")
                         .IsRequired()
@@ -12305,9 +12316,6 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50);
 
-                    b.Property<string>("AdGroup")
-                        .HasMaxLength(64);
-
                     b.Property<string>("Name")
                         .HasMaxLength(50);
 
@@ -12319,73 +12327,61 @@ namespace ntbs_service.Migrations
                         new
                         {
                             Code = "E45000001",
-                            AdGroup = "Global.NIS.NTBS.LON",
                             Name = "London"
                         },
                         new
                         {
                             Code = "E45000005",
-                            AdGroup = "Global.NIS.NTBS.WMS",
                             Name = "West Midlands"
                         },
                         new
                         {
                             Code = "E45000009",
-                            AdGroup = "Global.NIS.NTBS.NoE",
                             Name = "North East"
                         },
                         new
                         {
                             Code = "E45000010",
-                            AdGroup = "Global.NIS.NTBS.YHR",
                             Name = "Yorkshire and Humber"
                         },
                         new
                         {
                             Code = "E45000016",
-                            AdGroup = "Global.NIS.NTBS.EMS",
                             Name = "East Midlands"
                         },
                         new
                         {
                             Code = "E45000017",
-                            AdGroup = "Global.NIS.NTBS.EoE",
                             Name = "East of England"
                         },
                         new
                         {
                             Code = "E45000018",
-                            AdGroup = "Global.NIS.NTBS.NoW",
                             Name = "North West"
                         },
                         new
                         {
                             Code = "E45000019",
-                            AdGroup = "Global.NIS.NTBS.SoE",
                             Name = "South East"
                         },
                         new
                         {
                             Code = "E45000020",
-                            AdGroup = "Global.NIS.NTBS.SoW",
                             Name = "South West"
                         },
                         new
                         {
                             Code = "PHECNI",
-                            AdGroup = "",
                             Name = "Northern Ireland"
                         },
                         new
                         {
                             Code = "PHECSCOT",
-                            AdGroup = "",
                             Name = "Scotland"
                         },
                         new
                         {
                             Code = "PHECWAL",
-                            AdGroup = "",
                             Name = "Wales"
                         });
                 });
@@ -12565,6 +12561,9 @@ namespace ntbs_service.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
+                    b.Property<string>("PHECAdGroup")
+                        .HasMaxLength(64);
+
                     b.Property<string>("PHECCode")
                         .HasMaxLength(50);
 
@@ -12579,7 +12578,7 @@ namespace ntbs_service.Migrations
                         .IsUnique()
                         .HasFilter("[ServiceAdGroup] IS NOT NULL");
 
-                    b.ToTable("TbService");
+                    b.ToTable("TBService");
 
                     b.HasData(
                         new
@@ -14215,13 +14214,7 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool?>("DidNotStartTreatment");
 
-                            b1.Property<DateTime?>("FirstPresentationDate");
-
                             b1.Property<int?>("HIVTestState");
-
-                            b1.Property<bool?>("IsDOT");
-
-                            b1.Property<bool?>("IsEnhancedCaseManagement");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -14229,15 +14222,13 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool?>("IsShortCourseTreatment");
 
-                            b1.Property<bool?>("IsSymptomatic");
-
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
 
                             b1.Property<bool>("NoSampleTaken");
 
-                            b1.Property<DateTime?>("SymptomStartDate");
+                            b1.Property<DateTime?>("PresentationDate");
 
-                            b1.Property<DateTime?>("TBServicePresentationDate");
+                            b1.Property<DateTime?>("SymptomStartDate");
 
                             b1.Property<DateTime?>("TreatmentStartDate");
 
@@ -14422,9 +14413,6 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("GivenName")
                                 .HasMaxLength(35);
 
-                            b1.Property<string>("LocalPatientId")
-                                .HasMaxLength(50);
-
                             b1.Property<string>("NhsNumber")
                                 .HasMaxLength(10);
 
@@ -14439,8 +14427,6 @@ namespace ntbs_service.Migrations
                             b1.Property<int?>("SexId");
 
                             b1.Property<bool?>("UkBorn");
-
-                            b1.Property<int?>("YearOfUkEntry");
 
                             b1.HasKey("NotificationId");
 

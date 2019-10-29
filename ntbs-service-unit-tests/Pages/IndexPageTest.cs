@@ -1,25 +1,23 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Services;
 using ntbs_service.Pages;
-using ntbs_service.Pages_Notifications;
 using Xunit;
+using ntbs_service.DataAccess;
+using System.Security.Claims;
 
 namespace ntbs_service_unit_tests.Pages
 {
-    public class PatientIndexPageTest
+    public class IndexPageTests
     {
-        private readonly Mock<INotificationService> mockNotificationService;
-        private readonly Mock<IUserService> mockUserService;
-        public PatientIndexPageTest() 
+        private readonly Mock<INotificationRepository> mockNotificationRepository;
+        private readonly Mock<IAuthorizationService> mockAuthorizationService;
+        public IndexPageTests() 
         {
-            mockNotificationService = new Mock<INotificationService>();
-            mockUserService = new Mock<IUserService>();
+            mockNotificationRepository = new Mock<INotificationRepository>();
+            mockAuthorizationService = new Mock<IAuthorizationService>();
         }
 
         [Fact]
@@ -28,10 +26,12 @@ namespace ntbs_service_unit_tests.Pages
             // Arrange
             var recent = Task.FromResult(GetRecentNotifications());
             var drafts = Task.FromResult(GetDraftNotifications());
-            mockNotificationService.Setup(s => s.GetRecentNotificationsAsync(It.IsAny<IEnumerable<TBService>>())).Returns(recent);
-            mockNotificationService.Setup(s => s.GetDraftNotificationsAsync(It.IsAny<IEnumerable<TBService>>())).Returns(drafts);           
+            mockNotificationRepository.Setup(s => s.GetRecentNotificationsAsync()).Returns(recent);
+            mockNotificationRepository.Setup(s => s.GetDraftNotificationsAsync()).Returns(drafts);
+            mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), recent.Result)).Returns(recent);
+            mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), drafts.Result)).Returns(drafts);
 
-            var pageModel = new IndexModel(mockNotificationService.Object, mockUserService.Object);
+            var pageModel = new IndexModel(mockNotificationRepository.Object, mockAuthorizationService.Object);
 
             // Act
             await pageModel.OnGetAsync();
@@ -45,14 +45,14 @@ namespace ntbs_service_unit_tests.Pages
             Assert.Equal("Ross", resultDraft[0].PatientDetails.GivenName);
         }
 
-        public IList<Notification> GetRecentNotifications()
+        public IEnumerable<Notification> GetRecentNotifications()
         {
             var patient = new PatientDetails() { GivenName = "Bob" };
 
             return new List<Notification> { new Notification{ PatientDetails = patient } };
         }
 
-        public IList<Notification> GetDraftNotifications()
+        public IEnumerable<Notification> GetDraftNotifications()
         {
             var patient = new PatientDetails() { GivenName = "Ross" };
 

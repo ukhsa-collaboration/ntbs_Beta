@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -22,7 +25,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service, NtbsContext context) : base(service)
+        public EpisodeModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
             
@@ -37,15 +40,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
-            Notification = await service.GetNotificationAsync(id);
-            if (Notification == null)
-            {
-                return NotFound();
-            }
+            return await base.OnGetAsync(id, isBeingSubmitted);
+        }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        {
             Episode = Notification.Episode;
-            await SetNotificationProperties<Episode>(isBeingSubmitted, Episode);
+            await SetNotificationProperties(isBeingSubmitted, Episode);
 
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
@@ -69,18 +70,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task<bool> ValidateAndSave() 
+        protected override async Task ValidateAndSave() 
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
             validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
 
-            if (!TryValidateModel(Episode, Episode.GetType().Name))
+            if (TryValidateModel(Episode, Episode.GetType().Name))
             {
-                return false;
+                await service.UpdateEpisodeAsync(Notification, Episode);
             }
-
-            await service.UpdateEpisodeAsync(Notification, Episode);
-            return true;
+            else
+            {
+                // Detach notification to avoid getting cached notification when retrieving from context,
+                // because cached notification date will change notification date on a banner even when invalid
+                context.Entry(Notification).State = EntityState.Detached;
+            }
         }
 
         public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)

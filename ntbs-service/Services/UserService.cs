@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
-        UserType GetUserType(ClaimsPrincipal user);
+        Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user);
+        Task<TBService> GetDefaultTBService(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
@@ -23,21 +25,47 @@ namespace ntbs_service.Services
             this.context = context;
             config = options.CurrentValue;
         }
-        public async Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
+        public async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
-            var tbServices = await context.GetAllTbServicesAsync();
-            // National Team users have access to all services' records
-            if (GetUserType(user) == UserType.NationalTeam)
+            var userFilter = new UserPermissionsFilter() { Type = GetUserType(user) };
+
+            if (userFilter.Type == UserType.NationalTeam)
             {
-                return tbServices;
+                // National Team users have access to all services' records
+                return userFilter;
             }
 
             var roles = GetRoles(user);
-            return tbServices
-                .Where(service =>
-                    roles.Contains(service.ServiceAdGroup)
-                    || roles.Contains(service.PHECAdGroup))
-                .ToList();
+            if (userFilter.Type == UserType.NhsUser)
+            {
+                userFilter.IncludedTBServiceCodes = await context.TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+            }
+            else
+            {
+                userFilter.IncludedPHECCodes = await context.PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
+            }
+
+            return userFilter;
+        }
+
+        public async Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
+        {
+            var type = GetUserType(user);
+            var roles = GetRoles(user);
+
+            if (type == UserType.NationalTeam)
+            {
+                return null;
+            }
+
+            if (type == UserType.NhsUser)
+            {
+                return await context.TbService.FirstAsync(tb => roles.Contains(tb.ServiceAdGroup));
+            }
+            else
+            {
+                return await context.TbService.Include(tb => tb.PHEC).FirstAsync(tb => roles.Contains(tb.PHEC.AdGroup));
+            }
         }
 
         private IEnumerable<string> GetRoles(ClaimsPrincipal user)
@@ -47,27 +75,17 @@ namespace ntbs_service.Services
                     .Select(role => role.StartsWith(config.AdGroupsPrefix) ? role.Substring(config.AdGroupsPrefix.Length) : role);
         }
 
-        public UserType GetUserType(ClaimsPrincipal user)
+        private UserType GetUserType(ClaimsPrincipal user)
         {
             if (user.IsInRole(config.AdGroupsPrefix + config.NationalTeamAdGroup))
             {
                 return UserType.NationalTeam;
             }
-            if (GetRoles(user).Any(role => role.Contains(config.ServiceGroupAdPrefix)))
+            if (GetRoles(user).Where(role => role.Contains(config.ServiceGroupAdPrefix)).Any())
             {
                 return UserType.NhsUser;
             }
             return UserType.PheUser;
         }
-    }
-
-    public enum UserType
-    {
-        /** Members of the national team with access to all regions */
-        NationalTeam,
-        /** Members of PHECs, regions associated with multiple TB services */
-        PheUser,
-        /** Clinical staff, members of particular TB services */
-        NhsUser
     }
 }
