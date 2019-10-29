@@ -98,7 +98,7 @@
                 <nhs-fieldset-legend nhs-legend-size="Standard">
                     Sex (required)
                 </nhs-fieldset-legend>
-                <span class="nhsuk-error-message" id="sex-error" ref="errorField" asp-validation-for="Patient.SexId" has-error="@hasSexError"></span>
+                <span nhs-span-type="ErrorMessage" id="sex-error" ref="errorField" asp-validation-for="Patient.SexId" has-error="@hasSexError"></span>
                 <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
                     @foreach (var sex in Model.Sexes)
                     {
@@ -123,7 +123,7 @@
             <label nhs-label-type="Standard" asp-for="Patient.EthnicityId">
                 Ethnic group (required)
             </label>
-            <span class="nhsuk-error-message" id="ethnicity-error" ref="errorField"
+            <span nhs-span-type="ErrorMessage" id="ethnicity-error" ref="errorField"
                   asp-validation-for="Patient.EthnicityId" has-error="@hasEthnicityError"></span>
             <select v-on:change="validate" ref="selectField" nhs-select-type="@ethnicitySelectErrorState"
                     asp-for="Patient.EthnicityId" asp-items="Model.Ethnicities">
@@ -206,7 +206,7 @@
                         <label nhs-label-type="Standard" asp-for="Patient.CountryId">
                             Birth country (required)
                         </label>
-                        <span class="nhsuk-error-message" id="birth-country-error"
+                        <span nhs-span-type="ErrorMessage" id="birth-country-error"
                               ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
                         <select ref="selectField" v-on:change="validate" nhs-select-type="@countrySelectErrorState"
                                 asp-for="Patient.CountryId" asp-items="Model.Countries"

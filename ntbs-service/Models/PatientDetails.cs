@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -53,12 +54,11 @@ namespace ntbs_service.Models
         public virtual Country Country { get; set; }
 
         [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYearRange)]
-        [AssertThat("ForeignBorn == true", ErrorMessage = ValidationMessages.YearOfUkEntryNotNeededIfDomesticOrUnknown)]
         [AssertThat("UkEntryAfterBirth == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustBeAfterDob)]
         [AssertThat("UkEntryNotInFuture == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
+        [DisplayName("year of uk entry")]
         public int? YearOfUkEntry { get; set; }
 
-        public bool ForeignBorn => UkBorn == false;
         public bool UkEntryAfterBirth => !Dob.HasValue || YearOfUkEntry >= Dob.Value.Year;
         public bool UkEntryNotInFuture => YearOfUkEntry <= DateTime.Now.Year;
 

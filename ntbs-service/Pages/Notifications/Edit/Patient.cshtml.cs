@@ -71,7 +71,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
             ModelState.ClearValidationState("Patient.NHSNumber");
-            ModelState.ClearValidationState("Patient.YearOfUkEntry");
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
