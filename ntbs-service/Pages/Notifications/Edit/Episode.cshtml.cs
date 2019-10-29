@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    
+
     public class EpisodeModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
@@ -21,14 +21,14 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         [BindProperty]
         public FormattedDate FormattedNotificationDate { get; set; }
-        
+
         [BindProperty]
         public Episode Episode { get; set; }
 
         public EpisodeModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
-            
+
             TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
                                         nameof(TBService.Code),
                                         nameof(TBService.Name));
@@ -70,7 +70,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task ValidateAndSave() 
+        protected override async Task ValidateAndSave()
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
             validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
