@@ -56,9 +56,6 @@ namespace ntbs_service.Models
         public virtual DenotificationDetails DenotificationDetails { get; set; }
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         [MaxLength(150)]
-        [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, 
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
 

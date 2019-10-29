@@ -13,7 +13,6 @@ namespace ntbs_service.Pages.Notifications
     public class DeleteModel : NotificationModelBase
     {
         public ValidationService  ValidationService { get; set; }
-
         [BindProperty]
         [MaxLength(150)]
         [RegularExpression(
@@ -48,9 +47,6 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await service.GetNotificationAsync(NotificationId);
-            // Validate DeletionReason here
-            // TryValidateModel(Notification.DeletionReason, DeletionReason);
-            
             if (!ModelState.IsValid)
             {
                 NotificationBannerModel = new NotificationBannerModel(Notification);
@@ -60,9 +56,10 @@ namespace ntbs_service.Pages.Notifications
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
                 await service.DeleteNotification(NotificationId, DeletionReason);
+                return Partial("_DeleteConfirmation", this);
             }
 
-            return RedirectToPage("./DeleteConfirmation");
+            return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
         }
     }
 }

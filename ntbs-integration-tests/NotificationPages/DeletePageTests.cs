@@ -50,7 +50,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Post_RedirectsToNextPageAndDeletes_IfModelValidWithNoDescription()
+        public async Task Post_DeletesAndDisplaysConfirmationPage_IfModelValidWithNoDescription()
         {
             // Arrange
             const int id = Utilities.DELETE_NO_DESCRIPTION;
@@ -76,7 +76,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Post_RedirectsToNextPageAndDenotifies_IfModelValidWithDescription()
+        public async Task Post_DeletesAndDisplaysConfirmationPage_IfModelValidWithDescription()
         {
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;

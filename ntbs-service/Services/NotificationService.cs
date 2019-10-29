@@ -356,14 +356,8 @@ namespace ntbs_service.Services
         public async Task DeleteNotification(int notificationId, string deletionReason)
         {
             var notification = await repository.GetNotificationAsync(notificationId);
-            if (string.IsNullOrEmpty(notification.DeletionReason))
-            {
-                notification.DeletionReason = deletionReason;
-            }
-            else
-            {
-                context.Entry(deletionReason).CurrentValues.SetValues(deletionReason);
-            }
+            notification.DeletionReason = deletionReason;
+            // context.Entry(notification.DeletionReason).CurrentValues.SetValues(deletionReason);
 
             notification.NotificationStatus = NotificationStatus.Deleted;
             await UpdateDatabase(AuditType.Deleted);

@@ -1,9 +1,10 @@
 @page "{handler?}"
+@model ntbs_service.Pages.Notifications.DeleteModel
 
 @{
     Layout = "../Shared/_Form_Layout.cshtml";
 }
 
-<h2> Draft Notification #NUMBER has been deleted </h2>
+<h2> Draft Notification #@Model.NotificationId has been deleted </h2>
 <br>
 <a href="/" class="nhsuk-button return-to-homepage-link">Return to the homepage</a>
