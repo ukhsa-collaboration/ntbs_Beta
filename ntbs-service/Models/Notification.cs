@@ -246,8 +246,16 @@ namespace ntbs_service.Models
             {
                 return null;
             }
-            var daysDiff = ((DateTime) NotificationDate - (DateTime) PatientDetails.Dob).Days;
-            return (int) Math.Floor(daysDiff / 365.2425);
+
+            var notificationDate = (DateTime) NotificationDate;
+            var birthDate = (DateTime) PatientDetails.Dob;
+
+            var yearDiff = notificationDate.Year - birthDate.Year;
+            if ((birthDate.Month*100 + birthDate.Day) > (notificationDate.Month*100 + notificationDate.Day))
+            {
+                yearDiff -= 1;
+            }
+            return yearDiff;
         }
     }
 }

@@ -9,13 +9,48 @@
     var fullValidation = Model.Episode.ShouldValidateFull ? "True" : "False";
 }
 
-<h2>
-    Hospital details
-</h2>
-
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+    <h2>Notification Date (required)</h2>
+    <validate-date model="Notification" property="NotificationDate" notification_id="@Model.Notification.NotificationId" inline-template>
+        @{
+            var notificationDateError = !Model.IsValid("Notification.NotificationDate");
+            var notificationDateGroupState = notificationDateError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@notificationDateGroupState>
+            <nhs-fieldset aria-describedby="notification-date-error" role="group">
+                <span nhs-span-type="ErrorMessage" ref="errorField"
+                        id="notification-date-error" asp-validation-for="Notification.NotificationDate" has-error="@notificationDateError"></span>
+                <nhs-date-input id="notification-date">
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedNotificationDate.Day">Day</label>
+                            <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                   is-error-input=@notificationDateError asp-for="FormattedNotificationDate.Day" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedNotificationDate.Month">Month</label>
+                            <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                   is-error-input=@notificationDateError asp-for="FormattedNotificationDate.Month" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedNotificationDate.Year">Year</label>
+                            <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                   is-error-input=@notificationDateError asp-for="FormattedNotificationDate.Year" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-date>
+    <br />
+
+    <h2> Hospital details </h2>
     <cascading-dropdowns model="Episode" shouldvalidatefull="@fullValidation" inline-template>
         <div>
             @{
@@ -81,45 +116,6 @@
         </nhs-form-group>
     </validate-input>
     <br />
-
-    <h2>Notification Date (required)</h2>
-    <validate-date model="Notification" property="NotificationDate" notification_id="@Model.Notification.NotificationId" inline-template>
-        @{
-            var notificationDateError = !Model.IsValid("Notification.NotificationDate");
-            var notificationDateGroupState = notificationDateError ? Error : Standard;
-        }
-        <nhs-form-group nhs-form-group-type=@notificationDateGroupState>
-            <nhs-fieldset aria-describedby="notification-date-error" role="group">
-                <span nhs-span-type="ErrorMessage" ref="errorField"
-                        id="notification-date-error" asp-validation-for="Notification.NotificationDate" has-error="@notificationDateError"></span>
-                <nhs-date-input id="notification-date">
-                    <nhs-date-input-item>
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <label nhs-label-type="Date" asp-for="FormattedNotificationDate.Day">Day</label>
-                            <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                   is-error-input=@notificationDateError asp-for="FormattedNotificationDate.Day" />
-                        </nhs-form-group>
-                    </nhs-date-input-item>
-                    <nhs-date-input-item>
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <label nhs-label-type="Date" asp-for="FormattedNotificationDate.Month">Month</label>
-                            <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                   is-error-input=@notificationDateError asp-for="FormattedNotificationDate.Month" />
-                        </nhs-form-group>
-                    </nhs-date-input-item>
-                    <nhs-date-input-item>
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <label nhs-label-type="Date" asp-for="FormattedNotificationDate.Year">Year</label>
-                            <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                   is-error-input=@notificationDateError asp-for="FormattedNotificationDate.Year" />
-                        </nhs-form-group>
-                    </nhs-date-input-item>
-                </nhs-date-input>
-            </nhs-fieldset>
-        </nhs-form-group>
-    </validate-date>
-    <br />
-
     
     <partial name="_PaginationPartial" for="Notification" />
 </div>

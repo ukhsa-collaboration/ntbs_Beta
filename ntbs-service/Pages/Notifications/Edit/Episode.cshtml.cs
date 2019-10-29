@@ -5,6 +5,9 @@ using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -75,6 +78,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(Episode, Episode.GetType().Name))
             {
                 await service.UpdateEpisodeAsync(Notification, Episode);
+            }
+            else
+            {
+                // Detach notification to avoid getting cached notification when retrieving from context,
+                // because cached notification date will change notification date on a banner even when invalid
+                context.Entry(Notification).State = EntityState.Detached;
             }
         }
 
