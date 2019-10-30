@@ -1,25 +1,23 @@
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Models.Validations;
 using Xunit;
 
-namespace ntbs_integration_tests.NotificationPages
+namespace ntbs_integration_tests.SearchPage
 {
     public class SearchPageTests : TestRunnerBase
     {
-        protected override string PageRoute => Routes.SearchPage;
-
         public SearchPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+
+        public const string PageRoute = "/Search";
 
         [Fact]
         public async Task GetSearch_ReturnsPageWithModelErrors_IfSearchNotValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await client.GetAsync(PageRoute);
             var pageContent = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -37,7 +35,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendGetFormWithData(pageContent, formData);
+            var result = await SendGetFormWithData(pageContent, formData, PageRoute);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -54,7 +52,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetSearch_ReturnsPageWithMatchingResult_IfSearchValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await client.GetAsync(PageRoute);
             var pageContent = await GetDocumentAsync(initialPage);
             var formData = new Dictionary<string, string>
             {
@@ -62,14 +60,12 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendGetFormWithData(pageContent, formData);
+            var result = await SendGetFormWithData(pageContent, formData, PageRoute);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             
             Assert.Equal(" #1 ", resultDocument.QuerySelector("a[id='notification-banner-id']").TextContent);
-            
         }
-
     }
 }

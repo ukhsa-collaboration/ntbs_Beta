@@ -1,4 +1,4 @@
-using ntbs_service.Helpers;
+﻿using ntbs_service.Helpers;
 
 namespace ntbs_integration_tests.Helpers
 {

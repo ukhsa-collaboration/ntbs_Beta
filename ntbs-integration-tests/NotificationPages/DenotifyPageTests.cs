@@ -1,4 +1,4 @@
-using ntbs_integration_tests.Helpers;
+﻿using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Models.Validations;
 using System.Collections.Generic;
@@ -8,12 +8,13 @@ using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using Xunit;
 using System;
+using ntbs_service.Helpers;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class DenotifyPageTests : TestRunnerBase
+    public class DenotifyPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Denotify;
+        protected override string NotificationSubPath => NotificationSubPaths.Denotify;
 
         public DenotifyPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
@@ -23,10 +24,10 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 new Notification(){ NotificationId = Utilities.DENOTIFY_WITH_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
                 new Notification(){ NotificationId = Utilities.DENOTIFY_NO_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
-                new Notification(){ 
-                    NotificationId = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE, 
-                    NotificationStatus = NotificationStatus.Notified, 
-                    NotificationDate = new DateTime(2011, 1, 1) 
+                new Notification(){
+                    NotificationId = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE,
+                    NotificationStatus = NotificationStatus.Notified,
+                    NotificationDate = new DateTime(2011, 1, 1)
                 }
             };
         }
@@ -43,14 +44,15 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetDenotifyPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await Client.GetAsync(GetPageRouteForId(id));
+            var response = await client.GetAsync(GetCurrentPathForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
 
             if (response.StatusCode == HttpStatusCode.Redirect)
             {
-                Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(response));
+                // Flipped expected/actual here to accomodate trailing slash
+                Assert.Contains(GetRedirectLocation(response), GetPathForId(NotificationSubPaths.Overview, id));
             }
         }
 
@@ -59,7 +61,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DENOTIFY_NO_DESCRIPTION;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -77,11 +80,12 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(result));
+            // Flipped expected/actual here to accomodate trailing slash
+            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
 
             var redirectPage = await Client.GetAsync(GetRedirectLocation(result));
             var redirectDocument = await GetDocumentAsync(redirectPage);
@@ -93,7 +97,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DENOTIFY_WITH_DESCRIPTION;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -113,11 +118,12 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(result));
+            // Flipped expected/actual here to accomodate trailing slash
+            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
 
             var redirectPage = await Client.GetAsync(GetRedirectLocation(result));
             var redirectDocument = await GetDocumentAsync(redirectPage);
@@ -129,7 +135,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "0";
@@ -147,7 +154,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -161,7 +168,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -179,7 +187,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -193,7 +201,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -211,7 +220,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -224,7 +233,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -240,7 +250,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -254,7 +264,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -272,7 +283,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

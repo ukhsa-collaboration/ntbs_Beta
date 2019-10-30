@@ -4,14 +4,15 @@ using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class PatientPageTests : TestRunnerBase
+    public class PatientPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Patient;
+        protected override string NotificationSubPath => NotificationSubPaths.EditPatient;
 
         public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
@@ -19,8 +20,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_ReturnsPageWithModelErrors_IfModelNotValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var pageContent = await GetDocumentAsync(initialPage);
+            const int id = Utilities.DRAFT_ID;
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -36,7 +39,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(pageContent, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -53,8 +56,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_ReturnsPageWithModelErrors_IfYearOfUkEntryBeforeDob()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var pageContent = await GetDocumentAsync(initialPage);
+            const int id = Utilities.DRAFT_ID;
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -67,7 +72,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(pageContent, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -78,8 +83,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithAllModelErrors_IfModelNotValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.NOTIFIED_ID;
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -89,7 +96,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -109,59 +116,61 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_RedirectsToNextPageAndSavesContent_IfModelValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            const int id = Utilities.DRAFT_ID;
+            var initialUrl = GetCurrentPathForId(id);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
-            const string GivenName = "Test";
-            const string FamilyName = "User";
-            const string BirthDay = "5";
-            const string BirthMonth = "5";
-            const string BirthYear = "1992";
-            const string NhsNumber = "1234567891";
-            const string Address = "123 Fake Street, London";
-            const string EthnicityId = "1";
-            const string SexId = "2";
-            const string CountryId = "3";
-            const string LocalPatientId = "123#";
+            const string givenName = "Test";
+            const string familyName = "User";
+            const string birthDay = "5";
+            const string birthMonth = "5";
+            const string birthYear = "1992";
+            const string nhsNumber = "1234567891";
+            const string address = "123 Fake Street, London";
+            const string ethnicityId = "1";
+            const string sexId = "2";
+            const string countryId = "3";
+            const string localPatientId = "123#";
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["Patient.GivenName"] = GivenName,
-                ["Patient.FamilyName"] = FamilyName,
-                ["FormattedDob.Day"] = BirthDay,
-                ["FormattedDob.Month"] = BirthMonth,
-                ["FormattedDob.Year"] = BirthYear,
-                ["Patient.NhsNumber"] = NhsNumber,
-                ["Patient.Address"] = Address,
+                ["Patient.GivenName"] = givenName,
+                ["Patient.FamilyName"] = familyName,
+                ["FormattedDob.Day"] = birthDay,
+                ["FormattedDob.Month"] = birthMonth,
+                ["FormattedDob.Year"] = birthYear,
+                ["Patient.NhsNumber"] = nhsNumber,
+                ["Patient.Address"] = address,
                 ["Patient.NoFixedAbode"] = "true",
                 ["Patient.Postcode"] = "NW5 1TL",
-                ["Patient.EthnicityId"] = EthnicityId,
-                ["Patient.SexId"] = SexId,
-                ["Patient.CountryId"] = CountryId,
-                ["Patient.LocalPatientId"] = LocalPatientId
+                ["Patient.EthnicityId"] = ethnicityId,
+                ["Patient.SexId"] = sexId,
+                ["Patient.CountryId"] = countryId,
+                ["Patient.LocalPatientId"] = localPatientId
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildEditRoute(Routes.Episode, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditEpisode, id), GetRedirectLocation(result));
 
-            var reloadedPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var reloadedPage = await client.GetAsync(initialUrl);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
-            Assert.Equal(GivenName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_GivenName")).Value);
-            Assert.Equal(FamilyName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_FamilyName")).Value);
-            Assert.Equal(BirthDay, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Day")).Value);
-            Assert.Equal(BirthMonth, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Month")).Value);
-            Assert.Equal(BirthYear, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Year")).Value);
-            Assert.Equal(NhsNumber, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_NhsNumber")).Value);
-            Assert.Equal(Address, ((IHtmlTextAreaElement)reloadedDocument.GetElementById("Patient_Address")).Value);
+            Assert.Equal(givenName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_GivenName")).Value);
+            Assert.Equal(familyName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_FamilyName")).Value);
+            Assert.Equal(birthDay, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Day")).Value);
+            Assert.Equal(birthMonth, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Month")).Value);
+            Assert.Equal(birthYear, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Year")).Value);
+            Assert.Equal(nhsNumber, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_NhsNumber")).Value);
+            Assert.Equal(address, ((IHtmlTextAreaElement)reloadedDocument.GetElementById("Patient_Address")).Value);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_Postcode")).Value);
-            Assert.Equal(EthnicityId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_EthnicityId")).SelectedIndex.ToString());
+            Assert.Equal(ethnicityId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_EthnicityId")).SelectedIndex.ToString());
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("sexId-2")).IsChecked);
-            Assert.Equal(CountryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
-            Assert.Equal(LocalPatientId, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).Value);
+            Assert.Equal(countryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
+            Assert.Equal(localPatientId, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).Value);
         }
 
         [Fact]
@@ -177,7 +186,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidatePatientDate"));
+            var response = await client.GetAsync(GetValidationPath(formData, "ValidatePatientDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -197,7 +206,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidatePatientProperty"));
+            var response = await client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -217,7 +226,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidatePatientProperty"));
+            var response = await client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -233,7 +242,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string> { [""] = year };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidateYearOfUkEntry"));
+            var response = await client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -250,7 +259,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string> { [""] = year };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidateYearOfUkEntry"));
+            var response = await client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

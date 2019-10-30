@@ -1,24 +1,26 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Helpers;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class ComorbidityPageTests : TestRunnerBase
+    public class ComorbidityPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Comorbidities;
+        protected override string NotificationSubPath => NotificationSubPaths.EditComorbidities;
 
-        public ComorbidityPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public ComorbidityPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task Post_RedirectsToNextPageAndSavesContent()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialUrl = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialPage = await client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -31,13 +33,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildEditRoute(Routes.Immunosuppression, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditImmunosuppression, Utilities.DRAFT_ID), GetRedirectLocation(result));
 
-            var reloadedPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var reloadedPage = await client.GetAsync(initialUrl);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("diabetes-radio-button-Yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("hepatitis-b-radio-button-No")).IsChecked);
