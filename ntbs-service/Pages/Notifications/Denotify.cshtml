@@ -100,7 +100,7 @@
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
                     <nhs-form-group nhs-form-group-type="@descriptionFormGroupType">
                         <label asp-for="DenotificationDetails.OtherDescription" nhs-label-type="Standard">
-                            Enter reason for deletion
+                            Provide reason
                         </label>
                         <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.OtherDescription" has-error="@hasDescriptionError"></span>
                         <input asp-for="DenotificationDetails.OtherDescription" nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
@@ -110,7 +110,7 @@
         </nhs-fieldset>
     </nhs-form-group>
 
-    <button nhs-button-type="Standard" asp-page-handler="Confirm">Confirm delete</button>
+    <button nhs-button-type="Standard" asp-page-handler="Confirm">Confirm denotification</button>
 
     <nhs-back-link href="@Model.Notification.OverviewPath">Cancel & go back</nhs-back-link>
 

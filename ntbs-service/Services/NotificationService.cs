@@ -355,7 +355,6 @@ namespace ntbs_service.Services
         {
             var notification = await repository.GetNotificationAsync(notificationId);
             notification.DeletionReason = deletionReason;
-            // context.Entry(notification.DeletionReason).CurrentValues.SetValues(deletionReason);
 
             notification.NotificationStatus = NotificationStatus.Deleted;
             await UpdateDatabase(AuditType.Deleted);

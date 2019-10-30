@@ -20,7 +20,7 @@ namespace ntbs_service.Pages.Notifications
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         public string DeletionReason { get; set; }
 
-        public DeleteModel(INotificationService service) : base(service)
+        public DeleteModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
         {
             ValidationService = new ValidationService(this);
         }
