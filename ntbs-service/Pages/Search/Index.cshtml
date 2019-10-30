@@ -200,9 +200,9 @@
                 </div>
             </nhs-details>
 
-            <div class="submit-search-button-container">
-                <input type="submit" value="Search" class="nhsuk-button submit-search-button" id="search-button" formaction="#search-results-section"/>
-            </div>
+            <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary" id="search-button">
+                Search
+            </button>
         </form>
     </div>
     <br/>
@@ -223,8 +223,8 @@
             </div>
             <p> @("To filter results, add more search terms and search again.") </p>
             <div class="create-notification-button-container">
-                <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button create-notification-button--right" id="create-button-1">
-                    Create new notification
+                <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary" id="create-button-1">
+                    Create Notification
                 </a>
             </div>
             @if (Model.SearchResults != null)
@@ -249,8 +249,8 @@
                                 previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
             </ul>
         </nav>
-        <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button" id="create-button-2">
-            Create new notification
+        <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary" id="create-button-2">
+            Create Notification
         </a>
     </nhs-width-container>
     <br>

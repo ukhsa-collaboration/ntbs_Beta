@@ -1,0 +1,33 @@
+@import "./colors.scss";
+
+.ntbsuk-button--primary {
+    background-color: $phe-red;
+    box-shadow: 0 4px 0 $button-drop-shadow;
+    margin-bottom: 24px;
+
+    &:hover,
+    &:focus {
+        background-color: $phe-red-focus;
+    }
+}
+
+.ntbsuk-button--secondary {
+    background-color: $secondary-button;
+    box-shadow: 0 4px 0 $button-drop-shadow;
+    margin-bottom: 24px;
+
+    &:hover,
+    &:focus {
+        background-color: $secondary-button-focus;
+    }
+}
+
+.ntbsuk-button--warning {
+    background-color: #d4351c;
+    box-shadow: 0 4px 0 $button-drop-shadow;
+
+    &:hover,
+    &:focus {
+        background-color: #aa2a16;
+    }
+}

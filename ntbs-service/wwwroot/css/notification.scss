@@ -1,24 +1,5 @@
 @import "./breakpoints";
-
-.actions-aside-section {
-    width: 300px;
-    padding: 10px 0 0 0;
-    margin-top: 30px;
-    border-top: 10px solid #1d70b8;
-
-    // This is used to position the ActionsAside component to the right when the page is wide enough
-    @media(min-width: $max_content_width_breakpoint) {
-        width: 200px;
-        top: 0px;
-        right: -220px;
-        margin-top: 0;
-        position: absolute;
-    }
-}
-
-.body-and-aside-container {
-    position: relative;
-}
+@import "./colors.scss";
 
 .search-notifications-button {
     font-size: medium;
@@ -35,4 +16,100 @@
 
 .delete-reason-text-area-container {
     width: 750px;
+}
+
+.manage-notification {
+    border-top-color: $phe-red;
+    border-top-width: 10px;
+    border-top-style: solid;
+    padding-top: 16px;
+
+    &.manage-notification--draft {
+        border-top-color: $ntbs-draft;
+    }
+
+    // We're overriding some of the nhs-uk expander styling here to achieve the desired effect.
+    // This allows us to free-ride off of the summary-details polyfill this nhs component provides.
+    .nhsuk-expander,
+    .nhsuk-expander[open] {
+        margin-bottom: 0;
+
+        .nhsuk-details__summary {
+            padding: 0;
+            border-width: 2px;
+            border-color: black;
+            border-style: solid;
+            border-radius: 4px;
+            background-color: $dull-red;
+        }
+
+        .nhsuk-details__summary-text {
+            margin-left: 16px;
+            color: black;
+            text-decoration: none;
+            // Taken from nhs expander, but with colour swapped for phe-red
+            background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__plus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237f0029'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M12 8v8M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
+        }
+
+        &[open] .nhsuk-details__summary-text {
+            // Taken from nhs expander, but with colour swapped for phe-red
+            background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__minus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237f0029'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
+        }
+
+        .nhsuk-details__text {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+
+            padding: 12px;
+        }
+    }
+}
+
+.action-link {
+    text-align: center;
+}
+
+.manage-notification--no-expander {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.notification-banner-links {
+    padding: 5px 10px;
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    border-top-color: $phe-red;
+    border-top-width: 10px;
+    border-top-style: solid;
+
+    &.notification-banner-links--draft {
+        border-top-color: $ntbs-draft;
+    }
+
+    border-bottom: 1px solid $grey;
+}
+
+.notification-banner-links--current {
+    font-weight: bold;
+}
+
+.notification-banner-link-separator {
+    margin: 2px 10px;
+    border-right: 2px solid black;
+}
+
+.notification-page-end {
+    border-top-color: $phe-red;
+    border-top-width: 10px;
+    border-top-style: solid;
+
+    &.notification-page-end--draft {
+        border-top-color: $ntbs-draft;
+    }
+
+    margin-top: 24px
 }

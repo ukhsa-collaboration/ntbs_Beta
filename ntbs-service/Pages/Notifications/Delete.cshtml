@@ -5,41 +5,45 @@
 @model ntbs_service.Pages.Notifications.DeleteModel
 
 @{
-    Layout = "../Shared/_Form_Layout.cshtml";
+    Layout = "../Shared/_Layout.cshtml";
     ViewData["Title"] = $"Delete - {Model.NotificationId}";
 }
 
-<nhs-grid-row>
-    <nhs-grid-column grid-column-width="Full">
-        <div class="notification-banner-container">
-            <partial name="../Shared/_NotificationBanner.cshtml" model="@Model.NotificationBannerModel" />
-        </div>
-    </nhs-grid-column>
-    <nhs-grid-column grid-column-width="Full">
-        <input type="hidden" asp-for="NotificationId" />
-        <nhs-warning-callout title-text="You are about to delete this draft and all associated information">
-            <p>
-                This action will be recorded in the audit log
-            </p>
-        </nhs-warning-callout>
-        @{
-            var hasReasonError = !Model.ValidationService.IsValid("DeletionReason");
-            var reasonFormGroupType = hasReasonError ? Error : Standard;
-        }
-        <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
-            <nhs-fieldset aria-describedby="reason-error">
-                <nhs-fieldset-legend nhs-legend-size="Standard">
-                    Reason for deletion
-                </nhs-fieldset-legend>
+<nhs-width-container container-width="Standard">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
+            <div class="notification-banner-container">
+                <partial name="../Shared/_NotificationBanner.cshtml" model="@Model.NotificationBannerModel" />
+            </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="Full">
+            <form method="post" autocomplete="off">
+                <input type="hidden" asp-for="NotificationId" />
+                <nhs-warning-callout title-text="You are about to delete this draft and all associated information">
+                    <p>
+                        This action will be recorded in the audit log
+                    </p>
+                </nhs-warning-callout>
+                @{
+                    var hasReasonError = !Model.ValidationService.IsValid("DeletionReason");
+                    var reasonFormGroupType = hasReasonError ? Error : Standard;
+                }
+                <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
+                    <nhs-fieldset aria-describedby="reason-error">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                            Reason for deletion
+                        </nhs-fieldset-legend>
 
-                <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="DeletionReason" has-error="@hasReasonError"></span>
-                <textarea asp-for="DeletionReason" nhs-textarea-type="Standard" is-error-input="@hasReasonError"
-                          aria-describedby="reason-error" rows="2" classes="delete-reason-text-area-container"> </textarea>
-            </nhs-fieldset>
-        </nhs-form-group>
+                        <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="DeletionReason" has-error="@hasReasonError"></span>
+                        <textarea asp-for="DeletionReason" nhs-textarea-type="Standard" is-error-input="@hasReasonError"
+                                aria-describedby="reason-error" rows="2" classes="delete-reason-text-area-container"> </textarea>
+                    </nhs-fieldset>
+                </nhs-form-group>
 
-        <button asp-page-handler="Confirm" class="nhsuk-button ntbsuk-button--warning">Confirm deletion</button>
+                <button asp-page-handler="Confirm" class="nhsuk-button ntbsuk-button--warning">Confirm deletion</button>
 
-        <nhs-back-link href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">Cancel & go back</nhs-back-link>
-    </nhs-grid-column>
-</nhs-grid-row>
+                <nhs-back-link href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">Cancel & go back</nhs-back-link>
+            </form>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</nhs-width-container>
