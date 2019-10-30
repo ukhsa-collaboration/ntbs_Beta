@@ -25,16 +25,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Migrations\20191009132719_AddTotalNumberOfCountriesToVisitorAndTravelDetails.cs" />
-    <Compile Remove="Migrations\20191009132719_AddTotalNumberOfCountriesToVisitorAndTravelDetails.Designer.cs" />
-    <Compile Remove="Migrations\20191010133301_CorrectVisitorAndTravelToUseConventionBasedNavigationProperties.cs" />
-    <Compile Remove="Migrations\20191010133301_CorrectVisitorAndTravelToUseConventionBasedNavigationProperties.Designer.cs" />
-    <Compile Remove="Migrations\20191010140326_CorrectVisitorAndTravelToUseConventionBasedNavigationProperties.cs" />
-    <Compile Remove="Migrations\20191010140326_CorrectVisitorAndTravelToUseConventionBasedNavigationProperties.Designer.cs" />
-    <Compile Remove="Migrations\20191010150439_Test.cs" />
-    <Compile Remove="Migrations\20191010150439_Test.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\EFAuditer\EFAuditer.csproj" />
   </ItemGroup>
 </Project>
