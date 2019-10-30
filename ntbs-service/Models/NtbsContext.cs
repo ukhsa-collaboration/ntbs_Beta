@@ -217,6 +217,12 @@ namespace ntbs_service.Models
                     e.Property(cd => cd.BCGVaccinationState)
                        .HasConversion(statusEnumConverter)
                        .HasMaxLength(EnumMaxLength);
+                    e.Property(c => c.DotStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    e.Property(c => c.EnhancedCaseManagementStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
                     e.ToTable("ClinicalDetails");
                 });
 
