@@ -54,7 +54,7 @@ namespace ntbs_service.Services
             var type = GetUserType(user);
             var roles = GetRoles(user);
 
-            return await UserServicesQuery(type, roles).FirstAsync();
+            return await GetTbServicesQuery(type, roles).FirstAsync();
         }
 
         public async Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
@@ -62,10 +62,10 @@ namespace ntbs_service.Services
             var type = GetUserType(user);
             var roles = GetRoles(user);
 
-            return await UserServicesQuery(type, roles).ToListAsync();
+            return await GetTbServicesQuery(type, roles).ToListAsync();
         }
 
-        private IQueryable<TBService> UserServicesQuery(UserType type, IEnumerable<string> roles)
+        private IQueryable<TBService> GetTbServicesQuery(UserType type, IEnumerable<string> roles)
         {
             switch (type)
             {

@@ -102,13 +102,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             Notification notification = await service.GetNotificationAsync(notificationId);
             return validationService.ValidateDate(notification, key, day, month, year);
         }
-        
+
         private void SetValuesForValidation()
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
             validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
-            Binding only sets the entity ids, but not the actual entitie.
+            Binding only sets the entity ids, but not the actual entities.
             There's a validation rule that needs to check the relationship between the entities,
             therefore we need fetch the reference data from the db before validating
             */
