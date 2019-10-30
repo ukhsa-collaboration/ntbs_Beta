@@ -1,4 +1,5 @@
-@page "{handler?}"
+@page "/Notifications/{id:int?}/Denotify/{handler?}"
+
 @using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @model ntbs_service.Pages.Notifications.DenotifyModel
@@ -112,6 +113,6 @@
 
     <button nhs-button-type="Standard" asp-page-handler="Confirm">Confirm denotification</button>
 
-    <nhs-back-link href="@Model.Notification.OverviewPath">Cancel & go back</nhs-back-link>
+    <nhs-back-link href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">Cancel & go back</nhs-back-link>
 
 </div>

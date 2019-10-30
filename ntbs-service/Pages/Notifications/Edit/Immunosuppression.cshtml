@@ -1,4 +1,4 @@
-@page "{handler?}"
+@page "/Notifications/{id:int}/Edit/Immunosuppression/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ImmunosuppressionModel
 @using ntbs_service.Models
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
@@ -31,7 +31,7 @@
 
                         @{
                             var hasStatusError = !Model.IsValid("ImmunosuppressionDetails.Status");
-                            var statusFormGroupType = hasStatusError ? Error : Standard;  
+                            var statusFormGroupType = hasStatusError ? Error : Standard;
                         }
 
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
@@ -54,7 +54,7 @@
 
                                         @{
                                             var hasDescriptionError = !Model.IsValid("ImmunosuppressionDetails.OtherDescription");
-                                            var descriptionFormGroupType = hasDescriptionError ? Error: Standard;
+                                            var descriptionFormGroupType = hasDescriptionError ? Error : Standard;
                                         }
 
                                         <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-description">
@@ -64,8 +64,8 @@
                                                         Specify Details
                                                     </label>
                                                     <span ref="descriptionError" id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="ImmunosuppressionDetails.OtherDescription"></span>
-                                                    <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription" 
-                                                           nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error"  />
+                                                    <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription"
+                                                           nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
                                                 </nhs-fieldset>
                                             </nhs-form-group>
                                         </div>

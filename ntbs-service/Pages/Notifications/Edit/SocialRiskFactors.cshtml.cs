@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
@@ -12,11 +12,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
         public SocialRiskFactorsModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
-
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
-        {
-            return await base.OnGetAsync(id, isBeingSubmitted);
-        }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
@@ -35,7 +30,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
             return RedirectToPage("./Travel", new { id = notificationId, isBeingSubmitted });
         }

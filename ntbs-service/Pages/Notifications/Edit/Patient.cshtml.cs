@@ -44,11 +44,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             Sexes = context.GetAllSexesAsync().Result.ToList();
         }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
-        {
-            return await base.OnGetAsync(id, isBeingSubmitted);
-        }
-
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             Patient = Notification.PatientDetails;
@@ -105,7 +100,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return validationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
             return RedirectToPage("./Episode", new { id = notificationId, isBeingSubmitted });
         }

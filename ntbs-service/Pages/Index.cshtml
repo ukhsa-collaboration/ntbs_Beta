@@ -1,4 +1,5 @@
 ﻿@page
+@using ntbs_service.Helpers
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -10,7 +11,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(Model => Model.DraftNotifications[0].NotificationId)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].NotificationId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DraftNotifications[0].FormattedCreationDate)
@@ -27,18 +28,18 @@
 @foreach (var item in Model.DraftNotifications) {
         <tr>
             <th>
-                <a href="./Notifications/Overview?id=@item.NotificationId" class="govuk-link govuk-link--no-visited-state">
-                    @Html.DisplayFor(modelItem => item.NotificationId)
+                <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link govuk-link--no-visited-state">
+                    @Html.DisplayFor(_ => item.NotificationId)
                 </a>
             </th>
             <td>
-                @Html.DisplayFor(modelItem => item.FormattedCreationDate)
+                @Html.DisplayFor(_ => item.FormattedCreationDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TBServiceName)
+                @Html.DisplayFor(_ => item.TBServiceName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Episode.CaseManager)
+                @Html.DisplayFor(_ => item.Episode.CaseManager)
             </td>
         </tr>
 }
@@ -50,7 +51,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(Model => Model.RecentNotifications[0].NotificationId)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedSubmissionDate)
@@ -67,7 +68,7 @@
 @foreach (var item in Model.RecentNotifications) {
         <tr>
             <th>
-                <a href="./Notifications/Overview?id=@item.NotificationId" class="govuk-link--no-visited-state">
+                <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link--no-visited-state">
                     @Html.DisplayFor(modelItem => item.NotificationId)
                 </a>
             </th>
