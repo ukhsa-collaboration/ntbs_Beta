@@ -38,11 +38,11 @@ namespace ntbs_service.Services
             var roles = GetRoles(user);
             if (userFilter.Type == UserType.NhsUser)
             {
-                userFilter.IncludedTBServiceCodes = await context.TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+                userFilter.IncludedTBServiceCodes = await context.GetTbServiceCodesMatchingRolesAsync(roles);
             }
             else
             {
-                userFilter.IncludedPHECCodes = await context.PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
+                userFilter.IncludedPHECCodes = await context.GetPhecCodesMatchingRolesAsync(roles);
             }
 
             return userFilter;
@@ -60,11 +60,11 @@ namespace ntbs_service.Services
 
             if (type == UserType.NhsUser)
             {
-                return await context.TbService.FirstAsync(tb => roles.Contains(tb.ServiceAdGroup));
+                return await context.GetDefaultTbServiceForNhsUserAsync(roles);
             }
             else
             {
-                return await context.TbService.Include(tb => tb.PHEC).FirstAsync(tb => roles.Contains(tb.PHEC.AdGroup));
+                return await context.GetDefaultTbServiceForPheUserAsync(roles);
             }
         }
 

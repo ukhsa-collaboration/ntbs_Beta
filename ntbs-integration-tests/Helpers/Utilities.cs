@@ -77,14 +77,14 @@ namespace ntbs_integration_tests.Helpers
             };
         }
 
-        public static void AddServiceCodeToNotification(NtbsContext context, int notificationId, string code)
+        public static void SetServiceCodeForNotification(NtbsContext context, int notificationId, string code)
         {
             var notification = context.Notification.Find(notificationId);
             notification.Episode.TBServiceCode = code;
             context.SaveChanges();
         }
 
-        public static void AddPostcodeToNotification(NtbsContext context, int notificationId, string code)
+        public static void SetPostcodeForNotification(NtbsContext context, int notificationId, string code)
         {
             var notification = context.Notification.Find(notificationId);
             notification.PatientDetails.PostcodeToLookup = code;

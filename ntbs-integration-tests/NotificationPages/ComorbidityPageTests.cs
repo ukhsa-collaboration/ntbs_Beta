@@ -18,7 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_RedirectsToNextPageAndSavesContent()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -37,7 +37,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Equal(BuildEditRoute(Routes.Immunosuppression, Utilities.DRAFT_ID), GetRedirectLocation(result));
 
-            var reloadedPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("diabetes-radio-button-Yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("hepatitis-b-radio-button-No")).IsChecked);

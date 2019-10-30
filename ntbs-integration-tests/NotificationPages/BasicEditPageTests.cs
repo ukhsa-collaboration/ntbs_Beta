@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsNotFound_ForNewId(string route)
         {
             // Act
-            var response = await client.GetAsync($"{route}?id={Utilities.NEW_ID}");
+            var response = await Client.GetAsync($"{route}?id={Utilities.NEW_ID}");
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -26,7 +27,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForExistingIds(string route, int id)
         {
             //Act
-            var response = await client.GetAsync($"{route}?id={id}");
+            var response = await Client.GetAsync($"{route}?id={id}");
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -36,102 +37,96 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForNhsUserWithPermission(string route)
         {
             // Arrange
-            var idToServiceCodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE }
-            };
-            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
+                 //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
 
-            //Act
-            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
         }
 
         [Theory, MemberData(nameof(EditPageRoutes))]
         public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string route)
         {
             // Arrange
-            var idToServiceCodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE }
-            };
-            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
 
-            //Act
-            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            }
         }
 
         [Theory, MemberData(nameof(EditPageRoutes))]
         public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string route)
         {
             // Arrange
-            var idToServiceCodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE }
-            };
-            var client = factory.WithPheUserBuilder(idToServiceCodeMap, null).WithoutRedirects();
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
 
-            //Act
-            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
         }
 
         [Theory, MemberData(nameof(EditPageRoutes))]
         public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string route)
         {
             // Arrange
-            var idToPostcodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE }
-            };
-            var client = factory.WithPheUserBuilder(null, idToPostcodeMap).WithoutRedirects();
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
 
-            //Act
-            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
         }
 
         [Theory, MemberData(nameof(EditPageRoutes))]
         public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string route)
         {
             // Arrange
-            var idToServiceCodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE }
-            };
-            var client = factory.WithPheUserBuilder(idToServiceCodeMap, null).WithoutRedirects();
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
 
-            //Act
-            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            }
         }
 
         [Theory, MemberData(nameof(EditPageRoutes))]
         public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string route)
         {
             // Arrange
-            var idToPostcodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE }
-            };
-            var client = factory.WithPheUserBuilder(null, idToPostcodeMap).WithoutRedirects();
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
 
-            //Act
-            var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            }
         }
 
         private static readonly List<string> Routes = new List<string>()

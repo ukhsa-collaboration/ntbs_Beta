@@ -87,6 +87,25 @@ namespace ntbs_service.Models
             return await Site.ToListAsync();
         }
 
+        public virtual async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
+        {
+            return await TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+        }
+
+        public virtual async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
+        {
+            return await PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
+        }
+
+        public virtual async Task<TBService> GetDefaultTbServiceForNhsUserAsync(IEnumerable<string> roles)
+        {
+            return await TbService.FirstAsync(tb => roles.Contains(tb.ServiceAdGroup));
+        }
+
+        public virtual async Task<TBService> GetDefaultTbServiceForPheUserAsync(IEnumerable<string> roles)
+        {
+            return await TbService.Include(tb => tb.PHEC).FirstAsync(tb => roles.Contains(tb.PHEC.AdGroup));
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

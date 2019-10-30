@@ -12,14 +12,14 @@ namespace ntbs_integration_tests
 {
     public abstract class TestRunnerBase : IClassFixture<NtbsWebApplicationFactory<Startup>>
     {
-        protected readonly HttpClient client;
-        protected readonly NtbsWebApplicationFactory<Startup> factory;
+        protected readonly HttpClient Client;
+        protected readonly NtbsWebApplicationFactory<Startup> Factory;
         protected virtual string PageRoute { get; }
 
         protected TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
         {
-            this.factory = factory;
-            client = this.factory.WithoutRedirects();
+            Factory = factory;
+            Client = Factory.CreateClientWithoutRedirects();
         }
 
         protected async Task<IHtmlDocument> GetDocumentAsync(HttpResponseMessage response)
@@ -67,7 +67,7 @@ namespace ntbs_integration_tests
                 submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
             }
 
-            return await client.SendPostAsync(form, formData, submissionRoute);
+            return await Client.SendPostAsync(form, formData, submissionRoute);
         }
 
         protected async Task<HttpResponseMessage> SendGetFormWithData(
@@ -83,7 +83,7 @@ namespace ntbs_integration_tests
                 submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
             }
 
-            return await client.SendGetAsync(form, formData, submissionRoute);
+            return await Client.SendGetAsync(form, formData, submissionRoute);
         }
 
         protected string BuildValidationPath(Dictionary<string, string> formData, string subPath)

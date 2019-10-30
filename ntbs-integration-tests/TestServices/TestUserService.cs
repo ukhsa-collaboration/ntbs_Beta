@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace ntbs_integration_tests.TestServices
     {
         public Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
@@ -29,7 +30,7 @@ namespace ntbs_integration_tests.TestServices
     {
         public Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)

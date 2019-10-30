@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service;
-using ntbs_service.Models.Validations;
+using ntbs_service.Pages;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -28,7 +28,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetOverviewPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync(GetPageRouteForId(id));
+            var response = await Client.GetAsync(GetPageRouteForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
@@ -43,39 +43,38 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOverviewPage_ForUserWithPermission()
         {
             // Arrange
-            var idToServiceCodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE }
-            };
-            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
 
-            //Act
-            var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+                //Act
+                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var document = await GetDocumentAsync(response);
-            // There are 8 sections on the overview page
-            Assert.Equal(8, document.GetElementsByClassName("notification-overview-type-and-edit-container").Length);
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var document = await GetDocumentAsync(response);
+                Assert.True(document.GetElementsByClassName("notification-overview-type-and-edit-container").Length > 0);
+            }
         }
 
         [Fact]
         public async Task Get_ShowsWarning_ForUserWithoutPermission()
         {
             // Arrange
-            var idToServiceCodeMap = new Dictionary<int, string>
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
             {
-                { Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE }
-            };
-            var client = factory.WithNhsUserBuilder(idToServiceCodeMap).WithoutRedirects();
 
-            //Act
-            var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+                //Act
+                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var document = await GetDocumentAsync(response);
-            Assert.Equal(ValidationMessages.UnauthorizedWarning, document.GetElementById("unauthorized-warning").FirstElementChild.TextContent);
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var document = await GetDocumentAsync(response);
+                Assert.Contains(Messages.UnauthorizedWarning, document.GetElementById("unauthorized-warning").TextContent);
+            }
         }
     }
 }

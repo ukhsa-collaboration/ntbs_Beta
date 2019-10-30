@@ -16,7 +16,7 @@ namespace ntbs_integration_tests
         public async Task TestPagesExist(string route)
         {
             // Act
-            var response = await client.GetAsync($"{route}");
+            var response = await Client.GetAsync($"{route}");
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
