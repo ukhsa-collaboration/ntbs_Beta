@@ -19,6 +19,8 @@ using EFAuditer;
 using ntbs_service.Middleware;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authentication;
+using System;
+using System.Net.Http;
 
 namespace ntbs_service
 {
@@ -55,6 +57,9 @@ namespace ntbs_service
                     {
                         options.MetadataAddress = adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                         options.Wtrealm = adfsConfig["Wtrealm"];
+                        options.BackchannelHttpHandler = new HttpClientHandler() {
+                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        };
                     })
                     .AddCookie(options =>
                     {   
@@ -73,6 +78,9 @@ namespace ntbs_service
                                 .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddRazorPagesOptions(options => {
+                options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
+                options.Conventions.AllowAnonymousToPage("/Logout");
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

@@ -47,6 +47,8 @@ spec:
                 key: migration
           - name: AdfsOptions__Wtrealm
             value: # ???
+          - name: AdfsOptions__AdfsUrl
+            value: "https://ntbs.uksouth.cloudapp.azure.com"
           - name: AdfsOptions__AdGroupsPrefix
             value: ""
       imagePullSecrets:
