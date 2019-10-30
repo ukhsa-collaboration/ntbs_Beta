@@ -12559,7 +12559,7 @@ namespace ntbs_service.Migrations
                         .IsUnique()
                         .HasFilter("[ServiceAdGroup] IS NOT NULL");
 
-                    b.ToTable("TBService");
+                    b.ToTable("TbService");
 
                     b.HasData(
                         new
@@ -13930,7 +13930,13 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool?>("DidNotStartTreatment");
 
+                            b1.Property<DateTime?>("FirstPresentationDate");
+
                             b1.Property<int?>("HIVTestState");
+
+                            b1.Property<bool?>("IsDOT");
+
+                            b1.Property<bool?>("IsEnhancedCaseManagement");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -13942,9 +13948,9 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("NoSampleTaken");
 
-                            b1.Property<DateTime?>("PresentationDate");
-
                             b1.Property<DateTime?>("SymptomStartDate");
+
+                            b1.Property<DateTime?>("TBServicePresentationDate");
 
                             b1.Property<DateTime?>("TreatmentStartDate");
 

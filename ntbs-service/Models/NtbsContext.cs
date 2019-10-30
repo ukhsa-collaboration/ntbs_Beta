@@ -35,7 +35,6 @@ namespace ntbs_service.Models
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<PHEC> PHEC { get; set; }
-
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
