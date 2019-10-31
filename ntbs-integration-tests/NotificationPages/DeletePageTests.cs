@@ -82,13 +82,10 @@ namespace ntbs_integration_tests.NotificationPages
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
-            
-            const string reason = "A great reason";
-
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["DeletionReason"] = reason
+                ["DeletionReason"] = "A great reason"
             };
 
             // Act
@@ -110,13 +107,10 @@ namespace ntbs_integration_tests.NotificationPages
             var initialPage = await client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
-            
-            const string reason = "A bad reason $#|";
-
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["DeletionReason"] = reason
+                ["DeletionReason"] = "A bad reason $#|"
             };
 
             // Act

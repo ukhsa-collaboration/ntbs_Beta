@@ -34,6 +34,8 @@ namespace ntbs_service.Models
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
+        [MaxLength(150)]
+        public string DeletionReason { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
@@ -55,8 +57,6 @@ namespace ntbs_service.Models
         public virtual VisitorDetails VisitorDetails { get; set; }
         public virtual DenotificationDetails DenotificationDetails { get; set; }
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
-        [MaxLength(150)]
-        public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();

@@ -32,9 +32,8 @@
                 </nhs-fieldset-legend>
 
                 <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="DeletionReason" has-error="@hasReasonError"></span>
-
-                <input asp-for="DeletionReason" nhs-input-type="Standard" is-error-input="@hasReasonError" 
-                aria-describedby="reason-error" />
+                <textarea asp-for="DeletionReason" nhs-textarea-type="Standard" is-error-input="@hasReasonError" 
+                    aria-describedby="reason-error" rows="2" classes="delete-reason-text-area-container"> </textarea>
             </nhs-fieldset>
         </nhs-form-group>
 
