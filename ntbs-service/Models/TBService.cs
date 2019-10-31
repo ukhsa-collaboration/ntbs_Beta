@@ -6,7 +6,7 @@ namespace ntbs_service.Models
     {
         public string Code { get; set; }
         public string Name { get; set; }
-        public string ServiceAdGroup { get; internal set; }
+        public string ServiceAdGroup { get; set; }
 
         [MaxLength(50)]
         public string PHECCode { get; set; }

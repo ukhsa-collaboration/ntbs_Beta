@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsNotFound_ForNewId(string route)
         {
             // Act
-            var response = await client.GetAsync($"{route}?id={Utilities.NEW_ID}");
+            var response = await Client.GetAsync($"{route}?id={Utilities.NEW_ID}");
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -26,10 +27,106 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForExistingIds(string route, int id)
         {
             //Act
-            var response = await client.GetAsync($"{route}?id={id}");
+            var response = await Client.GetAsync($"{route}?id={id}");
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsOk_ForNhsUserWithPermission(string route)
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
+            {
+                 //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string route)
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            }
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string route)
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string route)
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE)
+                                        .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string route)
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            }
+        }
+
+        [Theory, MemberData(nameof(EditPageRoutes))]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string route)
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<PheUserService>()
+                                        .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE)
+                                        .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            }
         }
 
         private static readonly List<string> Routes = new List<string>()
@@ -63,6 +160,5 @@ namespace ntbs_integration_tests.NotificationPages
                 OkNotificationIds.Select(id => new object[] { route, id })
             );
         }
-
     }
 }

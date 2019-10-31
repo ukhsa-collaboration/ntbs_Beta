@@ -18,7 +18,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -42,7 +42,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_ReturnsWithNotificationDateRangeError_IfNotificationDateIsNotInRange()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -67,7 +67,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsWithNotificationDateRequiredError_IfNotificationDateNotSet()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -88,7 +88,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -112,7 +112,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsWithNotificationDateRangeError_IfNotificationDateIsNotInRange()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -136,7 +136,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithAllRequiredErrors_IfModelNotValid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -159,7 +159,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithTextFieldInputError_IfTextIsInvalid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -183,7 +183,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_RedirectToNextPage_IfModelIsValid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -210,7 +210,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValdationError()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>

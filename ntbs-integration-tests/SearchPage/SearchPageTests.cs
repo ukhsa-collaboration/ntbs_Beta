@@ -19,7 +19,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetSearch_ReturnsPageWithModelErrors_IfSearchNotValid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var pageContent = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetSearch_ReturnsPageWithMatchingResult_IfSearchValid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var pageContent = await GetDocumentAsync(initialPage);
             var formData = new Dictionary<string, string>
             {
