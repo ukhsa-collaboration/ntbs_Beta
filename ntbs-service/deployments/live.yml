@@ -48,9 +48,9 @@ spec:
           - name: AdfsOptions__Wtrealm
             value: # ???
           - name: AdfsOptions__AdfsUrl
-            value: "https://ntbs.uksouth.cloudapp.azure.com"
+            value: "https://fs.softwire.com"
           - name: AdfsOptions__AdGroupsPrefix
-            value: ""
+            value: "pheNtbs - "
       imagePullSecrets:
       - name: registery-password # ???
 ---
