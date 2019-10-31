@@ -177,8 +177,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "false",
-                ["ClinicalDetails.IsDOT"] = "Yes",
-                ["ClinicalDetails.IsEnhancedCaseManagement"] = "No"
+                ["ClinicalDetails.DotStatus"] = "Yes",
+                ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
             };
 
             // Act
