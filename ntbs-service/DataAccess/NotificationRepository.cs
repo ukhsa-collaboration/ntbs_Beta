@@ -84,13 +84,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseNotificationIQueryable()
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
-                .Include(n => n.PatientDetails)
-                    .ThenInclude(p => p.PostcodeLookup)
-                        .ThenInclude(pc => pc.LocalAuthority)
-                            .ThenInclude(la => la.LocalAuthorityToPHEC)
-                                .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.Episode).ThenInclude(p => p.Hospital)
-                .Include(n => n.Episode).ThenInclude(p => p.TBService)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
@@ -126,8 +120,10 @@ namespace ntbs_service.DataAccess
                     .ThenInclude(p => p.PostcodeLookup)
                         .ThenInclude(pc => pc.LocalAuthority)
                             .ThenInclude(la => la.LocalAuthorityToPHEC)
+                                .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.Episode)
-                    .ThenInclude(p => p.TBService);
+                    .ThenInclude(p => p.TBService)
+                        .ThenInclude(p => p.PHEC);
         }
     }
 }
