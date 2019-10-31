@@ -25,7 +25,7 @@ namespace ntbs_service.Pages.Notifications
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {
-                return Partial("./NotEditableWarning", this);
+                return Partial("./UnauthorizedWarning", this);
             }
 
             // This check has to happen after authorization as otherwise patient will redirect to overview and we'd be stuck in a loop.

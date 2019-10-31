@@ -49,7 +49,7 @@ namespace ntbs_service.Services
             this.userService = userService;
             this.context = context;
         }
-
+        
         public async Task<Notification> GetNotificationAsync(int? id)
         {
             return await repository.GetNotificationAsync(id);

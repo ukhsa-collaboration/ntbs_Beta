@@ -13,6 +13,7 @@ namespace ntbs_service.Services
     {
         Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user);
         Task<TBService> GetDefaultTBService(ClaimsPrincipal user);
+        Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
@@ -38,11 +39,11 @@ namespace ntbs_service.Services
             var roles = GetRoles(user);
             if (userFilter.Type == UserType.NhsUser)
             {
-                userFilter.IncludedTBServiceCodes = await context.TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+                userFilter.IncludedTBServiceCodes = await context.GetTbServiceCodesMatchingRolesAsync(roles);
             }
             else
             {
-                userFilter.IncludedPHECCodes = await context.PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
+                userFilter.IncludedPHECCodes = await context.GetPhecCodesMatchingRolesAsync(roles);
             }
 
             return userFilter;
@@ -50,21 +51,27 @@ namespace ntbs_service.Services
 
         public async Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
         {
+            return await GetTbServicesQuery(user).FirstAsync();
+        }
+
+        public async Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
+        {
+            return await GetTbServicesQuery(user).ToListAsync();
+        }
+
+        private IQueryable<TBService> GetTbServicesQuery(ClaimsPrincipal user)
+        {
             var type = GetUserType(user);
             var roles = GetRoles(user);
 
-            if (type == UserType.NationalTeam)
+            switch (type)
             {
-                return null;
-            }
-
-            if (type == UserType.NhsUser)
-            {
-                return await context.TbService.FirstAsync(tb => roles.Contains(tb.ServiceAdGroup));
-            }
-            else
-            {
-                return await context.TbService.Include(tb => tb.PHEC).FirstAsync(tb => roles.Contains(tb.PHEC.AdGroup));
+                case UserType.NationalTeam:
+                    return context.TbService;
+                case UserType.NhsUser:
+                    return context.GetDefaultTbServicesForNhsUser(roles);
+                default:
+                    return context.GetDefaultTbServicesForPheUser(roles);
             }
         }
 

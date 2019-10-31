@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
-using Microsoft.AspNetCore.Mvc.Testing;
 using ntbs_service;
 using Xunit;
 using AngleSharp;
@@ -13,17 +12,14 @@ namespace ntbs_integration_tests
 {
     public abstract class TestRunnerBase : IClassFixture<NtbsWebApplicationFactory<Startup>>
     {
-        protected readonly HttpClient client;
-        protected readonly NtbsWebApplicationFactory<Startup> factory;
+        protected readonly HttpClient Client;
+        protected readonly NtbsWebApplicationFactory<Startup> Factory;
         protected virtual string PageRoute { get; }
 
         protected TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
         {
-            this.factory = factory;
-            client = this.factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            Factory = factory;
+            Client = Factory.CreateClientWithoutRedirects();
         }
 
         protected async Task<IHtmlDocument> GetDocumentAsync(HttpResponseMessage response)
@@ -55,7 +51,7 @@ namespace ntbs_integration_tests
 
         protected string FullErrorMessage(string validationMessage)
         {
-            return $"Error:{validationMessage}";
+            return HtmlDocumentHelpers.FullErrorMessage(validationMessage);
         }
 
         protected async Task<HttpResponseMessage> SendPostFormWithData(
@@ -71,7 +67,7 @@ namespace ntbs_integration_tests
                 submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
             }
 
-            return await client.SendPostAsync(form, formData, submissionRoute);
+            return await Client.SendPostAsync(form, formData, submissionRoute);
         }
 
         protected async Task<HttpResponseMessage> SendGetFormWithData(
@@ -87,7 +83,7 @@ namespace ntbs_integration_tests
                 submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
             }
 
-            return await client.SendGetAsync(form, formData, submissionRoute);
+            return await Client.SendGetAsync(form, formData, submissionRoute);
         }
 
         protected string BuildValidationPath(Dictionary<string, string> formData, string subPath)

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Models.Validations;
@@ -13,13 +12,13 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string PageRoute => Routes.Episode;
 
-        public EpisodesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public EpisodesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task PostDraft_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -36,15 +35,14 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), 
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
         }
 
         [Fact]
         public async Task PostDraft_ReturnsWithNotificationDateRangeError_IfNotificationDateIsNotInRange()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -61,15 +59,15 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)), 
-                        resultDocument.GetError("notification-date"));
+            var expectedMessage = ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate);
+            resultDocument.AssertErrorMessage("notification-date", expectedMessage);
         }
 
         [Fact]
         public async Task PostNotified_ReturnsWithNotificationDateRequiredError_IfNotificationDateNotSet()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -83,15 +81,14 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired), 
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
         }
 
         [Fact]
         public async Task PostNotified_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -108,15 +105,14 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), 
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
         }
 
         [Fact]
         public async Task PostNotified_ReturnsWithNotificationDateRangeError_IfNotificationDateIsNotInRange()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -133,15 +129,14 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)), 
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate));
         }
 
         [Fact]
         public async Task PostNotified_ReturnsPageWithAllRequiredErrors_IfModelNotValid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -155,17 +150,16 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.NotificationDateIsRequired), 
-                        resultDocument.GetError("notification-date"));
-            Assert.Equal(ValidationMessages.TBServiceIsRequired, resultDocument.GetError("tb-service"));
-            Assert.Equal(ValidationMessages.HospitalIsRequired, resultDocument.GetError("hospital"));
-        }        
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
+            resultDocument.AssertErrorMessage("tb-service", ValidationMessages.TBServiceIsRequired);
+            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalIsRequired);
+        }
 
         [Fact]
         public async Task PostNotified_ReturnsPageWithTextFieldInputError_IfTextIsInvalid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -181,24 +175,22 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), 
-                        resultDocument.GetError("consultant"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), 
-                        resultDocument.GetError("case-manager"));
+            resultDocument.AssertErrorMessage("consultant", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("case-manager", ValidationMessages.StandardStringFormat);
         }
 
         [Fact]
         public async Task PostDraft_RedirectToNextPage_IfModelIsValid()
         {
             // Arrange
-            var initialPage = await client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["Episode.HospitalId"] = "1EE2B39A-428F-44C7-B4BB-000649636591",
-                ["Episode.TBServiceCode"] = "TBS0181",
+                ["Episode.HospitalId"] = Utilities.HOSPITAL_FLEETWOOD_HOSPITAL_ID,
+                ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_DERBY_HOSPITAL_ID,
                 ["Episode.Consultant"] = "Consultant",
                 ["Episode.CaseManager"] = "CaseManager",
                 ["FormattedNotificationDate.Day"] = "1",
@@ -214,6 +206,27 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(BuildEditRoute(Routes.ClinicalDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
         }
 
+        [Fact]
+        public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValdationError()
+        {
+            // Arrange
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var document = await GetDocumentAsync(initialPage);
 
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["Episode.HospitalId"] = Utilities.HOSPITAL_FLEETWOOD_HOSPITAL_ID,
+                ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
+            };
+
+            // Act
+            var result = await SendPostFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalMustBelongToSelectedTbSerice);
+        }
     }
 }

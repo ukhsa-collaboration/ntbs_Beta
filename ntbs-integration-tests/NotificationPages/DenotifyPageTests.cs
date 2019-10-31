@@ -43,7 +43,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetDenotifyPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync(GetPageRouteForId(id));
+            var response = await Client.GetAsync(GetPageRouteForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
@@ -59,7 +59,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DENOTIFY_NO_DESCRIPTION;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -83,7 +83,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(result));
 
-            var redirectPage = await client.GetAsync(GetRedirectLocation(result));
+            var redirectPage = await Client.GetAsync(GetRedirectLocation(result));
             var redirectDocument = await GetDocumentAsync(redirectPage);
             Assert.Contains("notification-banner--denotified", redirectDocument?.QuerySelector("dl.notification-banner")?.ClassList);
         }
@@ -93,7 +93,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DENOTIFY_WITH_DESCRIPTION;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -119,7 +119,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(result));
 
-            var redirectPage = await client.GetAsync(GetRedirectLocation(result));
+            var redirectPage = await Client.GetAsync(GetRedirectLocation(result));
             var redirectDocument = await GetDocumentAsync(redirectPage);
             Assert.Contains("notification-banner--denotified", redirectDocument?.QuerySelector("dl.notification-banner")?.ClassList);
         }
@@ -129,7 +129,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "0";
@@ -161,7 +161,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -193,7 +193,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -224,7 +224,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -254,7 +254,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";

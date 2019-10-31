@@ -7,19 +7,18 @@ namespace ntbs_service.Pages_Notifications
 {
     public class CreateModel : PageModel
     {
-        private readonly INotificationService service;
+        private readonly INotificationService notificationService;
 
-        public CreateModel(INotificationService service)
+        public CreateModel(INotificationService notificationService)
         {
-            this.service = service;
+            this.notificationService = notificationService;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var notification = await service.CreateNewNotificationForUser(User);
+            var notification = await notificationService.CreateNewNotificationForUser(User);
 
             return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });
         }
-
     }
 }

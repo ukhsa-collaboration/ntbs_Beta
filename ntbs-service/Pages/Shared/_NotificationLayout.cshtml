@@ -109,10 +109,10 @@
         <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
         <a href="@Model.Notification.DeletePath" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning delete-notification-button">Delete</a>
     }
-    else if ((bool)ViewData["IsOverviewPage"] && Model.HasEditPermission)
+    else if ((bool)ViewData["IsOverviewPage"])
     {
         <button nhs-button-type="Standard" asp-page-handler="CreateLink">New notification for this person</button>
-        if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
+        if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
         {
             <a href="@Model.Notification.DenotifyPath" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning">Denotify</a>
         }

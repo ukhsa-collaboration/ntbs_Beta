@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service;
+using ntbs_service.Pages;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -26,7 +28,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetOverviewPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync(GetPageRouteForId(id));
+            var response = await Client.GetAsync(GetPageRouteForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
@@ -34,6 +36,44 @@ namespace ntbs_integration_tests.NotificationPages
             if (response.StatusCode == HttpStatusCode.Redirect)
             {
                 Assert.Equal(BuildRoute(Routes.Patient, id), GetRedirectLocation(response));
+            }
+        }
+
+        [Fact]
+        public async Task Get_ReturnsOverviewPage_ForUserWithPermission()
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
+            {
+
+                //Act
+                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var document = await GetDocumentAsync(response);
+                Assert.True(document.GetElementsByClassName("notification-overview-type-and-edit-container").Length > 0);
+            }
+        }
+
+        [Fact]
+        public async Task Get_ShowsWarning_ForUserWithoutPermission()
+        {
+            // Arrange
+            using (var client = Factory.WithMockUserService<NhsUserService>()
+                                        .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE)
+                                        .CreateClientWithoutRedirects())
+            {
+
+                //Act
+                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var document = await GetDocumentAsync(response);
+                Assert.Contains(Messages.UnauthorizedWarning, document.GetElementById("unauthorized-warning").TextContent);
             }
         }
     }

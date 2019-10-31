@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
-{    
+{
     [Owned]
     public class Episode : ModelBase
-    {        
+    {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string Consultant { get; set; }
@@ -23,7 +23,10 @@ namespace ntbs_service.Models
         public virtual TBService TBService { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.HospitalIsRequired)]
+        [AssertThat(@"HospitalBelongsToTbService", ErrorMessage = ValidationMessages.HospitalMustBelongToSelectedTbSerice)]
         public Guid? HospitalId { get; set; }
         public virtual Hospital Hospital { get; set; }
+
+        public bool HospitalBelongsToTbService => Hospital?.TBService == TBService;
     }
 }

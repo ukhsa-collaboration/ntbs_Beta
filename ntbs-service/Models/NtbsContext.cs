@@ -35,7 +35,6 @@ namespace ntbs_service.Models
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<PHEC> PHEC { get; set; }
-
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
@@ -60,16 +59,11 @@ namespace ntbs_service.Models
             return await TbService.ToListAsync();
         }
 
-        public virtual async Task<IList<Hospital>> GetAllHospitalsAsync()
-        {
-            return await Hospital.ToListAsync();
-        }
-
-        public virtual async Task<List<Hospital>> GetHospitalsByTbService(string tbServiceCode)
+        public virtual async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
             return await Hospital
-                        .Where(x => x.TBServiceCode == tbServiceCode)
-                        .ToListAsync();
+                .Where(h => tbServices.Contains(h.TBServiceCode))
+                .ToListAsync();
         }
 
         public virtual async Task<IList<Sex>> GetAllSexesAsync()
@@ -87,6 +81,25 @@ namespace ntbs_service.Models
             return await Site.ToListAsync();
         }
 
+        public virtual async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
+        {
+            return await TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+        }
+
+        public virtual async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
+        {
+            return await PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
+        }
+
+        public virtual IQueryable<TBService> GetDefaultTbServicesForNhsUser(IEnumerable<string> roles)
+        {
+            return TbService.Where(tb => roles.Contains(tb.ServiceAdGroup));
+        }
+
+        public virtual IQueryable<TBService> GetDefaultTbServicesForPheUser(IEnumerable<string> roles)
+        {
+            return TbService.Include(tb => tb.PHEC).Where(tb => roles.Contains(tb.PHEC.AdGroup));
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
