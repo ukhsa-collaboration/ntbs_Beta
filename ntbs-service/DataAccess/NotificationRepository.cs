@@ -71,7 +71,8 @@ namespace ntbs_service.DataAccess
 
         public bool NotificationExists(int NotificationId)
         {
-            return context.Notification.Any(e => e.NotificationId == NotificationId);
+            return context.Notification
+                .Any(e => e.NotificationId == NotificationId);
         }
 
         public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId) {
@@ -112,6 +113,7 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetBaseNotificationIQueryable()
         {
             return context.Notification
+                .Where(n => n.NotificationStatus != NotificationStatus.Deleted)
                 .Include(n => n.PatientDetails)
                     .ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails)

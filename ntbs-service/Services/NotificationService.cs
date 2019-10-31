@@ -34,6 +34,7 @@ namespace ntbs_service.Services
         Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user);
         Task<IEnumerable<Notification>> GetNotificationsByIdAsync(IList<int> ids);
         Task DenotifyNotification(int notificationId, DenotificationDetails denotificationDetails);
+        Task DeleteNotification(int notificationId, string deletionReason);
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
     }
 
@@ -348,6 +349,15 @@ namespace ntbs_service.Services
 
             notification.NotificationStatus = NotificationStatus.Denotified;
             await UpdateDatabase(AuditType.Denotified);
+        }
+
+        public async Task DeleteNotification(int notificationId, string deletionReason)
+        {
+            var notification = await repository.GetNotificationAsync(notificationId);
+            notification.DeletionReason = deletionReason;
+
+            notification.NotificationStatus = NotificationStatus.Deleted;
+            await UpdateDatabase(AuditType.Deleted);
         }
     }
 }

@@ -34,6 +34,8 @@ namespace ntbs_service.Models
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
+        [MaxLength(150)]
+        public string DeletionReason { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
@@ -115,6 +117,7 @@ namespace ntbs_service.Models
         public string OverviewPath => GetNotificationPath("Overview");
         public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
         public string DenotifyPath => GetNotificationPath("Denotify");
+        public string DeletePath => GetNotificationPath("Delete");
 
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
