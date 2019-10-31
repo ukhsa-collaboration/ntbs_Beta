@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -5,49 +7,43 @@ using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
-using System;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    
+
     public class EpisodeModel : NotificationEditModelBase
     {
         private readonly NtbsContext context;
+        private readonly IUserService userService;
 
         public SelectList TBServices { get; set; }
         public SelectList Hospitals { get; set; }
 
         [BindProperty]
         public FormattedDate FormattedNotificationDate { get; set; }
-        
+
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
+        public EpisodeModel(INotificationService service,
+                            IAuthorizationService authorizationService,
+                            NtbsContext context,
+                            IUserService userService) : base(service, authorizationService)
         {
             this.context = context;
-            
-            TBServices = new SelectList(context.GetAllTbServicesAsync().Result,
-                                        nameof(TBService.Code),
-                                        nameof(TBService.Name));
-
-            Hospitals = new SelectList(context.GetAllHospitalsAsync().Result,
-                                        nameof(Hospital.HospitalId),
-                                        nameof(Hospital.Name));
+            this.userService = userService;
         }
 
         public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
         {
             return await base.OnGetAsync(id, isBeingSubmitted);
         }
-
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
             await SetNotificationProperties(isBeingSubmitted, Episode);
-
+            await SetTbServiceAndHospitalListsAsync();
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
             if (Episode.ShouldValidateFull)
@@ -59,9 +55,18 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        public JsonResult OnGetHospitalsByTBService(string tbServiceCode)
+        private async Task SetTbServiceAndHospitalListsAsync()
         {
-            var tbServices = context.GetHospitalsByTbService(tbServiceCode).Result;
+            var services = await userService.GetTbServicesAsync(User);
+            var hospitals = await context.GetHospitalsByTbServiceCodesAsync(services.Select(s => s.Code));
+
+            TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
+            Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
+        }
+
+        public async Task<JsonResult> OnGetHospitalsByTBService(string tbServiceCode)
+        {
+            var tbServices = await context.GetHospitalsByTbServiceCodesAsync(new List<string> { tbServiceCode });
             return new JsonResult(tbServices);
         }
 
@@ -70,10 +75,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
         }
 
-        protected override async Task ValidateAndSave() 
+        protected override async Task ValidateAndSave()
         {
-            Episode.SetFullValidation(Notification.NotificationStatus);
-            validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            SetValuesForValidation();
 
             if (TryValidateModel(Episode, Episode.GetType().Name))
             {
@@ -97,6 +101,30 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Query notification by Id when date validation depends on other properties of model
             Notification notification = await service.GetNotificationAsync(notificationId);
             return validationService.ValidateDate(notification, key, day, month, year);
+        }
+
+        private void SetValuesForValidation()
+        {
+            Episode.SetFullValidation(Notification.NotificationStatus);
+            validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            /*
+            Binding only sets the entity ids, but not the actual entities.
+            There's a validation rule that needs to check the relationship between the entities,
+            therefore we need fetch the reference data from the db before validating
+            */
+            SetHospitalAndTbService();
+        }
+
+        private void SetHospitalAndTbService()
+        {
+            if (Episode.HospitalId != null)
+            {
+                Episode.Hospital = context.Hospital.Where(h => h.HospitalId == Episode.HospitalId).FirstOrDefault();
+            }
+            if (Episode.TBServiceCode != null)
+            {
+                Episode.TBService = context.TbService.Where(s => s.Code == Episode.TBServiceCode).FirstOrDefault();
+            }
         }
     }
 }
