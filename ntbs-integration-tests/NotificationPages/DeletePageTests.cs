@@ -38,7 +38,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetDeletePage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync(GetPageRouteForId(id));
+            var response = await Client.GetAsync(GetPageRouteForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DELETE_NO_DESCRIPTION;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
 
@@ -79,7 +79,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -104,7 +104,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;
-            var initialPage = await client.GetAsync(GetPageRouteForId(id));
+            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
