@@ -29,7 +29,7 @@ namespace ntbs_integration_tests.Helpers
         {
             return factory.WithWebHostBuilder(builder =>
             {
-                SetupDatabase(builder, new Tuple<int, string>(notificationId, tbServiceCode), null);
+                UpdateDatabase(builder, (db) => Utilities.SetServiceCodeForNotification(db, notificationId, tbServiceCode));
             });
         }
 
@@ -39,7 +39,7 @@ namespace ntbs_integration_tests.Helpers
         {
             return factory.WithWebHostBuilder(builder =>
             {
-                SetupDatabase(builder, null, new Tuple<int, string>(notificationId, postcode));
+                UpdateDatabase(builder, (db) => Utilities.SetPostcodeForNotification(db, notificationId, postcode));
             });
         }
 
@@ -51,7 +51,7 @@ namespace ntbs_integration_tests.Helpers
             });
         }
 
-        private static void SetupDatabase(IWebHostBuilder builder, Tuple<int, string> idToServiceCode, Tuple<int, string> idToPostcode)
+        private static void UpdateDatabase(IWebHostBuilder builder, Action<NtbsContext> updateMethod)
         {
             builder.ConfigureServices(services =>
             {
@@ -63,15 +63,7 @@ namespace ntbs_integration_tests.Helpers
                     var db = scopedServices
                         .GetRequiredService<NtbsContext>();
 
-                    if (idToServiceCode != null)
-                    {
-                        Utilities.SetServiceCodeForNotification(db, idToServiceCode.Item1, idToServiceCode.Item2);
-                    }
-
-                    if (idToPostcode != null)
-                    {
-                        Utilities.SetPostcodeForNotification(db, idToPostcode.Item1, idToPostcode.Item2);
-                    }
+                    updateMethod(db);
                 }
             });
         }
