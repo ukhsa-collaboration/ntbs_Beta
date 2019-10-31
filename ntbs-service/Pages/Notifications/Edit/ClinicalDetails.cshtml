@@ -536,12 +536,16 @@
                     <nhs-fieldset-legend nhs-legend-size="Standard">Directly observed treatment? (including VOT)</nhs-fieldset-legend>
                     <nhs-radios nhs-radios-type="Standard">
                         <nhs-radios-item>
-                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsDOT" id="dot-yes" type="radio" value="true" />
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-yes" type="radio" value="Yes" />
                             <label nhs-label-type="Radios" for="dot-yes">Yes</label>
                         </nhs-radios-item>
                         <nhs-radios-item>
-                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsDOT" id="dot-no" type="radio" value="false" />
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-no" type="radio" value="No" />
                             <label nhs-label-type="Radios" for="dot-no">No</label>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-unknown" type="radio" value="Unknown">
+                            <label nhs-label-type="Radios" for="dot-unknown"> Unknown </label>
                         </nhs-radios-item>
                     </nhs-radios>
                 </nhs-fieldset>
@@ -552,12 +556,16 @@
                     <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
                     <nhs-radios nhs-radios-type="Standard">
                         <nhs-radios-item>
-                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsEnhancedCaseManagement" id="enhanced-case-management-yes" type="radio" value="true" />
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-yes" type="radio" value="Yes" />
                             <label nhs-label-type="Radios" for="enhanced-case-management-yes">Yes</label>
                         </nhs-radios-item>
                         <nhs-radios-item>
-                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsEnhancedCaseManagement" id="enhanced-case-management-no" type="radio" value="false" />
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-no" type="radio" value="No" />
                             <label nhs-label-type="Radios" for="enhanced-case-management-no">No</label>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-unknown" type="radio" value="Unknown">
+                            <label nhs-label-type="Radios" for="enhanced-case-management-unknown"> Unknown </label>
                         </nhs-radios-item>
                     </nhs-radios>
                 </nhs-fieldset>

@@ -73,8 +73,6 @@ namespace ntbs_service.Models
         public string IsSymptomatic => TrueFalseToYesNo(ClinicalDetails.IsSymptomatic);
         public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
-        public string IsDOTYesNo => TrueFalseToYesNo(ClinicalDetails.IsDOT);
-        public string IsEnhancedCaseManagementYesNo => TrueFalseToYesNo(ClinicalDetails.IsEnhancedCaseManagement);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
         public string HasRecentVisitor => TrueFalseToYesNo(VisitorDetails.HasVisitor);
