@@ -9,8 +9,8 @@ namespace ntbs_service.Pages.Account
         public AccessDenied()
         {
         }
-        
-        public async Task<PageResult> OnGetAsync()
+
+        public PageResult OnGet()
         {
             return Page();
         }
