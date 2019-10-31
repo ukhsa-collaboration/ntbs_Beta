@@ -27,7 +27,7 @@ const DateComparison = Vue.extend({
             }
             while (lowerDateIndex >= 0)
             {
-                if (!this.dates[lowerDateIndex]) {
+                if (!this.dates[lowerDateIndex] || (this.$refs[`checkbox${lowerDateIndex}`] && !this.$refs[`checkbox${lowerDateIndex}`].checked)) {
                     lowerDateIndex--;
                     continue;
                 }
@@ -47,7 +47,7 @@ const DateComparison = Vue.extend({
             }
             while (higherDateIndex < numberOfDates)
             {
-                if (!this.dates[higherDateIndex]) {
+                if (!this.dates[higherDateIndex] || (this.$refs[`checkbox${higherDateIndex}`] && !this.$refs[`checkbox${higherDateIndex}`].checked)) {
                     higherDateIndex++;
                     continue;
                 }

@@ -212,6 +212,7 @@
     <br />
 
     <h2>Clinical Dates</h2>
+
     <date-comparison inline-template>
         <div>
             <ul class="text-warning" id="date-warnings">
@@ -225,7 +226,8 @@
                     <nhs-fieldset-legend nhs-legend-size="Standard">Patient is symptomatic</nhs-fieldset-legend>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input asp-for="ClinicalDetails.IsSymptomatic" id="symptomatic-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-symptomatic-conditional">
+                            <input ref="checkbox0" asp-for="ClinicalDetails.IsSymptomatic" id="symptomatic-yes" class="nhsuk-radios__input" 
+                                type="radio" value="true" data-aria-controls="conditional-symptomatic-conditional">
                             <label class="nhsuk-label nhsuk-radios__label" for="symptomatic-yes">
                                 Yes
                             </label>
