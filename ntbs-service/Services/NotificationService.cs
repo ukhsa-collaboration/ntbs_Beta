@@ -44,7 +44,8 @@ namespace ntbs_service.Services
         private readonly IUserService userService;
         private readonly NtbsContext context;
 
-        public NotificationService(INotificationRepository repository, IUserService userService, NtbsContext context) {
+        public NotificationService(INotificationRepository repository, IUserService userService, NtbsContext context)
+        {
             this.repository = repository;
             this.userService = userService;
             this.context = context;
@@ -83,6 +84,25 @@ namespace ntbs_service.Services
 
             await UpdateUkBorn(patientDetails);
             UpdateEntryYearToUk(patientDetails);
+
+            await UpdateOccupation(patientDetails);
+        }
+
+        private async Task UpdateOccupation(PatientDetails patient)
+        {
+            if (patient.OccupationId.HasValue)
+            {
+                var occupation = await context.GetOccupationByIdAsync(patient.OccupationId.Value);
+                if (occupation != null)
+                {
+                    if (occupation.HasFreeTextField)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            patient.OccupationOther = null;
         }
 
         private async Task UpdateUkBorn(PatientDetails patient)

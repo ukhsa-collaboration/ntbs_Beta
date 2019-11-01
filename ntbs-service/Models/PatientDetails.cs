@@ -71,6 +71,13 @@ namespace ntbs_service.Models
         public virtual Sex Sex { get; set; }
         public bool NhsNumberNotKnown { get; set; }
         public bool NoFixedAbode { get; set; }
-    }
 
+        public int? OccupationId { get; set; }
+        public virtual Occupation Occupation { get; set; }
+
+        [MaxLength(50)]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [DisplayName("Occupation")]
+        public string OccupationOther { get; set; }
+    }
 }
