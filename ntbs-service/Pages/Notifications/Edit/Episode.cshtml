@@ -98,9 +98,10 @@
         <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
                         Notifying TB service
         </label>
-        <label nhs-label-type="Standard"> 
-            @Model.Notification.Episode.TBService?.Name 
-        </label>
+         <select asp-for="Episode.TBServiceCode" nhs-select-type="Standard" disabled>
+             <option selected="selected">@Model.Notification.Episode.TBService.Name</option>
+        </select>
+        <br />
         <br />
         
             var HospitalError = !Model.IsValid("Episode.HospitalId");
