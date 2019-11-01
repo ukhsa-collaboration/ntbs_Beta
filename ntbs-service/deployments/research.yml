@@ -42,6 +42,10 @@ spec:
                   key: migration
             - name: AdfsOptions__Wtrealm
               value: "https://ntbs-research.da0c702c3b574e3185f6.uksouth.aksapp.io"
+            - name: AdfsOptions__AdfsUrl
+              value: "https://fs.softwire.com"
+            - name: AdfsOptions__AdGroupsPrefix
+              value: "pheNtbs - "
       imagePullSecrets:
         - name: registery-password
 ---

@@ -1,16 +1,16 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: ntbs-test
+  name: ntbs-uat
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: ntbs-test
+        app: ntbs-uat
     spec:
       containers:
-      - name: ntbs-test
+      - name: ntbs-uat
         image: "ntbscontainerregistry.azurecr.io/ntbs-service"
         ports:
         - containerPort: 80
@@ -18,12 +18,12 @@ spec:
           - name: ConnectionStrings__ntbsContext
             valueFrom:
               secretKeyRef:
-                name: test-db-connection-string
+                name: uat-db-connection-string
                 key: connectionString
           - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:
-                name: test-audit-db-connection-string
+                name: uat-audit-db-connection-string
                 key: connectionString
           - name: ConnectionStrings__ltbr
             valueFrom:
@@ -41,41 +41,37 @@ spec:
                 name: lgeacy-and-migration-connection-strings
                 key: migration
           - name: AdfsOptions__Wtrealm
-            value: "https://ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io"
-          - name: AdfsOptions__AdfsUrl
-            value: "https://fs.softwire.com"
-          - name: AdfsOptions__AdGroupsPrefix
-            value: "pheNtbs - "
+            value: "https://ntbs-uat.da0c702c3b574e3185f6.uksouth.aksapp.io"
       imagePullSecrets:
       - name: registery-password
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ntbs-test
+  name: ntbs-uat
 spec:
   type: LoadBalancer
   ports:
   - port: 80
   selector:
-    app: ntbs-test
+    app: ntbs-uat
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ntbs-test
+  name: ntbs-uat
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
 spec:
   tls:
     - hosts:
-      - ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io
-      secretName: phe-ntbs-test-tls
+      - ntbs-uat.da0c702c3b574e3185f6.uksouth.aksapp.io
+      secretName: phe-ntbs-uat-tls
   rules:
-  - host: ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io
+  - host: ntbs-uat.da0c702c3b574e3185f6.uksouth.aksapp.io
     http:
       paths:
       - backend:
-          serviceName: ntbs-test
+          serviceName: ntbs-uat
           servicePort: 80
         path: /
