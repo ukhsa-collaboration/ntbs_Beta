@@ -1,20 +1,21 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Pages;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
     // TODO: Complete tests for this page
-    public class OverviewPageTests : TestRunnerBase
+    public class OverviewPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Overview;
+        protected override string NotificationSubPath => NotificationSubPaths.Overview;
 
-        public OverviewPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public OverviewPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         public static IEnumerable<object[]> OverviewRoutes()
         {
@@ -28,14 +29,14 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetOverviewPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await Client.GetAsync(GetPageRouteForId(id));
+            var response = await Client.GetAsync(GetCurrentPathForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
 
             if (response.StatusCode == HttpStatusCode.Redirect)
             {
-                Assert.Equal(BuildRoute(Routes.Patient, id), GetRedirectLocation(response));
+                Assert.Contains(GetPathForId(NotificationSubPaths.EditPatient, id), GetRedirectLocation(response));
             }
         }
 
@@ -49,7 +50,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
 
                 //Act
-                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+                var response = await client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -68,7 +69,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
 
                 //Act
-                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+                var response = await client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);

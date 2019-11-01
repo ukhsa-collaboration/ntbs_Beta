@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
@@ -14,11 +14,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public PatientTBHistory PatientTBHistory { get; set; }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
-        {
-            return await base.OnGetAsync(id, isBeingSubmitted);
-        }
-
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             PatientTBHistory = Notification.PatientTBHistory;
@@ -32,7 +27,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
             // This is the last page in the flow, so there's no next page to go to
             return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });

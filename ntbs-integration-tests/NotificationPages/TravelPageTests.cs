@@ -1,16 +1,17 @@
-using ntbs_integration_tests.Helpers;
+﻿using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Models.Validations;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ntbs_service.Helpers;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class TravelPageTests : TestRunnerBase
+    public class TravelPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Travel;
+        protected override string NotificationSubPath => NotificationSubPaths.EditTravel;
 
         public TravelPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
@@ -19,7 +20,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -30,11 +32,11 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildEditRoute(Routes.Comorbidities, id), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditComorbidities, id), GetRedirectLocation(result));
         }
 
         [Fact]
@@ -42,7 +44,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -53,11 +56,12 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(result));
+            // Flipped expected/actual here to accomodate trailing slash
+            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
         }
 
         [Theory]
@@ -66,7 +70,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsPageWithModelErrors_IfTotalNumberIsLessThanInputCountries(int id)
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -84,7 +89,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -105,7 +110,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsPageWithModelErrors_IfTotalDurationIsMoreThan24(int id)
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -131,7 +137,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -164,7 +170,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsPageWithModelErrors_IfCountriesAreNonUnique(int id)
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -184,7 +191,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -210,7 +217,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -221,7 +229,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -253,7 +261,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -273,7 +282,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -293,7 +302,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -315,7 +325,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -335,7 +345,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -357,7 +368,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -385,7 +396,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidateTravel"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -405,7 +416,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidateTravel"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -427,7 +438,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidateVisitor"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -447,7 +458,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "ValidateVisitor"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

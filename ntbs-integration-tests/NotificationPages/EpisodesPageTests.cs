@@ -1,16 +1,17 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class EpisodesPageTests : TestRunnerBase
+    public class EpisodesPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Episode;
+        protected override string NotificationSubPath => NotificationSubPaths.EditEpisode;
 
         public EpisodesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
@@ -18,8 +19,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -30,20 +33,23 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
+            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate),
+                        resultDocument.GetError("notification-date"));
         }
 
         [Fact]
         public async Task PostDraft_ReturnsWithNotificationDateRangeError_IfNotificationDateIsNotInRange()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -54,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -67,8 +73,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsWithNotificationDateRequiredError_IfNotificationDateNotSet()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -76,7 +84,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -88,8 +96,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -100,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -112,8 +122,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsWithNotificationDateRangeError_IfNotificationDateIsNotInRange()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -124,7 +136,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -136,8 +148,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithAllRequiredErrors_IfModelNotValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -145,7 +159,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -159,8 +173,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithTextFieldInputError_IfTextIsInvalid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
@@ -170,7 +186,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -183,8 +199,11 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_RedirectToNextPage_IfModelIsValid()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
-            var document = await GetDocumentAsync(initialPage);
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
+
 
             var formData = new Dictionary<string, string>
             {
@@ -199,18 +218,19 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildEditRoute(Routes.ClinicalDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditClinicalDetails, id), GetRedirectLocation(result));
         }
 
         [Fact]
         public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValdationError()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialPage = await Client.GetAsync(url);
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -221,7 +241,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

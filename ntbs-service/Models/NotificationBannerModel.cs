@@ -1,5 +1,6 @@
-using ntbs_service.Models.Enums;
+﻿using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Models
 {
@@ -48,7 +49,7 @@ namespace ntbs_service.Models
             Origin = "ntbs";
             ShowLink = showLink;
             FullAccess = fullAccess;
-            RedirectPath = notification.OverviewPath;
+            RedirectPath = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, NotificationId);
         }
     }
 }

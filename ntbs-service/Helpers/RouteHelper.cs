@@ -1,25 +1,37 @@
+﻿using Microsoft.AspNetCore.WebUtilities;
+
 namespace ntbs_service.Helpers
 {
     public static class RouteHelper
     {
-        public static string GetFullNotificationEditPath(string subPath, int id, bool isBeingSubmitted)
-        {
-            return $"{GetNotificationEditBasePath(subPath)}?id={id}&isBeingSubmitted={isBeingSubmitted}";
-        }
+        public static string NotificationBasePath => "/Notifications/{0}/{1}";
 
-        public static string GetNotificationEditBasePath(string subPath)
+        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted = false)
         {
-            return $"/Notifications/Edit/{subPath}";
-        }
+            var path = subPath;
+            if (isBeingSubmitted)
+            {
+                path = QueryHelpers.AddQueryString(path, "isBeingSubmitted", "True");
+            }
 
-        public static string GetFullNotificationPath(string subPath, int id)
-        {
-            return $"{GetNotificationBasePath(subPath)}?id={id}";
+            return string.Format(NotificationBasePath, id, path);
         }
+    }
 
-        public static string GetNotificationBasePath(string subPath)
-        {
-            return $"/Notifications/{subPath}";
-        }
+    public static class NotificationSubPaths
+    {
+        public static string EditClinicalDetails => "Edit/ClinicalDetails";
+        public static string EditPatient => "Edit/Patient";
+        public static string EditEpisode => "Edit/Episode";
+        public static string EditContactTracing => "Edit/ContactTracing";
+        public static string EditSocialRiskFactors => "Edit/SocialRiskFactors";
+        public static string EditTravel => "Edit/Travel";
+        public static string EditComorbidities => "Edit/Comorbidities";
+        public static string EditImmunosuppression => "Edit/Immunosuppression";
+        public static string EditPreviousHistory => "Edit/PreviousHistory";
+        public static string Overview => string.Empty;
+        public static string LinkedNotifications => "LinkedNotifications";
+        public static string Denotify => "Denotify";
+        public static string Delete => "Delete";
     }
 }
