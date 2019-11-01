@@ -6,10 +6,6 @@ namespace ntbs_service.Pages.Account
 {
     public class AccessDenied : PageModel 
     {
-        public AccessDenied()
-        {
-        }
-
         public PageResult OnGet()
         {
             return Page();
