@@ -173,7 +173,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("sexId-2")).IsChecked);
             Assert.Equal(countryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
             Assert.Equal(localPatientId, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).Value);
-            Assert.Equal(OccupationId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_OccupationId")).SelectedIndex.ToString());
+            Assert.Equal(occupationId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_OccupationId")).SelectedIndex.ToString());
         }
 
         [Fact]
