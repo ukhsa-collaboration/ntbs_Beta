@@ -58,8 +58,15 @@ namespace ntbs_service.Pages.Notifications.Edit
         private async Task SetTbServiceAndHospitalListsAsync()
         {
             var services = await userService.GetTbServicesAsync(User);
-            var hospitals = await context.GetHospitalsByTbServiceCodesAsync(services.Select(s => s.Code));
-
+            IEnumerable<Hospital> hospitals;
+            if(Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft) 
+            {
+                hospitals = await context.GetHospitalsByTbServiceCodesAsync(services.Select(s => s.Code));
+            }
+            else
+            {
+                hospitals = await context.GetHospitalsByTbServiceCodesAsync(new List<string>() {Notification.Episode.TBServiceCode});
+            }
             TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
         }

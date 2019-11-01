@@ -151,7 +151,6 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
-            resultDocument.AssertErrorMessage("tb-service", ValidationMessages.TBServiceIsRequired);
             resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalIsRequired);
         }
 
