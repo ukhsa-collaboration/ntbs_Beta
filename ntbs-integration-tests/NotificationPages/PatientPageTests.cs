@@ -132,6 +132,7 @@ namespace ntbs_integration_tests.NotificationPages
             const string sexId = "2";
             const string countryId = "3";
             const string localPatientId = "123#";
+            const string occupationId = "1";
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
@@ -147,7 +148,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Patient.EthnicityId"] = ethnicityId,
                 ["Patient.SexId"] = sexId,
                 ["Patient.CountryId"] = countryId,
-                ["Patient.LocalPatientId"] = localPatientId
+                ["Patient.LocalPatientId"] = localPatientId,
+                ["Patient.OccupationId"] = occupationId
             };
 
             // Act
@@ -171,6 +173,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("sexId-2")).IsChecked);
             Assert.Equal(countryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
             Assert.Equal(localPatientId, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).Value);
+            Assert.Equal(OccupationId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_OccupationId")).SelectedIndex.ToString());
         }
 
         [Fact]
@@ -231,39 +234,6 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
-        }
-
-        [Theory]
-        [InlineData("2100", ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
-        [InlineData("2010", "")]
-        public async Task Validate_EntryToUkYear_ReturnsExpectedResult(string year, string validationResult)
-        {
-            // Arrange
-            var formData = new Dictionary<string, string> { [""] = year };
-
-            // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
-
-            // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(validationResult, result);
-        }
-
-        [Theory]
-        [InlineData("1899")]
-        [InlineData("2101")]
-        public async Task Validate_EntryToUkYear_ReturnsExpectedResultForRange(string year)
-        {
-            // Arrange
-            var expectedValidationResult = string.Format(ValidationMessages.ValidYearRange, null, 1900, 2100);
-            var formData = new Dictionary<string, string> { [""] = year };
-
-            // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
-
-            // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(expectedValidationResult, result);
         }
     }
 }
