@@ -22,8 +22,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -33,7 +33,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -47,8 +47,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -59,7 +59,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -73,8 +73,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string description = "Other Therapy";
@@ -87,13 +87,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetPathForId(NotificationSubPaths.EditPreviousHistory, id), GetRedirectLocation(result));
 
-            var reloadedPage = await Client.GetAsync(initialUrl);
+            var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("immunosuppression-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_HasOther")).IsChecked);

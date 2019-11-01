@@ -20,8 +20,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -32,7 +32,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -44,8 +44,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -56,7 +56,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -70,8 +70,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsPageWithModelErrors_IfTotalNumberIsLessThanInputCountries(int id)
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -89,7 +89,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -110,8 +110,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsPageWithModelErrors_IfTotalDurationIsMoreThan24(int id)
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -137,7 +137,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -170,8 +170,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsPageWithModelErrors_IfCountriesAreNonUnique(int id)
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -191,7 +191,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -217,8 +217,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -229,7 +229,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -261,8 +261,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -282,7 +282,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -302,8 +302,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -325,7 +325,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -345,8 +345,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -368,7 +368,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

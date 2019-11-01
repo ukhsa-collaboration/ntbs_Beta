@@ -61,8 +61,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DENOTIFY_NO_DESCRIPTION;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -80,7 +80,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -97,8 +97,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DENOTIFY_WITH_DESCRIPTION;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -118,7 +118,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -135,8 +135,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "0";
@@ -154,7 +154,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -168,8 +168,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -187,7 +187,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -201,8 +201,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -220,7 +220,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -233,8 +233,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -250,7 +250,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -264,8 +264,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
-            var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -283,7 +283,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

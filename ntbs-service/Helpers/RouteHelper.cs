@@ -1,4 +1,6 @@
-﻿namespace ntbs_service.Helpers
+﻿using Microsoft.AspNetCore.WebUtilities;
+
+namespace ntbs_service.Helpers
 {
     public static class RouteHelper
     {
@@ -6,8 +8,13 @@
 
         public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted = false)
         {
-            var pathWithQueryString = string.Concat(subPath, isBeingSubmitted ? "?isBeingSubmitted=True" : string.Empty);
-            return string.Format(NotificationBasePath, id, pathWithQueryString);
+            var path = subPath;
+            if (isBeingSubmitted)
+            {
+                path = QueryHelpers.AddQueryString(path, "isBeingSubmitted", "True");
+            }
+
+            return string.Format(NotificationBasePath, id, path);
         }
     }
 
