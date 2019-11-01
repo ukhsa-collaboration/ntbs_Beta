@@ -25,5 +25,6 @@
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
+        public static string Delete => "Delete";
     }
 }

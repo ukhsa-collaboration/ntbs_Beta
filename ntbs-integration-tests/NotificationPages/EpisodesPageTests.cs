@@ -21,7 +21,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -48,7 +48,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -75,7 +75,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -98,7 +98,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -124,7 +124,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -150,7 +150,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -175,7 +175,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -201,7 +201,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
 
@@ -229,7 +229,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValdationError()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialPage = await Client.GetAsync(url);
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -240,7 +241,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData);
+            var result = await SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

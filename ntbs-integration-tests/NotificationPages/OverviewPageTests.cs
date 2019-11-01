@@ -5,6 +5,7 @@ using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Pages;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -28,7 +29,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetOverviewPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync(GetCurrentPathForId(id));
+            var response = await Client.GetAsync(GetCurrentPathForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
@@ -49,7 +50,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
 
                 //Act
-                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+                var response = await client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -68,7 +69,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
 
                 //Act
-                var response = await client.GetAsync($"{GetPageRouteForId(Utilities.NOTIFIED_ID)}");
+                var response = await client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);

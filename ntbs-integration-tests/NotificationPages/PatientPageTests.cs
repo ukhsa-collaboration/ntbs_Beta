@@ -22,7 +22,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -58,7 +58,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -85,7 +85,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -118,7 +118,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string givenName = "Test";
@@ -157,7 +157,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetPathForId(NotificationSubPaths.EditEpisode, id), GetRedirectLocation(result));
 
-            var reloadedPage = await client.GetAsync(initialUrl);
+            var reloadedPage = await Client.GetAsync(initialUrl);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.Equal(givenName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_GivenName")).Value);
             Assert.Equal(familyName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_FamilyName")).Value);
@@ -186,7 +186,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidatePatientDate"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidatePatientDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -206,7 +206,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -226,7 +226,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -242,7 +242,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string> { [""] = year };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -259,7 +259,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string> { [""] = year };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateYearOfUkEntry"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

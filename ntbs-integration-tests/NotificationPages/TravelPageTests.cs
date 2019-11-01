@@ -21,7 +21,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -45,7 +45,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -71,7 +71,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -111,7 +111,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -171,7 +171,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -218,7 +218,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -262,7 +262,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -303,7 +303,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -346,7 +346,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -396,7 +396,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -416,7 +416,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -438,7 +438,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -458,7 +458,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

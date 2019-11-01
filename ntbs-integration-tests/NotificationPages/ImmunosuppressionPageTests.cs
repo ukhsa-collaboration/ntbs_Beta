@@ -23,7 +23,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -48,7 +48,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -74,7 +74,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string description = "Other Therapy";
@@ -93,7 +93,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetPathForId(NotificationSubPaths.EditPreviousHistory, id), GetRedirectLocation(result));
 
-            var reloadedPage = await client.GetAsync(initialUrl);
+            var reloadedPage = await Client.GetAsync(initialUrl);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("immunosuppression-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_HasOther")).IsChecked);
@@ -117,7 +117,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "Validate"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "Validate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

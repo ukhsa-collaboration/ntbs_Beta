@@ -44,7 +44,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetDenotifyPage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await client.GetAsync(GetCurrentPathForId(id));
+            var response = await Client.GetAsync(GetCurrentPathForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
@@ -62,7 +62,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DENOTIFY_NO_DESCRIPTION;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -98,7 +98,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DENOTIFY_WITH_DESCRIPTION;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -136,7 +136,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "0";
@@ -169,7 +169,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -202,7 +202,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -234,7 +234,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";
@@ -265,7 +265,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var initialUrl = GetCurrentPathForId(id);
-            var initialPage = await client.GetAsync(initialUrl);
+            var initialPage = await Client.GetAsync(initialUrl);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             const string denotifyDateDay = "1";

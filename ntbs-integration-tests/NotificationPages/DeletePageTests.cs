@@ -1,19 +1,19 @@
-using ntbs_integration_tests.Helpers;
-using ntbs_service;
-using ntbs_service.Models.Validations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ntbs_integration_tests.Helpers;
+using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 using Xunit;
-using System;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class DeletePageTests : TestRunnerBase
+    public class DeletePageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Delete;
+        protected override string NotificationSubPath => NotificationSubPaths.Delete;
 
         public DeletePageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
@@ -38,14 +38,14 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task GetDeletePage_ReturnsCorrectStatusCode_DependentOnId(int id, HttpStatusCode code)
         {
             // Act
-            var response = await Client.GetAsync(GetPageRouteForId(id));
+            var response = await Client.GetAsync(GetCurrentPathForId(id));
 
             // Assert
             Assert.Equal(code, response.StatusCode);
 
             if (response.StatusCode == HttpStatusCode.Redirect)
             {
-                Assert.Equal(BuildRoute(Routes.Overview, id), GetRedirectLocation(response));
+                Assert.Contains(GetRedirectLocation(response), GetPathForId(NotificationSubPaths.Overview, id));
             }
         }
 
@@ -54,7 +54,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DELETE_NO_DESCRIPTION;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
 
@@ -64,9 +65,9 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
-            
+
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
@@ -79,7 +80,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -89,9 +91,9 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
-            
+
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
@@ -104,7 +106,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;
-            var initialPage = await Client.GetAsync(GetPageRouteForId(id));
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -114,7 +117,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, "Confirm");
+            var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

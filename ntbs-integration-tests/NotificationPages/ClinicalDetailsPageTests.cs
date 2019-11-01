@@ -20,8 +20,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDraft_ReturnsPageWithAllModelErrors_IfModelNotValid()
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialPage = await Client.GetAsync(url);
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -49,7 +49,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, initialUrl);
+            var result = await SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -73,8 +73,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithAllModelErrors_IfModelNotValid()
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var initialPage = await client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var initialPage = await Client.GetAsync(url);
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -86,7 +86,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, initialUrl);
+            var result = await SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -101,8 +101,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithDiseaseSiteRequiredError_IfDiseaseSiteNotSet()
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var initialPage = await client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var initialPage = await Client.GetAsync(url);
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -113,7 +113,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, initialUrl);
+            var result = await SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -126,8 +126,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostNotified_ReturnsPageWithDiagnosisDateRequiredError_IfDiagnosisDateNotSet()
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var initialPage = await client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var initialPage = await Client.GetAsync(url);
             var document = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -141,7 +141,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, initialUrl);
+            var result = await SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -154,8 +154,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_RedirectsToNextPageAndSavesContent_IfModelValid()
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -188,13 +188,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetPathForId(NotificationSubPaths.EditContactTracing, Utilities.DRAFT_ID), GetRedirectLocation(result));
 
-            var reloadedPage = await client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_PULMONARY_")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
@@ -225,8 +225,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ClearsConditionalInputValues_IfRadiosSetToOtherValue()
         {
             // Arrange
-            var initialUrl = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await client.GetAsync(initialUrl);
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
@@ -251,13 +251,13 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, initialUrl);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetPathForId(NotificationSubPaths.EditContactTracing, Utilities.DRAFT_ID), GetRedirectLocation(result));
 
-            var reloadedPage = await client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.False(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("OtherSite_SiteDescription")).Value);
@@ -290,7 +290,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -310,7 +310,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -329,7 +329,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateNotificationSites"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateNotificationSites"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -351,7 +351,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateNotificationSiteProperty"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateNotificationSiteProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -370,7 +370,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -391,7 +391,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Act
             var defaultUrl = GetCurrentPathForId(0);
-            var response = await client.GetAsync($"{defaultUrl}/ValidateClinicalDetailsProperties?{string.Join("&", keyValuePairs)}");
+            var response = await Client.GetAsync($"{defaultUrl}/ValidateClinicalDetailsProperties?{string.Join("&", keyValuePairs)}");
 
             // Assert check just response.Content
             var result = await response.Content.ReadAsStringAsync();
