@@ -20,6 +20,11 @@ const DateComparison = Vue.extend({
                 return;
             }
 
+            if(this.$refs[`checkbox${currentIndex}`] && !this.$refs[`checkbox${currentIndex}`].checked) {
+                this.clearWarning(currentIndex, numberOfDates);
+                return;
+            }
+
             var lowerDateIndex = currentIndex - 1;
             for (var i = 0; i <= lowerDateIndex; i++) {
                 // We clear this so the warning is shown with respect to current date
@@ -34,7 +39,9 @@ const DateComparison = Vue.extend({
 
                 if (this.dates[lowerDateIndex] > currentDate)
                 {
-                    this.dateWarnings[currentIndex] = { message: warningMessageEarlier(this.$refs[`date${currentIndex}`].name, this.$refs[`date${lowerDateIndex}`].name), comparedTo: lowerDateIndex };
+                    this.$set(this.dateWarnings, currentIndex, 
+                        { message: warningMessageEarlier(this.$refs[`date${currentIndex}`].name, this.$refs[`date${lowerDateIndex}`].name), 
+                        comparedTo: lowerDateIndex });
                     return;
                 }
                 lowerDateIndex--;
@@ -54,7 +61,9 @@ const DateComparison = Vue.extend({
 
                 if (this.dates[higherDateIndex] < currentDate)
                 {
-                    this.dateWarnings[currentIndex] = { message: warningMessageLater(this.$refs[`date${currentIndex}`].name, this.$refs[`date${higherDateIndex}`].name), comparedTo: higherDateIndex };
+                    this.$set(this.dateWarnings, currentIndex, 
+                        { message: warningMessageLater(this.$refs[`date${currentIndex}`].name, this.$refs[`date${higherDateIndex}`].name), 
+                        comparedTo: higherDateIndex });
                     return;
                 }
                 higherDateIndex++;
@@ -64,7 +73,7 @@ const DateComparison = Vue.extend({
         },
         clearWarning: function(currentIndex: number, numberOfDates: number) {
             if (this.dateWarnings[currentIndex]) {
-                this.dateWarnings[currentIndex] = null;
+                this.$set(this.dateWarnings, currentIndex, null);
             }
             for (var i = 0; i < numberOfDates; i++) {
                 if (i === currentIndex) {
@@ -75,7 +84,7 @@ const DateComparison = Vue.extend({
         },
         unsetMatchingWarning: function(i: number, currentIndex: number) {
             if (this.dateWarnings[i] && this.dateWarnings[i].comparedTo === currentIndex) {
-                this.dateWarnings[i] = null;
+                this.$set(this.dateWarnings, i, null);
             }
         }
     },
