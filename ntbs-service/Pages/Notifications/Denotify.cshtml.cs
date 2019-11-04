@@ -73,7 +73,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (Notification.NotificationStatus == NotificationStatus.Notified)
             {
-                await service.DenotifyNotification(NotificationId, DenotificationDetails);
+                await service.DenotifyNotificationAsync(NotificationId, DenotificationDetails);
             }
 
             return RedirectToPage("/Notifications/Overview", new { id = NotificationId });

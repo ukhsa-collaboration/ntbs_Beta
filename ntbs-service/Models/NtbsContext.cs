@@ -38,6 +38,11 @@ namespace ntbs_service.Models
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
         public virtual DbSet<Occupation> Occupation { get; set; }
 
+        public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
+        {
+            this.Entry(entity).CurrentValues.SetValues(values);
+        }
+
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
             return await Country.ToListAsync();

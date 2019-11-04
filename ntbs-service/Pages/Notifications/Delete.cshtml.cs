@@ -55,7 +55,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
-                await service.DeleteNotification(NotificationId, DeletionReason);
+                await service.DeleteNotificationAsync(NotificationId, DeletionReason);
                 return Partial("_DeleteConfirmation", this);
             }
 
