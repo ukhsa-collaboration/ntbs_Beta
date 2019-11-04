@@ -36,7 +36,7 @@ namespace ntbs_service_unit_tests.Services
         [Theory]
         [InlineData((int)Status.No)]
         [InlineData((int)Status.Unknown)]
-        public async Task SocialRiskFactorChecklist_AreSetToFalseIfStatusUnknown(int status)
+        public async Task SocialRiskFactorChecklist_AreSetToFalseIfStatusNoOrUnknown(int status)
         {
             // Arrange
             var parsedStatus = (Status)status;
