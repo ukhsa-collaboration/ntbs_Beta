@@ -57,11 +57,6 @@ namespace ntbs_service
                     {
                         options.MetadataAddress = adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                         options.Wtrealm = adfsConfig["Wtrealm"];
-                        options.BackchannelHttpHandler = new HttpClientHandler() {
-                            // TODO: NTBS-578 Create and configure SSL certificate for ADFS. 
-                            // Once done remove BackchannelHttpHandler
-                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        };
                     })
                     .AddCookie(options =>
                     {   
