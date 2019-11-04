@@ -3,6 +3,8 @@ using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using Xunit;
 
@@ -13,6 +15,19 @@ namespace ntbs_integration_tests.NotificationPages
         protected override string PageRoute => Routes.Episode;
 
         public EpisodesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+
+        public static IList<Notification> GetSeedingNotifications()
+        {
+            return new List<Notification>()
+            {
+                new Notification()
+                { 
+                    NotificationId = Utilities.NOTIFIED_WITH_TBSERVICE, 
+                    NotificationStatus = NotificationStatus.Notified, 
+                    Episode = new Episode() {TBServiceCode = "A code"}
+                }
+            };
+        }
 
         [Fact]
         public async Task PostDraft_ReturnsWithNotificationDateInvalidError_IfNotificationDateIsNotDate()
@@ -206,7 +221,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValdationError()
+        public async Task PostDraft_HospitalDoesNotMatchTbService_ReturnsValidationError()
         {
             // Arrange
             var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
@@ -226,6 +241,28 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalMustBelongToSelectedTbSerice);
+        }
+
+        [Fact]
+        public async Task PostNotified_TBServiceHasChanged_ReturnsValidationError()
+        {
+            // Arrange
+            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.NOTIFIED_WITH_TBSERVICE));
+            var document = await GetDocumentAsync(initialPage);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                ["TBServiceCode"] = "ChangedTBServiceCode"
+            };
+
+            // Act
+            var result = await SendPostFormWithData(document, formData);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorMessage("TBServiceCode", ValidationMessages.TBServiceCantChange);
         }
     }
 }
