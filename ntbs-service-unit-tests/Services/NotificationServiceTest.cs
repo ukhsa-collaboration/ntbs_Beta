@@ -170,7 +170,7 @@ namespace ntbs_service_unit_tests.Services
         [Theory]
         [InlineData((int)Status.No)]
         [InlineData((int)Status.Unknown)]
-        public async Task UpdateImmunosuppressionDetails_StripsAllButStatusWhenStatusIsNotYes(int status)
+        public void UpdateImmunosuppressionDetails_StripsAllButStatusWhenStatusIsNotYes(int status)
         {
             // Hacky workaround to parameterise enum values seems to be required as passing enum directly resulted in console exception:
             // System.IO.FileNotFoundException : Could not load file or assembly 'Microsoft.Extensions.Configuration.UserSecrets...
@@ -193,7 +193,7 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
-            await service.UpdateImmunosuppresionDetailsAsync(notification, input);
+            service.UpdateImmunosuppresionDetailsAsync(notification, input);
 
             Assert.Equal(reference.Status, input.Status);
             Assert.NotEqual(reference.HasBioTherapy, input.HasBioTherapy);
@@ -207,7 +207,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public async Task UpdateImmunosuppressionDetails_StripsOtherDescriptionWhenHasOtherIsFalse()
+        public void UpdateImmunosuppressionDetails_StripsOtherDescriptionWhenHasOtherIsFalse()
         {
             var reference = new ImmunosuppressionDetails
             {
@@ -223,7 +223,7 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
-            await service.UpdateImmunosuppresionDetailsAsync(notification, input);
+            service.UpdateImmunosuppresionDetailsAsync(notification, input);
 
             Assert.Equal(reference.Status, input.Status);
             Assert.Equal(reference.HasOther, input.HasOther);
