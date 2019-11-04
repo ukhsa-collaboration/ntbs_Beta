@@ -8,6 +8,7 @@ using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 using ntbs_service.Helpers;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -57,17 +58,20 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetTbServiceAndHospitalListsAsync()
         {
-            var services = await userService.GetTbServicesAsync(User);
-            IEnumerable<Hospital> hospitals;
+
+            IEnumerable<string> tbServiceCodes;
             if(Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft) 
             {
-                hospitals = await context.GetHospitalsByTbServiceCodesAsync(services.Select(s => s.Code));
+                var services = await userService.GetTbServicesAsync(User);
+                tbServiceCodes = services.Select(s => s.Code);
+                TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             }
             else
             {
-                hospitals = await context.GetHospitalsByTbServiceCodesAsync(new List<string>() {Notification.Episode.TBServiceCode});
+                tbServiceCodes = new List<string>() {Notification.Episode.TBServiceCode};
             }
-            TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
+            var hospitals = await context.GetHospitalsByTbServiceCodesAsync(tbServiceCodes);
+            
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
         }
 
@@ -85,6 +89,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             SetValuesForValidation();
+            if(Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.Episode.TBServiceCode != Episode.TBServiceCode)
+            {
+                ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
+            }
 
             if (TryValidateModel(Episode, Episode.GetType().Name))
             {
