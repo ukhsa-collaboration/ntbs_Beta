@@ -25,7 +25,11 @@ namespace ntbs_integration_tests.NotificationPages
                 { 
                     NotificationId = Utilities.NOTIFIED_WITH_TBSERVICE, 
                     NotificationStatus = NotificationStatus.Notified, 
-                    Episode = new Episode() {TBServiceCode = "A code"}
+                    Episode = new Episode() 
+                    {
+                        TBServiceCode = "A code",
+                        TBService = new TBService() { Name = "A name" }
+                    }
                 }
             };
         }
@@ -273,8 +277,8 @@ namespace ntbs_integration_tests.NotificationPages
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
-                ["TBServiceCode"] = "ChangedTBServiceCode"
+                ["NotificationId"] = Utilities.NOTIFIED_WITH_TBSERVICE.ToString(),
+                ["Episode.TBServiceCode"] = "ChangedTBServiceCode"
             };
 
             // Act
@@ -283,7 +287,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("TBServiceCode", ValidationMessages.TBServiceCantChange);
+            resultDocument.AssertErrorMessage("tb-service", ValidationMessages.TBServiceCantChange);
         }
     }
 }

@@ -74,7 +74,7 @@
                 else
                 {
                     <select asp-for="Episode.TBServiceCode" nhs-select-type="Standard" disabled>
-                        <option selected="selected">@Model.Notification.Episode.TBService.Name</option>
+                        <option selected="selected">@Model.Notification.Episode?.TBService?.Name</option>
                     </select>
                 }
                 

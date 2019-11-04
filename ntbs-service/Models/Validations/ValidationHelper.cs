@@ -75,7 +75,7 @@ namespace ntbs_service.Models.Validations
 
         #region Hospital Details
         public const string TBServiceIsRequired = "TB Service is a mandatory field";
-        public const string TBServiceCantChange = "TB Service cannot be changed for a notified notification";
+        public const string TBServiceCantChange = "TB Service cannot be changed for non-draft notifications";
         public const string HospitalIsRequired = "Hospital is a mandatory field";
         public const string HospitalMustBelongToSelectedTbSerice = "Hospital must belong to selected TB Service";
         public const string NotificationDateIsRequired = "Notification Date is a mandatory field";
