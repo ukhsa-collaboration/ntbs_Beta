@@ -80,16 +80,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
             ModelState.ClearValidationState("Patient.NHSNumber");
+            ModelState.ClearValidationState("Patient.OccupationOther");
             if (Patient.UkBorn != false)
             {
                 ModelState.ClearValidationState("Patient.YearOfUkEntry");
-            }
-
-            // UpdatePatientFlags above empties OccupationOther field if OccupationId does not match 
-            // required values
-            if (string.IsNullOrEmpty(Patient.OccupationOther))
-            {
-                ModelState.ClearValidationState("Patient.OccupationOther");
             }
 
             Patient.SetFullValidation(Notification.NotificationStatus);
