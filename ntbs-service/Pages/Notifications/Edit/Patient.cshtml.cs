@@ -47,8 +47,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var occupations = context.GetAllOccupationsAsync().Result;
             Occupations = new SelectList(
-                items: occupations, 
-                dataValueField: nameof(Occupation.OccupationId), 
+                items: occupations,
+                dataValueField: nameof(Occupation.OccupationId),
                 dataTextField: nameof(Occupation.Role),
                 selectedValue: null,
                 dataGroupField: nameof(Occupation.Sector));
@@ -75,7 +75,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            await service.UpdatePatientFlags(Patient);
+            await service.UpdatePatientFlagsAsync(Patient);
             // Remove already invalidated states from modelState as rely
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
@@ -85,6 +85,8 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.ClearValidationState("Patient.YearOfUkEntry");
             }
 
+            // UpdatePatientFlags above empties OccupationOther field if OccupationId does not match 
+            // required values
             if (string.IsNullOrEmpty(Patient.OccupationOther))
             {
                 ModelState.ClearValidationState("Patient.OccupationOther");
@@ -92,9 +94,9 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
-            
+
             validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-            
+
             if (TryValidateModel(Patient, "Patient"))
             {
                 await service.UpdatePatientAsync(Notification, Patient);

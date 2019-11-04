@@ -43,13 +43,13 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("given-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("family-name"));
+            resultDocument.AssertErrorMessage("given-name", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("family-name", ValidationMessages.StandardStringFormat);
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
             Assert.Contains(ValidationMessages.DateValidityRange(ValidDates.EarliestBirthDate), resultDocument.GetError("dob"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.NhsNumberLength), resultDocument.GetError("nhs-number"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("address"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidCharacter), resultDocument.GetError("local-patient-id"));
+            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NhsNumberLength);
+            resultDocument.AssertErrorMessage("address", ValidationMessages.StringWithNumbersAndForwardSlashFormat);
+            resultDocument.AssertErrorMessage("local-patient-id", ValidationMessages.InvalidCharacter);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.YearOfUkEntryMustBeAfterDob), resultDocument.GetError("year-of-entry"));
+            resultDocument.AssertErrorMessage("year-of-entry", ValidationMessages.YearOfUkEntryMustBeAfterDob);
         }
 
         [Fact]
@@ -102,14 +102,15 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.FamilyNameIsRequired), resultDocument.GetError("family-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.GivenNameIsRequired), resultDocument.GetError("given-name"));
+
+            resultDocument.AssertErrorMessage("family-name", ValidationMessages.FamilyNameIsRequired);
+            resultDocument.AssertErrorMessage("given-name", ValidationMessages.GivenNameIsRequired);
             Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.GetError("dob"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.NHSNumberIsRequired), resultDocument.GetError("nhs-number"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.PostcodeIsRequired), resultDocument.GetError("postcode"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.SexIsRequired), resultDocument.GetError("sex"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.EthnicGroupIsRequired), resultDocument.GetError("ethnicity"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.BirthCountryIsRequired), resultDocument.GetError("birth-country"));
+            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NHSNumberIsRequired);
+            resultDocument.AssertErrorMessage("postcode", ValidationMessages.PostcodeIsRequired);
+            resultDocument.AssertErrorMessage("sex", ValidationMessages.SexIsRequired);
+            resultDocument.AssertErrorMessage("ethnicity", ValidationMessages.EthnicGroupIsRequired);
+            resultDocument.AssertErrorMessage("birth-country", ValidationMessages.BirthCountryIsRequired);
         }
 
         [Fact]
@@ -161,19 +162,19 @@ namespace ntbs_integration_tests.NotificationPages
 
             var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
-            Assert.Equal(givenName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_GivenName")).Value);
-            Assert.Equal(familyName, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_FamilyName")).Value);
-            Assert.Equal(birthDay, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Day")).Value);
-            Assert.Equal(birthMonth, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Month")).Value);
-            Assert.Equal(birthYear, ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDob_Year")).Value);
-            Assert.Equal(nhsNumber, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_NhsNumber")).Value);
-            Assert.Equal(address, ((IHtmlTextAreaElement)reloadedDocument.GetElementById("Patient_Address")).Value);
-            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_Postcode")).Value);
-            Assert.Equal(ethnicityId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_EthnicityId")).SelectedIndex.ToString());
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("sexId-2")).IsChecked);
-            Assert.Equal(countryId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_CountryId")).SelectedIndex.ToString());
-            Assert.Equal(localPatientId, ((IHtmlInputElement)reloadedDocument.GetElementById("Patient_LocalPatientId")).Value);
-            Assert.Equal(occupationId, ((IHtmlSelectElement)reloadedDocument.GetElementById("Patient_OccupationId")).SelectedIndex.ToString());
+            reloadedDocument.AssertInputTextValue("Patient_GivenName", givenName);
+            reloadedDocument.AssertInputTextValue("Patient_FamilyName", familyName);
+            reloadedDocument.AssertInputTextValue("FormattedDob_Day", birthDay);
+            reloadedDocument.AssertInputTextValue("FormattedDob_Month", birthMonth);
+            reloadedDocument.AssertInputTextValue("FormattedDob_Year", birthYear);
+            reloadedDocument.AssertInputTextValue("Patient_NhsNumber", nhsNumber);
+            reloadedDocument.AssertInputTextValue("Patient_Postcode", string.Empty);
+            reloadedDocument.AssertInputTextValue("Patient_LocalPatientId", localPatientId);
+            reloadedDocument.AssertInputSelectValue("Patient_EthnicityId", ethnicityId);
+            reloadedDocument.AssertInputSelectValue("Patient_CountryId", countryId);
+            reloadedDocument.AssertInputSelectValue("Patient_OccupationId", occupationId);
+            reloadedDocument.AssertInputRadioValue("sexId-2", true);
+            reloadedDocument.AssertTextAreaValue("Patient_Address", address);
         }
 
         [Fact]

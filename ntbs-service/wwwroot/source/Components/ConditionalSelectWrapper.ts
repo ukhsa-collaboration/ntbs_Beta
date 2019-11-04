@@ -12,8 +12,9 @@ const ConditionalSelectWrapper = Vue.extend({
             this.hideOrShowControlBasedOnValue(value);
         },
         getValueFromChild: function () {
-            if (this.$refs["inner-validate"] && this.$refs["inner-validate"].$refs["selectField"])
+            if (this.$refs["inner-validate"] && this.$refs["inner-validate"].$refs["selectField"]) {
                 return this.$refs["inner-validate"].$refs["selectField"].value;
+            }
             return null;
         },
         handleChange: function (event: FocusEvent) {

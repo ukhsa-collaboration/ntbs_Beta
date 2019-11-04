@@ -80,7 +80,7 @@ namespace ntbs_service.Models
         public string FormattedNhsNumber => FormatNhsNumberString();
         public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
-        public string FormattedOccupationString => CreateFormattedOccupationString();
+        public string FormattedOccupationString => PatientDetails?.FormatOccupationString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
@@ -183,26 +183,6 @@ namespace ntbs_service.Models
             {
                 return PatientDetails.Postcode?.Trim();
             }
-        }
-
-        private string CreateFormattedOccupationString()
-        {
-            if (PatientDetails?.Occupation == null)
-            {
-                return string.Empty;
-            }
-
-            if (PatientDetails.Occupation.HasFreeTextField && !string.IsNullOrEmpty(PatientDetails.OccupationOther))
-            {
-                return $"{PatientDetails.Occupation.Sector} - {PatientDetails.OccupationOther}";
-            }
-
-            if (PatientDetails.Occupation.Sector == "Other")
-            {
-                return PatientDetails.Occupation.Role;
-            }
-
-            return $"{PatientDetails.Occupation.Sector} - {PatientDetails.Occupation.Role}";
         }
 
         private string FormatNhsNumberString()

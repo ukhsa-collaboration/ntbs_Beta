@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
@@ -79,5 +80,20 @@ namespace ntbs_service.Models
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [DisplayName("Occupation")]
         public string OccupationOther { get; set; }
+
+        public string FormatOccupationString()
+        {
+            if (Occupation == null)
+            {
+                return string.Empty;
+            }
+
+            if (Occupation.HasFreeTextField && !string.IsNullOrEmpty(OccupationOther))
+            {
+                return $"{Occupation.Sector} - {OccupationOther}";
+            }
+
+            return Occupation.Sector == "Other" ? Occupation.Role : $"{Occupation.Sector} - {Occupation.Role}";
+        }
     }
 }
