@@ -12299,6 +12299,223 @@ namespace ntbs_service.Migrations
                     b.ToTable("NotificationSite");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Occupation", b =>
+                {
+                    b.Property<int>("OccupationId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("HasFreeTextField");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Sector")
+                        .HasMaxLength(40);
+
+                    b.HasKey("OccupationId");
+
+                    b.ToTable("Occupation");
+
+                    b.HasData(
+                        new
+                        {
+                            OccupationId = 1,
+                            HasFreeTextField = false,
+                            Role = "Works with cattle",
+                            Sector = "Agricultural/animal care"
+                        },
+                        new
+                        {
+                            OccupationId = 2,
+                            HasFreeTextField = false,
+                            Role = "Works with wild animals",
+                            Sector = "Agricultural/animal care"
+                        },
+                        new
+                        {
+                            OccupationId = 3,
+                            HasFreeTextField = false,
+                            Role = "Other",
+                            Sector = "Agricultural/animal care"
+                        },
+                        new
+                        {
+                            OccupationId = 4,
+                            HasFreeTextField = false,
+                            Role = "Full-time student",
+                            Sector = "Education"
+                        },
+                        new
+                        {
+                            OccupationId = 5,
+                            HasFreeTextField = false,
+                            Role = "Lecturer",
+                            Sector = "Education"
+                        },
+                        new
+                        {
+                            OccupationId = 6,
+                            HasFreeTextField = false,
+                            Role = "Teacher incl. nursery",
+                            Sector = "Education"
+                        },
+                        new
+                        {
+                            OccupationId = 7,
+                            HasFreeTextField = false,
+                            Role = "Other",
+                            Sector = "Education"
+                        },
+                        new
+                        {
+                            OccupationId = 8,
+                            HasFreeTextField = false,
+                            Role = "Community care worker",
+                            Sector = "Health care"
+                        },
+                        new
+                        {
+                            OccupationId = 9,
+                            HasFreeTextField = false,
+                            Role = "Dentist",
+                            Sector = "Health care"
+                        },
+                        new
+                        {
+                            OccupationId = 10,
+                            HasFreeTextField = false,
+                            Role = "Doctor",
+                            Sector = "Health care"
+                        },
+                        new
+                        {
+                            OccupationId = 11,
+                            HasFreeTextField = false,
+                            Role = "Nurse",
+                            Sector = "Health care"
+                        },
+                        new
+                        {
+                            OccupationId = 12,
+                            HasFreeTextField = false,
+                            Role = "Other",
+                            Sector = "Health care"
+                        },
+                        new
+                        {
+                            OccupationId = 13,
+                            HasFreeTextField = false,
+                            Role = "Laboratory staff",
+                            Sector = "Laboratory/Pathology"
+                        },
+                        new
+                        {
+                            OccupationId = 14,
+                            HasFreeTextField = false,
+                            Role = "Microbiologist",
+                            Sector = "Laboratory/Pathology"
+                        },
+                        new
+                        {
+                            OccupationId = 15,
+                            HasFreeTextField = false,
+                            Role = "Pathologist",
+                            Sector = "Laboratory/Pathology"
+                        },
+                        new
+                        {
+                            OccupationId = 16,
+                            HasFreeTextField = false,
+                            Role = "PM attendant",
+                            Sector = "Laboratory/Pathology"
+                        },
+                        new
+                        {
+                            OccupationId = 17,
+                            HasFreeTextField = false,
+                            Role = "Other",
+                            Sector = "Laboratory/Pathology"
+                        },
+                        new
+                        {
+                            OccupationId = 18,
+                            HasFreeTextField = false,
+                            Role = "Homeless sector worker",
+                            Sector = "Social/prison service"
+                        },
+                        new
+                        {
+                            OccupationId = 19,
+                            HasFreeTextField = false,
+                            Role = "Prison/detention official",
+                            Sector = "Social/prison service"
+                        },
+                        new
+                        {
+                            OccupationId = 20,
+                            HasFreeTextField = false,
+                            Role = "Probation officer",
+                            Sector = "Social/prison service"
+                        },
+                        new
+                        {
+                            OccupationId = 21,
+                            HasFreeTextField = false,
+                            Role = "Social worker",
+                            Sector = "Social/prison service"
+                        },
+                        new
+                        {
+                            OccupationId = 22,
+                            HasFreeTextField = false,
+                            Role = "Other",
+                            Sector = "Social/prison service"
+                        },
+                        new
+                        {
+                            OccupationId = 23,
+                            HasFreeTextField = false,
+                            Role = "Child",
+                            Sector = "Other"
+                        },
+                        new
+                        {
+                            OccupationId = 24,
+                            HasFreeTextField = false,
+                            Role = "Housewife/househusband",
+                            Sector = "Other"
+                        },
+                        new
+                        {
+                            OccupationId = 25,
+                            HasFreeTextField = false,
+                            Role = "Prisoner",
+                            Sector = "Other"
+                        },
+                        new
+                        {
+                            OccupationId = 26,
+                            HasFreeTextField = false,
+                            Role = "Retired",
+                            Sector = "Other"
+                        },
+                        new
+                        {
+                            OccupationId = 27,
+                            HasFreeTextField = false,
+                            Role = "Unemployed",
+                            Sector = "Other"
+                        },
+                        new
+                        {
+                            OccupationId = 28,
+                            HasFreeTextField = true,
+                            Role = "Other",
+                            Sector = "Other"
+                        });
+                });
+
             modelBuilder.Entity("ntbs_service.Models.PHEC", b =>
                 {
                     b.Property<string>("Code")
@@ -14434,6 +14651,11 @@ namespace ntbs_service.Migrations
 
                             b1.Property<bool>("NoFixedAbode");
 
+                            b1.Property<int?>("OccupationId");
+
+                            b1.Property<string>("OccupationOther")
+                                .HasMaxLength(50);
+
                             b1.Property<string>("Postcode");
 
                             b1.Property<string>("PostcodeToLookup");
@@ -14449,6 +14671,8 @@ namespace ntbs_service.Migrations
                             b1.HasIndex("CountryId");
 
                             b1.HasIndex("EthnicityId");
+
+                            b1.HasIndex("OccupationId");
 
                             b1.HasIndex("PostcodeToLookup")
                                 .IsUnique()
@@ -14470,6 +14694,10 @@ namespace ntbs_service.Migrations
                                 .WithOne("PatientDetails")
                                 .HasForeignKey("ntbs_service.Models.PatientDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
+
+                            b1.HasOne("ntbs_service.Models.Occupation", "Occupation")
+                                .WithMany()
+                                .HasForeignKey("OccupationId");
 
                             b1.HasOne("ntbs_service.Models.PostcodeLookup", "PostcodeLookup")
                                 .WithOne()

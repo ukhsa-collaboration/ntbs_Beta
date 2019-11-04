@@ -154,6 +154,7 @@
                             var nhsNumberErrorGroup = hasNhsNumberError ? Error : Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@nhsNumberErrorGroup" aria-describedby="nhs-number-error">
+                            <label asp-for="Patient.NhsNumber" class="govuk-visually-hidden">Please provide NHS number</label>
                             <span nhs-span-type="ErrorMessage" id="nhs-number-error" ref="errorField"
                                   asp-validation-for="Patient.NhsNumber" has-error="@hasNhsNumberError"></span>
                             <input ref="inputField" v-on:blur="validate" is-error-input=@hasNhsNumberError nhs-input-type="Standard"
@@ -190,10 +191,15 @@
     <br />
 
     @{
-        var domesticOrUnknownValues = Json.Serialize(Model.DomesticOrUnknownCountryIds);
+        var countryConditionalValues = Json.Serialize(Model.RenderConditionalCountryFieldIds);
+        var countryConditionFunctionString = $"function(value) {{ return value && {countryConditionalValues}.indexOf(value) === -1 }}";
+
     }
-    <conditional-entry-year :domestic-or-unknown-values=@domesticOrUnknownValues inline-template>
-        <div>
+    <conditional-select-wrapper :value-condition-function='@countryConditionFunctionString' inline-template>
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Birth country (required)
+            </nhs-fieldset-legend>
             @{
                 var hasCountryError = !Model.IsValid("Patient.CountryId");
                 var countryGroupState = hasCountryError ? Error : Standard;
@@ -202,18 +208,16 @@
             <validate-input model="Patient" property="CountryId" shouldvalidatefull="@fullValidation"
                             v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
                 <nhs-form-group nhs-form-group-type="@countryGroupState">
-                    <nhs-fieldset>
-                        <label nhs-label-type="Standard" asp-for="Patient.CountryId">
-                            Birth country (required)
-                        </label>
-                        <span nhs-span-type="ErrorMessage" id="birth-country-error"
-                              ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
-                        <select ref="selectField" v-on:change="validate" nhs-select-type="@countrySelectErrorState"
-                                asp-for="Patient.CountryId" asp-items="Model.Countries"
-                                data-aria-controls="year-of-entry-conditional">
-                            <option value="">Select a Birth Country</option>
-                        </select>
-                    </nhs-fieldset>
+                    <label nhs-label-type="Standard" asp-for="Patient.CountryId" classes="govuk-visually-hidden">
+                        Birth country (required)
+                    </label>
+                    <span nhs-span-type="ErrorMessage" id="birth-country-error"
+                          ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
+                    <select ref="selectField" v-on:change="validate" nhs-select-type="@countrySelectErrorState"
+                            asp-for="Patient.CountryId" asp-items="Model.Countries"
+                            data-aria-controls="year-of-entry-conditional">
+                        <option value="">Select a Birth Country</option>
+                    </select>
                 </nhs-form-group>
             </validate-input>
 
@@ -221,19 +225,21 @@
                 var hasYearOfEntryError = !Model.IsValid("Patient.YearOfUkEntry");
                 var yearOfEntryFormState = hasYearOfEntryError ? Error : Standard;
             }
-            <div ref="year-of-entry-conditional" id="year-of-entry-conditional" class="govuk-radios__conditional">
-                <nhs-form-group nhs-form-group-type="@yearOfEntryFormState" ref="formGroup">
-                    <label for="year-of-entry" nhs-label-type="Standard" id="year-of-entry-label">
-                        Year of UK Entry
-                    </label>
-                    <span nhs-span-type="ErrorMessage" asp-validation-for="Patient.YearOfUkEntry"
-                          has-error="@hasYearOfEntryError" ref="errorField" id="year-of-entry-error"></span>
-                    <input nhs-input-type="Standard" asp-for="Patient.YearOfUkEntry" is-error-input="@hasYearOfEntryError"
-                           v-on:blur="validate" ref="inputField" fixed-width="Four" id="year-of-entry" aria-describedby="year-of-entry-error" />
-                </nhs-form-group>
+            <div ref="conditional-control" id="year-of-entry-conditional" class="govuk-radios__conditional">
+                <validate-input model="Patient" property="YearOfUkEntry" shouldvalidatefull="@fullValidation" inline-template>
+                    <nhs-form-group nhs-form-group-type="@yearOfEntryFormState" ref="formGroup">
+                        <label for="year-of-entry" nhs-label-type="Standard" id="year-of-entry-label">
+                            Year of UK Entry
+                        </label>
+                        <span nhs-span-type="ErrorMessage" asp-validation-for="Patient.YearOfUkEntry"
+                              has-error="@hasYearOfEntryError" ref="errorField" id="year-of-entry-error"></span>
+                        <input nhs-input-type="Standard" asp-for="Patient.YearOfUkEntry" is-error-input="@hasYearOfEntryError"
+                               v-on:blur="validate" ref="inputField" fixed-width="Four" id="year-of-entry" aria-describedby="year-of-entry-error" />
+                    </nhs-form-group>
+                </validate-input>
             </div>
-        </div>
-    </conditional-entry-year>
+        </nhs-fieldset>
+    </conditional-select-wrapper>
     <br />
 
     @{
@@ -252,8 +258,11 @@
         </nhs-form-group>
     </validate-input>
 
-    <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset aria-describedby="postcode-error">
+    <nhs-fieldset aria-describedby="postcode-error">
+        <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+            Postcode (required)
+        </nhs-fieldset-legend>
+        <nhs-form-group nhs-form-group-type="Standard">
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
                     <input asp-for="Patient.NoFixedAbode" id="postcode-yes" class="nhsuk-radios__input" type="radio" value="false"
@@ -269,6 +278,7 @@
                             var postcodeGroupState = hasPostcodeError ? Error : Standard;
                         }
                         <nhs-form-group ref="formGroup" nhs-form-group-type="@postcodeGroupState" aria-describedby="postcode-error">
+                            <label asp-for="Patient.Postcode" class="govuk-visually-hidden">Please provide postcode</label>
                             <span nhs-span-type="ErrorMessage" id="postcode-error" ref="errorField"
                                   asp-validation-for="Patient.Postcode" has-error="@hasPostcodeError"></span>
                             <input ref="inputField" v-on:blur="validate" is-error-input=@hasPostcodeError nhs-input-type="Standard"
@@ -283,8 +293,60 @@
                     </label>
                 </div>
             </div>
+        </nhs-form-group>
+    </nhs-fieldset>
+
+
+    @{
+        var occupationsWithConditionalFields = Json.Serialize(Model.RenderConditionalOccupationFieldIds);
+        var occupationConditionFunctionString = $"function(value) {{ return value && {occupationsWithConditionalFields}.indexOf(value) !== -1 }}";
+    }
+    <conditional-select-wrapper :value-condition-function='@occupationConditionFunctionString' inline-template>
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Occupation
+            </nhs-fieldset-legend>
+            @{
+                var hasOccupationError = !Model.IsValid("Patient.OccupationId");
+                var occupationFormState = hasAddressError ? Error : Standard;
+                var occupationSelectErrorState = hasAddressError ? SelectType.Error : SelectType.Standard;
+            }
+            <validate-input model="Patient" property="OccupationId" shouldvalidatefull="@fullValidation"
+                            v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
+                <nhs-form-group nhs-form-group-type="@occupationFormState">
+                    <label nhs-label-type="Standard" asp-for="Patient.OccupationId" classes="govuk-visually-hidden">
+                        Occupation
+                    </label>
+                    <span nhs-span-type="ErrorMessage"
+                          ref="errorField" asp-validation-for="Patient.OccupationId" has-error="@hasOccupationError"></span>
+                    <select ref="selectField" v-on:change="validate" nhs-select-type="@occupationSelectErrorState"
+                            asp-for="Patient.OccupationId" asp-items="Model.Occupations"
+                            data-aria-controls="occupation-other-conditional">
+                        <option value="">Select an occupation</option>
+                    </select>
+                </nhs-form-group>
+            </validate-input>
+
+            @{
+                var hasOccupationOtherError = !Model.IsValid("Patient.OccupationOther");
+                var occupationOtherFormState = hasOccupationOtherError ? Error : Standard;
+            }
+            <div ref="conditional-control" id="occupation-other-conditional" class="govuk-radios__conditional">
+                <validate-input model="Patient" property="OccupationOther" shouldvalidatefull="@fullValidation" inline-template>
+                    <nhs-form-group nhs-form-group-type="@occupationOtherFormState" ref="formGroup">
+                        <label for="occupation-other" nhs-label-type="Standard">
+                            Other (please specify)
+                        </label>
+                        <span nhs-span-type="ErrorMessage" asp-validation-for="Patient.OccupationOther"
+                              has-error="@hasOccupationOtherError" ref="errorField" id="occupation-other-error"></span>
+                        <input nhs-input-type="Standard" asp-for="Patient.OccupationOther" is-error-input="@hasOccupationOtherError"
+                               v-on:blur="validate" ref="inputField" fixed-width="Twenty" id="occupation-other" aria-describedby="occupation-other-error" />
+                    </nhs-form-group>
+                </validate-input>
+            </div>
         </nhs-fieldset>
-    </nhs-form-group>
+    </conditional-select-wrapper>
+
     <br />
     <partial name="_PaginationPartial" for="Notification" />
 </div>

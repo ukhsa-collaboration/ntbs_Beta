@@ -14,11 +14,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PatientModel : NotificationEditModelBase
     {
-
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
+        public List<string> RenderConditionalCountryFieldIds { get; set; }
         public List<Sex> Sexes { get; set; }
-        public List<string> DomesticOrUnknownCountryIds { get; set; }
+        public SelectList Occupations { get; set; }
+        public List<string> RenderConditionalOccupationFieldIds { get; set; }
 
         [BindProperty]
         public PatientDetails Patient { get; set; }
@@ -35,13 +36,26 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var countries = context.GetAllCountriesAsync().Result;
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
-            DomesticOrUnknownCountryIds = countries
+            RenderConditionalCountryFieldIds = countries
                 .Where(c =>
                     c.IsoCode == Models.Countries.UkCode
                     || c.IsoCode == Models.Countries.UnknownCode)
-                .Select(c => c.CountryId.ToString()).ToList();
+                .Select(c => c.CountryId.ToString())
+                .ToList();
 
             Sexes = context.GetAllSexesAsync().Result.ToList();
+
+            var occupations = context.GetAllOccupationsAsync().Result;
+            Occupations = new SelectList(
+                items: occupations,
+                dataValueField: nameof(Occupation.OccupationId),
+                dataTextField: nameof(Occupation.Role),
+                selectedValue: null,
+                dataGroupField: nameof(Occupation.Sector));
+            RenderConditionalOccupationFieldIds = occupations
+                .Where(o => o.HasFreeTextField)
+                .Select(o => o.OccupationId.ToString())
+                .ToList();
         }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
@@ -61,11 +75,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            await service.UpdatePatientFlags(Patient);
+            await service.UpdatePatientFlagsAsync(Patient);
             // Remove already invalidated states from modelState as rely
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
             ModelState.ClearValidationState("Patient.NHSNumber");
+            ModelState.ClearValidationState("Patient.OccupationOther");
             if (Patient.UkBorn != false)
             {
                 ModelState.ClearValidationState("Patient.YearOfUkEntry");
@@ -73,9 +88,9 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
-            
+
             validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
-            
+
             if (TryValidateModel(Patient, "Patient"))
             {
                 await service.UpdatePatientAsync(Notification, Patient);
@@ -113,20 +128,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
             return validationService.ValidateDate<PatientDetails>(key, day, month, year);
-        }
-
-        public ContentResult OnGetValidateYearOfUkEntry(int? yearOfUkEntry)
-        {
-            var patientDetails = new PatientDetails
-            {
-                // It should only be possible to get here through normal application use if not uk born (and not unknown)
-                UkBorn = false
-            };
-
-            return validationService.ValidateProperty(
-                patientDetails,
-                nameof(PatientDetails.YearOfUkEntry),
-                yearOfUkEntry);
         }
     }
 }

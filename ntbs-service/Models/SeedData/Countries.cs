@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ntbs_service.Models.SeedData
 {
-    public class Countries
+    public static class Countries
     {
         public static readonly string[] notHighTbOccurenceCountries = new[]
         {

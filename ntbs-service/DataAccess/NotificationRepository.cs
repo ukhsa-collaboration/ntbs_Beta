@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +85,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseNotificationIQueryable()
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
+                .Include(n => n.PatientDetails).ThenInclude(p => p.Occupation)
                 .Include(n => n.Episode).ThenInclude(p => p.Hospital)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)

@@ -80,6 +80,7 @@ namespace ntbs_service.Models
         public string FormattedNhsNumber => FormatNhsNumberString();
         public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
+        public string FormattedOccupationString => PatientDetails?.FormatOccupationString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
@@ -136,7 +137,7 @@ namespace ntbs_service.Models
         {
             if (x == null)
             {
-                return "";
+                return string.Empty;
             }
             else
             {
@@ -146,12 +147,12 @@ namespace ntbs_service.Models
 
         private string FormatStateAndYear(Status? state, int? year)
         {
-            return state?.ToString() + (year != null ? " - " + year : "");
+            return state?.ToString() + (year != null ? " - " + year : string.Empty);
         }
 
         private string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
-            return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : "");
+            return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : string.Empty);
         }
 
         private int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
@@ -163,7 +164,7 @@ namespace ntbs_service.Models
         {
             if (NotificationSites == null)
             {
-                return "";
+                return string.Empty;
             }
 
             var siteNames = NotificationSites.Select(ns => ns.Site)
@@ -191,7 +192,7 @@ namespace ntbs_service.Models
             }
             if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
             {
-                return "";
+                return string.Empty;
             }
             return string.Join(" ",
                 PatientDetails.NhsNumber.Substring(0, 3),

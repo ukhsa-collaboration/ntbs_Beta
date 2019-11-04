@@ -19,7 +19,7 @@ namespace ntbs_service.Services
         Task<Notification> GetNotificationWithAllInfoAsync(int? id);
         Task<NotificationGroup> GetNotificationGroupAsync(int id);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
-        Task UpdatePatientFlags(PatientDetails patientDetails);
+        Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
         Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails);
@@ -44,7 +44,8 @@ namespace ntbs_service.Services
         private readonly IUserService userService;
         private readonly NtbsContext context;
 
-        public NotificationService(INotificationRepository repository, IUserService userService, NtbsContext context) {
+        public NotificationService(INotificationRepository repository, IUserService userService, NtbsContext context)
+        {
             this.repository = repository;
             this.userService = userService;
             this.context = context;
@@ -63,13 +64,13 @@ namespace ntbs_service.Services
 
         public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)
         {
-            await UpdatePatientFlags(patient);
+            await UpdatePatientFlagsAsync(patient);
             context.Entry(notification.PatientDetails).CurrentValues.SetValues(patient);
 
             await UpdateDatabase();
         }
 
-        public async Task UpdatePatientFlags(PatientDetails patientDetails)
+        public async Task UpdatePatientFlagsAsync(PatientDetails patientDetails)
         {
             if (patientDetails.NhsNumberNotKnown)
             {
@@ -83,6 +84,8 @@ namespace ntbs_service.Services
 
             await UpdateUkBorn(patientDetails);
             UpdateEntryYearToUk(patientDetails);
+
+            await UpdateOccupation(patientDetails);
         }
 
         private async Task UpdateUkBorn(PatientDetails patient)
@@ -114,6 +117,23 @@ namespace ntbs_service.Services
             {
                 patient.YearOfUkEntry = null;
             }
+        }
+
+        private async Task UpdateOccupation(PatientDetails patient)
+        {
+            if (patient.OccupationId.HasValue)
+            {
+                var occupation = await context.GetOccupationByIdAsync(patient.OccupationId.Value);
+                if (occupation != null)
+                {
+                    if (occupation.HasFreeTextField)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            patient.OccupationOther = null;
         }
 
         public async Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails clinicalDetails)

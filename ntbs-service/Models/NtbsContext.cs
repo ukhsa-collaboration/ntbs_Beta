@@ -36,6 +36,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<PHEC> PHEC { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
+        public virtual DbSet<Occupation> Occupation { get; set; }
 
         public virtual async Task<IList<Country>> GetAllCountriesAsync()
         {
@@ -70,7 +71,7 @@ namespace ntbs_service.Models
         {
             return await Sex.ToListAsync();
         }
-        
+
         public virtual async Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync()
         {
             return await Ethnicity.OrderBy(e => e.Order).ToListAsync();
@@ -79,6 +80,16 @@ namespace ntbs_service.Models
         public virtual async Task<IList<Site>> GetAllSitesAsync()
         {
             return await Site.ToListAsync();
+        }
+
+        public virtual async Task<Occupation> GetOccupationByIdAsync(int occupationId)
+        {
+            return await Occupation.FindAsync(occupationId);
+        }
+
+        public virtual async Task<IList<Occupation>> GetAllOccupationsAsync()
+        {
+            return await Occupation.ToListAsync();
         }
 
         public virtual async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
@@ -383,6 +394,16 @@ namespace ntbs_service.Models
                 new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin" },
                 new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" },
                 new Site { SiteId = (int)SiteId.UNKNOWN, Description = "Unknown" }
+            );
+
+            modelBuilder.Entity<Occupation>(entity =>
+            {
+                entity.Property(e => e.Role).HasMaxLength(40);
+                entity.Property(e => e.Sector).HasMaxLength(40);
+            });
+
+            modelBuilder.Entity<Occupation>().HasData(
+                SeedData.Occupations.GetOccupations()
             );
         }
 
