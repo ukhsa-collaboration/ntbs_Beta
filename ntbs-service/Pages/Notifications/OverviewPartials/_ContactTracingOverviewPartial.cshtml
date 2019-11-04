@@ -1,13 +1,15 @@
+@using ntbs_service.Helpers
 @model ntbs_service.Models.ContactTracing
 
 @{
-    var notificationId = ViewData["NotificationId"];
+    var notificationId = (int)ViewData["NotificationId"];
 }
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Contact tracing </h3>
-    <a href="./Edit/ContactTracing?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
-</div> 
+    <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditContactTracing, notificationId)"
+       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div>
 <div class="notification-overview-details-container">
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">

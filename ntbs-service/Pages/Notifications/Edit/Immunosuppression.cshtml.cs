@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
@@ -17,12 +17,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
         }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
-        {
-            return await base.OnGetAsync(id, isBeingSubmitted);
-        }
-
-       protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
             await SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
@@ -30,7 +25,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
             return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
         }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models.Enums;
@@ -26,22 +26,23 @@ namespace ntbs_service.Pages_Notifications
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
-        public virtual async Task<IActionResult> OnGetAsync(int notificationId, bool isBeingSubmitted = false)
+        public virtual async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
-            Notification = await GetNotification(notificationId);
-
+            Notification = await GetNotification(id);
             if (Notification == null)
             {
                 return NotFound();
             }
 
+            NotificationId = Notification.NotificationId;
+
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {
-                return RedirectToOverview(notificationId);
+                return RedirectToOverview(NotificationId);
             }
 
-            return await PreparePageForGet(notificationId, isBeingSubmitted);
+            return await PreparePageForGet(NotificationId, isBeingSubmitted);
         }
 
         protected virtual async Task<Notification> GetNotification(int notificationId)
@@ -52,7 +53,7 @@ namespace ntbs_service.Pages_Notifications
         /*
         Post method accepts name of action specified by button clicked.
         Using handler adds handler onto url and therefore breaking javascript
-        validation hapening after form is submitted
+        validation happening after form is submitted
         */
         public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
         {
@@ -143,7 +144,6 @@ namespace ntbs_service.Pages_Notifications
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
         {
-            NotificationId = Notification.NotificationId;
             Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
 
@@ -157,6 +157,6 @@ namespace ntbs_service.Pages_Notifications
 
         protected abstract Task ValidateAndSave();
         protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
-        protected abstract IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted);
+        protected abstract IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted);
     }
 }

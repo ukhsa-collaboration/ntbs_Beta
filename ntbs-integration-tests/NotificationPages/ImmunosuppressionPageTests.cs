@@ -1,36 +1,39 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class ImmunosuppressionPageTests : TestRunnerBase
+    public class ImmunosuppressionPageTests : TestRunnerNotificationBase
     {
-        protected override string PageRoute => Routes.Immunosuppression;
+        protected override string NotificationSubPath => NotificationSubPaths.EditImmunosuppression;
 
-        public ImmunosuppressionPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public ImmunosuppressionPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task Post_ReturnsTypeRequiredError_IfYesSelected()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["ImmunosuppressionDetails.Status"] = "Yes",
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -43,18 +46,20 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ReturnsDetailsRequiredError_IfOtherCheckedSelected()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["ImmunosuppressionDetails.Status"] = "Yes",
                 ["ImmunosuppressionDetails.HasOther"] = "True",
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -67,30 +72,32 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_RedirectsToNextPageAndSavesContent()
         {
             // Arrange
-            var initialPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+            var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
-            const string Description = "Other Therapy";
+            const string description = "Other Therapy";
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["ImmunosuppressionDetails.Status"] = "Yes",
                 ["ImmunosuppressionDetails.HasOther"] = "True",
-                ["ImmunosuppressionDetails.OtherDescription"] = Description,
+                ["ImmunosuppressionDetails.OtherDescription"] = description,
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Equal(BuildEditRoute(Routes.PreviousHistory, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditPreviousHistory, id), GetRedirectLocation(result));
 
-            var reloadedPage = await Client.GetAsync(GetPageRouteForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("immunosuppression-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_HasOther")).IsChecked);
-            Assert.Equal(Description, ((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_OtherDescription")).Value);
+            Assert.Equal(description, ((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_OtherDescription")).Value);
         }
 
         [Theory]
@@ -110,21 +117,14 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(BuildValidationPath(formData, "Validate"));
+            var response = await Client.GetAsync(GetValidationPath(formData, "Validate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             if (!string.IsNullOrEmpty(result))
             {
                 var mappedResult = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-                if (result.Contains("Status"))
-                {
-                    result = mappedResult["ImmunosuppressionDetails.Status"];
-                }
-                else
-                {
-                    result = mappedResult["ImmunosuppressionDetails.OtherDescription"];
-                }
+                result = result.Contains("Status") ? mappedResult["ImmunosuppressionDetails.Status"] : mappedResult["ImmunosuppressionDetails.OtherDescription"];
             }
             Assert.Equal(validationResult, result);
         }

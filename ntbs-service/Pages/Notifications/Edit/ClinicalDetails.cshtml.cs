@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,11 +39,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ClinicalDetailsModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
         {
             this.context = context;
-        }
-
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
-        {
-            return await base.OnGetAsync(id, isBeingSubmitted);
         }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
@@ -94,7 +89,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
             return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
         }

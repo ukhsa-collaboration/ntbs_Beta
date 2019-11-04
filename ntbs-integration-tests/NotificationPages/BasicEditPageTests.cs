@@ -1,56 +1,57 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
+using ntbs_service.Helpers;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class BasicEditPageTests : TestRunnerBase
+    public class BasicEditPageTests : TestRunnerNotificationBase
     {
         public BasicEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsNotFound_ForNewId(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsNotFound_ForNewId(string subPath)
         {
             // Act
-            var response = await Client.GetAsync($"{route}?id={Utilities.NEW_ID}");
+            var response = await Client.GetAsync(GetPathForId(subPath, Utilities.NEW_ID));
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Theory, MemberData(nameof(OkRouteToIdCombinations))]
-        public async Task Get_ReturnsOk_ForExistingIds(string route, int id)
+        [Theory, MemberData(nameof(OkEditPathToIdCombinations))]
+        public async Task Get_ReturnsOk_ForExistingIds(string subPath, int id)
         {
             //Act
-            var response = await Client.GetAsync($"{route}?id={id}");
+            var response = await Client.GetAsync(GetPathForId(subPath, id));
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsOk_ForNhsUserWithPermission(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsOk_ForNhsUserWithPermission(string subPath)
         {
             // Arrange
             using (var client = Factory.WithMockUserService<NhsUserService>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                 //Act
-                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+                //Act
+                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
         }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string subPath)
         {
             // Arrange
             using (var client = Factory.WithMockUserService<NhsUserService>()
@@ -58,15 +59,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .CreateClientWithoutRedirects())
             {
                 //Act
-                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             }
         }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string subPath)
         {
             // Arrange
             using (var client = Factory.WithMockUserService<PheUserService>()
@@ -74,15 +75,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .CreateClientWithoutRedirects())
             {
                 //Act
-                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
         }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string subPath)
         {
             // Arrange
             using (var client = Factory.WithMockUserService<PheUserService>()
@@ -90,15 +91,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .CreateClientWithoutRedirects())
             {
                 //Act
-                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
         }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string subPath)
         {
             // Arrange
             using (var client = Factory.WithMockUserService<PheUserService>()
@@ -106,15 +107,15 @@ namespace ntbs_integration_tests.NotificationPages
                                         .CreateClientWithoutRedirects())
             {
                 //Act
-                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             }
         }
 
-        [Theory, MemberData(nameof(EditPageRoutes))]
-        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string route)
+        [Theory, MemberData(nameof(EditPageSubPaths))]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string subPath)
         {
             // Arrange
             using (var client = Factory.WithMockUserService<PheUserService>()
@@ -122,25 +123,12 @@ namespace ntbs_integration_tests.NotificationPages
                                         .CreateClientWithoutRedirects())
             {
                 //Act
-                var response = await client.GetAsync($"{route}?id={Utilities.DRAFT_ID}");
+                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
             }
         }
-
-        private static readonly List<string> Routes = new List<string>()
-        {
-            Helpers.Routes.Patient,
-            Helpers.Routes.Episode,
-            Helpers.Routes.ClinicalDetails,
-            Helpers.Routes.ContactTracing,
-            Helpers.Routes.SocialRiskFactors,
-            Helpers.Routes.Travel,
-            Helpers.Routes.Comorbidities,
-            Helpers.Routes.Immunosuppression,
-            Helpers.Routes.PreviousHistory
-        };
 
         private static readonly List<int> OkNotificationIds = new List<int>()
         {
@@ -149,16 +137,32 @@ namespace ntbs_integration_tests.NotificationPages
             Utilities.DENOTIFIED_ID
         };
 
-        public static IEnumerable<object[]> EditPageRoutes()
+        public static IEnumerable<object[]> EditPageSubPaths()
         {
-            return Routes.Select(route => new object[] { route });
+            return EditSubPaths.Select(path => new object[] { path });
         }
 
-        public static IEnumerable<object[]> OkRouteToIdCombinations()
+        public static IEnumerable<object[]> OkEditPathToIdCombinations()
         {
-            return Routes.SelectMany(route =>
-                OkNotificationIds.Select(id => new object[] { route, id })
+            return EditSubPaths.SelectMany(path =>
+                OkNotificationIds.Select(id => new object[] { path, id })
             );
         }
+
+        private static readonly List<string> EditSubPaths = new List<string>()
+        {
+            NotificationSubPaths.EditPatient,
+            NotificationSubPaths.EditEpisode,
+            NotificationSubPaths.EditClinicalDetails,
+            NotificationSubPaths.EditContactTracing,
+            NotificationSubPaths.EditSocialRiskFactors,
+            NotificationSubPaths.EditTravel,
+            NotificationSubPaths.EditComorbidities,
+            NotificationSubPaths.EditImmunosuppression,
+            NotificationSubPaths.EditPreviousHistory
+        };
     }
 }
+
+
+

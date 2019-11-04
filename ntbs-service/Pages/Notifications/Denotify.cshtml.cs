@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Pages_Notifications;
@@ -42,14 +42,10 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
-            await AuthorizeAndSetBannerAsync();
-            if (!HasEditPermission)
-            {
-                return RedirectToPage("./Overview", new {id});
-            }
-
             NotificationId = Notification.NotificationId;
-            if (Notification.NotificationStatus != NotificationStatus.Notified)
+
+            await AuthorizeAndSetBannerAsync();
+            if (!HasEditPermission || Notification.NotificationStatus != NotificationStatus.Notified)
             {
                 return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
             }

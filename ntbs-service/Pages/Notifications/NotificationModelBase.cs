@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.Models;
 using ntbs_service.Services;
@@ -45,8 +45,11 @@ namespace ntbs_service.Pages_Notifications
 
         protected async Task GetLinkedNotifications()
         {
-            Group = await GetNotificationGroupAsync();
-            NumberOfLinkedNotifications = Group?.Notifications.Count - 1 ?? 0;
+            if (Group == null)
+            {
+                Group = await GetNotificationGroupAsync();
+                NumberOfLinkedNotifications = Group?.Notifications.Count - 1 ?? 0;
+            }
         }
 
         protected IActionResult ForbiddenResult()

@@ -1,8 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
@@ -36,10 +38,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             this.userService = userService;
         }
 
-        public override async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted)
-        {
-            return await base.OnGetAsync(id, isBeingSubmitted);
-        }
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
@@ -81,7 +79,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return new JsonResult(tbServices);
         }
 
-        protected override IActionResult RedirectToNextPage(int? notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
             return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
         }

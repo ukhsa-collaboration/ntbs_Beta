@@ -1,6 +1,5 @@
-@page "{handler?}"
+@page "/Notifications/{id:int}/Edit/Comorbidities/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
-@using ntbs_service.Models.Enums
 
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
@@ -80,7 +79,7 @@
         </nhs-fieldset>
     </nhs-form-group>
 
-     <nhs-form-group nhs-form-group-type="Standard">
+    <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
                 Chronic Renal Disease

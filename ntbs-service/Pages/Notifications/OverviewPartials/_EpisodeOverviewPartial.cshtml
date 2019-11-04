@@ -1,10 +1,10 @@
-@{
-    var notificationId = ViewData["NotificationId"];
-}
+@using ntbs_service.Helpers
+@model OverviewModel
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Hospital Details </h3>
-    <a href="./Edit/Episode?id=@notificationId" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditEpisode, Model.NotificationId)"
+       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
 </div>
 <div class="notification-overview-details-container">
     <nhs-grid-row classes="notification-overview-details">
@@ -20,7 +20,7 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> TB Service </div>
-            <div class="cell-min-height"> @Model.Notification.TBServiceName </div> 
+            <div class="cell-min-height"> @Model.Notification.TBServiceName </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Hospital </div>

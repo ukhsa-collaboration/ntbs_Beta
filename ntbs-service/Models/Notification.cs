@@ -103,35 +103,11 @@ namespace ntbs_service.Models
         public string FormattedNotificationDate => FormatDate(NotificationDate);
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
 
-        public string PatientEditPath => GetNotificationEditPath("Patient");
-        public string EpisodeEditPath => GetNotificationEditPath("Episode");
-        public string ClinicalDetailsEditPath => GetNotificationEditPath("ClinicalDetails");
-        public string ContactTracingEditPath => GetNotificationEditPath("ContactTracing");
-        public string SocialRiskFactorsEditPath => GetNotificationEditPath("SocialRiskFactors");
-        public string TravelEditPath => GetNotificationEditPath("Travel");
-        public string ComorbiditiesEditPath => GetNotificationEditPath("Comorbidities");
-        public string ImmunosuppressionEditPath => GetNotificationEditPath("Immunosuppression");
-        public string PreviousHistoryEditPath => GetNotificationEditPath("PreviousHistory");
-        public string OverviewPath => GetNotificationPath("Overview");
-        public string LinkedNotificationsPath => GetNotificationPath("LinkedNotifications");
-        public string DenotifyPath => GetNotificationPath("Denotify");
-        public string DeletePath => GetNotificationPath("Delete");
-
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
         public string TreatmentPHECName => Episode.TBService?.PHEC?.Name;
 
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
-
-        private string GetNotificationEditPath(string subPath)
-        {
-            return RouteHelper.GetFullNotificationEditPath(subPath, NotificationId, ShouldValidateFull);
-        }
-
-        private string GetNotificationPath(string subPath)
-        {
-            return RouteHelper.GetFullNotificationPath(subPath, NotificationId);
-        }
 
         private string GetNotificationStatusString()
         {

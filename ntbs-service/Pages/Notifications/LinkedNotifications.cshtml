@@ -1,4 +1,4 @@
-@page "{handler?}"
+@page "/Notifications/{id:int?}/LinkedNotifications/{handler?}"
 @model ntbs_service.Pages_Notifications.LinkedNotificationsModel
 
 @{
@@ -7,11 +7,11 @@
     ViewData["NotificationId"] = @Model.NotificationId;
 }
 
-<h2>Linked Notifications</h2>
+<h2 id="top">Linked Notifications</h2>
 
 @foreach (var notificationBannerModel in @Model.LinkedNotifications)
 {
     <partial name="./Shared/_NotificationBanner" model="notificationBannerModel" />
 }
 
-<a href='#top' class="govuk-link--no-visited-state"> Back to top </a>
+<a href="#top" class="govuk-link--no-visited-state"> Back to top </a>
