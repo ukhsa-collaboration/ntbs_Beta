@@ -40,7 +40,7 @@ pipeline {
     stage('run ui tests') {
       steps {
         script {
-          docker.build("ntbs-service-ui-tests:${NTBS_BUILD}",  "-f Dockerfile-uitests .").inside {
+          docker.build("ntbs-service-ui-tests:${NTBS_BUILD}",  "-f Dockerfile-uitests --build-arg CACHEBUST=${NTBS_BUILD} .").inside {
             sh(script: '''
               echo "ui tests complete"
             ''')

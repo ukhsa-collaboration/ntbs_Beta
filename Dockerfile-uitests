@@ -28,6 +28,7 @@ RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 RUN export JAVA_HOME
 
+
 WORKDIR /
 COPY ./EFAuditer ./EFAuditer
 COPY ./ntbs-service ./ntbs-service
@@ -39,4 +40,5 @@ RUN npm ci
 RUN node_modules/.bin/selenium-standalone install
 
 ENV ASPNETCORE_URLS https://localhost:5001
-RUN node_modules/.bin/selenium-standalone start & dotnet test
+ARG CACHEBUST=1
+RUN ./test.sh
