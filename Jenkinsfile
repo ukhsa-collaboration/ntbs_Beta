@@ -37,6 +37,17 @@ pipeline {
         }
       }
     }
+    stage('run ui tests') {
+      steps {
+        script {
+          docker.build("ntbs-service-ui-tests:${NTBS_BUILD}",  "-f Dockerfile-uitests .").inside {
+            sh(script: '''
+              echo "ui tests complete"
+            ''')
+          }
+        }
+      }
+    }
     stage('build and publish image') {
       steps {
         script {

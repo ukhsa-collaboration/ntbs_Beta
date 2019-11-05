@@ -1,4 +1,6 @@
-.git/
+.git
+.idea
+.vscode
 Dockerfile*
 **/*.md
 

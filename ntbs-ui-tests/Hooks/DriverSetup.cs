@@ -26,7 +26,8 @@ namespace ntbs_ui_tests.Hooks
         public void BeforeScenario()
         {
             var opts = new ChromeOptions();
-            opts.AddArgument("--headless"); //Optional, comment this out if you want to SEE the browser window
+            opts.AddArgument("--no-sandbox"); // Necessary to avoid `unknown error: DevToolsActivePort file doesn't exist` when running on docker
+            opts.AddArgument("--headless"); // Optional, comment this out if you want to SEE the browser window
 
             Browser = new RemoteWebDriver(opts);
             objectContainer.RegisterInstanceAs(Browser);

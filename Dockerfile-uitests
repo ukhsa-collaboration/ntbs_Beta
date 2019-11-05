@@ -1,0 +1,42 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+
+ARG dotnet_cli_home_arg=/tmp/
+ENV DOTNET_CLI_HOME=$dotnet_cli_home_arg
+
+RUN apt-get update -yq \
+    && apt-get install curl gnupg -yq \
+    && curl -sL https://deb.nodesource.com/setup_10.x | bash \
+    && apt-get install nodejs -yq
+
+# Install OpenJDK-8
+RUN apt-get update && \
+    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y ant && \
+    apt-get clean;
+# Fix certificate issues
+RUN apt-get update && \
+    apt-get install ca-certificates-java && \
+    apt-get clean && \
+    update-ca-certificates -f;
+
+# Install Chrome
+RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /chrome.deb && \
+    dpkg -i /chrome.deb || apt-get install -yf && \
+    rm /chrome.deb
+
+# Setup JAVA_HOME -- useful for docker commandline
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+RUN export JAVA_HOME
+
+WORKDIR /
+COPY ./EFAuditer ./EFAuditer
+COPY ./ntbs-service ./ntbs-service
+COPY ./ntbs-ui-tests ./ntbs-ui-tests
+
+WORKDIR /ntbs-ui-tests
+
+RUN npm ci
+RUN node_modules/.bin/selenium-standalone install
+
+ENV ASPNETCORE_URLS https://localhost:5001
+RUN node_modules/.bin/selenium-standalone start & dotnet test

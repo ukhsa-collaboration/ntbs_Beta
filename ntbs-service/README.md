@@ -55,9 +55,10 @@ Secrets are project specific so run these commands in the root of a project.
 ## Testing
 
 We are using the [xunit](https://xunit.net/) framework for testing.
-To run unit/integration tests, cd into the ntbs-service-unit-tests/ntbs-integration-tests project and run "dotnet test".
+To run unit/integration tests, cd into the ntbs-service-unit-tests/ntbs-integration-tests project and run `dotnet test`.
 
-To run ui tests, ensure you run "npm install" from the ntbs-ui-tests directory to install selenium-standalone. Then run them with "dotnet test" as for other test projects.
+Before first running ui tests locally, cd into the ntbs-ui-tests directory and run `npm ci` to get the selenium-standalone dependency, followed by `.\node_modules\.bin\selenium-standalone install` to install selenium-standalone.
+To run ui tests, run the script `.\test.ps1`
 To see the browser window when running them comment out the appropriate line in DriverSetup.
 
 ## Database migrations

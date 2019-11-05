@@ -8,8 +8,6 @@ using System;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
-using System.Diagnostics;
-using System.IO;
 
 namespace ntbs_ui_tests
 {
@@ -26,31 +24,13 @@ namespace ntbs_ui_tests
     public class SeleniumServerFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
         IWebHost host;
-        readonly Process process; 
         public string RootUri { get; set; }
 
         public SeleniumServerFactory()
         {
             ClientOptions.BaseAddress = new Uri("https://localhost");
-            string workingDirectory = Environment.CurrentDirectory;
-            // working directory is in bin/Debug/netcoreapp2.2
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-
-            // Location of selenium-standalone executable
-            string nodeModulesDirectory = projectDirectory + "\\node_modules\\.bin";
-
-            process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                    {
-                        WorkingDirectory = nodeModulesDirectory,
-                        FileName = "selenium-standalone",
-                        Arguments = "start",
-                        UseShellExecute = true
-                    }
-            };
-            process.Start();
         }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Test");
@@ -102,8 +82,6 @@ namespace ntbs_ui_tests
             if (disposing) 
             {
                 host.Dispose();
-                process.CloseMainWindow();
-                process.Dispose();
             }
         }
     }
