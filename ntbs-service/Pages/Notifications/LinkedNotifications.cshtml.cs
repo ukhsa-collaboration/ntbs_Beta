@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications
 {
     public class LinkedNotificationsModel : NotificationModelBase
     {
@@ -22,6 +22,8 @@ namespace ntbs_service.Pages_Notifications
                 return NotFound();
             }
 
+            NotificationId = Notification.NotificationId;
+
             var hasLinkedNotifications = await TryGetLinkedNotifications();
             if (!hasLinkedNotifications)
             {
@@ -29,10 +31,10 @@ namespace ntbs_service.Pages_Notifications
             }
 
             await AuthorizeAndSetBannerAsync();
-            NotificationId = Notification.NotificationId;
 
-            LinkedNotifications = Group.Notifications.Where(n => n.NotificationId != NotificationId)
-                                                    .CreateNotificationBanners(User, authorizationService).ToList();
+            LinkedNotifications = Group.Notifications
+                .Where(n => n.NotificationId != NotificationId)
+                .CreateNotificationBanners(User, authorizationService).ToList();
 
             return Page();
         }

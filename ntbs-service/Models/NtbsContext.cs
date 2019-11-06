@@ -226,7 +226,7 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasOne<NotificationGroup>()
+                entity.HasOne(n => n.Group)
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 

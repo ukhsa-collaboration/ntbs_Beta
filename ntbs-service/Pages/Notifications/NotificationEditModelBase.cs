@@ -1,24 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ntbs_service.Models.Enums;
-using ntbs_service.Models;
-using ntbs_service.Services;
+using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
+using ntbs_service.Models.Enums;
+using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications
 {
-    public class NotifyError {
-        public string Url { get; set; }
-        public List<string> ErrorMessages { get; set; }
-    }
-
-    // Needed by all Notification edit pages
     public abstract class NotificationEditModelBase : NotificationModelBase
     {
         protected ValidationService validationService;
 
-        public NotificationEditModelBase(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
+        protected NotificationEditModelBase(
+            INotificationService service, 
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository = null) : base(service, authorizationService, notificationRepository)
         {
             validationService = new ValidationService(this);
         }
@@ -83,13 +81,11 @@ namespace ntbs_service.Pages_Notifications
 
         public async Task<IActionResult> Submit()
         {
-            // First Validate and Save current page details
             await ValidateAndSave();
             if (!ModelState.IsValid) 
             {
                 return await OnGetAsync(NotificationId);
             }
-
 
             // IsRequired fields on Models requires ShouldValidateFull flag
             SetShouldValidateFull();

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Validations;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -20,6 +20,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public List<Sex> Sexes { get; set; }
         public SelectList Occupations { get; set; }
         public List<string> RenderConditionalOccupationFieldIds { get; set; }
+        public Dictionary<string, string> DuplicateNhsNumberNotifications { get; set; }
 
         [BindProperty]
         public PatientDetails Patient { get; set; }
@@ -29,10 +30,23 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedDob { get; set; }
         private readonly IPostcodeService postcodeService;
 
-        public PatientModel(INotificationService service, IPostcodeService postcodeService, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
+        public PatientModel(
+            INotificationService service,
+            IPostcodeService postcodeService,
+            IAuthorizationService authorizationService,
+            NtbsContext context,
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
             this.postcodeService = postcodeService;
-            Ethnicities = new SelectList(context.GetAllOrderedEthnicitiesAsync().Result, nameof(Ethnicity.EthnicityId), nameof(Ethnicity.Label));
+            GenerateReferenceData(context);
+        }
+
+        private void GenerateReferenceData(NtbsContext context)
+        {
+            Ethnicities = new SelectList(
+                context.GetAllOrderedEthnicitiesAsync().Result,
+                nameof(Ethnicity.EthnicityId),
+                nameof(Ethnicity.Label));
 
             var countries = context.GetAllCountriesAsync().Result;
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
@@ -70,7 +84,30 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(Patient, "Patient");
             }
 
+            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(Patient.NhsNumber);
+
             return Page();
+        }
+
+        private async Task<Dictionary<string, string>> GenerateDuplicateNhsNumberNotificationUrlsAsync(string nhsNumber)
+        {
+            // If NhsNumber is empty or does not pass validation - return null
+            if (string.IsNullOrEmpty(nhsNumber) || !string.IsNullOrEmpty(
+                validationService.ValidateModelProperty<PatientDetails>("NhsNumber", nhsNumber, false).Content))
+            {
+                return null;
+            }
+
+            var notificationIds =
+                await notificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
+            // Filter this notification and linked notifications from collection.
+            notificationIds = notificationIds
+                .Where(n => n != NotificationId
+                         && (!Group?.Notifications.Exists(linked => linked.NotificationId == n) ?? true))
+                .ToList();
+            return notificationIds.ToDictionary(
+                id => id.ToString(),
+                id => RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, id));
         }
 
         protected override async Task ValidateAndSave()
@@ -128,6 +165,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
             return validationService.ValidateDate<PatientDetails>(key, day, month, year);
+        }
+
+        public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)
+        {
+            NotificationId = notificationId;
+            await GetLinkedNotifications();
+            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber));
         }
     }
 }

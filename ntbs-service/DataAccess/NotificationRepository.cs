@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 
@@ -21,8 +20,10 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationAsync(int? NotificationId);
         Task<IList<Notification>> GetNotificationsByIdsAsync(IList<int> ids);
         bool NotificationExists(int NotificationId);
+        Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
+        Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
     }
-    
+
     public class NotificationRepository : INotificationRepository 
     {
         private readonly NtbsContext context;
@@ -75,6 +76,15 @@ namespace ntbs_service.DataAccess
                 .Any(e => e.NotificationId == NotificationId);
         }
 
+        public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
+        {
+            return await context.Notification
+                .Where(n => (n.NotificationStatus == NotificationStatus.Notified || n.NotificationStatus == NotificationStatus.Denotified) 
+                            && n.PatientDetails.NhsNumber == nhsNumber)
+                .Select(n => n.NotificationId)
+                .ToListAsync();
+        }
+
         public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? NotificationId) {
             return await GetBaseNotificationIQueryable()
                 .Include(n => n.NotificationSites)
@@ -109,6 +119,15 @@ namespace ntbs_service.DataAccess
             return await GetBaseNotificationIQueryable()
                         .Where(n => ids.Contains(n.NotificationId))
                         .ToListAsync();
+        }
+
+        public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)
+        {
+            return await context.Notification
+                .Where(n => n.NotificationId == notificationId)
+                .Select(n => n.Group)
+                .Include(g => g.Notifications)
+                .SingleOrDefaultAsync();
         }
 
         private IQueryable<Notification> GetBaseNotificationIQueryable()

@@ -1,21 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Services;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications
 {
-    // Needed by all Notification pages
     public abstract class NotificationModelBase : PageModel
     {
         protected INotificationService service;
         protected IAuthorizationService authorizationService;
+        protected INotificationRepository notificationRepository;
 
-        public NotificationModelBase(INotificationService service, IAuthorizationService authorizationService)
+        protected NotificationModelBase(
+            INotificationService service,
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository = null)
         {
             this.service = service;
+            this.notificationRepository = notificationRepository;
             this.authorizationService = authorizationService;
         }
 
@@ -59,13 +64,7 @@ namespace ntbs_service.Pages_Notifications
 
         private async Task<NotificationGroup> GetNotificationGroupAsync()
         {
-            var groupId = Notification.GroupId;
-            if (groupId == null)
-            {
-                return null;
-            }
-
-            return await service.GetNotificationGroupAsync(groupId.Value);
+            return await notificationRepository.GetNotificationGroupAsync(NotificationId);
         }
     }
 }

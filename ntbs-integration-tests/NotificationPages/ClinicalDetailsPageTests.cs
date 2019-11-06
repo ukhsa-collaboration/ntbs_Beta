@@ -290,7 +290,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -310,7 +310,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -329,7 +329,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateNotificationSites"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateNotificationSites"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -351,7 +351,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateNotificationSiteProperty"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateNotificationSiteProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -370,7 +370,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsYearComparison"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
