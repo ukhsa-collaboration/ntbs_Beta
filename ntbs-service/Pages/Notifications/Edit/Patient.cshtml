@@ -66,6 +66,7 @@
                                     var nhsNumberErrorGroup = hasNhsNumberError ? Error : Standard;
                                 }
                                 <nhs-form-group nhs-form-group-type="@nhsNumberErrorGroup" aria-describedby="nhs-number-error">
+                                    <label asp-for="Patient.NhsNumber" class="govuk-visually-hidden">Please provide NHS number</label>	
                                     <span nhs-span-type="ErrorMessage" id="nhs-number-error" ref="errorField"
                                           asp-validation-for="Patient.NhsNumber" has-error="@hasNhsNumberError"></span>
                                     <input ref="inputField" v-on:blur="validate" is-error-input=@hasNhsNumberError nhs-input-type="Standard"
