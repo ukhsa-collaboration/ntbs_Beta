@@ -131,7 +131,7 @@
     </h2>
     @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
     {
-        <button nhs-button-type="Standard" name="actionName" value="Submit">Submit</button>
+        <button nhs-button-type="Standard" name="actionName" value="Submit" id="submit-button">Submit</button>
         <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId)" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning delete-notification-button">Delete</a>
     }
     else if ((bool)ViewData["IsOverviewPage"])
