@@ -10,18 +10,18 @@ namespace ntbs_service.Pages.Notifications
 {
     public abstract class NotificationModelBase : PageModel
     {
-        protected INotificationService service;
-        protected IAuthorizationService authorizationService;
-        protected INotificationRepository notificationRepository;
+        protected INotificationService Service;
+        protected IAuthorizationService AuthorizationService;
+        protected INotificationRepository NotificationRepository;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository = null)
         {
-            this.service = service;
-            this.notificationRepository = notificationRepository;
-            this.authorizationService = authorizationService;
+            this.Service = service;
+            this.NotificationRepository = notificationRepository;
+            this.AuthorizationService = authorizationService;
         }
 
         protected NotificationGroup Group;
@@ -38,7 +38,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            HasEditPermission = await authorizationService.CanEdit(User, Notification);
+            HasEditPermission = await AuthorizationService.CanEdit(User, Notification);
             NotificationBannerModel = new NotificationBannerModel(Notification, HasEditPermission);
         }
 
@@ -64,7 +64,7 @@ namespace ntbs_service.Pages.Notifications
 
         private async Task<NotificationGroup> GetNotificationGroupAsync()
         {
-            return await notificationRepository.GetNotificationGroupAsync(NotificationId);
+            return await NotificationRepository.GetNotificationGroupAsync(NotificationId);
         }
     }
 }

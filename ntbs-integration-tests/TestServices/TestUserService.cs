@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -12,7 +12,7 @@ namespace ntbs_integration_tests.TestServices
 {
     public class NhsUserService : IUserService
     {
-        public Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
+        public Task<TBService> GetDefaultTbService(ClaimsPrincipal user)
         {
             throw new NotImplementedException();
         }
@@ -34,7 +34,7 @@ namespace ntbs_integration_tests.TestServices
 
     public class PheUserService : IUserService
     {
-        public Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
+        public Task<TBService> GetDefaultTbService(ClaimsPrincipal user)
         {
             throw new NotImplementedException();
         }

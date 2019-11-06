@@ -14,6 +14,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PatientModel : NotificationEditModelBase
     {
+        private readonly IPostcodeService _postcodeService;
+
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
         public List<string> RenderConditionalCountryFieldIds { get; set; }
@@ -28,27 +30,26 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
-        private readonly IPostcodeService postcodeService;
 
         public PatientModel(
             INotificationService service,
             IPostcodeService postcodeService,
             IAuthorizationService authorizationService,
-            NtbsContext context,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
         {
-            this.postcodeService = postcodeService;
-            GenerateReferenceData(context);
+            _postcodeService = postcodeService;
+            GenerateReferenceData(referenceDataRepository);
         }
 
-        private void GenerateReferenceData(NtbsContext context)
+        private void GenerateReferenceData(IReferenceDataRepository referenceDataRepository)
         {
             Ethnicities = new SelectList(
-                context.GetAllOrderedEthnicitiesAsync().Result,
+                referenceDataRepository.GetAllOrderedEthnicitiesAsync().Result,
                 nameof(Ethnicity.EthnicityId),
                 nameof(Ethnicity.Label));
 
-            var countries = context.GetAllCountriesAsync().Result;
+            var countries = referenceDataRepository.GetAllCountriesAsync().Result;
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
             RenderConditionalCountryFieldIds = countries
                 .Where(c =>
@@ -57,9 +58,9 @@ namespace ntbs_service.Pages.Notifications.Edit
                 .Select(c => c.CountryId.ToString())
                 .ToList();
 
-            Sexes = context.GetAllSexesAsync().Result.ToList();
+            Sexes = referenceDataRepository.GetAllSexesAsync().Result.ToList();
 
-            var occupations = context.GetAllOccupationsAsync().Result;
+            var occupations = referenceDataRepository.GetAllOccupationsAsync().Result;
             Occupations = new SelectList(
                 items: occupations,
                 dataValueField: nameof(Occupation.OccupationId),
@@ -93,13 +94,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             // If NhsNumber is empty or does not pass validation - return null
             if (string.IsNullOrEmpty(nhsNumber) || !string.IsNullOrEmpty(
-                validationService.ValidateModelProperty<PatientDetails>("NhsNumber", nhsNumber, false).Content))
+                ValidationService.ValidateModelProperty<PatientDetails>("NhsNumber", nhsNumber, false).Content))
             {
                 return null;
             }
 
             var notificationIds =
-                await notificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
+                await NotificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
             // Filter this notification and linked notifications from collection.
             notificationIds = notificationIds
                 .Where(n => n != NotificationId
@@ -112,7 +113,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            await service.UpdatePatientFlagsAsync(Patient);
+            await Service.UpdatePatientFlagsAsync(Patient);
             // Remove already invalidated states from modelState as rely
             // on changes made in UpdatePatientFlags
             ModelState.ClearValidationState("Patient.Postcode");
@@ -126,30 +127,30 @@ namespace ntbs_service.Pages.Notifications.Edit
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
 
-            validationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            ValidationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
 
             if (TryValidateModel(Patient, "Patient"))
             {
-                await service.UpdatePatientAsync(Notification, Patient);
+                await Service.UpdatePatientAsync(Notification, Patient);
             }
         }
 
         private async Task FindAndSetPostcodeAsync()
         {
-            var foundPostcode = await postcodeService.FindPostcode(Patient.Postcode);
+            var foundPostcode = await _postcodeService.FindPostcode(Patient.Postcode);
             Patient.PostcodeToLookup = foundPostcode?.Postcode;
         }
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {
-            var foundPostcode = await postcodeService.FindPostcode(postcode);
+            var foundPostcode = await _postcodeService.FindPostcode(postcode);
             var propertyValueTuples = new List<Tuple<string, object>>
             {
                 new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
                 new Tuple<string, object>("Postcode", postcode)
             };
 
-            return validationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
+            return ValidationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
         }
 
         protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
@@ -159,12 +160,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)
         {
-            return validationService.ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
+            return ValidationService.ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
         {
-            return validationService.ValidateDate<PatientDetails>(key, day, month, year);
+            return ValidationService.ValidateDate<PatientDetails>(key, day, month, year);
         }
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)

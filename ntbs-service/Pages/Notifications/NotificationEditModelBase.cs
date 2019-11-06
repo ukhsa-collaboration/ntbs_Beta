@@ -11,14 +11,14 @@ namespace ntbs_service.Pages.Notifications
 {
     public abstract class NotificationEditModelBase : NotificationModelBase
     {
-        protected ValidationService validationService;
+        protected ValidationService ValidationService;
 
         protected NotificationEditModelBase(
             INotificationService service, 
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository = null) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
-            validationService = new ValidationService(this);
+            ValidationService = new ValidationService(this);
         }
 
         [ViewData]
@@ -45,7 +45,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected virtual async Task<Notification> GetNotification(int notificationId)
         {
-            return await service.GetNotificationAsync(notificationId);
+            return await NotificationRepository.GetNotificationAsync(notificationId);
         }
 
         /*
@@ -56,12 +56,12 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
         {
             // Get Notifications with all owned properties to check for 
-            Notification = await service.GetNotificationWithAllInfoAsync(NotificationId); 
+            Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId); 
             if (Notification == null)
             {
                 return NotFound();
             }
-            else if (!(await authorizationService.CanEdit(User, Notification)))
+            else if (!(await AuthorizationService.CanEdit(User, Notification)))
             {
                 return ForbiddenResult();
             }
@@ -96,7 +96,7 @@ namespace ntbs_service.Pages.Notifications
                 return Partial("./NotificationErrorSummary", this);
             } 
 
-            await service.SubmitNotificationAsync(Notification);
+            await Service.SubmitNotificationAsync(Notification);
             
             return RedirectToOverview(NotificationId);
         }
@@ -148,7 +148,7 @@ namespace ntbs_service.Pages.Notifications
 
         public bool IsValid(string key)
         {
-            return validationService.IsValid(key);
+            return ValidationService.IsValid(key);
         }
 
         protected abstract Task ValidateAndSave();

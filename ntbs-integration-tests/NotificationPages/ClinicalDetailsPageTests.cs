@@ -36,9 +36,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedFirstPresentationDate.Day"] = "1",
                 ["FormattedFirstPresentationDate.Month"] = "1",
                 ["FormattedFirstPresentationDate.Year"] = "2000",
-                ["FormattedTBServicePresentationDate.Day"] = "1",
-                ["FormattedTBServicePresentationDate.Month"] = "1",
-                ["FormattedTBServicePresentationDate.Year"] = "2000",
+                ["FormattedTbServicePresentationDate.Day"] = "1",
+                ["FormattedTbServicePresentationDate.Month"] = "1",
+                ["FormattedTbServicePresentationDate.Year"] = "2000",
                 ["FormattedDiagnosisDate.Day"] = "1",
                 ["FormattedDiagnosisDate.Month"] = "1",
                 ["FormattedDiagnosisDate.Year"] = "2000",
@@ -174,9 +174,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedFirstPresentationDate.Day"] = "2",
                 ["FormattedFirstPresentationDate.Month"] = "2",
                 ["FormattedFirstPresentationDate.Year"] = "2012",
-                ["FormattedTBServicePresentationDate.Day"] = "3",
-                ["FormattedTBServicePresentationDate.Month"] = "3",
-                ["FormattedTBServicePresentationDate.Year"] = "2013",
+                ["FormattedTbServicePresentationDate.Day"] = "3",
+                ["FormattedTbServicePresentationDate.Month"] = "3",
+                ["FormattedTbServicePresentationDate.Year"] = "2013",
                 ["FormattedDiagnosisDate.Day"] = "4",
                 ["FormattedDiagnosisDate.Month"] = "4",
                 ["FormattedDiagnosisDate.Year"] = "2014",
@@ -208,9 +208,9 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal("2", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Day")).Value);
             Assert.Equal("2", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Month")).Value);
             Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Year")).Value);
-            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Day")).Value);
-            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Month")).Value);
-            Assert.Equal("2013", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Year")).Value);
+            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTbServicePresentationDate_Day")).Value);
+            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTbServicePresentationDate_Month")).Value);
+            Assert.Equal("2013", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTbServicePresentationDate_Year")).Value);
             Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Day")).Value);
             Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Month")).Value);
             Assert.Equal("2014", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Year")).Value);
