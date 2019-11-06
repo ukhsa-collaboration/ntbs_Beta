@@ -58,7 +58,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetTbServiceAndHospitalListsAsync()
         {
-
             IEnumerable<string> tbServiceCodes;
 
             if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft)
