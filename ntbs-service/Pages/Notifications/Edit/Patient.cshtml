@@ -20,73 +20,73 @@
             : string.Empty;
         var requiresPrependedComma = false;
     }
-<nhs-number-duplicate-warning inline-template>
-    <div>
-        <div id="nhs-number-warning" class="govuk-warning-text @conditionallyHiddenClass" ref="nhs-number-warning">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <div class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">Warning</span>
-                <strong>NHS number is associated with other notification(s), please confirm:</strong>
-                <div ref="warning-container" id="nhs-number-links">
-                    @if (Model.DuplicateNhsNumberNotifications != null)
-                    {
-                        foreach (var (id, url) in Model.DuplicateNhsNumberNotifications)
+    <nhs-number-duplicate-warning inline-template>
+        <div>
+            <div id="nhs-number-warning" class="govuk-warning-text @conditionallyHiddenClass" ref="nhs-number-warning">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <div class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    <strong>NHS number is associated with other notification(s), please confirm:</strong>
+                    <div ref="warning-container" id="nhs-number-links">
+                        @if (Model.DuplicateNhsNumberNotifications != null)
                         {
-                            if (requiresPrependedComma)
+                            foreach (var (id, url) in Model.DuplicateNhsNumberNotifications)
                             {
-                                @:,
+                                if (requiresPrependedComma)
+                                {
+                                    @:,
+                                }
+                                <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
+                                requiresPrependedComma = true;
                             }
-                            <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
-                            requiresPrependedComma = true;
                         }
-                    }
+                    </div>
                 </div>
             </div>
+
+            <nhs-fieldset aria-describedby="nhs-number-error">
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    NHS Number (required)
+                </nhs-fieldset-legend>
+                <nhs-form-group nhs-form-group-type="Standard">
+                    <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
+                                   value="false" data-aria-controls="conditional-nhs-number-conditional" id="nhs-number-known">
+                            <label nhs-label-type="Radios" for="nhs-number-known">
+                                Known
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                             id="conditional-nhs-number-conditional">
+                            <validate-input model="Patient" property="NhsNumber" shouldvalidatefull="@fullValidation"
+                                            v-on:valid="handleValid" v-on:invalid="handleInvalid" inline-template>
+                                @{
+                                    var hasNhsNumberError = !Model.IsValid("Patient.NhsNumber");
+                                    var nhsNumberErrorGroup = hasNhsNumberError ? Error : Standard;
+                                }
+                                <nhs-form-group nhs-form-group-type="@nhsNumberErrorGroup" aria-describedby="nhs-number-error">
+                                    <label asp-for="Patient.NhsNumber" class="govuk-visually-hidden">Please provide NHS number</label>
+                                    <span nhs-span-type="ErrorMessage" id="nhs-number-error" ref="errorField"
+                                          asp-validation-for="Patient.NhsNumber" has-error="@hasNhsNumberError"></span>
+                                    <input ref="inputField" v-on:blur="validate" is-error-input=@hasNhsNumberError nhs-input-type="Standard"
+                                           fixed-width="Ten" asp-for="Patient.NhsNumber" aria-describedby="nhs-number-warning">
+                                </nhs-form-group>
+                            </validate-input>
+                        </div>
+
+                        <div class="nhsuk-radios__item">
+                            <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
+                                   value="true" id="nhs-number-unknown">
+                            <label nhs-label-type="Radios" for="nhs-number-unknown">
+                                Not known
+                            </label>
+                        </div>
+                    </div>
+                </nhs-form-group>
+            </nhs-fieldset>
         </div>
-
-        <nhs-fieldset aria-describedby="nhs-number-error">
-            <nhs-fieldset-legend nhs-legend-size="Standard">
-                NHS Number (required)
-            </nhs-fieldset-legend>
-            <nhs-form-group nhs-form-group-type="Standard">
-                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
-                               value="false" data-aria-controls="conditional-nhs-number-conditional" id="nhs-number-known">
-                        <label nhs-label-type="Radios" for="nhs-number-known">
-                            Known
-                        </label>
-                    </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
-                         id="conditional-nhs-number-conditional">
-                        <validate-input model="Patient" property="NhsNumber" shouldvalidatefull="@fullValidation"
-                                        v-on:valid="handleValid" v-on:invalid="handleInvalid" inline-template>
-                            @{
-                                var hasNhsNumberError = !Model.IsValid("Patient.NhsNumber");
-                                var nhsNumberErrorGroup = hasNhsNumberError ? Error : Standard;
-                            }
-                            <nhs-form-group nhs-form-group-type="@nhsNumberErrorGroup" aria-describedby="nhs-number-error">
-                                <label asp-for="Patient.NhsNumber" class="govuk-visually-hidden">Please provide NHS number</label>
-                                <span nhs-span-type="ErrorMessage" id="nhs-number-error" ref="errorField"
-                                      asp-validation-for="Patient.NhsNumber" has-error="@hasNhsNumberError"></span>
-                                <input ref="inputField" v-on:blur="validate" is-error-input=@hasNhsNumberError nhs-input-type="Standard"
-                                       fixed-width="Ten" asp-for="Patient.NhsNumber" aria-describedby="nhs-number-warning">
-                            </nhs-form-group>
-                        </validate-input>
-                    </div>
-
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="Patient.NhsNumberNotKnown" class="nhsuk-radios__input" type="radio"
-                               value="true" id="nhs-number-unknown">
-                        <label nhs-label-type="Radios" for="nhs-number-unknown">
-                            Not known
-                        </label>
-                    </div>
-                </div>
-            </nhs-form-group>
-        </nhs-fieldset>
-    </div>
-</nhs-number-duplicate-warning>
+    </nhs-number-duplicate-warning>
     <br />
 
     <validate-input model="Patient" property="GivenName" shouldvalidatefull="@fullValidation" inline-template>
