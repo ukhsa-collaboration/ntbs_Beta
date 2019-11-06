@@ -42,6 +42,8 @@ pipeline {
         script {
           docker.build("ntbs-service-ui-tests:${NTBS_BUILD}",  "-f Dockerfile-uitests --build-arg CACHEBUST=${NTBS_BUILD} .").inside {
             sh(script: '''
+              # We would like to run the actual tests in here, but an issue with jenkins means we do that within the docker build
+              # See Dockerfile-uitests for details.
               echo "ui tests complete"
             ''')
           }

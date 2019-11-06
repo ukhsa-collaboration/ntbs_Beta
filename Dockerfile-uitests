@@ -19,15 +19,14 @@ RUN apt-get update && \
     apt-get clean && \
     update-ca-certificates -f;
 
-# Install Chrome
-RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /chrome.deb && \
-    dpkg -i /chrome.deb || apt-get install -yf && \
-    rm /chrome.deb
-
 # Setup JAVA_HOME -- useful for docker commandline
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 RUN export JAVA_HOME
 
+# Install Chrome
+RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /chrome.deb && \
+    dpkg -i /chrome.deb || apt-get install -yf && \
+    rm /chrome.deb
 
 WORKDIR /
 COPY ./EFAuditer ./EFAuditer
@@ -40,5 +39,8 @@ RUN npm ci
 RUN node_modules/.bin/selenium-standalone install
 
 ENV ASPNETCORE_URLS https://localhost:5001
+# We would like to run this script from within jenkinsfile, however the volume mount overwrites the directory and hence the selenium installation
+# Cache busting taken from http://dev.im-bot.com/docker-select-caching/
+# Tech debt ticket raised: NTBS-629
 ARG CACHEBUST=1
 RUN ./test.sh
