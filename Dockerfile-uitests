@@ -43,4 +43,5 @@ ENV ASPNETCORE_URLS https://localhost:5001
 # Cache busting taken from http://dev.im-bot.com/docker-select-caching/
 # Tech debt ticket raised: NTBS-629
 ARG CACHEBUST=1
+RUN chmod +x test.sh
 RUN ./test.sh
