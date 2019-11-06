@@ -100,7 +100,7 @@ namespace ntbs_service.Pages_Notifications
                 return Partial("./NotificationErrorSummary", this);
             } 
 
-            await service.SubmitNotification(Notification);
+            await service.SubmitNotificationAsync(Notification);
             
             return RedirectToOverview(NotificationId);
         }
