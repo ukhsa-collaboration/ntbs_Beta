@@ -28,11 +28,6 @@ namespace ntbs_service_unit_tests.Services
             mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
         }
 
-        private static void VerifyUpdateDatabase(Mock<NtbsContext> mockContext)
-        {
-            mockContext.Verify(mock => mock.SaveChangesAsync(It.IsAny<CancellationToken>()));
-        }
-
         [Theory]
         [InlineData((int)Status.No)]
         [InlineData((int)Status.Unknown)]
@@ -69,7 +64,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.False(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
             mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment, socialRiskFactors.RiskFactorImprisonment));
 
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         public static IEnumerable<object[]> UkBornTestCases()
@@ -94,7 +89,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             Assert.Equal(expectedResult, patient.UkBorn);
             mockContext.Verify(context => context.SetValues(notification.PatientDetails, patient));
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         [Fact]
@@ -110,7 +105,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             Assert.Null(patient.UkBorn);
             mockContext.Verify(context => context.SetValues(notification.PatientDetails, patient));
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         [Fact]
@@ -128,7 +123,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.True(notification.SubmissionDate.HasValue);
             var statusChangeDate = notification.SubmissionDate.Value;
             Assert.Equal(expectedDate.Date, statusChangeDate.Date);
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         [Fact]
@@ -159,7 +154,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(reference.HasTransplantation, input.HasTransplantation);
             Assert.Equal(reference.HasOther, input.HasOther);
             Assert.Equal(reference.OtherDescription, input.OtherDescription);
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         [Theory]
@@ -199,7 +194,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Null(input.OtherDescription);
 
             mockContext.Verify(context => context.SetValues(notification.ImmunosuppressionDetails, input));
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         [Fact]
@@ -227,7 +222,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Null(input.OtherDescription);
 
             mockContext.Verify(context => context.SetValues(notification.ImmunosuppressionDetails, input));
-            VerifyUpdateDatabase(mockContext);
+            VerifyUpdateDatabaseCalled(mockContext);
         }
 
         [Fact]
@@ -355,6 +350,11 @@ namespace ntbs_service_unit_tests.Services
 
             Assert.Equal(reference.OccupationId, input.OccupationId);
             Assert.Equal(reference.OccupationOther, input.OccupationOther);
+        }
+
+        private static void VerifyUpdateDatabaseCalled(Mock<NtbsContext> mockContext)
+        {
+            mockContext.Verify(mock => mock.SaveChangesAsync(It.IsAny<CancellationToken>()));
         }
     }
 }
