@@ -7,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Services;
-using ntbs_service.Helpers;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -62,12 +60,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
 
             IEnumerable<string> tbServiceCodes;
-            
-            if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft) 
+
+            if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft)
             {
                 var services = await _userService.GetTbServicesAsync(User);
                 tbServiceCodes = services.Select(s => s.Code);
-                TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
+                TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             }
             else
             {
@@ -92,7 +90,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             await SetValuesForValidation();
-            if(Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.Episode.TBServiceCode != Episode.TBServiceCode)
+            if (Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.Episode.TBServiceCode != Episode.TBServiceCode)
             {
                 ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
