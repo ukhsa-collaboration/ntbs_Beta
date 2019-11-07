@@ -14,7 +14,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SocialRiskFactorsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+        {
+        }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {

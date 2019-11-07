@@ -119,7 +119,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, resultDocument.GetError("notification-sites"));
+            resultDocument.AssertErrorMessage("notification-sites", ValidationMessages.DiseaseSiteIsRequired);
         }
 
         [Fact]

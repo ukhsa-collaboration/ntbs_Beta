@@ -1,6 +1,5 @@
 @model ntbs_service.Models.RiskFactorDetails
-@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
-@using ntbs_service.Models.Enums
+
 @{
     var prefix = ViewData["propertyName"];
     var questionText = ViewData["questionText"];
@@ -8,7 +7,7 @@
 
 <div>
     <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset aria-describedby="error-@prefix"> 
+        <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
                 @questionText
             </nhs-fieldset-legend>
@@ -21,8 +20,11 @@
                 </div>
 
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-@prefix">
-                    <nhs-form-group nhs-form-group-type="Standard" aria-describedby="error-@prefix">
-                        <nhs-fieldset> 
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <nhs-fieldset>
+                            <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+                                In what timescale did this affect the patient?
+                            </nhs-fieldset-legend>
                             <nhs-checkboxes>
                                 <nhs-checkboxes-item>
                                     <input nhs-input-type="Checkboxes" asp-for="IsCurrent"/>
@@ -30,7 +32,7 @@
                                 </nhs-checkboxes-item>
                                 <nhs-checkboxes-item>
                                     <input nhs-input-type="Checkboxes" asp-for="InPastFiveYears"/>
-                                    <label nhs-label-type="Checkboxes" asp-for="InPastFiveYears" >In the past 5 years</label>
+                                    <label nhs-label-type="Checkboxes" asp-for="InPastFiveYears">In the past 5 years</label>
                                 </nhs-checkboxes-item>
                                 <nhs-checkboxes-item>
                                     <input nhs-input-type="Checkboxes" asp-for="MoreThanFiveYearsAgo"/>
@@ -38,7 +40,7 @@
                                 </nhs-checkboxes-item>
                             </nhs-checkboxes>
                         </nhs-fieldset>
-                    </nhs-form-group>                        
+                    </nhs-form-group>
                 </div>
 
                 <div class="nhsuk-radios__item">
@@ -47,13 +49,13 @@
                         @Status.No
                     </label>
                 </div>
-                
+
                 <div class="nhsuk-radios__item">
                     <input asp-for="Status" id="@prefix-radio-button-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
                     <label class="nhsuk-label nhsuk-radios__label" for="@prefix-radio-button-unknown">
                         @Status.Unknown
                     </label>
-                </div>      
+                </div>
             </div>
         </nhs-fieldset>
     </nhs-form-group>
