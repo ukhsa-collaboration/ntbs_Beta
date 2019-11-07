@@ -58,6 +58,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
 
             IEnumerable<string> tbServiceCodes;
+            
             if(Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft) 
             {
                 var services = await userService.GetTbServicesAsync(User);

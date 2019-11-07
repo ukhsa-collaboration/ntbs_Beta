@@ -59,26 +59,32 @@
                 var TBServiceCodeGroupState = TBServiceCodeError ? Error : Standard;
                 var TBServiceCodeSelectErrorState = TBServiceCodeError ? SelectType.Error : SelectType.Standard;
             }
-            @if (Model.Notification.NotificationStatus == NotificationStatus.Draft) 
-            {
-                <nhs-form-group ref="formGroupTBServiceCode" nhs-form-group-type=@TBServiceCodeGroupState>
-                    
+            <nhs-form-group ref="formGroupTBServiceCode" nhs-form-group-type=@TBServiceCodeGroupState>
+                @if (Model.Notification.NotificationStatus == NotificationStatus.Draft) 
+                {
                     <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode" >
                         @("Notifying TB service (required)")
                     </label>
                     <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
                         ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
-                    
-                        <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
-                                asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
-                        </select>
+                    <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
+                            asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
+                    </select>
+                }
+                else
+                {
+                    <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
+                        ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
+                    <select asp-for="Episode.TBServiceCode" class="hidden">
+                        <option selected="selected" value="@Model.Notification.Episode?.TBService?.Code">
+                            @Model.Notification.Episode?.TBService?.Name
+                        </option>
+                    </select>
+                    <p class="no-bottom-margin"> Notifying TB Service: @Model.Notification.Episode?.TBService?.Name </p>
+                }
                 </nhs-form-group>
-                <br />
-            }
-            else
-            {
-                <p> Notifying TB Service: @Model.Notification.Episode?.TBService?.Name </p>
-            }
+            
+            
             @{
                 var HospitalError = !Model.IsValid("Episode.HospitalId");
                 var HospitalGroupState = HospitalError ? Error : Standard;
@@ -95,7 +101,6 @@
                     <option value="" selected>Select Hospital</option>
                 </select>
             </nhs-form-group>
-            <br />
         </div>
     </cascading-dropdowns>
     
