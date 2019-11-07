@@ -9,7 +9,15 @@ const CascadingDropdowns = Vue.extend({
             const selectList = event.target as HTMLInputElement
             const tbService = selectList.value;
 
-            axios.get(`/Notifications/Edit/Episode/?handler=HospitalsByTBService&tbServiceCode=${tbService}`)
+            let requestConfig = {
+                url: `${window.location.pathname}/HospitalsByTBService`,
+                headers: getHeaders(),
+                params: {
+                    "tbServiceCode": tbService
+                }
+            }
+
+            axios.request(requestConfig)
                 .then((response: any) => {
                     return response.data;
                 })

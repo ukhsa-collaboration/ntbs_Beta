@@ -20,6 +20,8 @@ namespace ntbs_integration_tests.Helpers
 
         public const int DELETE_WITH_DESCRIPTION = 20;
         public const int DELETE_NO_DESCRIPTION = 21;
+
+        public const int NOTIFIED_WITH_TBSERVICE = 30;
       
         // These IDs match actual reference data - see app db seeding
         public const string HOSPITAL_FLEETWOOD_HOSPITAL_ID = "1EE2B39A-428F-44C7-B4BB-000649636591";
@@ -43,6 +45,7 @@ namespace ntbs_integration_tests.Helpers
             // Entities required for specific test suites
             context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
+            context.Notification.AddRange(EpisodesPageTests.GetSeedingNotifications());
 
             context.SaveChanges();
         }
