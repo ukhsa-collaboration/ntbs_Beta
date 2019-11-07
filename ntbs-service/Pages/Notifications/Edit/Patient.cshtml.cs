@@ -177,12 +177,5 @@ namespace ntbs_service.Pages.Notifications.Edit
             await GetLinkedNotifications();
             return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber));
         }
-
-        public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)
-        {
-            NotificationId = notificationId;
-            await GetLinkedNotifications();
-            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber));
-        }
     }
 }
