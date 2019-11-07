@@ -72,7 +72,7 @@ namespace ntbs_integration_tests.Helpers
             };
         }
 
-        // Unlike other data, these are not seeded via fluent migrator so we need to add some test postcodes manually
+        // Unlike other reference data, these are not seeded via fluent migrator so we need to add some test postcodes manually
         private static IEnumerable<PostcodeLookup> GetTestPostcodeLookups()
         {
             return new List<PostcodeLookup>

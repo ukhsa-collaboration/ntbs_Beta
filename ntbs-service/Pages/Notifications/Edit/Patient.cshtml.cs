@@ -93,6 +93,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         private async Task<Dictionary<string, string>> GenerateDuplicateNhsNumberNotificationUrlsAsync(string nhsNumber)
         {
             // If NhsNumber is empty or does not pass validation - return null
+            // Potential duplication of validation here so that both Server and Dynamic/JS routes to warnings
+            // can use the same method.
             if (string.IsNullOrEmpty(nhsNumber) || !string.IsNullOrEmpty(
                 ValidationService.ValidateModelProperty<PatientDetails>("NhsNumber", nhsNumber, false).Content))
             {
@@ -101,14 +103,15 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var notificationIds =
                 await NotificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
-            // Filter this notification and linked notifications from collection.
-            notificationIds = notificationIds
-                .Where(n => n != NotificationId
-                         && (!Group?.Notifications.Exists(linked => linked.NotificationId == n) ?? true))
-                .ToList();
-            return notificationIds.ToDictionary(
-                id => id.ToString(),
-                id => RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, id));
+            var idsInGroup = Group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
+            var filteredIds = notificationIds
+                .Except(idsInGroup)
+                .Where(n => n != NotificationId)
+                .ToDictionary(
+                    id => id.ToString(),
+                    id => RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, id));
+
+            return filteredIds;
         }
 
         protected override async Task ValidateAndSave()

@@ -232,11 +232,15 @@ namespace ntbs_integration_tests.NotificationPages
         [Fact]
         public async Task NonDuplicateNhsNumber_DoesNotShowWarning()
         {
+            // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
+
+            // Act
             var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
+            // Assert
             Assert.True(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));
         }
 
@@ -282,10 +286,14 @@ namespace ntbs_integration_tests.NotificationPages
         [Theory, MemberData(nameof(WarningScenarios))]
         public async Task DuplicateNhsNumber_ShowsWarningsWithExpectedIds(int pageNotificationId, List<int> expectedWarningNotificationIds)
         {
+            // Arrange
             var url = GetCurrentPathForId(pageNotificationId);
+
+            // Act
             var initialPage = await Client.GetAsync(url);
             var initialDocument = await GetDocumentAsync(initialPage);
 
+            // Assert
             Assert.False(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));
             var linksContainer = initialDocument.GetElementById("nhs-number-links");
             Assert.Equal(expectedWarningNotificationIds.Count, linksContainer.ChildElementCount);
@@ -300,6 +308,7 @@ namespace ntbs_integration_tests.NotificationPages
         [Fact]
         public async Task OnGetNhsNumberDuplicates_ReturnsExpectedEmptyResponseForNonDuplicate()
         {
+            // Arrange
             const int id = Utilities.DRAFT_ID;
             const string nonDuplicateNhsNumber = "7112516471";
             var formData = new Dictionary<string, string>
@@ -308,8 +317,10 @@ namespace ntbs_integration_tests.NotificationPages
                 ["nhsNumber"] = nonDuplicateNhsNumber
             };
 
+            // Act
             var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));
 
+            // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Equal("{}", result);
         }
@@ -317,6 +328,7 @@ namespace ntbs_integration_tests.NotificationPages
         [Fact]
         public async Task OnGetNhsNumberDuplicates_ReturnsExpectedResponseForGroupedDuplicateNhsNumber()
         {
+            // Arrange
             const int id = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
             const string nhsNumber = Utilities.NHS_NUMBER_SHARED;
             var formData = new Dictionary<string, string>
@@ -327,8 +339,10 @@ namespace ntbs_integration_tests.NotificationPages
             const int expectedWarningNotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
             var expectedWarningUrl = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, expectedWarningNotificationId);
 
+            // Act
             var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));
 
+            // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Contains($"\"{expectedWarningNotificationId}\":\"{expectedWarningUrl}\"", result);
         }
