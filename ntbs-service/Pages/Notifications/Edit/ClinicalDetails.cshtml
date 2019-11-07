@@ -59,10 +59,6 @@
                 </nhs-checkboxes>
                 <nhs-checkboxes style="margin-left: 52px">
                     <nhs-checkboxes-item>
-                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]" />
-                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.OCULAR).Description</label>
-                    </nhs-checkboxes-item>
-                    <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]" />
                         <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.CRYPTIC).Description</label>
                     </nhs-checkboxes-item>
@@ -96,6 +92,10 @@
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]" />
                         <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.MILIARY]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.MILIARY).Description</label>
+                    </nhs-checkboxes-item>
+                    <nhs-checkboxes-item>
+                        <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]" />
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.OCULAR]">@Model.Sites.Find(s => s.SiteId == (int)SiteId.OCULAR).Description</label>
                     </nhs-checkboxes-item>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.PLEURAL]" />
@@ -240,6 +240,9 @@
                                 <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
                                     <nhs-form-group nhs-form-group-type=@symptomGroupState>
                                         <nhs-fieldset aria-describedby="symptom-error" role="group">
+                                            <label for="symptom" nhs-label-type="Standard" id="symptomatic-date-label">
+                                                    Symptom onset date
+                                            </label>    
                                             <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate" 
                                                 id="symptom-error" has-error="@hasSymptomError"></span>
                                             <nhs-date-input id="symptom">
@@ -413,6 +416,9 @@
                             <validate-date ref="date4" name="Treatment Start Date" model="ClinicalDetails" property="TreatmentStartDate" rank="4" v-model="dates[4]" inline-template>
                                 <nhs-form-group nhs-form-group-type=@TreatmentGroupState>
                                     <nhs-fieldset aria-describedby="treatment-error" role="group">
+                                        <label for="treatment" nhs-label-type="Standard" id="treatment-date-label">
+                                                    Symptom onset date
+                                            </label>  
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TreatmentStartDate" id="treatment-error"></span>
                                         <nhs-date-input id="treatment">
                                             <nhs-date-input-item>
@@ -518,7 +524,7 @@
             @{ var ShortCourseGroupState = !Model.IsValid("ClinicalDetails.IsShortCourseTreatment") ? Error : Standard; }
             <nhs-form-group nhs-form-group-type="@ShortCourseGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                 <nhs-fieldset>
-                    <nhs-fieldset-legend nhs-legend-size="Standard">Has Started Short Course Treatment?</nhs-fieldset-legend>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">Has started standard therapy?</nhs-fieldset-legend>
                     <span ref="errorField[0]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-error"></span>
                     <nhs-radios nhs-radios-type="Standard">
                         <nhs-radios-item>
@@ -576,7 +582,7 @@
             @{ var MDRGroupState = !Model.IsValid("ClinicalDetails.IsMDRTreatment") ? Error : Standard; }
             <nhs-form-group nhs-form-group-type="@MDRGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                 <nhs-fieldset>
-                    <nhs-fieldset-legend nhs-legend-size="Standard">MDR Treatment Planned?</nhs-fieldset-legend>
+                    <nhs-fieldset-legend nhs-legend-size="Standard">RR/MDR/XDR treatment planned?</nhs-fieldset-legend>
                     <span ref="errorField[1]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment" id="mdr-error"></span>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
@@ -594,7 +600,7 @@
                                 }
                                 <nhs-form-group nhs-form-group-type=@MDRTreatmentGroupState>
                                     <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
-                                        <nhs-fieldset-legend nhs-legend-size="Standard">MDR treatment date</nhs-fieldset-legend>
+                                        <nhs-fieldset-legend nhs-legend-size="Standard">Treatment date</nhs-fieldset-legend>
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.MDRTreatmentStartDate"
                                               id="mdr-treatment-date-error"></span>
                                         <nhs-date-input id="mdr-treatment-date">

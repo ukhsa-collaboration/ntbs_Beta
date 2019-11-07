@@ -9,16 +9,12 @@ namespace ntbs_service.Models.Validations
 {
     public class ValidDateAttribute : RangeAttribute
     {
-        private readonly string StartDate;
         public ValidDateAttribute(string startDateString) : base(typeof(DateTime),
-            startDateString, DateTime.Now.ToShortDateString())
-        {
-            StartDate = startDateString;
-        }
+            startDateString, DateTime.Now.ToShortDateString()) {}
 
         public override string FormatErrorMessage(string name)
         {
-            return ValidationMessages.DateValidityRange(StartDate);
+            return ValidationMessages.TodayOrEarlier;
         }
     }
 
