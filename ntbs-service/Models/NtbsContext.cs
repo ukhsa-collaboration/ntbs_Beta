@@ -1,11 +1,9 @@
-﻿using Audit.EntityFramework;
+﻿using System.Collections.Generic;
+using Audit.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ntbs_service.Models
 {
@@ -41,80 +39,6 @@ namespace ntbs_service.Models
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
             this.Entry(entity).CurrentValues.SetValues(values);
-        }
-
-        public virtual async Task<IList<Country>> GetAllCountriesAsync()
-        {
-            return await Country.ToListAsync();
-        }
-
-        public virtual async Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync()
-        {
-            return await Country
-                            .Where(c => c.HasHighTbOccurence)
-                            .ToListAsync();
-        }
-
-        public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
-        {
-            return await Country.FindAsync(countryId);
-        }
-
-        public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
-        {
-            return await TbService.ToListAsync();
-        }
-
-        public virtual async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
-        {
-            return await Hospital
-                .Where(h => tbServices.Contains(h.TBServiceCode))
-                .ToListAsync();
-        }
-
-        public virtual async Task<IList<Sex>> GetAllSexesAsync()
-        {
-            return await Sex.ToListAsync();
-        }
-
-        public virtual async Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync()
-        {
-            return await Ethnicity.OrderBy(e => e.Order).ToListAsync();
-        }
-
-        public virtual async Task<IList<Site>> GetAllSitesAsync()
-        {
-            return await Site.ToListAsync();
-        }
-
-        public virtual async Task<Occupation> GetOccupationByIdAsync(int occupationId)
-        {
-            return await Occupation.FindAsync(occupationId);
-        }
-
-        public virtual async Task<IList<Occupation>> GetAllOccupationsAsync()
-        {
-            return await Occupation.ToListAsync();
-        }
-
-        public virtual async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
-        {
-            return await TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
-        }
-
-        public virtual async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
-        {
-            return await PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
-        }
-
-        public virtual IQueryable<TBService> GetDefaultTbServicesForNhsUser(IEnumerable<string> roles)
-        {
-            return TbService.Where(tb => roles.Contains(tb.ServiceAdGroup));
-        }
-
-        public virtual IQueryable<TBService> GetDefaultTbServicesForPheUser(IEnumerable<string> roles)
-        {
-            return TbService.Include(tb => tb.PHEC).Where(tb => roles.Contains(tb.PHEC.AdGroup));
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -226,7 +150,7 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasOne<NotificationGroup>()
+                entity.HasOne(n => n.Group)
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 

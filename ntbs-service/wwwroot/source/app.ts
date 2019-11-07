@@ -16,6 +16,7 @@ import { ValidateMultiple } from "./Components/ValidateMultiple";
 import { ValidateRequiredCheckboxes } from "./Components/ValidateRequiredCheckboxes";
 import { ValidatePostcode } from "./Components/ValidatePostcode";
 import ConditionalSelectWrapper from "./Components/ConditionalSelectWrapper";
+import NhsNumberDuplicateWarning from "./Components/NhsNumberDuplicateWarning";
 
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
@@ -33,13 +34,14 @@ Vue.component("validate-multiple", ValidateMultiple);
 Vue.component("validate-required-checkboxes", ValidateRequiredCheckboxes);
 Vue.component("validate-postcode", ValidatePostcode);
 Vue.component("conditional-select-wrapper", ConditionalSelectWrapper);
+Vue.component("nhs-number-duplicate-warning", NhsNumberDuplicateWarning);
 
 new Vue({
     el: "#app",
 });
 
 if (config.env === "development") {
-    // Enables ASP hot relaod
+    // Enables ASP hot reload
     console.log("RUNNING IN DEVELOPMENT MODE - Accepting hot reload");
     module.hot.accept();
 }

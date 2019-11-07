@@ -117,7 +117,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "Validate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "Validate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

@@ -4,23 +4,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Pages_Notifications;
-using ntbs_service.Services;
-using ntbs_service.Helpers;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-
     public class EpisodeModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
-        private readonly IUserService userService;
+        private readonly NtbsContext _context;
+        private readonly IUserService _userService;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
-        public SelectList TBServices { get; set; }
+        public SelectList TbServices { get; set; }
         public SelectList Hospitals { get; set; }
 
         [BindProperty]
@@ -29,13 +27,17 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public Episode Episode { get; set; }
 
-        public EpisodeModel(INotificationService service,
-                            IAuthorizationService authorizationService,
-                            NtbsContext context,
-                            IUserService userService) : base(service, authorizationService)
+        public EpisodeModel(
+            INotificationService notificationService,
+            INotificationRepository notificationRepository,
+            IReferenceDataRepository referenceDataRepository,
+            IAuthorizationService authorizationService,
+            IUserService userService,
+            NtbsContext context) : base(notificationService, authorizationService, notificationRepository)
         {
-            this.context = context;
-            this.userService = userService;
+            this._context = context;
+            this._userService = userService;
+            this._referenceDataRepository = referenceDataRepository;
         }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
@@ -47,7 +49,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (Episode.ShouldValidateFull)
             {
-                validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+                ValidationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
                 TryValidateModel(Episode, Episode.GetType().Name);
             }
 
@@ -58,25 +60,25 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
 
             IEnumerable<string> tbServiceCodes;
-            
-            if(Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft) 
+
+            if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft)
             {
-                var services = await userService.GetTbServicesAsync(User);
+                var services = await _userService.GetTbServicesAsync(User);
                 tbServiceCodes = services.Select(s => s.Code);
-                TBServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
+                TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             }
             else
             {
-                tbServiceCodes = new List<string>() {Notification.Episode.TBServiceCode};
+                tbServiceCodes = new List<string> { Notification.Episode.TBServiceCode };
             }
-            var hospitals = await context.GetHospitalsByTbServiceCodesAsync(tbServiceCodes);
-            
+
+            var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes);
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
         }
 
-        public async Task<JsonResult> OnGetHospitalsByTBService(string tbServiceCode)
+        public async Task<JsonResult> OnGetHospitalsByTbService(string tbServiceCode)
         {
-            var tbServices = await context.GetHospitalsByTbServiceCodesAsync(new List<string> { tbServiceCode });
+            var tbServices = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string> { tbServiceCode });
             return new JsonResult(tbServices);
         }
 
@@ -87,57 +89,57 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            SetValuesForValidation();
-            if(Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.Episode.TBServiceCode != Episode.TBServiceCode)
+            await SetValuesForValidation();
+            if (Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.Episode.TBServiceCode != Episode.TBServiceCode)
             {
                 ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
 
             if (TryValidateModel(Episode, Episode.GetType().Name))
             {
-                await service.UpdateEpisodeAsync(Notification, Episode);
+                await Service.UpdateEpisodeAsync(Notification, Episode);
             }
             else
             {
                 // Detach notification to avoid getting cached notification when retrieving from context,
                 // because cached notification date will change notification date on a banner even when invalid
-                context.Entry(Notification).State = EntityState.Detached;
+                _context.Entry(Notification).State = EntityState.Detached;
             }
         }
 
         public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)
         {
-            return validationService.ValidateModelProperty<Episode>(key, value, shouldValidateFull);
+            return ValidationService.ValidateModelProperty<Episode>(key, value, shouldValidateFull);
         }
 
         public async Task<ContentResult> OnGetValidateNotificationDateAsync(string key, string day, string month, string year, int notificationId)
         {
             // Query notification by Id when date validation depends on other properties of model
-            Notification notification = await service.GetNotificationAsync(notificationId);
-            return validationService.ValidateDate(notification, key, day, month, year);
+            Notification notification = await NotificationRepository.GetNotificationAsync(notificationId);
+            return ValidationService.ValidateDate(notification, key, day, month, year);
         }
 
-        private void SetValuesForValidation()
+        private async Task SetValuesForValidation()
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
-            validationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            ValidationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
             Binding only sets the entity ids, but not the actual entities.
             There's a validation rule that needs to check the relationship between the entities,
             therefore we need fetch the reference data from the db before validating
             */
-            SetHospitalAndTbService();
+            await GetHospitalAndTbService();
         }
 
-        private void SetHospitalAndTbService()
+        private async Task GetHospitalAndTbService()
         {
             if (Episode.HospitalId != null)
             {
-                Episode.Hospital = context.Hospital.Where(h => h.HospitalId == Episode.HospitalId).FirstOrDefault();
+                Episode.Hospital = await _referenceDataRepository.GetHospitalByGuidAsync(Episode.HospitalId.Value);
             }
             if (Episode.TBServiceCode != null)
             {
-                Episode.TBService = context.TbService.Where(s => s.Code == Episode.TBServiceCode).FirstOrDefault();
+                Episode.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(Episode.TBServiceCode);
             }
         }
     }

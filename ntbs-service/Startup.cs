@@ -1,4 +1,8 @@
+﻿using System.Globalization;
+using EFAuditer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,21 +14,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
-using ntbs_service.DataAccess;
 using ntbs_service.Data.Legacy;
+using ntbs_service.DataAccess;
+using ntbs_service.Middleware;
 using ntbs_service.Models;
 using ntbs_service.Services;
-using System.Globalization;
-using EFAuditer;
-using ntbs_service.Middleware;
-using Microsoft.AspNetCore.Authentication.WsFederation;
-using Microsoft.AspNetCore.Authentication;
-using System;
-using System.Net.Http;
 
 namespace ntbs_service
 {
-  public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
@@ -101,6 +99,7 @@ namespace ntbs_service
             }
 
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchServiceLegacy, SearchServiceLegacy>();
             services.AddScoped<IETSSearchService, ETSSearcher>();

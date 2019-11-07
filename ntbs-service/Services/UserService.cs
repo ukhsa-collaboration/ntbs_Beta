@@ -1,9 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 
@@ -12,23 +13,26 @@ namespace ntbs_service.Services
     public interface IUserService
     {
         Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user);
-        Task<TBService> GetDefaultTBService(ClaimsPrincipal user);
+        Task<TBService> GetDefaultTbService(ClaimsPrincipal user);
         Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
     {
-        private readonly AdfsOptions config;
-        private readonly NtbsContext context;
+        private readonly AdfsOptions _config;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
-        public UserService(NtbsContext context, IOptionsMonitor<AdfsOptions> options)
+        public UserService(
+            IReferenceDataRepository referenceDataRepository,
+            IOptionsMonitor<AdfsOptions> options)
         {
-            this.context = context;
-            config = options.CurrentValue;
+            _referenceDataRepository = referenceDataRepository;
+            _config = options.CurrentValue;
         }
+
         public async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
-            var userFilter = new UserPermissionsFilter() { Type = GetUserType(user) };
+            var userFilter = new UserPermissionsFilter { Type = GetUserType(user) };
 
             if (userFilter.Type == UserType.NationalTeam)
             {
@@ -39,17 +43,17 @@ namespace ntbs_service.Services
             var roles = GetRoles(user);
             if (userFilter.Type == UserType.NhsUser)
             {
-                userFilter.IncludedTBServiceCodes = await context.GetTbServiceCodesMatchingRolesAsync(roles);
+                userFilter.IncludedTBServiceCodes = await _referenceDataRepository.GetTbServiceCodesMatchingRolesAsync(roles);
             }
             else
             {
-                userFilter.IncludedPHECCodes = await context.GetPhecCodesMatchingRolesAsync(roles);
+                userFilter.IncludedPHECCodes = await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(roles);
             }
 
             return userFilter;
         }
 
-        public async Task<TBService> GetDefaultTBService(ClaimsPrincipal user)
+        public async Task<TBService> GetDefaultTbService(ClaimsPrincipal user)
         {
             return await GetTbServicesQuery(user).FirstAsync();
         }
@@ -67,11 +71,11 @@ namespace ntbs_service.Services
             switch (type)
             {
                 case UserType.NationalTeam:
-                    return context.TbService;
+                    return _referenceDataRepository.GetTbServicesQueryable();
                 case UserType.NhsUser:
-                    return context.GetDefaultTbServicesForNhsUser(roles);
+                    return _referenceDataRepository.GetDefaultTbServicesForNhsUserQueryable(roles);
                 default:
-                    return context.GetDefaultTbServicesForPheUser(roles);
+                    return _referenceDataRepository.GetDefaultTbServicesForPheUserQueryable(roles);
             }
         }
 
@@ -79,16 +83,16 @@ namespace ntbs_service.Services
         {
             return user.FindAll(claim => claim.Type == ClaimsIdentity.DefaultRoleClaimType)
                     .Select(claim => claim.Value)
-                    .Select(role => role.StartsWith(config.AdGroupsPrefix) ? role.Substring(config.AdGroupsPrefix.Length) : role);
+                    .Select(role => role.StartsWith(_config.AdGroupsPrefix) ? role.Substring(_config.AdGroupsPrefix.Length) : role);
         }
 
         private UserType GetUserType(ClaimsPrincipal user)
         {
-            if (user.IsInRole(config.AdGroupsPrefix + config.NationalTeamAdGroup))
+            if (user.IsInRole(_config.AdGroupsPrefix + _config.NationalTeamAdGroup))
             {
                 return UserType.NationalTeam;
             }
-            if (GetRoles(user).Where(role => role.Contains(config.ServiceGroupAdPrefix)).Any())
+            if (GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)))
             {
                 return UserType.NhsUser;
             }

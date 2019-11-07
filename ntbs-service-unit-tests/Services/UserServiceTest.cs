@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -17,26 +18,26 @@ namespace ntbs_service_unit_tests.Services
     {
         private const string NationalTeam = "NTA";
         private const string ServicePrefix = "Service";
-        private readonly IUserService service;
-        private readonly AdfsOptions options = new AdfsOptions
-        { 
-            NationalTeamAdGroup = NationalTeam, 
+        private readonly IUserService _service;
+        private readonly AdfsOptions _options = new AdfsOptions
+        {
+            NationalTeamAdGroup = NationalTeam,
             ServiceGroupAdPrefix = ServicePrefix,
-            AdGroupsPrefix = ""
+            AdGroupsPrefix = string.Empty
         };
-    
-        private readonly Mock<IOptionsMonitor<AdfsOptions>> mockOptionsMonitor;
-        private readonly Mock<NtbsContext> mockContext;
-        private readonly Mock<ClaimsPrincipal> mockUser;
+
+        private readonly Mock<IOptionsMonitor<AdfsOptions>> _mockOptionsMonitor;
+        private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
+        private readonly Mock<ClaimsPrincipal> _mockUser;
 
         public UserServiceTest()
         {
-            mockContext = new Mock<NtbsContext>();
-            mockOptionsMonitor = new Mock<IOptionsMonitor<AdfsOptions>>();
-            mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(options);
-            service = new UserService(mockContext.Object, mockOptionsMonitor.Object);
+            _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
+            _mockOptionsMonitor = new Mock<IOptionsMonitor<AdfsOptions>>();
+            _mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(_options);
+            _service = new UserService(_mockReferenceDataRepository.Object, _mockOptionsMonitor.Object);
 
-            mockUser = new Mock<ClaimsPrincipal>();
+            _mockUser = new Mock<ClaimsPrincipal>();
         }
 
         [Fact]
@@ -45,10 +46,10 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
-            mockUser.Setup(u => u.IsInRole(NationalTeam)).Returns(true);
+            _mockUser.Setup(u => u.IsInRole(NationalTeam)).Returns(true);
 
             // Act
-            var result = await service.GetUserPermissionsFilterAsync(mockUser.Object);
+            var result = await _service.GetUserPermissionsFilterAsync(_mockUser.Object);
 
             // Assert
             Assert.Empty(result.IncludedTBServiceCodes);
@@ -60,18 +61,17 @@ namespace ntbs_service_unit_tests.Services
         public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForNhsUser()
         {
             // Arrange
-            var serviceAdGroup = ServicePrefix + "Ashford";
-            var code = "TBS0008";
-            var tbService = new TBService() { ServiceAdGroup = serviceAdGroup, Code = code };
-    
+            const string serviceAdGroup = ServicePrefix + "Ashford";
+            const string code = "TBS0008";
+
             var claim = new Claim("User", serviceAdGroup);
             SetupClaimMocking(claim);
             var serviceCodeList = new List<string> { code };
-            mockContext.Setup(c => c.GetTbServiceCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
+            _mockReferenceDataRepository.Setup(c => c.GetTbServiceCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
                 .Returns(Task.FromResult(serviceCodeList));
 
             // Act
-            var result = await service.GetUserPermissionsFilterAsync(mockUser.Object);
+            var result = await _service.GetUserPermissionsFilterAsync(_mockUser.Object);
 
             // Assert
             Assert.Empty(result.IncludedPHECCodes);
@@ -84,18 +84,17 @@ namespace ntbs_service_unit_tests.Services
         public async Task GetUserPermissionsFilter_ReturnsExpectedFilter_ForPheUser()
         {
             // Arrange
-            var adGroup = "SoE";
-            var code = "E45000019";
-            var phec = new PHEC() { AdGroup = adGroup, Code = code };
-    
+            const string adGroup = "SoE";
+            const string code = "E45000019";
+
             var claim = new Claim("User", adGroup);
             SetupClaimMocking(claim);
             var phecCodeList = new List<string> { code };
-            mockContext.Setup(c => c.GetPhecCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
+            _mockReferenceDataRepository.Setup(c => c.GetPhecCodesMatchingRolesAsync(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
                 .Returns(Task.FromResult(phecCodeList));
 
             // Act
-            var result = await service.GetUserPermissionsFilterAsync(mockUser.Object);
+            var result = await _service.GetUserPermissionsFilterAsync(_mockUser.Object);
 
             // Assert
             Assert.Empty(result.IncludedTBServiceCodes);
@@ -107,58 +106,58 @@ namespace ntbs_service_unit_tests.Services
         // TODO: The following tests currently fail with "The provider for the source IQueryable doesn't implement IAsyncQueryProvider".
         // This isn't trivial to fix; this issue arose when merging as UserService had been refactored, so leaving as is for now.
 
-        [Fact(Skip="Issues with Async in test")]
+        [Fact(Skip = "Issues with Async in test")]
         public async Task GetDefaultTbService_ReturnsMatchingService_ForNationalUser()
         {
             // Arrange
-            var serviceAdGroup = ServicePrefix + "Ashford";
-            var tbService = new TBService() { ServiceAdGroup = serviceAdGroup, Code = "TBS0008" };
+            const string serviceAdGroup = ServicePrefix + "Ashford";
+            var tbService = new TBService { ServiceAdGroup = serviceAdGroup, Code = "TBS0008" };
 
             var claim = new Claim("User", NationalTeam);
             SetupClaimMocking(claim);
-            mockContext.Setup(c => c.GetDefaultTbServicesForNhsUser(It.Is<IEnumerable<string>>(l => l.Contains(NationalTeam))))
-                .Returns((new List<TBService>() { tbService}).AsQueryable);
+            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForNhsUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(NationalTeam))))
+                .Returns((new List<TBService> { tbService }).AsQueryable);
             // Act
-            var result = await service.GetDefaultTBService(mockUser.Object);
+            var result = await _service.GetDefaultTbService(_mockUser.Object);
 
             // Assert
             Assert.Null(result);
         }
 
-        [Fact(Skip="Issues with Async in test")]
+        [Fact(Skip = "Issues with Async in test")]
         public async Task GetDefaultTbService_ReturnsMatchingService_ForNhsUser()
         {
             // Arrange
-            var serviceAdGroup = ServicePrefix + "Ashford";
+            const string serviceAdGroup = ServicePrefix + "Ashford";
             var tbService = new TBService() { ServiceAdGroup = serviceAdGroup, Code = "TBS0008" };
-    
+
             var claim = new Claim("User", serviceAdGroup);
             SetupClaimMocking(claim);
-            mockContext.Setup(c => c.GetDefaultTbServicesForNhsUser(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
-                .Returns((new List<TBService>() { tbService}).AsQueryable);
+            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForNhsUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(serviceAdGroup))))
+                .Returns((new List<TBService>() { tbService }).AsQueryable);
 
             // Act
-            var result = await service.GetDefaultTBService(mockUser.Object);
+            var result = await _service.GetDefaultTbService(_mockUser.Object);
 
             // Assert
             Assert.Equal(tbService, result);
         }
 
-        [Fact(Skip="Issues with Async in test")]
+        [Fact(Skip = "Issues with Async in test")]
         public async Task GetDefaultTbService_ReturnsMatchingService_ForPheUser()
         {
             // Arrange
-            var adGroup = "SoE";
-            var serviceAdGroup = ServicePrefix + "Ashford";
+            const string adGroup = "SoE";
+            const string serviceAdGroup = ServicePrefix + "Ashford";
             var tbService = new TBService() { ServiceAdGroup = serviceAdGroup, Code = "TBS0008" };
-    
+
             var claim = new Claim("User", adGroup);
             SetupClaimMocking(claim);
-            mockContext.Setup(c => c.GetDefaultTbServicesForPheUser(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
-                .Returns((new List<TBService>() { tbService}).AsQueryable);
+            _mockReferenceDataRepository.Setup(c => c.GetDefaultTbServicesForPheUserQueryable(It.Is<IEnumerable<string>>(l => l.Contains(adGroup))))
+                .Returns((new List<TBService>() { tbService }).AsQueryable);
 
             // Act
-            var result = await service.GetDefaultTBService(mockUser.Object);
+            var result = await _service.GetDefaultTbService(_mockUser.Object);
 
             // Assert
             Assert.Equal(tbService, result);
@@ -167,7 +166,7 @@ namespace ntbs_service_unit_tests.Services
 
         private void SetupClaimMocking(Claim claim)
         {
-            mockUser.Setup(u => u.FindAll(It.IsAny<Predicate<Claim>>())).Returns(new List<Claim> { claim });
+            _mockUser.Setup(u => u.FindAll(It.IsAny<Predicate<Claim>>())).Returns(new List<Claim> { claim });
         }
     }
 }
