@@ -203,7 +203,7 @@
             @{
                 var hasCountryError = !Model.IsValid("Patient.CountryId");
                 var countryGroupState = hasCountryError ? Error : Standard;
-                var countrySelectErrorState = hasCountryError ? SelectType.Error : SelectType.Standard;
+                var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
             }
             <validate-input model="Patient" property="CountryId" shouldvalidatefull="@fullValidation"
                             v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
@@ -213,11 +213,13 @@
                     </label>
                     <span nhs-span-type="ErrorMessage" id="birth-country-error"
                           ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
-                    <select ref="selectField" v-on:change="validate" nhs-select-type="@countrySelectErrorState"
-                            asp-for="Patient.CountryId" asp-items="Model.Countries"
-                            data-aria-controls="year-of-entry-conditional">
-                        <option value="">Select a Birth Country</option>
-                    </select>
+                    <div ref="selectField" data-aria-controls="year-of-entry-conditional" class=@countrySelectErrorClass>
+                        <autocomplete-select v-on:validate-input="validate" placeholder="Select a Birth Country" validate="true" inline-template>
+                            <select asp-for="Patient.CountryId" asp-items="Model.Countries">
+                                <option value=""></option>
+                            </select>
+                        <autocomplete-select>
+                    </div>
                 </nhs-form-group>
             </validate-input>
 

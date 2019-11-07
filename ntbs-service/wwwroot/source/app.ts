@@ -16,6 +16,7 @@ import { ValidateMultiple } from "./Components/ValidateMultiple";
 import { ValidateRequiredCheckboxes } from "./Components/ValidateRequiredCheckboxes";
 import { ValidatePostcode } from "./Components/ValidatePostcode";
 import ConditionalSelectWrapper from "./Components/ConditionalSelectWrapper";
+import { AutocompleteSelect } from "./Components/AutocompleteSelect";
 
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
@@ -33,6 +34,7 @@ Vue.component("validate-multiple", ValidateMultiple);
 Vue.component("validate-required-checkboxes", ValidateRequiredCheckboxes);
 Vue.component("validate-postcode", ValidatePostcode);
 Vue.component("conditional-select-wrapper", ConditionalSelectWrapper);
+Vue.component("autocomplete-select", AutocompleteSelect);
 
 new Vue({
     el: "#app",
@@ -47,4 +49,4 @@ if (config.env === "development") {
 govUkJsInitAll();
 
 // For compatibility with IE11
-require("es6-promise").polyfill();
+require('es6-promise').polyfill();

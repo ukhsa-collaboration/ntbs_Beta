@@ -25,10 +25,6 @@ const ValidateTravelOrVisit = Vue.extend({
         }
     },
     methods: {
-        prependRefWithModelType: function (ref: String) {
-            return `${this.$props.modelType}-${ref}`;
-        },
-
         validate: function (event: FocusEvent) {
             if (this.$el.contains(event.relatedTarget)) {
                 return;
@@ -62,7 +58,8 @@ const ValidateTravelOrVisit = Vue.extend({
                                 const baseElement = this.$refs[baseRef];
                                 if (baseElement.tagName === "INPUT") {
                                     this.$refs[baseRef].classList.add("nhsuk-input--error");
-                                } else if (baseElement.tagName === "SELECT") {
+                                } else if (baseElement.tagName === "DIV") {
+                                    // Div Wraps select dropdowns
                                     this.$refs[baseRef].classList.add("nhsuk-select--error");
                                 }
 
@@ -94,7 +91,7 @@ const ValidateTravelOrVisit = Vue.extend({
                 const baseElement = this.$refs[ref];
                 if (baseElement.tagName === "INPUT") {
                     this.$refs[ref].classList.remove("nhsuk-input--error");
-                } else if (baseElement.tagName === "SELECT") {
+                } else if (baseElement.tagName === "DIV") {
                     this.$refs[ref].classList.remove("nhsuk-select--error");
                 }
 
@@ -107,9 +104,10 @@ const ValidateTravelOrVisit = Vue.extend({
         getTravelOrVisitVariables: function () {
             const variables: TravelOrVisitVariables = {
                 totalNumberOfCountries: this.$refs["totalNumberOfCountries"].value,
-                country1Id: this.$refs["country1Id"].value,
-                country2Id: this.$refs["country2Id"].value,
-                country3Id: this.$refs["country3Id"].value,
+                // Because of autocomplete, select inputs are hidden and we wrap them in a div that we can reference
+                country1Id: this.$refs["country1Id"].getElementsByTagName("select")[0].value,
+                country2Id: this.$refs["country2Id"].getElementsByTagName("select")[0].value,
+                country3Id: this.$refs["country3Id"].getElementsByTagName("select")[0].value,
                 stayLengthInMonths1: this.$refs["stayLengthInMonths1"].value,
                 stayLengthInMonths2: this.$refs["stayLengthInMonths2"].value,
                 stayLengthInMonths3: this.$refs["stayLengthInMonths3"].value,
