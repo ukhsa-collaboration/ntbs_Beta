@@ -59,27 +59,26 @@
                 var TBServiceCodeGroupState = TBServiceCodeError ? Error : Standard;
                 var TBServiceCodeSelectErrorState = TBServiceCodeError ? SelectType.Error : SelectType.Standard;
             }
+            @if (Model.Notification.NotificationStatus == NotificationStatus.Draft) 
+            {
             <nhs-form-group ref="formGroupTBServiceCode" nhs-form-group-type=@TBServiceCodeGroupState>
-                <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
-                    Notifying TB service (required)
+                
+                <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode" >
+                    @("Notifying TB service (required)")
                 </label>
                 <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
                     ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
-                @if(Model.Notification.NotificationStatus == NotificationStatus.Draft) 
-                {
+                
                     <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
                             asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
                     </select>
-                }
-                else
-                {
-                    <select asp-for="Episode.TBServiceCode" nhs-select-type="Standard" disabled>
-                        <option selected="selected">@Model.Notification.Episode?.TBService?.Name</option>
-                    </select>
-                }
-                
             </nhs-form-group>
             <br />
+            }
+            else
+            {
+                <p> Notifying TB Service: @Model.Notification.Episode?.TBService?.Name </p>
+            }
             @{
                 var HospitalError = !Model.IsValid("Episode.HospitalId");
                 var HospitalGroupState = HospitalError ? Error : Standard;
