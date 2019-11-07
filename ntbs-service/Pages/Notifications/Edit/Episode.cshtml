@@ -61,19 +61,19 @@
             }
             @if (Model.Notification.NotificationStatus == NotificationStatus.Draft) 
             {
-            <nhs-form-group ref="formGroupTBServiceCode" nhs-form-group-type=@TBServiceCodeGroupState>
-                
-                <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode" >
-                    @("Notifying TB service (required)")
-                </label>
-                <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
-                    ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
-                
-                    <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
-                            asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
-                    </select>
-            </nhs-form-group>
-            <br />
+                <nhs-form-group ref="formGroupTBServiceCode" nhs-form-group-type=@TBServiceCodeGroupState>
+                    
+                    <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode" >
+                        @("Notifying TB service (required)")
+                    </label>
+                    <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
+                        ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
+                    
+                        <select ref="selectFieldTBServiceCode" nhs-select-type="@TBServiceCodeSelectErrorState" asp-for="Episode.TBServiceCode"
+                                asp-items="Model.TBServices" v-on:change="function (ev) {fetchHospitalList(ev); validate('TBServiceCode')(ev);}">
+                        </select>
+                </nhs-form-group>
+                <br />
             }
             else
             {
