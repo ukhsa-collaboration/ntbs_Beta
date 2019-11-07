@@ -9,7 +9,7 @@
     var fullValidation = Model.Episode.ShouldValidateFull ? "True" : "False";
 }
 
-<div>
+<div id="episode-page-content">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <h2>Notification Date (required)</h2>
@@ -73,13 +73,7 @@
                 }
                 else
                 {
-                    <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@TBServiceCodeError"
-                        ref="errorFieldTBServiceCode" asp-validation-for="Episode.TBServiceCode"></span>
-                    <select asp-for="Episode.TBServiceCode" class="hidden">
-                        <option selected="selected" value="@Model.Notification.Episode?.TBService?.Code">
-                            @Model.Notification.Episode?.TBService?.Name
-                        </option>
-                    </select>
+                    <input asp-for="Episode.TBServiceCode" class="hidden"/>
                     <p class="no-bottom-margin"> Notifying TB Service: @Model.Notification.Episode?.TBService?.Name </p>
                 }
                 </nhs-form-group>

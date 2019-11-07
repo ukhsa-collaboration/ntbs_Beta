@@ -287,7 +287,9 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("tb-service", ValidationMessages.TBServiceCantChange);
+            // Here we check that the page has reloaded as the form is invalid, we can't check directly for an error as
+            // no error is shown for this case
+            Assert.NotNull(resultDocument.QuerySelector($"div[id='episode-page-content']"));
         }
     }
 }
