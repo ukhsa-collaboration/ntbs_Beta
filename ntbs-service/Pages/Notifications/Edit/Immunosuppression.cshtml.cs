@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -13,7 +13,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
 
-        public ImmunosuppressionModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
+        public ImmunosuppressionModel(
+            INotificationService service,
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
         }
 
@@ -21,7 +24,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
             await SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
-            
+
             return Page();
         }
 
@@ -34,7 +37,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (ModelState.IsValid)
             {
-                await service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
+                await Service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
             }
         }
 
@@ -55,7 +58,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 OtherDescription = string.IsNullOrEmpty(otherDescription) ? null : otherDescription
             };
 
-            return validationService.ValidateFullModel(model);
+            return ValidationService.ValidateFullModel(model);
         }
     }
 }

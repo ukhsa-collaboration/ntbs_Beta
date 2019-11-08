@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using Xunit;
 
@@ -15,6 +18,55 @@ namespace ntbs_integration_tests.NotificationPages
         protected override string NotificationSubPath => NotificationSubPaths.EditPatient;
 
         public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+
+        public static IList<Notification> GetSeedingNotifications()
+        {
+            return new List<Notification>()
+            {
+                new Notification
+                {
+                    NotificationId = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationStatus = NotificationStatus.Notified,
+                    GroupId = Utilities.NOTIFICATION_GROUP_ID,
+                    PatientDetails = new PatientDetails
+                    {
+                        NhsNumberNotKnown = false,
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationStatus = NotificationStatus.Denotified,
+                    GroupId = Utilities.NOTIFICATION_GROUP_ID,
+                    PatientDetails = new PatientDetails
+                    {
+                        NhsNumberNotKnown = false,
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.PATIENT_DRAFT_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationStatus = NotificationStatus.Draft,
+                    PatientDetails = new PatientDetails
+                    {
+                        NhsNumberNotKnown = false,
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    NotificationStatus = NotificationStatus.Notified,
+                    PatientDetails = new PatientDetails
+                    {
+                        NhsNumberNotKnown = false,
+                        NhsNumber = Utilities.NHS_NUMBER_SHARED
+                    }
+                }
+            };
+        }
 
         [Fact]
         public async Task PostDraft_ReturnsPageWithModelErrors_IfModelNotValid()
@@ -178,6 +230,124 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task NonDuplicateNhsNumber_DoesNotShowWarning()
+        {
+            // Arrange
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
+
+            // Assert
+            Assert.True(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));
+        }
+
+        public static IEnumerable<object[]> WarningScenarios()
+        {
+            yield return new object[]
+            {
+                Utilities.PATIENT_DRAFT_NOTIFICATION_SHARED_NHS_NUMBER,
+                new List<int>
+                {
+                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER
+                }
+            };
+            yield return new object[]
+            {
+                Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                new List<int>
+                {
+                    Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                    Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER
+                }
+            };
+            yield return new object[]
+            {
+                Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                new List<int>
+                {
+                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                }
+            };
+            yield return new object[]
+            {
+                Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                new List<int>
+                {
+                    Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
+                }
+            };
+        }
+
+        [Theory, MemberData(nameof(WarningScenarios))]
+        public async Task DuplicateNhsNumber_ShowsWarningsWithExpectedIds(int pageNotificationId, List<int> expectedWarningNotificationIds)
+        {
+            // Arrange
+            var url = GetCurrentPathForId(pageNotificationId);
+
+            // Act
+            var initialPage = await Client.GetAsync(url);
+            var initialDocument = await GetDocumentAsync(initialPage);
+
+            // Assert
+            Assert.False(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));
+            var linksContainer = initialDocument.GetElementById("nhs-number-links");
+            Assert.Equal(expectedWarningNotificationIds.Count, linksContainer.ChildElementCount);
+
+            foreach (var notificationId in expectedWarningNotificationIds)
+            {
+                var warningUrl = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, notificationId);
+                Assert.Equal($"#{notificationId}", linksContainer.QuerySelector($"a[href='{warningUrl}']").TextContent);
+            }
+        }
+
+        [Fact]
+        public async Task OnGetNhsNumberDuplicates_ReturnsExpectedEmptyResponseForNonDuplicate()
+        {
+            // Arrange
+            const int id = Utilities.DRAFT_ID;
+            const string nonDuplicateNhsNumber = "7112516471";
+            var formData = new Dictionary<string, string>
+            {
+                ["notificationId"] = id.ToString(),
+                ["nhsNumber"] = nonDuplicateNhsNumber
+            };
+
+            // Act
+            var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Equal("{}", result);
+        }
+
+        [Fact]
+        public async Task OnGetNhsNumberDuplicates_ReturnsExpectedResponseForGroupedDuplicateNhsNumber()
+        {
+            // Arrange
+            const int id = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
+            const string nhsNumber = Utilities.NHS_NUMBER_SHARED;
+            var formData = new Dictionary<string, string>
+            {
+                ["notificationId"] = id.ToString(),
+                ["nhsNumber"] = nhsNumber
+            };
+            const int expectedWarningNotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
+            var expectedWarningUrl = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, expectedWarningNotificationId);
+
+            // Act
+            var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));
+
+            // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains($"\"{expectedWarningNotificationId}\":\"{expectedWarningUrl}\"", result);
+        }
+
+        [Fact]
         public async Task IfDateTooEarly_ValidatePatientDate_ReturnsEarliestBirthDateErrorMessage()
         {
             // Arrange
@@ -190,7 +360,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidatePatientDate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -210,7 +380,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -230,7 +400,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidatePatientProperty"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

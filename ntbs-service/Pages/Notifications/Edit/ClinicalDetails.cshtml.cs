@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -15,8 +15,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     [BindProperties]
     public class ClinicalDetailsModel : NotificationEditModelBase
     {
-        private readonly NtbsContext context;
-        public HIVTestStatus HivTestStatuses;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -30,15 +29,19 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public FormattedDate FormattedSymptomDate { get; set; }
         public FormattedDate FormattedFirstPresentationDate { get; set; }
-        public FormattedDate FormattedTBServicePresentationDate { get; set; }
+        public FormattedDate FormattedTbServicePresentationDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
-        public FormattedDate FormattedMDRTreatmentDate { get; set; }
+        public FormattedDate FormattedMdrTreatmentDate { get; set; }
 
-        public ClinicalDetailsModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
+        public ClinicalDetailsModel(
+            INotificationService service,
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository,
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
         {
-            this.context = context;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
@@ -48,24 +51,25 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var notificationSites = Notification.NotificationSites;
             notificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
-            
+
             SetupNotificationSiteMap(notificationSites);
-            OtherSite = new NotificationSite {
-                SiteId = (int) SiteId.OTHER,
+            OtherSite = new NotificationSite
+            {
+                SiteId = (int)SiteId.OTHER,
                 SiteDescription = notificationSites.FirstOrDefault(ns => ns.SiteId == (int)SiteId.OTHER)?.SiteDescription,
                 ShouldValidateFull = Notification.ShouldValidateFull
             };
-            Sites = (await context.GetAllSitesAsync()).ToList();
+            Sites = (await _referenceDataRepository.GetAllSitesAsync()).ToList();
 
             PatientBirthYear = Notification.PatientDetails.Dob?.Year;
 
             FormattedSymptomDate = ClinicalDetails.SymptomStartDate.ConvertToFormattedDate();
             FormattedFirstPresentationDate = ClinicalDetails.FirstPresentationDate.ConvertToFormattedDate();
-            FormattedTBServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
+            FormattedTbServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
-            FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
+            FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
 
             if (ClinicalDetails.ShouldValidateFull)
             {
@@ -77,7 +81,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<Notification> GetNotification(int notificationId)
         {
-            return await service.GetNotificationWithNotificationSitesAsync(notificationId);
+            return await NotificationRepository.GetNotificationWithNotificationSitesAsync(notificationId);
         }
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)
@@ -98,42 +102,42 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             UpdateFlags();
 
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TBServicePresentationDate), FormattedTBServicePresentationDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
-            validationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMDRTreatmentDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
+            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate);
             if (ClinicalDetails.BCGVaccinationYear != null)
             {
-                validationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+                ValidationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 (int)ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             }
-            
+
             var notificationSites = CreateNotificationSitesFromModel(Notification);
-            
+
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
             OtherSite?.SetFullValidation(Notification.NotificationStatus);
-            
+
             // Since notification has other properties which are not populated by this page but have validation rules, 
             // validation of a whole Notification model will result in validation errors.
             // Therefore we need to manually validate NotificationSites and TryValidate other models
-            if (Notification.ShouldValidateFull && notificationSites.Count() == 0) 
+            if (Notification.ShouldValidateFull && !notificationSites.Any())
             {
                 ModelState.AddModelError("Notification.NotificationSites", ValidationMessages.DiseaseSiteIsRequired);
             }
-            
+
             TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
-            if (OtherSite != null) 
+            if (OtherSite != null)
             {
                 TryValidateModel(OtherSite, OtherSite.GetType().Name);
             }
 
             if (ModelState.IsValid)
             {
-                await service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-                await service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
+                await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
+                await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
         }
 
@@ -169,7 +173,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (ClinicalDetails.IsMDRTreatment.HasValue && !ClinicalDetails.IsMDRTreatment.Value)
             {
                 ClinicalDetails.MDRTreatmentStartDate = null;
-                FormattedMDRTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
+                FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
             }
 
@@ -182,16 +186,16 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
         {
-            foreach (var item in NotificationSiteMap)
+            foreach (var (siteId, value) in NotificationSiteMap)
             {
-                if (item.Value)
+                if (value)
                 {
                     yield return new NotificationSite
                     {
                         ShouldValidateFull = notification.ShouldValidateFull,
                         NotificationId = notification.NotificationId,
-                        SiteId = (int)item.Key,
-                        SiteDescription = item.Key == SiteId.OTHER ? OtherSite.SiteDescription : null
+                        SiteId = (int)siteId,
+                        SiteDescription = siteId == SiteId.OTHER ? OtherSite.SiteDescription : null
                     };
                 }
             }
@@ -199,7 +203,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            return validationService.ValidateDate<ClinicalDetails>(key, day, month, year);
+            return ValidationService.ValidateDate<ClinicalDetails>(key, day, month, year);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
@@ -214,7 +218,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 });
             }
 
-            return validationService.ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
+            return ValidationService.ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
@@ -224,12 +228,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ShouldValidateFull = shouldValidateFull,
                 SiteId = (int)SiteId.OTHER
             };
-            return validationService.ValidateProperty(notificationSite, key, value);
+            return ValidationService.ValidateProperty(notificationSite, key, value);
         }
 
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
-            return validationService.ValidateYearComparison(newYear, existingYear);
+            return ValidationService.ValidateYearComparison(newYear, existingYear);
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
@@ -239,7 +243,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], keyValuePair["value"]));
             }
-            return validationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
+            return ValidationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
         }
     }
 }

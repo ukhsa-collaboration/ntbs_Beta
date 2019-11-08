@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
     public class TravelModel : NotificationEditModelBase
     {
-
         [BindProperty]
         public TravelDetails TravelDetails { get; set; }
 
@@ -18,10 +17,14 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public SelectList HighTbIncidenceCountries { get; set; }
 
-        public TravelModel(INotificationService service, IAuthorizationService authorizationService, NtbsContext context) : base(service, authorizationService)
+        public TravelModel(
+            INotificationService service,
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository,
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
         {
             HighTbIncidenceCountries = new SelectList(
-                context.GetAllHighTbIncidenceCountriesAsync().Result,
+                referenceDataRepository.GetAllHighTbIncidenceCountriesAsync().Result,
                 nameof(Country.CountryId),
                 nameof(Country.Name));
         }
@@ -55,10 +58,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             TryValidateModel(TravelDetails, TravelDetails.GetType().Name);
             TryValidateModel(VisitorDetails, VisitorDetails.GetType().Name);
-            
+
             if (ModelState.IsValid)
             {
-                await service.UpdateTravelAndVisitorAsync(Notification, TravelDetails, VisitorDetails);
+                await Service.UpdateTravelAndVisitorAsync(Notification, TravelDetails, VisitorDetails);
             }
         }
 
@@ -66,25 +69,25 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (TravelDetails.HasTravel != true)
             {
-                service.ClearTravelOrVisitorFields(TravelDetails);
+                Service.ClearTravelOrVisitorFields(TravelDetails);
             }
 
             if (VisitorDetails.HasVisitor != true)
             {
-                service.ClearTravelOrVisitorFields(VisitorDetails);
+                Service.ClearTravelOrVisitorFields(VisitorDetails);
             }
         }
 
         public IActionResult OnGetValidateTravel(TravelDetails travelDetails)
         {
-            service.ClearTravelOrVisitorFields(travelDetails);
-            return validationService.ValidateFullModel(travelDetails);
+            Service.ClearTravelOrVisitorFields(travelDetails);
+            return ValidationService.ValidateFullModel(travelDetails);
         }
 
         public IActionResult OnGetValidateVisitor(VisitorDetails visitorDetails)
         {
-            service.ClearTravelOrVisitorFields(visitorDetails);
-            return validationService.ValidateFullModel(visitorDetails);
+            Service.ClearTravelOrVisitorFields(visitorDetails);
+            return ValidationService.ValidateFullModel(visitorDetails);
         }
     }
 }

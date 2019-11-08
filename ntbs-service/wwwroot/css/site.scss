@@ -122,3 +122,12 @@ body {
 .no-bottom-margin {
     margin-bottom: 0;
 }
+
+/* Need to pin this to 38px to make icon circular */
+.govuk-warning-text__icon {
+    width: 38px;
+}
+
+.flex-container {
+    display: flex;
+}

@@ -13,17 +13,19 @@ namespace ntbs_service_unit_tests.Services
 {
     public class NotificationServiceTest
     {
-        private readonly INotificationService service;
-        private readonly Mock<INotificationRepository> mockRepository;
+        private readonly INotificationService mockNotificationService;
+        private readonly Mock<INotificationRepository> mockNotificationRepository;
+        private readonly Mock<IReferenceDataRepository> mockReferenceDataRepository;
         private readonly Mock<IUserService> mockUserService;
         private readonly Mock<NtbsContext> mockContext;
 
         public NotificationServiceTest()
         {
-            mockRepository = new Mock<INotificationRepository>();
+            mockNotificationRepository = new Mock<INotificationRepository>();
+            mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             mockUserService = new Mock<IUserService>();
             mockContext = new Mock<NtbsContext>();
-            service = new NotificationService(mockRepository.Object, mockUserService.Object, mockContext.Object);
+            mockNotificationService = new NotificationService(mockNotificationRepository.Object, mockReferenceDataRepository.Object, mockUserService.Object, mockContext.Object);
 
             mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
         }
@@ -44,7 +46,7 @@ namespace ntbs_service_unit_tests.Services
             var notification = new Notification { SocialRiskFactors = socialRiskFactors };
 
             // Act
-            await service.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
+            await mockNotificationService.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
 
             // Assert
             mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors, socialRiskFactors));
@@ -78,13 +80,13 @@ namespace ntbs_service_unit_tests.Services
         public async Task UkBorn_IsSetToCorrectValueDependentOnBirthCountry(Country country, bool? expectedResult)
         {
             // Arrange
-            mockContext.Setup(rep => rep.GetCountryByIdAsync(country.CountryId))
+            mockReferenceDataRepository.Setup(rep => rep.GetCountryByIdAsync(country.CountryId))
                                  .Returns(Task.FromResult(country));
             var notification = new Notification();
             var patient = new PatientDetails() { CountryId = country.CountryId };
 
             // Act
-            await service.UpdatePatientAsync(notification, patient);
+            await mockNotificationService.UpdatePatientAsync(notification, patient);
 
             // Assert
             Assert.Equal(expectedResult, patient.UkBorn);
@@ -100,7 +102,7 @@ namespace ntbs_service_unit_tests.Services
             var patient = new PatientDetails() { UkBorn = true };
 
             // Act
-            await service.UpdatePatientAsync(notification, patient);
+            await mockNotificationService.UpdatePatientAsync(notification, patient);
 
             // Assert
             Assert.Null(patient.UkBorn);
@@ -116,7 +118,7 @@ namespace ntbs_service_unit_tests.Services
             var expectedDate = DateTime.UtcNow;
 
             // Act
-            await service.SubmitNotificationAsync(notification);
+            await mockNotificationService.SubmitNotificationAsync(notification);
 
             // Assert
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
@@ -147,7 +149,7 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
-            await service.UpdateImmunosuppresionDetailsAsync(notification, input);
+            await mockNotificationService.UpdateImmunosuppresionDetailsAsync(notification, input);
 
             Assert.Equal(reference.Status, input.Status);
             Assert.Equal(reference.HasBioTherapy, input.HasBioTherapy);
@@ -181,7 +183,7 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
-            await service.UpdateImmunosuppresionDetailsAsync(notification, input);
+            await mockNotificationService.UpdateImmunosuppresionDetailsAsync(notification, input);
 
             Assert.Equal(reference.Status, input.Status);
             Assert.NotEqual(reference.HasBioTherapy, input.HasBioTherapy);
@@ -214,7 +216,7 @@ namespace ntbs_service_unit_tests.Services
             };
             var notification = new Notification();
 
-            await service.UpdateImmunosuppresionDetailsAsync(notification, input);
+            await mockNotificationService.UpdateImmunosuppresionDetailsAsync(notification, input);
 
             Assert.Equal(reference.Status, input.Status);
             Assert.Equal(reference.HasOther, input.HasOther);
@@ -239,7 +241,7 @@ namespace ntbs_service_unit_tests.Services
                 NhsNumber = reference.NhsNumber
             };
 
-            await service.UpdatePatientFlagsAsync(input);
+            await mockNotificationService.UpdatePatientFlagsAsync(input);
 
             Assert.Equal(reference.NhsNumberNotKnown, input.NhsNumberNotKnown);
             Assert.NotEqual(reference.NhsNumber, input.NhsNumber);
@@ -260,7 +262,7 @@ namespace ntbs_service_unit_tests.Services
                 NhsNumber = reference.NhsNumber
             };
 
-            await service.UpdatePatientFlagsAsync(input);
+            await mockNotificationService.UpdatePatientFlagsAsync(input);
 
             Assert.Equal(reference.NhsNumberNotKnown, input.NhsNumberNotKnown);
             Assert.Equal(reference.NhsNumber, input.NhsNumber);
@@ -280,7 +282,7 @@ namespace ntbs_service_unit_tests.Services
                 Postcode = reference.Postcode
             };
 
-            await service.UpdatePatientFlagsAsync(input);
+            await mockNotificationService.UpdatePatientFlagsAsync(input);
 
             Assert.Equal(reference.NoFixedAbode, input.NoFixedAbode);
             Assert.NotEqual(reference.Postcode, input.Postcode);
@@ -301,7 +303,7 @@ namespace ntbs_service_unit_tests.Services
                 Postcode = reference.Postcode
             };
 
-            await service.UpdatePatientFlagsAsync(input);
+            await mockNotificationService.UpdatePatientFlagsAsync(input);
 
             Assert.Equal(reference.NoFixedAbode, input.NoFixedAbode);
             Assert.Equal(reference.Postcode, input.Postcode);
@@ -320,10 +322,10 @@ namespace ntbs_service_unit_tests.Services
                 OccupationId = reference.OccupationId,
                 OccupationOther = reference.OccupationOther
             };
-            mockContext.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
+            mockReferenceDataRepository.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
                 .Returns(Task.FromResult(new Occupation { HasFreeTextField = false }));
 
-            await service.UpdatePatientFlagsAsync(input);
+            await mockNotificationService.UpdatePatientFlagsAsync(input);
 
             Assert.Equal(reference.OccupationId, input.OccupationId);
             Assert.NotEqual(reference.OccupationOther, input.OccupationOther);
@@ -343,10 +345,10 @@ namespace ntbs_service_unit_tests.Services
                 OccupationId = reference.OccupationId,
                 OccupationOther = reference.OccupationOther
             };
-            mockContext.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
+            mockReferenceDataRepository.Setup(rep => rep.GetOccupationByIdAsync(input.OccupationId.Value))
                 .Returns(Task.FromResult(new Occupation { HasFreeTextField = true }));
 
-            await service.UpdatePatientFlagsAsync(input);
+            await mockNotificationService.UpdatePatientFlagsAsync(input);
 
             Assert.Equal(reference.OccupationId, input.OccupationId);
             Assert.Equal(reference.OccupationOther, input.OccupationOther);

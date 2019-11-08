@@ -25,10 +25,10 @@ namespace ntbs_integration_tests
             return RouteHelper.GetNotificationPath(subPath, id);
         }
 
-        protected string GetValidationPath(Dictionary<string, string> formData, string validationPath, int id = 0)
+        protected string GetHandlerPath(Dictionary<string, string> formData, string handlerPath, int id = 0)
         {
             var queryString = string.Join("&", formData.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-            return GetPathForId($"{NotificationSubPath}/{validationPath}?{queryString}", id);
+            return GetPathForId($"{NotificationSubPath}/{handlerPath}?{queryString}", id);
         }
     }
 }
