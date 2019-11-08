@@ -119,6 +119,7 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 - dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 - purging registrey - every once in a while the images registery [should be pureged](../scripts/purge-images.ps1) so it doesn't grow too big. It runs with `--dry-run` by defualt, make sure to remove the flag once you're happy nothing relevant will be deleted.
+- SSL cerificates - see [dedicated readme](./deployments/README.md)
 
 ## Basic auth securing
 Research env is set up with basic http auth, configured as per
