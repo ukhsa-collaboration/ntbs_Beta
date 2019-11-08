@@ -54,7 +54,7 @@ namespace ntbs_service.Models
         public int? CountryId { get; set;}
         public virtual Country Country { get; set; }
 
-        [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYearRange)]
+        [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYear)]
         [AssertThat("UkEntryAfterBirth == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustBeAfterDob)]
         [AssertThat("UkEntryNotInFuture == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
         [DisplayName("year of uk entry")]
