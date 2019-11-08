@@ -57,8 +57,14 @@ Secrets are project specific so run these commands in the root of a project.
 We are using the [xunit](https://xunit.net/) framework for testing.
 To run unit/integration tests, cd into the ntbs-service-unit-tests/ntbs-integration-tests project and run `dotnet test`.
 
-Before first running ui tests locally, cd into the ntbs-ui-tests directory and run `npm ci` to get the selenium-standalone dependency, followed by `.\node_modules\.bin\selenium-standalone install` to install selenium-standalone.
-To run ui tests, run the script `.\test.ps1`
+Before first running ui tests locally (the below steps are powershell specific, trivial changes are required for bash):
+
+ - Make sure you have a local install of java (doesn't have to be jdk) 
+ - cd into the ntbs-ui-tests directory 
+ - run `npm ci` to get the   selenium-standalone dependency 
+ - run   `.\node_modules\.bin\selenium-standalone install` to install  selenium-standalone - Flip slashes for bash
+
+To run ui tests, run the script `.\test.ps1` - If you don't have bash configured to be able to run powershell, `.\test.sh` is a good alternative.
 To see the browser window when running them comment out the appropriate line in DriverSetup.
 
 ## Database migrations
