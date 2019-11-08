@@ -15,34 +15,28 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     @{
-        var conditionallyHiddenClass = (Model.DuplicateNhsNumberNotifications == null || Model.DuplicateNhsNumberNotifications.Count == 0)
-            ? "hidden"
-            : string.Empty;
+        var isWarningHidden = (Model.DuplicateNhsNumberNotifications == null || Model.DuplicateNhsNumberNotifications.Count == 0);
         var requiresPrependedComma = false;
     }
     <nhs-number-duplicate-warning inline-template>
         <div>
-            <div id="nhs-number-warning" class="govuk-warning-text @conditionallyHiddenClass" ref="nhs-number-warning">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <div class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    <strong>NHS number is associated with other notification(s), please confirm:</strong>
-                    <div ref="warning-container" id="nhs-number-links">
-                        @if (Model.DuplicateNhsNumberNotifications != null)
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" is-hidden="@isWarningHidden">
+                <strong>NHS number is associated with other notification(s), please confirm:</strong>
+                <div ref="warning-container" id="nhs-number-links">
+                    @if (Model.DuplicateNhsNumberNotifications != null)
+                    {
+                        foreach (var (id, url) in Model.DuplicateNhsNumberNotifications)
                         {
-                            foreach (var (id, url) in Model.DuplicateNhsNumberNotifications)
+                            if (requiresPrependedComma)
                             {
-                                if (requiresPrependedComma)
-                                {
-                                    @:,
-                                }
-                                <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
-                                requiresPrependedComma = true;
+                                @:,
                             }
+                            <a href="@url" target="_blank" title="Open notification overview for notification #@id">#@id</a>
+                            requiresPrependedComma = true;
                         }
-                    </div>
+                    }
                 </div>
-            </div>
+            </govuk-warning-text>
 
             <nhs-fieldset aria-describedby="nhs-number-error">
                 <nhs-fieldset-legend nhs-legend-size="Standard">
