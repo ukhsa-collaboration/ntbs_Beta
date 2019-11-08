@@ -58,11 +58,11 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("other-site"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), resultDocument.GetError("bcg-vaccination"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("symptom"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
+            Assert.Equal(FullErrorMessage(ValidationMessages.TodayOrEarlier),
                 resultDocument.GetError("first-presentation"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
+            Assert.Equal(FullErrorMessage(ValidationMessages.TodayOrEarlier),
                 resultDocument.GetError("tb-service-presentation"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
+            Assert.Equal(FullErrorMessage(ValidationMessages.TodayOrEarlier),
                 resultDocument.GetError("diagnosis"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("treatment"));
             Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("short-course"));
@@ -314,7 +314,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate), result);
+            Assert.Equal(ValidationMessages.TodayOrEarlier, result);
         }
 
         [Theory]

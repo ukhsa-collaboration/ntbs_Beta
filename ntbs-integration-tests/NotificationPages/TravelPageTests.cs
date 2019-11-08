@@ -96,11 +96,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber),
+                FullErrorMessage(ValidationMessages.TotalNumberOfCountriesTravelledToGreaterThanInputNumber),
                 resultDocument.GetError("travel-total"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber),
+                FullErrorMessage(ValidationMessages.TotalNumberOfCountriesVisitedFromGreaterThanInputNumber),
                 resultDocument.GetError("visitor-total"));
         }
 
