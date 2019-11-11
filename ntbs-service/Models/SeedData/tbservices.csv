@@ -1,4 +1,4 @@
-Code,Name,PHEC_Code
+﻿Code,Name,PHEC_Code
 TBS0001,Abingdon Community Hospital,E45000019
 TBS0002,Addenbrooke's Hospital,E45000017
 TBS0003,Airedale NHS Foundation Trust,E45000010
@@ -238,7 +238,7 @@ TBS0236,Swindon,E45000020
 TBS0237,Swindon & Wiltshire,E45000020
 TBS0238,Tameside General Hospital,E45000018
 TBS0239,TB Service NCL - South Hub,E45000001
-TBS0240,The London Clinic,E45000010
+TBS0240,The London Clinic,
 TBS0241,The Rotherham NHS Foundation Trust,E45000010
 TBS0242,Tickhill Road Hospital,E45000010
 TBS0243,Torbay,E45000020
@@ -264,3 +264,147 @@ TBS0262,Wolverhampton,E45000005
 TBS0263,Worcestershire,E45000005
 TBS0264,Worthing Hospital,E45000019
 TBS0265,Yeovil,E45000020
+TBS0266,Plymouth,E45000020
+TBS0267,Daisy Hill Hospital,PHECNI
+TBS0268,Musgrave Park Hospital [Northern Ireland],PHECNI
+TBS0269,Whiteabbey Hospital,PHECNI
+TBS0270,Ards Hospital,PHECNI
+TBS0271,Mater Infirmorum Hospital,PHECNI
+TBS0272,Royal Victoria Hospital [Belfast],PHECNI
+TBS0273,Craigavon Area Hospital,PHECNI
+TBS0274,Causeway Hospital,PHECNI
+TBS0275,South Tyrone Hospital,PHECNI
+TBS0276,Antrim Area Hospital,PHECNI
+TBS0277,Belfast City Hospital,PHECNI
+TBS0278,Lagan Valley Hospital,PHECNI
+TBS0279,Erne Hospital,PHECNI
+TBS0280,Coleraine Hospital,PHECNI
+TBS0281,Ulster Hospital,PHECNI
+TBS0282,Tyrone County Hospital,PHECNI
+TBS0283,Downe Hospital,PHECNI
+TBS0284,Royal Hospital For Sick Children [Belfast],PHECNI
+TBS0285,Bangor Community Hospital,PHECNI
+TBS0286,Altnagelvin Area Hospital,PHECNI
+TBS0287,Mid-Ulster Hospital,PHECNI
+TBS0288,Werndale Hospital,PHECWAL
+TBS0289,Havenway Day Hospital,PHECWAL
+TBS0290,Lluesty Hospital,PHECWAL
+TBS0291,Ystradgynlais Community Hospital,PHECWAL
+TBS0292,Tredegar General Hospital,PHECWAL
+TBS0293,Groeswen Hospital,PHECWAL
+TBS0294,Chirk Community Hospital,PHECWAL
+TBS0295,Bronllys Hospital,PHECWAL
+TBS0296,Oakdale Hospital,PHECWAL
+TBS0297,Newport Interim Day Hospital,PHECWAL
+TBS0298,Gellinudd Hospital,PHECWAL
+TBS0299,Clydach War Memorial Hospital,PHECWAL
+TBS0300,Pontypridd & District Hospital,PHECWAL
+TBS0301,Cefni Hospital,PHECWAL
+TBS0302,Caernarfon Cottage Hospital,PHECWAL
+TBS0303,Neath Port Talbot Hospital,PHECWAL
+TBS0304,Glan Clwyd General Hospital,PHECWAL
+TBS0305,H M Stanley Hospital,PHECWAL
+TBS0306,Royal Glamorgan Hospital,PHECWAL
+TBS0307,Llwyneryr Hospital,PHECWAL
+TBS0308,Nant-Y-Glyn Day Hospital,PHECWAL
+TBS0309,Morriston Hospital,PHECWAL
+TBS0310,Spire Yale Hospital,PHECWAL
+TBS0311,Llandudno General Hospital,PHECWAL
+TBS0312,Swn-Y-Gwynt Day Hospital,PHECWAL
+TBS0313,Colwyn Bay Community Hospital,PHECWAL
+TBS0314,St Tydfils Hospital,PHECWAL
+TBS0315,Dolgellau & Barmouth District Hospital,PHECWAL
+TBS0316,Aberdare General Hospital,PHECWAL
+TBS0317,Ysbyty George Thomas,PHECWAL
+TBS0318,Bron Y Garth Hospital,PHECWAL
+TBS0319,St David'S Community Hospital [Cardiff],PHECWAL
+TBS0320,Ysbyty Gwynedd,PHECWAL
+TBS0321,Llandovery Hospital,PHECWAL
+TBS0322,Builth Wells Cottage Hospital,PHECWAL
+TBS0323,Ffestiniog Memorial Hospital,PHECWAL
+TBS0324,Forglen Day Hospital,PHECWAL
+TBS0325,Princess Of Wales Hospital,PHECWAL
+TBS0326,St Woolos,PHECWAL
+TBS0327,Royal Alexandra Hospital [Rhyl],PHECWAL
+TBS0328,Blaina & District Hospital,PHECWAL
+TBS0329,Whitchurch Hospital [Cardiff],PHECWAL
+TBS0330,Spire Cardiff Hospital,PHECWAL
+TBS0331,St Cadocs Hospital,PHECWAL
+TBS0332,Llanrwst Health Centre,PHECWAL
+TBS0333,Garngoch Hospital,PHECWAL
+TBS0334,Llanrhaedr Medical Clinic,PHECWAL
+TBS0335,Redwood Memorial Hospital,PHECWAL
+TBS0336,Park Square Day Hospital,PHECWAL
+TBS0337,Wrexham Maelor Hospital,PHECWAL
+TBS0338,Tywyn & District Day Hospital,PHECWAL
+TBS0339,Victoria Memorial Hospital [Powys],PHECWAL
+TBS0340,Amy Evans Memorial Hospital,PHECWAL
+TBS0341,Prince Philip Hospital,PHECWAL
+TBS0342,St Davids Hospital [Carmarthen],PHECWAL
+TBS0343,Deeside Community Hospital,PHECWAL
+TBS0344,Cardiff Royal Infirmary,PHECWAL
+TBS0345,Brynmawr Interim Day Hospital,PHECWAL
+TBS0346,Maesgwyn Hospital,PHECWAL
+TBS0347,Mold Community Hospital,PHECWAL
+TBS0348,Mynydd Mawr Hospital,PHECWAL
+TBS0349,Monmouth General Hospital,PHECWAL
+TBS0350,Aberystwyth Health Clinic,PHECWAL
+TBS0351,Westfa Day Hospital,PHECWAL
+TBS0352,Bro Ddyfi Community Hospital,PHECWAL
+TBS0353,Pwllheli Day Hospital,PHECWAL
+TBS0354,Tenby Cottage Hospital,PHECWAL
+TBS0355,Hill House Day Hospital,PHECWAL
+TBS0356,Cefn Coed Day Hospital,PHECWAL
+TBS0357,Aberaeron Hospital,PHECWAL
+TBS0358,Tonna Day Hospital,PHECWAL
+TBS0359,Ystrad Mynach Hospital,PHECWAL
+TBS0360,Amman Valley Hospital,PHECWAL
+TBS0361,Fairwood Hospital,PHECWAL
+TBS0362,Caerphilly District Miners Hospital,PHECWAL
+TBS0363,Holywell Community Hospital,PHECWAL
+TBS0364,Llwynypia Hospital,PHECWAL
+TBS0365,Brynseiont Hospital,PHECWAL
+TBS0366,Llanfrechfa Grange Hospital,PHECWAL
+TBS0367,Hafen Coed M.I. Day Hospital,PHECWAL
+TBS0368,Aberbargoed & District Hospital,PHECWAL
+TBS0369,Tregaron Hospital,PHECWAL
+TBS0370,Rookwood Hospital,PHECWAL
+TBS0371,Llandough Hospital,PHECWAL
+TBS0372,Ysbyty Penrhos Stanley,PHECWAL
+TBS0373,Llangollen Community Hospital,PHECWAL
+TBS0374,Montgomery County Infirmary,PHECWAL
+TBS0375,Gorseinon Hospital,PHECWAL
+TBS0376,Ruthin Community Hospital,PHECWAL
+TBS0377,Chepstow Community Hospital,PHECWAL
+TBS0378,Bryn Y Neuadd Day Hospital,PHECWAL
+TBS0379,St Joseph'S Hospital,PHECWAL
+TBS0380,Dewi Sant Day Hospital,PHECWAL
+TBS0381,Ysbyty'R Tri Chwm,PHECWAL
+TBS0382,Prestatyn Community Hospital,PHECWAL
+TBS0383,South Pembrokeshire Hospital Health & Social Care Resource Centre,PHECWAL
+TBS0384,Penley Hospital,PHECWAL
+TBS0385,County Hospital [Pontypool],PHECWAL
+TBS0386,Minfordd Hospital,PHECWAL
+TBS0387,Nevill Hall Hospital,PHECWAL
+TBS0388,Cymla Day Hospital,PHECWAL
+TBS0389,Withybush General Hospital,PHECWAL
+TBS0390,Mountain Ash General Hospital,PHECWAL
+TBS0391,Maindiff Court Hospital,PHECWAL
+TBS0392,Eryri Hospital,PHECWAL
+TBS0393,Maesteg General Hospital,PHECWAL
+TBS0394,Abertillery District Hospital,PHECWAL
+TBS0395,Royal Gwent Hospital,PHECWAL
+TBS0396,Glanrhyd Hospital,PHECWAL
+TBS0397,Bryn Beryl Hospital,PHECWAL
+TBS0398,West Wales General Hospital,PHECWAL
+TBS0399,Denbigh Community Hospital,PHECWAL
+TBS0400,Velindre Hospital,PHECWAL
+TBS0401,University Hospital Of Wales,PHECWAL
+TBS0402,Overmonnow Day Hospital,PHECWAL
+TBS0403,Abergele Hospital,PHECWAL
+TBS0404,Singleton Hospital,PHECWAL
+TBS0405,Bronglais General Hospital,PHECWAL
+TBS0406,Cardigan & District Memorial Hospital,PHECWAL
+TBS0407,Flint Community Hospital,PHECWAL
+TBS0408,Barry Hospital,PHECWAL
+TBS0409,Prince Charles Hospital,PHECWAL
