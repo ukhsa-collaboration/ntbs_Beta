@@ -14,6 +14,25 @@
             var searchParametersError = !Model.ValidationService.IsValid("SearchParameters");
             var searchParametersGroupState = searchParametersError ? Error : Standard;
         }
+
+        @{
+            var idFilterError = !Model.ValidationService.IsValid("SearchParameters.IdFilter");
+            var idFilterGroupState = idFilterError ? Error : Standard;
+        }
+        
+        <nhs-form-group nhs-form-group-type=@idFilterGroupState>
+            <span nhs-span-type="ErrorMessage" id="id-error"
+                    asp-validation-for="SearchParameters.IdFilter" has-error="@idFilterError"></span>
+            <nhs-grid-row style="display: flex">
+                <label nhs-label-type="Standard"> ID number </label>
+                <input is-error-input=@idFilterError nhs-input-type="Standard"
+                    asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" aria-describedby="id-types-hint" />
+                <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
+                    Search by NTBS, ETS, LTBR or NHS number
+                </nhs-hint>
+            </nhs-grid-row>
+        </nhs-form-group>
+
         <nhs-form-group nhs-form-group-type=@searchParametersGroupState>
             <nhs-fieldset aria-describedby="one-parameter-required-error">
                 <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -22,22 +41,6 @@
                 <span nhs-span-type="ErrorMessage" id="one-parameter-required-error"
                       asp-validation-for="SearchParameters" has-error="@searchParametersError"></span>
                 <nhs-grid-row>
-                    <nhs-grid-column grid-column-width="OneQuarter">
-                        @{
-                            var idFilterError = !Model.ValidationService.IsValid("SearchParameters.IdFilter");
-                            var idFilterGroupState = idFilterError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type=@idFilterGroupState>
-                            <label nhs-label-type="Standard"> ID number </label>
-                            <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
-                                Search by NTBS, ETS, LTBR or NHS number
-                            </nhs-hint>
-                            <span nhs-span-type="ErrorMessage" id="id-error"
-                                  asp-validation-for="SearchParameters.IdFilter" has-error="@idFilterError"></span>
-                            <input is-error-input=@idFilterError nhs-input-type="Standard"
-                                   asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" aria-describedby="id-types-hint" />
-                        </nhs-form-group>
-                    </nhs-grid-column>
                     <nhs-grid-column grid-column-width="OneQuarter">
                         @{
                             var familyNameError = !Model.ValidationService.IsValid("SearchParameters.FamilyName");
