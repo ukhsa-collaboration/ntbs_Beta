@@ -18,15 +18,15 @@ namespace ntbs_service.Models
         public PartialDate PartialDob { get; set; }
         public PartialDate PartialNotificationDate { get; set; }
         
-        [MinLength(2, ErrorMessage = ValidationMessages.MaxTwoCharacters)]
+        [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidationWithNumbers, ErrorMessage = ValidationMessages.StandardStringWithNumbersFormat)]
         public string Postcode { get; set; }
 
-        [MinLength(2, ErrorMessage = ValidationMessages.MaxTwoCharacters)]
+        [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string FamilyName { get; set; }
 
-        [MinLength(2, ErrorMessage = ValidationMessages.MaxTwoCharacters)]
+        [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }
 

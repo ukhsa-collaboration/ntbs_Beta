@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Validations
         public const string StandardStringFormat = "Can only contain letters and the symbols ' - . ,";
         public const string StandardStringWithNumbersFormat = "Can only contain letters, numbers and the symbols ' - . ,";
         public const string StringWithNumbersAndForwardSlashFormat = "Can only contain letters, numbers and the symbols ' - . , /";
-        public const string MaxTwoCharacters = "Enter at least 2 characters";
+        public const string MinTwoCharacters = "Enter at least 2 characters";
         public const string InvalidCharacter = "Invalid character found";
         public const string NumberFormat = "Can only contain digits 0-9";
         public const string PositiveNumbersOnly = "Please enter a positive value";
