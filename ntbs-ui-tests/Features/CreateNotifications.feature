@@ -31,7 +31,7 @@ Scenario: Create and submit notification without errors
     And I select TBS0008 for 'Episode_TBServiceCode'
     # Wait until javascript has populated the hospital dropdown
     And I wait for 1 second
-    And I select 0ba53cca-6c30-4743-a21e-0664294e64d3 for 'Episode_HospitalId'
+    And I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for 'Episode_HospitalId'
     And I click on 'save-button'
 
     # Clinical details page
