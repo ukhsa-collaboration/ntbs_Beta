@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ namespace ntbs_service.Models
     {
         public bool? IsSymptomatic { get; set; }
 
-        [Display(Name = "Symptoms start date")]
+        [Display(Name = "Symptom onset date")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
 
@@ -33,7 +33,7 @@ namespace ntbs_service.Models
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TreatmentStartDate { get; set; }
 
-        [Display(Name = "Date of death")]
+        [Display(Name = "Date of Death")]
         [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.DeathDateIsRequired)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DeathDate { get; set; }
