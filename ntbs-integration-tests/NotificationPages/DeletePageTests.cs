@@ -123,7 +123,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StringWithNumbersAndForwardSlashFormat), resultDocument.GetError("reason"));
+            resultDocument.AssertErrorMessage("reason", ValidationMessages.StringWithNumbersAndForwardSlashFormat);
         }
     }
 }

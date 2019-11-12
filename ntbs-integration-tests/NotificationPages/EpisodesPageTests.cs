@@ -57,8 +57,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate),
-                        resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
         }
 
         [Fact]

@@ -39,7 +39,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            Assert.Equal(FullErrorMessage(ValidationMessages.ImmunosuppressionTypeRequired), resultDocument.GetError("status"));
+            resultDocument.AssertErrorMessage("status", ValidationMessages.ImmunosuppressionTypeRequired);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            Assert.Equal(FullErrorMessage(ValidationMessages.ImmunosuppressionDetailRequired), resultDocument.GetError("description"));
+            resultDocument.AssertErrorMessage("description", ValidationMessages.ImmunosuppressionDetailRequired);
         }
 
         [Fact]
