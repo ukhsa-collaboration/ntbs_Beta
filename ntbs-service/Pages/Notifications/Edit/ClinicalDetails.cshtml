@@ -294,7 +294,7 @@
 
             <validate-date ref="date1" name="Presentation To Any Health Service Date" model="ClinicalDetails" property="FirstPresentationDate" rank="1" v-model="dates[1]" inline-template>
                 @{
-                    var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.PresentationToAnyHealthServiceDate");
+                    var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.FirstPresentationDate");
                     var presentationAnyHealthServiceGroupState = hasPresentationAnyHealthServiceError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@presentationAnyHealthServiceGroupState>

@@ -6,9 +6,14 @@ namespace ntbs_integration_tests.Helpers
 {
     public static class HtmlDocumentExtensions
     {
-        public static string GetError(this IHtmlDocument document, string input) => 
-            document?.QuerySelector($"span[id='{input}-error']")?.TextContent;
-            
+        public static string GetError(this IHtmlDocument document, string input)
+        {
+            var errorSpan = document?.QuerySelector($"span[id='{input}-error']");
+            if (errorSpan == null) return null;
+            if (errorSpan.ClassList.Contains("hidden")) return null;
+            return errorSpan.TextContent;
+        }
+
         public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage)
         {
             var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage);

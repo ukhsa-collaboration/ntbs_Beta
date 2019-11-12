@@ -9,7 +9,7 @@ namespace ntbs_integration_tests.SearchPage
 {
     public class SearchPageTests : TestRunnerBase
     {
-        public SearchPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public SearchPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         public const string PageRoute = "/Search";
 
@@ -39,12 +39,12 @@ namespace ntbs_integration_tests.SearchPage
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            Assert.Equal(FullErrorMessage(ValidationMessages.NumberFormat), resultDocument.GetError("id"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("family-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("given-name"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringWithNumbersFormat), resultDocument.GetError("postcode"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), resultDocument.GetError("dob"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.InvalidDate), resultDocument.GetError("notification-date"));
+            resultDocument.AssertErrorMessage("id", ValidationMessages.NumberFormat);
+            resultDocument.AssertErrorMessage("family-name", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("given-name", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("postcode", ValidationMessages.StandardStringWithNumbersFormat);
+            resultDocument.AssertErrorMessage("dob", ValidationMessages.InvalidDate);
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.InvalidDate);
         }
 
 
@@ -64,7 +64,7 @@ namespace ntbs_integration_tests.SearchPage
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            
+
             Assert.Equal(" #1 ", resultDocument.QuerySelector("a[id='notification-banner-id']").TextContent);
         }
     }
