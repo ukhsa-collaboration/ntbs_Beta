@@ -222,10 +222,10 @@
 
     <date-comparison inline-template>
         <div>
-            <div v-if="dateWarnings.length > 0">
+            <div v-if="filteredDateWarnings.length > 0">
                 <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning">
                     <div class="warning-container">
-                        <p v-for="warning in dateWarnings" v-if="warning">
+                        <p v-for="warning in filteredDateWarnings">
                             <strong>{{ warning.message }}</strong>
                         </p>
                     </div>
