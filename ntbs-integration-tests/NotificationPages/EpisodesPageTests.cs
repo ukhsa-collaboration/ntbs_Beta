@@ -84,7 +84,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            var expectedMessage = ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate);
+            var expectedMessage = ValidationMessages.TodayOrEarlier;
             resultDocument.AssertErrorMessage("notification-date", expectedMessage);
         }
 
@@ -160,7 +160,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.TodayOrEarlier);
         }
 
         [Fact]

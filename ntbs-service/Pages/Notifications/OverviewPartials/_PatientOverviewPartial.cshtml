@@ -67,7 +67,7 @@
         @if (Model.Notification.PatientDetails.UkBorn == false)
         {
             <nhs-grid-column grid-column-width="OneThird">
-                <div class="notification-details-label"> Year of first entry to UK </div>
+                <div class="notification-details-label"> UK entry year</div>
                 <div class="cell-min-height"> @Model.Notification.PatientDetails?.YearOfUkEntry </div>
             </nhs-grid-column>
         }
@@ -88,7 +88,7 @@
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Previous IDs </div>
+            <div class="notification-details-label"> Legacy IDs </div>
             <div class="cell-min-height">  </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
