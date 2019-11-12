@@ -11,7 +11,7 @@ namespace ntbs_service.Models
     public class ClinicalDetails : ModelBase
     {
         public bool? IsSymptomatic { get; set; }
-         
+
         [Display(Name = "Symptoms start date")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
@@ -19,7 +19,7 @@ namespace ntbs_service.Models
         [Display(Name = "Presentation to any health service")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? FirstPresentationDate { get; set; }
-        
+
         [Display(Name = "Presentation to TB service")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TBServicePresentationDate { get; set; }
@@ -54,7 +54,7 @@ namespace ntbs_service.Models
         [OnlyOneTrue("IsShortCourseTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
         public bool? IsMDRTreatment { get; set; }
 
-        [Display(Name = "MDR treatment date")]
+        [Display(Name = "RR/MDR/XDR treatment date")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? MDRTreatmentStartDate { get; set; }
         public Status? DotStatus { get; set; }

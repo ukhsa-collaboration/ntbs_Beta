@@ -56,7 +56,7 @@ namespace ntbs_service.Models.Validations
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
         public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
-        public const string MDRDateIsRequired = "MDR treatment date is a mandatory field";
+        public const string MDRDateIsRequired = "RR/MDR/XDR treatment date is a mandatory field";
         public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         #endregion
 
