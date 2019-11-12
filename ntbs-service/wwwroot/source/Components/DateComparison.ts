@@ -95,9 +95,9 @@ export {
 };
 
 function warningMessageEarlier(first: string, second: string) {
-    return `Warning: ${first} is earlier than ${second}`;
+    return `${first} is earlier than ${second}`;
 };
 
 function warningMessageLater(first: string, second: string) {
-    return `Warning: ${first} is later than ${second}`;
+    return `${first} is later than ${second}`;
 };

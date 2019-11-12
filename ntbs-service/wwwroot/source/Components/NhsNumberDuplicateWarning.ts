@@ -17,7 +17,7 @@ const NhsNumberDuplicateWarning = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    if (response.data) {
+                    if (response.data && Object.keys(response.data).length !== 0) {
                         this.displayWarnings(response.data);
                     } else {
                         this.hideWarnings();

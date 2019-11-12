@@ -40,7 +40,6 @@ const ValidateDate = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    console.log(response);
                     var errorMessage = response.data;
 
                     this.$refs["errorField"].textContent = errorMessage;
