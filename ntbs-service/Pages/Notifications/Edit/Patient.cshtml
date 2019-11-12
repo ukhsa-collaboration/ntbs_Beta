@@ -215,10 +215,10 @@
                           ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
                     <div ref="selectField" data-aria-controls="year-of-entry-conditional" class=@countrySelectErrorClass>
                         <autocomplete-select v-on:validate-input="validate" placeholder="Select a Birth Country" validate="true" inline-template>
-                            <select asp-for="Patient.CountryId" asp-items="Model.Countries">
+                            <select asp-for="Patient.CountryId" asp-items="Model.Countries" ref="selectElement">
                                 <option value=""></option>
                             </select>
-                        <autocomplete-select>
+                        </autocomplete-select>
                     </div>
                 </nhs-form-group>
             </validate-input>

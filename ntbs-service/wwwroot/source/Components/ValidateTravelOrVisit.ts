@@ -16,14 +16,7 @@ type TravelOrVisitVariables = {
 };
 
 const ValidateTravelOrVisit = Vue.extend({
-    props: {
-        modelType: {
-            type: String
-        },
-        shouldvalidatefull: {
-            type: String
-        }
-    },
+    props: ['modelType', 'shouldvalidatefull'],
     methods: {
         validate: function (event: FocusEvent) {
             if (this.$el.contains(event.relatedTarget)) {
