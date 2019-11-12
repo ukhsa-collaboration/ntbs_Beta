@@ -287,7 +287,7 @@
     </validate-input>
 
     <nhs-fieldset aria-describedby="postcode-error">
-        <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+        <nhs-fieldset-legend nhs-legend-size="Standard">
             Postcode (required)
         </nhs-fieldset-legend>
         <nhs-form-group nhs-form-group-type="Standard">
@@ -296,7 +296,7 @@
                     <input asp-for="Patient.NoFixedAbode" id="postcode-yes" class="nhsuk-radios__input" type="radio" value="false"
                            data-aria-controls="conditional-postcode-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="postcode-yes">
-                        Postcode (required)
+                        Usual place of residence
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postcode-conditional">
