@@ -21,7 +21,7 @@
     <nhs-number-duplicate-warning inline-template>
         <div>
             <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" is-hidden="@isWarningHidden">
-                <strong>NHS number is associated with other notification(s), please confirm:</strong>
+                <strong>NHS number is already associated with the following notification(s), please review:</strong>
                 <div ref="warning-container" id="nhs-number-links">
                     @if (Model.DuplicateNhsNumberNotifications != null)
                     {
