@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
@@ -11,24 +12,30 @@ namespace ntbs_service.Models
     {
         public bool? IsSymptomatic { get; set; }
          
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [Display(Name = "Symptoms start date")]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
 
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [Display(Name = "Presentation to any health service")]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? FirstPresentationDate { get; set; }
         
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [Display(Name = "Presentation to TB service")]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TBServicePresentationDate { get; set; }
 
+        [Display(Name = "Diagnosis Date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.DiagnosisDateIsRequired)]
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DiagnosisDate { get; set; }
 
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [Display(Name = "Treatment start date")]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TreatmentStartDate { get; set; }
 
+        [Display(Name = "Date of death")]
         [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.DeathDateIsRequired)]
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DeathDate { get; set; }
 
         public bool? DidNotStartTreatment { get; set; }
@@ -46,8 +53,9 @@ namespace ntbs_service.Models
 
         [OnlyOneTrue("IsShortCourseTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
         public bool? IsMDRTreatment { get; set; }
-        [ValidDate(ValidDates.EarliestClinicalDate)]
 
+        [Display(Name = "MDR treatment date")]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? MDRTreatmentStartDate { get; set; }
         public Status? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }

@@ -6,11 +6,8 @@ namespace ntbs_service.Models.Validations
     {
         public const string ValidDate = "Please enter a valid date";
         public const string ValidYear = "Please enter a valid year";
-        public const string TodayOrEarlier = "Must be today or earlier";
-        public static string DateValidityRange(string startDate)
-        {
-            return $"Must be between {startDate} and {DateTime.Now.ToShortDateString()}";
-        }
+        public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
+        public static string DateValidityRangeStart(string name, string startDate) => $"{name} must not be before {startDate}";
 
         public static string ValidYearLaterThanBirthYear(int birthYear)
         {
@@ -27,9 +24,10 @@ namespace ntbs_service.Models.Validations
         public const string PositiveNumbersOnly = "Please enter a positive value";
         public const string InvalidDate = "Invalid date selection";
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
-        public const string YearRequired = "A year must be provided";            
+        public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string ValidYearRange = "Year must be provided between {1} and {2}";
+
         #endregion
 
         #region Patient Details
@@ -84,7 +82,7 @@ namespace ntbs_service.Models.Validations
         public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
 
         #endregion
-        
+
         #region Travel History
         public const string TravelOrVisitTotalNumberOfCountriesRequired = "Please supply total number of countries";
         public const string TotalNumberOfCountriesVisitedFromGreaterThanInputNumber = "Number of countries entered exceeds total number of countries visited from";

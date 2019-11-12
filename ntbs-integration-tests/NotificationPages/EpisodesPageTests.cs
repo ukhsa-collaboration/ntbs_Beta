@@ -22,10 +22,10 @@ namespace ntbs_integration_tests.NotificationPages
             return new List<Notification>()
             {
                 new Notification()
-                { 
-                    NotificationId = Utilities.NOTIFIED_WITH_TBSERVICE, 
-                    NotificationStatus = NotificationStatus.Notified, 
-                    Episode = new Episode() 
+                {
+                    NotificationId = Utilities.NOTIFIED_WITH_TBSERVICE,
+                    NotificationStatus = NotificationStatus.Notified,
+                    Episode = new Episode()
                     {
                         TBServiceCode = "A code",
                         TBService = new TBService() { Name = "A name" }
@@ -84,7 +84,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            var expectedMessage = ValidationMessages.TodayOrEarlier;
+            var expectedMessage = ValidationMessages.DateValidityRangeStart("Notification date", "01/01/2010");
             resultDocument.AssertErrorMessage("notification-date", expectedMessage);
         }
 
@@ -160,7 +160,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.TodayOrEarlier);
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.DateValidityRangeStart("Notification date", "01/01/2010"));
         }
 
         [Fact]
