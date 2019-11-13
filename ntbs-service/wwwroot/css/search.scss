@@ -23,3 +23,60 @@
     margin-left: auto;
     margin-bottom: 0;
 }
+
+.nhs-form-group--search {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.nhs-form-group--search-date {
+    display: inline-block;
+
+    @media(min-width: 450px) {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.search-label {
+    width: 160px;
+}
+
+.search-label--long {
+    width: 180px;
+}
+
+.search-input {
+    margin-right: 20px;
+}
+
+.search-date-input {
+    display: flex;
+}
+
+.search-date-input-label {
+    margin-right: 15px;
+}
+
+.search-dropdown {
+    width: 350px;
+    margin: 15px 0;
+    white-space: pre-wrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+
+    option {
+        width: 350px !important;
+        white-space: pre-wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.search-sex-radios {
+    display: block;
+
+    @media(min-width: 600px) {
+        display: flex;
+    }
+}
