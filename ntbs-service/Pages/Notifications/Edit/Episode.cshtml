@@ -78,7 +78,10 @@
                 else
                 {
                     <input asp-for="Episode.TBServiceCode" class="hidden"/>
-                    <p class="no-bottom-margin"> Notifying TB Service: @Model.Notification.Episode?.TBService?.Name </p>
+                    <p class="no-bottom-margin"> Notifying TB Service </p>
+                    <select nhs-select-type="Standard" disabled>
+                            <option value="@Model.Notification.Episode?.TBService?.Code" selected="selected"> @Model.Notification.Episode?.TBService?.Name </option>
+                    </select>
                 }
                 </nhs-form-group>
             
