@@ -28,6 +28,7 @@ namespace ntbs_service
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred migrating the DB.");
+                    throw ex;
                 }
 
                 try
@@ -39,6 +40,7 @@ namespace ntbs_service
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred migrating the Audit DB.");
+                    throw ex;
                 }
             }
 
