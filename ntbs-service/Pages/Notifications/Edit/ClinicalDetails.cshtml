@@ -2,12 +2,11 @@
 @model ntbs_service.Pages.Notifications.Edit.ClinicalDetailsModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using ntbs_service.Models
-@using ntbs_service.Models.Enums
 
 @{
     Layout = "../../Shared/_NotificationLayout.cshtml";
-    ViewData["Title"] = "Notification - Clinical Details";
-    var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
+ViewData["Title"] = "Notification - Clinical Details";
+var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
 }
 
 <!-- TODO: Split this into multiple partial pages for readability -->
@@ -160,7 +159,7 @@
             </nhs-fieldset-legend>
             <nhs-checkboxes>
                 <nhs-checkboxes-item>
-                    <input nhs-input-type="Checkboxes" asp-for="ClinicalDetails.NoSampleTaken"/>
+                    <input nhs-input-type="Checkboxes" asp-for="ClinicalDetails.NoSampleTaken" />
                     <label nhs-label-type="Checkboxes" asp-for="ClinicalDetails.NoSampleTaken">No sample taken</label>
                 </nhs-checkboxes-item>
             </nhs-checkboxes>
@@ -223,12 +222,15 @@
 
     <date-comparison inline-template>
         <div>
-            @* TODO: Implement this as non-javascript friendly *@
-            <ul class="text-warning" id="date-warnings">
-                <li v-for="warning in dateWarnings" v-if="warning">
-                    <h4>{{ warning.message }}</h4>
-                </li>
-            </ul>
+            <div v-if="filteredDateWarnings.length > 0">
+                <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning">
+                    <div class="warning-container">
+                        <p v-for="warning in filteredDateWarnings">
+                            <strong>{{ warning.message }}</strong>
+                        </p>
+                    </div>
+                </govuk-warning-text>
+            </div>
 
             <nhs-form-group nhs-form-group-type="Standard">
                 <nhs-fieldset>
@@ -246,11 +248,11 @@
                                 var hasSymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
                                 var symptomGroupState = hasSymptomError ? Error : Standard;
                             }
-                            <validate-date ref="date0" name="Symptom Onset Date" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
+                            <validate-date ref="date0" name="@Html.DisplayNameFor(model => model.ClinicalDetails.SymptomStartDate)" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
                                 <nhs-form-group nhs-form-group-type=@symptomGroupState>
                                     <nhs-fieldset aria-describedby="symptom-error" role="group">
                                         <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
-                                            Symptom onset date
+                                            @Html.DisplayNameFor(model => model.ClinicalDetails.SymptomStartDate)
                                         </nhs-fieldset-legend>
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate"
                                               has-error="@hasSymptomError" id="symptom-error"></span>
@@ -259,21 +261,21 @@
                                                 <nhs-form-group nhs-form-group-type="Standard">
                                                     <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Day">Day</label>
                                                     <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                           is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Day"/>
+                                                           is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Day" />
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
                                                 <nhs-form-group nhs-form-group-type="Standard">
                                                     <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Month">Month</label>
                                                     <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                           is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Month"/>
+                                                           is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Month" />
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
                                                 <nhs-form-group nhs-form-group-type="Standard">
                                                     <label nhs-label-type="Date" asp-for="FormattedSymptomDate.Year">Year</label>
                                                     <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                           is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Year"/>
+                                                           is-error-input=@hasSymptomError asp-for="FormattedSymptomDate.Year" />
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                         </nhs-date-input>
@@ -292,14 +294,16 @@
             </nhs-form-group>
             <br />
 
-            <validate-date ref="date1" name="Presentation To Any Health Service Date" model="ClinicalDetails" property="FirstPresentationDate" rank="1" v-model="dates[1]" inline-template>
+            <validate-date ref="date1" name="@Html.DisplayNameFor(model => model.ClinicalDetails.FirstPresentationDate)" model="ClinicalDetails" property="FirstPresentationDate" rank="1" v-model="dates[1]" inline-template>
                 @{
                     var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.FirstPresentationDate");
                     var presentationAnyHealthServiceGroupState = hasPresentationAnyHealthServiceError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@presentationAnyHealthServiceGroupState>
                     <nhs-fieldset aria-describedby="first-presentation-error" role="group">
-                        <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to any health service</nhs-fieldset-legend>
+                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                            @Html.DisplayNameFor(model => model.ClinicalDetails.FirstPresentationDate)
+                        </nhs-fieldset-legend>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.FirstPresentationDate"
                               has-error="@hasPresentationAnyHealthServiceError" id="first-presentation-error"></span>
                         <nhs-date-input id="presentation-to-any-health-service">
@@ -330,14 +334,16 @@
             </validate-date>
             <br />
 
-            <validate-date ref="date2" name="Presentation To TB Service Date" model="ClinicalDetails" property="TBServicePresentationDate" rank="2" v-model="dates[2]" inline-template>
+            <validate-date ref="date2" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)" model="ClinicalDetails" property="TBServicePresentationDate" rank="2" v-model="dates[2]" inline-template>
                 @{
                     var hasPresentationTbServiceError = !Model.IsValid("ClinicalDetails.TBServicePresentationDate");
                     var presentationTbServiceGroupState = hasPresentationTbServiceError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type=@presentationTbServiceGroupState>
                     <nhs-fieldset aria-describedby="tb-service-presentation-error" role="group">
-                        <nhs-fieldset-legend nhs-legend-size="Standard">Presentation to TB service</nhs-fieldset-legend>
+                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                            @Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)
+                        </nhs-fieldset-legend>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TBServicePresentationDate"
                               has-error="@hasPresentationTbServiceError" id="tb-service-presentation-error"></span>
                         <nhs-date-input id="presentation-to-TB-service">
@@ -368,7 +374,7 @@
             </validate-date>
             <br />
 
-            <validate-date ref="date3" name="Diagnosis Date" model="ClinicalDetails" property="DiagnosisDate" rank="3" v-model="dates[3]" inline-template>
+            <validate-date ref="date3" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate)" model="ClinicalDetails" property="DiagnosisDate" rank="3" v-model="dates[3]" inline-template>
                 @{
                     var hasDiagnosisError = !Model.IsValid("ClinicalDetails.DiagnosisDate");
                     var diagnosisGroupState = hasDiagnosisError ? Error : Standard;
@@ -376,7 +382,7 @@
                 <nhs-form-group nhs-form-group-type=@diagnosisGroupState>
                     <nhs-fieldset aria-describedby="diagnosis-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
-                            Diagnosis Date (required)
+                            @Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate) (required)
                         </nhs-fieldset-legend>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DiagnosisDate"
                               has-error="@hasDiagnosisError" id="diagnosis-error"></span>
@@ -423,11 +429,11 @@
                                 var hasTreatmentError = !Model.IsValid("ClinicalDetails.TreatmentStartDate");
                                 var treatmentGroupState = hasTreatmentError ? Error : Standard;
                             }
-                            <validate-date ref="date4" name="Treatment Start Date" model="ClinicalDetails" property="TreatmentStartDate" rank="4" v-model="dates[4]" inline-template>
+                            <validate-date ref="date4" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TreatmentStartDate)" model="ClinicalDetails" property="TreatmentStartDate" rank="4" v-model="dates[4]" inline-template>
                                 <nhs-form-group nhs-form-group-type=@treatmentGroupState>
                                     <nhs-fieldset aria-describedby="treatment-error" role="group">
                                         <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
-                                            Treatment start date
+                                            @Html.DisplayNameFor(m => m.ClinicalDetails.TreatmentStartDate)
                                         </nhs-fieldset-legend>
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TreatmentStartDate"
                                               has-error="@hasTreatmentError" id="treatment-error"></span>
@@ -436,21 +442,21 @@
                                                 <nhs-form-group nhs-form-group-type="Standard">
                                                     <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Day">Day</label>
                                                     <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                           is-error-input=@hasTreatmentError asp-for="FormattedTreatmentDate.Day"/>
+                                                           is-error-input=@hasTreatmentError asp-for="FormattedTreatmentDate.Day" />
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
                                                 <nhs-form-group nhs-form-group-type="Standard">
                                                     <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Month">Month</label>
                                                     <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                           is-error-input=@hasTreatmentError asp-for="FormattedTreatmentDate.Month"/>
+                                                           is-error-input=@hasTreatmentError asp-for="FormattedTreatmentDate.Month" />
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                             <nhs-date-input-item>
                                                 <nhs-form-group nhs-form-group-type="Standard">
                                                     <label nhs-label-type="Date" asp-for="FormattedTreatmentDate.Year">Year</label>
                                                     <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                           is-error-input=@hasTreatmentError asp-for="FormattedTreatmentDate.Year"/>
+                                                           is-error-input=@hasTreatmentError asp-for="FormattedTreatmentDate.Year" />
                                                 </nhs-form-group>
                                             </nhs-date-input-item>
                                         </nhs-date-input>
@@ -484,10 +490,12 @@
                                 var hasDeathDateError = !Model.IsValid("ClinicalDetails.DeathDate");
                                 var deathDateGroupState = hasDeathDateError ? Error : Standard;
                             }
-                            <validate-date ref="date5" name="Death Date" model="ClinicalDetails" property="DeathDate" rank="5" v-model="dates[5]" inline-template>
+                            <validate-date ref="date5" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" rank="5" v-model="dates[5]" inline-template>
                                 <nhs-form-group nhs-form-group-type=@deathDateGroupState>
                                     <nhs-fieldset aria-describedby="postmortem-error" role="group">
-                                        <nhs-fieldset-legend nhs-legend-size="Standard">Date of Death</nhs-fieldset-legend>
+                                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                                            @Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)
+                                        </nhs-fieldset-legend>
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DeathDate"
                                               has-error="@hasDeathDateError" id="postmortem-error"></span>
                                         <nhs-date-input id="postmortem">
@@ -602,7 +610,7 @@
             <nhs-form-group nhs-form-group-type="@mdrGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
                 <nhs-fieldset>
                     <nhs-fieldset-legend nhs-legend-size="Standard">RR/MDR/XDR Treatment Planned?</nhs-fieldset-legend>
-                    <span ref="errorField[1]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment" 
+                    <span ref="errorField[1]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"
                           has-error="@hasMdrError" id="mdr-error"></span>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">

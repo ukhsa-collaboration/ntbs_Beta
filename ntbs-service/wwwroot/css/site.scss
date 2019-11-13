@@ -124,8 +124,24 @@ body {
 }
 
 /* Need to pin this to 38px to make icon circular */
-.govuk-warning-text__icon {
-    width: 38px;
+.govuk-warning-text {
+    color: orangered;
+
+    .govuk-warning-text__icon {
+        width: 38px;
+        border: 3px solid orangered;
+        background: orangered;
+    }
+
+    .warning-container {
+        p {
+            margin-bottom: 12px;
+        }
+
+        p:last-child {
+            margin-bottom: 0px;
+        }
+    }
 }
 
 .flex-container {
