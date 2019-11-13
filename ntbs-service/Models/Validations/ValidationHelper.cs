@@ -86,7 +86,7 @@ namespace ntbs_service.Models.Validations
         #region Travel History
         public const string TravelOrVisitTotalNumberOfCountriesRequired = "Please supply total number of countries";
         public const string TotalNumberOfCountriesVisitedFromGreaterThanInputNumber = "Number of countries entered exceeds total number of countries visited from";
-        public const string TotalNumberOfCountriesTravelledToGreaterThanInputNumber = "Number of countries entered exceeds total number of countries visited travelled to";
+        public const string TotalNumberOfCountriesTravelledToGreaterThanInputNumber = "Number of countries entered exceeds total number of countries travelled to";
         public const string TravelMostRecentCountryRequired = "Please supply most recent country visited";
         public const string VisitMostRecentCountryRequired = "Please supply most recent country visited from";
         public const string TravelTotalDurationWithinLimit = "Total duration of travel must not exceed 24 months";
