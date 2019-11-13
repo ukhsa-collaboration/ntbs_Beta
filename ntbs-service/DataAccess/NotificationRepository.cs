@@ -137,8 +137,8 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Where(n => n.NotificationStatus != NotificationStatus.Deleted)
-                .Include(n => n.PatientDetails)
-                    .ThenInclude(p => p.Sex)
+                    .Include(n => n.PatientDetails)
+                        .ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails)
                     .ThenInclude(p => p.Country)
                 .Include(n => n.PatientDetails)
@@ -148,7 +148,10 @@ namespace ntbs_service.DataAccess
                                 .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.Episode)
                     .ThenInclude(p => p.TBService)
-                        .ThenInclude(p => p.PHEC);
+                        .ThenInclude(p => p.PHEC)
+                .Include(n => n.Episode)
+                    .ThenInclude(p => p.CaseManager)
+                        .ThenInclude(p => p.CaseManagerTbServices);
         }
     }
 }

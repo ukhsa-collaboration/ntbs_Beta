@@ -35,6 +35,8 @@ namespace ntbs_service.Models
         public virtual DbSet<PHEC> PHEC { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
         public virtual DbSet<Occupation> Occupation { get; set; }
+        public virtual DbSet<CaseManager> CaseManager { get; set; }
+        public virtual DbSet<CaseManagerTbService> CaseManagerTbService { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -90,6 +92,7 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<TBService>(entity =>
             {
+                entity.Property(e => e.Code).HasMaxLength(16);
                 entity.HasKey(e => e.Code);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 /*
@@ -154,7 +157,15 @@ namespace ntbs_service.Models
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 
-                entity.OwnsOne(e => e.Episode).ToTable("Episode");
+                entity.OwnsOne(e => e.Episode, episode =>
+                {
+                    episode.Property(e => e.CaseManagerEmail)
+                        .HasMaxLength(64);
+
+                    episode.HasOne(e => e.CaseManager);
+
+                    episode.ToTable("Episode");
+                });
 
                 entity.OwnsOne(e => e.PatientDetails, x =>
                 {
@@ -334,6 +345,31 @@ namespace ntbs_service.Models
             modelBuilder.Entity<Occupation>().HasData(
                 SeedData.Occupations.GetOccupations()
             );
+
+            modelBuilder.Entity<CaseManager>(entity =>
+            {
+                entity.Property(e => e.Email).HasMaxLength(64);
+                entity.Property(e => e.FamilyName).HasMaxLength(32);
+                entity.Property(e => e.GivenName).HasMaxLength(32);
+
+                entity.HasKey(e => e.Email);
+            });
+
+            modelBuilder.Entity<CaseManagerTbService>(entity =>
+            {
+                entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
+                entity.Property(e => e.TbServiceCode).HasMaxLength(16);
+
+                entity.HasKey(e => new { e.CaseManagerEmail, e.TbServiceCode });
+
+                entity.HasOne(e => e.CaseManager)
+                    .WithMany(caseManager => caseManager.CaseManagerTbServices)
+                    .HasForeignKey(e => e.CaseManagerEmail);
+
+                entity.HasOne(e => e.TbService)
+                    .WithMany(tbService => tbService.CaseManagerTbServices)
+                    .HasForeignKey(e => e.TbServiceCode);
+            });
         }
 
         private List<object> GetTBServicesList()

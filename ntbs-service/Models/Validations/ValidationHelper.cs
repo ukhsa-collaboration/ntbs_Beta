@@ -80,6 +80,7 @@ namespace ntbs_service.Models.Validations
         public const string HospitalMustBelongToSelectedTbSerice = "Hospital must belong to selected TB Service";
         public const string NotificationDateIsRequired = "Notification Date is a mandatory field";
         public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
+        public const string CaseManagerMustBeAllowedForSelectedTbService = "Case Manager must be allowed for selected TB Service";
 
         #endregion
 

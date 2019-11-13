@@ -1,0 +1,24 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ntbs_service.Models
+{
+    public class CaseManager
+    {
+        public string Email { get; set; }
+        public string GivenName { get; set; }
+        public string FamilyName { get; set; }
+
+        public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
+
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                return GivenName + " " + FamilyName;
+            }
+        }
+    }
+}

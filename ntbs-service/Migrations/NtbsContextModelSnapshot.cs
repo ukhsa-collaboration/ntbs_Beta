@@ -19,6 +19,38 @@ namespace ntbs_service.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ntbs_service.Models.CaseManager", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64);
+
+                    b.Property<string>("FamilyName")
+                        .HasMaxLength(32);
+
+                    b.Property<string>("GivenName")
+                        .HasMaxLength(32);
+
+                    b.HasKey("Email");
+
+                    b.ToTable("CaseManager");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
+                {
+                    b.Property<string>("CaseManagerEmail")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("TbServiceCode")
+                        .HasMaxLength(16);
+
+                    b.HasKey("CaseManagerEmail", "TbServiceCode");
+
+                    b.HasIndex("TbServiceCode");
+
+                    b.ToTable("CaseManagerTbService");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Country", b =>
                 {
                     b.Property<int>("CountryId")
@@ -8745,7 +8777,8 @@ namespace ntbs_service.Migrations
             modelBuilder.Entity("ntbs_service.Models.TBService", b =>
                 {
                     b.Property<string>("Code")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(16);
 
                     b.Property<string>("Name")
                         .HasMaxLength(200);
@@ -9610,7 +9643,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             Code = "TBS0141",
-                            Name = "Northern Lincolnshire & Goole NHS Foundation Trust ",
+                            Name = "Northern Lincolnshire & Goole NHS Foundation Trust",
                             PHECCode = "E45000010"
                         },
                         new
@@ -11222,6 +11255,19 @@ namespace ntbs_service.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
+                {
+                    b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                        .WithMany("CaseManagerTbServices")
+                        .HasForeignKey("CaseManagerEmail")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.TBService", "TbService")
+                        .WithMany("CaseManagerTbServices")
+                        .HasForeignKey("TbServiceCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Hospital", b =>
                 {
                     b.HasOne("ntbs_service.Models.TBService", "TBService")
@@ -11244,7 +11290,7 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Notification", b =>
                 {
-                    b.HasOne("ntbs_service.Models.NotificationGroup")
+                    b.HasOne("ntbs_service.Models.NotificationGroup", "Group")
                         .WithMany("Notifications")
                         .HasForeignKey("GroupId");
 
@@ -11395,8 +11441,8 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<string>("CaseManager")
-                                .HasMaxLength(200);
+                            b1.Property<string>("CaseManagerEmail")
+                                .HasMaxLength(64);
 
                             b1.Property<string>("Consultant")
                                 .HasMaxLength(200);
@@ -11407,11 +11453,17 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
+                            b1.HasIndex("CaseManagerEmail");
+
                             b1.HasIndex("HospitalId");
 
                             b1.HasIndex("TBServiceCode");
 
                             b1.ToTable("Episode");
+
+                            b1.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                                .WithMany()
+                                .HasForeignKey("CaseManagerEmail");
 
                             b1.HasOne("ntbs_service.Models.Hospital", "Hospital")
                                 .WithMany()
