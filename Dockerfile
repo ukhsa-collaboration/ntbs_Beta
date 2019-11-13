@@ -10,7 +10,8 @@ COPY ntbs-service/ntbs-service.csproj ./ntbs-service/
 RUN dotnet restore ntbs-service/ntbs-service.csproj
 
 # copy and build app
-COPY . ./
+COPY ntbs-service/ ./ntbs-service/
+COPY EFAuditer/ ./EFAuditer/
 RUN dotnet publish ntbs-service/*.csproj -c Release -o out
 
 FROM node AS build-frontend
@@ -22,7 +23,9 @@ COPY ntbs-service/package-lock.json .
 RUN npm install
 
 # copy everything else and build frontend app
-COPY ./ntbs-service/ .
+COPY ./ntbs-service/wwwroot ./wwwroot
+COPY ./ntbs-service/tsconfig.json ./
+COPY ./ntbs-service/webpack* ./
 RUN npm run build:prod
 
 

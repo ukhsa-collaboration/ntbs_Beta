@@ -43,9 +43,8 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-            var setupDummyAuth = Env.IsDevelopment() || Env.IsEnvironment("Test");
-            IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
+            var adfsConfig = Configuration.GetSection("AdfsOptions");
+            var setupDummyAuth = adfsConfig.GetValue<bool>("UseDummyAuth", false);
             var authSetup = services.AddAuthentication(sharedOptions =>
                     {
                         sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -57,7 +56,7 @@ namespace ntbs_service
                         options.Wtrealm = adfsConfig["Wtrealm"];
                     })
                     .AddCookie(options =>
-                    {   
+                    {
                         options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
                     });
 
@@ -66,14 +65,15 @@ namespace ntbs_service
                 authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
             }
 
-            services.AddMvc(options => 
+            services.AddMvc(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
                                 .RequireAuthenticatedUser()
                                 .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            }).AddRazorPagesOptions(options => {
+            }).AddRazorPagesOptions(options =>
+            {
                 options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
                 options.Conventions.AllowAnonymousToPage("/Logout");
             })

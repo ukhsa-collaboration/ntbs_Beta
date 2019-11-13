@@ -4,48 +4,52 @@ pipeline {
   }
   agent { label 'linux' }
   stages {
-    stage('run unit tests') {
-      steps {
-        script {
-          docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2').inside {
-            sh(script: '''
-              # Workaround from https://stackoverflow.com/a/57212491/2363767
-              export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
-              cd ntbs-service-unit-tests
-              echo "Running service unit tests"
-              dotnet test
-              cd ../EFAuditer-tests
-              echo "Running EFAuditer unit tests"
-              dotnet test
-            ''')
+    stage('run automated tests') {
+      parallel {
+        stage('run unit tests') {
+          steps {
+            script {
+              docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2').inside {
+                sh(script: '''
+                  # Workaround from https://stackoverflow.com/a/57212491/2363767
+                  export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
+                  cd ntbs-service-unit-tests
+                  echo "Running service unit tests"
+                  dotnet test
+                  cd ../EFAuditer-tests
+                  echo "Running EFAuditer unit tests"
+                  dotnet test
+                ''')
+              }
+            }
           }
         }
-      }
-    }
-    stage('run integration tests') {
-      steps {
-        script {
-          docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2').inside {
-            sh(script: '''
-              # Workaround from https://stackoverflow.com/a/57212491/2363767
-              export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
-              cd ntbs-integration-tests
-              echo "Running integration tests"
-              dotnet test
-            ''')
+        stage('run integration tests') {
+          steps {
+            script {
+              docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2').inside {
+                sh(script: '''
+                  # Workaround from https://stackoverflow.com/a/57212491/2363767
+                  export DOTNET_CLI_HOME="/tmp/DOTNET_CLI_HOME"
+                  cd ntbs-integration-tests
+                  echo "Running integration tests"
+                  dotnet test
+                ''')
+              }
+            }
           }
         }
-      }
-    }
-    stage('run ui tests') {
-      steps {
-        script {
-          docker.build("ntbs-service-ui-tests:${NTBS_BUILD}",  "-f Dockerfile-uitests --build-arg CACHEBUST=${NTBS_BUILD} .").inside {
-            sh(script: '''
-              # We would like to run the actual tests in here, but an issue with jenkins means we do that within the docker build
-              # See Dockerfile-uitests for details.
-              echo "ui tests complete"
-            ''')
+        stage('run ui tests') {
+          steps {
+            script {
+              docker.build("ntbs-service-ui-tests:${NTBS_BUILD}",  "-f Dockerfile-uitests --build-arg CACHEBUST=${NTBS_BUILD} .").inside {
+                sh(script: '''
+                  # We would like to run the actual tests in here, but an issue with jenkins means we do that within the docker build
+                  # See Dockerfile-uitests for details.
+                  echo "ui tests complete"
+                ''')
+              }
+            }
           }
         }
       }
