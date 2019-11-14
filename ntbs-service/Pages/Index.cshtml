@@ -20,7 +20,7 @@
                 @Html.DisplayNameFor(model => model.DraftNotifications[0].TBServiceName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManager)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManagerName)
             </th>
         </tr>
     </thead>
@@ -39,7 +39,7 @@
                 @Html.DisplayFor(_ => item.TBServiceName)
             </td>
             <td>
-                @Html.DisplayFor(_ => item.Episode.CaseManager)
+                @Html.DisplayFor(_ => item.Episode.CaseManagerName)
             </td>
         </tr>
 }
@@ -60,7 +60,7 @@
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].TBServiceName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManager)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManagerName)
             </th>
         </tr>
     </thead>
@@ -79,7 +79,7 @@
                 @Html.DisplayFor(modelItem => item.TBServiceName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Episode.CaseManager)
+                @Html.DisplayFor(modelItem => item.Episode.CaseManagerName)
             </td>
         </tr>
 }

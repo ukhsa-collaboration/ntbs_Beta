@@ -14,7 +14,9 @@ namespace ntbs_service.DataAccess
         Task<Country> GetCountryByIdAsync(int id);
         Task<IList<TBService>> GetAllTbServicesAsync();
         Task<TBService> GetTbServiceByCodeAsync(string code);
+        Task<CaseManager> GetCaseManagerByEmailAsync(string email);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
+        Task<IList<CaseManager>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
         Task<IList<Sex>> GetAllSexesAsync();
         Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync();
@@ -64,10 +66,28 @@ namespace ntbs_service.DataAccess
             return await _context.TbService.SingleOrDefaultAsync(t => t.Code == code);
         }
 
+        public async Task<CaseManager> GetCaseManagerByEmailAsync(string email)
+        {
+            return await _context.CaseManager
+                .Include(c => c.CaseManagerTbServices)
+                .ThenInclude(ct => ct.TbService)
+                .SingleOrDefaultAsync(c => c.Email == email);
+        }
+
         public async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
             return await _context.Hospital
                 .Where(h => tbServices.Contains(h.TBServiceCode))
+                .ToListAsync();
+        }
+
+        public async Task<IList<CaseManager>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes)
+        {
+            return await _context.TbService
+                .Where(t => tbServiceCodes.Contains(t.Code))
+                .SelectMany(t => t.CaseManagerTbServices.Select(join => join.CaseManager))
+                .Distinct()
+                .OrderBy(c => c.FamilyName)
                 .ToListAsync();
         }
 
