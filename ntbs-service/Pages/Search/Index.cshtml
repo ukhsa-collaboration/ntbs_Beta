@@ -28,8 +28,8 @@
                     <nhs-form-group nhs-form-group-type=@idFilterGroupState classes="nhs-form-group--search">
                         <span nhs-span-type="ErrorMessage" id="id-error"
                                 asp-validation-for="SearchParameters.IdFilter" has-error="@idFilterError"></span>
-                        <label nhs-label-type="Standard" classes="search-label--standard"> ID number </label>
-                        <input is-error-input=@idFilterError nhs-input-type="Standard"
+                        <label nhs-label-type="Standard" classes="search-label--standard" for="id-filter-input"> ID number </label>
+                        <input is-error-input=@idFilterError nhs-input-type="Standard" id="id-filter-input"
                             asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10 search-input" aria-describedby="id-types-hint" />
                         <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
                             Search by NTBS, ETS, LTBR or NHS number
@@ -43,8 +43,8 @@
                     <nhs-form-group nhs-form-group-type=@familyNameGroupState classes="nhs-form-group--search">
                         <span nhs-span-type="ErrorMessage" id="family-name-error"
                             asp-validation-for="SearchParameters.FamilyName" has-error="@familyNameError"></span>
-                        <label nhs-label-type="Standard" classes="search-label--standard"> Family Name</label>
-                        <input is-error-input=@familyNameError nhs-input-type="Standard"
+                        <label nhs-label-type="Standard" classes="search-label--standard" for="family-name-input"> Family Name</label>
+                        <input is-error-input=@familyNameError nhs-input-type="Standard" id="family-name-input"
                             asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10 search-input" aria-describedby="two-character-family-name-hint" />
                         <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint">
                             Enter at least two characters
@@ -58,7 +58,7 @@
                     <nhs-form-group nhs-form-group-type=@dobGroupState classes="nhs-form-group--search-date">
                         <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
                             asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
-                        <label nhs-label-type="Standard" classes="search-label--standard"> Date of birth </label>
+                        <label nhs-label-type="Standard" classes="search-label--standard" for="dob"> Date of birth </label>
                         <nhs-date-input id="dob" classes="date-input--search">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
@@ -94,8 +94,8 @@
                     <nhs-form-group nhs-form-group-type=@postcodeGroupState classes="nhs-form-group--search">
                         <span nhs-span-type="ErrorMessage" id="postcode-error"
                             asp-validation-for="SearchParameters.Postcode" has-error="@postcodeError"></span>
-                        <label nhs-label-type="Standard" classes="search-label--standard"> Postcode </label>
-                        <input is-error-input=@postcodeError nhs-input-type="Standard"
+                        <label nhs-label-type="Standard" classes="search-label--standard" for="postcode-input"> Postcode </label>
+                        <input is-error-input=@postcodeError nhs-input-type="Standard" id="postcode-input"
                                     asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10 search-input"
                                     aria-describedby="two-character-postcode-hint" />
                         <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint">
@@ -113,8 +113,8 @@
                 <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--search-date">
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error"
                         asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
-                        <label nhs-label-type="Standard" classes="search-label--long"> Notification Date </label>
-                        <nhs-date-input id="dob" classes="date-input--search">
+                        <label nhs-label-type="Standard" classes="search-label--long" for="notification-date"> Notification Date </label>
+                        <nhs-date-input id="notification-date" classes="date-input--search">
                             <nhs-date-input-item>
                                 <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
                                     <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Day"  classes="search-date-input-label">Day</label>
@@ -149,8 +149,8 @@
                 <nhs-form-group nhs-form-group-type=@givenNameGroupState classes="nhs-form-group--search">
                     <span nhs-span-type="ErrorMessage" id="given-name-error"
                         asp-validation-for="SearchParameters.GivenName" has-error="@givenNameError"></span>
-                    <label nhs-label-type="Standard" classes="search-label--long"> Given Name</label>
-                    <input is-error-input=@givenNameError nhs-input-type="Standard"
+                    <label nhs-label-type="Standard" classes="search-label--long" for="given-name-input"> Given Name</label>
+                    <input is-error-input=@givenNameError nhs-input-type="Standard" id="given-name-input"
                             asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10 search-input" 
                             aria-describedby="two-character-given-name-hint" />
                     <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint">
@@ -159,12 +159,12 @@
                 </nhs-form-group>
 
                 <div class="search-sex-radios">
-                    <label nhs-label-type="Standard" classes="search-label--long"> Sex </label>
-                    <nhs-radios nhs-radios-type="Standard" classes="search-sex-radios">
+                    <label nhs-label-type="Standard" classes="search-label--long" for="sex-radios"> Sex </label>
+                    <nhs-radios nhs-radios-type="Standard" classes="search-sex-radios" id="sex-radios">
                         @foreach (var sex in Model.Sexes)
                         {
                             <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" id="sexId" />
+                                <input nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId" />
                                 <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-@sex.SexId">@sex.Label</label>
                             </nhs-radios-item>
                         }
@@ -183,16 +183,16 @@
                 </div>
 
                 <div class="nhs-form-group--search">
-                    <label nhs-label-type="Standard" classes="search-label--long"> TB service </label>
-                    <select nhs-select-type="Standard" asp-for="SearchParameters.TBServiceCode"
+                    <label nhs-label-type="Standard" classes="search-label--long" for="tb-service-dropdown"> TB service </label>
+                    <select nhs-select-type="Standard" asp-for="SearchParameters.TBServiceCode" id="tb-service-dropdown"
                                 asp-items="Model.TbServices" classes="search-dropdown">
                         <option value="" selected>Select TB Service</option>
                     </select>
                 </div>
 
                 <div class="nhs-form-group--search">
-                    <label nhs-label-type="Standard" classes="search-label--long"> Country of birth </label>
-                    <select nhs-select-type="Standard" asp-for="SearchParameters.CountryId"
+                    <label nhs-label-type="Standard" classes="search-label--long" for="country-dropdown"> Country of birth </label>
+                    <select nhs-select-type="Standard" asp-for="SearchParameters.CountryId" id="country-dropdown"
                                 asp-items="Model.Countries"  classes="search-dropdown">
                         <option value="" selected>Select country</option>
                     </select>
