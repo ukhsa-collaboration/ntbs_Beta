@@ -137,8 +137,8 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Where(n => n.NotificationStatus != NotificationStatus.Deleted)
-                    .Include(n => n.PatientDetails)
-                        .ThenInclude(p => p.Sex)
+                .Include(n => n.PatientDetails)
+                    .ThenInclude(p => p.Sex)
                 .Include(n => n.PatientDetails)
                     .ThenInclude(p => p.Country)
                 .Include(n => n.PatientDetails)

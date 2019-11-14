@@ -26,10 +26,10 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(64);
 
                     b.Property<string>("FamilyName")
-                        .HasMaxLength(32);
+                        .HasMaxLength(64);
 
                     b.Property<string>("GivenName")
-                        .HasMaxLength(32);
+                        .HasMaxLength(64);
 
                     b.HasKey("Email");
 

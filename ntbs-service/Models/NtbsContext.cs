@@ -349,8 +349,8 @@ namespace ntbs_service.Models
             modelBuilder.Entity<CaseManager>(entity =>
             {
                 entity.Property(e => e.Email).HasMaxLength(64);
-                entity.Property(e => e.FamilyName).HasMaxLength(32);
-                entity.Property(e => e.GivenName).HasMaxLength(32);
+                entity.Property(e => e.FamilyName).HasMaxLength(64);
+                entity.Property(e => e.GivenName).HasMaxLength(64);
 
                 entity.HasKey(e => e.Email);
             });

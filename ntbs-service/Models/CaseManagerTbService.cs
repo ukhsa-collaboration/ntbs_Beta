@@ -3,9 +3,9 @@
     public class CaseManagerTbService
     {
         public string TbServiceCode { get; set; }
-        public TBService TbService { get; set; }
+        public virtual TBService TbService { get; set; }
 
         public string CaseManagerEmail { get; set; }
-        public CaseManager CaseManager { get; set; }
+        public virtual CaseManager CaseManager { get; set; }
     }
 }

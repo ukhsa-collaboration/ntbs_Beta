@@ -306,15 +306,31 @@ namespace ntbs_service.Services
 
         public async Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user)
         {
+            var defaultTbService = await _userService.GetDefaultTbService(user);
+            var caseManagerEmail = await GetDefaultCaseManagerEmail(user, defaultTbService?.Code);
+
             var notification = new Notification
             {
                 CreationDate = DateTime.Now,
-                // We need to set a default value for TBService for users that do not have full permissions
-                Episode = { TBService = await _userService.GetDefaultTbService(user) }
+                Episode =
+                {
+                    TBService = defaultTbService,
+                    CaseManagerEmail = caseManagerEmail
+                }
             };
 
             await _notificationRepository.AddNotificationAsync(notification);
             return notification;
+        }
+
+        private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
+        {
+            var caseManagersForTbService =
+                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
+            var userEmail = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var upperUserEmail = userEmail?.ToUpperInvariant();
+
+            return caseManagersForTbService.Any(c => c.Email.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
         }
 
         private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)

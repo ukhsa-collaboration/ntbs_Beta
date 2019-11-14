@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ntbs_service.Models
 {
-    [NotMapped]
     public class FilteredEpisodePageSelectLists
     {
         public IEnumerable<ListEntry> Hospitals { get; set; }
