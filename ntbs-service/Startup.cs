@@ -19,6 +19,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Middleware;
 using ntbs_service.Models;
 using ntbs_service.Services;
+using Serilog;
 
 namespace ntbs_service
 {
@@ -137,9 +138,15 @@ namespace ntbs_service
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging(options => // Needs to be before MVC handlers
+            {
+                options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
+            });
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseStaticFiles();
             app.UseCookiePolicy();
             if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
             {
