@@ -140,10 +140,18 @@ namespace ntbs_service
 
             app.UseStaticFiles();
 
-            app.UseSerilogRequestLogging(options => // Needs to be before MVC handlers
+            if (!Env.IsEnvironment("Test"))
             {
-                options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
-            });
+                /*
+                Making this conidtional is the result of serilog not playing nicely with WebApplicationFactory
+                used by the ui tests, see: https://github.com/serilog/serilog-aspnetcore/issues/105
+                Using env directly as check is an unsatisfying solution, but configuration values were not picked up consistently correctly here.
+                */
+                app.UseSerilogRequestLogging(options => // Needs to be before MVC handlers
+                {
+                    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
+                });
+            };
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
