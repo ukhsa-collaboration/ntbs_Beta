@@ -38,8 +38,22 @@
     }
 }
 
-.search-label {
+.date-input--search {
+    display: flex;
+    flex-direction: column;
+
+    @media(min-width: 450px) {
+        flex-direction: row;
+    }
+}
+
+.search-label--standard {
+    margin: auto 0;
     width: 160px;
+}
+
+.search-header {
+    margin-bottom: 12px;
 }
 
 .search-label--long {
@@ -52,31 +66,48 @@
 
 .search-date-input {
     display: flex;
+    margin: 5px 0;
+
+    @media(min-width: 450px) {
+        margin: 0;
+    }
 }
 
 .search-date-input-label {
-    margin-right: 15px;
+    margin: auto 15px auto 0;
 }
 
 .search-dropdown {
-    width: 350px;
+    width: 400px;
     margin: 15px 0;
-    white-space: pre-wrap;
-    text-overflow: ellipsis;
-    max-width: 100%;
-
-    option {
-        width: 350px !important;
-        white-space: pre-wrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 }
 
 .search-sex-radios {
     display: block;
+    margin: 10px 0 20px 0;
 
     @media(min-width: 600px) {
         display: flex;
+        margin: 0;
     }
+}
+
+.search-results-section {
+    background: #F0F4F5;
+    width: 100%;
+    overflow: auto;
+    padding-top: 24px;
+    padding-bottom: 48px;
+}
+
+.search-results-summary {
+    display: flex;
+}
+
+.create-notification-button--1 {
+    margin-left: auto;
+}
+
+.create-notification-button-container {
+    display: flex;
 }
