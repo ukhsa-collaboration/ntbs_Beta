@@ -4,6 +4,7 @@ import "../css/site.scss"
 import config from "./config/config-APP_TARGET";
 import Vue from "vue";
 import { initAll as govUkJsInitAll } from "govuk-frontend";
+import '../../node_modules/nhsuk-frontend/packages/components/details/details.polyfill';
 import { ValidateInput } from "./Components/ValidateInput";
 import { ValidateDate } from "./Components/ValidateDate";
 import { DateComparison } from "./Components/DateComparison";

@@ -2,16 +2,18 @@
     Layout = "./_Layout.cshtml";
 }
 
-<nhs-grid-row classes="body-and-aside-container">
-    <nhs-grid-column grid-column-width="Full">
-        @RenderBody()
-    </nhs-grid-column>
-    @if (IsSectionDefined("ActionsAside"))
-    {
-        <nhs-grid-column grid-column-width="Full" classes="actions-aside-section" >
-            <aside>
-                @RenderSection("ActionsAside")
-            </aside>
+<nhs-width-container container-width="Standard">
+    <nhs-grid-row classes="body-and-aside-container">
+        <nhs-grid-column grid-column-width="Full">
+            @RenderBody()
         </nhs-grid-column>
-    }
-</nhs-grid-row>
+        @if (IsSectionDefined("ActionsAside"))
+        {
+            <nhs-grid-column grid-column-width="Full" classes="actions-aside-section" >
+                <aside>
+                    @RenderSection("ActionsAside")
+                </aside>
+            </nhs-grid-column>
+        }
+    </nhs-grid-row>
+</nhs-width-container>
