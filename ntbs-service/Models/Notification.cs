@@ -60,6 +60,7 @@ namespace ntbs_service.Models
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public int? GroupId { get; set; }
         public virtual NotificationGroup Group { get; set; }
+        public ICollection<Alert> Alerts { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
