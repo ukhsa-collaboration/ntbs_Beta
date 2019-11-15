@@ -25,5 +25,8 @@ namespace ntbs_service.Models
         public AlertStatus AlertStatus { get; set; }
         public DateTime ClosureDate { get; set; }
         public string ClosingUserId { get; set; }
+        public string AlertReason => "";
+        public string AlertLink => "";
     }
+
 }
