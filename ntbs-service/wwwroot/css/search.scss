@@ -1,3 +1,5 @@
+@import "./breakpoints";
+
 .clear-search-button-container {
     display: flex;
 }
@@ -32,7 +34,7 @@
 .nhs-form-group--search-date {
     display: inline-block;
 
-    @media(min-width: 450px) {
+    @media(min-width: $tablet_breakpoint) {
         display: flex;
         flex-wrap: wrap;
     }
@@ -42,7 +44,7 @@
     display: flex;
     flex-direction: column;
 
-    @media(min-width: 450px) {
+    @media(min-width: $tablet_breakpoint) {
         flex-direction: row;
     }
 }
@@ -68,13 +70,18 @@
     display: flex;
     margin: 5px 0;
 
-    @media(min-width: 450px) {
+    @media(min-width: $tablet_breakpoint) {
         margin: 0;
     }
 }
 
 .search-date-input-label {
     margin: auto 15px auto 0;
+    width: 45px;
+
+    @media(min-width: $tablet_breakpoint) {
+        width: auto;
+    }
 }
 
 .search-dropdown {
@@ -86,7 +93,7 @@
     display: block;
     margin: 10px 0 20px 0;
 
-    @media(min-width: 600px) {
+    @media(min-width: $tablet_breakpoint) {
         display: flex;
         margin: 0;
     }

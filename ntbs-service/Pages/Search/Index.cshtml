@@ -201,7 +201,7 @@
             </nhs-details>
 
             <div class="submit-search-button-container">
-                <input type="submit" value="Search" class="nhsuk-button submit-search-button" id="search-button" formaction="#search-results"/>
+                <input type="submit" value="Search" class="nhsuk-button submit-search-button" id="search-button" formaction="#search-results-section"/>
             </div>
         </form>
     </div>
@@ -209,7 +209,7 @@
 </nhs-width-container>
 @if (Model.SearchParameters?.SearchParamsExist == true)
 {
-    <div class="search-results-section">
+    <div class="search-results-section" id="search-results-section">
         <nhs-width-container container-width="Standard">
             <div class="search-results-summary">
                 @{

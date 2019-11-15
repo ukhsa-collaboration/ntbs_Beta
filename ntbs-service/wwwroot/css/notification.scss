@@ -1,3 +1,5 @@
+@import "./breakpoints";
+
 .actions-aside-section {
     width: 300px;
     padding: 10px 0 0 0;
@@ -5,7 +7,7 @@
     border-top: 10px solid #1d70b8;
 
     // This is used to position the ActionsAside component to the right when the page is wide enough
-    @media(min-width: 1480px) {
+    @media(min-width: $max_content_width_breakpoint) {
         width: 200px;
         top: 0px;
         right: -220px;
