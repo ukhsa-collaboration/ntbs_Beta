@@ -1,11 +1,11 @@
-﻿using ExpressiveAnnotations.Attributes;
-using ntbs_service.Helpers;
-using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using ExpressiveAnnotations.Attributes;
+using ntbs_service.Helpers;
+using ntbs_service.Models.Enums;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
@@ -26,6 +26,8 @@ namespace ntbs_service.Models
             ComorbidityDetails = new ComorbidityDetails();
         }
 
+        #region DB Mapped Fields
+
         [Display(Name = "Notification Id")]
         public int NotificationId { get; set; }
         [MaxLength(50)]
@@ -36,7 +38,7 @@ namespace ntbs_service.Models
         public DateTime? SubmissionDate { get; set; }
         [MaxLength(150)]
         public string DeletionReason { get; set; }
-
+        public int? GroupId { get; set; }
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
@@ -44,11 +46,14 @@ namespace ntbs_service.Models
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
 
-        public virtual PatientDetails PatientDetails { get; set; }
-        public virtual ClinicalDetails ClinicalDetails { get; set; }
+        #endregion
+
+        #region Navigation Properties
 
         [AssertThat("NotificationSites.Count > 0 || !ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteIsRequired)]
         public virtual List<NotificationSite> NotificationSites { get; set; }
+        public virtual PatientDetails PatientDetails { get; set; }
+        public virtual ClinicalDetails ClinicalDetails { get; set; }
         public virtual Episode Episode { get; set; }
         public virtual PatientTBHistory PatientTBHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
@@ -58,8 +63,12 @@ namespace ntbs_service.Models
         public virtual VisitorDetails VisitorDetails { get; set; }
         public virtual DenotificationDetails DenotificationDetails { get; set; }
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
-        public int? GroupId { get; set; }
         public virtual NotificationGroup Group { get; set; }
+        public virtual ICollection<ManualTestResult> ManualTestResults { get; set; }
+
+        #endregion
+
+        #region Display and Formatting methods/fields
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
@@ -81,7 +90,7 @@ namespace ntbs_service.Models
         public string HasRecentTravel => TrueFalseToYesNo(TravelDetails.HasTravel);
         public string FormattedNhsNumber => FormatNhsNumberString();
         public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
-        public string FormattedNoAbodeOrPostcodeString => CreateNoAbodeOrPostcodeString();
+        public string FormattedNoAbodeOrPostcodeString => PatientDetails.NoFixedAbode ? "No fixed abode" : PatientDetails.Postcode?.Trim();
         public string FormattedOccupationString => PatientDetails?.FormatOccupationString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
@@ -105,11 +114,9 @@ namespace ntbs_service.Models
         public string FormattedCreationDate => FormatDate(CreationDate);
         public string FormattedNotificationDate => FormatDate(NotificationDate);
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
-
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
         public string TreatmentPHECName => Episode.TBService?.PHEC?.Name;
-
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
 
         private string GetNotificationStatusString()
@@ -130,12 +137,12 @@ namespace ntbs_service.Models
             throw new InvalidOperationException("Notification status is not currently set");
         }
 
-        private string FormatDate(DateTime? date)
+        private static string FormatDate(DateTime? date)
         {
             return date?.ToString("dd-MMM-yyyy");
         }
 
-        private string TrueFalseToYesNo(bool? x)
+        private static string TrueFalseToYesNo(bool? x)
         {
             if (x == null)
             {
@@ -147,17 +154,17 @@ namespace ntbs_service.Models
             }
         }
 
-        private string FormatStateAndYear(Status? state, int? year)
+        private static string FormatStateAndYear(Status? state, int? year)
         {
             return state?.ToString() + (year != null ? " - " + year : string.Empty);
         }
 
-        private string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
+        private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
             return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : string.Empty);
         }
 
-        private int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
+        private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
         {
             return (date1?.Date - date2?.Date)?.Days;
         }
@@ -173,18 +180,6 @@ namespace ntbs_service.Models
                 .Where(ns => ns != null)
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
-        }
-
-        private string CreateNoAbodeOrPostcodeString()
-        {
-            if (PatientDetails.NoFixedAbode)
-            {
-                return "No fixed abode";
-            }
-            else
-            {
-                return PatientDetails.Postcode?.Trim();
-            }
         }
 
         private string FormatNhsNumberString()
@@ -204,7 +199,7 @@ namespace ntbs_service.Models
             );
         }
 
-        private string CreateTimePeriodsString(RiskFactorDetails riskFactor)
+        private static string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
             var timeStrings = new List<string>();
             if (riskFactor.IsCurrent)
@@ -239,5 +234,8 @@ namespace ntbs_service.Models
             }
             return yearDiff;
         }
+
+        #endregion
+
     }
 }

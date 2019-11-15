@@ -37,6 +37,9 @@ namespace ntbs_service.Models
         public virtual DbSet<Occupation> Occupation { get; set; }
         public virtual DbSet<CaseManager> CaseManager { get; set; }
         public virtual DbSet<CaseManagerTbService> CaseManagerTbService { get; set; }
+        public virtual DbSet<SampleType> SampleType { get; set; }
+        public virtual DbSet<ManualTestType> ManualTestType { get; set; }
+        public virtual DbSet<ManualTestResult> ManualTestResult { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -115,6 +118,7 @@ namespace ntbs_service.Models
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
             var denotificationReasonEnumConverter = new EnumToStringConverter<DenotificationReason>();
+            var testResultEnumConverter = new EnumToStringConverter<Result>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -370,29 +374,78 @@ namespace ntbs_service.Models
                     .WithMany(tbService => tbService.CaseManagerTbServices)
                     .HasForeignKey(e => e.TbServiceCode);
             });
+
+            modelBuilder.Entity<ManualTestType>(entity =>
+            {
+                entity.Property(e => e.Description).HasMaxLength(40);
+
+                entity.HasData(SeedData.ManualTestTypes.GetManualTestTypes());
+            });
+
+            modelBuilder.Entity<SampleType>(entity =>
+            {
+                entity.Property(e => e.Description).HasMaxLength(40);
+                entity.Property(e => e.Category).HasMaxLength(40);
+
+                entity.HasData(SeedData.SampleTypes.GetSampleTypes());
+            });
+
+            modelBuilder.Entity<ManualTestTypeSampleType>(entity =>
+            {
+                entity.HasKey(e => new { e.ManualTestTypeId, e.SampleTypeId });
+
+                entity.HasOne(e => e.ManualTestType)
+                    .WithMany(manualTestType => manualTestType.ManualTestTypeSampleTypes)
+                    .HasForeignKey(e => e.ManualTestTypeId);
+
+                entity.HasOne(e => e.SampleType)
+                    .WithMany(sampleType => sampleType.ManualTestTypeSampleTypes)
+                    .HasForeignKey(e => e.SampleTypeId);
+
+                entity.HasData(SeedData.ManualTestTypeSampleTypes.GetJoinDataManualTestTypeToSampleType());
+            });
+
+            modelBuilder.Entity<ManualTestResult>(entity =>
+            {
+                entity.Property(e => e.Result)
+                    .HasConversion(testResultEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.HasOne(e => e.Notification)
+                    .WithMany(notification => notification.ManualTestResults)
+                    .HasForeignKey(e => e.NotificationId);
+
+                entity.HasOne(e => e.ManualTestType)
+                    .WithMany()
+                    .HasForeignKey(e => e.ManualTestTypeId);
+
+                entity.HasOne(e => e.SampleType)
+                    .WithMany()
+                    .HasForeignKey(e => e.SampleTypeId);
+            });
         }
 
-        private List<object> GetTBServicesList()
+        private static List<object> GetTBServicesList()
         {
             return SeedingHelper.GetTBServices("Models/SeedData/tbservices.csv");
         }
 
-        private List<object> GetPHECtoLA()
+        private static List<object> GetPHECtoLA()
         {
             return SeedingHelper.GetLAtoPHEC("Models/SeedData/LA_to_PHEC.csv");
         }
 
-        private List<object> GetHospitalsList()
+        private static List<object> GetHospitalsList()
         {
             return SeedingHelper.GetHospitalsList("Models/SeedData/hospitals.csv");
         }
 
-        private List<object> GetPHECList()
+        private static List<object> GetPHECList()
         {
             return SeedingHelper.GetPHECList("Models/SeedData/phec.csv");
         }
 
-        private List<object> GetLocalAuthoritiesList()
+        private static List<object> GetLocalAuthoritiesList()
         {
             return SeedingHelper.GetLocalAuthorities("Models/SeedData/LocalAuthorities.csv");
         }
