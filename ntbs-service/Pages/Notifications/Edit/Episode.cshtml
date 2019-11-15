@@ -81,11 +81,17 @@
             }
             else
             {
-                <input asp-for="Episode.TBServiceCode" class="hidden"/>
-                <p class="no-bottom-margin"> Notifying TB Service </p>
-                <select nhs-select-type="Standard" disabled>
-                    <option value="@Model.Notification.Episode?.TBService?.Code" selected="selected"> @Model.Notification.Episode?.TBService?.Name </option>
-                </select>
+                <div>
+                    <input asp-for="Episode.TBServiceCode" type="hidden" />
+                    <p class="no-bottom-margin"> Notifying TB Service </p>
+                    <label for="disabled-hospital-select" class="govuk-visually-hidden">
+                        Notifying TB Service (Disabled)
+                    </label>
+                    <select nhs-select-type="Standard" id="disabled-hospital-select" title="TB Service cannot be changed after notification" disabled="disabled">
+                        <option value="@Model.Notification.Episode?.TBService?.Code" selected="selected"> @Model.Notification.Episode?.TBService?.Name </option>
+                    </select>
+                </div>
+                <br />
             }
 
             <validate-input model="Episode" property="HospitalId" shouldvalidatefull="@fullValidation"
