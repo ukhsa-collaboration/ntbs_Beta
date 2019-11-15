@@ -200,9 +200,11 @@
                 </div>
             </nhs-details>
 
-            <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary" id="search-button">
-                Search
-            </button>
+            <div class="submit-search-button-container">
+                <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary submit-search-button" id="search-button" formaction="#search-results-section">
+                    Search
+                </button>
+            </div>
         </form>
     </div>
     <br/>
@@ -249,9 +251,12 @@
                                 previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
             </ul>
         </nav>
-        <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
-            Create Notification
-        </a>
+        @if(Model.SearchResults.Count > 3)
+        {
+            <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
+                Create Notification
+            </a>
+        }
     </nhs-width-container>
     <br>
 }
