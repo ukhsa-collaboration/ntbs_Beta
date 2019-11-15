@@ -30,7 +30,7 @@ RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 
 WORKDIR /ntbs-ui-tests
 
-COPY ./ntbs-ui-tests/package*.json .
+COPY ./ntbs-ui-tests/package*.json ./
 RUN npm ci
 RUN node_modules/.bin/selenium-standalone install
 
