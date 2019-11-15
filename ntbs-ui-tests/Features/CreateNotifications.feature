@@ -6,7 +6,7 @@ Feature: Notification creation
     When I enter 1 into 'SearchParameters_IdFilter'
     And I click on 'search-button'
     Then I should be on the Search page
-	When I click on 'create-button-1'
+	When I click on 'create-button'
     Then I should be on the Patient page
 
 Scenario: Create and submit notification without errors
