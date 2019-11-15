@@ -3,4 +3,11 @@
 @{
     var buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";
 }
-<button nhs-button-type="Standard" name="actionName" value="Save" id="save-button">@buttonName</button>
+<button
+    nhs-button-type="Standard"
+    classes="ntbsuk-button--primary"
+    name="actionName"
+    value="Save"
+    id="save-button">
+    @buttonName
+</button>

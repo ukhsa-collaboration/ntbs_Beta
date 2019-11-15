@@ -1,0 +1,33 @@
+@using ntbs_service.Helpers
+
+<nhs-grid-column grid-column-width="TwoThirds">
+    &nbsp;
+    <!-- Alerts placeholder - &nbsp; needed so column doesn't collapse -->
+    <!-- <h2 class="govuk-heading-m"></h2> -->
+</nhs-grid-column>
+<nhs-grid-column grid-column-width="OneThird">
+    @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
+    {
+        <div class="manage-notification manage-notification--no-expander manage-notification--draft">
+            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit">Submit</button>
+            @{ var deleteHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId); }
+            <a class="action-link" role="button" href="deleteHref">Delete draft</a>
+
+        </div>
+    }
+    else if ((bool)ViewData["IsOverviewPage"] && Model.HasEditPermission)
+    {
+        <div class="manage-notification">
+            <nhs-details display-text="Manage notification" nhs-details-type="Expander">
+                <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
+                    New notification for this patient
+                </button>
+                @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
+                {
+                    var denotfiyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
+                    <a class="action-link" role="button" href="denotfiyHref">Denotify</a>
+                }
+            </nhs-details>
+        </div>
+    }
+</nhs-grid-column>
