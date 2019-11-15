@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace ntbs_service.Models
 {
-    public class Alert : ModelBase
+    public class Alert
     {
         public int AlertId { get; set; }
         public int? NotificationId { get; set; }
@@ -23,7 +23,7 @@ namespace ntbs_service.Models
         public virtual Hospital Hospital { get; set; }
         public AlertType AlertType { get; set; }
         public AlertStatus AlertStatus { get; set; }
-        public DateTime ClosureDate { get; set; }
+        public DateTime? ClosureDate { get; set; }
         public string ClosingUserId { get; set; }
         public string AlertReason => "";
         public string AlertLink => "";
