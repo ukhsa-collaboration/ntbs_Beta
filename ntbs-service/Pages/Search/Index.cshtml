@@ -26,7 +26,7 @@
                         var idFilterGroupState = idFilterError ? Error : Standard;
                     }
                     <nhs-form-group nhs-form-group-type=@idFilterGroupState classes="nhs-form-group--search">
-                        <span nhs-span-type="ErrorMessage" id="id-error"
+                        <span nhs-span-type="ErrorMessage" id="id-error" classes="search-error"
                                 asp-validation-for="SearchParameters.IdFilter" has-error="@idFilterError"></span>
                         <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.IdFilter"> ID number </label>
                         <input is-error-input=@idFilterError nhs-input-type="Standard"
@@ -41,7 +41,7 @@
                         var familyNameGroupState = familyNameError ? Error : Standard;
                     }
                     <nhs-form-group nhs-form-group-type=@familyNameGroupState classes="nhs-form-group--search">
-                        <span nhs-span-type="ErrorMessage" id="family-name-error"
+                        <span nhs-span-type="ErrorMessage" id="family-name-error" classes="search-error"
                             asp-validation-for="SearchParameters.FamilyName" has-error="@familyNameError"></span>
                         <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.FamilyName"> Family Name</label>
                         <input is-error-input=@familyNameError nhs-input-type="Standard"
@@ -56,7 +56,7 @@
                         var dobGroupState = dobError ? Error : Standard;
                     }
                     <nhs-form-group nhs-form-group-type=@dobGroupState classes="nhs-form-group--search-date">
-                        <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
+                        <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error" classes="search-error"
                             asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
                         <label nhs-label-type="Standard" classes="search-label--standard" for="dob"> Date of birth </label>
                         <nhs-date-input id="dob" classes="date-input--search">
@@ -92,7 +92,7 @@
                         var postcodeGroupState = postcodeError ? Error : Standard;
                     }
                     <nhs-form-group nhs-form-group-type=@postcodeGroupState classes="nhs-form-group--search">
-                        <span nhs-span-type="ErrorMessage" id="postcode-error"
+                        <span nhs-span-type="ErrorMessage" id="postcode-error" classes="search-error"
                             asp-validation-for="SearchParameters.Postcode" has-error="@postcodeError"></span>
                         <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.Postcode"> Postcode </label>
                         <input is-error-input=@postcodeError nhs-input-type="Standard"
@@ -111,7 +111,7 @@
                         var notificationDateGroupState = notificationDateError ? Error : Standard;
                     }
                     <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--search-date">
-                        <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error"
+                        <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="search-error"
                             asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
                             <label nhs-label-type="Standard" classes="search-label--long" for="notification-date"> Notification Date </label>
                             <nhs-date-input id="notification-date" classes="date-input--search">
@@ -147,7 +147,7 @@
                         var givenNameGroupState = givenNameError ? Error : Standard;
                     }
                     <nhs-form-group nhs-form-group-type=@givenNameGroupState classes="nhs-form-group--search">
-                        <span nhs-span-type="ErrorMessage" id="given-name-error"
+                        <span nhs-span-type="ErrorMessage" id="given-name-error" classes="search-error"
                             asp-validation-for="SearchParameters.GivenName" has-error="@givenNameError"></span>
                         <label nhs-label-type="Standard" classes="search-label--long" asp-for="SearchParameters.GivenName"> Given Name</label>
                         <input is-error-input=@givenNameError nhs-input-type="Standard"
@@ -200,9 +200,11 @@
                 </div>
             </nhs-details>
 
-            <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary" id="search-button">
-                Search
-            </button>
+            <div class="submit-search-button-container">
+                <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary submit-search-button" id="search-button" formaction="#search-results-section">
+                    Search
+                </button>
+            </div>
         </form>
     </div>
     <br/>
@@ -249,9 +251,12 @@
                                 previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
             </ul>
         </nav>
-        <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
-            Create Notification
-        </a>
+        @if(Model.SearchResults?.Count > 3)
+        {
+            <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
+                Create Notification
+            </a>
+        }
     </nhs-width-container>
     <br>
 }
