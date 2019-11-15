@@ -13,8 +13,9 @@
                 Submit
             </button>
             @{ var deleteHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId); }
-            <a class="action-link" role="button" href="deleteHref">Delete draft</a>
-
+            <a id="delte-draft-button" class="action-link" role="button" href="@deleteHref">
+                Delete draft
+            </a>
         </div>
     }
     else if ((bool)ViewData["IsOverviewPage"] && Model.HasEditPermission)
@@ -26,8 +27,8 @@
                 </button>
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
                 {
-                    var denotfiyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
-                    <a class="action-link" role="button" href="denotfiyHref">Denotify</a>
+                    var denotifyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
+                    <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">Denotify</a>
                 }
             </nhs-details>
         </div>

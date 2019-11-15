@@ -68,6 +68,12 @@ namespace ntbs_ui_tests.StepDefinitions
             Assert.Equal("Notifications", urlArray[numberOfUrlParts - 2]);
         }
 
+        [Then(@"I should be on the Homepage")]
+        public void ThenIShouldBeOnTheHomepage()
+        {
+            Assert.Equal($"{Server.RootUri}/", Browser.Url);
+        }
+
         [Then(@"I should be on the (.*) page")]
         public void ThenIShouldBeOnPage(string pageName)
         {
