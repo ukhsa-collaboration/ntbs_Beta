@@ -37,6 +37,7 @@ namespace ntbs_service.Models
         public virtual DbSet<Occupation> Occupation { get; set; }
         public virtual DbSet<CaseManager> CaseManager { get; set; }
         public virtual DbSet<CaseManagerTbService> CaseManagerTbService { get; set; }
+        public virtual DbSet<Alert> Alert { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -115,6 +116,8 @@ namespace ntbs_service.Models
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
             var denotificationReasonEnumConverter = new EnumToStringConverter<DenotificationReason>();
+            var alertTypeEnumConverter = new EnumToStringConverter<AlertType>();
+            var alertStatusEnumConverter = new EnumToStringConverter<AlertStatus>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -370,6 +373,21 @@ namespace ntbs_service.Models
                     .WithMany(tbService => tbService.CaseManagerTbServices)
                     .HasForeignKey(e => e.TbServiceCode);
             });
+
+            modelBuilder.Entity<Alert>(entity =>
+            {
+                entity.Property(e => e.AlertStatus)
+                    .HasConversion(alertStatusEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.AlertType)
+                    .HasConversion(alertTypeEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
+                entity.Property(e => e.TbServiceCode).HasMaxLength(16);
+                entity.Property(e => e.ClosingUserId).HasMaxLength(64);
+            });
+
+            modelBuilder.Entity<ExampleTbServiceAlert>().HasBaseType<Alert>();
         }
 
         private List<object> GetTBServicesList()
