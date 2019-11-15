@@ -42,8 +42,8 @@ namespace ntbs_service.Services
 
         public async Task<bool> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert)
         {
-            var optionalAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if(optionalAlert == null)
+            var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
+            if(matchingAlert != null)
             {
                 return false;
             }
