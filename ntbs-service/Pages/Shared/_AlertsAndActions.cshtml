@@ -9,7 +9,9 @@
     @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
     {
         <div class="manage-notification manage-notification--no-expander manage-notification--draft">
-            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit">Submit</button>
+            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit" id="submit-button">
+                Submit
+            </button>
             @{ var deleteHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId); }
             <a class="action-link" role="button" href="deleteHref">Delete draft</a>
 
