@@ -9,7 +9,8 @@ namespace ntbs_service.DataAccess
 {
     public interface IAlertRepository
     {
-        Task<Alert> GetAlertAsync(int? alertId);
+        Task<Alert> GetAlertByIdAsync(int? alertId);
+        Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddExampleTbServiceAlertAsync(ExampleTbServiceAlert alert);
     }
 
@@ -28,10 +29,16 @@ namespace ntbs_service.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Alert> GetAlertAsync(int? alertId)
+        public async Task<Alert> GetAlertByIdAsync(int? alertId)
         {
             return await _context.Alert
                 .FirstOrDefaultAsync(m => m.AlertId == alertId);
+        }
+
+        public async Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
+        {
+            return await _context.Alert
+                .FirstOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
         
     }

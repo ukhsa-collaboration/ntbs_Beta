@@ -12,7 +12,7 @@ namespace ntbs_service.Services
 {
     public interface IAlertService
     {
-        Task<Alert> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert);
+        Task<bool> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert);
         Task DeleteAlertAsync(int alertId, string userId);
 
     }
@@ -26,13 +26,13 @@ namespace ntbs_service.Services
             IAlertRepository alertRepository,
             NtbsContext context)
         {
-            _alertRepository = alertRepository;
-            _context = context;
+            this._alertRepository = alertRepository;
+            this._context = context;
         }
 
         public async Task DeleteAlertAsync(int alertId, string userId)
         {
-            var alert = await _alertRepository.GetAlertAsync(alertId);
+            var alert = await _alertRepository.GetAlertByIdAsync(alertId);
             alert.ClosingUserId = userId;
             alert.ClosureDate = DateTime.Now;
 
@@ -40,10 +40,15 @@ namespace ntbs_service.Services
             await UpdateDatabaseAsync(AuditType.Deleted);
         }
 
-        public async Task<Alert> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert)
+        public async Task<bool> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert)
         {
+            var optionalAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
+            if(optionalAlert == null)
+            {
+                return false;
+            }
             await _alertRepository.AddExampleTbServiceAlertAsync(alert);
-            return alert;
+            return true;
         }
 
         private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)
