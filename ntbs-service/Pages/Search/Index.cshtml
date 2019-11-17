@@ -31,7 +31,7 @@
                         <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.IdFilter"> ID number </label>
                         <input is-error-input=@idFilterError nhs-input-type="Standard"
                             asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10 search-input" aria-describedby="id-types-hint" />
-                        <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
+                        <nhs-hint nhs-hint-type="Standard" id="id-types-hint" classes="search-hint">
                             Search by NTBS, ETS, LTBR or NHS number
                         </nhs-hint>
                     </nhs-form-group>
@@ -46,7 +46,7 @@
                         <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.FamilyName"> Family Name</label>
                         <input is-error-input=@familyNameError nhs-input-type="Standard"
                             asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10 search-input" aria-describedby="two-character-family-name-hint" />
-                        <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint">
+                        <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint" classes="search-hint">
                             Enter at least two characters
                         </nhs-hint>
                     </nhs-form-group>
@@ -82,7 +82,7 @@
                                 </nhs-form-group>
                             </nhs-date-input-item>
                         </nhs-date-input>
-                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
+                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
                             Dates can be partial
                         </nhs-hint>
                     </nhs-form-group>
@@ -98,7 +98,7 @@
                         <input is-error-input=@postcodeError nhs-input-type="Standard"
                                     asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10 search-input"
                                     aria-describedby="two-character-postcode-hint" />
-                        <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint">
+                        <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint" classes="search-hint">
                             Enter at least two characters
                         </nhs-hint>
                     </nhs-form-group>
@@ -137,7 +137,7 @@
                                     </nhs-form-group>
                                 </nhs-date-input-item>
                             </nhs-date-input>
-                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
+                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
                             Dates can be partial
                         </nhs-hint>
                     </nhs-form-group>
@@ -153,7 +153,7 @@
                         <input is-error-input=@givenNameError nhs-input-type="Standard"
                                 asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10 search-input" 
                                 aria-describedby="two-character-given-name-hint" />
-                        <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint">
+                        <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint" classes="search-hint">
                             Enter at least two characters
                         </nhs-hint>
                     </nhs-form-group>
