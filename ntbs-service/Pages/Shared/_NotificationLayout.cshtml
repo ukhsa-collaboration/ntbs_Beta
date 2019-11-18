@@ -19,7 +19,7 @@
             break;
     }
 
-    ViewData["IsOverviewPage"] = currentPage == string.Empty;
+    ViewData["IsOverviewPage"] = currentPage == string.Empty || currentPage == @Model.NotificationId.ToString();
     ViewData["IsPatientPage"] = currentPage == "Patient";
     ViewData["IsEpisodePage"] = currentPage == "Episode";
     ViewData["IsClinicalDetailsPage"] = currentPage == "ClinicalDetails";
