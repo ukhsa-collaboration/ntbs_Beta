@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -30,8 +31,7 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(30);
 
                     b.Property<string>("AlertType")
-                        .IsRequired()
-                        .HasMaxLength(30);
+                        .IsRequired();
 
                     b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
@@ -42,9 +42,6 @@ namespace ntbs_service.Migrations
                     b.Property<DateTime?>("ClosureDate");
 
                     b.Property<DateTime>("CreationDate");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
 
                     b.Property<Guid?>("HospitalId");
 
@@ -59,13 +56,13 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("HospitalId");
 
-                    b.HasIndex("NotificationId");
-
                     b.HasIndex("TbServiceCode");
+
+                    b.HasIndex("NotificationId", "AlertType");
 
                     b.ToTable("Alert");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Alert");
+                    b.HasDiscriminator<string>("AlertType");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.CaseManager", b =>
@@ -11312,7 +11309,7 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("TransferReason");
 
-                    b.HasDiscriminator().HasValue("ExampleTbServiceAlert");
+                    b.HasDiscriminator().HasValue("TransferRequest");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Alert", b =>

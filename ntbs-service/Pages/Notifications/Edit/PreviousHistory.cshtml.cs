@@ -8,10 +8,14 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PreviousHistoryModel : NotificationEditModelBase
     {
+        protected IAlertService alertService;
         public PreviousHistoryModel(
+            IAlertService _alertService,
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { 
+                alertService = _alertService;
+            }
 
         [BindProperty]
         public PatientTBHistory PatientTbHistory { get; set; }
@@ -25,6 +29,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TryValidateModel(PatientTbHistory, PatientTbHistory.GetType().Name);
             }
+
+            var alert = new ExampleTbServiceAlert() {MessageToNewCaseManager = "hey"};
+            var t = alertService.AddUniqueAlertAsync(alert);
 
             return Page();
         }

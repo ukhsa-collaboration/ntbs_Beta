@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -11,7 +12,9 @@ namespace ntbs_service.DataAccess
     {
         Task<Alert> GetAlertByIdAsync(int? alertId);
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
-        Task AddExampleTbServiceAlertAsync(ExampleTbServiceAlert alert);
+        Task AddAlertAsync(Alert alert);
+        Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
+        Task<IList<Alert>> GetAlertsByTbServices(IEnumerable<string> tbServices);
     }
 
     public class AlertRepository : IAlertRepository
@@ -23,10 +26,10 @@ namespace ntbs_service.DataAccess
             this._context = context;
         }
 
-        public async Task AddExampleTbServiceAlertAsync(ExampleTbServiceAlert alert)
+        public async Task AddAlertAsync(Alert alert)
         {
             _context.Alert.Add(alert);
-            await _context.SaveChangesAsync();
+            await UpdateAlertAsync();
         }
 
         public async Task<Alert> GetAlertByIdAsync(int? alertId)
@@ -40,6 +43,16 @@ namespace ntbs_service.DataAccess
             return await _context.Alert
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
+
+        public async Task<IList<Alert>> GetAlertsByTbServices(IEnumerable<string> tbServices)
+        {
+            return await _context.Alert.Where(a => tbServices.Contains(a.TbServiceCode)).ToListAsync();
+        }
         
+        public async Task UpdateAlertAsync(AuditType auditType = AuditType.Edit)
+        {
+            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ntbs_service.Migrations
 {
-    public partial class AddBaseAlertClassWithExampleDerivedClass : Migration
+    public partial class AddAlertClassAndExampleDerivedClass : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,11 +19,10 @@ namespace ntbs_service.Migrations
                     TbServiceCode = table.Column<string>(maxLength: 16, nullable: true),
                     CaseManagerEmail = table.Column<string>(maxLength: 64, nullable: true),
                     HospitalId = table.Column<Guid>(nullable: true),
-                    AlertType = table.Column<string>(maxLength: 30, nullable: false),
                     AlertStatus = table.Column<string>(maxLength: 30, nullable: false),
                     ClosureDate = table.Column<DateTime>(nullable: true),
                     ClosingUserId = table.Column<string>(maxLength: 64, nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
+                    AlertType = table.Column<string>(nullable: false),
                     TransferReason = table.Column<string>(nullable: true),
                     MessageToNewCaseManager = table.Column<string>(nullable: true)
                 },
@@ -67,14 +66,14 @@ namespace ntbs_service.Migrations
                 column: "HospitalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Alert_NotificationId",
-                table: "Alert",
-                column: "NotificationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Alert_TbServiceCode",
                 table: "Alert",
                 column: "TbServiceCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Alert_NotificationId_AlertType",
+                table: "Alert",
+                columns: new[] { "NotificationId", "AlertType" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

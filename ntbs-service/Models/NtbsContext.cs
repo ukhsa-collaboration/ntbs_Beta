@@ -116,8 +116,8 @@ namespace ntbs_service.Models
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
             var denotificationReasonEnumConverter = new EnumToStringConverter<DenotificationReason>();
-            var alertTypeEnumConverter = new EnumToStringConverter<AlertType>();
             var alertStatusEnumConverter = new EnumToStringConverter<AlertStatus>();
+            var alertTypeEnumConverter = new EnumToStringConverter<AlertType>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -379,12 +379,14 @@ namespace ntbs_service.Models
                 entity.Property(e => e.AlertStatus)
                     .HasConversion(alertStatusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
-                entity.Property(e => e.AlertType)
-                    .HasConversion(alertTypeEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
                 entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
                 entity.Property(e => e.TbServiceCode).HasMaxLength(16);
                 entity.Property(e => e.ClosingUserId).HasMaxLength(64);
+                entity.HasIndex(p => new { p.NotificationId, p.AlertType});
+                entity.Property(e => e.AlertType)
+                    .HasConversion(alertTypeEnumConverter);
+                entity.HasDiscriminator<AlertType>("AlertType")
+                    .HasValue<ExampleTbServiceAlert>(AlertType.TransferRequest);
             });
 
             modelBuilder.Entity<ExampleTbServiceAlert>().HasBaseType<Alert>();

@@ -12,7 +12,7 @@ namespace ntbs_service.Services
 {
     public interface IAlertService
     {
-        Task<bool> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert);
+        Task<bool> AddUniqueAlertAsync(Alert alert);
         Task DeleteAlertAsync(int alertId, string userId);
 
     }
@@ -20,41 +20,33 @@ namespace ntbs_service.Services
     public class AlertService : IAlertService
     {
         private readonly IAlertRepository _alertRepository;
-        private readonly NtbsContext _context;
 
         public AlertService(
-            IAlertRepository alertRepository,
-            NtbsContext context)
+            IAlertRepository alertRepository)
         {
-            this._alertRepository = alertRepository;
-            this._context = context;
+            _alertRepository = alertRepository;
         }
 
         public async Task DeleteAlertAsync(int alertId, string userId)
         {
             var alert = await _alertRepository.GetAlertByIdAsync(alertId);
+            
             alert.ClosingUserId = userId;
             alert.ClosureDate = DateTime.Now;
-
             alert.AlertStatus = AlertStatus.Closed;
-            await UpdateDatabaseAsync(AuditType.Deleted);
+
+            await _alertRepository.UpdateAlertAsync(AuditType.Deleted);
         }
 
-        public async Task<bool> CreateExampleTbServiceAlertAsync(ExampleTbServiceAlert alert)
+        public async Task<bool> AddUniqueAlertAsync(Alert alert)
         {
             var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
             if(matchingAlert != null)
             {
                 return false;
             }
-            await _alertRepository.AddExampleTbServiceAlertAsync(alert);
+            await _alertRepository.AddAlertAsync(alert);
             return true;
-        }
-
-        private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)
-        {
-            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
-            await _context.SaveChangesAsync();
         }
     }
 }

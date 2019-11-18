@@ -1,15 +1,9 @@
-using ExpressiveAnnotations.Attributes;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace ntbs_service.Models
 {
-    public class Alert
+    public abstract class Alert
     {
         public int AlertId { get; set; }
         public int? NotificationId { get; set; }
@@ -21,13 +15,12 @@ namespace ntbs_service.Models
         public virtual CaseManager CaseManager { get; set; }
         public Guid? HospitalId { get; set; }
         public virtual Hospital Hospital { get; set; }
-        public AlertType AlertType { get; set; }
         public AlertStatus AlertStatus { get; set; }
         public DateTime? ClosureDate { get; set; }
         public string ClosingUserId { get; set; }
-        // AlertReason and AlertLink should be able to be populated from the rest of the fields on the class - might be easier to override the getter in the derived classes
-        public string AlertReason => "";
-        public string AlertLink => "";
+        public AlertType AlertType { get; set; }
+        public virtual string AlertReason { get; }
+        public virtual string AlertLink { get; }
     }
 
 }

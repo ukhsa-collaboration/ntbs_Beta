@@ -11,14 +11,20 @@ namespace ntbs_service.Pages
     public class IndexModel : PageModel
     {
         private readonly INotificationRepository notificationRepository;
+        private readonly IAlertRepository alertRepository;
         private readonly IAuthorizationService authorizationService;
+        private readonly IUserService userService;
 
-        public IndexModel(INotificationRepository notificationRepository, IAuthorizationService authorizationService)
+        public IndexModel(INotificationRepository notificationRepository, IAlertRepository alertRepository, 
+            IAuthorizationService authorizationService, IUserService userService)
         {
             this.notificationRepository = notificationRepository;
             this.authorizationService = authorizationService;
+            this.alertRepository = alertRepository;
+            this.userService = userService;
         }
 
+        public IList<Alert> Alerts { get; set; }
         public IList<Notification> DraftNotifications { get;set; }
         public IList<Notification> RecentNotifications { get;set; }
 
@@ -28,6 +34,8 @@ namespace ntbs_service.Pages
             var recentNotifications = await notificationRepository.GetRecentNotificationsAsync();
             DraftNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable)).Take(10).ToList();
             RecentNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, recentNotifications)).Take(10).ToList();
+            var services = await userService.GetTbServicesAsync(User);
+            Alerts = await alertRepository.GetAlertsByTbServices(services.Select(x => x.Code));
         }
     }
 }
