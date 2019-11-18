@@ -31,7 +31,10 @@ RUN npm run build:prod
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 
-# Openshift permission model does not allow binding ont he default 80 port
+# Satisfying Openshift requirements:
+# - this tells it that the app is OK to run under random user id
+USER 1001
+# - we don't have the permissions to run on default 80 port
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://*:8080
 
