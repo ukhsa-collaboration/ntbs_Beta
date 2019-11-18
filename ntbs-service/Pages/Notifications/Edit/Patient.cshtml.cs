@@ -135,6 +135,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(Patient, "Patient"))
             {
                 await Service.UpdatePatientAsync(Notification, Patient);
+            } 
+            else
+            {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
             }
         }
 
