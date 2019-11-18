@@ -54,6 +54,7 @@
 }
 
 .search-label--standard {
+    height: 100%;
     margin: auto 0;
     width: 160px;
 }
@@ -63,8 +64,14 @@
 }
 
 .search-label--long {
+    height: 100%;
     margin: auto 0;
     width: 180px;
+}
+
+.search-hint {
+    height: 100%;
+    margin: auto 0;
 }
 
 .search-input {
@@ -83,6 +90,7 @@
 .search-date-input-label {
     margin: auto 15px auto 0;
     width: 45px;
+    height: 100%;
 
     @media(min-width: $tablet_breakpoint) {
         width: auto;
