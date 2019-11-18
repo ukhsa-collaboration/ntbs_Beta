@@ -30,7 +30,13 @@ RUN npm run build:prod
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+
+# Openshift permission model does not allow binding ont he default 80 port
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://*:8080
+
 WORKDIR /app
 COPY --from=build /app/ntbs-service/out ./
 COPY --from=build-frontend /app/wwwroot/dist ./wwwroot/dist/
+
 ENTRYPOINT ["dotnet", "ntbs-service.dll"]
