@@ -12,7 +12,8 @@ spec:
     spec:
       containers:
         - name: ntbs-live
-          image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
+          image: "ntbscontainerregistry.azurecr.io/ntbs-service"
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "2GiB"

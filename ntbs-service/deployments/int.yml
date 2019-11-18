@@ -12,6 +12,7 @@ spec:
       containers:
       - name: ntbs-int
         image: "ntbscontainerregistry.azurecr.io/ntbs-service"
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
