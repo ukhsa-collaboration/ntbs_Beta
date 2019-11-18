@@ -21,6 +21,7 @@ namespace ntbs_service.Helpers
     public static class NotificationSubPaths
     {
         public static string EditClinicalDetails => "Edit/ClinicalDetails";
+        public static string EditTestResults => "Edit/TestResults";
         public static string EditPatient => "Edit/Patient";
         public static string EditEpisode => "Edit/Episode";
         public static string EditContactTracing => "Edit/ContactTracing";

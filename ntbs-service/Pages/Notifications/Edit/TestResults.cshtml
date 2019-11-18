@@ -1,0 +1,42 @@
+@page "/Notifications/{id:int}/Edit/TestResults/{handler?}"
+@model TestResultsModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    ViewData["Title"] = "Notification - Test Results";
+    var fullValidation = Model.TestData.ShouldValidateFull ? "True" : "False";
+}
+
+<h2>Test Results</h2>
+
+<div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <validate-input model="TestData" property="HasTestCarriedOut" shouldvalidatefull="@fullValidation" inline-template>
+        @{
+            var hasTestCarriedOutError = !Model.IsValid("TestData.HasTestCarriedOut");
+            var testCarriedOutGroupState = hasTestCarriedOutError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type="@testCarriedOutGroupState">
+            <nhs-fieldset aria-describedby="test-carried-out-error">
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Test carried out
+                </nhs-fieldset-legend>
+                <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="TestData.HasTestCarriedOut" has-error="@hasTestCarriedOutError" id="test-carried-out-error"></span>
+                <nhs-radios nhs-radios-type="Standard" v-on:change="validate">
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="TestData.HasTestCarriedOut" id="test-carried-out-yes" type="radio" value="true" />
+                        <label nhs-label-type="Radios" for="test-carried-out-yes">Yes</label>
+                    </nhs-radios-item>
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="TestData.HasTestCarriedOut" id="test-carried-out-no" type="radio" value="false" />
+                        <label nhs-label-type="Radios" for="test-carried-out-no">No</label>
+                    </nhs-radios-item>
+                </nhs-radios>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-input>
+
+    <partial name="_PaginationPartial" for="Notification" />
+</div>

@@ -60,6 +60,10 @@ namespace ntbs_service.Models.Validations
         public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         #endregion
 
+        #region Test Results
+        public const string TestCarriedOutIsRequired = "Test carried out is a mandatory field";
+        #endregion
+
         #region Contact Tracing
         public const string ContactTracingAdultsScreened = "Must not be greater than the number of adults identified";
         public const string ContactTracingChildrenScreened = "Must not be greater than the number of children identified";

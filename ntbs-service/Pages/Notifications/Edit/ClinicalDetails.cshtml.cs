@@ -95,7 +95,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./TestResults", new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

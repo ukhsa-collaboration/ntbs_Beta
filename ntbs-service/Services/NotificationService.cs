@@ -15,6 +15,7 @@ namespace ntbs_service.Services
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
+        Task UpdateTestDataAsync(Notification notification, TestData testData);
         Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
         Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails);
         Task UpdateEpisodeAsync(Notification notification, Episode episode);
@@ -133,6 +134,13 @@ namespace ntbs_service.Services
         public async Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails clinicalDetails)
         {
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
+
+            await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateTestDataAsync(Notification notification, TestData testData)
+        {
+            _context.SetValues(notification.TestData, testData);
 
             await UpdateDatabaseAsync();
         }
