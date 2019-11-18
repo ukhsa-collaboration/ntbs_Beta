@@ -1,10 +1,12 @@
 @page "/Notifications/{id:int}/Edit/ContactTracing/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ContactTracingModel
+@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["Title"] = "Notification - Contact Tracing";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditContactTracing;
 }
 
 <h2>Contact Tracing</h2>

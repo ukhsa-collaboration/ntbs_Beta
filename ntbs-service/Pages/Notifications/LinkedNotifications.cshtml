@@ -1,10 +1,12 @@
 @page "/Notifications/{id:int?}/LinkedNotifications/{handler?}"
+@using ntbs_service.Helpers
 @model LinkedNotificationsModel
 
 @{
-    Layout = "../Shared/_NotificationLayout.cshtml";
+    Layout = "../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["Title"] = "Linked Notifications";
     ViewData["NotificationId"] = @Model.NotificationId;
+    ViewData["CurrentPage"] = NotificationSubPaths.LinkedNotifications;
 }
 
 <h2 id="top">Linked Notifications</h2>

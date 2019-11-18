@@ -19,7 +19,7 @@
                 </a>
             </div>
         }
-        else if ((bool)ViewData["IsOverviewPage"] && Model.HasEditPermission)
+        else if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview && Model.HasEditPermission)
         {
             <div class="manage-notification">
                 <nhs-details display-text="Manage notification" nhs-details-type="Expander">

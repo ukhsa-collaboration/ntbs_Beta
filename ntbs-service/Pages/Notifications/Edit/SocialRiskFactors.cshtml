@@ -1,10 +1,12 @@
 @page "/Notifications/{id:int}/Edit/SocialRiskFactors/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.SocialRiskFactorsModel
+@using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
 
 @{
     Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["Title"] = "Social Risk Factors";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditSocialRiskFactors;
 }
 
 <h2>Social Risk Factors</h2>
