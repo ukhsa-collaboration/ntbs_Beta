@@ -111,7 +111,7 @@
         </nhs-fieldset>
     </nhs-form-group>
 
-    <button nhs-button-type="Standard" asp-page-handler="Confirm">Confirm denotification</button>
+    <button id="confirm-dentoification-button" nhs-button-type="Standard" asp-page-handler="Confirm">Confirm denotification</button>
 
     <nhs-back-link href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">Cancel & go back</nhs-back-link>
 
