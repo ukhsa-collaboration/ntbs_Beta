@@ -291,7 +291,7 @@ namespace ntbs_ui_tests.Features
 #line 107
         testRunner.When("I select radio value \'denotify-radio-DuplicateEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 108
-        testRunner.And("I click on \'confirm-dentoification-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I click on \'confirm-denotification-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 109
         testRunner.Then("I should see the Notification", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 110

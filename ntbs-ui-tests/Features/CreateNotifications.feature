@@ -98,13 +98,13 @@ Feature: Notification creation
         Then I should be on the ContactTracing page
         When I click on 'submit-button'
         Then I should see the Notification
-        
+
         # This is where the actual test starts
-        Given I am on current notification page
+        Given I am on current notification overview page
         When I expand manage notification section
         And I click on 'denotify-button'
         Then I should be on the Denotify page
         When I select radio value 'denotify-radio-DuplicateEntry'
-        And I click on 'confirm-dentoification-button'
+        And I click on 'confirm-denotification-button'
         Then I should see the Notification
         And The notification should be denotified

@@ -28,8 +28,8 @@ namespace ntbs_ui_tests.StepDefinitions
             Server = server;
         }
 
-        [Given(@"I am on current notification page")]
-        public void GivenIAmOnNotificationPage()
+        [Given(@"I am on current notification overview page")]
+        public void GivenIAmOnNotificationOverviewPage()
         {
             Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{stepsData.NotificationId}");
         }
