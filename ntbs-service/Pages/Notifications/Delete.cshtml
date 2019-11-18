@@ -22,15 +22,12 @@
             var reasonFormGroupType = hasReasonError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
-            <nhs-fieldset aria-describedby="reason-error">
-                <nhs-fieldset-legend nhs-legend-size="Standard">
-                    Reason for deletion
-                </nhs-fieldset-legend>
-
-                <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="DeletionReason" has-error="@hasReasonError"></span>
-                <textarea asp-for="DeletionReason" nhs-textarea-type="Standard" is-error-input="@hasReasonError"
-                          aria-describedby="reason-error" rows="2" classes="delete-reason-text-area-container"> </textarea>
-            </nhs-fieldset>
+            <label asp-for="DeletionReason" nhs-label-type="Standard">
+                Reason for deletion
+            </label>
+            <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="DeletionReason" has-error="@hasReasonError"></span>
+            <textarea asp-for="DeletionReason" nhs-textarea-type="Standard" is-error-input="@hasReasonError"
+                      aria-describedby="reason-error" rows="2" classes="delete-reason-text-area-container"> </textarea>
         </nhs-form-group>
 
                 <button id="confirm-deletion-button" asp-page-handler="Confirm" class="nhsuk-button ntbsuk-button--warning">
