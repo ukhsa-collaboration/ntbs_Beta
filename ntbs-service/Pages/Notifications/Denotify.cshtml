@@ -9,7 +9,8 @@
     ViewData["Title"] = $"Denotify - {Model.NotificationId}";
 }
 
-<div>
+<form method="post" autocomplete="off">
+    <input type="hidden" asp-for="NotificationId" />
     <nhs-warning-callout title-text="You are about to denotify this notification">
         <p>
             This action will be recorded in the audit log
@@ -111,8 +112,10 @@
         </nhs-fieldset>
     </nhs-form-group>
 
-    <button id="confirm-denotification-button" nhs-button-type="Standard" asp-page-handler="Confirm">Confirm denotification</button>
+        <button id="confirm-denotification-button" nhs-button-type="Standard" asp-page-handler="Confirm">
+            Confirm denotification
+        </button>
 
     <nhs-back-link href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">Cancel & go back</nhs-back-link>
 
-</div>
+</form>

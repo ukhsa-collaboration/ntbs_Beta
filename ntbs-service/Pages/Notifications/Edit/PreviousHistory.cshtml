@@ -1,10 +1,12 @@
 @page "/Notifications/{id:int}/Edit/PreviousHistory/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.PreviousHistoryModel
+@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["Title"] = "Notification - Patient TB History";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditPreviousHistory;
     var fullValidation = Model.PatientTbHistory.ShouldValidateFull ? "True" : "False";
 }
 

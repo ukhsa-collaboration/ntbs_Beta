@@ -1,9 +1,11 @@
 @page "/Notifications/{id:int}/Edit/Comorbidities/{handler?}"
+@using ntbs_service.Helpers
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["Title"] = "Comorbidities";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditComorbidities;
 }
 
 <h2>Comorbidities</h2>

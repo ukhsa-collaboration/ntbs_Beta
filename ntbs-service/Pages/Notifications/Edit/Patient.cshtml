@@ -2,10 +2,12 @@
 @model ntbs_service.Pages.Notifications.Edit.PatientModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
+@using ntbs_service.Helpers
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["Title"] = "Notification - Personal Details";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditPatient;
     var fullValidation = Model.Patient.ShouldValidateFull ? "True" : "False";
 }
 

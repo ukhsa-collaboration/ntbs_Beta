@@ -281,7 +281,7 @@ namespace ntbs_ui_tests.Features
 #line 100
         testRunner.Then("I should see the Notification", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 103
-        testRunner.Given("I am on current notification page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+        testRunner.Given("I am on current notification overview page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 104
         testRunner.When("I expand manage notification section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 105
