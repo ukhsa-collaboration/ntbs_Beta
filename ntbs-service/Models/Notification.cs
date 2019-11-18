@@ -24,6 +24,7 @@ namespace ntbs_service.Models
             TravelDetails = new TravelDetails();
             VisitorDetails = new VisitorDetails();
             ComorbidityDetails = new ComorbidityDetails();
+            TestData = new TestData();
         }
 
         #region DB Mapped Fields
@@ -64,6 +65,7 @@ namespace ntbs_service.Models
         public virtual DenotificationDetails DenotificationDetails { get; set; }
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public virtual NotificationGroup Group { get; set; }
+        public virtual TestData TestData { get; set; }
         public virtual ICollection<ManualTestResult> ManualTestResults { get; set; }
 
         #endregion
@@ -82,7 +84,6 @@ namespace ntbs_service.Models
         public string HospitalName => Episode.Hospital?.Name;
         public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
         public string IsSymptomatic => TrueFalseToYesNo(ClinicalDetails.IsSymptomatic);
-        public string NoSampleTakenYesNo => TrueFalseToYesNo(!ClinicalDetails.NoSampleTaken);
         public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
         public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
         public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);

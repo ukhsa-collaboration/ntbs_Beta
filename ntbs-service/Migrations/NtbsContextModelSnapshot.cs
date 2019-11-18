@@ -12020,8 +12020,6 @@ namespace ntbs_service.Migrations
 
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
 
-                            b1.Property<bool>("NoSampleTaken");
-
                             b1.Property<DateTime?>("SymptomStartDate");
 
                             b1.Property<DateTime?>("TBServicePresentationDate");
@@ -12408,6 +12406,22 @@ namespace ntbs_service.Migrations
                                         .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
+                        });
+
+                    b.OwnsOne("ntbs_service.Models.TestData", "TestData", b1 =>
+                        {
+                            b1.Property<int>("NotificationId");
+
+                            b1.Property<bool?>("HasTestCarriedOut");
+
+                            b1.HasKey("NotificationId");
+
+                            b1.ToTable("TestData");
+
+                            b1.HasOne("ntbs_service.Models.Notification")
+                                .WithOne("TestData")
+                                .HasForeignKey("ntbs_service.Models.TestData", "NotificationId")
+                                .OnDelete(DeleteBehavior.Cascade);
                         });
 
                     b.OwnsOne("ntbs_service.Models.TravelDetails", "TravelDetails", b1 =>

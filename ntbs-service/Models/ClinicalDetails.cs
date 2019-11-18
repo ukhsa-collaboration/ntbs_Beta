@@ -41,8 +41,6 @@ namespace ntbs_service.Models
         public bool? DidNotStartTreatment { get; set; }
         public bool? IsPostMortem { get; set; }
 
-        public bool NoSampleTaken { get; set; }
-
         public Status? BCGVaccinationState { get; set; }
         [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.BCGYearIsRequired)]
         public int? BCGVaccinationYear { get; set; }

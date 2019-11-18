@@ -291,6 +291,12 @@ namespace ntbs_service.Models
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("DenotificationDetails");
                 });
+
+                entity.OwnsOne(e => e.TestData, i =>
+                {
+                    i.ToTable("TestData");
+                });
+
             });
 
             modelBuilder.Entity<Region>(entity =>
