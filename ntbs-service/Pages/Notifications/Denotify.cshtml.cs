@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
-using System;
-using System.Threading.Tasks;
-using ntbs_service.DataAccess;
 
 namespace ntbs_service.Pages.Notifications
 {
