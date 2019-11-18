@@ -25,6 +25,7 @@ namespace ntbs_service.Models
         public AlertStatus AlertStatus { get; set; }
         public DateTime? ClosureDate { get; set; }
         public string ClosingUserId { get; set; }
+        // AlertReason and AlertLink should be able to be populated from the rest of the fields on the class - might be easier to override the getter in the derived classes
         public string AlertReason => "";
         public string AlertLink => "";
     }

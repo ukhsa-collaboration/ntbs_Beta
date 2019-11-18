@@ -1,6 +1,7 @@
 namespace ntbs_service.Models.Enums 
 {
-    public enum AlertType {
+    public enum AlertType 
+    {
         EnhancedSurveillanceMDR,
         EnhancedSurveillanceMBovis,
         MissingTreatmentOutcome,

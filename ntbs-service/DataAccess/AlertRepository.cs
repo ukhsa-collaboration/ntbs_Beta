@@ -32,13 +32,13 @@ namespace ntbs_service.DataAccess
         public async Task<Alert> GetAlertByIdAsync(int? alertId)
         {
             return await _context.Alert
-                .FirstOrDefaultAsync(m => m.AlertId == alertId);
+                .SingleOrDefaultAsync(m => m.AlertId == alertId);
         }
 
         public async Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
         {
             return await _context.Alert
-                .FirstOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
+                .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
         
     }

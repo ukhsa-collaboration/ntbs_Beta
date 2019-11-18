@@ -10,7 +10,7 @@ using ntbs_service.Models;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20191115122928_AddBaseAlertClassWithExampleDerivedClass")]
+    [Migration("20191118111751_AddBaseAlertClassWithExampleDerivedClass")]
     partial class AddBaseAlertClassWithExampleDerivedClass
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace ntbs_service.Migrations
                     b.Property<string>("ClosingUserId")
                         .HasMaxLength(64);
 
-                    b.Property<DateTime>("ClosureDate");
+                    b.Property<DateTime?>("ClosureDate");
 
                     b.Property<DateTime>("CreationDate");
 

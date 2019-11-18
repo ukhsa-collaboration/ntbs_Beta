@@ -21,7 +21,7 @@ namespace ntbs_service.Migrations
                     HospitalId = table.Column<Guid>(nullable: true),
                     AlertType = table.Column<string>(maxLength: 30, nullable: false),
                     AlertStatus = table.Column<string>(maxLength: 30, nullable: false),
-                    ClosureDate = table.Column<DateTime>(nullable: false),
+                    ClosureDate = table.Column<DateTime>(nullable: true),
                     ClosingUserId = table.Column<string>(maxLength: 64, nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
                     TransferReason = table.Column<string>(nullable: true),

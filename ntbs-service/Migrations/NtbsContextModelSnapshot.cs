@@ -39,7 +39,7 @@ namespace ntbs_service.Migrations
                     b.Property<string>("ClosingUserId")
                         .HasMaxLength(64);
 
-                    b.Property<DateTime>("ClosureDate");
+                    b.Property<DateTime?>("ClosureDate");
 
                     b.Property<DateTime>("CreationDate");
 
