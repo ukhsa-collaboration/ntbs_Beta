@@ -2,12 +2,13 @@
 
 @{
     var buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";
+    var id = @ViewData.ContainsKey("id") ? @ViewData["id"] : "save-button";
 }
 <button
     nhs-button-type="Standard"
     classes="ntbsuk-button--primary"
     name="actionName"
     value="Save"
-    id="save-button">
+    id=@id >
     @buttonName
 </button>
