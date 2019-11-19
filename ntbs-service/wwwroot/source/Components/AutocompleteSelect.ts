@@ -6,16 +6,19 @@ const AutocompleteSelect = Vue.extend({
     mounted: function() {
         this.selectElement = this.$refs["selectElement"];
         var selectId = this.selectElement.id;
-        accessible.enhanceSelectElement({
+        var options:any = {
             placeholder: this.$props.placeholder,
             autoselect: false,
             preserveNullOptions: true,
             showAllValues: true,
-            selectElement: this.selectElement,
-            onConfirm: (val: any) => {
+            selectElement: this.selectElement
+        };
+        if (this.$props.validate) {
+            options.onConfirm = (val: any) => {
                 this.onConfirm(val);
             }
-        })
+        };
+        accessible.enhanceSelectElement(options);
         this.autocompleteElement = document.getElementById(selectId) as HTMLInputElement;
         // Workaround for stopping Chrome trying to autocomplete by country, see discussion https://gist.github.com/niksumeiko/360164708c3b326bd1c8
         // Note that autocomplete="off" does not work.
@@ -50,7 +53,7 @@ const AutocompleteSelect = Vue.extend({
                     this.selectElement.dispatchEvent(event);
                     break;
                 }
-            }
+            };
         },
         selectChanged: function (event: Event) {
             // to ensure containing validation method called
