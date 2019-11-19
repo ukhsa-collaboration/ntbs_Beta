@@ -3,7 +3,7 @@
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Comorbidities";
     ViewData["CurrentPage"] = NotificationSubPaths.EditComorbidities;
 }
@@ -99,5 +99,5 @@
     </nhs-form-group>
 
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>
