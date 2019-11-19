@@ -13,7 +13,7 @@ namespace ntbs_service.Services
     public interface IAlertService
     {
         Task<bool> AddUniqueAlertAsync(Alert alert);
-        Task DeleteAlertAsync(int alertId, string userId);
+        Task DismissAlertAsync(int alertId, string userId);
 
     }
 
@@ -27,7 +27,7 @@ namespace ntbs_service.Services
             _alertRepository = alertRepository;
         }
 
-        public async Task DeleteAlertAsync(int alertId, string userId)
+        public async Task DismissAlertAsync(int alertId, string userId)
         {
             var alert = await _alertRepository.GetAlertByIdAsync(alertId);
             

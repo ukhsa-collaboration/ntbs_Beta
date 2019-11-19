@@ -6,140 +6,161 @@
     Layout = "./Shared/_NoForm_Layout.cshtml";
 }
 
+<div>
+    <h2> Alerts </h2>
+    <p>
+        Filter by TB Service
+    </p>
+    <select>
+        <option> Show all </option>
+    </select>
+</div>
 
-<h2> Alerts </h2>
-
-<table class="notifications-table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Alerts[0].NotificationId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alerts[0].CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alerts[0].CaseManager.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alerts[0].Hospital.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alerts[0].TbServiceCode)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Alerts) {
-        <tr>
-            <th>
-                <a href="/" class="govuk-link govuk-link--no-visited-state">
-                    @Html.DisplayFor(_ => item.NotificationId)
-                </a>
-            </th>
-            <td>
-                @Html.DisplayFor(_ => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(_ => item.AlertType)
-            </td>
-            <td>
-                @Html.DisplayFor(_ => item.CaseManager.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(_ => item.Hospital.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(_ => item.TbServiceCode)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<nhs-table class="notifications-table">
+    <nhs-table-head>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].NotificationId)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].FormattedCreationDate)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].CaseManagerFullName)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].HospitalName)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].Action)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.Alerts[0].DismissLink)
+        </nhs-table-item>
+    </nhs-table-head>
+    <nhs-table-body>
+        @foreach (var item in Model.Alerts) 
+        {
+            
+            <nhs-table-body-row ref="@item.TbServiceCode">
+                <nhs-table-item>
+                    @if(item.NotificationId != null) 
+                    {
+                        <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId ?? 1)" class="govuk-link govuk-link--no-visited-state">
+                            @Html.DisplayFor(_ => item.NotificationId)
+                        </a>
+                    }
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.FormattedCreationDate)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.AlertType)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.CaseManager.FullName)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.Hospital.Name)
+                </nhs-table-item>
+                <nhs-table-item>
+                    <a href="@item.ActionLink">
+                        @Html.DisplayFor(_ => item.Action)
+                    </a>
+                </nhs-table-item>
+                <nhs-table-item>
+                    <form method="post">
+                        <input hidden />
+                        <a href="@item.DismissLink">
+                            Dismiss
+                        </a>
+                    </form>
+                </nhs-table-item>
+            </nhs-table-body-row>
+            
+        }
+    </nhs-table-body>
+</nhs-table>
 
 <h2> Draft notifications </h2>
 
-<table class="notifications-table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].NotificationId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].FormattedCreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].TBServiceName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManagerName)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.DraftNotifications) {
-        <tr>
-            <th>
-                <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link govuk-link--no-visited-state">
-                    @Html.DisplayFor(_ => item.NotificationId)
-                </a>
-            </th>
-            <td>
-                @Html.DisplayFor(_ => item.FormattedCreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(_ => item.TBServiceName)
-            </td>
-            <td>
-                @Html.DisplayFor(_ => item.Episode.CaseManagerName)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<nhs-table class="notifications-table">
+    <nhs-table-head>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.DraftNotifications[0].NotificationId)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.DraftNotifications[0].FormattedCreationDate)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.DraftNotifications[0].TBServiceName)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManagerName)
+        </nhs-table-item>
+    </nhs-table-head>
+    <nhs-table-body>
+        @foreach (var item in Model.DraftNotifications) 
+        {
+            <nhs-table-body-row>
+                <nhs-table-item>
+                    <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link govuk-link--no-visited-state">
+                        @Html.DisplayFor(_ => item.NotificationId)
+                    </a>
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.FormattedCreationDate)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.TBServiceName)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(_ => item.Episode.CaseManagerName)
+                </nhs-table-item>
+            </nhs-table-body-row>
+        }
+    </nhs-table-body>
+</nhs-table>
 
 <h2> Recent notifications </h2>
-<table class="notifications-table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedSubmissionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].TBServiceName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManagerName)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.RecentNotifications) {
-        <tr>
-            <th>
-                <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link--no-visited-state">
-                    @Html.DisplayFor(modelItem => item.NotificationId)
-                </a>
-            </th>
-            <td>
-                @Html.DisplayFor(modelItem => item.FormattedSubmissionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TBServiceName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Episode.CaseManagerName)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<nhs-table class="notifications-table">
+    <nhs-table-head>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedSubmissionDate)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.RecentNotifications[0].TBServiceName)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManagerName)
+        </nhs-table-item>
+    </nhs-table-head>
+    <nhs-table-body>
+        @foreach (var item in Model.RecentNotifications) {
+            <nhs-table-body-row>
+                <nhs-table-item>
+                    <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link--no-visited-state">
+                        @Html.DisplayFor(modelItem => item.NotificationId)
+                    </a>
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(modelItem => item.FormattedSubmissionDate)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(modelItem => item.TBServiceName)
+                </nhs-table-item>
+                <nhs-table-item>
+                    @Html.DisplayFor(modelItem => item.Episode.CaseManagerName)
+                </nhs-table-item>
+            </nhs-table-body-row>
+        }
+    </nhs-table-body>
+</nhs-table>
 
 @section ActionsAside 
 {

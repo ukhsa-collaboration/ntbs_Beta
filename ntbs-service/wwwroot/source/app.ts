@@ -17,6 +17,7 @@ import { ValidatePostcode } from "./Components/ValidatePostcode";
 import ConditionalSelectWrapper from "./Components/ConditionalSelectWrapper";
 import NhsNumberDuplicateWarning from "./Components/NhsNumberDuplicateWarning";
 import TbServiceFilteredDropdowns from "./Components/TbServiceFilteredDropdowns";
+import TbServiceFilteredAlerts from "./Components/TbServiceFilteredAlerts";
 
 // For compatibility with IE11
 require("es6-promise").polyfill();
@@ -38,6 +39,7 @@ Vue.component("validate-postcode", ValidatePostcode);
 Vue.component("conditional-select-wrapper", ConditionalSelectWrapper);
 Vue.component("nhs-number-duplicate-warning", NhsNumberDuplicateWarning);
 Vue.component("tb-service-filtered-dropdowns", TbServiceFilteredDropdowns);
+Vue.component("tb-service-filtered-alerts", TbServiceFilteredAlerts);
 
 new Vue({
     el: "#app",

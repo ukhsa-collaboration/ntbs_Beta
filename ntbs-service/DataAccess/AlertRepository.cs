@@ -14,7 +14,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
         Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
-        Task<IList<Alert>> GetAlertsByTbServices(IEnumerable<string> tbServices);
+        Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
     }
 
     public class AlertRepository : IAlertRepository
@@ -34,25 +34,34 @@ namespace ntbs_service.DataAccess
 
         public async Task<Alert> GetAlertByIdAsync(int? alertId)
         {
-            return await _context.Alert
+            return await GetBaseAlertIQueryable()
                 .SingleOrDefaultAsync(m => m.AlertId == alertId);
         }
 
         public async Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
         {
-            return await _context.Alert
+            return await GetBaseAlertIQueryable()
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
 
-        public async Task<IList<Alert>> GetAlertsByTbServices(IEnumerable<string> tbServices)
+        public async Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
-            return await _context.Alert.Where(a => tbServices.Contains(a.TbServiceCode)).ToListAsync();
+            return await GetBaseAlertIQueryable().Where(a => tbServices.Contains(a.TbServiceCode)).ToListAsync();
         }
         
         public async Task UpdateAlertAsync(AuditType auditType = AuditType.Edit)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await _context.SaveChangesAsync();
+        }
+
+        private IQueryable<Alert> GetBaseAlertIQueryable()
+        {
+            return _context.Alert
+                .Where(n => n.AlertStatus != AlertStatus.Closed)
+                .Include(n => n.TbService)
+                .Include(n => n.CaseManager)
+                .Include(n => n.Hospital);
         }
     }
 }
