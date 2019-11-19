@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Migrations;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 
@@ -22,6 +23,7 @@ namespace ntbs_service.DataAccess
         bool NotificationExists(int notificationId);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
+        Task<IList<ManualTestResult>> GetManualTestResultsForNotificationAsync(int notificationId);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -131,6 +133,15 @@ namespace ntbs_service.DataAccess
                 .Select(n => n.Group)
                 .Include(g => g.Notifications)
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<IList<ManualTestResult>> GetManualTestResultsForNotificationAsync(int notificationId)
+        {
+            return await _context.ManualTestResult
+                .Where(t => t.NotificationId == notificationId)
+                .Include(t => t.ManualTestType)
+                .Include(t => t.SampleType)
+                .ToListAsync();
         }
 
         private IQueryable<Notification> GetBaseNotificationIQueryable()

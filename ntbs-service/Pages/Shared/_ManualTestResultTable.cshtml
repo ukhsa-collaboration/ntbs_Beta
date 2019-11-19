@@ -1,0 +1,17 @@
+@model ntbs_service.Pages.Notifications.Edit.ManualTestResult
+
+<div>
+    <h3>
+        Results
+    </h3>
+
+    @foreach (var result in Model.AllTestResults)
+    {
+        @result.ManualTestResultId
+        @result.TestDate
+        @result.ManualTestType.Description
+        @result.SampleType.Description
+        @result.Result
+        <br />
+    }
+</div>

@@ -36,6 +36,11 @@ namespace ntbs_service.Pages.Notifications
         [BindProperty]
         public int NotificationId { get; set; }
 
+        protected virtual async Task<Notification> GetNotification(int notificationId)
+        {
+            return await NotificationRepository.GetNotificationAsync(notificationId);
+        }
+
         protected async Task AuthorizeAndSetBannerAsync()
         {
             HasEditPermission = await AuthorizationService.CanEdit(User, Notification);

@@ -34,5 +34,8 @@ namespace ntbs_service.Helpers
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
+
+        public static string EditManualTestResult(string id) => $"Edit/ManualTestResult/{id}";
+        public static string AddManualTestResult => $"Edit/ManualTestResult";
     }
 }

@@ -1,0 +1,77 @@
+@page "/Notifications/{notificationId:int}/Edit/ManualTestResult/{rowId:int?}"
+@model ManualTestResult
+
+@{
+    Layout = "../../../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Notification - Manual Test Result";
+}
+
+<form method="post" autocomplete="off">
+    <input type="hidden" asp-for="NotificationId" />
+    <input type="hidden" asp-for="RowId" />
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset role="group">
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Test Date
+            </nhs-fieldset-legend>
+            <nhs-date-input>
+                <nhs-date-input-item>
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Date" asp-for="FormattedTestDate.Day">Day</label>
+                        <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                               asp-for="FormattedTestDate.Day" />
+                    </nhs-form-group>
+                </nhs-date-input-item>
+                <nhs-date-input-item>
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Date" asp-for="FormattedTestDate.Month">Month</label>
+                        <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                               asp-for="FormattedTestDate.Month" />
+                    </nhs-form-group>
+                </nhs-date-input-item>
+                <nhs-date-input-item>
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Date" asp-for="FormattedTestDate.Year">Year</label>
+                        <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                               asp-for="FormattedTestDate.Year" />
+                    </nhs-form-group>
+                </nhs-date-input-item>
+            </nhs-date-input>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <label nhs-label-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId">
+            Test type
+        </label>
+        <select nhs-select-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId"
+                asp-items="Model.ManualTestTypes">
+            <option value="">Please select</option>
+        </select>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <label nhs-label-type="Standard" asp-for="TestResultForEdit.SampleTypeId">
+            Sample Type
+        </label>
+        <select nhs-select-type="Standard" asp-for="TestResultForEdit.SampleTypeId"
+                asp-items="Model.SampleTypes">
+            <option value="">Please select</option>
+        </select>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <label nhs-label-type="Standard" asp-for="TestResultForEdit.SampleTypeId">
+            Result
+        </label>
+        <select nhs-select-type="Standard" asp-for="TestResultForEdit.Result"
+                asp-items="Model.ResultOptions">
+            <option value="">Please select</option>
+        </select>
+    </nhs-form-group>
+
+    <button type="submit">Save it</button>
+</form>
+
+<partial name="_ManualTestResultTable" model="@Model" />

@@ -37,6 +37,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
         }
 
+        protected override IActionResult RedirectToCreate(int notificationId)
+        {
+            return RedirectToPage("./Table/ManualTestResult", new { notificationId = notificationId });
+        }
+
         protected override async Task ValidateAndSave()
         {
             TestData.SetFullValidation(Notification.NotificationStatus);
