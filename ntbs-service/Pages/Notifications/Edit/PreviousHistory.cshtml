@@ -4,7 +4,7 @@
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Patient TB History";
     ViewData["CurrentPage"] = NotificationSubPaths.EditPreviousHistory;
     var fullValidation = Model.PatientTbHistory.ShouldValidateFull ? "True" : "False";
@@ -54,6 +54,6 @@
     </nhs-form-group>
 
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 
 </div>

@@ -5,7 +5,7 @@
 @using ntbs_service.Helpers
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Personal Details";
     ViewData["CurrentPage"] = NotificationSubPaths.EditPatient;
     var fullValidation = Model.Patient.ShouldValidateFull ? "True" : "False";
@@ -378,5 +378,5 @@
     </conditional-select-wrapper>
 
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

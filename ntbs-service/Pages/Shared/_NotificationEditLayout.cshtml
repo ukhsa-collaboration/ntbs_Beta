@@ -1,0 +1,14 @@
+@model ntbs_service.Pages.Notifications.NotificationModelBase
+
+@{
+    Layout = "./_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+}
+
+@section MainFormButton {
+    <div hidden>
+        <partial name="_PaginationPartial" for="Notification" />
+    </div>
+}
+
+@RenderBody()
+<partial name="_PaginationPartial" for="Notification" />

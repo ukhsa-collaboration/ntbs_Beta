@@ -5,7 +5,7 @@
 @using ntbs_service.Models
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Clinical Details";
     ViewData["CurrentPage"] = NotificationSubPaths.EditClinicalDetails;
     var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
@@ -672,5 +672,5 @@
         </div>
     </validate-multiple>
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>
