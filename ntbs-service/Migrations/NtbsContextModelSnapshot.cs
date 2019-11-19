@@ -8255,6 +8255,8 @@ namespace ntbs_service.Migrations
 
                     b.Property<int>("SampleTypeId");
 
+                    b.Property<DateTime>("TestDate");
+
                     b.HasKey("ManualTestResultId");
 
                     b.HasIndex("ManualTestTypeId");
