@@ -16,6 +16,7 @@ import { ValidateMultiple } from "./Components/ValidateMultiple";
 import { ValidateRequiredCheckboxes } from "./Components/ValidateRequiredCheckboxes";
 import { ValidatePostcode } from "./Components/ValidatePostcode";
 import ConditionalSelectWrapper from "./Components/ConditionalSelectWrapper";
+import { AutocompleteSelect } from "./Components/AutocompleteSelect";
 import NhsNumberDuplicateWarning from "./Components/NhsNumberDuplicateWarning";
 import TbServiceFilteredDropdowns from "./Components/TbServiceFilteredDropdowns";
 
@@ -37,6 +38,7 @@ Vue.component("validate-multiple", ValidateMultiple);
 Vue.component("validate-required-checkboxes", ValidateRequiredCheckboxes);
 Vue.component("validate-postcode", ValidatePostcode);
 Vue.component("conditional-select-wrapper", ConditionalSelectWrapper);
+Vue.component("autocomplete-select", AutocompleteSelect);
 Vue.component("nhs-number-duplicate-warning", NhsNumberDuplicateWarning);
 Vue.component("tb-service-filtered-dropdowns", TbServiceFilteredDropdowns);
 
