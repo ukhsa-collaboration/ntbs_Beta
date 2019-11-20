@@ -33,8 +33,8 @@
             <div class="cell-min-height"> @Model.Notification.FormattedSymptomStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Days from onset to treatment </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToTreatment </div>
+            <div class="notification-details-label"> Symptom onset to treatment start </div>
+            <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToTreatment days </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
@@ -43,8 +43,8 @@
             <div class="cell-min-height"> @Model.Notification.FormattedPresentationToAnyHealthServiceDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Days from onset to first presentation </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToFirstPresentation </div>
+            <div class="notification-details-label"> Symptom onset to health service presentation </div>
+            <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToFirstPresentation days </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
@@ -53,8 +53,8 @@
             <div class="cell-min-height"> @Model.Notification.FormattedPresentationToTBServiceDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Days from onset to TB service presentation </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromFirstPresentationToTBServicePresentation </div>
+            <div class="notification-details-label"> Health service to TB service presentation </div>
+            <div class="cell-min-height"> @Model.Notification.DaysFromFirstPresentationToTBServicePresentation days </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
@@ -63,8 +63,8 @@
             <div class="cell-min-height"> @Model.Notification.FormattedDiagnosisDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Days from presentation to diagnosis </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromTBServicePresentationToDiagnosis </div>
+            <div class="notification-details-label"> TB service presentation to diagnosis </div>
+            <div class="cell-min-height"> @Model.Notification.DaysFromTBServicePresentationToDiagnosis days </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
@@ -73,8 +73,8 @@
             <div class="cell-min-height"> @Model.Notification.FormattedTreatmentStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Days from diagnosis to treatment </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromDiagnosisToTreatment </div>
+            <div class="notification-details-label"> Diagnosis to treatment start </div>
+            <div class="cell-min-height"> @Model.Notification.DaysFromDiagnosisToTreatment days </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
@@ -93,11 +93,11 @@
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Short course treatment </div>
+            <div class="notification-details-label"> Standard therapy treatment </div>
             <div class="cell-min-height"> @Model.Notification.IsShortCourseYesNo </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Directly observed treatment </div>
+            <div class="notification-details-label"> DOT/VOT </div>
             <div class="cell-min-height"> @Model.Notification.ClinicalDetails?.DotStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
@@ -107,7 +107,7 @@
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> MDR treatment </div>
+            <div class="notification-details-label"> RR/MDR/XDR treatment </div>
             <div class="cell-min-height"> @Model.Notification.MDRTreatmentStateAndDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">

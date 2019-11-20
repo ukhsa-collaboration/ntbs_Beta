@@ -1,266 +1,262 @@
 @page
-@model ntbs_service.Pages_Search.IndexModel
+@model IndexModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
-@using Microsoft.AspNetCore.Routing
 
 @{
     ViewData["Title"] = "Search";
-    Layout = "../Shared/_NoForm_Layout.cshtml";
+    Layout = "../Shared/_Layout.cshtml";
 }
 
-<h1>Search</h1>
-<div class="search-page">
-    <form method="get">
-        @{
-            var SearchParametersError = !Model.validationService.IsValid("SearchParameters");
-            var SearchParametersGroupState = SearchParametersError ? Error : Standard;
-        }
-        <nhs-form-group nhs-form-group-type=@SearchParametersGroupState>
-            <nhs-fieldset aria-describedby="one-parameter-required-error">
-                <nhs-fieldset-legend nhs-legend-size="Standard">
-                    To search enter at least one of the following fields
-                </nhs-fieldset-legend>
-                <span nhs-span-type="ErrorMessage" id="one-parameter-required-error"
-                    asp-validation-for="SearchParameters" has-error="@SearchParametersError"></span>
-                <nhs-grid-row>
-                    <nhs-grid-column grid-column-width="OneQuarter">
-                        @{
-                            var IdFilterError = !Model.validationService.IsValid("SearchParameters.IdFilter");
-                            var IdFilterGroupState = IdFilterError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type=@IdFilterGroupState>
-                            <label nhs-label-type="Standard"> ID number </label>
-                            <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
-                                Search by NTBS, ETS, LTBR or NHS number
-                            </nhs-hint>
-                            <span nhs-span-type="ErrorMessage" id="id-error"
-                                asp-validation-for="SearchParameters.IdFilter" has-error="@IdFilterError"></span>
-                            <input is-error-input=@IdFilterError nhs-input-type="Standard"
-                                asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10" aria-describedby="id-types-hint"/>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneQuarter">
-                        @{
-                            var FamilyNameError = !Model.validationService.IsValid("SearchParameters.FamilyName");
-                            var FamilyNameGroupState = FamilyNameError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type=@FamilyNameGroupState>
-                            <label nhs-label-type="Standard"> Family Name</label>
-                            <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint">
-                                Enter at least two characters
-                            </nhs-hint>
-                            <span nhs-span-type="ErrorMessage" id="family-name-error"
-                                asp-validation-for="SearchParameters.FamilyName" has-error="@FamilyNameError"></span>
-                            <input is-error-input=@FamilyNameError nhs-input-type="Standard"
-                                asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10" aria-describedby="two-character-family-name-hint"/>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneQuarter">
-                        @{
-                            var DobError = !Model.validationService.IsValid("SearchParameters.PartialDob");
-                            var DobGroupState = DobError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type=@DobGroupState>
-                            <label nhs-label-type="Standard"> Date of birth </label>
-                            <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
-                                Dates can be partial, enter year at minimum
-                            </nhs-hint>
-                            <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error"
-                                asp-validation-for="SearchParameters.PartialDob" has-error="@DobError"></span>
-                            <nhs-date-input id="dob">
+<nhs-width-container container-width="Standard">
+    <h1 class="search-header"> Search </h1>
+    <div class="search-page">
+        <form method="get">
+            @{
+                var searchParametersError = !Model.ValidationService.IsValid("SearchParameters");
+                var searchParametersGroupState = searchParametersError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@searchParametersGroupState>
+                <nhs-fieldset aria-describedby="one-parameter-required-error">
+                    <span nhs-span-type="ErrorMessage" id="one-parameter-required-error"
+                        asp-validation-for="SearchParameters" has-error="@searchParametersError"></span>
+                    <br />
+
+                    @{
+                        var idFilterError = !Model.ValidationService.IsValid("SearchParameters.IdFilter");
+                        var idFilterGroupState = idFilterError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@idFilterGroupState classes="nhs-form-group--search">
+                        <span nhs-span-type="ErrorMessage" id="id-error" classes="search-error"
+                                asp-validation-for="SearchParameters.IdFilter" has-error="@idFilterError"></span>
+                        <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.IdFilter"> ID number </label>
+                        <input is-error-input=@idFilterError nhs-input-type="Standard"
+                            asp-for="SearchParameters.IdFilter" classes="nhsuk-input--width-10 search-input" aria-describedby="id-types-hint" />
+                        <nhs-hint nhs-hint-type="Standard" id="id-types-hint" classes="search-hint">
+                            Search by NTBS, ETS, LTBR or NHS number
+                        </nhs-hint>
+                    </nhs-form-group>
+
+                    @{
+                        var familyNameError = !Model.ValidationService.IsValid("SearchParameters.FamilyName");
+                        var familyNameGroupState = familyNameError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@familyNameGroupState classes="nhs-form-group--search">
+                        <span nhs-span-type="ErrorMessage" id="family-name-error" classes="search-error"
+                            asp-validation-for="SearchParameters.FamilyName" has-error="@familyNameError"></span>
+                        <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.FamilyName"> Family Name</label>
+                        <input is-error-input=@familyNameError nhs-input-type="Standard"
+                            asp-for="SearchParameters.FamilyName" classes="nhsuk-input--width-10 search-input" aria-describedby="two-character-family-name-hint" />
+                        <nhs-hint nhs-hint-type="Standard" id="two-character-family-name-hint" classes="search-hint">
+                            Enter at least two characters
+                        </nhs-hint>
+                    </nhs-form-group>
+
+                    @{
+                        var dobError = !Model.ValidationService.IsValid("SearchParameters.PartialDob");
+                        var dobGroupState = dobError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@dobGroupState classes="nhs-form-group--search-date">
+                        <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error" classes="search-error"
+                            asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
+                        <label nhs-label-type="Standard" classes="search-label--standard" for="dob"> Date of birth </label>
+                        <nhs-date-input id="dob" classes="date-input--search">
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                    <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day" classes="search-date-input-label">Day</label>
+                                    <input nhs-input-type="Date" fixed-width="Two"
+                                            is-error-input=@dobError asp-for="SearchParameters.PartialDob.Day" />
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
+                                    <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month" classes="search-date-input-label">Month</label>
+                                    <input nhs-input-type="Date" fixed-width="Two"
+                                            is-error-input=@dobError asp-for="SearchParameters.PartialDob.Month" />
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
+                                    <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year" classes="search-date-input-label">Year</label>
+                                    <input nhs-input-type="Date" fixed-width="Four"
+                                            is-error-input=@dobError asp-for="SearchParameters.PartialDob.Year" />
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
+                            Dates can be partial
+                        </nhs-hint>
+                    </nhs-form-group>
+
+                    @{
+                        var postcodeError = !Model.ValidationService.IsValid("SearchParameters.Postcode");
+                        var postcodeGroupState = postcodeError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@postcodeGroupState classes="nhs-form-group--search">
+                        <span nhs-span-type="ErrorMessage" id="postcode-error" classes="search-error"
+                            asp-validation-for="SearchParameters.Postcode" has-error="@postcodeError"></span>
+                        <label nhs-label-type="Standard" classes="search-label--standard" asp-for="SearchParameters.Postcode"> Postcode </label>
+                        <input is-error-input=@postcodeError nhs-input-type="Standard"
+                                    asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10 search-input"
+                                    aria-describedby="two-character-postcode-hint" />
+                        <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint" classes="search-hint">
+                            Enter at least two characters
+                        </nhs-hint>
+                    </nhs-form-group>
+                </nhs-fieldset>
+            </nhs-form-group>
+            <nhs-details display-text="Advanced options" nhs-details-type="Standard">
+                <div>
+                    @{
+                        var notificationDateError = !Model.ValidationService.IsValid("SearchParameters.PartialNotificationDate");
+                        var notificationDateGroupState = notificationDateError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--search-date">
+                        <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="search-error"
+                            asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
+                            <label nhs-label-type="Standard" classes="search-label--long" for="notification-date"> Notification Date </label>
+                            <nhs-date-input id="notification-date" classes="date-input--search">
                                 <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day">Day</label>
+                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Day"  classes="search-date-input-label">Day</label>
                                         <input nhs-input-type="Date" fixed-width="Two"
-                                            is-error-input=@DobError asp-for="SearchParameters.PartialDob.Day"/>
+                                            is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Day" />
                                     </nhs-form-group>
                                 </nhs-date-input-item>
                                 <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month">Month</label>
+                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Month"  classes="search-date-input-label">Month</label>
                                         <input nhs-input-type="Date" fixed-width="Two"
-                                            is-error-input=@DobError asp-for="SearchParameters.PartialDob.Month"/>
+                                            is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Month" />
                                     </nhs-form-group>
                                 </nhs-date-input-item>
                                 <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year">Year</label>
+                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Year"  classes="search-date-input-label">Year</label>
                                         <input nhs-input-type="Date" fixed-width="Four"
-                                            is-error-input=@DobError asp-for="SearchParameters.PartialDob.Year"/>
+                                            is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Year" />
                                     </nhs-form-group>
                                 </nhs-date-input-item>
                             </nhs-date-input>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneQuarter">
-                        @{
-                            var PostcodeError = !Model.validationService.IsValid("SearchParameters.Postcode");
-                            var PostcodeGroupState = PostcodeError ? Error : Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type=@PostcodeGroupState>
-                            <label nhs-label-type="Standard"> Postcode </label>
-                            <nhs-hint nhs-hint-type="Standard" id="two-character-postcode-hint">
-                                Enter at least two characters
-                            </nhs-hint>
-                            <span nhs-span-type="ErrorMessage" id="postcode-error"
-                                asp-validation-for="SearchParameters.Postcode" has-error="@PostcodeError"></span>
-                            <input is-error-input=@PostcodeError nhs-input-type="Standard"
-                                asp-for="SearchParameters.Postcode" classes="nhsuk-input--width-10" 
-                                aria-describedby="two-character-postcode-hint"/>
-                        </nhs-form-group>
-                    </nhs-grid-column>
-                </nhs-grid-row>
-            </nhs-fieldset>
-        </nhs-form-group>
-        <span class="enter-search-details-tip">
-            Advanced options
-        </span>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneQuarter">
-                @{
-                    var NotificationDateError = !Model.validationService.IsValid("SearchParameters.PartialNotificationDate");
-                    var NotificationDateGroupState = NotificationDateError ? Error : Standard;
-                }
-                <nhs-form-group nhs-form-group-type=@NotificationDateGroupState>
-                    <label nhs-label-type="Standard"> Notification Date </label>
-                    <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint">
-                        Dates can be partial, enter year at minimum
-                    </nhs-hint>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error"
-                        asp-validation-for="SearchParameters.PartialNotificationDate"  has-error="@NotificationDateError"></span>
-                    <nhs-date-input id="dob">
-                        <nhs-date-input-item>
-                            <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Day">Day</label>
-                                <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@NotificationDateError asp-for="SearchParameters.PartialNotificationDate.Day"/>
-                            </nhs-form-group>
-                        </nhs-date-input-item>
-                        <nhs-date-input-item>
-                            <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Month">Month</label>
-                                <input nhs-input-type="Date" fixed-width="Two"
-                                    is-error-input=@NotificationDateError asp-for="SearchParameters.PartialNotificationDate.Month"/>
-                            </nhs-form-group>
-                        </nhs-date-input-item>
-                        <nhs-date-input-item>
-                            <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Year">Year</label>
-                                <input nhs-input-type="Date" fixed-width="Four"
-                                    is-error-input=@NotificationDateError asp-for="SearchParameters.PartialNotificationDate.Year"/>
-                            </nhs-form-group>
-                        </nhs-date-input-item>
-                    </nhs-date-input>
-                </nhs-form-group>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneQuarter">
-                @{
-                    var GivenNameError = !Model.validationService.IsValid("SearchParameters.GivenName");
-                    var GivenNameGroupState = GivenNameError ? Error : Standard;
-                }
-                <nhs-form-group nhs-form-group-type=@GivenNameGroupState>
-                    <label nhs-label-type="Standard"> Given Name</label>
-                    <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint">
-                        Enter at least two characters
-                    </nhs-hint>
-                    <span nhs-span-type="ErrorMessage" id="given-name-error"
-                        asp-validation-for="SearchParameters.GivenName" has-error="@GivenNameError"></span>
-                    <input is-error-input=@GivenNameError nhs-input-type="Standard"
-                        asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10" aria-describedby="two-character-given-name-hint"/>
-                </nhs-form-group>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneQuarter">
-                @{
-                    var SexIdError = !Model.validationService.IsValid("SexId");
-                    var SexIdGroupState = SexIdError ? Error : Standard;
-                }
-                <nhs-form-group nhs-form-group-type=@SexIdGroupState>
-                    <label nhs-label-type="Standard"> Sex </label>
-                    <span ref="errorField" nhs-span-type="ErrorMessage" id="sexId-error"
-                        asp-validation-for="SearchParameters.SexId" has-error="@SexIdError"></span>
-                    <nhs-radios nhs-radios-type="Standard">
-                        @foreach (var sex in Model.Sexes)
-                        {
-                            <nhs-radios-item>
-                                <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId"/>
-                                <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-@sex.SexId">@sex.Label</label>
-                            </nhs-radios-item>
-                        }
-                        <nhs-radios-item>
-                            @{
-                                string anyChecked = null;
-                                if(Model.SearchParameters.SexId == null) {
-                                    anyChecked = "true";
-                                }
-                            }
-                            <input is-error-input=@SexIdError nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="" checked="@anyChecked"id="sexId-Any"/>
-                            <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-Any">Any</label>
-                        </nhs-radios-item>
-                    </nhs-radios>
-                </nhs-form-group>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneQuarter">
-                <label nhs-label-type="Standard"> TB service </label>
-                <select nhs-select-type="Standard" asp-for="SearchParameters.TBServiceCode"
-                        asp-items="Model.TBServices">
-                    <option value="" selected>Select TB Service</option>
-                </select>
-                <br>
-                <br>
-                <label nhs-label-type="Standard"> Country of birth </label>
-                <select nhs-select-type="Standard" asp-for="SearchParameters.CountryId"
-                        asp-items="Model.Countries">
-                    <option value="" selected>Select country</option>
-                </select>
-            </nhs-grid-column>
-        </nhs-grid-row>
-        <div class="submit-search-button-container">
-            <input type="submit" value="Search" class="nhsuk-button submit-search-button"/>
-        </div>
-    </form>
-</div>
-<hr />
-@if(Model.SearchParameters?.SearchParamsExist == true) 
-{
-    <div>
-        <div class="clear-search-button-container">
-            <a href="/search" class="clear-search-button">
-                Clear search & start again
-            </a>
-        </div>
-        <div>
-            @{ 
-                var resultCount = Model.SearchResults?.NumberOfResults ?? 0; 
-                var resultsFoundString = $"{resultCount.ToString()} Result{(resultCount == 1 ? "" : "s")} found.";
-            }
-            <p> @resultsFoundString </p>
-            <p> To filter results, add more search terms and search again. </p>
-        </div>
-        @if(Model.SearchResults != null) 
-        {
-            <ol class="search-results-list">
-                @foreach(var result in @Model.SearchResults) 
-                {
-                    <li>
-                        <!-- Each search hit is displayed using a notification banner -->
-                        <partial name="../Shared/_NotificationBanner.cshtml" model="result"/>
-                    </li>
-                }
-            </ol>
-        }
+                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
+                            Dates can be partial
+                        </nhs-hint>
+                    </nhs-form-group>
 
-        <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
-            <ul class="nhsuk-list nhsuk-pagination__list">
-                <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl" 
-                    previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
-            </ul>
-        </nav>
+                    @{
+                        var givenNameError = !Model.ValidationService.IsValid("SearchParameters.GivenName");
+                        var givenNameGroupState = givenNameError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@givenNameGroupState classes="nhs-form-group--search">
+                        <span nhs-span-type="ErrorMessage" id="given-name-error" classes="search-error"
+                            asp-validation-for="SearchParameters.GivenName" has-error="@givenNameError"></span>
+                        <label nhs-label-type="Standard" classes="search-label--long" asp-for="SearchParameters.GivenName"> Given Name</label>
+                        <input is-error-input=@givenNameError nhs-input-type="Standard"
+                                asp-for="SearchParameters.GivenName" classes="nhsuk-input--width-10 search-input" 
+                                aria-describedby="two-character-given-name-hint" />
+                        <nhs-hint nhs-hint-type="Standard" id="two-character-given-name-hint" classes="search-hint">
+                            Enter at least two characters
+                        </nhs-hint>
+                    </nhs-form-group>
+
+                    <div class="search-sex-radios">
+                        <label nhs-label-type="Standard" classes="search-label--long" for="sex-radios"> Sex </label>
+                        <nhs-radios nhs-radios-type="Standard" classes="search-sex-radios" id="sex-radios">
+                            @foreach (var sex in Model.Sexes)
+                            {
+                                <nhs-radios-item>
+                                    <input nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId" />
+                                    <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-@sex.SexId">@sex.Label</label>
+                                </nhs-radios-item>
+                            }
+                            <nhs-radios-item>
+                                @{
+                                    string anyChecked = null;
+                                    if (Model.SearchParameters.SexId == null)
+                                    {
+                                        anyChecked = "true";
+                                    }
+                                }
+                                <input nhs-input-type="Radios" asp-for="SearchParameters.SexId" type="radio" value="" checked="@anyChecked" id="sexId-Any" />
+                                <label nhs-label-type="Radios" asp-for="SearchParameters.SexId" for="sexId-Any">Any</label>
+                            </nhs-radios-item>
+                        </nhs-radios>
+                    </div>
+
+                    <div class="nhs-form-group--search">
+                        <label nhs-label-type="Standard" classes="search-label--long" asp-for="SearchParameters.TBServiceCode"> TB service </label>
+                        <select nhs-select-type="Standard" asp-for="SearchParameters.TBServiceCode"
+                                    asp-items="Model.TbServices" classes="search-dropdown">
+                            <option value="" selected>Select TB Service</option>
+                        </select>
+                    </div>
+
+                    <div class="nhs-form-group--search">
+                        <label nhs-label-type="Standard" classes="search-label--long" asp-for="SearchParameters.CountryId"> Country of birth </label>
+                        <select nhs-select-type="Standard" asp-for="SearchParameters.CountryId"
+                                    asp-items="Model.Countries"  classes="search-dropdown">
+                            <option value="" selected>Select country</option>
+                        </select>
+                    </div>
+                </div>
+            </nhs-details>
+
+            <div class="submit-search-button-container">
+                <button nhs-button-type="Standard" type="submit" value="Search" classes="ntbsuk-button--primary submit-search-button" id="search-button" formaction="#search-results-section">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+    <br/>
+</nhs-width-container>
+@if (Model.SearchParameters?.SearchParamsExist == true)
+{
+    <div class="search-results-section" id="search-results-section">
+        <nhs-width-container container-width="Standard">
+            <div class="search-results-summary">
+                @{
+                    var resultCount = Model.SearchResults?.NumberOfResults ?? 0;
+                    var resultsFoundString = $"{resultCount.ToString()} Result{(resultCount == 1 ? "" : "s")} found.";
+                }
+                <p> @resultsFoundString </p>
+                <a href="/search" class="clear-search-button">
+                    Clear search & start again
+                </a>
+            </div>
+            <p> @("To filter results, add more search terms and search again.") </p>
+            <div class="create-notification-button-container">
+                <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button create-notification-button--right ntbsuk-button--primary" id="create-button">
+                    Create Notification
+                </a>
+            </div>
+            @if (Model.SearchResults != null)
+            {
+                <ol class="search-results-list" id="search-results">
+                    @foreach (var result in @Model.SearchResults)
+                    {
+                        <li>
+                            <!-- Each search hit is displayed using a notification banner -->
+                            <partial name="../Shared/_NotificationBanner.cshtml" model="result" />
+                        </li>
+                    }
+                </ol>
+            }
+        </nhs-width-container>
     </div>
 
-    @section ActionsAside 
-    {
-        <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button search-notifications-button">
-            Create Notification
-        </a>
-    }
+    <nhs-width-container container-width="Standard">
+        <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
+            <ul class="nhsuk-list nhsuk-pagination__list">
+                <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl"
+                                previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
+            </ul>
+        </nav>
+        @if(Model.SearchResults?.Count > 3)
+        {
+            <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
+                Create Notification
+            </a>
+        }
+    </nhs-width-container>
+    <br>
 }

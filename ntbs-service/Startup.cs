@@ -1,4 +1,8 @@
+﻿using System.Globalization;
+using EFAuditer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,21 +14,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
-using ntbs_service.DataAccess;
 using ntbs_service.Data.Legacy;
+using ntbs_service.DataAccess;
+using ntbs_service.Middleware;
 using ntbs_service.Models;
 using ntbs_service.Services;
-using System.Globalization;
-using EFAuditer;
-using ntbs_service.Middleware;
-using Microsoft.AspNetCore.Authentication.WsFederation;
-using Microsoft.AspNetCore.Authentication;
-using System;
-using System.Net.Http;
+using Serilog;
 
 namespace ntbs_service
 {
-  public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
@@ -45,9 +44,8 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-            var setupDummyAuth = Env.IsDevelopment() || Env.IsEnvironment("Test");
-            IConfigurationSection adfsConfig = Configuration.GetSection("AdfsOptions");
+            var adfsConfig = Configuration.GetSection("AdfsOptions");
+            var setupDummyAuth = adfsConfig.GetValue<bool>("UseDummyAuth", false);
             var authSetup = services.AddAuthentication(sharedOptions =>
                     {
                         sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -59,7 +57,7 @@ namespace ntbs_service
                         options.Wtrealm = adfsConfig["Wtrealm"];
                     })
                     .AddCookie(options =>
-                    {   
+                    {
                         options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
                     });
 
@@ -68,14 +66,15 @@ namespace ntbs_service
                 authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
             }
 
-            services.AddMvc(options => 
+            services.AddMvc(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
                                 .RequireAuthenticatedUser()
                                 .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            }).AddRazorPagesOptions(options => {
+            }).AddRazorPagesOptions(options =>
+            {
                 options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
                 options.Conventions.AllowAnonymousToPage("/Logout");
             })
@@ -101,6 +100,7 @@ namespace ntbs_service
             }
 
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchServiceLegacy, SearchServiceLegacy>();
             services.AddScoped<IETSSearchService, ETSSearcher>();
@@ -138,9 +138,23 @@ namespace ntbs_service
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
+
+            if (!Env.IsEnvironment("Test"))
+            {
+                /*
+                Making this conidtional is the result of serilog not playing nicely with WebApplicationFactory
+                used by the ui tests, see: https://github.com/serilog/serilog-aspnetcore/issues/105
+                Using env directly as check is an unsatisfying solution, but configuration values were not picked up consistently correctly here.
+                */
+                app.UseSerilogRequestLogging(options => // Needs to be before MVC handlers
+                {
+                    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
+                });
+            };
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseStaticFiles();
             app.UseCookiePolicy();
             if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
             {

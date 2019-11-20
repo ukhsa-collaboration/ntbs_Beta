@@ -14,7 +14,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditClinicalDetails;
 
-        public ClinicalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) {}
+        public ClinicalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task PostDraft_ReturnsPageWithAllModelErrors_IfModelNotValid()
@@ -35,13 +35,13 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedSymptomDate.Day"] = "10",
                 ["FormattedFirstPresentationDate.Day"] = "1",
                 ["FormattedFirstPresentationDate.Month"] = "1",
-                ["FormattedFirstPresentationDate.Year"] = "2000",
-                ["FormattedTBServicePresentationDate.Day"] = "1",
-                ["FormattedTBServicePresentationDate.Month"] = "1",
-                ["FormattedTBServicePresentationDate.Year"] = "2000",
+                ["FormattedFirstPresentationDate.Year"] = "2050",
+                ["FormattedTbServicePresentationDate.Day"] = "1",
+                ["FormattedTbServicePresentationDate.Month"] = "1",
+                ["FormattedTbServicePresentationDate.Year"] = "2050",
                 ["FormattedDiagnosisDate.Day"] = "1",
                 ["FormattedDiagnosisDate.Month"] = "1",
-                ["FormattedDiagnosisDate.Year"] = "2000",
+                ["FormattedDiagnosisDate.Year"] = "2050",
                 ["ClinicalDetails.DidNotStartTreatment"] = "false",
                 ["FormattedTreatmentDate.Day"] = "1",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
@@ -55,18 +55,15 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.StandardStringFormat), resultDocument.GetError("other-site"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidYear), resultDocument.GetError("bcg-vaccination"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("symptom"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                resultDocument.GetError("first-presentation"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                resultDocument.GetError("tb-service-presentation"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate)),
-                resultDocument.GetError("diagnosis"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("treatment"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("short-course"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidTreatmentOptions), resultDocument.GetError("mdr"));
+            resultDocument.AssertErrorMessage("other-site", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("bcg-vaccination", ValidationMessages.ValidYear);
+            resultDocument.AssertErrorMessage("symptom", ValidationMessages.ValidDate);
+            resultDocument.AssertErrorMessage("first-presentation", ValidationMessages.TodayOrEarlier("Presentation to any health service"));
+            resultDocument.AssertErrorMessage("tb-service-presentation", ValidationMessages.TodayOrEarlier("Presentation to TB service"));
+            resultDocument.AssertErrorMessage("diagnosis", ValidationMessages.TodayOrEarlier("Diagnosis Date"));
+            resultDocument.AssertErrorMessage("treatment", ValidationMessages.ValidDate);
+            resultDocument.AssertErrorMessage("short-course", ValidationMessages.ValidTreatmentOptions);
+            resultDocument.AssertErrorMessage("mdr", ValidationMessages.ValidTreatmentOptions);
         }
 
         [Fact]
@@ -92,9 +89,9 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DiseaseSiteOtherIsRequired), resultDocument.GetError("other-site"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.BCGYearIsRequired), resultDocument.GetError("bcg-vaccination"));
-            Assert.Equal(FullErrorMessage(ValidationMessages.DeathDateIsRequired), resultDocument.GetError("postmortem"));
+            resultDocument.AssertErrorMessage("other-site", ValidationMessages.DiseaseSiteOtherIsRequired);
+            resultDocument.AssertErrorMessage("bcg-vaccination", ValidationMessages.BCGYearIsRequired);
+            resultDocument.AssertErrorMessage("postmortem", ValidationMessages.DeathDateIsRequired);
         }
 
         [Fact]
@@ -119,7 +116,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(ValidationMessages.DiseaseSiteIsRequired, resultDocument.GetError("notification-sites"));
+            resultDocument.AssertErrorMessage("notification-sites", ValidationMessages.DiseaseSiteIsRequired);
         }
 
         [Fact]
@@ -147,7 +144,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DiagnosisDateIsRequired), resultDocument.GetError("diagnosis"));
+            resultDocument.AssertErrorMessage("diagnosis", ValidationMessages.DiagnosisDateIsRequired);
         }
 
         [Fact]
@@ -174,9 +171,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedFirstPresentationDate.Day"] = "2",
                 ["FormattedFirstPresentationDate.Month"] = "2",
                 ["FormattedFirstPresentationDate.Year"] = "2012",
-                ["FormattedTBServicePresentationDate.Day"] = "3",
-                ["FormattedTBServicePresentationDate.Month"] = "3",
-                ["FormattedTBServicePresentationDate.Year"] = "2013",
+                ["FormattedTbServicePresentationDate.Day"] = "3",
+                ["FormattedTbServicePresentationDate.Month"] = "3",
+                ["FormattedTbServicePresentationDate.Year"] = "2013",
                 ["FormattedDiagnosisDate.Day"] = "4",
                 ["FormattedDiagnosisDate.Month"] = "4",
                 ["FormattedDiagnosisDate.Year"] = "2014",
@@ -208,9 +205,9 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal("2", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Day")).Value);
             Assert.Equal("2", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Month")).Value);
             Assert.Equal("2012", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedFirstPresentationDate_Year")).Value);
-            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Day")).Value);
-            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Month")).Value);
-            Assert.Equal("2013", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTBServicePresentationDate_Year")).Value);
+            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTbServicePresentationDate_Day")).Value);
+            Assert.Equal("3", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTbServicePresentationDate_Month")).Value);
+            Assert.Equal("2013", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTbServicePresentationDate_Year")).Value);
             Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Day")).Value);
             Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Month")).Value);
             Assert.Equal("2014", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Year")).Value);
@@ -290,7 +287,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -310,11 +307,11 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsDate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(ValidationMessages.DateValidityRange(ValidDates.EarliestClinicalDate), result);
+            Assert.Equal(ValidationMessages.DateValidityRangeStart("Diagnosis Date", "01/01/2010"), result);
         }
 
         [Theory]
@@ -329,7 +326,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateNotificationSites"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateNotificationSites"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -351,7 +348,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateNotificationSiteProperty"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateNotificationSiteProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -361,7 +358,7 @@ namespace ntbs_integration_tests.NotificationPages
         [Fact]
         public async Task ValidateClinicalDetailsYearComparison_ReturnsErrorIfNewYearEarlierThanExisting()
         {
-             // Arrange
+            // Arrange
             var existingYear = 1990;
             var formData = new Dictionary<string, string>
             {
@@ -370,7 +367,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateClinicalDetailsYearComparison"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsYearComparison"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

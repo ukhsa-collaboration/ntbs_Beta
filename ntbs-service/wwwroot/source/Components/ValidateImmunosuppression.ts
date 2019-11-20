@@ -26,8 +26,10 @@ const ValidateImmunosuppression = Vue.extend({
                         const errorMessage = data["ImmunosuppressionDetails.Status"];
                         this.$refs.statusFormGroup.classList.add("nhsuk-form-group--error");
                         this.$refs.statusError.textContent = errorMessage;
+                        this.$refs.statusError.classList.remove("hidden");
                     } else {
                         this.$refs.statusFormGroup.classList.remove("nhsuk-form-group--error");
+                        this.$refs.statusError.classList.add("hidden");
                         this.$refs.statusError.textContent = "";
                     }
 
@@ -36,10 +38,12 @@ const ValidateImmunosuppression = Vue.extend({
                         this.$refs.descriptionFormGroup.classList.add("nhsuk-form-group--error");
                         this.$refs.otherDescription.classList.add("nhsuk-input--error");
                         this.$refs.descriptionError.textContent = errorMessage;
+                        this.$refs.descriptionError.classList.remove("hidden");
                     } else {
                         this.$refs.descriptionFormGroup.classList.remove("nhsuk-form-group--error");
                         this.$refs.otherDescription.classList.remove("nhsuk-input--error");
                         this.$refs.descriptionError.textContent = "";
+                        this.$refs.descriptionError.classList.add("hidden");
                     }
                 })
                 .catch((error: any) => {
@@ -57,7 +61,7 @@ const ValidateImmunosuppression = Vue.extend({
 
         getInputValues() {
             return {
-                status : this.getStatus(),
+                status: this.getStatus(),
 
                 hasBioTherapy: this.$refs.hasBioTherapy.checked,
                 hasTransplantation: this.$refs.hasTransplantation.checked,

@@ -10,16 +10,15 @@ namespace ntbs_service.Models
         public int NotificationId;
         public string SortByDate;
         public string NotificationDate;
-        public string TBService;
+        public string TbService;
         public string CaseManager;
-        public string NHSNumber;
+        public string NhsNumber;
         public string DateOfBirth;
         public string CountryOfBirth;
         public string Postcode;
         public string Name;
         public string Sex;
         public string DrugResistance;
-        public string TreatmentOutcome;
         public string Origin;
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
@@ -34,9 +33,9 @@ namespace ntbs_service.Models
             } else {
                 SortByDate = notification.FormattedSubmissionDate;
             }
-            TBService = notification.TBServiceName;
-            CaseManager = notification.Episode.CaseManager;
-            NHSNumber = notification.FormattedNhsNumber;
+            TbService = notification.TBServiceName;
+            CaseManager = notification.Episode.CaseManagerName;
+            NhsNumber = notification.FormattedNhsNumber;
             DateOfBirth = notification.FormattedDob;
             CountryOfBirth = notification.CountryName;
             Postcode = notification.FormattedNoAbodeOrPostcodeString;

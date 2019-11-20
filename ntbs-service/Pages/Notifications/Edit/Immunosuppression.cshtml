@@ -1,13 +1,14 @@
 @page "/Notifications/{id:int}/Edit/Immunosuppression/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ImmunosuppressionModel
-@using ntbs_service.Models
+@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
-@using ntbs_service.Models.Enums
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Immunosuppression";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditImmunosuppression;
 }
+
 <h2>Immunosuppression</h2>
 
 <div>
@@ -20,7 +21,6 @@
             </nhs-fieldset-legend>
             <div v-on:focusout="validate">
                 <nhs-form-group nhs-form-group-type="Standard">
-
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
                             <input ref="statusYes" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
@@ -35,9 +35,14 @@
                         }
 
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
+
                             <nhs-form-group ref="statusFormGroup" nhs-form-group-type="@statusFormGroupType" aria-describedby="status-error">
-                                <span ref="statusError" id="status-error" nhs-span-type="ErrorMessage" asp-validation-for="@Model.ImmunosuppressionDetails.Status"></span>
-                                <nhs-fieldset>
+                                <nhs-fieldset aria-describedby="status-error">
+                                    <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+                                        Type of immunosuppression
+                                    </nhs-fieldset-legend>
+                                    <span ref="statusError" id="status-error" nhs-span-type="ErrorMessage"
+                                          asp-validation-for="@Model.ImmunosuppressionDetails.Status" has-error="@hasStatusError"></span>
                                     <div class="nhsuk-checkboxes" data-module="govuk-checkboxes">
                                         <div class="nhsuk-checkboxes__item">
                                             <input ref="hasBioTherapy" nhs-input-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasBioTherapy" />
@@ -56,17 +61,15 @@
                                             var hasDescriptionError = !Model.IsValid("ImmunosuppressionDetails.OtherDescription");
                                             var descriptionFormGroupType = hasDescriptionError ? Error : Standard;
                                         }
-
                                         <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-description">
                                             <nhs-form-group ref="descriptionFormGroup" nhs-form-group-type="@descriptionFormGroupType" aria-describedby="description-error">
-                                                <nhs-fieldset>
-                                                    <label nhs-label-type="Standard" asp-for="ImmunosuppressionDetails.OtherDescription">
-                                                        Specify Details
-                                                    </label>
-                                                    <span ref="descriptionError" id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="ImmunosuppressionDetails.OtherDescription"></span>
-                                                    <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription"
-                                                           nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
-                                                </nhs-fieldset>
+                                                <label nhs-label-type="Standard" asp-for="ImmunosuppressionDetails.OtherDescription">
+                                                    Specify Details
+                                                </label>
+                                                <span ref="descriptionError" id="description-error" nhs-span-type="ErrorMessage"
+                                                      asp-validation-for="ImmunosuppressionDetails.OtherDescription" has-error="@hasDescriptionError"></span>
+                                                <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription"
+                                                       nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
                                             </nhs-form-group>
                                         </div>
                                     </div>
@@ -93,5 +96,5 @@
         </nhs-fieldset>
     </validate-immunosuppression>
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

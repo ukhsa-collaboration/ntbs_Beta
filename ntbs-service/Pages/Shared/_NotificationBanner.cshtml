@@ -1,3 +1,5 @@
+@model ntbs_service.Models.NotificationBannerModel
+
 @{
     var notificationStatusBannerCssClass = "";
     switch (@Model.NotificationStatus)
@@ -38,12 +40,12 @@
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
-                <dt class="bold-label"> Date of notification </dt>
+                <dt class="bold-label"> Notification date </dt>
                 <dd class="cell-min-height"> @Model.NotificationDate </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> TB service </dt>
-                <dd> @Model.TBService </dd>
+                <dd> @Model.TbService </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Case manager </dt>
@@ -73,7 +75,7 @@
         <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> NHS number </dt>
-                <dd class="cell-min-height">  @Model.NHSNumber </dd>
+                <dd class="cell-min-height">  @Model.NhsNumber </dd>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="bold-label"> Sex </div>

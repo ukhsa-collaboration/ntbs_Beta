@@ -4,6 +4,7 @@
 // Govuk css - needed for things like conditionally revealed radios sections
 @import '../../node_modules/govuk-frontend/govuk/all.scss';
 @import './checkboxes.scss';
+@import './buttons.scss';
 @import './notification.scss';
 @import './notificationView.scss';
 @import './notificationBanner.scss';
@@ -107,15 +108,36 @@ body {
     line-height: 24px;
 }
 
-.hidden, .hidden * {
+.hidden,
+.hidden * {
     display: none;
 }
 
-.ntbsuk-button--warning {
-    background-color: #d4351c;
-    box-shadow: 0 4px 0 #003317;
+.no-bottom-margin {
+    margin-bottom: 0;
+}
 
-    &:hover, &:focus {
-        background-color: #aa2a16;
+/* Need to pin this to 38px to make icon circular */
+.govuk-warning-text {
+    color: orangered;
+
+    .govuk-warning-text__icon {
+        width: 38px;
+        border: 3px solid orangered;
+        background: orangered;
     }
+
+    .warning-container {
+        p {
+            margin-bottom: 12px;
+        }
+
+        p:last-child {
+            margin-bottom: 0px;
+        }
+    }
+}
+
+.flex-container {
+    display: flex;
 }

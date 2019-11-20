@@ -17,7 +17,7 @@ namespace ntbs_service.Models
 
         [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired)]
         [Range(1, 50)]
-        [AssertThat("TotalNumberGreaterOrEqualToInputCountries == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber)]
+        [AssertThat("TotalNumberGreaterOrEqualToInputCountries == true", ErrorMessage = ValidationMessages.TotalNumberOfCountriesVisitedFromGreaterThanInputNumber)]
         [DisplayName("total number of countries")]
         public int? TotalNumberOfCountries { get; set; }
 

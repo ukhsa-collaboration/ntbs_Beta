@@ -37,9 +37,10 @@ namespace ntbs_service.Models
         [MaxLength(150)]
         public string DeletionReason { get; set; }
 
+        [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
-        [ValidDate(ValidDates.EarliestClinicalDate)]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
 
@@ -58,6 +59,7 @@ namespace ntbs_service.Models
         public virtual DenotificationDetails DenotificationDetails { get; set; }
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public int? GroupId { get; set; }
+        public virtual NotificationGroup Group { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
@@ -115,7 +117,7 @@ namespace ntbs_service.Models
             if (NotificationStatus == NotificationStatus.Draft)
             {
                 return "Draft";
-            } 
+            }
             else if (NotificationStatus == NotificationStatus.Notified)
             {
                 return "Notification";
@@ -187,7 +189,8 @@ namespace ntbs_service.Models
 
         private string FormatNhsNumberString()
         {
-            if (PatientDetails.NhsNumberNotKnown) {
+            if (PatientDetails.NhsNumberNotKnown)
+            {
                 return "Not known";
             }
             if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
@@ -221,16 +224,16 @@ namespace ntbs_service.Models
 
         private int? GetAgeAtTimeOfNotification()
         {
-            if (NotificationDate == null || PatientDetails?.Dob == null) 
+            if (NotificationDate == null || PatientDetails?.Dob == null)
             {
                 return null;
             }
 
-            var notificationDate = (DateTime) NotificationDate;
-            var birthDate = (DateTime) PatientDetails.Dob;
+            var notificationDate = (DateTime)NotificationDate;
+            var birthDate = (DateTime)PatientDetails.Dob;
 
             var yearDiff = notificationDate.Year - birthDate.Year;
-            if ((birthDate.Month*100 + birthDate.Day) > (notificationDate.Month*100 + notificationDate.Day))
+            if ((birthDate.Month * 100 + birthDate.Day) > (notificationDate.Month * 100 + notificationDate.Day))
             {
                 yearDiff -= 1;
             }

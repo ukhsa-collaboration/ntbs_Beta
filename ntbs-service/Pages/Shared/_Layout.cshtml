@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,13 +8,11 @@
 </head>
 <body>
     <div id="app">
-        <partial name="./_Header.cshtml">
+        <partial name="./_Header.cshtml" />
+        
         <nhs-main-wrapper>
-            <nhs-width-container container-width="Standard">
-                @RenderBody()
-            </nhs-width-container>
+            @RenderBody()
         </nhs-main-wrapper>
-
         <partial name="./_Footer.cshtml" />
     </div>
 

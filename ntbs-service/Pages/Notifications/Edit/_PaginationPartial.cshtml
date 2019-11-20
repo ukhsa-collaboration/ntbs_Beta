@@ -1,6 +1,0 @@
-@model ntbs_service.Models.Notification
-
-@{
-    var buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";
-}
-<button nhs-button-type="Standard" name="actionName" value="Save">@buttonName</button>

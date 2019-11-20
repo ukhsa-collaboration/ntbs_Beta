@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -11,7 +11,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public SocialRiskFactors SocialRiskFactors { get; set; }
 
-        public SocialRiskFactorsModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService) {}
+        public SocialRiskFactorsModel(
+            INotificationService service,
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+        {
+        }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {
@@ -21,12 +26,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override async Task ValidateAndSave() 
+        protected override async Task ValidateAndSave()
         {
-            SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);   
+            SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);
             if (TryValidateModel(SocialRiskFactors))
             {
-                await service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
+                await Service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
             }
         }
 

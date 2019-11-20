@@ -1,10 +1,12 @@
 @page "/Notifications/{id:int}/Edit/ContactTracing/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ContactTracingModel
+@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
-Layout = "../../Shared/_NotificationLayout.cshtml";
-ViewData["Title"] = "Notification - Contact Tracing";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - Contact Tracing";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditContactTracing;
 }
 
 <h2>Contact Tracing</h2>
@@ -13,213 +15,220 @@ ViewData["Title"] = "Notification - Contact Tracing";
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <validate-contact-tracing name="Contact Tracing" model="ContactTracing" property="ContactTracing"
-                rank="0" inline-template>
-        <nhs-fieldset aria-describedby="TB-contacts-identified">
-            <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts identified for screening </nhs-fieldset-legend>
-            <div style="display: flex">
-            @{
-            var AdultsIdentifiedError = !Model.IsValid("ContactTracing.AdultsIdentified");
-            var AdultsIdentifiedGroupState = AdultsIdentifiedError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@AdultsIdentifiedGroupState ref="AdultsIdentifiedFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsIdentified">Adults</label>
-                <span ref="AdultsIdentifiedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.AdultsIdentified"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsIdentifiedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsIdentified" fixed-width="Two" ref="adultsIdentified"  />
-            </nhs-form-group>
-            <div class="fixed-width-separator"> </div>
-            @{
-            var ChildrenIdentifiedError = !Model.IsValid("ContactTracing.ChildrenIdentified");
-            var ChildrenIdentifiedGroupState = ChildrenIdentifiedError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@ChildrenIdentifiedGroupState ref="ChildrenIdentifiedFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenIdentified">Children</label>
-                <span ref="ChildrenIdentifiedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.ChildrenIdentified"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenIdentifiedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenIdentified" fixed-width="Two" ref="childrenIdentified" />
-            </nhs-form-group>
-            <div class="double-fixed-width-separator"> </div>
-            <div>
-                <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsIdentified"> @(Model.ContactTracing.TotalContactsIdentified ?? 0)</div>
-            </div>
-            </div>
+                              rank="0" inline-template>
+        <div>
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts identified for screening </nhs-fieldset-legend>
+                <div class="flex-container">
+                    @{
+                        var hasAdultsIdentifiedError = !Model.IsValid("ContactTracing.AdultsIdentified");
+                        var adultsIdentifiedGroupState = hasAdultsIdentifiedError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@adultsIdentifiedGroupState ref="AdultsIdentifiedFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsIdentified">Adults</label>
+                        <span ref="AdultsIdentifiedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsIdentifiedError"
+                              asp-validation-for="ContactTracing.AdultsIdentified"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasAdultsIdentifiedError nhs-input-type="Standard"
+                               asp-for="ContactTracing.AdultsIdentified" fixed-width="Two" ref="adultsIdentified" />
+                    </nhs-form-group>
+                    <div class="fixed-width-separator"> </div>
+                    @{
+                        var hasChildrenIdentifiedError = !Model.IsValid("ContactTracing.ChildrenIdentified");
+                        var childrenIdentifiedGroupState = hasChildrenIdentifiedError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@childrenIdentifiedGroupState ref="ChildrenIdentifiedFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenIdentified">Children</label>
+                        <span ref="ChildrenIdentifiedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenIdentifiedError"
+                              asp-validation-for="ContactTracing.ChildrenIdentified"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasChildrenIdentifiedError nhs-input-type="Standard"
+                               asp-for="ContactTracing.ChildrenIdentified" fixed-width="Two" ref="childrenIdentified" />
+                    </nhs-form-group>
+                    <div class="double-fixed-width-separator"> </div>
+                    <div>
+                        <div class="nhsuk-label"> Total </div>
+                        <div class="nhsuk-label top-margin-separator" ref="totalContactsIdentified"> @(Model.ContactTracing.TotalContactsIdentified ?? 0)</div>
+                    </div>
+                </div>
+            </nhs-fieldset>
+            <br />
 
-        <br />
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened for TB </nhs-fieldset-legend>
+                <div class="flex-container">
+                    @{
+                        var hasAdultsScreenedError = !Model.IsValid("ContactTracing.AdultsScreened");
+                        var adultsScreenedGroupState = hasAdultsScreenedError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@adultsScreenedGroupState ref="AdultsScreenedFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsScreened">Adults</label>
+                        <span ref="AdultsScreenedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsScreenedError"
+                              asp-validation-for="ContactTracing.AdultsScreened"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasAdultsScreenedError nhs-input-type="Standard"
+                               asp-for="ContactTracing.AdultsScreened" fixed-width="Two" ref="adultsScreened" />
+                    </nhs-form-group>
+                    <div class="fixed-width-separator"> </div>
+                    @{
+                        var hasChildrenScreenedError = !Model.IsValid("ContactTracing.ChildrenScreened");
+                        var childrenScreenedGroupState = hasChildrenScreenedError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@childrenScreenedGroupState ref="ChildrenScreenedFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenScreened">Children</label>
+                        <span ref="ChildrenScreenedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenScreenedError"
+                              asp-validation-for="ContactTracing.ChildrenScreened"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasChildrenScreenedError nhs-input-type="Standard"
+                               asp-for="ContactTracing.ChildrenScreened" fixed-width="Two" ref="childrenScreened" />
+                    </nhs-form-group>
+                    <div class="double-fixed-width-separator"> </div>
+                    <div>
+                        <div class="nhsuk-label"> Total </div>
+                        <div class="nhsuk-label top-margin-separator" ref="totalContactsScreened"> @(Model.ContactTracing.TotalContactsScreened ?? 0) </div>
+                    </div>
+                </div>
+            </nhs-fieldset>
+            <br />
 
-        <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened for TB </nhs-fieldset-legend>
-        <div style="display: flex">
-            @{
-            var AdultsScreenedError = !Model.IsValid("ContactTracing.AdultsScreened");
-            var AdultsScreenedGroupState = AdultsScreenedError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@AdultsScreenedGroupState ref="AdultsScreenedFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsScreened">Adults</label>
-                <span ref="AdultsScreenedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.AdultsScreened"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsScreenedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsScreened" fixed-width="Two" ref="adultsScreened"  />
-            </nhs-form-group>
-        <div class="fixed-width-separator"> </div>
-            @{
-            var ChildrenScreenedError = !Model.IsValid("ContactTracing.ChildrenScreened");
-            var ChildrenScreenedGroupState = ChildrenScreenedError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@ChildrenScreenedGroupState ref="ChildrenScreenedFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenScreened">Children</label>
-                <span ref="ChildrenScreenedErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.ChildrenScreened"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenScreenedError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenScreened" fixed-width="Two" ref="childrenScreened"  />
-            </nhs-form-group>
-            <div class="double-fixed-width-separator"> </div>
-            <div>
-                <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsScreened"> @(Model.ContactTracing.TotalContactsScreened ?? 0) </div>
-            </div>
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened with active TB </nhs-fieldset-legend>
+                <div class="flex-container">
+                    @{
+                        var hasAdultsActiveTbError = !Model.IsValid("ContactTracing.AdultsActiveTB");
+                        var adultsActiveTbGroupState = hasAdultsActiveTbError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@adultsActiveTbGroupState ref="AdultsActiveTBFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsActiveTB">Adults</label>
+                        <span ref="AdultsActiveTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsActiveTbError"
+                              asp-validation-for="ContactTracing.AdultsActiveTB"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasAdultsActiveTbError nhs-input-type="Standard"
+                               asp-for="ContactTracing.AdultsActiveTB" fixed-width="Two" ref="adultsActiveTB" />
+                    </nhs-form-group>
+                    <div class="fixed-width-separator"> </div>
+                    @{
+                        var hasChildrenActiveTbError = !Model.IsValid("ContactTracing.ChildrenActiveTB");
+                        var childrenActiveTbGroupState = hasChildrenActiveTbError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@childrenActiveTbGroupState ref="ChildrenActiveTBFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenActiveTB">Children</label>
+                        <span ref="ChildrenActiveTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenActiveTbError"
+                              asp-validation-for="ContactTracing.ChildrenActiveTB"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasChildrenActiveTbError nhs-input-type="Standard"
+                               asp-for="ContactTracing.ChildrenActiveTB" fixed-width="Two" ref="childrenActiveTB" />
+                    </nhs-form-group>
+                    <div class="double-fixed-width-separator"> </div>
+                    <div>
+                        <div class="nhsuk-label"> Total </div>
+                        <div class="nhsuk-label top-margin-separator" ref="totalContactsActiveTB"> @(Model.ContactTracing.TotalContactsActiveTB ?? 0)</div>
+                    </div>
+                </div>
+            </nhs-fieldset>
+            <br />
+
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened with latent TB </nhs-fieldset-legend>
+                <div class="flex-container">
+                    @{
+                        var hasAdultsLatentTbError = !Model.IsValid("ContactTracing.AdultsLatentTB");
+                        var adultsLatentTbGroupState = hasAdultsLatentTbError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@adultsLatentTbGroupState ref="AdultsLatentTBFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsLatentTB">Adults</label>
+                        <span ref="AdultsLatentTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsLatentTbError"
+                              asp-validation-for="ContactTracing.AdultsLatentTB"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasAdultsLatentTbError nhs-input-type="Standard"
+                               asp-for="ContactTracing.AdultsLatentTB" fixed-width="Two" ref="adultsLatentTB" />
+                    </nhs-form-group>
+                    <div class="fixed-width-separator"> </div>
+                    @{
+                        var hasChildrenLatentTbError = !Model.IsValid("ContactTracing.ChildrenLatentTB");
+                        var childrenLatentTbGroupState = hasChildrenLatentTbError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@childrenLatentTbGroupState ref="ChildrenLatentTBFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenLatentTB">Children</label>
+                        <span ref="ChildrenLatentTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenLatentTbError"
+                              asp-validation-for="ContactTracing.ChildrenLatentTB"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasChildrenLatentTbError nhs-input-type="Standard"
+                               asp-for="ContactTracing.ChildrenLatentTB" fixed-width="Two" ref="childrenLatentTB" />
+                    </nhs-form-group>
+                    <div class="double-fixed-width-separator"> </div>
+                    <div>
+                        <div class="nhsuk-label"> Total </div>
+                        <div class="nhsuk-label top-margin-separator" ref="totalContactsLatentTB"> @(Model.ContactTracing.TotalContactsLatentTB ?? 0) </div>
+                    </div>
+                </div>
+            </nhs-fieldset>
+            <br />
+
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts that have started treatment for latent TB </nhs-fieldset-legend>
+                <div class="flex-container">
+                    @{
+                        var hasAdultsStartedTreatmentError = !Model.IsValid("ContactTracing.AdultsStartedTreatment");
+                        var adultsStartedTreatmentGroupState = hasAdultsStartedTreatmentError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@adultsStartedTreatmentGroupState ref="AdultsStartedTreatmentFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsStartedTreatment">Adults</label>
+                        <span ref="AdultsStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsStartedTreatmentError"
+                              asp-validation-for="ContactTracing.AdultsStartedTreatment"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasAdultsStartedTreatmentError nhs-input-type="Standard"
+                               asp-for="ContactTracing.AdultsStartedTreatment" fixed-width="Two" ref="adultsStartedTreatment" />
+                    </nhs-form-group>
+                    <div class="fixed-width-separator"> </div>
+                    @{
+                        var hasChildrenStartedTreatmentError = !Model.IsValid("ContactTracing.ChildrenStartedTreatment");
+                        var childrenStartedTreatmentGroupState = hasChildrenStartedTreatmentError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@childrenStartedTreatmentGroupState ref="ChildrenStartedTreatmentFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenStartedTreatment">Children</label>
+                        <span ref="ChildrenStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenStartedTreatmentError"
+                              asp-validation-for="ContactTracing.ChildrenStartedTreatment"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasChildrenStartedTreatmentError nhs-input-type="Standard"
+                               asp-for="ContactTracing.ChildrenStartedTreatment" fixed-width="Two" ref="childrenStartedTreatment" />
+                    </nhs-form-group>
+                    <div class="double-fixed-width-separator"> </div>
+                    <div>
+                        <div class="nhsuk-label"> Total </div>
+                        <div class="nhsuk-label top-margin-separator" ref="totalContactsStartedTreatment"> @(Model.ContactTracing.TotalContactsStartedTreatment ?? 0) </div>
+                    </div>
+                </div>
+            </nhs-fieldset>
+            <br />
+
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts that have completed treatment for latent TB </nhs-fieldset-legend>
+                <div class="flex-container">
+                    @{
+                        var hasAdultsFinishedTreatmentError = !Model.IsValid("ContactTracing.AdultsFinishedTreatment");
+                        var adultsFinishedTreatmentGroupState = hasAdultsFinishedTreatmentError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@adultsFinishedTreatmentGroupState ref="AdultsFinishedTreatmentFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsFinishedTreatment">Adults</label>
+                        <span ref="AdultsFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsFinishedTreatmentError"
+                              asp-validation-for="ContactTracing.AdultsFinishedTreatment"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasAdultsFinishedTreatmentError nhs-input-type="Standard"
+                               asp-for="ContactTracing.AdultsFinishedTreatment" fixed-width="Two" ref="adultsFinishedTreatment" />
+                    </nhs-form-group>
+                    <div class="fixed-width-separator"> </div>
+                    @{
+                        var hasChildrenFinishedTreatmentError = !Model.IsValid("ContactTracing.ChildrenFinishedTreatment");
+                        var childrenFinishedTreatmentGroupState = hasChildrenFinishedTreatmentError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@childrenFinishedTreatmentGroupState ref="ChildrenFinishedTreatmentFormGroup">
+                        <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenFinishedTreatment">Children</label>
+                        <span ref="ChildrenFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenFinishedTreatmentError"
+                              asp-validation-for="ContactTracing.ChildrenFinishedTreatment"></span>
+                        <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@hasChildrenFinishedTreatmentError nhs-input-type="Standard"
+                               asp-for="ContactTracing.ChildrenFinishedTreatment" fixed-width="Two" ref="childrenFinishedTreatment" />
+                    </nhs-form-group>
+                    <div class="double-fixed-width-separator"> </div>
+                    <div>
+                        <div class="nhsuk-label"> Total </div>
+                        <div class="nhsuk-label top-margin-separator" ref="totalContactsFinishedTreatment"> @(Model.ContactTracing.TotalContactsFinishedTreatment ?? 0) </div>
+                    </div>
+                </div>
+            </nhs-fieldset>
         </div>
-
-        <br />
-
-        <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened with active TB </nhs-fieldset-legend>
-        <div style="display: flex">
-            @{
-            var AdultsActiveTBError = !Model.IsValid("ContactTracing.AdultsActiveTB");
-            var AdultsActiveTBGroupState = AdultsActiveTBError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@AdultsActiveTBGroupState ref="AdultsActiveTBFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsActiveTB">Adults</label>
-                <span ref="AdultsActiveTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.AdultsActiveTB"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsActiveTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsActiveTB" fixed-width="Two" ref="adultsActiveTB"  />
-            </nhs-form-group>
-        <div class="fixed-width-separator"> </div>
-            @{
-            var ChildrenActiveTBError = !Model.IsValid("ContactTracing.ChildrenActiveTB");
-            var ChildrenActiveTBGroupState = ChildrenActiveTBError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@ChildrenActiveTBGroupState ref="ChildrenActiveTBFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenActiveTB">Children</label>
-                <span ref="ChildrenActiveTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.ChildrenActiveTB"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenActiveTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenActiveTB" fixed-width="Two" ref="childrenActiveTB"  />
-            </nhs-form-group>
-            <div class="double-fixed-width-separator"> </div>
-            <div>
-                <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsActiveTB"> @(Model.ContactTracing.TotalContactsActiveTB ?? 0)</div>
-            </div>
-        </div>
-
-        <br />
-
-        <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened with latent TB </nhs-fieldset-legend>
-        <div style="display: flex">
-            @{
-            var AdultsLatentTBError = !Model.IsValid("ContactTracing.AdultsLatentTB");
-            var AdultsLatentTBGroupState = AdultsLatentTBError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@AdultsLatentTBGroupState ref="AdultsLatentTBFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsLatentTB">Adults</label>
-                <span ref="AdultsLatentTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.AdultsLatentTB"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsLatentTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsLatentTB" fixed-width="Two" ref="adultsLatentTB"  />
-            </nhs-form-group>
-        <div class="fixed-width-separator"> </div>
-            @{
-            var ChildrenLatentTBError = !Model.IsValid("ContactTracing.ChildrenLatentTB");
-            var ChildrenLatentTBGroupState = ChildrenLatentTBError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@ChildrenLatentTBGroupState ref="ChildrenLatentTBFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenLatentTB">Children</label>
-                <span ref="ChildrenLatentTBErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.ChildrenLatentTB"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenLatentTBError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenLatentTB" fixed-width="Two" ref="childrenLatentTB"  />
-            </nhs-form-group>
-            <div class="double-fixed-width-separator"> </div>
-            <div>
-                <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsLatentTB"> @(Model.ContactTracing.TotalContactsLatentTB ?? 0) </div>
-            </div>
-        </div>
-
-        <br />
-
-        <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts that have started treatment for latent TB </nhs-fieldset-legend>
-        <div style="display: flex">
-            @{
-            var AdultsStartedTreatmentError = !Model.IsValid("ContactTracing.AdultsStartedTreatment");
-            var AdultsStartedTreatmentGroupState = AdultsStartedTreatmentError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@AdultsStartedTreatmentGroupState ref="AdultsStartedTreatmentFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsStartedTreatment">Adults</label>
-                <span ref="AdultsStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.AdultsStartedTreatment"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsStartedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsStartedTreatment" fixed-width="Two" ref="adultsStartedTreatment"  />
-            </nhs-form-group>
-        <div class="fixed-width-separator"> </div>
-            @{
-            var ChildrenStartedTreatmentError = !Model.IsValid("ContactTracing.ChildrenStartedTreatment");
-            var ChildrenStartedTreatmentGroupState = ChildrenStartedTreatmentError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@ChildrenStartedTreatmentGroupState ref="ChildrenStartedTreatmentFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenStartedTreatment">Children</label>
-                <span ref="ChildrenStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.ChildrenStartedTreatment"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenStartedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenStartedTreatment" fixed-width="Two" ref="childrenStartedTreatment"  />
-            </nhs-form-group>
-            <div class="double-fixed-width-separator"> </div>
-            <div>
-                <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsStartedTreatment"> @(Model.ContactTracing.TotalContactsStartedTreatment ?? 0) </div>
-            </div>
-        </div>
-
-        <br />
-
-        <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts that have completed treatment for latent TB </nhs-fieldset-legend>
-        <div style="display: flex">
-            @{
-            var AdultsFinishedTreatmentError = !Model.IsValid("ContactTracing.AdultsFinishedTreatment");
-            var AdultsFinishedTreatmentGroupState = AdultsFinishedTreatmentError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@AdultsFinishedTreatmentGroupState ref="AdultsFinishedTreatmentFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsFinishedTreatment">Adults</label>
-                <span ref="AdultsFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.AdultsFinishedTreatment"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@AdultsFinishedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.AdultsFinishedTreatment" fixed-width="Two" ref="adultsFinishedTreatment"  />
-            </nhs-form-group>
-        <div class="fixed-width-separator"> </div>
-            @{
-            var ChildrenFinishedTreatmentError = !Model.IsValid("ContactTracing.ChildrenFinishedTreatment");
-            var ChildrenFinishedTreatmentGroupState = ChildrenFinishedTreatmentError ? Error : Standard;
-            }
-            <nhs-form-group nhs-form-group-type=@ChildrenFinishedTreatmentGroupState ref="ChildrenFinishedTreatmentFormGroup">
-                <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenFinishedTreatment">Children</label>
-                <span ref="ChildrenFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" id="adults-identified-error"
-                    asp-validation-for="ContactTracing.ChildrenFinishedTreatment"></span>
-                <input type="number" v-on:blur="validateAndCalculateTotals" is-error-input=@ChildrenFinishedTreatmentError nhs-input-type="Standard"
-                    asp-for="ContactTracing.ChildrenFinishedTreatment" fixed-width="Two" ref="childrenFinishedTreatment"  />
-            </nhs-form-group>
-            <div class="double-fixed-width-separator"> </div>
-            <div>
-                <div class="nhsuk-label"> Total </div> 
-                <div class="nhsuk-label top-margin-separator" ref="totalContactsFinishedTreatment"> @(Model.ContactTracing.TotalContactsFinishedTreatment ?? 0) </div>
-            </div>
-        </div>
-        </nhs-fieldset>
     </validate-contact-tracing>
 
     <br />
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

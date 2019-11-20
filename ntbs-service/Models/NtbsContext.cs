@@ -1,11 +1,9 @@
-﻿using Audit.EntityFramework;
+﻿using System.Collections.Generic;
+using Audit.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ntbs_service.Models
 {
@@ -37,79 +35,12 @@ namespace ntbs_service.Models
         public virtual DbSet<PHEC> PHEC { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
         public virtual DbSet<Occupation> Occupation { get; set; }
+        public virtual DbSet<CaseManager> CaseManager { get; set; }
+        public virtual DbSet<CaseManagerTbService> CaseManagerTbService { get; set; }
 
-        public virtual async Task<IList<Country>> GetAllCountriesAsync()
+        public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
-            return await Country.ToListAsync();
-        }
-
-        public virtual async Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync()
-        {
-            return await Country
-                            .Where(c => c.HasHighTbOccurence)
-                            .ToListAsync();
-        }
-
-        public virtual async Task<Country> GetCountryByIdAsync(int? countryId)
-        {
-            return await Country.FindAsync(countryId);
-        }
-
-        public virtual async Task<IList<TBService>> GetAllTbServicesAsync()
-        {
-            return await TbService.ToListAsync();
-        }
-
-        public virtual async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
-        {
-            return await Hospital
-                .Where(h => tbServices.Contains(h.TBServiceCode))
-                .ToListAsync();
-        }
-
-        public virtual async Task<IList<Sex>> GetAllSexesAsync()
-        {
-            return await Sex.ToListAsync();
-        }
-
-        public virtual async Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync()
-        {
-            return await Ethnicity.OrderBy(e => e.Order).ToListAsync();
-        }
-
-        public virtual async Task<IList<Site>> GetAllSitesAsync()
-        {
-            return await Site.ToListAsync();
-        }
-
-        public virtual async Task<Occupation> GetOccupationByIdAsync(int occupationId)
-        {
-            return await Occupation.FindAsync(occupationId);
-        }
-
-        public virtual async Task<IList<Occupation>> GetAllOccupationsAsync()
-        {
-            return await Occupation.ToListAsync();
-        }
-
-        public virtual async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
-        {
-            return await TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
-        }
-
-        public virtual async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
-        {
-            return await PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
-        }
-
-        public virtual IQueryable<TBService> GetDefaultTbServicesForNhsUser(IEnumerable<string> roles)
-        {
-            return TbService.Where(tb => roles.Contains(tb.ServiceAdGroup));
-        }
-
-        public virtual IQueryable<TBService> GetDefaultTbServicesForPheUser(IEnumerable<string> roles)
-        {
-            return TbService.Include(tb => tb.PHEC).Where(tb => roles.Contains(tb.PHEC.AdGroup));
+            this.Entry(entity).CurrentValues.SetValues(values);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -161,6 +92,7 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<TBService>(entity =>
             {
+                entity.Property(e => e.Code).HasMaxLength(16);
                 entity.HasKey(e => e.Code);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 /*
@@ -221,11 +153,19 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasOne<NotificationGroup>()
+                entity.HasOne(n => n.Group)
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 
-                entity.OwnsOne(e => e.Episode).ToTable("Episode");
+                entity.OwnsOne(e => e.Episode, episode =>
+                {
+                    episode.Property(e => e.CaseManagerEmail)
+                        .HasMaxLength(64);
+
+                    episode.HasOne(e => e.CaseManager);
+
+                    episode.ToTable("Episode");
+                });
 
                 entity.OwnsOne(e => e.PatientDetails, x =>
                 {
@@ -405,6 +345,31 @@ namespace ntbs_service.Models
             modelBuilder.Entity<Occupation>().HasData(
                 SeedData.Occupations.GetOccupations()
             );
+
+            modelBuilder.Entity<CaseManager>(entity =>
+            {
+                entity.Property(e => e.Email).HasMaxLength(64);
+                entity.Property(e => e.FamilyName).HasMaxLength(64);
+                entity.Property(e => e.GivenName).HasMaxLength(64);
+
+                entity.HasKey(e => e.Email);
+            });
+
+            modelBuilder.Entity<CaseManagerTbService>(entity =>
+            {
+                entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
+                entity.Property(e => e.TbServiceCode).HasMaxLength(16);
+
+                entity.HasKey(e => new { e.CaseManagerEmail, e.TbServiceCode });
+
+                entity.HasOne(e => e.CaseManager)
+                    .WithMany(caseManager => caseManager.CaseManagerTbServices)
+                    .HasForeignKey(e => e.CaseManagerEmail);
+
+                entity.HasOne(e => e.TbService)
+                    .WithMany(tbService => tbService.CaseManagerTbServices)
+                    .HasForeignKey(e => e.TbServiceCode);
+            });
         }
 
         private List<object> GetTBServicesList()

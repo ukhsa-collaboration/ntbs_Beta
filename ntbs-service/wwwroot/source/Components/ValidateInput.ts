@@ -14,7 +14,7 @@ const ValidateInput = Vue.extend({
             const newValue = inputField.value;
             this.$emit("validate", event);
 
-            let requestConfig = {
+            const requestConfig = {
                 url: `${getValidationPath(this.$props.model)}Property`,
                 headers: getHeaders(),
                 params: {
@@ -22,11 +22,12 @@ const ValidateInput = Vue.extend({
                     "shouldValidateFull": this.$props.shouldvalidatefull,
                     "key": this.$props.property
                 }
-            }
+            };
             axios.request(requestConfig)
                 .then((response: any) => {
                     var errorMessage = response.data;
                     if (errorMessage) {
+                        this.$emit("invalid");
                         this.$el.classList.add("nhsuk-form-group--error");
                         this.$refs["errorField"].classList.remove("hidden");
                         if (this.$refs["inputField"]) {
@@ -39,6 +40,7 @@ const ValidateInput = Vue.extend({
                             this.$refs["textareaField"].classList.add("nhsuk-textarea--error");
                         }
                     } else {
+                        this.$emit("valid", newValue);
                         this.$el.classList.remove("nhsuk-form-group--error");
                         this.$refs["errorField"].classList.add("hidden");
                         if (this.$refs["inputField"]) {

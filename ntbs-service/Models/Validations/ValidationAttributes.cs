@@ -1,24 +1,36 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using ntbs_service.Models;
-using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Validations
 {
-    public class ValidDateAttribute : RangeAttribute
+    public class ValidDateRangeAttribute : ValidationAttribute
     {
-        private readonly string StartDate;
-        public ValidDateAttribute(string startDateString) : base(typeof(DateTime),
-            startDateString, DateTime.Now.ToShortDateString())
+        private readonly DateTime StartDate;
+        public ValidDateRangeAttribute(string startDate) : base()
         {
-            StartDate = startDateString;
+            StartDate = DateTime.Parse(startDate);
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value != null)
+            {
+                var date = (DateTime)value;
+                if (date < StartDate)
+                {
+                    return new ValidationResult(ErrorMessage);
+                }
+                if (date > DateTime.Today)
+                {
+                    return new ValidationResult(ValidationMessages.TodayOrEarlier(validationContext.DisplayName));
+                }
+            }
+            return null;
         }
 
         public override string FormatErrorMessage(string name)
         {
-            return ValidationMessages.DateValidityRange(StartDate);
+            return ValidationMessages.DateValidityRangeStart(name, StartDate.ToShortDateString());
         }
     }
 
@@ -37,7 +49,8 @@ namespace ntbs_service.Models.Validations
             var propertyToCompare = instance.GetType().GetProperty(ComparisonValue);
             object valueToCompare = propertyToCompare.GetValue(instance);
 
-            if (IsTruthy(valueToCompare) && IsTruthy(value)) {
+            if (IsTruthy(valueToCompare) && IsTruthy(value))
+            {
                 return new ValidationResult(ErrorMessage);
             }
             return null;
@@ -56,10 +69,10 @@ namespace ntbs_service.Models.Validations
 
         public AtLeastOnePropertyAttribute(params string[] propertyList)
         {
-            this.PropertyList  = propertyList;
+            this.PropertyList = propertyList;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext) 
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             foreach (var propertyName in PropertyList)
             {
@@ -81,19 +94,24 @@ namespace ntbs_service.Models.Validations
             {
                 return null;
             }
-            if (!string.IsNullOrEmpty(partialDate.Day)) {
-                if(string.IsNullOrEmpty(partialDate.Month) || string.IsNullOrEmpty(partialDate.Year)) {
+            if (!string.IsNullOrEmpty(partialDate.Day))
+            {
+                if (string.IsNullOrEmpty(partialDate.Month) || string.IsNullOrEmpty(partialDate.Year))
+                {
                     return new ValidationResult(ValidationMessages.YearIfMonthRequired);
                 }
             }
-            if(!string.IsNullOrEmpty(partialDate.Month)) {
-                if(string.IsNullOrEmpty(partialDate.Year)) {
+            if (!string.IsNullOrEmpty(partialDate.Month))
+            {
+                if (string.IsNullOrEmpty(partialDate.Year))
+                {
                     return new ValidationResult(ValidationMessages.YearRequired);
                 }
             }
 
             bool canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
-            if (!canConvert) {
+            if (!canConvert)
+            {
                 return new ValidationResult(ErrorMessage);
             }
             return null;
@@ -111,7 +129,8 @@ namespace ntbs_service.Models.Validations
             }
 
             bool canConvert = formattedDate.TryConvertToDateTime(out _);
-            if (!canConvert) {
+            if (!canConvert)
+            {
                 return new ValidationResult(ErrorMessage);
             }
             return null;

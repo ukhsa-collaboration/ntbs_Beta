@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using ntbs_service.Pages_Notifications;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ntbs_service.Helpers
 {
+    public class NotifyError
+    {
+        public string Url { get; set; }
+        public List<string> ErrorMessages { get; set; }
+    }
+
     public static class NotificationValidationErrorGenerator
     {
         private static Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }

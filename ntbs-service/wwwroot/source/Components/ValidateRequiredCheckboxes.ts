@@ -1,50 +1,47 @@
-import Vue from 'vue';
-import { getHeaders, getValidationPath } from '../helpers';
-import axios from 'axios';
-import { InputType } from 'zlib';
+import Vue from "vue";
+import { getHeaders, getValidationPath } from "../helpers";
+import axios from "axios";
 
-const qs = require('qs');
+const qs = require("qs");
 
 const ValidateRequiredCheckboxes = Vue.extend({
-    props: ['property', 'shouldvalidatefull'],
+    props: ["property", "shouldvalidatefull"],
     methods: {
-      validate: function (event: FocusEvent) {
-        // Our onBlur validate events happen on input fields;;
-        const inputField = event.target as HTMLInputElement
-        const newValue = inputField.value;
+        validate: function () {
+            var notificationSiteRegex = /NotificationSiteMap\[(.*)\]/;
+            const checkboxes: Array<HTMLInputElement> = Array.from(this.$refs["checkboxgroup"].getElementsByClassName("nhsuk-checkboxes__input"));
+            const checkboxList = checkboxes
+                .filter(x => x.checked)
+                .map(x => notificationSiteRegex.exec(x.name)[1]);
 
-        var notificationSiteRegex = /NotificationSiteMap\[(.*)\]/;
-        var checkboxes : Array<HTMLInputElement> = Array.from(this.$refs["checkboxgroup"].getElementsByClassName("nhsuk-checkboxes__input"));
-        var checkboxList = checkboxes
-          .filter(x => x.checked)
-          .map(x => notificationSiteRegex.exec(x.name)[1])
+            const queryString = qs.stringify({
+                "valueList": checkboxList,
+                "shouldValidateFull": this.$props.shouldvalidatefull,
+            });
 
-        var queryString = qs.stringify({
-          "valueList": checkboxList,
-          "shouldValidateFull": this.$props.shouldvalidatefull,
-        })
+            const requestConfig = {
+                url: `${getValidationPath(this.$props.property)}?${queryString}`,
+                headers: getHeaders(),
+            };
 
-        let requestConfig = {
-          url: `${getValidationPath(this.$props.property)}?${queryString}`,
-          headers: getHeaders(),
+            axios.request(requestConfig)
+                .then((response: any) => {
+                    var errorMessage = response.data;
+                    if (errorMessage) {
+                        this.$el.classList.add("nhsuk-form-group--error");
+                        this.$refs["errorField"].textContent = errorMessage;
+                        this.$refs["errorField"].classList.remove("hidden");
+                    } else {
+                        this.$el.classList.remove("nhsuk-form-group--error");
+                        this.$refs["errorField"].textContent = "";
+                        this.$refs["errorField"].classList.add("hidden");
+                    }
+                })
+                .catch((error: any) => {
+                    console.log(error.response);
+                });
         }
-        
-        axios.request(requestConfig)
-        .then((response: any) => {
-            var errorMessage = response.data;
-            var hasError = errorMessage != '';
-            if (hasError) {
-              this.$el.classList.add('nhsuk-form-group--error');
-            } else {
-              this.$el.classList.remove('nhsuk-form-group--error')
-            }
-            this.$refs["errorField"].textContent = errorMessage;
-          })
-        .catch((error: any) => {
-            console.log(error.response)
-        });
     }
-  }
 });
 
 export {

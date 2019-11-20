@@ -1,10 +1,12 @@
 @page "/Notifications/{id:int}/Edit/SocialRiskFactors/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.SocialRiskFactorsModel
+@using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Social Risk Factors";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditSocialRiskFactors;
 }
 
 <h2>Social Risk Factors</h2>
@@ -32,14 +34,14 @@
 
     <div>
         @{
-            var DrugsModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorDrugs");
-            var DrugsViewData = new ViewDataDictionary(this.ViewData) {
+            var drugsModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorDrugs");
+            var drugsViewData = new ViewDataDictionary(this.ViewData) {
                 { "propertyName", "RiskFactorDrugs" },
-                { "errorState", DrugsModelIsValid },
+                { "errorState", drugsModelIsValid },
                 { "questionText", "Patient has a history of drug misuse" }
             };
         }
-        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorDrugs" view-data="@DrugsViewData" />
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorDrugs" view-data="@drugsViewData" />
         <br />
     </div>
 
@@ -99,5 +101,5 @@
         </nhs-fieldset>
     </nhs-form-group>
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

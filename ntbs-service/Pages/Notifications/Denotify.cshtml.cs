@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages_Notifications;
 using ntbs_service.Services;
-using System;
-using System.Threading.Tasks;
 
 namespace ntbs_service.Pages.Notifications
 {
     public class DenotifyModel : NotificationModelBase
     {
-        public ValidationService  ValidationService { get; set; }
+        public ValidationService ValidationService { get; set; }
 
         [BindProperty]
         public DenotificationDetails DenotificationDetails { get; set; }
@@ -18,7 +18,10 @@ namespace ntbs_service.Pages.Notifications
         [BindProperty]
         public FormattedDate FormattedDenotificationDate { get; set; }
 
-        public DenotifyModel(INotificationService service, IAuthorizationService authorizationService) : base(service, authorizationService)
+        public DenotifyModel(
+            INotificationService service,
+            IAuthorizationService authorizationService,
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
             ValidationService = new ValidationService(this);
 
@@ -36,7 +39,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Notification = await service.GetNotificationAsync(id);
+            Notification = await NotificationRepository.GetNotificationAsync(id);
             if (Notification == null)
             {
                 return NotFound();
@@ -57,8 +60,8 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnPostConfirmAsync()
         {
-            Notification = await service.GetNotificationAsync(NotificationId);
-            if (!(await authorizationService.CanEdit(User, Notification)))
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            if (!(await AuthorizationService.CanEdit(User, Notification)))
             {
                 return ForbiddenResult();
             }
@@ -73,7 +76,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (Notification.NotificationStatus == NotificationStatus.Notified)
             {
-                await service.DenotifyNotification(NotificationId, DenotificationDetails);
+                await Service.DenotifyNotificationAsync(NotificationId, DenotificationDetails);
             }
 
             return RedirectToPage("/Notifications/Overview", new { id = NotificationId });

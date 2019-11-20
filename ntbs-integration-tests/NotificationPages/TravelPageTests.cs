@@ -96,11 +96,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber),
+                FullErrorMessage(ValidationMessages.TotalNumberOfCountriesTravelledToGreaterThanInputNumber),
                 resultDocument.GetError("travel-total"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesGreaterThanInputNumber),
+                FullErrorMessage(ValidationMessages.TotalNumberOfCountriesVisitedFromGreaterThanInputNumber),
                 resultDocument.GetError("visitor-total"));
         }
 
@@ -396,7 +396,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateTravel"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -416,7 +416,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateTravel"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateTravel"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -438,7 +438,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateVisitor"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -458,7 +458,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetValidationPath(formData, "ValidateVisitor"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateVisitor"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

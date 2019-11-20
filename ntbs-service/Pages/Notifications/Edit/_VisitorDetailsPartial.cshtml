@@ -20,6 +20,9 @@
 
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-has-visitor">
                     <nhs-fieldset>
+                        <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+                            Visit details
+                        </nhs-fieldset-legend>
 
                         @{
                             var hasTotalError = !Model.IsValid($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.TotalNumberOfCountries)}");
@@ -32,7 +35,7 @@
                             <span asp-validation-for="VisitorDetails.TotalNumberOfCountries" nhs-span-type="ErrorMessage"
                                   id="visitor-total-error" ref="totalNumberOfCountriesErrorRef" has-error="@hasTotalError"></span>
                             <input asp-for="VisitorDetails.TotalNumberOfCountries" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasTotalError"
-                                   ref="totalNumberOfCountries" aria-describedby="visitor-total-error" />
+                                   ref="totalNumberOfCountries" aria-describedby="visitor-total-error"/>
                         </nhs-form-group>
 
                         @{
@@ -63,7 +66,7 @@
                             <span asp-validation-for="VisitorDetails.StayLengthInMonths1" nhs-span-type="ErrorMessage"
                                   id="visitor-length1-error" ref="stayLengthInMonths1ErrorRef" has-error="@hasStayLength1Error"></span>
                             <input asp-for="VisitorDetails.StayLengthInMonths1" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength1Error"
-                                   ref="stayLengthInMonths1" aria-describedby="visitor-length1-error" />
+                                   ref="stayLengthInMonths1" aria-describedby="visitor-length1-error"/>
                         </nhs-form-group>
 
                         @{
@@ -94,7 +97,7 @@
                             <span asp-validation-for="VisitorDetails.StayLengthInMonths2" nhs-span-type="ErrorMessage"
                                   id="visitor-length2-error" ref="stayLengthInMonths2ErrorRef" has-error="@hasStayLength2Error"></span>
                             <input asp-for="VisitorDetails.StayLengthInMonths2" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength2Error"
-                                   ref="stayLengthInMonths2" aria-describedby="visitor-length2-error" />
+                                   ref="stayLengthInMonths2" aria-describedby="visitor-length2-error"/>
                         </nhs-form-group>
 
                         @{
@@ -125,7 +128,7 @@
                             <span asp-validation-for="VisitorDetails.StayLengthInMonths3" nhs-span-type="ErrorMessage"
                                   id="visitor-length3-error" ref="stayLengthInMonths3ErrorRef" has-error="@hasStayLength3Error"></span>
                             <input asp-for="VisitorDetails.StayLengthInMonths3" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasStayLength3Error"
-                                   ref="stayLengthInMonths3" aria-describedby="visitor-length3-error" />
+                                   ref="stayLengthInMonths3" aria-describedby="visitor-length3-error"/>
                         </nhs-form-group>
                     </nhs-fieldset>
                 </div>

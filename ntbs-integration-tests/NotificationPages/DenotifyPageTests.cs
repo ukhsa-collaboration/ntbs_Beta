@@ -160,7 +160,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.ValidDate), resultDocument.GetError("date"));
+            resultDocument.AssertErrorMessage("date", ValidationMessages.ValidDate);
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateLatestToday), resultDocument.GetError("date"));
+            resultDocument.AssertErrorMessage("date", ValidationMessages.DenotificationDateLatestToday);
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationDateAfterNotification), resultDocument.GetError("date"));
+            resultDocument.AssertErrorMessage("date", ValidationMessages.DenotificationDateAfterNotification);
         }
 
         [Fact]
@@ -256,7 +256,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationReasonRequired), resultDocument.GetError("reason"));
+            resultDocument.AssertErrorMessage("reason", ValidationMessages.DenotificationReasonRequired);
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            Assert.Equal(FullErrorMessage(ValidationMessages.DenotificationReasonOtherRequired), resultDocument.GetError("description"));
+            resultDocument.AssertErrorMessage("description", ValidationMessages.DenotificationReasonOtherRequired);
         }
     }
 }

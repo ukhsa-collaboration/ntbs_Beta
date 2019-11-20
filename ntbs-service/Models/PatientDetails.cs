@@ -28,18 +28,19 @@ namespace ntbs_service.Models
 
         [MaxLength(50)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, 
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string LocalPatientId { get; set; }
 
+        [Display(Name = "Date of birth")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.BirthDateIsRequired)]
-        [ValidDate(ValidDates.EarliestBirthDate)]
+        [ValidDateRange(ValidDates.EarliestBirthDate)]
         public DateTime? Dob { get; set; }
         public bool? UkBorn { get; set; }
 
         [MaxLength(150)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, 
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         public string Address { get; set; }
 
@@ -51,10 +52,10 @@ namespace ntbs_service.Models
         public virtual PostcodeLookup PostcodeLookup { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.BirthCountryIsRequired)]
-        public int? CountryId { get; set;}
+        public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
 
-        [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYearRange)]
+        [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYear)]
         [AssertThat("UkEntryAfterBirth == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustBeAfterDob)]
         [AssertThat("UkEntryNotInFuture == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
         [DisplayName("year of uk entry")]
@@ -66,7 +67,7 @@ namespace ntbs_service.Models
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.EthnicGroupIsRequired)]
         public int? EthnicityId { get; set; }
         public virtual Ethnicity Ethnicity { get; set; }
-        
+
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.SexIsRequired)]
         public int? SexId { get; set; }
         public virtual Sex Sex { get; set; }

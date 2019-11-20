@@ -1,0 +1,8 @@
+### DotnetCore ###
+# .NET Core build folders
+/bin
+/obj
+/Properties
+/node_modules
+
+.vs/
