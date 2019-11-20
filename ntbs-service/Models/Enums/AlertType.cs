@@ -8,6 +8,7 @@ namespace ntbs_service.Models.Enums
         EnhancedSurveillanceMBovis,
         MissingTreatmentOutcome,
         UnmatchedLabResult,
+        [Display(Name = "Transfer Request")]
         TransferRequest,
         TransferRejected,
         DataQualityIssue,
