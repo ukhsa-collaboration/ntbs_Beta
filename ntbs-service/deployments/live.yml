@@ -16,8 +16,8 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "2GiB"
-              cpu: "1000m" # Given in milicores, this is 1 core
+              memory: 2Gi
+              cpu: 1000m # Given in milicores, this is 1 core
           ports:
             - containerPort: 8080
           env:
@@ -47,7 +47,7 @@ spec:
             #       name: lgeacy-and-migration-connection-strings
             #       key: migration
             - name: AdfsOptions__UseDummyAuth
-              value: true
+              value: "true"
       imagePullSecrets:
         - name: registery-password
 ---
