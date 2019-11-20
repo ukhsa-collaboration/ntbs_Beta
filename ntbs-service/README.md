@@ -95,9 +95,12 @@ We're using ACR to store docker images. When logged in to Azure, run this comman
 ## Deploying to environments
 `master` branch deploys to `int` automatically.
 
-For `test` and `research` environments, pick the docker image <TAG> of the build from registery and from root directory run:
+For `test` and `research` and `uat` environments, pick the docker image <TAG> of the build from registery and from root directory run:
 
 `.\scripts\release.sh <ENV> <TAG>`
+
+For `live` environment, the process is the same once
+[you've connected to Openshift successfully](https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/163446793/Deployments+on+PHE+infrastructure)
 
 ## Running the app in Docker (builds in produciton mode)
 ```
