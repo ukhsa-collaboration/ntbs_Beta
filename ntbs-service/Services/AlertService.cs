@@ -20,11 +20,14 @@ namespace ntbs_service.Services
     public class AlertService : IAlertService
     {
         private readonly IAlertRepository _alertRepository;
+        private readonly INotificationRepository _notificationRepository;
 
         public AlertService(
-            IAlertRepository alertRepository)
+            IAlertRepository alertRepository,
+            INotificationRepository notificationRepository)
         {
             _alertRepository = alertRepository;
+            _notificationRepository = notificationRepository;
         }
 
         public async Task DismissAlertAsync(int alertId, string userId)
@@ -45,6 +48,18 @@ namespace ntbs_service.Services
             {
                 return false;
             }
+            if(alert.NotificationId != null)
+            {
+                var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId);
+                if(alert.CaseManagerEmail == null)
+                {
+                    alert.CaseManagerEmail = notification.Episode?.CaseManagerEmail;
+                }
+                if(alert.HospitalId == null)
+                {
+                    alert.HospitalId = notification.Episode?.HospitalId;
+                }
+            } 
             await _alertRepository.AddAlertAsync(alert);
             return true;
         }

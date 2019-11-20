@@ -7,12 +7,12 @@
 }
 <tb-service-filtered-alerts inline-template>
     <div>
-        <div style="display: flex"> <!-- Flex boy here -->
-            <h2> Alerts </h2>
-            <p style="margin-left: auto">
+        <div class="flex-container">
+            <h2 class="alerts-heading"> Alerts </h2>
+            <label nhs-label-type="Standard" for="tb-service-filter-dropdown" classes="tb-service-alerts-filter-label">
                 Filter by TB Service
-            </p>
-            <select ref="tbService" asp-items="Model.TbServices" v-on:change="updateTable" style="max-width: 250px; margin: 5px 0 auto 15px">
+            </label>
+            <select id="tb-service-filter-dropdown" nhs-select-type="Standard" ref="tbService" asp-items="Model.TbServices" v-on:change="updateTable" classes="tb-service-alerts-filter-dropdown">
                 <option> Show all </option>
             </select>
         </div>
@@ -67,9 +67,9 @@
                         <nhs-table-item>
                             <form method="post" asp-page="./Alerts/Dismiss">
                                 <input hidden value="@item.AlertId" asp-for="@Model.AlertId" />
-                                <button class="nhsuk-button ntbsuk-button--warning">
-                                    Dismiss
-                                </button>
+                                    <button class="nhsuk-button ntbsuk-button--warning">
+                                        Dismiss
+                                    </button>
                             </form>
                         </nhs-table-item>
                     </nhs-table-body-row>
