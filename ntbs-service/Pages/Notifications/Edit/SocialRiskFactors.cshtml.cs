@@ -35,9 +35,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Travel", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./Travel", new { NotificationId, isBeingSubmitted });
         }
     }
 }

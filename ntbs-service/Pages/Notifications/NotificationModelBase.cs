@@ -33,7 +33,7 @@ namespace ntbs_service.Pages.Notifications
         [BindProperty]
         public bool HasEditPermission { get; set; }
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
 
         protected virtual async Task<Notification> GetNotification(int notificationId)

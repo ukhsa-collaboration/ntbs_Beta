@@ -32,14 +32,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./ContactTracing", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./ContactTracing", new { NotificationId, isBeingSubmitted });
         }
 
-        protected override IActionResult RedirectToCreate(int notificationId)
+        protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Table/ManualTestResult", new { notificationId = notificationId });
+            return RedirectToPage("./Table/ManualTestResult", new { NotificationId });
         }
 
         protected override async Task ValidateAndSave()

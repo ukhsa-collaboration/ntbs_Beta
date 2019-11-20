@@ -27,18 +27,17 @@ namespace ntbs_service.Pages.Notifications
             ValidationService = new ValidationService(this);
         }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(id);
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
             if (Notification.NotificationStatus != NotificationStatus.Draft)
             {
-                return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
+                return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
@@ -61,7 +60,7 @@ namespace ntbs_service.Pages.Notifications
                 return Partial("_DeleteConfirmation", this);
             }
 
-            return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
     }
 }

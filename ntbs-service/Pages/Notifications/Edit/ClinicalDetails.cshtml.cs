@@ -93,9 +93,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./TestResults", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./TestResults", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

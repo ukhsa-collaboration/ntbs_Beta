@@ -93,9 +93,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./ClinicalDetails", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

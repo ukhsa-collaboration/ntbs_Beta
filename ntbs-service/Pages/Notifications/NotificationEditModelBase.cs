@@ -25,22 +25,21 @@ namespace ntbs_service.Pages.Notifications
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
-        public virtual async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
+        public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
-            Notification = await GetNotification(id);
+            Notification = await GetNotification(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {
-                return RedirectToOverview(NotificationId);
+                return RedirectAfterSaveForNotified();
             }
 
+            // TODO NTBS-133 Rename to PreparePageForDisplayAsync. Remove parameters?
             return await PreparePageForGet(NotificationId, isBeingSubmitted);
         }
 
@@ -66,7 +65,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!isValid)
             {
-                return await OnGetAsync(NotificationId);
+                return await OnGetAsync(isBeingSubmitted);
             }
 
             switch (actionName)
@@ -76,7 +75,7 @@ namespace ntbs_service.Pages.Notifications
                 case "Submit":
                     return await Submit();
                 case "Create":
-                    return RedirectToCreate(NotificationId);
+                    return RedirectToCreate();
                 default:
                     return BadRequest();
             }
@@ -95,7 +94,7 @@ namespace ntbs_service.Pages.Notifications
 
             await Service.SubmitNotificationAsync(Notification);
 
-            return RedirectToOverview(NotificationId);
+            return RedirectAfterSaveForNotified();
         }
 
         private void SetShouldValidateFull()
@@ -116,15 +115,17 @@ namespace ntbs_service.Pages.Notifications
         {
             if (Notification.NotificationStatus != NotificationStatus.Draft)
             {
-                return RedirectToOverview(NotificationId);
+                return RedirectAfterSaveForNotified();
             }
 
-            return RedirectToNextPage(NotificationId, isBeingSubmitted);
+            return RedirectAfterSaveForDraft(NotificationId, isBeingSubmitted);
         }
 
-        protected IActionResult RedirectToOverview(int id)
+        // By default saving a notified record takes user to Overview page,
+        // but this can be overriden for sub-entity pages such as TestResult
+        protected virtual IActionResult RedirectAfterSaveForNotified()
         {
-            return RedirectToPage("../Overview", new { id });
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
@@ -139,8 +140,7 @@ namespace ntbs_service.Pages.Notifications
         {
             Notification.SetFullValidation(Notification.NotificationStatus);
             await ValidateAndSave();
-            var modelStateIsValid = ModelState.IsValid;
-            return modelStateIsValid;
+            return ModelState.IsValid;
         }
 
         public bool IsValid(string key)
@@ -150,9 +150,9 @@ namespace ntbs_service.Pages.Notifications
 
         protected abstract Task ValidateAndSave();
         protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
-        protected abstract IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted);
+        protected abstract IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted);
 
-        protected virtual IActionResult RedirectToCreate(int notificationId)
+        protected virtual IActionResult RedirectToCreate()
         {
             throw new NotImplementedException();
         }

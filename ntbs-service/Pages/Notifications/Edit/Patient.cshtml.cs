@@ -156,9 +156,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./Episode", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./Episode", new { NotificationId, isBeingSubmitted });
         }
 
         public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)

@@ -29,10 +29,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
         {
             // This is the last page in the flow, so there's no next page to go to
-            return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./PreviousHistory", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

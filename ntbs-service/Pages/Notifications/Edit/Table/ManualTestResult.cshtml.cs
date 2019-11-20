@@ -12,7 +12,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class ManualTestResult : NotificationModelBase
+    public class ManualTestResultPage : NotificationModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
 
@@ -28,7 +28,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public FormattedDate FormattedTestDate { get; set; }
 
-        public ManualTestResult(
+        public ManualTestResultPage(
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
