@@ -2,10 +2,12 @@
 @model ntbs_service.Pages.Notifications.Edit.EpisodeModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
+@using ntbs_service.Helpers
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Hospital Details";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditEpisode;
     var fullValidation = Model.Episode.ShouldValidateFull ? "True" : "False";
 }
 
@@ -81,11 +83,17 @@
             }
             else
             {
-                <input asp-for="Episode.TBServiceCode" class="hidden"/>
-                <p class="no-bottom-margin"> Notifying TB Service </p>
-                <select nhs-select-type="Standard" disabled>
-                    <option value="@Model.Notification.Episode?.TBService?.Code" selected="selected"> @Model.Notification.Episode?.TBService?.Name </option>
-                </select>
+                <div>
+                    <input asp-for="Episode.TBServiceCode" type="hidden" />
+                    <p class="no-bottom-margin"> Notifying TB Service </p>
+                    <label for="disabled-hospital-select" class="govuk-visually-hidden">
+                        Notifying TB Service (Disabled)
+                    </label>
+                    <select nhs-select-type="Standard" id="disabled-hospital-select" title="TB Service cannot be changed after notification" disabled="disabled">
+                        <option value="@Model.Notification.Episode?.TBService?.Code" selected="selected"> @Model.Notification.Episode?.TBService?.Name </option>
+                    </select>
+                </div>
+                <br />
             }
 
             <validate-input model="Episode" property="HospitalId" shouldvalidatefull="@fullValidation"
@@ -146,5 +154,5 @@
         </div>
     </tb-service-filtered-dropdowns>
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

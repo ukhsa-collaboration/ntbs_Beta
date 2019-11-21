@@ -9,16 +9,29 @@ using Xunit;
 
 namespace ntbs_ui_tests.StepDefinitions
 {
+    public class StepsData
+    {
+        public int NotificationId;
+    }
+    
     [Binding]
     public class Steps
     {
         private readonly IWebDriver Browser;
         private readonly SeleniumServerFactory<Startup> Server;
 
+        private readonly StepsData stepsData = new StepsData();
+
         public Steps(IWebDriver driver, SeleniumServerFactory<Startup> server)
         {
             Browser = driver;
             Server = server;
+        }
+
+        [Given(@"I am on current notification overview page")]
+        public void GivenIAmOnNotificationOverviewPage()
+        {
+            Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{stepsData.NotificationId}");
         }
 
         [Given(@"I am on the (.*) page")]
@@ -52,6 +65,15 @@ namespace ntbs_ui_tests.StepDefinitions
             new SelectElement(FindById(selectId)).SelectByValue(value);
         }
 
+        [When(@"I expand manage notification section")]
+        public void WhenIExpandNotificationSection()
+        {
+            var button = Browser
+                .FindElement(By.ClassName("manage-notification"))
+                .FindElement(By.TagName("summary"));
+            button.Click();
+        }
+
         [When(@"I wait for 1 second")]
         public void WhenIWaitBriefly()
         {
@@ -64,8 +86,14 @@ namespace ntbs_ui_tests.StepDefinitions
             var urlArray = Browser.Url.Split('/');
             var numberOfUrlParts = urlArray.Count();
             // Last part should be id, will throw exception if not correct format
-            int.Parse(urlArray[numberOfUrlParts - 1]);
+            stepsData.NotificationId = int.Parse(urlArray[numberOfUrlParts - 1]);
             Assert.Equal("Notifications", urlArray[numberOfUrlParts - 2]);
+        }
+
+        [Then(@"I should be on the Homepage")]
+        public void ThenIShouldBeOnTheHomepage()
+        {
+            Assert.Equal($"{Server.RootUri}/", Browser.Url);
         }
 
         [Then(@"I should be on the (.*) page")]
@@ -91,6 +119,13 @@ namespace ntbs_ui_tests.StepDefinitions
             Assert.Contains(ValidationMessages.NHSNumberIsRequired, summaryText);
             Assert.Contains(ValidationMessages.FamilyNameIsRequired, summaryText);
             Assert.Contains(ValidationMessages.EthnicGroupIsRequired, summaryText);
+        }
+
+        [Then(@"The notification should be denotified")]
+        public void ThenCurrentNotificationShouldBeDenotified()
+        {
+            var notificationHeading = Browser.FindElement(By.TagName("h1")).Text;
+            Assert.Contains("Denotified", notificationHeading);
         }
     }
 }

@@ -1,0 +1,40 @@
+@using ntbs_service.Helpers
+
+<nhs-grid-row>
+    <nhs-grid-column grid-column-width="TwoThirds">
+        &nbsp;
+        <!-- Alerts placeholder - &nbsp; needed so column doesn't collapse -->
+        <!-- <h2 class="govuk-heading-m"></h2> -->
+    </nhs-grid-column>
+    <nhs-grid-column grid-column-width="OneThird">
+        @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
+        {
+            <div class="manage-notification manage-notification--no-expander manage-notification--draft">
+                <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit" id="submit-button">
+                    Submit
+                </button>
+                @{ var deleteHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId); }
+                <a id="delete-draft-button" class="action-link" role="button" href="@deleteHref">
+                    Delete draft
+                </a>
+            </div>
+        }
+        else if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview && Model.HasEditPermission)
+        {
+            <div class="manage-notification">
+                <nhs-details display-text="Manage notification" nhs-details-type="Expander">
+                    <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
+                        New notification for this patient
+                    </button>
+                    @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
+                    {
+                        var denotifyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
+                        <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">
+                            Denotify
+                        </a>
+                    }
+                </nhs-details>
+            </div>
+        }
+    </nhs-grid-column>
+</nhs-grid-row>

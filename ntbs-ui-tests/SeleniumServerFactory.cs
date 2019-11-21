@@ -41,17 +41,17 @@ namespace ntbs_ui_tests
                     .AddEntityFrameworkInMemoryDatabase()
                     .BuildServiceProvider();
 
-                services.AddDbContext<NtbsContext>(options => 
+                services.AddDbContext<NtbsContext>(options =>
                 {
                     options.UseInMemoryDatabase("Ntbs_UI_Test_Db");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
-                 services.AddDbContext<AuditDatabaseContext>(options => 
-                {
-                    options.UseInMemoryDatabase("Ntbs_UI_Audit_Test_Db");
-                    options.UseInternalServiceProvider(serviceProvider);
-                });
+                services.AddDbContext<AuditDatabaseContext>(options =>
+               {
+                   options.UseInMemoryDatabase("Ntbs_UI_Audit_Test_Db");
+                   options.UseInternalServiceProvider(serviceProvider);
+               });
 
                 var sp = services.BuildServiceProvider();
 
@@ -73,13 +73,13 @@ namespace ntbs_ui_tests
             RootUri = host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.LastOrDefault(); //port 5001
 
             // This is a 'fake' server, needed to be returned by the method but will not actually be used.
-            return new TestServer(new WebHostBuilder().UseStartup<TStartup>());
+            return new TestServer(new WebHostBuilder().UseEnvironment("Test").UseStartup<TStartup>());
         }
 
-        protected override void Dispose(bool disposing) 
+        protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (disposing) 
+            if (disposing)
             {
                 host.Dispose();
             }

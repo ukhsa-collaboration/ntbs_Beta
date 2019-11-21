@@ -4,7 +4,7 @@ set -e
 env="$1"
 build="$2"
 
-echo "Deploying to int"
+echo "Deploying to $env"
 
 echo "Applying resource definion $env.yml"
 kubectl apply -f ./ntbs-service/deployments/$env.yml --record=true

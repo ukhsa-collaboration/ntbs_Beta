@@ -1,9 +1,15 @@
+@import "./breakpoints";
+
 .clear-search-button-container {
     display: flex;
 }
 
 .clear-search-button {
     margin-left: auto;
+}
+
+.search-error {
+    flex-basis: 100%;
 }
 
 .search-results-list {
@@ -22,4 +28,106 @@
 .submit-search-button {
     margin-left: auto;
     margin-bottom: 0;
+}
+
+.nhs-form-group--search {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.nhs-form-group--search-date {
+    display: inline-block;
+
+    @media(min-width: $tablet_breakpoint) {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.date-input--search {
+    display: flex;
+    flex-direction: column;
+
+    @media(min-width: $tablet_breakpoint) {
+        flex-direction: row;
+    }
+}
+
+.search-label--standard {
+    height: 100%;
+    margin: auto 0;
+    width: 160px;
+}
+
+.search-header {
+    margin-bottom: 12px;
+}
+
+.search-label--long {
+    height: 100%;
+    margin: auto 0;
+    width: 180px;
+}
+
+.search-hint {
+    height: 100%;
+    margin: auto 0;
+}
+
+.search-input {
+    margin-right: 20px;
+}
+
+.search-date-input {
+    display: flex;
+    margin: 5px 0;
+
+    @media(min-width: $tablet_breakpoint) {
+        margin: 0;
+    }
+}
+
+.search-date-input-label {
+    margin: auto 15px auto 0;
+    width: 45px;
+    height: 100%;
+
+    @media(min-width: $tablet_breakpoint) {
+        width: auto;
+    }
+}
+
+.search-dropdown {
+    width: 400px;
+    margin: 15px 0;
+}
+
+.search-sex-radios {
+    display: block;
+    margin: 10px 0 20px 0;
+
+    @media(min-width: $tablet_breakpoint) {
+        display: flex;
+        margin: 0;
+    }
+}
+
+.search-results-section {
+    background: #F0F4F5;
+    width: 100%;
+    overflow: auto;
+    padding-top: 24px;
+    padding-bottom: 48px;
+}
+
+.search-results-summary {
+    display: flex;
+}
+
+.create-notification-button--right {
+    margin-left: auto;
+}
+
+.create-notification-button-container {
+    display: flex;
 }

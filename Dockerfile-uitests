@@ -28,15 +28,18 @@ RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
     dpkg -i /chrome.deb || apt-get install -yf && \
     rm /chrome.deb
 
+WORKDIR /ntbs-ui-tests
+
+COPY ./ntbs-ui-tests/package*.json ./
+RUN npm ci
+RUN node_modules/.bin/selenium-standalone install
+
 WORKDIR /
 COPY ./EFAuditer ./EFAuditer
 COPY ./ntbs-service ./ntbs-service
 COPY ./ntbs-ui-tests ./ntbs-ui-tests
 
 WORKDIR /ntbs-ui-tests
-
-RUN npm ci
-RUN node_modules/.bin/selenium-standalone install
 
 ENV ASPNETCORE_URLS https://localhost:5001
 # We would like to run this script from within jenkinsfile, however the volume mount overwrites the directory and hence the selenium installation

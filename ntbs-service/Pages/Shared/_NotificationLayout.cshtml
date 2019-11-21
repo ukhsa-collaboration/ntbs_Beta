@@ -1,10 +1,7 @@
 @model ntbs_service.Pages.Notifications.NotificationModelBase
-@using ntbs_service.Helpers
-@using static NHSUK.FrontEndLibrary.TagHelpers.GridColumnWidth
+
 @{
-    Layout = "./_Form_Layout.cshtml";
-    var splitUrlPath = Context.Request.Path.ToString().Split("/");
-    var currentPage = splitUrlPath[splitUrlPath.Length - 1];
+    Layout = "./_Layout";
     var notificationStatusTriangleCssClass = "";
     switch (Model.Notification.NotificationStatus)
     {
@@ -18,128 +15,16 @@
             notificationStatusTriangleCssClass = "notification-banner-triangle--denotified";
             break;
     }
-
-    ViewData["IsOverviewPage"] = currentPage == string.Empty;
-    ViewData["IsPatientPage"] = currentPage == "Patient";
-    ViewData["IsEpisodePage"] = currentPage == "Episode";
-    ViewData["IsClinicalDetailsPage"] = currentPage == "ClinicalDetails";
-    ViewData["IsContactTracingPage"] = currentPage == "ContactTracing";
-    ViewData["IsSocialRiskFactorsPage"] = currentPage == "SocialRiskFactors";
-    ViewData["IsTravelPage"] = currentPage == "Travel";
-    ViewData["IsComorbiditiesPage"] = currentPage == "Comorbidities";
-    ViewData["IsImmunosuppressionPage"] = currentPage == "Immunosuppression";
-    ViewData["IsPreviousHistoryPage"] = currentPage == "PreviousHistory";
-    ViewData["IsLinkedNotificationsPage"] = currentPage == "LinkedNotifications";
-
-    var mainGridWidth = (bool)ViewData["IsLinkedNotificationsPage"] ? Full : ThreeQuarters;
 }
 
-<nhs-grid-row>
-    <nhs-grid-column grid-column-width="Full">
-        <div class="notification-banner-container">
-            <partial name="./_NotificationBanner.cshtml" model="@Model.NotificationBannerModel" />
-            <div class="notification-banner-triangle @notificationStatusTriangleCssClass"> </div>
-        </div>
-        <div class="notification-banner-links">
-            @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
-            {
-                <div class="@((bool) ViewData["IsOverviewPage"] ? "notification-banner-links--current" : "")">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">
-                        Notification details
-                    </a>
-                </div>
-                <div class="notification-banner-link-separator"> </div>
-            }
-            @if (Model.NumberOfLinkedNotifications > 0)
-            {
-                <div class="@((bool) ViewData["IsLinkedNotificationsPage"] ? "notification-banner-links--current" : "")">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.LinkedNotifications, Model.NotificationId)">
-                        Linked Notifications (@Model.NumberOfLinkedNotifications)
-                    </a>
-                </div>
-                <div class="notification-banner-link-separator"> </div>
-            }
-            <div>
-                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">
-                    Audit
-                </a>
+<nhs-width-container container-width="Standard">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
+            <div class="notification-banner-container">
+                <partial name="../Shared/_NotificationBanner.cshtml" model="@Model.NotificationBannerModel" />
+                <div class="notification-banner-triangle @notificationStatusTriangleCssClass"> </div>
             </div>
-        </div>
-    </nhs-grid-column>
-    @if (!(bool)ViewData["IsLinkedNotificationsPage"] && Model.HasEditPermission)
-    {
-        <nhs-grid-column grid-column-width="OneQuarter">
-            <ul class="sub-nav-left">
-                <li class="@("contents-list-item " + ((bool)ViewData["IsPatientPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditPatient, Model.NotificationId)">
-                        Personal details
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsEpisodePage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditEpisode, Model.NotificationId)">
-                        Hospital details
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsClinicalDetailsPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditClinicalDetails, Model.NotificationId)">
-                        Clinical Details
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsContactTracingPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditContactTracing, Model.NotificationId)">
-                        Contact Tracing
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsSocialRiskFactorsPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditSocialRiskFactors, Model.NotificationId)">
-                        Social Risk Factors
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsTravelPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditTravel, Model.NotificationId)">
-                        Travel/visitor history
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsComorbiditiesPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditComorbidities, Model.NotificationId)">
-                        Co-morbidities
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsImmunosuppressionPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditImmunosuppression, Model.NotificationId)">
-                        Immunosuppression
-                    </a>
-                </li>
-                <li class="@("contents-list-item " + ((bool)ViewData["IsPreviousHistoryPage"] ? "contents-list-item--current" : ""))">
-                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditPreviousHistory, Model.NotificationId)">
-                        Previous History
-                    </a>
-                </li>
-            </ul>
         </nhs-grid-column>
-    }
-    <nhs-grid-column grid-column-width=@mainGridWidth>
-        <input type="hidden" asp-for="NotificationId" />
-        @RenderBody()
-    </nhs-grid-column>
-</nhs-grid-row>
-
-@section ActionsAside
-{
-    <h2 class="govuk-heading-s" id="manage-notification-title">
-        Manage Notification
-    </h2>
-    @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
-    {
-        <button nhs-button-type="Standard" name="actionName" value="Submit" id="submit-button">Submit</button>
-        <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId)" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning delete-notification-button">Delete</a>
-    }
-    else if ((bool)ViewData["IsOverviewPage"])
-    {
-        <button nhs-button-type="Standard" asp-page-handler="CreateLink">New notification for this person</button>
-        if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
-        {
-            <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId)" role="button" draggable="false" class="nhsuk-button ntbsuk-button--warning">Denotify</a>
-        }
-    }
-}
+    </nhs-grid-row>
+    @RenderBody()
+</nhs-width-container>

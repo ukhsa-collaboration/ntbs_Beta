@@ -1,0 +1,16 @@
+@model ntbs_service.Pages.Notifications.NotificationModelBase
+
+@{
+    Layout = "./_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    var HiddenPartialData = new ViewDataDictionary(ViewData);
+    HiddenPartialData["id"] = "save-button-hidden";
+}
+
+@section MainFormButton {
+    <div hidden>
+        <partial name="_SaveButton" for="Notification" view-data="HiddenPartialData" />
+    </div>
+}
+
+@RenderBody()
+<partial name="_SaveButton" for="Notification" />

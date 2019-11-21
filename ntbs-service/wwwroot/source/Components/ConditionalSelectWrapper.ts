@@ -13,7 +13,11 @@ const ConditionalSelectWrapper = Vue.extend({
         },
         getValueFromChild: function () {
             if (this.$refs["inner-validate"] && this.$refs["inner-validate"].$refs["selectField"]) {
-                return this.$refs["inner-validate"].$refs["selectField"].value;
+                const selectField = this.$refs["inner-validate"].$refs["selectField"];
+                if (selectField.tagName === "DIV") {
+                    return selectField.getElementsByTagName("select")[0].value;
+                }
+                return selectField.value;
             }
             return null;
         },

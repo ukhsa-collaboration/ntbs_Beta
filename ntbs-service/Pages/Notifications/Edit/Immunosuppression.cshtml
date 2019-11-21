@@ -1,13 +1,14 @@
 @page "/Notifications/{id:int}/Edit/Immunosuppression/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ImmunosuppressionModel
-@using ntbs_service.Models
+@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
-@using ntbs_service.Models.Enums
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Immunosuppression";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditImmunosuppression;
 }
+
 <h2>Immunosuppression</h2>
 
 <div>
@@ -95,5 +96,5 @@
         </nhs-fieldset>
     </validate-immunosuppression>
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>
