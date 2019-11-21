@@ -7,9 +7,7 @@
 }
 
 <form method="post" autocomplete="off">
-    <input type="hidden" asp-for="NotificationId" />
     <input type="hidden" asp-for="RowId" />
-
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset role="group">
             <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -71,7 +69,9 @@
         </select>
     </nhs-form-group>
 
-    <button type="submit">Save it</button>
+    <button nhs-button-type="Standard" classes="ntbsuk-button--primary">
+        Save
+    </button>
 </form>
 
 <partial name="_ManualTestResultTable" model="@Model" />

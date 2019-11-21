@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,82 +11,63 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class ManualTestResultPage : NotificationModelBase
+    public class ManualTestResultPage : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly ITestResultsRepository _testResultsRepository;
 
-        public IList<Models.ManualTestResult> AllTestResults { get; set; }
+        public IList<ManualTestResult> AllTestResults { get; set; }
         public SelectList ManualTestTypes { get; set; }
         public SelectList SampleTypes { get; set; }
         public SelectList ResultOptions { get; set; }
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
         [BindProperty]
-        public Models.ManualTestResult TestResultForEdit { get; set; }
+        public ManualTestResult TestResultForEdit { get; set; }
         [BindProperty]
         public FormattedDate FormattedTestDate { get; set; }
 
         public ManualTestResultPage(
-            INotificationService service,
+            INotificationService notificationService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
+            IReferenceDataRepository referenceDataRepository,
+            ITestResultsRepository testResultsRepository) 
+            : base(notificationService, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
+            _testResultsRepository = testResultsRepository;
         }
 
-        public async Task<IActionResult> OnGetAsync(int notificationId, int? rowId)
+        protected override async Task ValidateAndSave()
         {
-            Notification = await GetNotification(notificationId);
-            if (Notification == null)
+
+            TestResultForEdit.Notification = Notification;
+
+            ValidationService.TrySetAndValidateDateOnModel(TestResultForEdit, nameof(ManualTestResult.TestDate), FormattedTestDate);
+
+
+            if (TryValidateModel(TestResultForEdit))
             {
-                return NotFound();
+                if (RowId != null)
+                {
+                    await _testResultsRepository.AddTestResultAsync(TestResultForEdit);
+                }
+                else
+                {
+                    await _testResultsRepository.UpdateTestResultAsync(TestResultForEdit);
+                }
             }
-
-            NotificationId = Notification.NotificationId;
-
-            await AuthorizeAndSetBannerAsync();
-            if (!HasEditPermission)
-            {
-                return RedirectToOverview(NotificationId);
-            }
-
-            return await PreparePageForGet(NotificationId, rowId);
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            Notification = await GetNotification(NotificationId);
-            if (Notification == null)
+            AllTestResults = await NotificationRepository.GetManualTestResultsForNotificationAsync(NotificationId);
+
+            if (RowId != null)
             {
-                return NotFound();
-            }
-
-            if (!(await AuthorizationService.CanEdit(User, Notification)))
-            {
-                return ForbiddenResult();
-            }
-
-            if (!FormattedTestDate.TryConvertToDateTime(out DateTime? testDate))
-            {
-                TestResultForEdit.TestDate = testDate.Value;
-            }
-
-            // Validate
-            // Save/Delete
-            // Redirect, maybe to same page depending on whether optional implementation of 'Save and add another is used'
-
-            return RedirectToEditPage(NotificationId);
-        }
-
-        public async Task<IActionResult> PreparePageForGet(int notificationId, int? rowId)
-        {
-            AllTestResults = await NotificationRepository.GetManualTestResultsForNotificationAsync(notificationId);
-
-            if (rowId != null)
-            {
-                TestResultForEdit = AllTestResults.SingleOrDefault(r => r.ManualTestResultId == rowId.Value);
+                TestResultForEdit = AllTestResults.SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
                 if (TestResultForEdit != null)
                 {
                     FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
@@ -115,14 +95,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             ResultOptions = new SelectList(ResultEnumHelper.GetAll());
         }
 
-        protected IActionResult RedirectToOverview(int notificationId)
+        protected override IActionResult RedirectAfterSaveForNotified()
         {
-            return RedirectToPage("/Notifications/Overview", new { id = notificationId });
+            return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }
 
-        protected IActionResult RedirectToEditPage(int notificationId)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("/Notifications/Edit/TestResults", new { id = notificationId });
+            return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId, isBeingSubmitted });
         }
     }
 }
