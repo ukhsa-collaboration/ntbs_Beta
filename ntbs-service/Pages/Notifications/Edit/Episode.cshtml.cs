@@ -42,7 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             this._referenceDataRepository = referenceDataRepository;
         }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
             await SetNotificationProperties(isBeingSubmitted, Episode);
@@ -93,7 +93,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./ClinicalDetails", new { NotificationId, isBeingSubmitted });
         }

@@ -39,8 +39,7 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectAfterSaveForNotified();
             }
 
-            // TODO NTBS-133 Rename to PreparePageForDisplayAsync. Remove parameters?
-            return await PreparePageForGet(NotificationId, isBeingSubmitted);
+            return await PrepareAndDisplayPageAsync(isBeingSubmitted);
         }
 
         /*
@@ -65,24 +64,23 @@ namespace ntbs_service.Pages.Notifications
 
             if (!isValid)
             {
-                return await OnGetAsync(isBeingSubmitted);
+                return await PrepareAndDisplayPageAsync(isBeingSubmitted);
             }
 
             switch (actionName)
             {
-                case "Save":
-                    return RedirectAfterSave(isBeingSubmitted);
                 case "Submit":
-                    return await Submit();
+                    return await SubmitAsync();
                 case "Create":
                     return RedirectToCreate();
+                case "Save": // intentional fall-through: treating Save as the default case
                 default:
-                    return BadRequest();
+                    return RedirectAfterSave(isBeingSubmitted);
             }
         }
 
 
-        public async Task<IActionResult> Submit()
+        public async Task<IActionResult> SubmitAsync()
         {
             SetShouldValidateFull();
 
@@ -118,7 +116,7 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectAfterSaveForNotified();
             }
 
-            return RedirectAfterSaveForDraft(NotificationId, isBeingSubmitted);
+            return RedirectAfterSaveForDraft(isBeingSubmitted);
         }
 
         // By default saving a notified record takes user to Overview page,
@@ -149,8 +147,8 @@ namespace ntbs_service.Pages.Notifications
         }
 
         protected abstract Task ValidateAndSave();
-        protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
-        protected abstract IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted);
+        protected abstract Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted);
+        protected abstract IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted);
 
         protected virtual IActionResult RedirectToCreate()
         {

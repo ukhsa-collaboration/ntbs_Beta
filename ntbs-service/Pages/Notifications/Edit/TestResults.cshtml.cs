@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public TestData TestData { get; set; }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             TestData = Notification.TestData;
             await SetNotificationProperties(isBeingSubmitted, TestData);
@@ -32,7 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./ContactTracing", new { NotificationId, isBeingSubmitted });
         }

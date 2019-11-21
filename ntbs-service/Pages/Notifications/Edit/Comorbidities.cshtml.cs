@@ -15,7 +15,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             ComorbidityDetails = Notification.ComorbidityDetails;
 
@@ -28,7 +28,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./Immunosuppression", new { NotificationId, isBeingSubmitted });
         }

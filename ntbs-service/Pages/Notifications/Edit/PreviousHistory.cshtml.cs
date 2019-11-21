@@ -16,7 +16,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public PatientTBHistory PatientTbHistory { get; set; }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             PatientTbHistory = Notification.PatientTBHistory;
             await SetNotificationProperties(isBeingSubmitted, PatientTbHistory);
@@ -29,7 +29,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             // This is the last page in the flow, so there's no next page to go to
             return RedirectToPage("./PreviousHistory", new { NotificationId, isBeingSubmitted });
