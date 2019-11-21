@@ -30,9 +30,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(PatientTbHistory, PatientTbHistory.GetType().Name);
             }
 
-            var alert = new ExampleTbServiceAlert() {MessageToNewCaseManager = "hey"};
-            var t = alertService.AddUniqueAlertAsync(alert);
-
             return Page();
         }
 

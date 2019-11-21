@@ -53,11 +53,11 @@ namespace ntbs_service.Services
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId);
                 if(alert.CaseManagerEmail == null)
                 {
-                    alert.CaseManagerEmail = notification.Episode?.CaseManagerEmail;
+                    alert.CaseManagerEmail = notification?.Episode?.CaseManagerEmail;
                 }
-                if(alert.HospitalId == null)
+                if(alert.TbServiceCode == null)
                 {
-                    alert.HospitalId = notification.Episode?.HospitalId;
+                    alert.TbServiceCode = notification?.Episode?.TBServiceCode;
                 }
             } 
             await _alertRepository.AddAlertAsync(alert);

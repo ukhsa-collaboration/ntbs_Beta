@@ -14,7 +14,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
         Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
-        Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
+        Task<IList<Alert>> GetDateOrderedAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
     }
 
     public class AlertRepository : IAlertRepository
@@ -44,9 +44,12 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
 
-        public async Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
+        public async Task<IList<Alert>> GetDateOrderedAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
-            return await GetBaseAlertIQueryable().Where(a => tbServices.Contains(a.TbServiceCode)).ToListAsync();
+            return await GetBaseAlertIQueryable()
+                .Where(a => tbServices.Contains(a.TbServiceCode))
+                .OrderByDescending(a => a.CreationDate)
+                .ToListAsync();
         }
         
         public async Task UpdateAlertAsync(AuditType auditType = AuditType.Edit)
@@ -60,8 +63,7 @@ namespace ntbs_service.DataAccess
             return _context.Alert
                 .Where(n => n.AlertStatus != AlertStatus.Closed)
                 .Include(n => n.TbService)
-                .Include(n => n.CaseManager)
-                .Include(n => n.Hospital);
+                .Include(n => n.CaseManager);
         }
     }
 }

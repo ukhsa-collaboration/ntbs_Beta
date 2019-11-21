@@ -10,6 +10,7 @@
 @import "./footer.scss";
 @import "./search.scss";
 @import './header.scss';
+@import "./home.scss";
 @import './fonts/webfontkit-helveticaneue/stylesheet.css';
 
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
@@ -146,19 +147,4 @@ body {
 
 .flex-container {
     display: flex;
-}
-
-.alerts-heading {
-    height: 100%;
-    margin: auto 0;
-}
-
-.tb-service-alerts-filter-label {
-    height: 100%;
-    margin: auto 0 auto auto;
-}
-
-.tb-service-alerts-filter-dropdown {
-    max-width: 200px;
-    margin: 5px 0 auto 15px
 }

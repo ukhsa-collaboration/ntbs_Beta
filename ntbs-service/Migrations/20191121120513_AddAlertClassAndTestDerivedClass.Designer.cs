@@ -11,8 +11,8 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20191118165027_AddAlertClassAndExampleDerivedClass")]
-    partial class AddAlertClassAndExampleDerivedClass
+    [Migration("20191121120513_AddAlertClassAndTestDerivedClass")]
+    partial class AddAlertClassAndTestDerivedClass
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,8 +45,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<Guid?>("HospitalId");
-
                     b.Property<int?>("NotificationId");
 
                     b.Property<string>("TbServiceCode")
@@ -55,8 +53,6 @@ namespace ntbs_service.Migrations
                     b.HasKey("AlertId");
 
                     b.HasIndex("CaseManagerEmail");
-
-                    b.HasIndex("HospitalId");
 
                     b.HasIndex("TbServiceCode");
 
@@ -11303,15 +11299,11 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ExampleTbServiceAlert", b =>
+            modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Alert");
 
-                    b.Property<string>("MessageToNewCaseManager");
-
-                    b.Property<string>("TransferReason");
-
-                    b.HasDiscriminator().HasValue("TransferRequest");
+                    b.HasDiscriminator().HasValue("Test");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Alert", b =>
@@ -11319,10 +11311,6 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
                         .WithMany()
                         .HasForeignKey("CaseManagerEmail");
-
-                    b.HasOne("ntbs_service.Models.Hospital", "Hospital")
-                        .WithMany()
-                        .HasForeignKey("HospitalId");
 
                     b.HasOne("ntbs_service.Models.Notification", "Notification")
                         .WithMany("Alerts")

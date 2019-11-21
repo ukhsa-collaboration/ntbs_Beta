@@ -9,10 +9,11 @@
     <div>
         <div class="flex-container">
             <h2 class="alerts-heading"> Alerts </h2>
-            <label nhs-label-type="Standard" for="tb-service-filter-dropdown" classes="tb-service-alerts-filter-label">
+            <label nhs-label-type="Standard" for="tb-service-filter-dropdown" classes="tb-service-alerts-filter-label" >
                 Filter by TB Service
             </label>
-            <select id="tb-service-filter-dropdown" nhs-select-type="Standard" ref="tbService" asp-items="Model.TbServices" v-on:change="updateTable" classes="tb-service-alerts-filter-dropdown">
+            <select id="tb-service-filter-dropdown" nhs-select-type="Standard" ref="tbService" asp-items="Model.TbServices" 
+                v-on:change="updateTable" classes="tb-service-alerts-filter-dropdown">
                 <option> Show all </option>
             </select>
         </div>
@@ -26,26 +27,24 @@
                     @Html.DisplayNameFor(model => model.Alerts[0].FormattedCreationDate)
                 </nhs-table-item>
                 <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
+                    @Html.DisplayNameFor(model => model.Alerts[0].Action)
                 </nhs-table-item>
                 <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.Alerts[0].CaseManagerFullName)
+                    @Html.DisplayNameFor(model => model.Alerts[0].CaseManagerFullName), @Html.DisplayNameFor(model => model.Alerts[0].TbServiceName)
                 </nhs-table-item>
                 <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.Alerts[0].HospitalName)
-                </nhs-table-item>
-                <nhs-table-item>
-                    @Html.DisplayNameFor(model => model.Alerts[0].DismissLink)
+                    Dismiss
                 </nhs-table-item>
             </nhs-table-head>
             <nhs-table-body>
                 @foreach (var item in Model.Alerts) 
                 {
-                    <nhs-table-body-row ref="@item.TbServiceCode" v-if="TbServiceCode == '@item.TbServiceCode' || TbServiceCode == 'Show all'">
+                    <nhs-table-body-row id="alert-@item.AlertId" v-if="TbServiceCode == '@item.TbServiceCode' || TbServiceCode == 'Show all'">
                         <nhs-table-item>
                             @if(item.NotificationId != null) 
                             {
-                                <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId ?? 1)" class="govuk-link govuk-link--no-visited-state">
+                                var overviewPageLink = @RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId.GetValueOrDefault());
+                                <a href="@overviewPageLink" class="govuk-link govuk-link--no-visited-state">
                                     @Html.DisplayFor(_ => item.NotificationId) 
                                 </a>
                             }
@@ -59,21 +58,23 @@
                             </a>
                         </nhs-table-item>
                         <nhs-table-item>
-                            @Html.DisplayFor(_ => item.CaseManager.FullName)
+                            @Html.DisplayFor(_ => item.CaseManagerFullName)
+                            @if(item.CaseManagerFullName != null && item.TbServiceName != null)
+                            {
+                                @:, 
+                            }
+                            @Html.DisplayFor(_ => item.TbServiceName)
                         </nhs-table-item>
                         <nhs-table-item>
-                            @Html.DisplayFor(_ => item.Hospital.Name)
-                        </nhs-table-item>
-                        <nhs-table-item>
-                            <form method="post" asp-page="./Alerts/Dismiss">
-                                <input hidden value="@item.AlertId" asp-for="@Model.AlertId" />
-                                    <button class="nhsuk-button ntbsuk-button--warning">
-                                        Dismiss
+                            <form method="post" action="@RouteHelper.GetAlertPath(AlertSubPaths.Dismiss, @item.AlertId)" >
+                                @Html.AntiForgeryToken()
+                                <input hidden value="@item.TbServiceCode" name="hi"/>
+                                    <button class="nhsuk-link govuk-link--no-visited-state reset-button-styling">
+                                        X
                                     </button>
                             </form>
                         </nhs-table-item>
                     </nhs-table-body-row>
-                    
                 }
             </nhs-table-body>
         </nhs-table>

@@ -12,6 +12,8 @@ namespace ntbs_service.Models.Enums
         TransferRequest,
         TransferRejected,
         DataQualityIssue,
-        SocialContext
+        SocialContext,
+        [Display(Name = "Test Alert")]
+        Test
     }
 }

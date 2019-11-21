@@ -5,6 +5,7 @@ namespace ntbs_service.Helpers
     public static class RouteHelper
     {
         public static string NotificationBasePath => "/Notifications/{0}/{1}";
+        public static string AlertBasePath => "/Alerts/{0}/{1}";
 
         public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted = false)
         {
@@ -15,6 +16,12 @@ namespace ntbs_service.Helpers
             }
 
             return string.Format(NotificationBasePath, id, path);
+        }
+
+        public static string GetAlertPath(string subPath, int id)
+        {
+            var path = subPath;
+            return string.Format(AlertBasePath, id, path);
         }
     }
 
@@ -33,5 +40,10 @@ namespace ntbs_service.Helpers
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
+    }
+
+    public static class AlertSubPaths
+    {
+        public static string Dismiss => "Dismiss";
     }
 }

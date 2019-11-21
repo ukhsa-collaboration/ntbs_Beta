@@ -34,14 +34,24 @@ namespace ntbs_service.Pages
 
         public async Task OnGetAsync()
         {
+            await SetUserNotificationsAsync();
+            await SetUserAlertsAsync();
+        }
+
+        private async Task SetUserNotificationsAsync()
+        {
             var draftNotificationsQueryable = await notificationRepository.GetDraftNotificationsAsync();
             var recentNotifications = await notificationRepository.GetRecentNotificationsAsync();
             DraftNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable)).Take(10).ToList();
             RecentNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, recentNotifications)).Take(10).ToList();
+        }
+
+        private async Task SetUserAlertsAsync()
+        {
             var services = await userService.GetTbServicesAsync(User);
             var tbServiceCodes = services.Select(s => s.Code);
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
-            Alerts = await alertRepository.GetAlertsByTbServiceCodesAsync(tbServiceCodes);
+            Alerts = await alertRepository.GetDateOrderedAlertsByTbServiceCodesAsync(tbServiceCodes);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace ntbs_service.Services
     {
         Task<bool> CanEdit(ClaimsPrincipal user, Notification notification);
         Task<IEnumerable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IEnumerable<Notification> notifications);
+        Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
     }
 
     public class AuthorizationService : IAuthorizationService
@@ -21,6 +22,16 @@ namespace ntbs_service.Services
         public AuthorizationService(IUserService userService)
         {
             this.userService = userService;
+        }
+
+        public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
+        {
+            var userTbServiceCodes = (await userService.GetTbServicesAsync(user)).Select(s => s.Code);
+            if(userTbServiceCodes.Contains(alert.TbServiceCode))
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)

@@ -7,7 +7,7 @@ namespace ntbs_service.Models
     public abstract class Alert
     {
         public int AlertId { get; set; }
-        [Display(Name = "Notification ID")]
+        [Display(Name = "Notification Id")]
         public int? NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
         public DateTime CreationDate { get; set; }
@@ -15,8 +15,6 @@ namespace ntbs_service.Models
         public virtual TBService TbService { get; set; }
         public string CaseManagerEmail { get; set; }
         public virtual CaseManager CaseManager { get; set; }
-        public Guid? HospitalId { get; set; }
-        public virtual Hospital Hospital { get; set; }
         public AlertStatus AlertStatus { get; set; }
         public DateTime? ClosureDate { get; set; }
         public string ClosingUserId { get; set; }
@@ -30,8 +28,8 @@ namespace ntbs_service.Models
         public string FormattedCreationDate => FormatDate(CreationDate);
         [Display(Name = "Case manager")]
         public string CaseManagerFullName => CaseManager?.FullName;
-        [Display(Name = "Hospital")]
-        public string HospitalName => Hospital?.Name;
+        [Display(Name = "TB Service")]
+        public string TbServiceName => TbService?.Name;
         [Display(Name = "Dismiss")]
         public string DismissLink => "";
 

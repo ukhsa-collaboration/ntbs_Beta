@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ntbs_service.Migrations
 {
-    public partial class AddAlertClassAndExampleDerivedClass : Migration
+    public partial class AddAlertClassAndTestDerivedClass : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,13 +18,10 @@ namespace ntbs_service.Migrations
                     CreationDate = table.Column<DateTime>(nullable: false),
                     TbServiceCode = table.Column<string>(maxLength: 16, nullable: true),
                     CaseManagerEmail = table.Column<string>(maxLength: 64, nullable: true),
-                    HospitalId = table.Column<Guid>(nullable: true),
                     AlertStatus = table.Column<string>(maxLength: 30, nullable: false),
                     ClosureDate = table.Column<DateTime>(nullable: true),
                     ClosingUserId = table.Column<string>(maxLength: 64, nullable: true),
-                    AlertType = table.Column<string>(nullable: false),
-                    TransferReason = table.Column<string>(nullable: true),
-                    MessageToNewCaseManager = table.Column<string>(nullable: true)
+                    AlertType = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,12 +31,6 @@ namespace ntbs_service.Migrations
                         column: x => x.CaseManagerEmail,
                         principalTable: "CaseManager",
                         principalColumn: "Email",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Alert_Hospital_HospitalId",
-                        column: x => x.HospitalId,
-                        principalTable: "Hospital",
-                        principalColumn: "HospitalId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Alert_Notification_NotificationId",
@@ -59,11 +50,6 @@ namespace ntbs_service.Migrations
                 name: "IX_Alert_CaseManagerEmail",
                 table: "Alert",
                 column: "CaseManagerEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Alert_HospitalId",
-                table: "Alert",
-                column: "HospitalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alert_TbServiceCode",

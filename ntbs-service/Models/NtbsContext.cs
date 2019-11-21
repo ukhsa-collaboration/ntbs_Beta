@@ -386,10 +386,10 @@ namespace ntbs_service.Models
                 entity.Property(e => e.AlertType)
                     .HasConversion(alertTypeEnumConverter);
                 entity.HasDiscriminator<AlertType>("AlertType")
-                    .HasValue<ExampleTbServiceAlert>(AlertType.TransferRequest);
+                    .HasValue<TestAlert>(AlertType.Test);
             });
 
-            modelBuilder.Entity<ExampleTbServiceAlert>().HasBaseType<Alert>();
+            modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();
         }
 
         private List<object> GetTBServicesList()
