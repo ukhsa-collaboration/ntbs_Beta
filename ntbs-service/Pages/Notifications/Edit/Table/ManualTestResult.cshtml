@@ -1,11 +1,13 @@
 @page "/Notifications/{NotificationId:int}/Edit/ManualTestResult/{RowId:int?}"
+@using ntbs_service.Helpers
 @model ManualTestResultPage
 
 @{
     Layout = "../../../Shared/_NotificationLayout.cshtml";
     ViewData["Title"] = "Notification - Manual Test Result";
 }
-
+<h2> Test Results </h2>
+<h3> @(Model.RowId == null ? "Add new " : "Edit ") test result</h3>
 <form method="post" autocomplete="off">
     <input type="hidden" asp-for="RowId" />
     <nhs-form-group nhs-form-group-type="Standard">
@@ -74,4 +76,10 @@
     </button>
 </form>
 
-<partial name="_ManualTestResultTable" model="@Model" />
+<h3> Results </h3>
+
+<partial name="_ManualTestResultTable" for="Notification.ManualTestResults" />
+
+<a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditTestResults, Model.NotificationId)">
+    Back to test results
+</a>

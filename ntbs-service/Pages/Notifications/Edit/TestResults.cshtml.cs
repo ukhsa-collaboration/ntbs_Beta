@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -9,15 +10,18 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class TestResultsModel : NotificationEditModelBase
     {
         public TestResultsModel(
-            INotificationService service,
+            INotificationService notificationService,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService,
-            notificationRepository)
+            INotificationRepository notificationRepository)
+            : base(notificationService,
+                   authorizationService,
+                   notificationRepository)
         {
         }
 
         [BindProperty]
         public TestData TestData { get; set; }
+        public ICollection<ManualTestResult> ManualTestResults { get; set; }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
@@ -28,6 +32,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TryValidateModel(this);
             }
+
+            // view-only data
+            ManualTestResults = Notification.ManualTestResults;
 
             return Page();
         }
@@ -54,6 +61,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidateTestDataProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.ValidateModelProperty<TestData>(key, value, shouldValidateFull);
+        }
+        
+        protected override async Task<Notification> GetNotification(int notificationId)
+        {
+            return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
         }
     }
 }

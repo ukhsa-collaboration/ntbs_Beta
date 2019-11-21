@@ -1,17 +1,39 @@
-@model ntbs_service.Pages.Notifications.Edit.ManualTestResultPage
+@model ICollection<ntbs_service.Models.ManualTestResult>
 
-<div>
-    <h3>
-        Results
-    </h3>
+@{ var header = Model.FirstOrDefault(); }
 
-    @foreach (var result in Model.AllTestResults)
+<nhs-table id="manual-results" caption="Manual Results">
+    <nhs-table-head>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.TestDate)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.ManualTestType)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.SampleType)
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.Result)
+        </nhs-table-item>
+    </nhs-table-head>
+    <nhs-table-body>
+    @foreach (var result in Model)
     {
-        @result.ManualTestResultId
-        @result.TestDate
-        @result.ManualTestType.Description
-        @result.SampleType.Description
-        @result.Result
-        <br />
+        <nhs-table-body-row>
+            <nhs-table-item>
+                @(result.TestDate.ToString("dd-MMM-yyyy"))
+            </nhs-table-item>
+            <nhs-table-item>
+                @result.ManualTestType.Description
+            </nhs-table-item>
+            <nhs-table-item>
+                @result.SampleType.Description
+            </nhs-table-item>
+            <nhs-table-item>
+                @result.Result
+            </nhs-table-item>
+        </nhs-table-body-row>
     }
-</div>
+    </nhs-table-body>
+</nhs-table>

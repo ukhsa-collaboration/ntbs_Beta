@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -14,7 +13,9 @@ namespace ntbs_integration_tests.NotificationPages
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult("");
 
-        public ManualTestResultEditPages(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public ManualTestResultEditPages(NtbsWebApplicationFactory<Startup> factory, ITestOutputHelper output) : base(factory)
+        {
+        }
 
 
         [Fact]
@@ -33,20 +34,21 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedTestDate.Day"] = "2",
                 ["FormattedTestDate.Month"] = "2",
                 ["FormattedTestDate.Year"] = "1992",
-                ["TestResultForEdit.ManualTestTypeId"] = ManualTestTypeId.Histology.ToString(),
-                ["TestResultForEdit.SampleTypeId"] = SampleTypeId.Blood.ToString(),
-                ["TestResultForEdit.Result"] = Result.Negative.ToString(),
+                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Histology).ToString(),
+                ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.Blood).ToString(),
+                ["TestResultForEdit.Result"] = ((int)Result.Negative).ToString(),
             };
             var result = await SendPostFormWithData(initialDocument, formData, url);
-            // var document = await GetDocumentAsync(result);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, NotificationId));
-            // var manualResults = document.GetElementById("manual-results");
-            // Assert.Contains("Histology", manualResults.TextContent);
-            // Assert.Contains("Blood", manualResults.TextContent);
-            // Assert.Contains("Negative", manualResults.TextContent);
+            var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var testsListDocument = await GetDocumentAsync(testsListPage);
+            var manualResults = testsListDocument.GetElementById("manual-results");
+
+            Assert.Contains("Histology", manualResults.TextContent);
+            Assert.Contains("Blood", manualResults.TextContent);
+            Assert.Contains("Negative", manualResults.TextContent);
         }
     }
 }

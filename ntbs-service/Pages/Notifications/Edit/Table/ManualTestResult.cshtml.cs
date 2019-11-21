@@ -16,7 +16,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly ITestResultsRepository _testResultsRepository;
 
-        public IList<ManualTestResult> AllTestResults { get; set; }
         public SelectList ManualTestTypes { get; set; }
         public SelectList SampleTypes { get; set; }
         public SelectList ResultOptions { get; set; }
@@ -63,11 +62,9 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            AllTestResults = await NotificationRepository.GetManualTestResultsForNotificationAsync(NotificationId);
-
             if (RowId != null)
             {
-                TestResultForEdit = AllTestResults.SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
+                TestResultForEdit = Notification.ManualTestResults.SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
                 if (TestResultForEdit != null)
                 {
                     FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
@@ -103,6 +100,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId, isBeingSubmitted });
+        }
+        
+        protected override async Task<Notification> GetNotification(int notificationId)
+        {
+            return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
         }
     }
 }
