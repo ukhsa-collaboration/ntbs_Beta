@@ -41,7 +41,13 @@ Feature: Notification creation
         And I enter 1 into 'FormattedDiagnosisDate_Month'
         And I enter 2018 into 'FormattedDiagnosisDate_Year'
         And I click on 'save-button'
-
+        
+        # Test results page
+        Then I should be on the TestResults page
+        When I select radio value 'test-carried-out-yes'
+        And I click on 'save-button'
+        
+        # Contact tracing page + submission
         Then I should be on the ContactTracing page
         When I click on 'submit-button'
         Then I should see the Notification
@@ -93,6 +99,10 @@ Feature: Notification creation
         When I enter 1 into 'FormattedDiagnosisDate_Day'
         And I enter 1 into 'FormattedDiagnosisDate_Month'
         And I enter 2018 into 'FormattedDiagnosisDate_Year'
+        And I click on 'save-button'
+
+        Then I should be on the TestResults page
+        When I select radio value 'test-carried-out-yes'
         And I click on 'save-button'
 
         Then I should be on the ContactTracing page

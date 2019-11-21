@@ -161,7 +161,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["NotificationSiteMap[PULMONARY]"] = "true",
                 ["NotificationSiteMap[OTHER]"] = "true",
                 ["OtherSite.SiteDescription"] = "tissue",
-                ["ClinicalDetails.NoSampleTaken"] = "true",
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "2000",
                 ["ClinicalDetails.IsSymptomatic"] = "true",
@@ -189,14 +188,13 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditContactTracing, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditTestResults, Utilities.DRAFT_ID), GetRedirectLocation(result));
 
             var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_PULMONARY_")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("NotificationSiteMap_OTHER_")).IsChecked);
             Assert.Equal("tissue", ((IHtmlInputElement)reloadedDocument.GetElementById("OtherSite_SiteDescription")).Value);
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_NoSampleTaken")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("bcg-vaccination-yes")).IsChecked);
             Assert.Equal("2000", ((IHtmlInputElement)reloadedDocument.GetElementById("ClinicalDetails_BCGVaccinationYear")).Value);
             Assert.Equal("1", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Day")).Value);
@@ -252,7 +250,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditContactTracing, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditTestResults, Utilities.DRAFT_ID), GetRedirectLocation(result));
 
             var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
