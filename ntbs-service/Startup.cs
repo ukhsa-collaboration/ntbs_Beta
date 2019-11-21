@@ -120,7 +120,7 @@ namespace ntbs_service
         {
             if (Env.IsEnvironment("Test"))
             {
-                app.UseDeveloperExceptionPage();
+                app.UseStatusCodePagesWithReExecute("/errors/{0}");
             }
             else if (env.IsDevelopment())
             {
