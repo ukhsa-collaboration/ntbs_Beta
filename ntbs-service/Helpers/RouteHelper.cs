@@ -35,7 +35,7 @@ namespace ntbs_service.Helpers
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
 
-        public static string EditManualTestResult(string id) => $"Edit/ManualTestResult/{id}";
+        public static string EditManualTestResult(int? TestResultId) => $"Edit/ManualTestResult/{TestResultId}";
         public static string AddManualTestResult => $"Edit/ManualTestResult";
     }
 }

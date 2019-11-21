@@ -1,8 +1,11 @@
 @model ICollection<ntbs_service.Models.ManualTestResult>
 
-@{ var header = Model.FirstOrDefault(); }
+@{ 
+    var header = Model.FirstOrDefault(); 
+    var showEditLinks = (bool) (ViewData["ShowManualResultsEditLinks"] ?? false);
+}
 
-<nhs-table id="manual-results" caption="Manual Results">
+<nhs-table id="manual-results" caption="Manual Test Results" >
     <nhs-table-head>
         <nhs-table-item>
             @Html.DisplayNameFor(_ => header.TestDate)
@@ -16,6 +19,10 @@
         <nhs-table-item>
             @Html.DisplayNameFor(_ => header.Result)
         </nhs-table-item>
+        @if (showEditLinks) 
+        {
+            <nhs-table-item>Edit</nhs-table-item>
+        }
     </nhs-table-head>
     <nhs-table-body>
     @foreach (var result in Model)
@@ -33,6 +40,14 @@
             <nhs-table-item>
                 @result.Result
             </nhs-table-item>
+            @if (showEditLinks) 
+            {
+                var subPath = NotificationSubPaths.EditManualTestResult(result.ManualTestResultId);
+                var path = RouteHelper.GetNotificationPath(subPath, result.NotificationId);
+                <nhs-table-item>
+                    <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
+                </nhs-table-item>
+            }
         </nhs-table-body-row>
     }
     </nhs-table-body>
