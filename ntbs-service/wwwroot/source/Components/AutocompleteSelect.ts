@@ -9,7 +9,6 @@ const AutocompleteSelect = Vue.extend({
         var options:any = {
             placeholder: this.$props.placeholder,
             autoselect: false,
-            preserveNullOptions: true,
             showAllValues: true,
             selectElement: this.selectElement
         };
@@ -23,6 +22,8 @@ const AutocompleteSelect = Vue.extend({
         // Workaround for stopping Chrome trying to autocomplete by country, see discussion https://gist.github.com/niksumeiko/360164708c3b326bd1c8
         // Note that autocomplete="off" does not work.
         this.autocompleteElement.setAttribute('autocomplete', 'no');
+        // In IE, name gets automatically populated with empty string and razor then tries to bind this value to the model, so we need to remove name completely
+        this.autocompleteElement.removeAttribute('name');
         if (this.$props.validate) {
             // As we do not build the element ourselves, use ordinary event listeners rather than vue's
             this.autocompleteElement.addEventListener('change', (event: any) => this.inputChanged(event));
