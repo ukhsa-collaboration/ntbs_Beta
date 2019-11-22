@@ -115,6 +115,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 // Detach notification to avoid getting cached notification when retrieving from context,
                 // because cached notification date will change notification date on a banner even when invalid
                 _context.Entry(Notification).State = EntityState.Detached;
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
             }
         }
 

@@ -56,7 +56,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorMessage("other-site", ValidationMessages.StandardStringFormat);
-            resultDocument.AssertErrorMessage("bcg-vaccination", ValidationMessages.ValidYear);
+            resultDocument.AssertErrorMessage("bcg-vaccination", ValidationMessages.InvalidYear);
             resultDocument.AssertErrorMessage("symptom", ValidationMessages.ValidDate);
             resultDocument.AssertErrorMessage("first-presentation", ValidationMessages.TodayOrEarlier("Presentation to any health service"));
             resultDocument.AssertErrorMessage("tb-service-presentation", ValidationMessages.TodayOrEarlier("Presentation to TB service"));

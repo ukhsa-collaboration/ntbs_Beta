@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Services;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
@@ -38,6 +39,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(ContactTracing, ContactTracing.GetType().Name))
             {
                 await Service.UpdateContactTracingAsync(Notification, ContactTracing);
+            }
+            else
+            {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
             }
         }
 

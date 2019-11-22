@@ -91,7 +91,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                return pageModel.Content(ValidationMessages.ValidDate);
+                return pageModel.Content(ValidationMessages.InvalidDate);
             }
         }
 
@@ -158,7 +158,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidDate);
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate);
                 return;
             }
         }
@@ -190,7 +190,7 @@ namespace ntbs_service.Services
         {
             if (!IsValidYear(yearToValidate))
             {
-                return pageModel.Content(ValidationMessages.ValidYear);
+                return pageModel.Content(ValidationMessages.InvalidYear);
             }
 
             if (yearToValidate < yearToCompare)
@@ -216,7 +216,7 @@ namespace ntbs_service.Services
 
             if (!IsValidYear(yearToValidate))
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear);
                 return;
             }
 

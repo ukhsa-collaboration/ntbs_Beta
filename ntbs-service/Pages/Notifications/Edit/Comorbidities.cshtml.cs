@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Services;
 
@@ -39,6 +40,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(ComorbidityDetails, ComorbidityDetails.GetType().Name))
             {
                 await Service.UpdateComorbidityAsync(Notification, ComorbidityDetails);
+            }
+            else
+            {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
             }
         }
     }

@@ -45,5 +45,10 @@ namespace ntbs_service.Helpers
                 return;
             }
         }
+
+        public static string GenerateLinkFromKey(string key)
+        {
+            return $"#{key}-form-group";
+        }
     }
 }

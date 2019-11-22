@@ -139,6 +139,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
+            else
+            {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
+            }
         }
 
         private void UpdateFlags()

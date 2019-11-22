@@ -14,22 +14,26 @@ namespace ntbs_service.Models
         [StringLength(35)]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FamilyNameIsRequired)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [Display(Name = "Family name")]
         public string FamilyName { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.GivenNameIsRequired)]
         [StringLength(35)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [Display(Name = "Given name")]
         public string GivenName { get; set; }
 
         [RequiredIf(@"ShouldValidateFull && !NhsNumberNotKnown", ErrorMessage = ValidationMessages.NHSNumberIsRequired)]
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NhsNumberFormat)]
         [StringLength(10, MinimumLength = 10, ErrorMessage = ValidationMessages.NhsNumberLength)]
+        [Display(Name = "NHS number")]
         public string NhsNumber { get; set; }
 
         [MaxLength(50)]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
+        [Display(Name = "Local Patient Id")]
         public string LocalPatientId { get; set; }
 
         [Display(Name = "Date of birth")]
@@ -55,10 +59,10 @@ namespace ntbs_service.Models
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
 
-        [Range(1900, 2100, ErrorMessage = ValidationMessages.ValidYear)]
+        [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYear)]
         [AssertThat("UkEntryAfterBirth == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustBeAfterDob)]
         [AssertThat("UkEntryNotInFuture == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
-        [DisplayName("year of uk entry")]
+        [DisplayName("Year of uk entry")]
         public int? YearOfUkEntry { get; set; }
 
         public bool UkEntryAfterBirth => !Dob.HasValue || YearOfUkEntry >= Dob.Value.Year;

@@ -23,6 +23,7 @@ namespace ntbs_service.Models
             ErrorMessage = ValidationMessages.ImmunosuppressionDetailRequired)]
         [MaxLength(100)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [Display(Name = "Details")]
         public string OtherDescription { get; set; }
 
         public string CreateTypesOfImmunosuppressionString()

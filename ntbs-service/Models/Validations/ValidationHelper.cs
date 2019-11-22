@@ -4,25 +4,26 @@ namespace ntbs_service.Models.Validations
 {
     public static class ValidationMessages
     {
+        //REMOVE validdate
         public const string ValidDate = "Please enter a valid date";
-        public const string ValidYear = "Please enter a valid year";
+        public const string InvalidYear = "{0} has an invalid year";
         public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
         public static string DateValidityRangeStart(string name, string startDate) => $"{name} must not be before {startDate}";
 
         public static string ValidYearLaterThanBirthYear(int birthYear)
         {
-            return $"Should be later than birth year ({birthYear})";
+            return $"{0} should be later than birth year ({birthYear})";
         }
 
         #region Shared
-        public const string StandardStringFormat = "Can only contain letters and the symbols ' - . ,";
-        public const string StandardStringWithNumbersFormat = "Can only contain letters, numbers and the symbols ' - . ,";
-        public const string StringWithNumbersAndForwardSlashFormat = "Can only contain letters, numbers and the symbols ' - . , /";
+        public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
+        public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
+        public const string StringWithNumbersAndForwardSlashFormat = "{0} can only contain letters, numbers and the symbols ' - . , /";
         public const string MinTwoCharacters = "Enter at least 2 characters";
-        public const string InvalidCharacter = "Invalid character found";
-        public const string NumberFormat = "Can only contain digits 0-9";
+        public const string InvalidCharacter = "Invalid character found in {0}";
+        public const string NumberFormat = "{0} can only contain digits 0-9";
         public const string PositiveNumbersOnly = "Please enter a positive value";
-        public const string InvalidDate = "Invalid date selection";
+        public const string InvalidDate = "{0} does not have a valid date selection";
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";

@@ -11,7 +11,7 @@
         @foreach (var notifyError in EditPageErrorDictionary) 
         {
             <li>
-                <a href=@notifyError.Key>@notifyError.Value</a>
+                <a href=@EditPageValidationErrorGenerator.GenerateLinkFromKey(@notifyError.Key)>@notifyError.Value</a>
             </li>
         }
     </nhs-error-summary>

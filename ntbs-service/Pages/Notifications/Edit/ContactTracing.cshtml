@@ -7,6 +7,8 @@
     ViewData["Title"] = "Notification - Contact Tracing";
 }
 
+<partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
+
 <h2>Contact Tracing</h2>
 
 <div>
@@ -22,7 +24,7 @@
                         var hasAdultsIdentifiedError = !Model.IsValid("ContactTracing.AdultsIdentified");
                         var adultsIdentifiedGroupState = hasAdultsIdentifiedError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@adultsIdentifiedGroupState ref="AdultsIdentifiedFormGroup">
+                    <nhs-form-group nhs-form-group-type=@adultsIdentifiedGroupState ref="AdultsIdentifiedFormGroup" id="AdultsIdentified-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsIdentified">Adults</label>
                         <span ref="AdultsIdentifiedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsIdentifiedError"
                               asp-validation-for="ContactTracing.AdultsIdentified"></span>
@@ -34,7 +36,7 @@
                         var hasChildrenIdentifiedError = !Model.IsValid("ContactTracing.ChildrenIdentified");
                         var childrenIdentifiedGroupState = hasChildrenIdentifiedError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@childrenIdentifiedGroupState ref="ChildrenIdentifiedFormGroup">
+                    <nhs-form-group nhs-form-group-type=@childrenIdentifiedGroupState ref="ChildrenIdentifiedFormGroup" id="ChildrenIdentified-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenIdentified">Children</label>
                         <span ref="ChildrenIdentifiedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenIdentifiedError"
                               asp-validation-for="ContactTracing.ChildrenIdentified"></span>
@@ -57,7 +59,7 @@
                         var hasAdultsScreenedError = !Model.IsValid("ContactTracing.AdultsScreened");
                         var adultsScreenedGroupState = hasAdultsScreenedError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@adultsScreenedGroupState ref="AdultsScreenedFormGroup">
+                    <nhs-form-group nhs-form-group-type=@adultsScreenedGroupState ref="AdultsScreenedFormGroup" id="AdultsScreened-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsScreened">Adults</label>
                         <span ref="AdultsScreenedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsScreenedError"
                               asp-validation-for="ContactTracing.AdultsScreened"></span>
@@ -69,7 +71,7 @@
                         var hasChildrenScreenedError = !Model.IsValid("ContactTracing.ChildrenScreened");
                         var childrenScreenedGroupState = hasChildrenScreenedError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@childrenScreenedGroupState ref="ChildrenScreenedFormGroup">
+                    <nhs-form-group nhs-form-group-type=@childrenScreenedGroupState ref="ChildrenScreenedFormGroup" id="ChildrenScreened-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenScreened">Children</label>
                         <span ref="ChildrenScreenedErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenScreenedError"
                               asp-validation-for="ContactTracing.ChildrenScreened"></span>
@@ -92,7 +94,7 @@
                         var hasAdultsActiveTbError = !Model.IsValid("ContactTracing.AdultsActiveTB");
                         var adultsActiveTbGroupState = hasAdultsActiveTbError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@adultsActiveTbGroupState ref="AdultsActiveTBFormGroup">
+                    <nhs-form-group nhs-form-group-type=@adultsActiveTbGroupState ref="AdultsActiveTBFormGroup" id="AdultsActiveTB-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsActiveTB">Adults</label>
                         <span ref="AdultsActiveTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsActiveTbError"
                               asp-validation-for="ContactTracing.AdultsActiveTB"></span>
@@ -104,7 +106,7 @@
                         var hasChildrenActiveTbError = !Model.IsValid("ContactTracing.ChildrenActiveTB");
                         var childrenActiveTbGroupState = hasChildrenActiveTbError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@childrenActiveTbGroupState ref="ChildrenActiveTBFormGroup">
+                    <nhs-form-group nhs-form-group-type=@childrenActiveTbGroupState ref="ChildrenActiveTBFormGroup" id="ChildrenActiveTB-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenActiveTB">Children</label>
                         <span ref="ChildrenActiveTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenActiveTbError"
                               asp-validation-for="ContactTracing.ChildrenActiveTB"></span>
@@ -127,7 +129,7 @@
                         var hasAdultsLatentTbError = !Model.IsValid("ContactTracing.AdultsLatentTB");
                         var adultsLatentTbGroupState = hasAdultsLatentTbError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@adultsLatentTbGroupState ref="AdultsLatentTBFormGroup">
+                    <nhs-form-group nhs-form-group-type=@adultsLatentTbGroupState ref="AdultsLatentTBFormGroup"  id="AdultsLatentTB-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsLatentTB">Adults</label>
                         <span ref="AdultsLatentTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsLatentTbError"
                               asp-validation-for="ContactTracing.AdultsLatentTB"></span>
@@ -139,7 +141,7 @@
                         var hasChildrenLatentTbError = !Model.IsValid("ContactTracing.ChildrenLatentTB");
                         var childrenLatentTbGroupState = hasChildrenLatentTbError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@childrenLatentTbGroupState ref="ChildrenLatentTBFormGroup">
+                    <nhs-form-group nhs-form-group-type=@childrenLatentTbGroupState ref="ChildrenLatentTBFormGroup" id="ChildrenLatentTB-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenLatentTB">Children</label>
                         <span ref="ChildrenLatentTBErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenLatentTbError"
                               asp-validation-for="ContactTracing.ChildrenLatentTB"></span>
@@ -162,7 +164,8 @@
                         var hasAdultsStartedTreatmentError = !Model.IsValid("ContactTracing.AdultsStartedTreatment");
                         var adultsStartedTreatmentGroupState = hasAdultsStartedTreatmentError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@adultsStartedTreatmentGroupState ref="AdultsStartedTreatmentFormGroup">
+                    <nhs-form-group nhs-form-group-type=@adultsStartedTreatmentGroupState ref="AdultsStartedTreatmentFormGroup"
+                        id="AdultsStartedTreatment-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsStartedTreatment">Adults</label>
                         <span ref="AdultsStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsStartedTreatmentError"
                               asp-validation-for="ContactTracing.AdultsStartedTreatment"></span>
@@ -174,7 +177,8 @@
                         var hasChildrenStartedTreatmentError = !Model.IsValid("ContactTracing.ChildrenStartedTreatment");
                         var childrenStartedTreatmentGroupState = hasChildrenStartedTreatmentError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@childrenStartedTreatmentGroupState ref="ChildrenStartedTreatmentFormGroup">
+                    <nhs-form-group nhs-form-group-type=@childrenStartedTreatmentGroupState ref="ChildrenStartedTreatmentFormGroup"
+                        id="ChildrenStartedTreatment-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenStartedTreatment">Children</label>
                         <span ref="ChildrenStartedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenStartedTreatmentError"
                               asp-validation-for="ContactTracing.ChildrenStartedTreatment"></span>
@@ -197,7 +201,8 @@
                         var hasAdultsFinishedTreatmentError = !Model.IsValid("ContactTracing.AdultsFinishedTreatment");
                         var adultsFinishedTreatmentGroupState = hasAdultsFinishedTreatmentError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@adultsFinishedTreatmentGroupState ref="AdultsFinishedTreatmentFormGroup">
+                    <nhs-form-group nhs-form-group-type=@adultsFinishedTreatmentGroupState
+                        ref="AdultsFinishedTreatmentFormGroup" id="AdultsFinishedTreatment-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.AdultsFinishedTreatment">Adults</label>
                         <span ref="AdultsFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasAdultsFinishedTreatmentError"
                               asp-validation-for="ContactTracing.AdultsFinishedTreatment"></span>
@@ -209,7 +214,8 @@
                         var hasChildrenFinishedTreatmentError = !Model.IsValid("ContactTracing.ChildrenFinishedTreatment");
                         var childrenFinishedTreatmentGroupState = hasChildrenFinishedTreatmentError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@childrenFinishedTreatmentGroupState ref="ChildrenFinishedTreatmentFormGroup">
+                    <nhs-form-group nhs-form-group-type=@childrenFinishedTreatmentGroupState 
+                        ref="ChildrenFinishedTreatmentFormGroup" id="ChildrenFinishedTreatment-form-group">
                         <label nhs-label-type="Standard" asp-for="ContactTracing.ChildrenFinishedTreatment">Children</label>
                         <span ref="ChildrenFinishedTreatmentErrorRef" nhs-span-type="ErrorMessage" has-error="@hasChildrenFinishedTreatmentError"
                               asp-validation-for="ContactTracing.ChildrenFinishedTreatment"></span>
