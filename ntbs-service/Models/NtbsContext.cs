@@ -297,6 +297,8 @@ namespace ntbs_service.Models
                     i.ToTable("TestData");
                 });
 
+                entity.HasMany(e => e.ManualTestResults);
+
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -416,10 +418,6 @@ namespace ntbs_service.Models
                 entity.Property(e => e.Result)
                     .HasConversion(testResultEnumConverter)
                     .HasMaxLength(EnumMaxLength);
-
-                entity.HasOne(e => e.Notification)
-                    .WithMany(notification => notification.ManualTestResults)
-                    .HasForeignKey(e => e.NotificationId);
 
                 entity.HasOne(e => e.ManualTestType)
                     .WithMany()

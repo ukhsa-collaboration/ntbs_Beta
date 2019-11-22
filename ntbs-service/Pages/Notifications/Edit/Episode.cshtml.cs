@@ -51,7 +51,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (Episode.ShouldValidateFull)
             {
-                ValidationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+                ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
                 TryValidateModel(Episode, Episode.GetType().Name);
             }
 
@@ -133,7 +133,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         private async Task SetValuesForValidation()
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
-            ValidationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
             Binding only sets the entity ids, but not the actual entities.
             There's a validation rule that needs to check the relationship between the entities,

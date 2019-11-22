@@ -65,7 +65,11 @@ namespace ntbs_service.Pages.Notifications
             }
 
             DenotificationDetails.DateOfNotification = Notification.NotificationDate;
-            ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
+            ValidationService.TrySetFormattedDate(DenotificationDetails,
+                                                  "DenotificationDetails",
+                                                  nameof(DenotificationDetails.DateOfDenotification),
+                                                  FormattedDenotificationDate);
+            TryValidateModel(DenotificationDetails, "DenotificationDetails");
             if (!ModelState.IsValid)
             {
                 NotificationBannerModel = new NotificationBannerModel(Notification);

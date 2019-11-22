@@ -79,7 +79,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override async Task<Notification> GetNotification(int notificationId)
+        protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationWithNotificationSitesAsync(notificationId);
         }
@@ -101,14 +101,18 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             UpdateFlags();
+            new List<(string key, FormattedDate date)> {
+                (nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate),
+                (nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate),
+                (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
+                (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
+                (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
+                (nameof(ClinicalDetails.DeathDate), FormattedDeathDate),
+                (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
+            }.ForEach(item => 
+                ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
+            );
 
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.SymptomStartDate), FormattedSymptomDate);
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.FirstPresentationDate), FormattedFirstPresentationDate);
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate);
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate);
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate);
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.DeathDate), FormattedDeathDate);
-            ValidationService.TrySetAndValidateDateOnModel(ClinicalDetails, nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate);
             if (ClinicalDetails.BCGVaccinationYear != null)
             {
                 ValidationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),

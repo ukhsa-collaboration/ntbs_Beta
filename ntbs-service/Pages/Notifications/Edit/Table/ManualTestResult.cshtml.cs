@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,7 +31,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            ITestResultsRepository testResultsRepository) 
+            ITestResultsRepository testResultsRepository)
             : base(notificationService, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
@@ -42,12 +41,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
 
-            TestResultForEdit.Notification = Notification;
+            TestResultForEdit.NotificationId = NotificationId;
+            TestResultForEdit.Dob = Notification.PatientDetails.Dob;
+            ValidationService.TrySetFormattedDate(TestResultForEdit, "TestResultForEdit", nameof(ManualTestResult.TestDate), FormattedTestDate);
 
-            ValidationService.TrySetAndValidateDateOnModel(TestResultForEdit, nameof(ManualTestResult.TestDate), FormattedTestDate);
-
-
-            if (TryValidateModel(TestResultForEdit))
+            if (TryValidateModel(TestResultForEdit, "TestResultForEdit"))
             {
                 if (RowId != null)
                 {
@@ -101,8 +99,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId, isBeingSubmitted });
         }
-        
-        protected override async Task<Notification> GetNotification(int notificationId)
+
+        protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
         }

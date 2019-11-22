@@ -147,19 +147,19 @@ namespace ntbs_service.Services
             return ModelState()[key].Errors.Count == 0;
         }
 
-        public void TrySetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
+        /// <param name="model"> The model on which date gets set </param>
+        /// <param name="modelKey"> Prefix for model state errors </param>
+        /// <param name="key"> Date key for model state errors </param>
+        /// <param name="formattedDate"> The FormattedDate to covert and set </param>
+        public void TrySetFormattedDate(object model, string modelKey, string key, FormattedDate formattedDate)
         {
-            string modelTypeName = model.GetType().Name;
-
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
                 model.GetType().GetProperty(key).SetValue(model, convertedDob);
-                pageModel.TryValidateModel(model, modelTypeName);
             }
             else
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidDate);
-                return;
+                ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.ValidDate);
             }
         }
 

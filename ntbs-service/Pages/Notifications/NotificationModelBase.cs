@@ -36,7 +36,7 @@ namespace ntbs_service.Pages.Notifications
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
 
-        protected virtual async Task<Notification> GetNotification(int notificationId)
+        protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationAsync(notificationId);
         }

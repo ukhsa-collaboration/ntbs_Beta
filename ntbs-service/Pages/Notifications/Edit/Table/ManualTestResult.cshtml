@@ -1,6 +1,7 @@
 @page "/Notifications/{NotificationId:int}/Edit/ManualTestResult/{RowId:int?}"
 @using ntbs_service.Helpers
 @model ManualTestResultPage
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../../Shared/_NotificationLayout.cshtml";
@@ -10,37 +11,59 @@
 <h3> @(Model.RowId == null ? "Add new " : "Edit ") test result</h3>
 <form method="post" autocomplete="off">
     <input type="hidden" asp-for="RowId" />
-    <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset role="group">
-            <nhs-fieldset-legend nhs-legend-size="Standard">
-                Test Date
-            </nhs-fieldset-legend>
-            <nhs-date-input>
-                <nhs-date-input-item>
-                    <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Date" asp-for="FormattedTestDate.Day">Day</label>
-                        <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                               asp-for="FormattedTestDate.Day" />
-                    </nhs-form-group>
-                </nhs-date-input-item>
-                <nhs-date-input-item>
-                    <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Date" asp-for="FormattedTestDate.Month">Month</label>
-                        <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                               asp-for="FormattedTestDate.Month" />
-                    </nhs-form-group>
-                </nhs-date-input-item>
-                <nhs-date-input-item>
-                    <nhs-form-group nhs-form-group-type="Standard">
-                        <label nhs-label-type="Date" asp-for="FormattedTestDate.Year">Year</label>
-                        <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                               asp-for="FormattedTestDate.Year" />
-                    </nhs-form-group>
-                </nhs-date-input-item>
-            </nhs-date-input>
-        </nhs-fieldset>
-    </nhs-form-group>
-
+    <validate-date model="TestResultForEdit" property="TestDate" inline-template>
+        @{
+            var hasTestDateError = !Model.IsValid("TestResultForEdit.TestDate") || !Model.IsValid("FormattedTestDate");
+            var testDateGroupState = hasTestDateError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@testDateGroupState>
+            <nhs-fieldset role="group" aria-describe-by="test-date-error">
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    @Html.DisplayNameFor(m => m.TestResultForEdit.TestDate)
+                </nhs-fieldset-legend>
+                <span nhs-span-type="ErrorMessage"
+                    ref="errorField"
+                    asp-validation-for="TestResultForEdit.TestDate"
+                    has-error="@hasTestDateError"
+                    id="test-date-error"></span>
+                <nhs-date-input>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedTestDate.Day">Day</label>
+                            <input v-on:blur="validate" 
+                                is-error-input=@hasTestDateError
+                                ref="dayInput" 
+                                nhs-input-type="Date" 
+                                fixed-width="Two"
+                                asp-for="FormattedTestDate.Day" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedTestDate.Month">Month</label>
+                            <input v-on:blur="validate" 
+                                is-error-input=@hasTestDateError 
+                                ref="monthInput"
+                                nhs-input-type="Date"
+                                fixed-width="Two"
+                                asp-for="FormattedTestDate.Month" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="FormattedTestDate.Year">Year</label>
+                            <input v-on:blur="validate"
+                                is-error-input=@hasTestDateError 
+                                ref="yearInput"
+                                nhs-input-type="Date"
+                                fixed-width="Four"
+                                asp-for="FormattedTestDate.Year" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-date>
     <nhs-form-group nhs-form-group-type="Standard">
         <label nhs-label-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId">
             Test type

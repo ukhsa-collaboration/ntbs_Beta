@@ -130,7 +130,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Patient.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
 
-            ValidationService.TrySetAndValidateDateOnModel(Patient, nameof(Patient.Dob), FormattedDob);
+            ValidationService.TrySetFormattedDate(Patient, "Patient", nameof(Patient.Dob), FormattedDob);
 
             if (TryValidateModel(Patient, "Patient"))
             {

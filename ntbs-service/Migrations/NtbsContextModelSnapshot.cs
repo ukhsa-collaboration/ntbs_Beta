@@ -11957,7 +11957,7 @@ namespace ntbs_service.Migrations
                         .HasForeignKey("ManualTestTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.Notification", "Notification")
+                    b.HasOne("ntbs_service.Models.Notification")
                         .WithMany("ManualTestResults")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);

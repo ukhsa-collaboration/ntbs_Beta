@@ -27,7 +27,7 @@ namespace ntbs_service.Pages.Notifications
 
         public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
-            Notification = await GetNotification(NotificationId);
+            Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace ntbs_service.Pages.Notifications
         */
         public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
         {
-            Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);
+            Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
