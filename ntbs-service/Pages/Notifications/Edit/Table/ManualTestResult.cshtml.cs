@@ -40,7 +40,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-
             TestResultForEdit.NotificationId = NotificationId;
             TestResultForEdit.Dob = Notification.PatientDetails.Dob;
             ValidationService.TrySetFormattedDate(TestResultForEdit, "TestResultForEdit", nameof(ManualTestResult.TestDate), FormattedTestDate);

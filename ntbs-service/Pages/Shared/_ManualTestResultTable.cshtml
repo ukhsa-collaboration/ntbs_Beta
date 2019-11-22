@@ -29,7 +29,7 @@
     {
         <nhs-table-body-row>
             <nhs-table-item>
-                @(result.TestDate.ToString("dd-MMM-yyyy"))
+                @(result.TestDate?.ToString("dd-MMM-yyyy"))
             </nhs-table-item>
             <nhs-table-item>
                 @result.ManualTestType.Description

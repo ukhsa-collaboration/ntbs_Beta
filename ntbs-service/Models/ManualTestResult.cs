@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
@@ -14,20 +15,23 @@ namespace ntbs_service.Models
         // We are not including a navigation property to Notification, otherwise it gets validated
         // on every TryValidateModel(manualTestResult)
 
-        [DisplayName("Test Date")]
-        // [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [DisplayName("Test date")]
+        // DateTime is non-nullable in db, but we make it a nullable runtime type so 
+        // the Required attribute can be applied properly
+        [Required(ErrorMessage = ValidationMessages.Required)] 
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
         [AssertThat(@"TestDateBeforeDob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
-        public DateTime TestDate { get; set; }
+        public DateTime? TestDate { get; set; }
 
         [DisplayName("Result")]
         public Result Result { get; set; }
 
         public int ManualTestTypeId { get; set; }
-        [DisplayName("Test Type")]
+        [DisplayName("Test type")]
         public virtual ManualTestType ManualTestType { get; set; }
 
         public int SampleTypeId { get; set; }
-        [DisplayName("Sample Type")]
+        [DisplayName("Sample type")]
         public virtual SampleType SampleType { get; set; }
         
         /// <summary>
