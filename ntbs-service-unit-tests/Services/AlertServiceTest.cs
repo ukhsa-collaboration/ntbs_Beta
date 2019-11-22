@@ -16,28 +16,25 @@ namespace ntbs_service_unit_tests.Services
         private readonly IAlertService mockAlertService;
         private readonly Mock<IAlertRepository> mockAlertRepository;
         private readonly Mock<INotificationRepository> mockNotificationRepository;
-        private readonly Mock<NtbsContext> mockContext;
 
         public AlertServiceTest()
         {
             mockAlertRepository = new Mock<IAlertRepository>();
             mockNotificationRepository = new Mock<INotificationRepository>();
-            mockContext = new Mock<NtbsContext>();
             mockAlertService = new AlertService(mockAlertRepository.Object, mockNotificationRepository.Object);
-
-            mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
         }
 
         [Fact]
         public async Task AddUniqueAlert_AddsIfNoAlertWithSameNotificationIdAndAlertType()
         {
             // Arrange
-            var y = new TestAlert() {AlertId = 2};
-            mockAlertRepository.Setup(x => x.GetAlertByNotificationIdAndTypeAsync(It.IsAny<int>(), It.IsAny<AlertType>()))
-                .Returns(Task.FromResult((Alert)y));
+            var matchingAlert = Task.FromResult((Alert)new TestAlert() {AlertId = 2});
+            var testAlert = new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest};
+            mockAlertRepository.Setup(x => x.GetAlertByNotificationIdAndTypeAsync(testAlert.NotificationId, testAlert.AlertType))
+                .Returns(matchingAlert);
 
             // Act
-            var result = await mockAlertService.AddUniqueAlertAsync(new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest});
+            var result = await mockAlertService.AddUniqueAlertAsync(testAlert);
 
             // Assert
             Assert.False(result);
@@ -49,9 +46,10 @@ namespace ntbs_service_unit_tests.Services
             // Arrange
             mockAlertRepository.Setup(x => x.GetAlertByNotificationIdAndTypeAsync(It.IsAny<int>(), It.IsAny<AlertType>()))
                 .Returns(Task.FromResult((Alert)null));
+            var testAlert = new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest};
 
             // Act
-            var result = await mockAlertService.AddUniqueAlertAsync(new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest});
+            var result = await mockAlertService.AddUniqueAlertAsync(testAlert);
 
             // Assert
             Assert.True(result);

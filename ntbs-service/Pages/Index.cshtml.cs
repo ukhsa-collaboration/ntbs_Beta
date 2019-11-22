@@ -51,7 +51,7 @@ namespace ntbs_service.Pages
             var services = await userService.GetTbServicesAsync(User);
             var tbServiceCodes = services.Select(s => s.Code);
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
-            Alerts = await alertRepository.GetDateOrderedAlertsByTbServiceCodesAsync(tbServiceCodes);
+            Alerts = await alertRepository.GetAlertsByTbServiceCodesAsync(tbServiceCodes);
         }
     }
 }

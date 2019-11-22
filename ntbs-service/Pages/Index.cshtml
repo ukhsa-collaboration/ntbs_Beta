@@ -62,16 +62,15 @@
                                 </a>
                             </nhs-table-item>
                             <nhs-table-item>
-                                @{var caseManagerAndTbService = String.Join(", ", item.CaseManagerFullName, item.TbServiceName);}
-                                @caseManagerAndTbService
+                                @item.CaseManagerAndTbService
                             </nhs-table-item>
                             <nhs-table-item>
-                                <form method="post" action="@RouteHelper.GetAlertPath(AlertSubPaths.Dismiss, @item.AlertId)" >
+                                <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
                                     @Html.AntiForgeryToken()
-                                    <input hidden value="@item.TbServiceCode" name="hi"/>
-                                        <button class="nhsuk-link govuk-link--no-visited-state reset-button-styling">
-                                            X
-                                        </button>
+                                    <input hidden value="@item.TbServiceCode"/>
+                                    <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link" aria-label="Dismiss alert">
+                                        X
+                                    </button>
                                 </form>
                             </nhs-table-item>
                         </nhs-table-body-row>

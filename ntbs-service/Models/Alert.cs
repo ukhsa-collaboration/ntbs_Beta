@@ -30,8 +30,7 @@ namespace ntbs_service.Models
         public string CaseManagerFullName => CaseManager?.FullName;
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
-        [Display(Name = "Dismiss")]
-        public string DismissLink => "";
+        public string CaseManagerAndTbService => string.Join(", ", CaseManagerFullName, TbServiceName);
 
         private string FormatDate(DateTime? date)
         {

@@ -21,21 +21,16 @@ namespace ntbs_integration_tests.HomePage
             // Arrange
             var initialPage = await Client.GetAsync(PageRoute);
             var pageContent = await GetDocumentAsync(initialPage);
-            var formData = new Dictionary<string, string>
-            {
-                // ["AlertId"] = Utilities.ALERT_ID.ToString()
-            };
+            Assert.NotNull(pageContent.QuerySelector("#alert-1"));
 
             // Act
-            Assert.NotNull(pageContent.QuerySelector("tr[id='alert-1']"));
-            var result = await SendPostFormWithData(pageContent, formData, DismissPageRoute);
+            var result = await SendPostFormWithData(pageContent, null, DismissPageRoute);
 
             // Assert
-            // var resultDocument = await GetDocumentAsync(result);
             var reloadedPage = await Client.GetAsync(PageRoute);
             var reloadedPageContent = await GetDocumentAsync(reloadedPage);
 
-            Assert.Null(reloadedPageContent.QuerySelector("tr[id='alert-1']"));
+            Assert.Null(reloadedPageContent.QuerySelector("#alert-1"));
         }
     }
 }

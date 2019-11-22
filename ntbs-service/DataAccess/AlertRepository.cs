@@ -14,7 +14,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
         Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
-        Task<IList<Alert>> GetDateOrderedAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
+        Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
     }
 
     public class AlertRepository : IAlertRepository
@@ -44,7 +44,7 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
 
-        public async Task<IList<Alert>> GetDateOrderedAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
+        public async Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
         {
             return await GetBaseAlertIQueryable()
                 .Where(a => tbServices.Contains(a.TbServiceCode))

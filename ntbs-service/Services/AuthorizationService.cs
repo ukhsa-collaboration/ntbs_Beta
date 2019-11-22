@@ -27,11 +27,7 @@ namespace ntbs_service.Services
         public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
         {
             var userTbServiceCodes = (await userService.GetTbServicesAsync(user)).Select(s => s.Code);
-            if(userTbServiceCodes.Contains(alert.TbServiceCode))
-            {
-                return true;
-            }
-            return false;
+            return userTbServiceCodes.Contains(alert.TbServiceCode);
         }
 
         public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)
