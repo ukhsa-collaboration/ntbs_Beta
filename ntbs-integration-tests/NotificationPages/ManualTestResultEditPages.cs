@@ -7,6 +7,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using Xunit;
 using System;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_integration_tests.NotificationPages
 {
@@ -103,6 +104,37 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains("Blood", manualResults.TextContent);
             Assert.Contains("Negative", manualResults.TextContent);
             Assert.DoesNotContain("Smear", manualResults.TextContent);
+        }
+
+        [Fact]
+        public async Task PostEditOfManualTestResult_ReturnsAllRequiredValidationErrors()
+        {
+            // Arrange
+            var NotificationId = Utilities.DRAFT_ID;
+            var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
+            var editPage = await Client.GetAsync(editUrl);
+            var editDocument = await GetDocumentAsync(editPage);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedTestDate.Day"] = "",
+                ["FormattedTestDate.Month"] = "",
+                ["FormattedTestDate.Year"] = "",
+                ["TestResultForEdit.ManualTestTypeId"] = "",
+                ["TestResultForEdit.SampleTypeId"] = "",
+                ["TestResultForEdit.Result"] = "",
+            };
+            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var resultDocument = await GetDocumentAsync(result);
+
+            // Assert
+            result.AssertValidationErrorResponse();
+
+            resultDocument.AssertErrorMessage("test-date", string.Format(ValidationMessages.RequiredEnter, "Test date"));
+            resultDocument.AssertErrorMessage("test-type", string.Format(ValidationMessages.RequiredSelect, "Test type"));
+            resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.RequiredSelect, "Sample type"));
+            resultDocument.AssertErrorMessage("result", string.Format(ValidationMessages.RequiredSelect, "Result"));
         }
     }
 }

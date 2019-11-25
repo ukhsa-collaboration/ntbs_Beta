@@ -27,7 +27,8 @@ namespace ntbs_service.Models.Validations
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string ValidYearRange = "Year must be provided between {1} and {2}";
-        public const string Required = "Enter {0}";
+        public const string RequiredEnter = "Please enter {0}";
+        public const string RequiredSelect = "Please select {0}";
 
         #endregion
 

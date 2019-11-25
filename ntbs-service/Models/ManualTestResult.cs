@@ -10,28 +10,32 @@ namespace ntbs_service.Models
 {
     public class ManualTestResult
     {
+        // Even for values which are non-nullable in db, we make them a nullable runtime type so 
+        // the Required attribute can be applied properly, producing correct error messages
+
         public int ManualTestResultId { get; set; }
         public int NotificationId { get; set; }
         // We are not including a navigation property to Notification, otherwise it gets validated
         // on every TryValidateModel(manualTestResult)
 
         [DisplayName("Test date")]
-        // DateTime is non-nullable in db, but we make it a nullable runtime type so 
-        // the Required attribute can be applied properly
-        [Required(ErrorMessage = ValidationMessages.Required)] 
+        [Required(ErrorMessage = ValidationMessages.RequiredEnter)] 
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         [AssertThat(@"TestDateBeforeDob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
         public DateTime? TestDate { get; set; }
 
+        [Required(ErrorMessage = ValidationMessages.RequiredSelect)] 
         [DisplayName("Result")]
-        public Result Result { get; set; }
+        public Result? Result { get; set; }
 
-        public int ManualTestTypeId { get; set; }
+        [Required(ErrorMessage = ValidationMessages.RequiredSelect)] 
         [DisplayName("Test type")]
+        public int? ManualTestTypeId { get; set; }
         public virtual ManualTestType ManualTestType { get; set; }
 
-        public int SampleTypeId { get; set; }
+        [Required(ErrorMessage = ValidationMessages.RequiredSelect)] 
         [DisplayName("Sample type")]
+        public int? SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
         
         /// <summary>

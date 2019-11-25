@@ -1,7 +1,7 @@
 @page "/Notifications/{NotificationId:int}/Edit/ManualTestResult/{RowId:int?}"
-@using ntbs_service.Helpers
 @model ManualTestResultPage
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using NHSUK.FrontEndLibrary.TagHelpers
 
 @{
     Layout = "../../../Shared/_NotificationLayout.cshtml";
@@ -64,31 +64,50 @@
             </nhs-fieldset>
         </nhs-form-group>
     </validate-date>
-    <nhs-form-group nhs-form-group-type="Standard">
+    
+    @{
+        var hasTestTypeError = !Model.IsValid("TestResultForEdit.ManualTestTypeId");
+        var testTypeGroupState = hasTestTypeError ? Error : Standard;
+    }
+    <nhs-form-group nhs-form-group-type=@testTypeGroupState aria-describe-by="test-type-error">
         <label nhs-label-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId">
-            Test type
+            @Html.DisplayNameFor(m => m.TestResultForEdit.ManualTestTypeId)
         </label>
-        <select nhs-select-type="Standard" asp-for="TestResultForEdit.ManualTestTypeId"
+        <span id="test-type-error" nhs-span-type="ErrorMessage" has-error=@hasTestTypeError asp-validation-for="TestResultForEdit.ManualTestTypeId"></span>
+        <select nhs-select-type=@(hasTestTypeError ? SelectType.Error : SelectType.Standard)
+                asp-for="TestResultForEdit.ManualTestTypeId"
                 asp-items="Model.ManualTestTypes">
             <option value="">Please select</option>
         </select>
     </nhs-form-group>
 
-    <nhs-form-group nhs-form-group-type="Standard">
+    @{
+        var hasSampleTypeError = !Model.IsValid("TestResultForEdit.SampleTypeId");
+        var sampleTypeGroupState = hasTestTypeError ? Error : Standard;
+    }
+    <nhs-form-group nhs-form-group-type=@sampleTypeGroupState aria-describe-by="sample-type-error" >
         <label nhs-label-type="Standard" asp-for="TestResultForEdit.SampleTypeId">
-            Sample Type
+            @Html.DisplayNameFor(m => m.TestResultForEdit.SampleTypeId)
         </label>
-        <select nhs-select-type="Standard" asp-for="TestResultForEdit.SampleTypeId"
+        <span id="sample-type-error" nhs-span-type="ErrorMessage" has-error=@hasSampleTypeError asp-validation-for="TestResultForEdit.SampleTypeId"></span>
+        <select nhs-select-type=@(hasSampleTypeError ? SelectType.Error : SelectType.Standard)
+                asp-for="TestResultForEdit.SampleTypeId"
                 asp-items="Model.SampleTypes">
             <option value="">Please select</option>
         </select>
     </nhs-form-group>
-
-    <nhs-form-group nhs-form-group-type="Standard">
-        <label nhs-label-type="Standard" asp-for="TestResultForEdit.SampleTypeId">
-            Result
+    
+    @{
+        var hasResultError = !Model.IsValid("TestResultForEdit.Result");
+        var resultGroupState = hasTestTypeError ? Error : Standard;
+    }
+    <nhs-form-group nhs-form-group-type=@resultGroupState aria-describe-by="result-error" >
+        <label nhs-label-type="Standard" asp-for="TestResultForEdit.Result">
+            @Html.DisplayNameFor(m => m.TestResultForEdit.Result)
         </label>
-        <select nhs-select-type="Standard" asp-for="TestResultForEdit.Result"
+        <span id="result-error" nhs-span-type="ErrorMessage" has-error=@hasResultError asp-validation-for="TestResultForEdit.Result"></span>
+        <select nhs-select-type=@(hasResultError ? SelectType.Error : SelectType.Standard)
+                asp-for="TestResultForEdit.Result"
                 asp-items="Model.ResultOptions">
             <option value="">Please select</option>
         </select>
