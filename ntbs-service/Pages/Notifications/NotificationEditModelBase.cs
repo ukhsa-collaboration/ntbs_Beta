@@ -49,7 +49,8 @@ namespace ntbs_service.Pages.Notifications
         */
         public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
         {
-            Notification = await GetNotificationAsync(NotificationId);
+            await SetNotification(actionName);
+
             if (Notification == null)
             {
                 return NotFound();
@@ -79,8 +80,20 @@ namespace ntbs_service.Pages.Notifications
             }
         }
 
+        private async Task SetNotification(string actionName)
+        {
+            if (actionName == "Submit")
+            {
+                // When submitting, we need to validate the entire record, not just the currently edited page
+                Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);
+            }
+            else
+            {
+                Notification = await GetNotificationAsync(NotificationId);
+            }
+        }
 
-        public async Task<IActionResult> SubmitAsync()
+        private async Task<IActionResult> SubmitAsync()
         {
             SetShouldValidateFull();
 

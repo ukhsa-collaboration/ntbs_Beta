@@ -110,10 +110,6 @@ namespace ntbs_ui_tests.StepDefinitions
         public void ThenIShouldSeeAllSubmissionErrorMessages()
         {
             var summaryText = Browser.FindElement(By.ClassName("nhsuk-error-summary")).Text;
-            Assert.Contains(ValidationMessages.NotificationDateIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.HospitalIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.DiseaseSiteIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.DiagnosisDateIsRequired, summaryText);
             Assert.Contains(ValidationMessages.BirthDateIsRequired, summaryText);
             Assert.Contains(ValidationMessages.SexIsRequired, summaryText);
             Assert.Contains(ValidationMessages.PostcodeIsRequired, summaryText);
@@ -122,6 +118,11 @@ namespace ntbs_ui_tests.StepDefinitions
             Assert.Contains(ValidationMessages.NHSNumberIsRequired, summaryText);
             Assert.Contains(ValidationMessages.FamilyNameIsRequired, summaryText);
             Assert.Contains(ValidationMessages.EthnicGroupIsRequired, summaryText);
+            Assert.Contains(ValidationMessages.NotificationDateIsRequired, summaryText);
+            Assert.Contains(ValidationMessages.HospitalIsRequired, summaryText);
+            Assert.Contains(ValidationMessages.DiseaseSiteIsRequired, summaryText);
+            Assert.Contains(ValidationMessages.DiagnosisDateIsRequired, summaryText);
+            Assert.Contains(string.Format(ValidationMessages.Mandatory, "Test carried out"), summaryText);
         }
 
         [Then(@"The notification should be denotified")]

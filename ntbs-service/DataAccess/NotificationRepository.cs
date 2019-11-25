@@ -15,7 +15,7 @@ namespace ntbs_service.DataAccess
         Task<IEnumerable<Notification>> GetDraftNotificationsAsync();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
-        Task<Notification> GetNotificationWithAllInfoAsync(int? notificationId);
+        Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task UpdateNotificationAsync(Notification notification);
         Task AddNotificationAsync(Notification notification);
         Task DeleteNotificationAsync(Notification notification);
@@ -105,7 +105,7 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
-        public async Task<Notification> GetNotificationWithAllInfoAsync(int? notificationId)
+        public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
         {
             return await GetBaseNotificationsIQueryable()
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
@@ -115,6 +115,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
+                .Include(n => n.ManualTestResults).ThenInclude(r => r.ManualTestType)
+                .Include(n => n.ManualTestResults).ThenInclude(r => r.SampleType)
                 .Include(n => n.TravelDetails.Country1)
                 .Include(n => n.TravelDetails.Country2)
                 .Include(n => n.TravelDetails.Country3)

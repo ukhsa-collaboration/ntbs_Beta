@@ -28,7 +28,9 @@ namespace ntbs_service.DataAccess
         IQueryable<TBService> GetTbServicesQueryable();
         IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles);
         IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles);
+        Task<ManualTestType> GetManualTestTypeAsync(int value);
         Task<IList<ManualTestType>> GetManualTestTypesAsync();
+        Task<SampleType> GetSampleTypeAsync(int value);
         Task<IList<SampleType>> GetSampleTypesAsync();
         Task<IList<SampleType>> GetSampleTypesForManualTestType(int manualTestTypeId);
     }
@@ -149,9 +151,22 @@ namespace ntbs_service.DataAccess
             return _context.TbService.Include(tb => tb.PHEC).Where(tb => roles.Contains(tb.PHEC.AdGroup));
         }
 
+        public async Task<ManualTestType> GetManualTestTypeAsync(int id)
+        {
+            return await _context.ManualTestType
+                .Include(t => t.ManualTestTypeSampleTypes)
+                    .ThenInclude(join => join.SampleType)
+                .FirstAsync(t => t.ManualTestTypeId == id);
+        }
+
         public async Task<IList<ManualTestType>> GetManualTestTypesAsync()
         {
             return await _context.ManualTestType.ToListAsync();
+        }
+
+        public async Task<SampleType> GetSampleTypeAsync(int id)
+        {
+            return await _context.SampleType.FirstAsync(t => t.SampleTypeId == id);
         }
 
         public async Task<IList<SampleType>> GetSampleTypesAsync()

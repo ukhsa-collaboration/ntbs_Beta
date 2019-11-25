@@ -42,6 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             TestResultForEdit.NotificationId = NotificationId;
             TestResultForEdit.Dob = Notification.PatientDetails.Dob;
+            await SetRelatedEntities();
             ValidationService.TrySetFormattedDate(TestResultForEdit, "TestResultForEdit", nameof(ManualTestResult.TestDate), FormattedTestDate);
 
             if (TryValidateModel(TestResultForEdit, "TestResultForEdit"))
@@ -102,6 +103,18 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
+        }
+        
+        private async Task SetRelatedEntities()
+        {
+            if (TestResultForEdit.ManualTestTypeId != null)
+            {
+                TestResultForEdit.ManualTestType = await _referenceDataRepository.GetManualTestTypeAsync(TestResultForEdit.ManualTestTypeId.Value);
+            }
+            if (TestResultForEdit.SampleTypeId != null)
+            {
+                TestResultForEdit.SampleType = await _referenceDataRepository.GetSampleTypeAsync(TestResultForEdit.SampleTypeId.Value);
+            }
         }
     }
 }

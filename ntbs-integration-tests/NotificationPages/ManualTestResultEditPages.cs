@@ -136,5 +136,32 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.RequiredSelect, "Sample type"));
             resultDocument.AssertErrorMessage("result", string.Format(ValidationMessages.RequiredSelect, "Result"));
         }
+
+        [Fact]
+        public async Task PostEditWithInvalidResult_ReturnsErrors()
+        {
+            // Arrange
+            var NotificationId = Utilities.DRAFT_ID;
+            var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
+            var editPage = await Client.GetAsync(editUrl);
+            var editDocument = await GetDocumentAsync(editPage);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedTestDate.Day"] = "",
+                ["FormattedTestDate.Month"] = "",
+                ["FormattedTestDate.Year"] = "",
+                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Histology).ToString(),
+                ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.BronchialWashings).ToString(),
+                ["TestResultForEdit.Result"] = "",
+            };
+            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var resultDocument = await GetDocumentAsync(result);
+
+            // Assert
+            result.AssertValidationErrorResponse();
+            resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.InvalidTestAndSampleTypeCombination, "Sample type"));
+        }
     }
 }

@@ -22,7 +22,7 @@
         <nhs-form-group nhs-form-group-type="@testCarriedOutGroupState">
             <nhs-fieldset aria-describedby="test-carried-out-error">
                 <nhs-fieldset-legend nhs-legend-size="Standard">
-                    Test carried out
+                    @Html.DisplayNameFor(m => m.TestData.HasTestCarriedOut)
                 </nhs-fieldset-legend>
                 <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="TestData.HasTestCarriedOut" has-error="@hasTestCarriedOutError" id="test-carried-out-error"></span>
                 <nhs-radios nhs-radios-type="Standard" v-on:change="validate">
