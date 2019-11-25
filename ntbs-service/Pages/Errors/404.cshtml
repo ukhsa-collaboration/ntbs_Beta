@@ -1,4 +1,6 @@
 @page
+@using ntbs_service.Pages
+@model ErrorModel
 @{
     ViewData["Title"] = "Page not found";
 }
@@ -16,6 +18,14 @@
         </p>
         <p class="govuk-body">
           If you are looking for a Notification, use the Search feature to find the correct ID.
+        </p>
+        <p class="govuk-body">
+          @if (Model.ShowRequestId)
+          {
+              <p>
+                  If error persists, contact helpdesk and quote <strong>Request ID:</strong> <code>@Model.RequestId</code>
+              </p>
+          }
         </p>
       </div>
     </div>

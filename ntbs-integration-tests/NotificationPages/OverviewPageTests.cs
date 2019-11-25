@@ -72,9 +72,9 @@ namespace ntbs_integration_tests.NotificationPages
                 var response = await client.GetAsync(GetCurrentPathForId(Utilities.NOTIFIED_ID));
 
                 // Assert
-                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var document = await GetDocumentAsync(response);
-                Assert.Contains(Messages.UnauthorizedWarning, document.Body.InnerHtml);
+                Assert.Contains(Messages.UnauthorizedWarning, document.GetElementById("unauthorized-warning").TextContent);
             }
         }
     }
