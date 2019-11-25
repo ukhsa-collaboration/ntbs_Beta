@@ -9,6 +9,7 @@ namespace ntbs_integration_tests.Helpers
 {
     public static class Utilities
     {
+        public const int ALERT_ID = 1;
         public const int DRAFT_ID = 1;
         public const int NOTIFIED_ID = 2;
         public const int DENOTIFIED_ID = 3;
@@ -57,6 +58,7 @@ namespace ntbs_integration_tests.Helpers
             context.NotificationGroup.AddRange(GetTestNotificationGroups());
             context.CaseManager.AddRange(GetCaseManagers());
             context.CaseManagerTbService.AddRange(GetCaseManagerTbServicesJoinEntries());
+            context.Alert.AddRange(GetSeedingAlerts());
 
             // Entities required for specific test suites
             context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
@@ -127,6 +129,21 @@ namespace ntbs_integration_tests.Helpers
                     {
                         new NotificationSite { NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
                     }
+                }
+            };
+        }
+
+        public static List<Alert> GetSeedingAlerts()
+        {
+            return new List<Alert>
+            {
+                new TestAlert {
+                    AlertId = ALERT_ID,
+                    AlertStatus = AlertStatus.Open,
+                    TbServiceCode = PERMITTED_SERVICE_CODE,
+                    CreationDate = DateTime.Now,
+                    NotificationId = DRAFT_ID,
+                    AlertType = AlertType.Test
                 }
             };
         }

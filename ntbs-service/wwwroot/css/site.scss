@@ -11,6 +11,7 @@
 @import './footer.scss';
 @import './search.scss';
 @import './header.scss';
+@import "./home.scss";
 @import './fonts/webfontkit-helveticaneue/stylesheet.css';
 @import 'accessible-autocomplete';
 @import './autocomplete.scss';
@@ -141,4 +142,29 @@ body {
 
 .flex-container {
     display: flex;
+}
+
+.button-link {
+    background: none;
+    border: none;
+    color: #003078;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: large;
+    outline: none;
+
+    &:hover {
+        background-color: #ffcd60;
+        box-shadow: 0 0 0 4px #ffcd60;
+        color: #212b32;
+        text-decoration: none;
+    }
+
+    &:focus {
+        background-color: #ffb81C;
+        box-shadow: 0 0 0 4px #ffb81C;
+        color: #212b32;
+        outline: 4px solid transparent;
+        outline-offset: 4px;
+    }
 }
