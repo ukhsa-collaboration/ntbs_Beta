@@ -28,7 +28,7 @@ namespace ntbs_service.Middleware
             var request = context.Request;
             var response = context.Response;
 
-            if (response.StatusCode == StatusCodes.Status200OK && request.Method == "GET" && request.Query.ContainsKey("id"))
+            if (response.StatusCode == StatusCodes.Status200OK && request.Method == "GET" && request.Path.ToString().Contains("Notification"))
             {
                 var id = int.Parse(request.Query["id"].ToString());
                 var userName = context.User.FindFirstValue(ClaimTypes.Email);
