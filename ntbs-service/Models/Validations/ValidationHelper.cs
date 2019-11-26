@@ -65,6 +65,8 @@ namespace ntbs_service.Models.Validations
 
         #region Test Results
         public const string InvalidTestAndSampleTypeCombination = "{0} does not match test type selected";
+        public const string NoTestResult = "Please add a test result or confirm no sample was taken";
+        public const string RemoveTestResultsBeforeSayingNoSample = "Please remove all test results or confirm sample was taken";
         #endregion
 
         #region Contact Tracing

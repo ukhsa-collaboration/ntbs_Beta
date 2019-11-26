@@ -45,6 +45,14 @@ Feature: Notification creation
         # Test results page
         Then I should be on the TestResults page
         When I select radio value 'test-carried-out-yes'
+        And I click on 'add-new-manual-test-result-button'
+        And I enter 1 into 'FormattedTestDate_Day'
+        And I enter 1 into 'FormattedTestDate_Month'
+        And I enter 2012 into 'FormattedTestDate_Year'
+        And I enter Smear into 'TestResultForEdit_ManualTestTypeId'
+        And I enter BronchialWashings into 'TestResultForEdit_SampleTypeId'
+        And I enter Negative into 'TestResultForEdit_Result'
+        And I click on 'save-test-result-button'
         And I click on 'save-button'
         
         # Contact tracing page + submission
@@ -103,6 +111,14 @@ Feature: Notification creation
 
         Then I should be on the TestResults page
         When I select radio value 'test-carried-out-yes'
+        And I click on 'add-new-manual-test-result-button'
+        And I enter 1 into 'FormattedTestDate_Day'
+        And I enter 1 into 'FormattedTestDate_Month'
+        And I enter 2012 into 'FormattedTestDate_Year'
+        And I enter Smear into 'TestResultForEdit_ManualTestTypeId'
+        And I enter BronchialWashings into 'TestResultForEdit_SampleTypeId'
+        And I enter Negative into 'TestResultForEdit_Result'
+        And I click on 'save-test-result-button'
         And I click on 'save-button'
 
         Then I should be on the ContactTracing page

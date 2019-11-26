@@ -99,7 +99,8 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseNotificationsIQueryable()
                 .Include(n => n.TestData.ManualTestResults)
-                    .ThenInclude(t => t.ManualTestType)
+                    .ThenInclude(t => t.ManualTestType.ManualTestTypeSampleTypes)
+                        .ThenInclude(t => t.SampleType)
                 .Include(n => n.TestData.ManualTestResults)
                     .ThenInclude(t => t.SampleType)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
