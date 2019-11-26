@@ -28,7 +28,7 @@
                             var hasTotalError = !Model.IsValid($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.TotalNumberOfCountries)}");
                             var totalFormGroup = hasTotalError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@totalFormGroup" ref="totalNumberOfCountriesFormGroup" id="TotalNumberOfCountries-form-group">
+                        <nhs-form-group nhs-form-group-type="@totalFormGroup" ref="totalNumberOfCountriesFormGroup" id="VisitorDetails-TotalNumberOfCountries">
                             <label asp-for="VisitorDetails.TotalNumberOfCountries" nhs-label-type="Standard">
                                 Total number of countries visited from
                             </label>
@@ -43,7 +43,7 @@
                             var country1FormGroup = hasCountry1IdError ? Error : Standard;
                             var country1SelectType = hasCountry1IdError ? SelectType.Error : SelectType.Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@country1FormGroup" ref="country1IdFormGroup" id="Country1Id-form-group">
+                        <nhs-form-group nhs-form-group-type="@country1FormGroup" ref="country1IdFormGroup" id="VisitorDetails-Country1Id">
                             <label asp-for="VisitorDetails.Country1Id" nhs-label-type="Standard">
                                 Most recent country visited from
                             </label>
@@ -59,7 +59,7 @@
                             var hasStayLength1Error = !Model.IsValid($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.StayLengthInMonths1)}");
                             var length1FormGroup = hasStayLength1Error ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@length1FormGroup" ref="stayLengthInMonths1FormGroup" id="StayLengthInMonths1-form-group">
+                        <nhs-form-group nhs-form-group-type="@length1FormGroup" ref="stayLengthInMonths1FormGroup" id="VisitorDetails-StayLengthInMonths1">
                             <label asp-for="VisitorDetails.StayLengthInMonths1" nhs-label-type="Standard">
                                 Duration of visit in months
                             </label>
@@ -74,7 +74,7 @@
                             var country2FormGroup = hasCountry2IdError ? Error : Standard;
                             var country2SelectType = hasCountry2IdError ? SelectType.Error : SelectType.Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@country2FormGroup" ref="country2IdFormGroup" id="Country2Id-form-group">
+                        <nhs-form-group nhs-form-group-type="@country2FormGroup" ref="country2IdFormGroup" id="VisitorDetails-Country2Id">
                             <label asp-for="VisitorDetails.Country2Id" nhs-label-type="Standard">
                                 2nd most recent country visited from
                             </label>
@@ -90,7 +90,7 @@
                             var hasStayLength2Error = !Model.IsValid($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.StayLengthInMonths2)}");
                             var length2FormGroup = hasStayLength2Error ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@length2FormGroup" ref="stayLengthInMonths2FormGroup" id="StayLengthInMonths2-form-group">
+                        <nhs-form-group nhs-form-group-type="@length2FormGroup" ref="stayLengthInMonths2FormGroup" id="VisitorDetails-StayLengthInMonths2">
                             <label asp-for="VisitorDetails.StayLengthInMonths2" nhs-label-type="Standard">
                                 Duration of visit in months
                             </label>
@@ -105,7 +105,7 @@
                             var country3FormGroup = hasCountry3IdError ? Error : Standard;
                             var country3SelectType = hasCountry3IdError ? SelectType.Error : SelectType.Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@country3FormGroup" ref="country3IdFormGroup" id="Country3Id-form-group">
+                        <nhs-form-group nhs-form-group-type="@country3FormGroup" ref="country3IdFormGroup" id="VisitorDetails-Country3Id">
                             <label asp-for="VisitorDetails.Country3Id" nhs-label-type="Standard">
                                 3rd most recent country visited from
                             </label>
@@ -121,7 +121,7 @@
                             var hasStayLength3Error = !Model.IsValid($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.StayLengthInMonths3)}");
                             var length3FormGroup = hasStayLength3Error ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@length3FormGroup" ref="stayLengthInMonths3FormGroup" id="StayLengthInMonths3-form-group">
+                        <nhs-form-group nhs-form-group-type="@length3FormGroup" ref="stayLengthInMonths3FormGroup" id="VisitorDetails-StayLengthInMonths3">
                             <label asp-for="VisitorDetails.StayLengthInMonths3" nhs-label-type="Standard">
                                 Duration of visit in months
                             </label>

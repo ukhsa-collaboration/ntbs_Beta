@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace ntbs_service.Services
 {
@@ -91,7 +93,8 @@ namespace ntbs_service.Services
             }
             else
             {
-                return pageModel.Content(ValidationMessages.InvalidDate(""));
+                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                return pageModel.Content(ValidationMessages.InvalidDate(x));
             }
         }
 
@@ -158,7 +161,8 @@ namespace ntbs_service.Services
             }
             else
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate(""));
+                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate(x));
                 return;
             }
         }

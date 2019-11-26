@@ -291,7 +291,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(ValidationMessages.ValidDate, result);
+            Assert.Equal(ValidationMessages.InvalidDate(""), result);
         }
 
         [Fact]

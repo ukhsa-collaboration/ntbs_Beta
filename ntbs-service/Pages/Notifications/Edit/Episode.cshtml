@@ -12,8 +12,6 @@
 <partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
 
 <div id="episode-page-content">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
     <h2>Notification Date (required)</h2>
     <validate-date model="Notification" property="NotificationDate" notification_id="@Model.Notification.NotificationId" inline-template>
         @{
@@ -21,7 +19,7 @@
             var notificationDateGroupState = hasNotificationDateError ? Error : Standard;
         }
 
-        <nhs-form-group nhs-form-group-type=@notificationDateGroupState id="NotificationDate-form-group">
+        <nhs-form-group nhs-form-group-type=@notificationDateGroupState id="Notification-NotificationDate">
             <nhs-fieldset aria-describedby="notification-date-error" role="group">
                 <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
                     Notification date
@@ -69,7 +67,7 @@
                         var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
                         var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TBServiceCode-form-group">
+                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="Episode-TBServiceCode">
                         <label nhs-label-type="Standard" asp-for="Episode.TBServiceCode">
                             @("Notifying TB service (required)")
                         </label>
@@ -103,7 +101,7 @@
                     var hospitalGroupState = hasHospitalError ? Error : Standard;
                     var hospitalSelectErrorState = hasHospitalError ? SelectType.Error : SelectType.Standard;
                 }
-                <nhs-form-group nhs-form-group-type="@hospitalGroupState" id="HospitalId-form-group">
+                <nhs-form-group nhs-form-group-type="@hospitalGroupState" id="Episode-HospitalId">
                     <label nhs-label-type="Standard" asp-for="Episode.HospitalId">
                         Hospital (required)
                     </label>
@@ -121,7 +119,7 @@
                     var hasConsultantError = !Model.IsValid("Episode.Consultant");
                     var consultantGroupState = hasConsultantError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type="@consultantGroupState" id="Consultant-form-group">
+                <nhs-form-group nhs-form-group-type="@consultantGroupState" id="Episode-Consultant">
                     <label nhs-label-type="Standard" asp-for="Episode.Consultant">Add details of consultant</label>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="consultant-error" asp-validation-for="Episode.Consultant"
                           has-error="@hasConsultantError"></span>
@@ -137,7 +135,7 @@
                     var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                     var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                 }
-                <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="CaseManagerEmail-form-group">
+                <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="Episode-CaseManagerEmail">
                     <label nhs-label-type="Standard" asp-for="Episode.CaseManagerEmail">
                         Add details of case manager
                     </label>

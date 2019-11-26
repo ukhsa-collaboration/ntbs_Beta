@@ -1,5 +1,4 @@
 @model NotificationModelBase
-@using ntbs_service.Helpers
 
 @{
     Dictionary<string, string> EditPageErrorDictionary = (Dictionary<string, string>) ViewData["EditPageErrorDictionary"];
@@ -11,7 +10,7 @@
         @foreach (var notifyError in EditPageErrorDictionary) 
         {
             <li>
-                <a href=@EditPageValidationErrorGenerator.GenerateLinkFromKey(@notifyError.Key)>@notifyError.Value</a>
+                <a href="#@notifyError.Key">@notifyError.Value</a>
             </li>
         }
     </nhs-error-summary>

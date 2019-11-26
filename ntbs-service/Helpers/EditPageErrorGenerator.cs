@@ -27,27 +27,22 @@ namespace ntbs_service.Helpers
             return NotifyErrorDictionary;
         }
 
-        private static void AddErrorMessagesIntoDictionary(string displayName, string url)
+        private static void AddErrorMessagesIntoDictionary(string property, string errorMessage)
         {
-            if (url == null)
+            if (errorMessage == null)
             {
                 return;
             }
-            var item = displayName.Replace(".", "-");
+            var item = property.Replace(".", "-");
 
             if (!NotifyErrorDictionary.ContainsKey(item))
             {
-                NotifyErrorDictionary.Add(item, url);
+                NotifyErrorDictionary.Add(item, errorMessage);
             }
             else
             {
                 return;
             }
-        }
-
-        public static string GenerateLinkFromKey(string key)
-        {
-            return $"#{key}-form-group";
         }
     }
 }
