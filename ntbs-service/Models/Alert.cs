@@ -7,7 +7,7 @@ namespace ntbs_service.Models
     public abstract class Alert
     {
         public int AlertId { get; set; }
-        [Display(Name = "Notification Id")]
+        [Display(Name = "NTBS Id")]
         public int? NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
         public DateTime CreationDate { get; set; }
@@ -30,11 +30,10 @@ namespace ntbs_service.Models
         public string CaseManagerFullName => CaseManager?.FullName;
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
-        public string CaseManagerAndTbService => string.Join(", ", CaseManagerFullName, TbServiceName);
 
         private string FormatDate(DateTime? date)
         {
-            return date?.ToString("dd-MMM-yyyy");
+            return date?.ToString("dd MMM yyyy");
         }
     }
 

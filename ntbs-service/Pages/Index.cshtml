@@ -31,7 +31,7 @@
                         @Html.DisplayNameFor(model => model.Alerts[0].FormattedCreationDate)
                     </nhs-table-item>
                     <nhs-table-item>
-                        @Html.DisplayNameFor(model => model.Alerts[0].Action)
+                        @Html.DisplayNameFor(model => model.Alerts[0].AlertType)
                     </nhs-table-item>
                     <nhs-table-item>
                         @Html.DisplayNameFor(model => model.Alerts[0].CaseManagerFullName), @Html.DisplayNameFor(model => model.Alerts[0].TbServiceName)
@@ -62,7 +62,9 @@
                                 </a>
                             </nhs-table-item>
                             <nhs-table-item>
-                                @item.CaseManagerAndTbService
+                                @item.CaseManagerFullName
+                                <br />
+                                @item.TbServiceName
                             </nhs-table-item>
                             <nhs-table-item>
                                 <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
