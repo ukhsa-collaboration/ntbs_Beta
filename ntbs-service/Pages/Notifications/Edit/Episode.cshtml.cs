@@ -105,8 +105,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
-
-            if (TryValidateModel(Episode, Episode.GetType().Name))
+            TryValidateModel(Episode, nameof(Episode));
+            TryValidateModel(Notification, nameof(Notification));
+            if (ModelState.IsValid)
             {
                 await Service.UpdateEpisodeAsync(Notification, Episode);
             }

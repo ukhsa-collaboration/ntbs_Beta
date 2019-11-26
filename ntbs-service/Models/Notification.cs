@@ -66,7 +66,6 @@ namespace ntbs_service.Models
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public virtual NotificationGroup Group { get; set; }
         public virtual TestData TestData { get; set; }
-        public virtual ICollection<ManualTestResult> ManualTestResults { get; set; }
 
         #endregion
 

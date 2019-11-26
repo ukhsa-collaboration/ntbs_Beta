@@ -156,10 +156,6 @@ namespace ntbs_service.Services
         /// <param name="formattedDate"> The FormattedDate to covert and set </param>
         public void TrySetFormattedDate(object model, string modelKey, string key, FormattedDate formattedDate)
         {
-            // Start by clearing the validation state - since we're only setting date now, previous
-            // validation must be outdated
-            ModelState().Remove($"{modelKey}.{key}");
-
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
                 model.GetType().GetProperty(key).SetValue(model, convertedDob);

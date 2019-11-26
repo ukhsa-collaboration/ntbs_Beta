@@ -28,14 +28,14 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS,
                     NotificationStatus = NotificationStatus.Notified,
-                    ManualTestResults = new List<ManualTestResult> () { new ManualTestResult
+                    TestData = { ManualTestResults = new List<ManualTestResult> () { new ManualTestResult
                     {
                         ManualTestResultId = TEST_ID,
                         TestDate = new DateTime(),
                         ManualTestTypeId = (int)ManualTestTypeId.Smear,
                         SampleTypeId = (int)SampleTypeId.LungBronchialTreeTissue,
                         Result = Result.Positive,
-                    }}
+                    }}}
                 }
             };
         }
@@ -55,8 +55,8 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["FormattedTestDate.Day"] = "2",
                 ["FormattedTestDate.Month"] = "2",
-                ["FormattedTestDate.Year"] = "1992",
-                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Histology).ToString(),
+                ["FormattedTestDate.Year"] = "2012",
+                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Smear).ToString(),
                 ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.Blood).ToString(),
                 ["TestResultForEdit.Result"] = ((int)Result.Negative).ToString(),
             };
@@ -68,7 +68,7 @@ namespace ntbs_integration_tests.NotificationPages
             var testsListDocument = await GetDocumentAsync(testsListPage);
             var manualResults = testsListDocument.GetElementById("manual-results");
 
-            Assert.Contains("Histology", manualResults.TextContent);
+            Assert.Contains("Smear", manualResults.TextContent);
             Assert.Contains("Blood", manualResults.TextContent);
             Assert.Contains("Negative", manualResults.TextContent);
         }
@@ -87,9 +87,9 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["FormattedTestDate.Day"] = "2",
                 ["FormattedTestDate.Month"] = "2",
-                ["FormattedTestDate.Year"] = "1992",
-                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Histology).ToString(),
-                ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.Blood).ToString(),
+                ["FormattedTestDate.Year"] = "2012",
+                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Smear).ToString(),
+                ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.BronchialWashings).ToString(),
                 ["TestResultForEdit.Result"] = ((int)Result.Negative).ToString(),
             };
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
@@ -100,10 +100,10 @@ namespace ntbs_integration_tests.NotificationPages
             var testsListDocument = await GetDocumentAsync(testsListPage);
             var manualResults = testsListDocument.GetElementById("manual-results");
 
-            Assert.Contains("Histology", manualResults.TextContent);
-            Assert.Contains("Blood", manualResults.TextContent);
+            Assert.Contains("Smear", manualResults.TextContent);
+            Assert.Contains("Bronchial washings", manualResults.TextContent);
             Assert.Contains("Negative", manualResults.TextContent);
-            Assert.DoesNotContain("Smear", manualResults.TextContent);
+            Assert.DoesNotContain("Lung bronchial tree tissue", manualResults.TextContent);
         }
 
         [Fact]

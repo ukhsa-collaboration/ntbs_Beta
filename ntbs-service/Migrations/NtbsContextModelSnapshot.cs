@@ -8245,7 +8245,8 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ManualTestTypeId");
+                    b.Property<int?>("ManualTestTypeId")
+                        .IsRequired();
 
                     b.Property<int>("NotificationId");
 
@@ -8253,7 +8254,8 @@ namespace ntbs_service.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<int>("SampleTypeId");
+                    b.Property<int?>("SampleTypeId")
+                        .IsRequired();
 
                     b.Property<DateTime?>("TestDate")
                         .IsRequired();
@@ -11918,6 +11920,17 @@ namespace ntbs_service.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
+                {
+                    b.Property<int>("NotificationId");
+
+                    b.Property<bool?>("HasTestCarriedOut");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("TestData");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
                 {
                     b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
@@ -11958,7 +11971,7 @@ namespace ntbs_service.Migrations
                         .HasForeignKey("ManualTestTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.Notification")
+                    b.HasOne("ntbs_service.Models.TestData")
                         .WithMany("ManualTestResults")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -12411,22 +12424,6 @@ namespace ntbs_service.Migrations
                                 });
                         });
 
-                    b.OwnsOne("ntbs_service.Models.TestData", "TestData", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<bool?>("HasTestCarriedOut");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("TestData");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("TestData")
-                                .HasForeignKey("ntbs_service.Models.TestData", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
                     b.OwnsOne("ntbs_service.Models.TravelDetails", "TravelDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
@@ -12549,6 +12546,14 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.PHEC", "PHEC")
                         .WithMany()
                         .HasForeignKey("PHECCode");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Notification")
+                        .WithOne("TestData")
+                        .HasForeignKey("ntbs_service.Models.TestData", "NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -21,7 +21,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         [BindProperty]
         public TestData TestData { get; set; }
-        public ICollection<ManualTestResult> ManualTestResults { get; set; }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
@@ -32,9 +31,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TryValidateModel(this);
             }
-
-            // view-only data
-            ManualTestResults = Notification.ManualTestResults;
 
             return Page();
         }

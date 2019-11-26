@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             TestResultForEdit.NotificationId = NotificationId;
             TestResultForEdit.Dob = Notification.PatientDetails.Dob;
             await SetRelatedEntities();
-            ValidationService.TrySetFormattedDate(TestResultForEdit, "TestResultForEdit", nameof(ManualTestResult.TestDate), FormattedTestDate);
+            SetDate();
 
             if (TryValidateModel(TestResultForEdit, "TestResultForEdit"))
             {
@@ -62,7 +62,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (RowId != null)
             {
-                TestResultForEdit = Notification.ManualTestResults.SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
+                TestResultForEdit = Notification.TestData.ManualTestResults
+                    .SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
                 if (TestResultForEdit != null)
                 {
                     FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
@@ -104,7 +105,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
         }
-        
+
         private async Task SetRelatedEntities()
         {
             if (TestResultForEdit.ManualTestTypeId != null)
@@ -115,6 +116,17 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TestResultForEdit.SampleType = await _referenceDataRepository.GetSampleTypeAsync(TestResultForEdit.SampleTypeId.Value);
             }
+        }
+
+        private void SetDate()
+        {
+            // The required date will be marked as missing on the model, since we are setting it manually, rather than binding it
+            ModelState.Remove("TestResultForEdit.TestDate");
+            ValidationService.TrySetFormattedDate(
+                TestResultForEdit,
+                "TestResultForEdit",
+                nameof(ManualTestResult.TestDate),
+                FormattedTestDate);
         }
     }
 }

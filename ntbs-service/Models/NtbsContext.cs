@@ -292,12 +292,6 @@ namespace ntbs_service.Models
                     i.ToTable("DenotificationDetails");
                 });
 
-                entity.OwnsOne(e => e.TestData, i =>
-                {
-                    i.ToTable("TestData");
-                });
-
-                entity.HasMany(e => e.ManualTestResults);
 
             });
 
@@ -426,6 +420,12 @@ namespace ntbs_service.Models
                 entity.HasOne(e => e.SampleType)
                     .WithMany()
                     .HasForeignKey(e => e.SampleTypeId);
+            });
+
+            modelBuilder.Entity<TestData>(entity =>
+            {
+                entity.HasKey(e => e.NotificationId);
+                entity.HasMany(e => e.ManualTestResults);
             });
         }
 

@@ -98,11 +98,11 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationWithTestsAsync(int notificationId)
         {
             return await GetBaseNotificationsIQueryable()
-                .Include(n => n.ManualTestResults)
+                .Include(n => n.TestData.ManualTestResults)
                     .ThenInclude(t => t.ManualTestType)
-                .Include(n => n.ManualTestResults)
+                .Include(n => n.TestData.ManualTestResults)
                     .ThenInclude(t => t.SampleType)
-                .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
+                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
@@ -115,8 +115,10 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
-                .Include(n => n.ManualTestResults).ThenInclude(r => r.ManualTestType)
-                .Include(n => n.ManualTestResults).ThenInclude(r => r.SampleType)
+                .Include(n => n.TestData.ManualTestResults)
+                    .ThenInclude(r => r.ManualTestType.ManualTestTypeSampleTypes)
+                        .ThenInclude(t => t.SampleType)
+                .Include(n => n.TestData.ManualTestResults).ThenInclude(r => r.SampleType)
                 .Include(n => n.TravelDetails.Country1)
                 .Include(n => n.TravelDetails.Country2)
                 .Include(n => n.TravelDetails.Country3)
