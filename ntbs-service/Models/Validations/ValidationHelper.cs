@@ -12,8 +12,9 @@ namespace ntbs_service.Models.Validations
 
         public static string ValidYearLaterThanBirthYear(int birthYear)
         {
-            return $"{0} should be later than birth year ({birthYear})";
+            return $"{{0}} should be later than birth year ({birthYear})";
         }
+        public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
 
         #region Shared
         public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
@@ -23,7 +24,6 @@ namespace ntbs_service.Models.Validations
         public const string InvalidCharacter = "Invalid character found in {0}";
         public const string NumberFormat = "{0} can only contain digits 0-9";
         public const string PositiveNumbersOnly = "Please enter a positive value";
-        public const string InvalidDate = "{0} does not have a valid date selection";
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
@@ -62,16 +62,16 @@ namespace ntbs_service.Models.Validations
         #endregion
 
         #region Contact Tracing
-        public const string ContactTracingAdultsScreened = "Must not be greater than the number of adults identified";
-        public const string ContactTracingChildrenScreened = "Must not be greater than the number of children identified";
-        public const string ContactTracingAdultsLatentTB = "Must not be greater than number of adults screened minus those with active TB";
-        public const string ContactTracingChildrenLatentTB = "Must not be greater than number of children screened minus those with active TB";
-        public const string ContactTracingAdultsActiveTB = "Must not be greater than number of adults screened minus those with latent TB";
-        public const string ContactTracingChildrenActiveTB = "Must not be greater than equal to than number of children screened minus those with latent TB";
-        public const string ContactTracingAdultStartedTreatment = "Must not be greater than number of adults with latent TB";
-        public const string ContactTracingChildrenStartedTreatment = "Must not be greater than number of children with latent TB";
-        public const string ContactTracingAdultsFinishedTreatment = "Must not be greater than number of adults the started treatment";
-        public const string ContactTracingChildrenFinishedTreatment = "Must not be greater than number of children the started treatment";
+        public const string ContactTracingAdultsScreened = "Adults screened must not be greater than the number of adults identified";
+        public const string ContactTracingChildrenScreened = "Children Screened must not be greater than the number of children identified";
+        public const string ContactTracingAdultsLatentTB = "Adults with latent TB must not be greater than number of adults screened minus those with active TB";
+        public const string ContactTracingChildrenLatentTB = "Children with latent TB must not be greater than number of children screened minus those with active TB";
+        public const string ContactTracingAdultsActiveTB = "Adults with active TB  must not be greater than number of adults screened minus those with latent TB";
+        public const string ContactTracingChildrenActiveTB = "Children with active TB must not be greater than equal to than number of children screened minus those with latent TB";
+        public const string ContactTracingAdultStartedTreatment = "Adults that have started treatment must not be greater than number of adults with latent TB";
+        public const string ContactTracingChildrenStartedTreatment = "Children that have started treatment must not be greater than number of children with latent TB";
+        public const string ContactTracingAdultsFinishedTreatment = "Adults that have finished treatment must not be greater than number of adults the started treatment";
+        public const string ContactTracingChildrenFinishedTreatment = "Children that have finished treatment must not be greater than number of children the started treatment";
         #endregion
 
         #region Hospital Details

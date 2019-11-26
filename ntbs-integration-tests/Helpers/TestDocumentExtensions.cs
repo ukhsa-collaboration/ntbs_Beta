@@ -1,5 +1,4 @@
 ﻿using AngleSharp.Html.Dom;
-using ntbs_service.Helpers;
 using Xunit;
 
 namespace ntbs_integration_tests.Helpers
@@ -14,9 +13,9 @@ namespace ntbs_integration_tests.Helpers
             return errorSpan.TextContent;
         }
 
-        public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage)
+        public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage, string propertyName)
         {
-            var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage);
+            var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage, propertyName);
             var actual = document.GetError(inputName);
             Assert.Equal(expected, actual);
         }

@@ -32,7 +32,7 @@ namespace ntbs_service.Services
             return GetValidationResult(model, key);
         }
 
-        public ContentResult ValidateMultipleProperties<T>(IEnumerable<Tuple<string, object>> propertyValueTuples, bool shouldValidateFull=false) where T : ModelBase
+        public ContentResult ValidateMultipleProperties<T>(IEnumerable<Tuple<string, object>> propertyValueTuples, bool shouldValidateFull = false) where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));
             model.ShouldValidateFull = shouldValidateFull;
@@ -91,7 +91,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                return pageModel.Content(ValidationMessages.InvalidDate);
+                return pageModel.Content(ValidationMessages.InvalidDate(""));
             }
         }
 
@@ -158,7 +158,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate);
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate(""));
                 return;
             }
         }

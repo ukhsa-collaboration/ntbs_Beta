@@ -43,8 +43,8 @@ namespace ntbs_integration_tests.SearchPage
             resultDocument.AssertErrorMessage("family-name", ValidationMessages.StandardStringFormat);
             resultDocument.AssertErrorMessage("given-name", ValidationMessages.StandardStringFormat);
             resultDocument.AssertErrorMessage("postcode", ValidationMessages.StandardStringWithNumbersFormat);
-            resultDocument.AssertErrorMessage("dob", ValidationMessages.InvalidDate);
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.InvalidDate);
+            resultDocument.AssertErrorMessage("dob", ValidationMessages.InvalidDate("Date of birth"));
+            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.InvalidDate("Notification date"));
         }
 
 

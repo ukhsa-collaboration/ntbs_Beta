@@ -33,8 +33,7 @@ namespace ntbs_service.Helpers
             {
                 return;
             }
-            var splitDisplayName = displayName.Split(".");
-            var item = splitDisplayName.Last();
+            var item = displayName.Replace(".", "-");
 
             if (!NotifyErrorDictionary.ContainsKey(item))
             {

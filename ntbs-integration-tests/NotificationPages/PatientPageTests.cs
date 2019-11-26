@@ -95,13 +95,13 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("given-name", ValidationMessages.StandardStringFormat);
-            resultDocument.AssertErrorMessage("family-name", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("given-name", ValidationMessages.StandardStringFormat, "GivenName");
+            resultDocument.AssertErrorMessage("family-name", ValidationMessages.StandardStringFormat, "FamilyName");
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
             Assert.Contains(ValidationMessages.DateValidityRangeStart("Date of birth", "01/01/1900"), resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NhsNumberLength);
-            resultDocument.AssertErrorMessage("address", ValidationMessages.StringWithNumbersAndForwardSlashFormat);
-            resultDocument.AssertErrorMessage("local-patient-id", ValidationMessages.InvalidCharacter);
+            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NhsNumberLength, "GivenName");
+            resultDocument.AssertErrorMessage("address", ValidationMessages.StringWithNumbersAndForwardSlashFormat, "GivenName");
+            resultDocument.AssertErrorMessage("local-patient-id", ValidationMessages.InvalidCharacter, "GivenName");
         }
 
         [Fact]
