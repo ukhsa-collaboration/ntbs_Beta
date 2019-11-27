@@ -12,7 +12,6 @@ namespace ntbs_service.Pages_Notifications
     {
         private readonly IAlertRepository alertRepository;
         private readonly IAlertService alertService;
-        private readonly IUserService userService;
         private readonly IAuthorizationService authorizationService;
         [BindProperty]
         public int AlertId { get; set; }
@@ -20,13 +19,11 @@ namespace ntbs_service.Pages_Notifications
         public string TbServiceCode { get; set; }
 
         public DismissModel(IAlertService alertService, 
-            IAlertRepository alertRepository, 
-            IUserService userService, 
+            IAlertRepository alertRepository,
             IAuthorizationService authorizationService)
         {
             this.alertService = alertService;
             this.alertRepository = alertRepository;
-            this.userService = userService;
             this.authorizationService = authorizationService;
         }
 
@@ -35,7 +32,7 @@ namespace ntbs_service.Pages_Notifications
             var alertToDismiss = await alertRepository.GetAlertByIdAsync(AlertId);
             if(await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
-                await alertService.DismissAlertAsync(AlertId, "user");
+                await alertService.DismissAlertAsync(AlertId, User.FindFirstValue(ClaimTypes.Email));
             }
             // TODO:NTBS-376 This will need to be changed to link to the correct place instead of just the home page
             return RedirectToPage("/Index");

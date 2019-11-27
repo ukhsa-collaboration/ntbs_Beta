@@ -9,6 +9,7 @@ namespace ntbs_service.Authentication {
     public class DummyAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public static readonly string Name = "DummyAuth";
+        public static readonly string Email = "DummyEmail";
 
         private readonly ClaimsPrincipal id;
 
@@ -27,6 +28,7 @@ namespace ntbs_service.Authentication {
             // Add role claim for user role - as specified in appsettings.Development.json
             string group = adfsOptions.AdGroupsPrefix + (adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup);
             id.AddClaim(new Claim(ClaimTypes.Role, group, ClaimValueTypes.String));
+            id.AddClaim(new Claim(ClaimTypes.Email, Email, ClaimValueTypes.String));
             this.id = new ClaimsPrincipal(id);
         }
 
