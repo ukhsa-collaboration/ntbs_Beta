@@ -160,7 +160,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            // resultDocument.AssertErrorMessage("date", ValidationMessages.ValidDate);
+            resultDocument.AssertErrorMessage("date", "Denotification date does not have a valid date selection");
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("date", ValidationMessages.DenotificationDateLatestToday);
+            resultDocument.AssertErrorMessage("date", "Date of denotification cannot be later than today");
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("date", ValidationMessages.DenotificationDateAfterNotification);
+            resultDocument.AssertErrorMessage("date", "Date of denotification must be after the date of notification");
         }
 
         [Fact]
@@ -256,7 +256,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("reason", ValidationMessages.DenotificationReasonRequired);
+            resultDocument.AssertErrorMessage("reason", "Please supply a reason for denotification");
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("description", ValidationMessages.DenotificationReasonOtherRequired);
+            resultDocument.AssertErrorMessage("description", "Please supply additional details for the denotification reason");
         }
     }
 }

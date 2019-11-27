@@ -103,8 +103,8 @@ namespace ntbs_integration_tests.NotificationPages
         [Theory]
         [InlineData("Unknown", "false", "", "")]
         [InlineData("No", "false", "", "")]
-        [InlineData("Yes", "false", "", ValidationMessages.ImmunosuppressionTypeRequired)]
-        [InlineData("Yes", "true", "", ValidationMessages.ImmunosuppressionDetailRequired)]
+        [InlineData("Yes", "false", "", "At least one field must be selected")]
+        [InlineData("Yes", "true", "", "Please supply immunosuppression other details")]
         [InlineData("Yes", "true", "Other", "")]
         public async Task Validate_ReturnsExpectedResult(string status, string isOther, string description, string validationResult)
         {

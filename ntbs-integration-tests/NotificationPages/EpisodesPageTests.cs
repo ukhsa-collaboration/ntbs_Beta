@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
+            resultDocument.AssertErrorMessage("notification-date", "Notification Date is a mandatory field");
         }
 
         [Fact]
@@ -264,7 +264,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalMustBelongToSelectedTbSerice);
+            resultDocument.AssertErrorMessage("hospital", "Hospital must belong to selected TB Service");
         }
 
         [Fact]
@@ -288,7 +288,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("case-manager", ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService);
+            resultDocument.AssertErrorMessage("case-manager", "Case Manager must be allowed for selected TB Service");
         }
 
         [Fact]
