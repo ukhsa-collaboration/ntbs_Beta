@@ -40,7 +40,7 @@ namespace ntbs_service.Services
         public async Task DeleteTestAsync(ManualTestResult testResult)
         {
             _context.Remove(testResult);
-            await UpdateDatabaseAsync(AuditType.Deleted);
+            await UpdateDatabaseAsync();
         }
 
         private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)
