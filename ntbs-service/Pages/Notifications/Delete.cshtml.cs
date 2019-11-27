@@ -12,6 +12,7 @@ namespace ntbs_service.Pages.Notifications
     public class DeleteModel : NotificationModelBase
     {
         public ValidationService ValidationService { get; set; }
+        [Display(Name = "Deletion reason")]
         [BindProperty]
         [MaxLength(150)]
         [RegularExpression(

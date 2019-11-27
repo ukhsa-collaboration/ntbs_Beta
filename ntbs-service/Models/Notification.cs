@@ -34,6 +34,7 @@ namespace ntbs_service.Models
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
+        [Display(Name = "Deletion reason")]
         [MaxLength(150)]
         public string DeletionReason { get; set; }
 

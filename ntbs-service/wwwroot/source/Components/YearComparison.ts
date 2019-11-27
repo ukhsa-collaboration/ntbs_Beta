@@ -3,7 +3,7 @@ import { getHeaders, getValidationPath } from "../helpers";
 import axios from "axios";
 
 const YearComparison = Vue.extend({
-    props: ["model", "yeartocompare", "shouldvalidatefull"],
+    props: ["model", "yeartocompare", "shouldvalidatefull", "propertyName"],
     methods: {
         validate: function (event: FocusEvent) {
             // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop

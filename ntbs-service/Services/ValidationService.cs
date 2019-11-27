@@ -190,16 +190,16 @@ namespace ntbs_service.Services
             }
         }
 
-        public ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare)
+        public ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare, string propertyName)
         {
             if (!IsValidYear(yearToValidate))
             {
-                return pageModel.Content(ValidationMessages.InvalidYear);
+                return pageModel.Content(ValidationMessages.InvalidYear(propertyName));
             }
 
             if (yearToValidate < yearToCompare)
             {
-                return pageModel.Content(ValidationMessages.ValidYearLaterThanBirthYear(yearToCompare));
+                return pageModel.Content(ValidationMessages.ValidYearLaterThanBirthYear(propertyName, yearToCompare));
             }
             else
             {
@@ -220,13 +220,15 @@ namespace ntbs_service.Services
 
             if (!IsValidYear(yearToValidate))
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear);
+                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(x));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
+                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(x, (int)yearToCompare));
             }
         }
 

@@ -4,19 +4,19 @@ namespace ntbs_service.Models.Validations
 {
     public static class ValidationMessages
     {
-        //REMOVE validdate
-        public const string ValidDate = "Please enter a valid date";
-        public const string InvalidYear = "{0} has an invalid year";
+        public static string InvalidYear(string name) => $"{name} has an invalid year";
         public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
         public static string DateValidityRangeStart(string name, string startDate) => $"{name} must not be before {startDate}";
 
-        public static string ValidYearLaterThanBirthYear(int birthYear)
+        public static string ValidYearLaterThanBirthYear(string name, int birthYear)
         {
-            return $"{{0}} should be later than birth year ({birthYear})";
+            return $"{name} should be later than birth year ({birthYear})";
         }
+        
         public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
 
         #region Shared
+        public const string InvalidYearForAttribute = "{0} has an invalid year";
         public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
         public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
         public const string StringWithNumbersAndForwardSlashFormat = "{0} can only contain letters, numbers and the symbols ' - . , /";
@@ -32,8 +32,8 @@ namespace ntbs_service.Models.Validations
         #endregion
 
         #region Patient Details
-        public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
-        public const string NhsNumberLength = "NHS Number needs to be 10 digits long";
+        public const string NhsNumberFormat = "NHS number can only contain digits 0-9";
+        public const string NhsNumberLength = "NHS number needs to be 10 digits long";
         public const string FamilyNameIsRequired = "Family Name is a mandatory field";
         public const string GivenNameIsRequired = "Given Name is a mandatory field";
         public const string BirthDateIsRequired = "Date of birth is a mandatory field";
@@ -43,8 +43,8 @@ namespace ntbs_service.Models.Validations
         public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
         public const string PostcodeIsRequired = "Postcode is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
-        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth.";
-        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year.";
+        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
+        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year";
         #endregion
 
         #region Clinical Details

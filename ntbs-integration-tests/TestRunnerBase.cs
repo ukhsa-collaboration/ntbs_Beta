@@ -32,9 +32,9 @@ namespace ntbs_integration_tests
             return response.Headers.Location.OriginalString;
         }
 
-        protected string FullErrorMessage(string validationMessage, string propertyName = "")
+        protected string FullErrorMessage(string validationMessage)
         {
-            return HtmlDocumentHelpers.FullErrorMessage(validationMessage, propertyName);
+            return HtmlDocumentHelpers.FullErrorMessage(validationMessage);
         }
 
         protected async Task<HttpResponseMessage> SendPostFormWithData(

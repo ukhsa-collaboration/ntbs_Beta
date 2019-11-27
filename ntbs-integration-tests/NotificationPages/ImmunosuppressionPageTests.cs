@@ -39,7 +39,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("status", ValidationMessages.ImmunosuppressionTypeRequired);
+            resultDocument.AssertErrorMessage("status", "At least one field must be selected");
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("description", ValidationMessages.ImmunosuppressionDetailRequired);
+            resultDocument.AssertErrorMessage("description", "Please supply immunosuppression other details");
         }
 
         [Fact]

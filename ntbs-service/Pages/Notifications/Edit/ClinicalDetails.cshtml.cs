@@ -237,7 +237,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
         {
-            return ValidationService.ValidateYearComparison(newYear, existingYear);
+            return ValidationService.ValidateYearComparison(newYear, existingYear, "BCG vaccination year");
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)

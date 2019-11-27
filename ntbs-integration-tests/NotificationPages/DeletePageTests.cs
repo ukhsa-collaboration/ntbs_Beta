@@ -123,7 +123,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("reason", ValidationMessages.StringWithNumbersAndForwardSlashFormat);
+            resultDocument.AssertErrorMessage("reason", "Deletion reason can only contain letters, numbers and the symbols ' - . , /");
         }
     }
 }

@@ -13,9 +13,9 @@ namespace ntbs_integration_tests.Helpers
             return errorSpan.TextContent;
         }
 
-        public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage, string propertyName = "")
+        public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage)
         {
-            var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage, propertyName);
+            var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage);
             var actual = document.GetError(inputName);
             Assert.Equal(expected, actual);
         }
