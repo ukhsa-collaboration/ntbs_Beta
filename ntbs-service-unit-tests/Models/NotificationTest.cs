@@ -52,7 +52,7 @@ namespace ntbs_service_unit_tests.Models
             var formattedDate = TestNotification.FormattedSymptomStartDate;
 
             // Assert
-            Assert.Equal("01-Jan-2000", formattedDate);
+            Assert.Equal("01 Jan 2000", formattedDate);
         }
 
         [Fact]
@@ -102,8 +102,8 @@ namespace ntbs_service_unit_tests.Models
         }
 
         [Theory]
-        [InlineData(true, 2019, 1, 1, "Yes - 01-Jan-2019")]
-        [InlineData(false, 2019, 1, 1, "No - 01-Jan-2019")]
+        [InlineData(true, 2019, 1, 1, "Yes - 01 Jan 2019")]
+        [InlineData(false, 2019, 1, 1, "No - 01 Jan 2019")]
         [InlineData(false, null, null, null, "No")]
         public void CreatesMDRTreatmentStringCorrectly(bool state, int? year, int? month, int? day, string expectedResult) {
             // Arrange
