@@ -290,6 +290,17 @@ namespace ntbs_service.Models
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("DenotificationDetails");
                 });
+
+                entity.OwnsOne(e => e.MDRDetails, i =>
+                {
+                    i.Property(e => e.ExposureToKnownCaseStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    i.Property(e => e.CaseInUKStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    i.ToTable("MDRDetails");
+                });
             });
 
             modelBuilder.Entity<Region>(entity =>

@@ -1,0 +1,123 @@
+@page "/Notifications/{id:int}/Edit/MDRDetails/{handler?}"
+@model ntbs_service.Pages.Notifications.Edit.MDRDetailsModel
+@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - MDRDetails";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditMDRDetails;
+    var fullValidation = Model.MDRDetails.ShouldValidateFull ? "True" : "False";
+}
+
+<h2>MDR Details</h2>
+
+<div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">Has the patient been exposed to a known RR/MDR/XDR-TB Case?</nhs-fieldset-legend>
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-exposure-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" for="exposure-yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-exposure-conditional">
+                    <validate-input model="MDRDetails" property="RelationshipToCase" shouldvalidatefull="@fullValidation" inline-template>
+                        @{
+                            var hasRelationshipDescriptionError = !Model.IsValid("MDRDetails.RelationshipToCase");
+                            var relationshipDescriptionGroupState = hasRelationshipDescriptionError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type=@relationshipDescriptionGroupState aria-describedby="relationship-description-error">
+                            <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelationshipDescriptionError"
+                                    asp-validation-for="MDRDetails.RelationshipToCase" id="relationship-description-error"></span>
+                            <label nhs-label-type="Standard" asp-for="MDRDetails.RelationshipToCase">
+                                Relationship of the current case to the contact
+                            </label>
+                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasRelationshipDescriptionError nhs-input-type="Standard"
+                                    classes="nhsuk-input--width-10" asp-for="MDRDetails.RelationshipToCase" type="text">
+                        </nhs-form-group>
+                    </validate-input>
+                     @{
+                        var hasCaseInUKError = !Model.IsValid("MDRDetails.CaseInUKStatus");
+                        var caseInUKGroupState = hasCaseInUKError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@caseInUKGroupState aria-describedby="case-in-uk-error">
+                        <nhs-fieldset>
+                            <nhs-fieldset-legend nhs-legend-size="Standard">Was the contact a case in the UK?</nhs-fieldset-legend>
+                            <span id="case-in-uk-error" nhs-span-type="ErrorMessage"
+                                        asp-validation-for="MDRDetails.CaseInUKStatus" has-error="@hasCaseInUKError"></span>
+                            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input asp-for="MDRDetails.CaseInUKStatus" id="uk-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-uk-conditional">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="uk-yes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-uk-conditional">
+                                    <validate-related-notification model="MDRDetails" inline-template>
+                                        @{
+                                            var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
+                                            var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+                                        }
+                                        <nhs-form-group nhs-form-group-type=@relatedNotificationGroupState aria-describedby="related-notification-error">
+                                            <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelatedNotificationError"
+                                                    asp-validation-for="MDRDetails.RelatedNotificationId" id="related-notification-error"></span>
+                                            <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
+                                                Contact's notification id
+                                            </label>
+                                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasRelatedNotificationError nhs-input-type="Date"
+                                                    classes="nhsuk-input--width-10" asp-for="MDRDetails.RelatedNotificationId" type="number">
+                                            <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                        </nhs-form-group>
+                                    </validate-related-notification>
+                                </div>
+                                <div class="nhsuk-radios__item">
+                                    <input asp-for="MDRDetails.CaseInUKStatus" id="uk-no" class="nhsuk-radios__input" type="radio" value="@Status.No" data-aria-controls="conditional-country-conditional">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="uk-no">
+                                        No
+                                    </label>
+                                </div>
+                                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-country-conditional">
+                                    <nhs-form-group nhs-form-group-type="Standard">
+                                        <label nhs-label-type="Standard" asp-for="MDRDetails.CountryId">
+                                            Country in which contact occurred
+                                        </label>
+                                        <autocomplete-select placeholder="Specify country" inline-template>
+                                            <select asp-for="MDRDetails.CountryId" asp-items="Model.NotUKCountries" ref="selectElement">
+                                                <option value=""></option>
+                                            </select>
+                                        <autocomplete-select>
+                                    </nhs-form-group>
+                                </div>
+                                <div class="nhsuk-radios__item">
+                                    <input asp-for="MDRDetails.CaseInUKStatus" id="uk-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                                    <label class="nhsuk-label nhsuk-radios__label" for="uk-unknown">
+                                        Unknown
+                                    </label>
+                                </div>
+                            </div>
+                        </nhs-fieldset>
+                    </nhs-form-group>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                    <label class="nhsuk-label nhsuk-radios__label" for="exposure-no">
+                        No
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                    <label class="nhsuk-label nhsuk-radios__label" for="exposure-unknown">
+                        Unknown
+                    </label>
+                </div>
+            </div>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    
+</div>

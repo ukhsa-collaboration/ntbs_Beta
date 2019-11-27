@@ -133,7 +133,7 @@ namespace ntbs_service.Services
             return ValidContent();
         }
 
-        private ContentResult ValidContent()
+        public ContentResult ValidContent()
         {
             return pageModel.Content("");
         }

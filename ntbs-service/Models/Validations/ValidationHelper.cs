@@ -117,6 +117,13 @@ namespace ntbs_service.Models.Validations
         public const string PreviousTBDiagnosisYear = "Please enter a valid year. Year of diagnosis cannot be after 2000";
         public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
         #endregion
+
+        #region MDR Details
+        public const string RelationshipToCaseIsRequired = "Please supply details of the relationship to case";
+        public const string CaseInUKStatusIsRequired = "Please specify whether the contact was a case in the UK";
+        public const string RelatedNotificationIdInvalid = "The NTBS ID does not match an existing ID in the system";
+        public const string RelatedNotificationIdMustBeInteger = "The NTBS ID must be an integer";
+        #endregion
     }
 
     public static class ValidDates
