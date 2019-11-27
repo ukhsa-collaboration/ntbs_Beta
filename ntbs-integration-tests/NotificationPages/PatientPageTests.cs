@@ -155,14 +155,14 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("family-name", ValidationMessages.FamilyNameIsRequired);
-            resultDocument.AssertErrorMessage("given-name", ValidationMessages.GivenNameIsRequired);
-            Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NHSNumberIsRequired);
-            resultDocument.AssertErrorMessage("postcode", ValidationMessages.PostcodeIsRequired);
-            resultDocument.AssertErrorMessage("sex", ValidationMessages.SexIsRequired);
-            resultDocument.AssertErrorMessage("ethnicity", ValidationMessages.EthnicGroupIsRequired);
-            resultDocument.AssertErrorMessage("birth-country", ValidationMessages.BirthCountryIsRequired);
+            resultDocument.AssertErrorMessage("family-name", "Family Name is a mandatory field");
+            resultDocument.AssertErrorMessage("given-name", "Given Name is a mandatory field");
+            Assert.Contains("Date of birth is a mandatory field", resultDocument.GetError("dob"));
+            resultDocument.AssertErrorMessage("nhs-number", "NHS number is a mandatory field");
+            resultDocument.AssertErrorMessage("postcode", "Postcode is a mandatory field");
+            resultDocument.AssertErrorMessage("sex", "Sex is a mandatory field");
+            resultDocument.AssertErrorMessage("ethnicity", "Ethnic Group is a mandatory field");
+            resultDocument.AssertErrorMessage("birth-country", "Country of Birth is a mandatory field");
         }
 
         [Fact]

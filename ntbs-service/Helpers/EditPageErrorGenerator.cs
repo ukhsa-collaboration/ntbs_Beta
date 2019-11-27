@@ -10,17 +10,18 @@ namespace ntbs_service.Helpers
     {
         private static Dictionary<string, string> NotifyErrorDictionary { get; set; }
 
-        // This method converts Model State Errors to Dictionary of Errors to be used in view
+        // This method converts Model State Errors to Dictionary of Errors 
+        // to be used in _SinglePageErrorSummaryPartial
         public static Dictionary<string, string> MapToDictionary(ModelStateDictionary modelState)
         {
             NotifyErrorDictionary = new Dictionary<string, string>();
 
             foreach (var key in modelState.Keys)
             {
-                var x = modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList();
-                    foreach(var y in x)
+                var errorMessageList = modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList();
+                    foreach(var errorMessage in errorMessageList)
                     {
-                        AddErrorMessagesIntoDictionary(key, y);
+                        AddErrorMessagesIntoDictionary(key, errorMessage);
                     }
             }
 
@@ -33,11 +34,11 @@ namespace ntbs_service.Helpers
             {
                 return;
             }
-            var item = property.Replace(".", "-");
+            var hyphenatedProperty = property.Replace(".", "-");
 
-            if (!NotifyErrorDictionary.ContainsKey(item))
+            if (!NotifyErrorDictionary.ContainsKey(hyphenatedProperty))
             {
-                NotifyErrorDictionary.Add(item, errorMessage);
+                NotifyErrorDictionary.Add(hyphenatedProperty, errorMessage);
             }
             else
             {

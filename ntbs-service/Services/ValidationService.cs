@@ -86,15 +86,16 @@ namespace ntbs_service.Services
         public ContentResult ValidateDate<T>(T model, string key, string day, string month, string year)
         {
             var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
+            var modelType = model.GetType();
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
-                model.GetType().GetProperty(key).SetValue(model, convertedDob);
+                modelType.GetProperty(key).SetValue(model, convertedDob);
                 return GetValidationResult(model, key);
             }
             else
             {
-                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
-                return pageModel.Content(ValidationMessages.InvalidDate(x));
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                return pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
 
@@ -153,16 +154,17 @@ namespace ntbs_service.Services
         public void TrySetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
         {
             string modelTypeName = model.GetType().Name;
+            var modelType = model.GetType();
 
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
-                model.GetType().GetProperty(key).SetValue(model, convertedDob);
+                modelType.GetProperty(key).SetValue(model, convertedDob);
                 pageModel.TryValidateModel(model, modelTypeName);
             }
             else
             {
-                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate(x));
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
                 return;
             }
         }
@@ -217,18 +219,20 @@ namespace ntbs_service.Services
         public void ValidateYearComparisonOnModel(object model, string key, int yearToValidate, int? yearToCompare)
         {
             string modelTypeName = model.GetType().Name;
+            var modelType = model.GetType();
+            string propertyDisplayName;
 
             if (!IsValidYear(yearToValidate))
             {
-                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(x));
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(propertyDisplayName));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                var x = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(x, (int)yearToCompare));
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(propertyDisplayName, (int)yearToCompare));
             }
         }
 
