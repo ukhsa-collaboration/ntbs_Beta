@@ -59,6 +59,26 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
+        public async Task<IActionResult> OnPostDeleteAsync()
+        {
+            Notification = await GetNotificationAsync(NotificationId);
+            if (!(await AuthorizationService.CanEdit(User, Notification)))
+            {
+                return ForbiddenResult();
+            }
+
+            var testResult = Notification.TestData.ManualTestResults
+                    .SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
+            if (testResult == null)
+            {
+                return NotFound();
+            }
+
+            await _testResultsRepository.DeleteTestAsync(testResult);
+
+            return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
+        }
+
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             if (RowId != null)

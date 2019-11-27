@@ -1,4 +1,4 @@
-@page "/Notifications/{NotificationId:int}/Edit/ManualTestResult/{RowId:int?}"
+@page "/Notifications/{NotificationId:int}/Edit/ManualTestResult/{RowId:int?}/{handler?}"
 @model ManualTestResultPage
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
@@ -116,6 +116,17 @@
         Save
     </button>
 </form>
+@if (Model.RowId != null) 
+{
+    <form method="post">
+        <button id="delete-test-result-button"
+            asp-page-handler="Delete" 
+            nhs-button-type="Standard" 
+            classes="ntbsuk-button--secondary">
+            Delete
+        </button>
+    </form>
+}
 
 <h3> Results </h3>
 

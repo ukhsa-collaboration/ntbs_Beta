@@ -8,4 +8,4 @@
 .vs/
 
 # Generated files
-**/feature.cs
+**/*feature.cs

@@ -15,6 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
     public class ManualTestResultEditPages : TestRunnerNotificationBase
     {
         const int TEST_ID = 10;
+        const int TEST_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult(null);
 
         public ManualTestResultEditPages(NtbsWebApplicationFactory<Startup> factory) : base(factory)
@@ -29,14 +30,22 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS,
                     NotificationStatus = NotificationStatus.Notified,
-                    TestData = { ManualTestResults = new List<ManualTestResult> () { new ManualTestResult
-                    {
-                        ManualTestResultId = TEST_ID,
-                        TestDate = new DateTime(2012, 1, 1),
-                        ManualTestTypeId = (int)ManualTestTypeId.Smear,
-                        SampleTypeId = (int)SampleTypeId.LungBronchialTreeTissue,
-                        Result = Result.Positive,
-                    }}}
+                    TestData = { ManualTestResults = new List<ManualTestResult> () { 
+                        new ManualTestResult {
+                            ManualTestResultId = TEST_ID,
+                            TestDate = new DateTime(2012, 1, 1),
+                            ManualTestTypeId = (int)ManualTestTypeId.Smear,
+                            SampleTypeId = (int)SampleTypeId.LungBronchialTreeTissue,
+                            Result = Result.Positive,
+                        },
+                        new ManualTestResult {
+                            ManualTestResultId = TEST_TO_DELETE_ID,
+                            TestDate = new DateTime(2013, 1, 1),
+                            ManualTestTypeId = (int)ManualTestTypeId.LineProbeAssay,
+                            SampleTypeId = (int)SampleTypeId.GastricWashings,
+                            Result = Result.Awaiting,
+                        }
+                    }}
                 }
             };
         }
@@ -178,6 +187,30 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, editPage.StatusCode);
+        }
+
+        [Fact]
+        public async Task PostDelete_ReturnsSuccessAndRemovesResult()
+        {
+            // Arrange
+            var NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
+            var editUrl = GetCurrentPathForId(NotificationId) + TEST_TO_DELETE_ID;
+            var editPage = await Client.GetAsync(editUrl);
+            var editDocument = await GetDocumentAsync(editPage);
+
+            // Act
+            var formData = new Dictionary<string, string> { };
+            var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
+
+            // Assert
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, NotificationId));
+            var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var testsListDocument = await GetDocumentAsync(testsListPage);
+            var manualResults = testsListDocument.GetElementById("manual-results");
+
+            Assert.DoesNotContain("Line probe assay", manualResults.TextContent);
+            Assert.DoesNotContain("Gastric washings", manualResults.TextContent);
+            Assert.DoesNotContain("Awaiting", manualResults.TextContent);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.Models;
@@ -10,6 +11,7 @@ namespace ntbs_service.Services
     {
         Task AddTestResultAsync(ManualTestResult testResultForEdit);
         Task UpdateTestResultAsync(Notification Notification, ManualTestResult testResultForEdit);
+        Task DeleteTestAsync(ManualTestResult testResult);
     }
 
     public class TestResultsRepository : ITestResultsRepository
@@ -33,6 +35,12 @@ namespace ntbs_service.Services
                 .First(t => t.ManualTestResultId == testResult.ManualTestResultId);
             _context.SetValues(entity, testResult);
             await UpdateDatabaseAsync();
+        }
+
+        public async Task DeleteTestAsync(ManualTestResult testResult)
+        {
+            _context.Remove(testResult);
+            await UpdateDatabaseAsync(AuditType.Deleted);
         }
 
         private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)

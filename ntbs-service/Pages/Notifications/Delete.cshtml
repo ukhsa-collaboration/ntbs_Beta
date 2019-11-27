@@ -29,9 +29,9 @@
                   aria-describedby="reason-error" rows="2" classes="delete-reason-text-area-container"> </textarea>
     </nhs-form-group>
 
-                <button id="confirm-deletion-button" asp-page-handler="Confirm" class="nhsuk-button ntbsuk-button--warning">
-                    Confirm deletion
-                </button>
+    <button id="confirm-deletion-button" asp-page-handler="Confirm" class="nhsuk-button ntbsuk-button--warning">
+        Confirm deletion
+    </button>
 
     <nhs-back-link href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">Cancel & go back</nhs-back-link>
 </form>
