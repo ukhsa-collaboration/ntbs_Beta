@@ -31,7 +31,7 @@ namespace ntbs_integration_tests.NotificationPages
                     TestData = { ManualTestResults = new List<ManualTestResult> () { new ManualTestResult
                     {
                         ManualTestResultId = TEST_ID,
-                        TestDate = new DateTime(),
+                        TestDate = new DateTime(2012, 1, 1),
                         ManualTestTypeId = (int)ManualTestTypeId.Smear,
                         SampleTypeId = (int)SampleTypeId.LungBronchialTreeTissue,
                         Result = Result.Positive,
@@ -74,18 +74,19 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostEditOfManualTestResult_ReturnsSuccessAndAddsResultToTable()
+        public async Task PostEditOfManualTestResult_ReturnsSuccessAndAmendsResultInTable()
         {
             // Arrange
-            var NotificationId = Utilities.DRAFT_ID;
+            var NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
+            
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);
 
             // Act
             var formData = new Dictionary<string, string>
             {
-                ["FormattedTestDate.Day"] = "2",
+                ["FormattedTestDate.Day"] = "3",
                 ["FormattedTestDate.Month"] = "2",
                 ["FormattedTestDate.Year"] = "2012",
                 ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Smear).ToString(),
@@ -110,7 +111,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostEditOfManualTestResult_ReturnsAllRequiredValidationErrors()
         {
             // Arrange
-            var NotificationId = Utilities.DRAFT_ID;
+            var NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);
@@ -141,7 +142,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostEditWithInvalidResult_ReturnsErrors()
         {
             // Arrange
-            var NotificationId = Utilities.DRAFT_ID;
+            var NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);

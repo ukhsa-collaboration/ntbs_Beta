@@ -47,13 +47,14 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (TryValidateModel(TestResultForEdit, "TestResultForEdit"))
             {
-                if (RowId != null)
+                if (RowId == null)
                 {
                     await _testResultsRepository.AddTestResultAsync(TestResultForEdit);
                 }
                 else
                 {
-                    await _testResultsRepository.UpdateTestResultAsync(TestResultForEdit);
+                    TestResultForEdit.ManualTestResultId = RowId.Value;
+                    await _testResultsRepository.UpdateTestResultAsync(Notification, TestResultForEdit);
                 }
             }
         }

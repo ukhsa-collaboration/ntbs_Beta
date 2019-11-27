@@ -10,7 +10,6 @@
 <h2> Test Results </h2>
 <h3> @(Model.RowId == null ? "Add new " : "Edit ") test result</h3>
 <form method="post" autocomplete="off">
-    <input type="hidden" asp-for="RowId" />
     <validate-date model="TestResultForEdit" property="TestDate" inline-template>
         @{
             var hasTestDateError = !Model.IsValid("TestResultForEdit.TestDate") || !Model.IsValid("FormattedTestDate");

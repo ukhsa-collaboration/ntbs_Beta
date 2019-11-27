@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -8,7 +9,7 @@ namespace ntbs_service.Services
     public interface ITestResultsRepository
     {
         Task AddTestResultAsync(ManualTestResult testResultForEdit);
-        Task UpdateTestResultAsync(ManualTestResult testResultForEdit);
+        Task UpdateTestResultAsync(Notification Notification, ManualTestResult testResultForEdit);
     }
 
     public class TestResultsRepository : ITestResultsRepository
@@ -26,9 +27,11 @@ namespace ntbs_service.Services
             await UpdateDatabaseAsync();
         }
 
-        public async Task UpdateTestResultAsync(ManualTestResult testResult)
+        public async Task UpdateTestResultAsync(Notification Notification, ManualTestResult testResult)
         {
-            _context.Attach(testResult);
+            var entity = Notification.TestData.ManualTestResults
+                .First(t => t.ManualTestResultId == testResult.ManualTestResultId);
+            _context.SetValues(entity, testResult);
             await UpdateDatabaseAsync();
         }
 
