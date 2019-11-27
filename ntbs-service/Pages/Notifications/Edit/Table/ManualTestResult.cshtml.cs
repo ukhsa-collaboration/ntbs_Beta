@@ -65,10 +65,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TestResultForEdit = Notification.TestData.ManualTestResults
                     .SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
-                if (TestResultForEdit != null)
+                if (TestResultForEdit == null)
                 {
-                    FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
+                    return NotFound();
                 }
+                FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
             }
 
             await SetDropdownsAsync();

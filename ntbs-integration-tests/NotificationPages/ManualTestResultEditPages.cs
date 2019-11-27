@@ -8,6 +8,7 @@ using ntbs_service.Helpers;
 using Xunit;
 using System;
 using ntbs_service.Models.Validations;
+using System.Net;
 
 namespace ntbs_integration_tests.NotificationPages
 {
@@ -79,7 +80,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
-            
+
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);
 
@@ -163,6 +164,20 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
             resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.InvalidTestAndSampleTypeCombination, "Sample type"));
+        }
+
+        [Fact]
+        public async Task GetEditWithInvalidTest_ReturnsNotFound()
+        {
+            // Arrange
+            var NotificationId = Utilities.DRAFT_ID;
+            var editUrl = GetCurrentPathForId(NotificationId) + TEST_ID;
+
+            // Act
+            var editPage = await Client.GetAsync(editUrl);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, editPage.StatusCode);
         }
     }
 }
