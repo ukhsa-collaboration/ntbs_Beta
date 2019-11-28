@@ -38,6 +38,24 @@ namespace ntbs_service.Pages.Notifications.Edit
             _testResultsRepository = testResultsRepository;
         }
 
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
+        {
+            if (RowId != null)
+            {
+                TestResultForEdit = Notification.TestData.ManualTestResults
+                    .SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
+                if (TestResultForEdit == null)
+                {
+                    return NotFound();
+                }
+                FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
+            }
+
+            await SetDropdownsAsync();
+
+            return Page();
+        }
+
         protected override async Task ValidateAndSave()
         {
             TestResultForEdit.NotificationId = NotificationId;
@@ -77,24 +95,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             await _testResultsRepository.DeleteTestAsync(testResult);
 
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
-        }
-
-        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
-        {
-            if (RowId != null)
-            {
-                TestResultForEdit = Notification.TestData.ManualTestResults
-                    .SingleOrDefault(r => r.ManualTestResultId == RowId.Value);
-                if (TestResultForEdit == null)
-                {
-                    return NotFound();
-                }
-                FormattedTestDate = TestResultForEdit.TestDate.ConvertToFormattedDate();
-            }
-
-            await SetDropdownsAsync();
-
-            return Page();
         }
 
         private async Task SetDropdownsAsync()

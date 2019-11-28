@@ -65,7 +65,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());
             context.Notification.AddRange(EpisodesPageTests.GetSeedingNotifications());
-            context.Notification.AddRange(ManualTestResultEditPages.GetSeedingNotifications());
+            context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
 
             context.SaveChanges();
         }

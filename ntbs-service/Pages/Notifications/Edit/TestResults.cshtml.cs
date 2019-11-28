@@ -42,12 +42,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Table/ManualTestResult", new { NotificationId });
+            return RedirectToPage("./Children/ManualTestResult", new { NotificationId });
         }
 
         protected override async Task ValidateAndSave()
         {
-            // Set the colleciton so it can be included in the validation
+            // Set the collection so it can be included in the validation
             TestData.ManualTestResults = Notification.TestData.ManualTestResults;
             TestData.SetFullValidation(Notification.NotificationStatus);
             if (TryValidateModel(TestData, nameof(TestData)))

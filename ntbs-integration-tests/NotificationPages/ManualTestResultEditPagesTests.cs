@@ -12,13 +12,13 @@ using System.Net;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class ManualTestResultEditPages : TestRunnerNotificationBase
+    public class ManualTestResultEditPagesTests : TestRunnerNotificationBase
     {
         const int TEST_ID = 10;
         const int TEST_TO_DELETE_ID = 11;
         protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult(null);
 
-        public ManualTestResultEditPages(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public ManualTestResultEditPagesTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
         }
 
@@ -149,7 +149,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostEditWithInvalidResult_ReturnsErrors()
+        public async Task PostEditWithInvalidTestAndSampleTypeCombination_ReturnsErrors()
         {
             // Arrange
             var NotificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
