@@ -76,11 +76,15 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, NotificationId));
             var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
             var testsListDocument = await GetDocumentAsync(testsListPage);
-            var manualResults = testsListDocument.GetElementById("manual-results");
+            // We can't pick based on id, as we don't know the id created
+            var manualResultText = testsListDocument.GetElementById("manual-results")
+                .GetElementsByTagName("tbody")[0]
+                .GetElementsByTagName("tr")[0]
+                .TextContent; 
 
-            Assert.Contains("Smear", manualResults.TextContent);
-            Assert.Contains("Blood", manualResults.TextContent);
-            Assert.Contains("Negative", manualResults.TextContent);
+            Assert.Contains("Smear", manualResultText);
+            Assert.Contains("Blood", manualResultText);
+            Assert.Contains("Negative", manualResultText);
         }
 
         [Fact]
@@ -92,6 +96,10 @@ namespace ntbs_integration_tests.NotificationPages
 
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);
+            var manualResultTextBeforeChanges = editDocument.GetElementById($"manual-test-result-{TEST_ID}").TextContent;
+            Assert.Contains("Smear", manualResultTextBeforeChanges);
+            Assert.Contains("Lung bronchial tree tissue", manualResultTextBeforeChanges);
+            Assert.Contains("Positive", manualResultTextBeforeChanges);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -109,12 +117,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, NotificationId));
             var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
             var testsListDocument = await GetDocumentAsync(testsListPage);
-            var manualResults = testsListDocument.GetElementById("manual-results");
+            var manualResultText = testsListDocument.GetElementById($"manual-test-result-{TEST_ID}").TextContent;
 
-            Assert.Contains("Smear", manualResults.TextContent);
-            Assert.Contains("Bronchial washings", manualResults.TextContent);
-            Assert.Contains("Negative", manualResults.TextContent);
-            Assert.DoesNotContain("Lung bronchial tree tissue", manualResults.TextContent);
+            Assert.Contains("Smear", manualResultText);
+            Assert.Contains("Bronchial washings", manualResultText);
+            Assert.Contains("Negative", manualResultText);
         }
 
         [Fact]
@@ -206,11 +213,7 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, NotificationId));
             var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
             var testsListDocument = await GetDocumentAsync(testsListPage);
-            var manualResults = testsListDocument.GetElementById("manual-results");
-
-            Assert.DoesNotContain("Line probe assay", manualResults.TextContent);
-            Assert.DoesNotContain("Gastric washings", manualResults.TextContent);
-            Assert.DoesNotContain("Awaiting", manualResults.TextContent);
+            Assert.Null(testsListDocument.GetElementById($"manual-test-result-{TEST_TO_DELETE_ID}"));
         }
     }
 }

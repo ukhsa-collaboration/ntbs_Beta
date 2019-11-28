@@ -27,7 +27,7 @@
     <nhs-table-body>
     @foreach (var result in Model)
     {
-        <nhs-table-body-row>
+        <nhs-table-body-row id="manual-test-result-@result.ManualTestResultId">
             <nhs-table-item>
                 @(result.TestDate?.ToString("dd-MMM-yyyy"))
             </nhs-table-item>
