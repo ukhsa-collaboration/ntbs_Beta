@@ -1,0 +1,15 @@
+@using ntbs_service.Helpers
+@model ntbs_service.Models.TestData
+
+@{
+    var notificationId = (int)ViewData["NotificationId"];
+}
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Test results </h3>
+    <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditTestResults, notificationId)"
+       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div>
+<div class="notification-overview-details-container">
+    <partial name="Shared/_ManualTestResultTable" for="ManualTestResults" />
+</div>
