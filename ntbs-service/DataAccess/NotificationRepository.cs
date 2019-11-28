@@ -22,6 +22,7 @@ namespace ntbs_service.DataAccess
         bool NotificationExists(int notificationId);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
+        bool NotificationWithLtbrOrEtsIdExists(string id);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -74,6 +75,12 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Any(e => e.NotificationId == notificationId);
+        }
+
+        public bool NotificationWithLtbrOrEtsIdExists(string id)
+        {
+            return _context.Notification
+                .Any(e => e.LTBRID == id || e.ETSID == id);
         }
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)

@@ -2,38 +2,40 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.Data.Legacy;
+using ntbs_service.DataMigration;
+using ntbs_service.Models;
+using System.Threading.Tasks;
 
 namespace ntbs_service.Pages_SearchOld
 {
     public class IndexModel : PageModel
     {
-        private readonly ISearchServiceLegacy _searcher;
+        private readonly INotificationImportService _service;
 
-        public IndexModel(ISearchServiceLegacy searcher)
+        public IndexModel(INotificationImportService service)
         {
-            _searcher = searcher;
-            Results = new List<SearchResult>();
+            _service = service;
+            Results = new List<Notification>();
         }
 
         [BindProperty]
-        public SearchRequest SearchRequest { get; set; }
+        public string NotificationId { get; set; }
 
-        public IList<SearchResult> Results { get; set; }
+        public IList<Notification> Results { get; set; }
 
         public IActionResult OnGetAsync()
         {
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            Results = _searcher.Search(SearchRequest).ToList();
+            Results = await _service.ImportNotificationsAsync(NotificationId);
             return Page();
         }
     }

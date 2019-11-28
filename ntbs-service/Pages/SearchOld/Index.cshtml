@@ -13,9 +13,9 @@
     <form method="post">
         <div asp-validation-summary="ModelOnly"></div>
         <div>
-            <label asp-for="SearchRequest.NhsNumber"></label>
-            <input asp-for="SearchRequest.NhsNumber" />
-            <span asp-validation-for="SearchRequest.NhsNumber"></span>
+            <label asp-for="NotificationId"></label>
+            <input asp-for="NotificationId" />
+            <span asp-validation-for="NotificationId"></span>
         </div>
         <div>
             <input type="submit" value="Search" />
@@ -26,22 +26,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Results[0].Source)
+                @Html.DisplayNameFor(model => model.Results[0].NotificationId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Results[0].FamilyNames)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].GivenNames)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].NhsNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Results[0].DateOfBirth)
-            </th>
-                        <th>
-                @Html.DisplayNameFor(model => model.Results[0].DateOfNotification)
+                @Html.DisplayNameFor(model => model.Results[0].NotificationDate)
             </th>
         </tr>
     </thead>
@@ -49,22 +37,10 @@
 @foreach (var item in Model.Results) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Source)
+                @Html.DisplayFor(modelItem => item.NotificationId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FamilyNames)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GivenNames)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NhsNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfNotification)
+                @Html.DisplayFor(modelItem => item.NotificationDate)
             </td>
         </tr>
 }
