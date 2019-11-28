@@ -386,7 +386,8 @@ namespace ntbs_service.Models
                 entity.Property(e => e.AlertType)
                     .HasConversion(alertTypeEnumConverter);
                 entity.HasDiscriminator<AlertType>("AlertType")
-                    .HasValue<TestAlert>(AlertType.Test);
+                    .HasValue<TestAlert>(AlertType.Test)
+                    .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR);
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();
