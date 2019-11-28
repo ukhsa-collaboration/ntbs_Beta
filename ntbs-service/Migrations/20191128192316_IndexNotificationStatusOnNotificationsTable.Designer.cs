@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191128192316_IndexNotificationStatusOnNotificationsTable")]
+    partial class IndexNotificationStatusOnNotificationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2442,13 +2444,6 @@ namespace ntbs_service.Migrations
                             CountryCode = "E92000001",
                             Name = "BROADGREEN HOSPITAL",
                             TBServiceCode = "TBS0109"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("fefd7cdd-bdaa-4be8-b839-780a7bb0d7ff"),
-                            CountryCode = "E92000001",
-                            Name = "BROMLEY HOSPITAL",
-                            TBServiceCode = "TBS0029"
                         },
                         new
                         {
@@ -5543,13 +5538,6 @@ namespace ntbs_service.Migrations
                             CountryCode = "E92000001",
                             Name = "TAMESIDE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0238"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("6fd71037-5957-4a18-97e7-65efdd524cf7"),
-                            CountryCode = "E92000001",
-                            Name = "TB SERVICE NCL - SOUTH HUB",
-                            TBServiceCode = "TBS0239"
                         },
                         new
                         {
@@ -11582,39 +11570,6 @@ namespace ntbs_service.Migrations
                             b1.HasOne("ntbs_service.Models.Notification")
                                 .WithOne("ImmunosuppressionDetails")
                                 .HasForeignKey("ntbs_service.Models.ImmunosuppressionDetails", "NotificationId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.MDRDetails", "MDRDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId");
-
-                            b1.Property<string>("CaseInUKStatus")
-                                .HasMaxLength(30);
-
-                            b1.Property<int?>("CountryId");
-
-                            b1.Property<string>("ExposureToKnownCaseStatus")
-                                .HasMaxLength(30);
-
-                            b1.Property<int?>("RelatedNotificationId");
-
-                            b1.Property<string>("RelationshipToCase")
-                                .HasMaxLength(40);
-
-                            b1.HasKey("NotificationId");
-
-                            b1.HasIndex("CountryId");
-
-                            b1.ToTable("MDRDetails");
-
-                            b1.HasOne("ntbs_service.Models.Country", "Country")
-                                .WithMany()
-                                .HasForeignKey("CountryId");
-
-                            b1.HasOne("ntbs_service.Models.Notification")
-                                .WithOne("MDRDetails")
-                                .HasForeignKey("ntbs_service.Models.MDRDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 

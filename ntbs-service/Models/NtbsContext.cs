@@ -301,6 +301,8 @@ namespace ntbs_service.Models
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("MDRDetails");
                 });
+                
+                entity.HasIndex(e => e.NotificationStatus);
             });
 
             modelBuilder.Entity<Region>(entity =>
