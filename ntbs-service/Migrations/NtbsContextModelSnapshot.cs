@@ -11972,7 +11972,7 @@ namespace ntbs_service.Migrations
 
                     b.ToTable("TestData");
                 });
-                
+
             modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Alert");
