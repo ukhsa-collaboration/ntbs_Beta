@@ -29,7 +29,7 @@ namespace ntbs_service.Models
 
         #region DB Mapped Fields
 
-        [Display(Name = "Notification Id")]
+        [Display(Name = "NTBS Id")]
         public int NotificationId { get; set; }
         [MaxLength(50)]
         public string ETSID { get; set; }
@@ -66,6 +66,7 @@ namespace ntbs_service.Models
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public virtual NotificationGroup Group { get; set; }
         public virtual TestData TestData { get; set; }
+        public virtual ICollection<Alert> Alerts { get; set; }
 
         #endregion
 
@@ -139,7 +140,7 @@ namespace ntbs_service.Models
 
         private static string FormatDate(DateTime? date)
         {
-            return date?.ToString("dd-MMM-yyyy");
+            return date?.ToString("dd MMM yyyy");
         }
 
         private static string TrueFalseToYesNo(bool? x)

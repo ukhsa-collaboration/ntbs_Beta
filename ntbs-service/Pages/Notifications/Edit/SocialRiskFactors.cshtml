@@ -4,10 +4,10 @@
 @using ntbs_service.Models.Enums
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Social Risk Factors";
     ViewData["CurrentPage"] = NotificationSubPaths.EditSocialRiskFactors;
-    var statuses = EnumHelper.GetEnumList<Result>();
+    var statuses = EnumHelper.GetEnumList<Status>();
 }
 
 <h2>Social Risk Factors</h2>
@@ -102,5 +102,5 @@
         </nhs-fieldset>
     </nhs-form-group>
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

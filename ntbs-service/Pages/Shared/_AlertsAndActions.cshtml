@@ -19,14 +19,14 @@
                 </a>
             </div>
         }
-        else if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview && Model.HasEditPermission)
+        else if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview)
         {
             <div class="manage-notification">
                 <nhs-details display-text="Manage notification" nhs-details-type="Expander">
                     <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
                         New notification for this patient
                     </button>
-                    @if (Model.Notification.NotificationStatus == NotificationStatus.Notified)
+                    @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
                     {
                         var denotifyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
                         <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">

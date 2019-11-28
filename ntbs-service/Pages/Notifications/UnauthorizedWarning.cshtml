@@ -1,8 +1,10 @@
 @model NotificationModelBase
 @using ntbs_service.Pages
+@using ntbs_service.Helpers
 
 @{
-    Layout = "../Shared/_NotificationLayout.cshtml";
+    Layout = "../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
 
 <nhs-width-container container-width="Standard">

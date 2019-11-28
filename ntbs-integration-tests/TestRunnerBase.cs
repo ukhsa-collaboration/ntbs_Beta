@@ -44,6 +44,7 @@ namespace ntbs_integration_tests
             string postRoute = null,
             string submitType = null)
         {
+            var data = formData ?? new Dictionary<string, string>();
             var form = (IHtmlFormElement)document.QuerySelector("form");
 
             var submissionRoute = pageRoute;
@@ -52,7 +53,7 @@ namespace ntbs_integration_tests
                 submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
             }
 
-            return await Client.SendPostAsync(form, formData, submissionRoute, submitType);
+            return await Client.SendPostAsync(form, data, submissionRoute, submitType);
         }
 
         protected async Task<HttpResponseMessage> SendGetFormWithData(

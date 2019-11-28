@@ -16,6 +16,11 @@ namespace ntbs_service.Helpers
 
             return string.Format(NotificationBasePath, id, path);
         }
+
+        public static string GetAlertPath(int id, string subPath)
+        {
+            return string.Format("/Alerts/{0}/{1}", id, subPath);
+        }
     }
 
     public static class NotificationSubPaths
@@ -37,5 +42,10 @@ namespace ntbs_service.Helpers
 
         public static string EditManualTestResult(int? TestResultId) => $"Edit/ManualTestResult/{TestResultId}";
         public static string AddManualTestResult => $"Edit/ManualTestResult";
+    }
+
+    public static class AlertSubPaths
+    {
+        public static string Dismiss => "Dismiss";
     }
 }

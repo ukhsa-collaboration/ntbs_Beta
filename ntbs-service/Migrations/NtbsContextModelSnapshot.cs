@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -18,6 +19,47 @@ namespace ntbs_service.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("ntbs_service.Models.Alert", b =>
+                {
+                    b.Property<int>("AlertId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AlertStatus")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<string>("AlertType")
+                        .IsRequired();
+
+                    b.Property<string>("CaseManagerEmail")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("ClosingUserId")
+                        .HasMaxLength(64);
+
+                    b.Property<DateTime?>("ClosureDate");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<int?>("NotificationId");
+
+                    b.Property<string>("TbServiceCode")
+                        .HasMaxLength(16);
+
+                    b.HasKey("AlertId");
+
+                    b.HasIndex("CaseManagerEmail");
+
+                    b.HasIndex("TbServiceCode");
+
+                    b.HasIndex("NotificationId", "AlertType");
+
+                    b.ToTable("Alert");
+
+                    b.HasDiscriminator<string>("AlertType");
+                });
 
             modelBuilder.Entity("ntbs_service.Models.CaseManager", b =>
                 {
@@ -11929,6 +11971,28 @@ namespace ntbs_service.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("TestData");
+                });
+                
+            modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Alert");
+
+                    b.HasDiscriminator().HasValue("Test");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Alert", b =>
+                {
+                    b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                        .WithMany()
+                        .HasForeignKey("CaseManagerEmail");
+
+                    b.HasOne("ntbs_service.Models.Notification", "Notification")
+                        .WithMany("Alerts")
+                        .HasForeignKey("NotificationId");
+
+                    b.HasOne("ntbs_service.Models.TBService", "TbService")
+                        .WithMany()
+                        .HasForeignKey("TbServiceCode");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>

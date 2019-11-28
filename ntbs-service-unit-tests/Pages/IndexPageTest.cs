@@ -14,10 +14,14 @@ namespace ntbs_service_unit_tests.Pages
     {
         private readonly Mock<INotificationRepository> mockNotificationRepository;
         private readonly Mock<IAuthorizationService> mockAuthorizationService;
+        private readonly Mock<IUserService> mockUserService;
+        private readonly Mock<IAlertRepository> mockAlertRepository;
         public IndexPageTests() 
         {
             mockNotificationRepository = new Mock<INotificationRepository>();
             mockAuthorizationService = new Mock<IAuthorizationService>();
+            mockUserService = new Mock<IUserService>();
+            mockAlertRepository = new Mock<IAlertRepository>();
         }
 
         [Fact]
@@ -31,7 +35,7 @@ namespace ntbs_service_unit_tests.Pages
             mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), recent.Result)).Returns(recent);
             mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), drafts.Result)).Returns(drafts);
 
-            var pageModel = new IndexModel(mockNotificationRepository.Object, mockAuthorizationService.Object);
+            var pageModel = new IndexModel(mockNotificationRepository.Object, mockAlertRepository.Object, mockAuthorizationService.Object, mockUserService.Object);
 
             // Act
             await pageModel.OnGetAsync();

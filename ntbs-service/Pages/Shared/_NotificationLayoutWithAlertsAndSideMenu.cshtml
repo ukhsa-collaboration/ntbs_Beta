@@ -15,6 +15,7 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
+        @RenderSection("MainFormButton", required: false)
         <partial name="./_AlertsAndActions" model="@Model" />
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="Full">

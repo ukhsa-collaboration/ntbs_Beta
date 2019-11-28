@@ -3,7 +3,7 @@
 @model ntbs_service.Pages.Notifications.Edit.TravelModel
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Travel and visitor history";
     ViewData["CurrentPage"] = NotificationSubPaths.EditTravel;
 }
@@ -16,5 +16,5 @@
     <partial name="_TravelDetailsPartial" />
     <partial name="_VisitorDetailsPartial" />
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

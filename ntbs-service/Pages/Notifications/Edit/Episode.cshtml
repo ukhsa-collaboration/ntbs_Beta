@@ -5,7 +5,7 @@
 @using ntbs_service.Helpers
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Hospital Details";
     ViewData["CurrentPage"] = NotificationSubPaths.EditEpisode;
     var fullValidation = Model.Episode.ShouldValidateFull ? "True" : "False";
@@ -154,5 +154,5 @@
         </div>
     </tb-service-filtered-dropdowns>
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

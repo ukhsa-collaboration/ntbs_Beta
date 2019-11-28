@@ -1,0 +1,25 @@
+@page
+@using ntbs_service.Pages
+@model ErrorModel
+@{
+    ViewData["Title"] = "Service unavailable";
+}
+
+<div class="govuk-width-container">
+  <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
+        <p class="govuk-body">Please try again.</p>
+        <p class="govuk-body">
+          @if (Model.ShowRequestId)
+          {
+              <p>
+                  If error persists, contact helpdesk and quote <strong>Request ID:</strong> <code>@Model.RequestId</code>
+              </p>
+          }
+        </p>
+      </div>
+    </div>
+  </main>
+</div>

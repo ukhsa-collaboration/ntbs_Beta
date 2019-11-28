@@ -3,10 +3,10 @@
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
 
 @{
-    Layout = "../../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Comorbidities";
     ViewData["CurrentPage"] = NotificationSubPaths.EditComorbidities;
-    var statuses = EnumHelper.GetEnumList<Result>();
+    var statuses = EnumHelper.GetEnumList<Status>();
 }
 
 <h2>Comorbidities</h2>
@@ -100,5 +100,5 @@
     </nhs-form-group>
 
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

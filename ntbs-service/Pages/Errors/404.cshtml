@@ -1,0 +1,33 @@
+@page
+@using ntbs_service.Pages
+@model ErrorModel
+@{
+    ViewData["Title"] = "Page not found";
+}
+
+<div class="govuk-width-container">
+  <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Page not found</h1>
+        <p class="govuk-body">
+          If you typed the web address, check it is correct.
+        </p>
+        <p class="govuk-body">
+          If you pasted the web address, check you copied the entire address.
+        </p>
+        <p class="govuk-body">
+          If you are looking for a Notification, use the Search feature to find the correct ID.
+        </p>
+        <p class="govuk-body">
+          @if (Model.ShowRequestId)
+          {
+              <p>
+                  If error persists, contact helpdesk and quote <strong>Request ID:</strong> <code>@Model.RequestId</code>
+              </p>
+          }
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
