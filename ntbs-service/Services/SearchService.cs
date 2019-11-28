@@ -53,8 +53,7 @@ namespace ntbs_service.Services
 
         private IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 
         {
-            return query.OrderByDescending(n => n.CreationDate)
-                .OrderByDescending(n => n.SubmissionDate);
+            return query.OrderByDescending(n => n.NotificationDate ?? n.CreationDate);
         }
 
         private async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
