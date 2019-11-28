@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
@@ -53,7 +55,14 @@ namespace ntbs_service.Pages.Notifications
             if (Group == null)
             {
                 Group = await GetNotificationGroupAsync();
-                NumberOfLinkedNotifications = Group?.Notifications.Count - 1 ?? 0;
+                if (Group != null)
+                {
+                    NumberOfLinkedNotifications = Group.Notifications.Count(x => x.NotificationStatus != NotificationStatus.Deleted) - 1;
+                }
+                else
+                {
+                    NumberOfLinkedNotifications = 0;
+                }
             }
         }
 
