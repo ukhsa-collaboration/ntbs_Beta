@@ -110,7 +110,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 selectedValue: null,
                 dataGroupField: nameof(SampleType.Category));
 
-            ResultOptions = new SelectList(ResultEnumHelper.GetAll());
+            ResultOptions = new SelectList(EnumHelper.GetEnumList<Result>());
         }
 
         protected override IActionResult RedirectAfterSaveForNotified()
