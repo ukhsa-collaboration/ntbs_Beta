@@ -12,18 +12,32 @@ namespace ntbs_service.Models
     // We use the latter to simplify modelling the validation for ManualTestReults' presence
     public class TestData : ModelBase
     {
-        public int NotificationId {get; set; }
+        public int NotificationId { get; set; }
 
         [DisplayName("Test carried out")]
         [RequiredIf("ShouldValidateFull", ErrorMessage = ValidationMessages.Mandatory)]
         [AssertThat("ResultAddedIfTestCarriedOut", ErrorMessage = ValidationMessages.NoTestResult)]
-        [AssertThat("NoImpliesEmptyCollection", ErrorMessage = ValidationMessages.RemoveTestResultsBeforeSayingNoSample)]
         public bool? HasTestCarriedOut { get; set; }
         public virtual ICollection<ManualTestResult> ManualTestResults { get; set; }
 
         [NotMapped]
-        public bool ResultAddedIfTestCarriedOut => !ShouldValidateFull || ManualTestResults == null || ManualTestResults.Any();
+        public bool ResultAddedIfTestCarriedOut =>
+            // This test only makes sense if test are loaded
+            ManualTestResults == null
+            // if test is carried out, make sure there are results
+            || HasTestCarriedOut == false || ManualTestResults.Any()
+            // ...unless they are about to add them, in which case that's fine too
+            || ProceedingToAdd;
+
         [NotMapped]
-        public bool NoImpliesEmptyCollection => HasTestCarriedOut == true || ManualTestResults == null || !ManualTestResults.Any();
+        public bool NoImpliesEmptyCollection =>
+            // This test only makes sense if test are loaded
+            ManualTestResults == null
+            // if test is marked not carried out, make sure there are no results
+            || HasTestCarriedOut == true || !ManualTestResults.Any();
+
+        // Only used to inform validation, much like the `ShouldValidateFull` property
+        [NotMapped]
+        public bool ProceedingToAdd { get; set; }
     }
 }

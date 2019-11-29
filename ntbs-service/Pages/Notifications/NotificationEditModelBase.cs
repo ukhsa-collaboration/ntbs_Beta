@@ -25,6 +25,14 @@ namespace ntbs_service.Pages.Notifications
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
+        /*
+        Post method accepts name of action specified by button clicked.
+        Using handler appends handler to the url and would require awkward javascript logic
+        to accommodate the URL changes for dynamic validation.
+        */
+        [BindProperty]
+        public string ActionName { get; set; }
+
         public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
             Notification = await GetNotificationAsync(NotificationId);
@@ -42,14 +50,9 @@ namespace ntbs_service.Pages.Notifications
             return await PrepareAndDisplayPageAsync(isBeingSubmitted);
         }
 
-        /*
-        Post method accepts name of action specified by button clicked.
-        Using handler appends handler to the url and would require awkward javascript logic
-        to accomodate the URL changes for dynamic validation.
-        */
-        public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
+        public async Task<IActionResult> OnPostAsync(bool isBeingSubmitted)
         {
-            await SetNotification(actionName);
+            await SetNotification(ActionName);
 
             if (Notification == null)
             {
@@ -68,7 +71,7 @@ namespace ntbs_service.Pages.Notifications
                 return await PrepareAndDisplayPageAsync(isBeingSubmitted);
             }
 
-            switch (actionName)
+            switch (ActionName)
             {
                 case "Submit":
                     return await SubmitAsync();

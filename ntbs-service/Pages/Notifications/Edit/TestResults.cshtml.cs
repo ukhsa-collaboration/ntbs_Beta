@@ -49,6 +49,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             // Set the collection so it can be included in the validation
             TestData.ManualTestResults = Notification.TestData.ManualTestResults;
+            TestData.ProceedingToAdd = ActionName == "Create";
             TestData.SetFullValidation(Notification.NotificationStatus);
             if (TryValidateModel(TestData, nameof(TestData)))
             {
