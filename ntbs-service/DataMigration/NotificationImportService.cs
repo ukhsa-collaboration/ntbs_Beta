@@ -45,7 +45,7 @@ namespace ntbs_service.DataMigration
             Task.WaitAll(notificationTask);
             var notifications = notificationTask.Result.ToList();
 
-            LogInformation($"{notifications.Count} notifications found to import");
+            LogInformation($"{notifications.Count} notifications included linked ones found to import");
             var notificationsToSave = new List<Notification>();
             foreach (var notification in notifications)
             {

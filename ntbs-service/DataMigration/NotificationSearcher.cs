@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ntbs_service.Models;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.DataMigration
 {
@@ -19,13 +20,14 @@ namespace ntbs_service.DataMigration
         const string Query = @"
             SELECT *
             FROM Notifications n 
-            LEFT JOIN Patients p ON p.OldNotificationId = n.OldNotificationId
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Demographics d ON d.OldNotificationId = n.OldNotificationId
+            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             LEFT JOIN DeathDates dd ON dd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN VisitorHistory vh ON vh.OldNotificationId = n.OldNotificationId
-            LEFT JOIN TravelHistory th ON th.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ClinicalDates cd ON cd.OldNotificationId = n.OldNotificationId
+            LEFT JOIN VisitorHistory vstr ON vstr.OldNotificationId = n.OldNotificationId
+            LEFT JOIN TravelHistory trvl ON trvl.OldNotificationId = n.OldNotificationId
+            LEFT JOIN ClinicalDates clncl ON clncl.OldNotificationId = n.OldNotificationId
+            LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
+            LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
             WHERE GroupId IN (
                 SELECT GroupId
                 FROM Notifications n WHERE n.OldNotificationId = @NotificationId
@@ -64,10 +66,34 @@ namespace ntbs_service.DataMigration
                 PatientDetails = ExtractPatientDetails(result),
                 ClinicalDetails = ExtractClinicalDetails(result),
                 TravelDetails = ExtractTravelDetails(result),
-                VisitorDetails = ExtractVisitorDetails(result)
+                VisitorDetails = ExtractVisitorDetails(result),
+                ComorbidityDetails = ExtractComorbidityDetails(result),
+                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(result)
             };
 
             return notification;
+        }
+
+        private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
+        {
+            return new ImmunosuppressionDetails {
+                Status = GetStatusFromString(notification.Status),
+                HasBioTherapy = GetBoolValue(notification.HasBioTherapy),
+                HasTransplantation = GetBoolValue(notification.HasTransplantation),
+                HasOther = GetBoolValue(notification.HasOther),
+                OtherDescription = notification.OtherDescription
+            };
+        }
+
+        private static ComorbidityDetails ExtractComorbidityDetails(dynamic notification)
+        {
+            return new ComorbidityDetails {
+                DiabetesStatus = GetStatusFromString(notification.DiabetesStatus),
+                LiverDiseaseStatus = GetStatusFromString(notification.LiverDiseaseStatus),
+                RenalDiseaseStatus = GetStatusFromString(notification.RenalDiseaseStatus),
+                HepatitisBStatus = GetStatusFromString(notification.HepatitisBStatus),
+                HepatitisCStatus = GetStatusFromString(notification.HepatitisCStatus)
+            };
         }
 
         private static ClinicalDetails ExtractClinicalDetails(dynamic notification)
@@ -144,6 +170,16 @@ namespace ntbs_service.DataMigration
                 return null;
             }
             return value == 1 ? true : false;
+        }
+
+        private static Status? GetStatusFromString(string status)
+        {
+            if (string.IsNullOrEmpty(status))
+            {
+                return null;
+            }
+
+            return Enum.Parse<Status>(status);
         }
     }
   
