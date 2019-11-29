@@ -122,18 +122,16 @@
             <button id="save-test-result-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
                 Save
             </button>
-        </form>
-        @if (Model.RowId != null) 
-        {
-            <form method="post">
+            @if (Model.RowId != null) 
+            {
                 <button id="delete-test-result-button"
                     asp-page-handler="Delete" 
                     nhs-button-type="Standard" 
                     classes="ntbsuk-button--secondary">
                     Delete
                 </button>
-            </form>
-        }
+            }
+        </form>
     </nhs-width-container>
 </div>
 <nhs-width-container container-width="Standard">
