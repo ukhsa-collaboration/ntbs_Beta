@@ -41,10 +41,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateComorbidityAsync(Notification, ComorbidityDetails);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
     }
 }

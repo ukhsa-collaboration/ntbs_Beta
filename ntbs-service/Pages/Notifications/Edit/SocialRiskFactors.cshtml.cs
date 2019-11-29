@@ -34,10 +34,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
 
         protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)

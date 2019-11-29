@@ -139,10 +139,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
 
         private void UpdateFlags()
@@ -235,9 +231,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.ValidateProperty(notificationSite, key, value);
         }
 
-        public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear)
+        public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear, string propertyName)
         {
-            return ValidationService.ValidateYearComparison(newYear, existingYear, "BCG vaccination year");
+            return ValidationService.ValidateYearComparison(newYear, existingYear, propertyName);
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)

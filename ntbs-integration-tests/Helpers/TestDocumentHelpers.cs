@@ -8,7 +8,7 @@ namespace ntbs_integration_tests.Helpers
     {        
         public static string FullErrorMessage(string validationMessage)
         {
-            return string.Format($"Error:{validationMessage}");
+            return $"Error:{validationMessage}";
         }
     }
 }

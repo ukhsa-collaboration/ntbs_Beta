@@ -40,10 +40,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateContactTracingAsync(Notification, ContactTracing);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
 
         public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)

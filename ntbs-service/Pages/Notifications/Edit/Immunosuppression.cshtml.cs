@@ -40,10 +40,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
 
         public IActionResult OnGetValidate(

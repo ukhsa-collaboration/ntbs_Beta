@@ -45,10 +45,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdatePatientTbHistoryAsync(Notification, PatientTbHistory);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
 
         private void UpdateFlags()

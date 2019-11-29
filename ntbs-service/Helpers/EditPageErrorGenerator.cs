@@ -21,14 +21,14 @@ namespace ntbs_service.Helpers
                 var errorMessageList = modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList();
                     foreach(var errorMessage in errorMessageList)
                     {
-                        AddErrorMessagesIntoDictionary(key, errorMessage);
+                        AddErrorMessageIntoDictionary(key, errorMessage);
                     }
             }
 
             return NotifyErrorDictionary;
         }
 
-        private static void AddErrorMessagesIntoDictionary(string property, string errorMessage)
+        private static void AddErrorMessageIntoDictionary(string property, string errorMessage)
         {
             if (errorMessage == null)
             {

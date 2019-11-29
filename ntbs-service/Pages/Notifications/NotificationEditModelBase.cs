@@ -125,6 +125,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!ModelState.IsValid) 
             {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
                 return await OnGetAsync(NotificationId);
             }
 

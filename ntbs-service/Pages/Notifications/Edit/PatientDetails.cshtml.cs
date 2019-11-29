@@ -28,7 +28,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public PatientDetails PatientDetails { get; set; }
 
         [BindProperty]
-        // [ValidFormattedDateCanConvertToDatetime]
         public FormattedDate FormattedDob { get; set; }
 
         public PatientDetailsModel(
@@ -135,10 +134,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (TryValidateModel(PatientDetails, "PatientDetails"))
             {
                 await Service.UpdatePatientAsync(Notification, PatientDetails);
-            } 
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
             }
         }
 

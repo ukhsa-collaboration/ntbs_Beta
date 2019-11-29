@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class PatientPageTests : TestRunnerNotificationBase
     {
-        protected override string NotificationSubPath => NotificationSubPaths.EditPatient;
+        protected override string NotificationSubPath => NotificationSubPaths.EditPatientDetails;
 
         public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 

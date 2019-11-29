@@ -64,10 +64,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateTravelAndVisitorAsync(Notification, TravelDetails, VisitorDetails);
             }
-            else
-            {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-            }
         }
 
         private void CleanModel()

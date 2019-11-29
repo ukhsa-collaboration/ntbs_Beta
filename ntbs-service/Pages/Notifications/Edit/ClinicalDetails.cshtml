@@ -181,7 +181,8 @@ var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False"
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-bcg-vaccination-conditional">
-                    <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" shouldvalidatefull="@fullValidation" inline-template>
+                    <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" shouldvalidatefull="@fullValidation"
+                        propertyname="BCG vaccination year" inline-template>
                         @{
                             var hasBcgVaccinationError = !Model.IsValid("ClinicalDetails.BCGVaccinationYear");
                             var bcgVaccinationGroupState = hasBcgVaccinationError ? Error : Standard;
