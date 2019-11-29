@@ -137,10 +137,17 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, OtherSite.GetType().Name);
             }
 
-            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true)
+            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) // TODO-370 drug fields too
             {
                 var mdrAlert = new MdrAlert() {NotificationId = NotificationId};
                 await _alertService.AddUniqueAlertAsync(mdrAlert);
+            }
+            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false) 
+            {
+                // TODO-370 check no MDR fields entered
+               await _alertService.DismissMatchingAlertAsync(NotificationId, AlertType.EnhancedSurveillanceMDR);
+               // TODO-370 check MDR fields entered
+               // show the cannot change value contact NTBS@phe.gov.uk message
             }
 
             if (ModelState.IsValid)
