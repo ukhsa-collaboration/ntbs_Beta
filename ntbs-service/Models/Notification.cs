@@ -127,6 +127,10 @@ namespace ntbs_service.Models
             {
                 return "Denotified";
             }
+            else if (NotificationStatus == NotificationStatus.Legacy)
+            {
+                return "Legacy";
+            }
 
             throw new InvalidOperationException("Notification status is not currently set");
         }

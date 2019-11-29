@@ -1,42 +1,36 @@
+@using ntbs_integration_tests.Helpers
 @model ntbs_service.Models.NotificationBannerModel
 
 @{
-    var notificationStatusBannerCssClass = "";
-    switch (@Model.NotificationStatus)
-    {
-        case NotificationStatus.Draft:
-            notificationStatusBannerCssClass = "notification-banner--draft";
-            break;
-        case NotificationStatus.Notified:
-            notificationStatusBannerCssClass = "notification-banner--notified";
-            break;
-        case NotificationStatus.Denotified:
-            notificationStatusBannerCssClass = "notification-banner--denotified";
-            break;
-        default:
-            break;
-    }
+    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.NotificationStatus);
+    var notificationStatusBannerCssClass = $"notification-banner notification-banner{classSuffix}";
 }
 
-<dl class="notification-banner @notificationStatusBannerCssClass">
+<dl class="@notificationStatusBannerCssClass">
     <div class="notification-banner-head">
-        <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <h1 class="notification-banner-title-text">
-                <div> @Model.NotificationStatusString </div>
-                    
-                @if(@Model.ShowLink) 
-                {
-                    <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id"> #@Model.NotificationId </a>
-                }
-                else 
-                {
-                    <div> #@Model.NotificationId </div>
-                }
-                @if(!@Model.FullAccess)
-                {
-                    <p> (Limited access) </p>
-                }
+                    <div> @Model.NotificationStatusString </div>
+
+                    <div>
+                        @if (@Model.ShowLink)
+                        {
+                            <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
+                        }
+                        else
+                        {
+                            @:#@(Model.NotificationId)
+                        }
+
+                        @if (!Model.FullAccess)
+                        {
+                            <span class="govuk-visually-hidden">Limited Access</span>
+                            <svg width="16" height="18" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.43108 9.28571V7.35714C5.43108 5.94085 6.58622 4.78571 8.00251 4.78571C9.41881 4.78571 10.5739 5.94085 10.5739 7.35714V9.28571H5.43108ZM13.7882 10.25C13.7882 9.71763 13.3563 9.28571 12.8239 9.28571H12.5025V7.35714C12.5025 4.88616 10.4735 2.85714 8.00251 2.85714C5.53153 2.85714 3.50251 4.88616 3.50251 7.35714V9.28571H3.18108C2.64872 9.28571 2.2168 9.71763 2.2168 10.25V16.0357C2.2168 16.5681 2.64872 17 3.18108 17H12.8239C13.3563 17 13.7882 16.5681 13.7882 16.0357V10.25Z" />
+                            </svg>
+                        }
+                    </div>
                 </h1>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
@@ -54,7 +48,7 @@
         </nhs-grid-row>
     </div>
     <div class="notification-banner-body">
-        <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter" classes="notification-banner-field">
                 <div class="bold-label"> Name </div>
                 <div class="cell-min-height"> @Model.Name </div>
@@ -72,7 +66,7 @@
                 <div> @Model.Postcode </div>
             </nhs-grid-column>
         </nhs-grid-row>
-        <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> NHS number </dt>
                 <dd class="cell-min-height">  @Model.NhsNumber </dd>
