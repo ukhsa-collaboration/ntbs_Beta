@@ -65,7 +65,7 @@ namespace ntbs_integration_tests.SearchPage
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
-            Assert.Equal(" #1 ", resultDocument.QuerySelector("a[id='notification-banner-id']").TextContent);
+            Assert.Contains("#1", resultDocument.QuerySelector("a[id='notification-banner-id']").TextContent);
         }
     }
 }
