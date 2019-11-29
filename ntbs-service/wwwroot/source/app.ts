@@ -20,6 +20,7 @@ import { AutocompleteSelect } from "./Components/AutocompleteSelect";
 import NhsNumberDuplicateWarning from "./Components/NhsNumberDuplicateWarning";
 import TbServiceFilteredDropdowns from "./Components/TbServiceFilteredDropdowns";
 import TbServiceFilteredAlerts from "./Components/TbServiceFilteredAlerts";
+import HideManualTestResults from "./Components/HideManualTestResults";
 
 // For compatibility with IE11
 require("es6-promise").polyfill();
@@ -43,6 +44,7 @@ Vue.component("autocomplete-select", AutocompleteSelect);
 Vue.component("nhs-number-duplicate-warning", NhsNumberDuplicateWarning);
 Vue.component("tb-service-filtered-dropdowns", TbServiceFilteredDropdowns);
 Vue.component("tb-service-filtered-alerts", TbServiceFilteredAlerts);
+Vue.component("hide-manual-test-results", HideManualTestResults);
 
 new Vue({
     el: "#app",

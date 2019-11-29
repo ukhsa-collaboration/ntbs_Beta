@@ -55,7 +55,6 @@ namespace ntbs_service.Models
             ManualTestType == null ||
             // ... the entities and sample match
             ManualTestType.ManualTestTypeSampleTypes
-            .Where(ts => ts.SampleType == SampleType)
-            .Any();
+                .Any(ts => ts.SampleType == SampleType);
     }
 }

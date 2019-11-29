@@ -150,5 +150,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 nameof(ManualTestResult.TestDate),
                 FormattedTestDate);
         }
+
+        public ContentResult OnGetValidateTestResultForEditDate(string key, string day, string month, string year)
+        {
+            return ValidationService.ValidateDate<ManualTestResult>(key, day, month, year);
+        }
     }
 }
