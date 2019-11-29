@@ -3,6 +3,7 @@
 @{ 
     var header = Model.FirstOrDefault(); 
     var showEditLinks = (bool) (ViewData["ShowManualResultsEditLinks"] ?? false);
+    var orderedResults = Model.OrderByDescending(r => r.TestDate);
 }
 
 <nhs-table id="manual-results" caption="Manual Test Results" >
@@ -25,7 +26,7 @@
         }
     </nhs-table-head>
     <nhs-table-body>
-    @foreach (var result in Model)
+    @foreach (var result in orderedResults)
     {
         <nhs-table-body-row id="manual-test-result-@result.ManualTestResultId">
             <nhs-table-item>
