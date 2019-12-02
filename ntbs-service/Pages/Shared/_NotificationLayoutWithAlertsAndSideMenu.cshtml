@@ -48,8 +48,8 @@
         {
             <nhs-grid-column grid-column-width="OneQuarter">
                 <ul class="sub-nav-left">
-                    <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditPatient ? "contents-list-item--current" : ""))">
-                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditPatient, Model.NotificationId)">
+                    <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditPatientDetails ? "contents-list-item--current" : ""))">
+                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditPatientDetails, Model.NotificationId)">
                             Personal details
                         </a>
                     </li>
@@ -95,9 +95,9 @@
                     </li>
                     @if(Model.Notification?.ClinicalDetails?.IsMDRTreatment == true) // Add drug resistance check here
                     {
-                        <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMdr ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditMdr, Model.NotificationId)">
-                                MDR surveillance
+                        <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMDRDetails ? "contents-list-item--current" : ""))">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditMDRDetails, Model.NotificationId)">
+                                MDR Details
                             </a>
                         </li>
                     }

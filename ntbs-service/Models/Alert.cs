@@ -25,7 +25,7 @@ namespace ntbs_service.Models
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => FormatDate(CreationDate);
         [Display(Name = "Case manager")]
-        public string CaseManagerFullName => CaseManager?.FullName;
+        public string CaseManagerFullName => CaseManager?.FullName ?? "System";
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
 

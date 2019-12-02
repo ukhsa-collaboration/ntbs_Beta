@@ -3,7 +3,7 @@ import { getHeaders, getValidationPath } from "../helpers";
 import axios from "axios";
 
 const YearComparison = Vue.extend({
-    props: ["model", "yeartocompare", "shouldvalidatefull"],
+    props: ["model", "yeartocompare", "shouldvalidatefull", "propertyname"],
     methods: {
         validate: function (event: FocusEvent) {
             // For validating an input year against a year on a different model, which needs to be passed in as the yeartocompare prop
@@ -16,12 +16,12 @@ const YearComparison = Vue.extend({
                 params: {
                     "newYear": newValue,
                     "shouldValidateFull": this.$props.shouldvalidatefull,
-                    "existingYear": this.$props.yeartocompare
+                    "existingYear": this.$props.yeartocompare,
+                    "propertyName": this.$props.propertyname
                 }
             };
             axios.request(requestConfig)
                 .then((response: any) => {
-                    console.log(response);
                     var errorMessage = response.data;
                     if (errorMessage) {
                         this.$el.classList.add("nhsuk-form-group--error");

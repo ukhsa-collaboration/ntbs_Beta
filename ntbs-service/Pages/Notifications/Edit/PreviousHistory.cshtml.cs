@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Services;
 
@@ -8,14 +9,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PreviousHistoryModel : NotificationEditModelBase
     {
-        protected IAlertService alertService;
         public PreviousHistoryModel(
-            IAlertService _alertService,
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { 
-                alertService = _alertService;
-            }
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
 
         [BindProperty]
         public PatientTBHistory PatientTbHistory { get; set; }
@@ -35,8 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
-            // This is the last page in the flow, so there's no next page to go to
-            return RedirectToPage("./PreviousHistory", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./MDRDetails", new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

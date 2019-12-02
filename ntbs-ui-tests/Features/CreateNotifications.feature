@@ -7,19 +7,19 @@ Feature: Notification creation
         And I click on 'search-button'
         Then I should be on the Search page
         When I click on 'create-button'
-        Then I should be on the Patient page
+        Then I should be on the PatientDetails page
 
     Scenario: Create and submit notification without errors
         # Patient page
-        When I enter Test into 'Patient_GivenName'
-        And I enter User into 'Patient_FamilyName'
+        When I enter Test into 'PatientDetails_GivenName'
+        And I enter User into 'PatientDetails_FamilyName'
         And I enter 1 into 'FormattedDob_Day'
         And I enter 1 into 'FormattedDob_Month'
         And I enter 1970 into 'FormattedDob_Year'
         And I select radio value 'sexId-1'
-        And I select 1 for 'Patient_EthnicityId'
+        And I select 1 for 'PatientDetails_EthnicityId'
         And I select radio value 'nhs-number-unknown'
-        And I select 1 for 'Patient_CountryId'
+        And I select 1 for 'PatientDetails_CountryId'
         And I select radio value 'postcode-no'
         And I click on 'save-button'
 
@@ -48,7 +48,7 @@ Feature: Notification creation
 
     Scenario: Create and submit notification without content
         When I click on 'submit-button'
-        Then I should be on the Patient page
+        Then I should be on the PatientDetails page
         And I should see all submission error messages
 
     Scenario: Create and delete notification draft
@@ -67,15 +67,15 @@ Feature: Notification creation
         # A half-way point would be to at least create a separate feature file, but
         # that's currentyl blocked by the setup which for some reason ignores requets
         # to run features sequentially, but fials in parallel due to port competition
-        When I enter Test into 'Patient_GivenName'
-        And I enter User into 'Patient_FamilyName'
+        When I enter Test into 'PatientDetails_GivenName'
+        And I enter User into 'PatientDetails_FamilyName'
         And I enter 1 into 'FormattedDob_Day'
         And I enter 1 into 'FormattedDob_Month'
         And I enter 1970 into 'FormattedDob_Year'
         And I select radio value 'sexId-1'
-        And I select 1 for 'Patient_EthnicityId'
+        And I select 1 for 'PatientDetails_EthnicityId'
         And I select radio value 'nhs-number-unknown'
-        And I select 1 for 'Patient_CountryId'
+        And I select 1 for 'PatientDetails_CountryId'
         And I select radio value 'postcode-no'
         And I click on 'save-button'
 

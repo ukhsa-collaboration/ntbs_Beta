@@ -96,11 +96,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TotalNumberOfCountriesTravelledToGreaterThanInputNumber),
+                FullErrorMessage("Number of countries entered exceeds total number of countries travelled to"),
                 resultDocument.GetError("travel-total"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TotalNumberOfCountriesVisitedFromGreaterThanInputNumber),
+                FullErrorMessage("Number of countries entered exceeds total number of countries visited from"),
                 resultDocument.GetError("visitor-total"));
         }
 
@@ -144,23 +144,23 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelTotalDurationWithinLimit),
+                FullErrorMessage("Total duration of travel must not exceed 24 months"),
                 resultDocument.GetError("travel-length1"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelTotalDurationWithinLimit),
+                FullErrorMessage("Total duration of travel must not exceed 24 months"),
                 resultDocument.GetError("travel-length2"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelTotalDurationWithinLimit),
+                FullErrorMessage("Total duration of travel must not exceed 24 months"),
                 resultDocument.GetError("travel-length3"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitTotalDurationWithinLimit),
+                FullErrorMessage("Total duration of visits must not exceed 24 months"),
                 resultDocument.GetError("visitor-length1"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitTotalDurationWithinLimit),
+                FullErrorMessage("Total duration of visits must not exceed 24 months"),
                 resultDocument.GetError("visitor-length2"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitTotalDurationWithinLimit),
+                FullErrorMessage("Total duration of visits must not exceed 24 months"),
                 resultDocument.GetError("visitor-length3"));
         }
 
@@ -198,17 +198,17 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelUniqueCountry),
+                FullErrorMessage("Multiple visits to same country - record as single period of travel"),
                 resultDocument.GetError("travel-country2Id"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelUniqueCountry),
+                FullErrorMessage("Multiple visits to same country - record as single period of travel"),
                 resultDocument.GetError("travel-country3Id"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitUniqueCountry),
+                FullErrorMessage("Multiple visits from same country - record as single visit"),
                 resultDocument.GetError("visitor-country2Id"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitUniqueCountry),
+                FullErrorMessage("Multiple visits from same country - record as single visit"),
                 resultDocument.GetError("visitor-country3Id"));
         }
 
@@ -236,23 +236,23 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired),
+                FullErrorMessage("Please supply total number of countries"),
                 resultDocument.GetError("travel-total"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelMostRecentCountryRequired),
+                FullErrorMessage("Please supply most recent country visited"),
                 resultDocument.GetError("travel-country1Id"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelCountryRequiresDuration),
+                FullErrorMessage("Please supply a duration for travel"),
                 resultDocument.GetError("travel-length1"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired),
+                FullErrorMessage("Please supply total number of countries"),
                 resultDocument.GetError("visitor-total"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitMostRecentCountryRequired),
+                FullErrorMessage("Please supply most recent country visited from"),
                 resultDocument.GetError("visitor-country1Id"));
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitCountryRequiresDuration),
+                FullErrorMessage("Please supply a duration for visit"),
                 resultDocument.GetError("visitor-length1"));
         }
 
@@ -289,11 +289,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelIsChronological),
+                FullErrorMessage("Travel must be recorded in chronological order"),
                 resultDocument.GetError("travel-country3Id"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitIsChronological),
+                FullErrorMessage("Visits must be recorded in chronological order"),
                 resultDocument.GetError("visitor-country3Id"));
         }
 
@@ -332,11 +332,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitDurationHasCountry),
+                FullErrorMessage("Duration cannot be added without a corresponding country"),
                 resultDocument.GetError("travel-length2"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelOrVisitDurationHasCountry),
+                FullErrorMessage("Duration cannot be added without a corresponding country"),
                 resultDocument.GetError("visitor-length2"));
         }
 
@@ -375,11 +375,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.TravelCountryRequiresDuration),
+                FullErrorMessage("Please supply a duration for travel"),
                 resultDocument.GetError("travel-length2"));
 
             Assert.Equal(
-                FullErrorMessage(ValidationMessages.VisitCountryRequiresDuration),
+                FullErrorMessage("Please supply a duration for visit"),
                 resultDocument.GetError("visitor-length2"));
         }
 
@@ -420,9 +420,9 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired, result);
-            Assert.Contains(ValidationMessages.TravelMostRecentCountryRequired, result);
-            Assert.Contains(ValidationMessages.TravelCountryRequiresDuration, result);
+            Assert.Contains("Please supply total number of countries", result);
+            Assert.Contains("Please supply most recent country visited", result);
+            Assert.Contains("Please supply a duration for travel", result);
         }
 
         [Fact]
@@ -462,9 +462,9 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired, result);
-            Assert.Contains(ValidationMessages.VisitMostRecentCountryRequired, result);
-            Assert.Contains(ValidationMessages.VisitCountryRequiresDuration, result);
+            Assert.Contains("Please supply total number of countries", result);
+            Assert.Contains("Please supply most recent country visited from", result);
+            Assert.Contains("Please supply a duration for visit", result);
         }
     }
 }

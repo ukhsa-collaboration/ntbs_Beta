@@ -60,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
+            resultDocument.AssertErrorMessage("notification-date", "Notification date does not have a valid date selection");
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            var expectedMessage = ValidationMessages.DateValidityRangeStart("Notification date", "01/01/2010");
+            var expectedMessage = "Notification date must not be before 01/01/2010";
             resultDocument.AssertErrorMessage("notification-date", expectedMessage);
         }
 
@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
+            resultDocument.AssertErrorMessage("notification-date", "Notification date is a mandatory field");
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.ValidDate);
+            resultDocument.AssertErrorMessage("notification-date", "Notification date does not have a valid date selection");
         }
 
         [Fact]
@@ -162,7 +162,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.DateValidityRangeStart("Notification date", "01/01/2010"));
+            resultDocument.AssertErrorMessage("notification-date", "Notification date must not be before 01/01/2010");
         }
 
         [Fact]
@@ -185,8 +185,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", ValidationMessages.NotificationDateIsRequired);
-            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalIsRequired);
+            resultDocument.AssertErrorMessage("notification-date", "Notification date is a mandatory field");
+            resultDocument.AssertErrorMessage("hospital", "Hospital is a mandatory field");
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("consultant", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("consultant", "Consultant can only contain letters and the symbols ' - . ,");
         }
 
         [Fact]
@@ -264,7 +264,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("hospital", ValidationMessages.HospitalMustBelongToSelectedTbSerice);
+            resultDocument.AssertErrorMessage("hospital", "Hospital must belong to selected TB Service");
         }
 
         [Fact]
@@ -288,7 +288,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("case-manager", ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService);
+            resultDocument.AssertErrorMessage("case-manager", "Case Manager must be allowed for selected TB Service");
         }
 
         [Fact]

@@ -18,7 +18,7 @@ namespace ntbs_service.Pages_Notifications
         {
             var notification = await notificationService.CreateNewNotificationForUser(User);
 
-            return RedirectToPage("./Edit/Patient", new { id = notification.NotificationId });
+            return RedirectToPage("./Edit/PatientDetails", new { id = notification.NotificationId });
         }
     }
 }

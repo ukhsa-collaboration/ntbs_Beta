@@ -4,25 +4,26 @@ namespace ntbs_service.Models.Validations
 {
     public static class ValidationMessages
     {
-        public const string ValidDate = "Please enter a valid date";
-        public const string ValidYear = "Please enter a valid year";
+        public static string InvalidYear(string name) => $"{name} has an invalid year";
         public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
         public static string DateValidityRangeStart(string name, string startDate) => $"{name} must not be before {startDate}";
 
-        public static string ValidYearLaterThanBirthYear(int birthYear)
+        public static string ValidYearLaterThanBirthYear(string name, int birthYear)
         {
-            return $"Should be later than birth year ({birthYear})";
+            return $"{name} should be later than birth year ({birthYear})";
         }
+        
+        public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
 
         #region Shared
-        public const string StandardStringFormat = "Can only contain letters and the symbols ' - . ,";
-        public const string StandardStringWithNumbersFormat = "Can only contain letters, numbers and the symbols ' - . ,";
-        public const string StringWithNumbersAndForwardSlashFormat = "Can only contain letters, numbers and the symbols ' - . , /";
+        public const string InvalidYearForAttribute = "{0} has an invalid year";
+        public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
+        public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
+        public const string StringWithNumbersAndForwardSlashFormat = "{0} can only contain letters, numbers and the symbols ' - . , /";
         public const string MinTwoCharacters = "Enter at least 2 characters";
-        public const string InvalidCharacter = "Invalid character found";
-        public const string NumberFormat = "Can only contain digits 0-9";
+        public const string InvalidCharacter = "Invalid character found in {0}";
+        public const string NumberFormat = "{0} can only contain digits 0-9";
         public const string PositiveNumbersOnly = "Please enter a positive value";
-        public const string InvalidDate = "Invalid date selection";
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
@@ -31,56 +32,39 @@ namespace ntbs_service.Models.Validations
         #endregion
 
         #region Patient Details
-        public const string NhsNumberFormat = "NHS Number can only contain digits 0-9";
-        public const string NhsNumberLength = "NHS Number needs to be 10 digits long";
-        public const string FamilyNameIsRequired = "Family Name is a mandatory field";
-        public const string GivenNameIsRequired = "Given Name is a mandatory field";
-        public const string BirthDateIsRequired = "Date of birth is a mandatory field";
-        public const string SexIsRequired = "Sex is a mandatory field";
-        public const string EthnicGroupIsRequired = "Ethnic Group is a mandatory field";
-        public const string NHSNumberIsRequired = "NHS number is a mandatory field";
-        public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
-        public const string PostcodeIsRequired = "Postcode is a mandatory field";
+        public const string NhsNumberLength = "{0} needs to be 10 digits long";
+        public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
-        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth.";
-        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year.";
+        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
+        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year";
         #endregion
 
         #region Clinical Details
         public const string RiskFactorSelection = "At least one field should be selected";
         public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
-        public const string DiseaseSiteOtherIsRequired = "Other Field is a mandatory field";
-        public const string SampleTakenIsRequired = "Sample taken is a mandatory field";
-        public const string DeathDateIsRequired = "Date of death is a mandatory field";
-        public const string DiagnosisDateIsRequired = "Diagnosis date is a mandatory field";
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
         public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
-        public const string MDRDateIsRequired = "RR/MDR/XDR treatment date is a mandatory field";
-        public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         #endregion
 
         #region Contact Tracing
-        public const string ContactTracingAdultsScreened = "Must not be greater than the number of adults identified";
-        public const string ContactTracingChildrenScreened = "Must not be greater than the number of children identified";
-        public const string ContactTracingAdultsLatentTB = "Must not be greater than number of adults screened minus those with active TB";
-        public const string ContactTracingChildrenLatentTB = "Must not be greater than number of children screened minus those with active TB";
-        public const string ContactTracingAdultsActiveTB = "Must not be greater than number of adults screened minus those with latent TB";
-        public const string ContactTracingChildrenActiveTB = "Must not be greater than equal to than number of children screened minus those with latent TB";
-        public const string ContactTracingAdultStartedTreatment = "Must not be greater than number of adults with latent TB";
-        public const string ContactTracingChildrenStartedTreatment = "Must not be greater than number of children with latent TB";
-        public const string ContactTracingAdultsFinishedTreatment = "Must not be greater than number of adults the started treatment";
-        public const string ContactTracingChildrenFinishedTreatment = "Must not be greater than number of children the started treatment";
+        public const string ContactTracingAdultsScreened = "Adults screened must not be greater than the number of adults identified";
+        public const string ContactTracingChildrenScreened = "Children Screened must not be greater than the number of children identified";
+        public const string ContactTracingAdultsLatentTB = "Adults with latent TB must not be greater than number of adults screened minus those with active TB";
+        public const string ContactTracingChildrenLatentTB = "Children with latent TB must not be greater than number of children screened minus those with active TB";
+        public const string ContactTracingAdultsActiveTB = "Adults with active TB  must not be greater than number of adults screened minus those with latent TB";
+        public const string ContactTracingChildrenActiveTB = "Children with active TB must not be greater than equal to than number of children screened minus those with latent TB";
+        public const string ContactTracingAdultStartedTreatment = "Adults that have started treatment must not be greater than number of adults with latent TB";
+        public const string ContactTracingChildrenStartedTreatment = "Children that have started treatment must not be greater than number of children with latent TB";
+        public const string ContactTracingAdultsFinishedTreatment = "Adults that have finished treatment must not be greater than number of adults the started treatment";
+        public const string ContactTracingChildrenFinishedTreatment = "Children that have finished treatment must not be greater than number of children the started treatment";
         #endregion
 
         #region Hospital Details
-        public const string TBServiceIsRequired = "TB Service is a mandatory field";
-        public const string TBServiceCantChange = "TB Service cannot be changed for non-draft notifications";
-        public const string HospitalIsRequired = "Hospital is a mandatory field";
-        public const string HospitalMustBelongToSelectedTbSerice = "Hospital must belong to selected TB Service";
-        public const string NotificationDateIsRequired = "Notification Date is a mandatory field";
-        public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
-        public const string CaseManagerMustBeAllowedForSelectedTbService = "Case Manager must be allowed for selected TB Service";
+        public const string TBServiceCantChange = "{0} cannot be changed for non-draft notifications";
+        public const string HospitalMustBelongToSelectedTbSerice = "{0} must belong to selected TB Service";
+        public const string NotificationDateShouldBeLaterThanDob = "{0} must be later than date of birth";
+        public const string CaseManagerMustBeAllowedForSelectedTbService = "{0} must be allowed for selected TB Service";
 
         #endregion
 
@@ -115,7 +99,13 @@ namespace ntbs_service.Models.Validations
 
         #region Previous History
         public const string PreviousTBDiagnosisYear = "Please enter a valid year. Year of diagnosis cannot be after 2000";
-        public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
+        #endregion
+
+        #region MDR Details
+        public const string RelationshipToCaseIsRequired = "Please supply details of the relationship to case";
+        public const string CaseInUKStatusIsRequired = "Please specify whether the contact was a case in the UK";
+        public const string RelatedNotificationIdInvalid = "The NTBS ID does not match an existing ID in the system";
+        public const string RelatedNotificationIdMustBeInteger = "The NTBS ID must be an integer";
         #endregion
     }
 

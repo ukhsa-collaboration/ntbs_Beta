@@ -85,7 +85,7 @@ namespace ntbs_ui_tests.Features
 #line 9
         testRunner.When("I click on \'create-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 10
-        testRunner.Then("I should be on the Patient page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
         }
         
@@ -106,9 +106,9 @@ namespace ntbs_ui_tests.Features
 #line 4
     this.FeatureBackground();
 #line 14
-        testRunner.When("I enter Test into \'Patient_GivenName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I enter Test into \'PatientDetails_GivenName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 15
-        testRunner.And("I enter User into \'Patient_FamilyName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter User into \'PatientDetails_FamilyName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
         testRunner.And("I enter 1 into \'FormattedDob_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 17
@@ -118,11 +118,11 @@ namespace ntbs_ui_tests.Features
 #line 19
         testRunner.And("I select radio value \'sexId-1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 20
-        testRunner.And("I select 1 for \'Patient_EthnicityId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select 1 for \'PatientDetails_EthnicityId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 21
         testRunner.And("I select radio value \'nhs-number-unknown\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 22
-        testRunner.And("I select 1 for \'Patient_CountryId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select 1 for \'PatientDetails_CountryId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 23
         testRunner.And("I select radio value \'postcode-no\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
@@ -179,7 +179,7 @@ namespace ntbs_ui_tests.Features
 #line 50
         testRunner.When("I click on \'submit-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 51
-        testRunner.Then("I should be on the Patient page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 52
         testRunner.And("I should see all submission error messages", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -225,9 +225,9 @@ namespace ntbs_ui_tests.Features
 #line 4
     this.FeatureBackground();
 #line 70
-        testRunner.When("I enter Test into \'Patient_GivenName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I enter Test into \'PatientDetails_GivenName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 71
-        testRunner.And("I enter User into \'Patient_FamilyName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter User into \'PatientDetails_FamilyName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 72
         testRunner.And("I enter 1 into \'FormattedDob_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 73
@@ -237,11 +237,11 @@ namespace ntbs_ui_tests.Features
 #line 75
         testRunner.And("I select radio value \'sexId-1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 76
-        testRunner.And("I select 1 for \'Patient_EthnicityId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select 1 for \'PatientDetails_EthnicityId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 77
         testRunner.And("I select radio value \'nhs-number-unknown\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 78
-        testRunner.And("I select 1 for \'Patient_CountryId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select 1 for \'PatientDetails_CountryId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 79
         testRunner.And("I select radio value \'postcode-no\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 80

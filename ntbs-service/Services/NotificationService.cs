@@ -25,6 +25,7 @@ namespace ntbs_service.Services
         Task UpdatePatientTbHistoryAsync(Notification notification, PatientTBHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
+        Task UpdateMDRDetailsAsync(Notification notification, MDRDetails details);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user);
         Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails);
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
@@ -245,6 +246,12 @@ namespace ntbs_service.Services
             }
 
             _context.SetValues(notification.ImmunosuppressionDetails, immunosuppressionDetails);
+            await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMDRDetailsAsync(Notification notification, MDRDetails details)
+        {
+            _context.SetValues(notification.MDRDetails, details);
             await UpdateDatabaseAsync();
         }
 

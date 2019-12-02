@@ -36,7 +36,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             if (response.StatusCode == HttpStatusCode.Redirect)
             {
-                Assert.Contains(GetPathForId(NotificationSubPaths.EditPatient, id), GetRedirectLocation(response));
+                Assert.Contains(GetPathForId(NotificationSubPaths.EditPatientDetails, id), GetRedirectLocation(response));
             }
         }
 

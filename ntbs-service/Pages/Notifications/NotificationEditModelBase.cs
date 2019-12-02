@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -23,6 +24,9 @@ namespace ntbs_service.Pages.Notifications
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+        [ViewData]
+        public Dictionary<string, string> EditPageErrorDictionary { get; set; }
+        
 
         public virtual async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
@@ -122,6 +126,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!ModelState.IsValid) 
             {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
                 return await OnGetAsync(NotificationId);
             }
 
@@ -149,6 +154,11 @@ namespace ntbs_service.Pages.Notifications
         public bool IsValid(string key)
         {
             return ValidationService.IsValid(key);
+        }
+
+        protected ContentResult CreateJsonResponse(object content)
+        {
+            return Content(JsonConvert.SerializeObject(content), "application/json");
         }
 
         protected abstract Task ValidateAndSave();

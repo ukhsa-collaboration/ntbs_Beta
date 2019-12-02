@@ -151,7 +151,7 @@ namespace ntbs_integration_tests.NotificationPages
 
         private static readonly List<string> EditSubPaths = new List<string>()
         {
-            NotificationSubPaths.EditPatient,
+            NotificationSubPaths.EditPatientDetails,
             NotificationSubPaths.EditEpisode,
             NotificationSubPaths.EditClinicalDetails,
             NotificationSubPaths.EditContactTracing,
@@ -159,7 +159,8 @@ namespace ntbs_integration_tests.NotificationPages
             NotificationSubPaths.EditTravel,
             NotificationSubPaths.EditComorbidities,
             NotificationSubPaths.EditImmunosuppression,
-            NotificationSubPaths.EditPreviousHistory
+            NotificationSubPaths.EditPreviousHistory,
+            NotificationSubPaths.EditMDRDetails
         };
     }
 }

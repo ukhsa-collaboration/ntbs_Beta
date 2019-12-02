@@ -112,7 +112,7 @@ namespace ntbs_service.Models.Validations
             bool canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);
             if (!canConvert)
             {
-                return new ValidationResult(ErrorMessage);
+                return new ValidationResult(ValidationMessages.InvalidDate(validationContext.DisplayName));
             }
             return null;
         }
@@ -131,7 +131,7 @@ namespace ntbs_service.Models.Validations
             bool canConvert = formattedDate.TryConvertToDateTime(out _);
             if (!canConvert)
             {
-                return new ValidationResult(ErrorMessage);
+                return new ValidationResult(ValidationMessages.InvalidDate(validationContext.DisplayName));
             }
             return null;
         }
