@@ -85,7 +85,7 @@ namespace ntbs_ui_tests.Features
 #line 9
         testRunner.When("I click on \'create-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 10
-        testRunner.Then("I should be on the Patient page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
         }
         
@@ -179,7 +179,7 @@ namespace ntbs_ui_tests.Features
 #line 50
         testRunner.When("I click on \'submit-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 51
-        testRunner.Then("I should be on the Patient page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 52
         testRunner.And("I should see all submission error messages", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
