@@ -107,18 +107,18 @@ namespace ntbs_ui_tests.StepDefinitions
         public void ThenIShouldSeeAllSubmissionErrorMessages()
         {
             var summaryText = Browser.FindElement(By.ClassName("nhsuk-error-summary")).Text;
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
+            Assert.Contains("Notification date is a mandatory field", summaryText);
+            Assert.Contains("Hospital is a mandatory field", summaryText);
             Assert.Contains(ValidationMessages.DiseaseSiteIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
-            Assert.Contains(ValidationMessages.FamilyNameIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.FieldRequired, summaryText);
+            Assert.Contains("Diagnosis date is a mandatory field", summaryText);
+            Assert.Contains("Date of birth is a mandatory field", summaryText);
+            Assert.Contains("Sex is a mandatory field", summaryText);
+            Assert.Contains("Postcode is a mandatory field", summaryText);
+            Assert.Contains("Birth country is a mandatory field", summaryText);
+            Assert.Contains("Given name is a mandatory field", summaryText);
+            Assert.Contains("NHS number is a mandatory field", summaryText);
+            Assert.Contains("Family name is a mandatory field", summaryText);
+            Assert.Contains("Ethnic group is a mandatory field", summaryText);
         }
 
         [Then(@"The notification should be denotified")]

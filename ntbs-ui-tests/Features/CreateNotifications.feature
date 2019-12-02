@@ -7,7 +7,7 @@ Feature: Notification creation
         And I click on 'search-button'
         Then I should be on the Search page
         When I click on 'create-button'
-        Then I should be on the Patient page
+        Then I should be on the PatientDetails page
 
     Scenario: Create and submit notification without errors
         # Patient page
@@ -48,7 +48,7 @@ Feature: Notification creation
 
     Scenario: Create and submit notification without content
         When I click on 'submit-button'
-        Then I should be on the Patient page
+        Then I should be on the PatientDetails page
         And I should see all submission error messages
 
     Scenario: Create and delete notification draft
