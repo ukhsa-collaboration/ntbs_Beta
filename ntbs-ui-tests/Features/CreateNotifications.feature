@@ -19,9 +19,7 @@ Feature: Notification creation
         And I select radio value 'sexId-1'
         And I select 1 for 'PatientDetails_EthnicityId'
         And I select radio value 'nhs-number-unknown'
-        And I enter Afghanistan into 'PatientDetails_CountryId'
-        # Need to click away from autocomplete select dropdown for it to populate actual select
-        And I click away from element 'PatientDetails_CountryId'
+        And I enter Afghanistan into 'PatientDetails_CountryId' autocomplete
         And I wait
         And I select radio value 'postcode-no'
         And I click on the 'save-button' button
@@ -78,9 +76,7 @@ Feature: Notification creation
         And I select radio value 'sexId-1'
         And I select 1 for 'PatientDetails_EthnicityId'
         And I select radio value 'nhs-number-unknown'
-        And I enter Afghanistan into 'PatientDetails_CountryId'
-        # Need to click away from autocomplete select dropdown for it to populate actual select
-        And I click away from element 'PatientDetails_CountryId'
+        And I enter Afghanistan into 'PatientDetails_CountryId' autocomplete
         And I wait
         And I select radio value 'postcode-no'
         And I click on the 'save-button' button
