@@ -38,6 +38,7 @@ namespace ntbs_service.Pages.Notifications
 
             await AuthorizeAndSetBannerAsync();
 
+            // Deleted notifications should have their group ID removed so they should not appear here
             LinkedNotifications = Group.Notifications
                 .Where(n => n.NotificationId != NotificationId)
                 .CreateNotificationBanners(User, AuthorizationService).ToList();

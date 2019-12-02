@@ -26,7 +26,7 @@ namespace ntbs_service.Models
             ComorbidityDetails = new ComorbidityDetails();
         }
 
-        [Display(Name = "Notification Id")]
+        [Display(Name = "NTBS Id")]
         public int NotificationId { get; set; }
         [MaxLength(50)]
         public string ETSID { get; set; }
@@ -61,6 +61,7 @@ namespace ntbs_service.Models
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
         public int? GroupId { get; set; }
         public virtual NotificationGroup Group { get; set; }
+        public virtual ICollection<Alert> Alerts { get; set; }
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
@@ -133,7 +134,7 @@ namespace ntbs_service.Models
 
         private string FormatDate(DateTime? date)
         {
-            return date?.ToString("dd-MMM-yyyy");
+            return date?.ToString("dd MMM yyyy");
         }
 
         private string TrueFalseToYesNo(bool? x)

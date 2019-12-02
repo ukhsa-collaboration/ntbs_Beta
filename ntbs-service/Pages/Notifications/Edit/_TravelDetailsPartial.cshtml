@@ -3,7 +3,11 @@
 @using ntbs_service.Models
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
-<validate-travel-or-visit model-type="travel" shouldvalidatefull="@Model.TravelDetails.ShouldValidateFull" inline-template>
+@{
+    var selectDropdownPlaceholder = "Select from list";
+    var fullValidation = Model.TravelDetails.ShouldValidateFull ? "True" : "False";
+}
+<validate-travel-or-visit model-type="travel" shouldvalidatefull="@fullValidation" inline-template>
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -35,13 +39,12 @@
                             <span asp-validation-for="TravelDetails.TotalNumberOfCountries" nhs-span-type="ErrorMessage"
                                   id="travel-total-error" ref="totalNumberOfCountriesErrorRef" has-error="@hasTotalError"></span>
                             <input asp-for="TravelDetails.TotalNumberOfCountries" nhs-input-type="Standard" fixed-width="Two" is-error-input="@hasTotalError"
-                                   ref="totalNumberOfCountries" aria-describedby="travel-total-error"/>
+                                   ref="totalNumberOfCountries" aria-describedby="travel-total-error" autocomplete="no" />
                         </nhs-form-group>
 
                         @{
                             var hasCountry1IdError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country1Id)}");
                             var country1FormGroup = hasCountry1IdError ? Error : Standard;
-                            var country1SelectType = hasCountry1IdError ? SelectType.Error : SelectType.Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@country1FormGroup" ref="country1IdFormGroup" id="TravelDetails-Country1Id">
                             <label asp-for="TravelDetails.Country1Id" nhs-label-type="Standard">
@@ -49,10 +52,13 @@
                             </label>
                             <span asp-validation-for="TravelDetails.Country1Id" nhs-span-type="ErrorMessage"
                                   id="travel-country1Id-error" ref="country1IdErrorRef" has-error="@hasCountry1IdError"></span>
-                            <select asp-for="TravelDetails.Country1Id" nhs-select-type="@country1SelectType" asp-items="Model.HighTbIncidenceCountries"
-                                    ref="country1Id" aria-describedby="travel-country1Id-error">
-                                <option value="" selected>Select from list</option>
-                            </select>
+                            <div ref="country1Id" aria-describedby="travel-country1Id-error">
+                                <autocomplete-select placeholder="@selectDropdownPlaceholder" inline-template>
+                                    <select asp-for="TravelDetails.Country1Id" asp-items="Model.HighTbIncidenceCountries" ref="selectElement">
+                                        <option value=""></option>
+                                    </select>
+                                </autocomplete-select>
+                            </div>
                         </nhs-form-group>
 
                         @{
@@ -72,7 +78,6 @@
                         @{
                             var hasCountry2IdError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country2Id)}");
                             var country2FormGroup = hasCountry2IdError ? Error : Standard;
-                            var country2SelectType = hasCountry2IdError ? SelectType.Error : SelectType.Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@country2FormGroup" ref="country2IdFormGroup" id="TravelDetails-Country2Id">
                             <label asp-for="TravelDetails.Country2Id" nhs-label-type="Standard">
@@ -80,10 +85,13 @@
                             </label>
                             <span asp-validation-for="TravelDetails.Country2Id" nhs-span-type="ErrorMessage"
                                   id="travel-country2Id-error" ref="country2IdErrorRef" has-error="@hasCountry2IdError"></span>
-                            <select asp-for="TravelDetails.Country2Id" nhs-select-type="@country2SelectType" asp-items="Model.HighTbIncidenceCountries"
-                                    ref="country2Id" aria-describedby="travel-country2Id-error">
-                                <option value="" selected>Select from list</option>
-                            </select>
+                            <div ref="country2Id" aria-describedby="travel-country2Id-error">
+                                <autocomplete-select placeholder="@selectDropdownPlaceholder" inline-template>
+                                    <select asp-for="TravelDetails.Country2Id" asp-items="Model.HighTbIncidenceCountries" ref="selectElement">
+                                        <option value=""></option>
+                                    </select>
+                                <autocomplete-select>
+                            </div>
                         </nhs-form-group>
 
                         @{
@@ -103,7 +111,6 @@
                         @{
                             var hasCountry3IdError = !Model.IsValid($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country3Id)}");
                             var country3FormGroup = hasCountry3IdError ? Error : Standard;
-                            var country3SelectType = hasCountry3IdError ? SelectType.Error : SelectType.Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@country3FormGroup" ref="country3IdFormGroup" id="TravelDetails-Country3Id">
                             <label asp-for="TravelDetails.Country3Id" nhs-label-type="Standard">
@@ -111,10 +118,13 @@
                             </label>
                             <span asp-validation-for="TravelDetails.Country3Id" nhs-span-type="ErrorMessage"
                                   id="travel-country3Id-error" ref="country3IdErrorRef" has-error="@hasCountry3IdError"></span>
-                            <select asp-for="TravelDetails.Country3Id" nhs-select-type="@country3SelectType" asp-items="Model.HighTbIncidenceCountries"
-                                    ref="country3Id" aria-describedby="travel-country3Id-error">
-                                <option value="" selected>Select from list</option>
-                            </select>
+                            <div ref="country3Id" aria-describedby="travel-country3Id-error">
+                                <autocomplete-select placeholder="@selectDropdownPlaceholder" inline-template>
+                                    <select asp-for="TravelDetails.Country3Id" asp-items="Model.HighTbIncidenceCountries" ref="selectElement">
+                                        <option value=""></option>
+                                    </select>
+                                <autocomplete-select>
+                            </div>
                         </nhs-form-group>
 
                         @{

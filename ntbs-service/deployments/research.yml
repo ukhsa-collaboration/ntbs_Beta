@@ -12,8 +12,9 @@ spec:
       containers:
         - name: ntbs-research
           image: "ntbscontainerregistry.azurecr.io/ntbs-service"
+          imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: ConnectionStrings__ntbsContext
               valueFrom:
@@ -53,6 +54,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: 80
+      targetPort: 8080
   selector:
     app: ntbs-research
 ---

@@ -2,11 +2,13 @@
 @model ntbs_service.Pages.Notifications.Edit.PatientDetailsModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
+@using ntbs_service.Helpers
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Personal Details";
-    var fullValidation = Model.PatientDetails.ShouldValidateFull ? "True" : "False";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditPatientDetails;
+    var fullValidation = Model.Patient.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
@@ -232,7 +234,7 @@
             @{
                 var hasCountryError = !Model.IsValid("PatientDetails.CountryId");
                 var countryGroupState = hasCountryError ? Error : Standard;
-                var countrySelectErrorState = hasCountryError ? SelectType.Error : SelectType.Standard;
+                var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
             }
             <validate-input model="PatientDetails" property="CountryId" shouldvalidatefull="@fullValidation"
                             v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
@@ -241,12 +243,14 @@
                         Birth country (required)
                     </label>
                     <span nhs-span-type="ErrorMessage" id="birth-country-error"
-                          ref="errorField" asp-validation-for="PatientDetails.CountryId" has-error="@hasCountryError"></span>
-                    <select ref="selectField" v-on:change="validate" nhs-select-type="@countrySelectErrorState"
-                            asp-for="PatientDetails.CountryId" asp-items="Model.Countries"
-                            data-aria-controls="year-of-entry-conditional">
-                        <option value="">Select a Birth Country</option>
-                    </select>
+                          ref="errorField" asp-validation-for="Patient.CountryId" has-error="@hasCountryError"></span>
+                    <div ref="selectField" data-aria-controls="year-of-entry-conditional" class=@countrySelectErrorClass>
+                        <autocomplete-select v-on:validate-input="validate" placeholder="Select a Birth Country" validate="true" inline-template>
+                            <select asp-for="Patient.CountryId" asp-items="Model.Countries" ref="selectElement">
+                                <option value=""></option>
+                            </select>
+                        </autocomplete-select>
+                    </div>
                 </nhs-form-group>
             </validate-input>
 
@@ -377,5 +381,5 @@
     </conditional-select-wrapper>
 
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

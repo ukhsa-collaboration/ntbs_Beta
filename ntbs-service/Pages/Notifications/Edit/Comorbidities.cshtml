@@ -1,9 +1,11 @@
 @page "/Notifications/{id:int}/Edit/Comorbidities/{handler?}"
+@using ntbs_service.Helpers
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Comorbidities";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditComorbidities;
 }
 
 <partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
@@ -99,5 +101,5 @@
     </nhs-form-group>
 
     <br />
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

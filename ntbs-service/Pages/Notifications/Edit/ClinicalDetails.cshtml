@@ -1,12 +1,14 @@
 @page "/Notifications/{id:int}/Edit/ClinicalDetails/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ClinicalDetailsModel
+@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using ntbs_service.Models
 
 @{
-    Layout = "../../Shared/_NotificationLayout.cshtml";
-ViewData["Title"] = "Notification - Clinical Details";
-var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - Clinical Details";
+    ViewData["CurrentPage"] = NotificationSubPaths.EditClinicalDetails;
+    var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
@@ -675,5 +677,5 @@ var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False"
         </div>
     </validate-multiple>
 
-    <partial name="_PaginationPartial" for="Notification" />
+    
 </div>

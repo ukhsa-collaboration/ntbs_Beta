@@ -69,7 +69,7 @@ namespace ntbs_service.Pages.Notifications
                 return ForbiddenResult();
             }
 
-            NotificationBannerModel = new NotificationBannerModel(Notification);
+            await AuthorizeAndSetBannerAsync();
 
             switch (actionName) 
             {
