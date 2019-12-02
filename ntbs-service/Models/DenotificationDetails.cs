@@ -13,12 +13,14 @@ namespace ntbs_service.Models
     {
         [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DenotificationDateAfterNotification)]
         [AssertThat("DenotificationNotAfterToday == true", ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
+        [Display(Name = "Denotification date")]
         public DateTime DateOfDenotification { get; set; }
 
         /// <summary>
         /// Used for validation purposes only, requires consumer to populate it.
         /// </summary>
         [NotMapped]
+        [Display(Name = "Denotification date")]
         public DateTime? DateOfNotification { get; set; }
 
         /// <summary>

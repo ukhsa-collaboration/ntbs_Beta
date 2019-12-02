@@ -10,8 +10,9 @@ namespace ntbs_service.Models
 
         public int SiteId { get; set; }
         public Site Site { get; set; }
-
-        [RequiredIf("SiteId == SiteId.OTHER && ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteOtherIsRequired)]
+        
+        [Display(Name = "Site description")]
+        [RequiredIf("SiteId == SiteId.OTHER && ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SiteDescription { get; set; }
     }

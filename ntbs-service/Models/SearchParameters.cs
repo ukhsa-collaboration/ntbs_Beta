@@ -9,23 +9,27 @@ namespace ntbs_service.Models
     [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDobExists", "Postcode", ErrorMessage = ValidationMessages.SupplyAParameter)]
     public class SearchParameters
     {
-        
+        [Display(Name = "Id filter")]
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
         public int? CountryId { get; set; }
         public string TBServiceCode { get; set; }
+        [Display(Name = "Date of birth")]
         public PartialDate PartialDob { get; set; }
+        [Display(Name = "Notification date")]
         public PartialDate PartialNotificationDate { get; set; }
         
         [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidationWithNumbers, ErrorMessage = ValidationMessages.StandardStringWithNumbersFormat)]
         public string Postcode { get; set; }
 
+        [Display(Name = "Family name")]
         [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string FamilyName { get; set; }
 
+        [Display(Name = "Given name")]
         [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }

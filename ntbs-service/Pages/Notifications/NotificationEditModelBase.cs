@@ -23,6 +23,9 @@ namespace ntbs_service.Pages.Notifications
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+        [ViewData]
+        public Dictionary<string, string> EditPageErrorDictionary { get; set; }
+        
 
         public virtual async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
         {
@@ -122,6 +125,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!ModelState.IsValid) 
             {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
                 return await OnGetAsync(NotificationId);
             }
 
