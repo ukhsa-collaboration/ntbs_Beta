@@ -31,5 +31,11 @@ namespace ntbs_service.Models
         [DisplayName("Country in which contact occurred")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
+        public bool MDRDetailsEntered =>
+            ExposureToKnownCaseStatus != null ||
+            RelationshipToCase != null ||
+            CaseInUKStatus != null ||
+            RelatedNotificationId != null ||
+            CountryId != null;
     }
 }
