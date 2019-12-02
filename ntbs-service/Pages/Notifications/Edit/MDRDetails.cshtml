@@ -17,7 +17,7 @@
 
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">Has the patient been exposed to a known RR/MDR/XDR-TB Case?</nhs-fieldset-legend>
+            <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.ExposureToKnownCaseStatus)</nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
                     <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-exposure-conditional">
@@ -35,10 +35,10 @@
                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelationshipDescriptionError"
                                     asp-validation-for="MDRDetails.RelationshipToCase" id="relationship-description-error"></span>
                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelationshipToCase">
-                                Relationship of the current case to the contact
+                                @Html.DisplayNameFor(model => model.MDRDetails.RelationshipToCase)
                             </label>
                             <input ref="inputField" v-on:blur="validate" is-error-input=@hasRelationshipDescriptionError nhs-input-type="Standard"
-                                    classes="nhsuk-input--width-10" asp-for="MDRDetails.RelationshipToCase" type="text">
+                                    fixed-width="Ten" asp-for="MDRDetails.RelationshipToCase" type="text">
                         </nhs-form-group>
                     </validate-input>
                      @{
@@ -47,7 +47,7 @@
                     }
                     <nhs-form-group nhs-form-group-type=@caseInUKGroupState aria-describedby="case-in-uk-error">
                         <nhs-fieldset>
-                            <nhs-fieldset-legend nhs-legend-size="Standard">Was the contact a case in the UK?</nhs-fieldset-legend>
+                            <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.CaseInUKStatus)</nhs-fieldset-legend>
                             <span id="case-in-uk-error" nhs-span-type="ErrorMessage"
                                         asp-validation-for="MDRDetails.CaseInUKStatus" has-error="@hasCaseInUKError"></span>
                             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
@@ -67,10 +67,10 @@
                                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelatedNotificationError"
                                                     asp-validation-for="MDRDetails.RelatedNotificationId" id="related-notification-error"></span>
                                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
-                                                Contact's notification id
+                                                @Html.DisplayNameFor(model => model.MDRDetails.RelatedNotificationId)
                                             </label>
                                             <input ref="inputField" v-on:blur="validate" is-error-input=@hasRelatedNotificationError nhs-input-type="Date"
-                                                    classes="nhsuk-input--width-10" asp-for="MDRDetails.RelatedNotificationId" type="number">
+                                                    fixed-width="Ten" asp-for="MDRDetails.RelatedNotificationId" type="number">
                                             <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
                                         </nhs-form-group>
                                     </validate-related-notification>
@@ -84,7 +84,7 @@
                                  <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-country-conditional">
                                     <nhs-form-group nhs-form-group-type="Standard">
                                         <label nhs-label-type="Standard" asp-for="MDRDetails.CountryId">
-                                            Country in which contact occurred
+                                            @Html.DisplayNameFor(model => model.MDRDetails.CountryId)
                                         </label>
                                         <autocomplete-select placeholder="Specify country" inline-template>
                                             <select asp-for="MDRDetails.CountryId" asp-items="Model.NotUKCountries" ref="selectElement">

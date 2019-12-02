@@ -20,9 +20,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
             { 
                 NotUKCountries = new SelectList(
-                referenceDataRepository.GetAllCountriesApartFromUKAsync().Result,
-                nameof(Country.CountryId),
-                nameof(Country.Name));
+                    referenceDataRepository.GetAllCountriesApartFromUKAsync().Result,
+                    nameof(Country.CountryId),
+                    nameof(Country.Name)
+                );
             }
 
         [BindProperty]
@@ -116,12 +117,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 var relatedNotification = await GetRelatedNotification(notificationId);
                 if (relatedNotification == null)
                 {
-                    return Content(ValidationMessages.RelatedNotificationIdInvalid);
+                    return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdInvalid });
                 }
                 var info = NotificationInfo.CreateFromNotification(relatedNotification);
-                return Content(JsonConvert.SerializeObject(info), "application/json");
+                return CreateJsonResponse(new { relatedNotification = info });
             }
-            return Content(ValidationMessages.RelatedNotificationIdMustBeInteger);
+            return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdMustBeInteger });
         }
     }
 }
