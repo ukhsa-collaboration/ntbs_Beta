@@ -43,7 +43,21 @@ namespace ntbs_ui_tests.StepDefinitions
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
+            FindById(elementId).Click();
             FindById(elementId).SendKeys(value);
+        }
+
+        [When(@"I wait")]
+        public void WhenIWait()
+        {
+            Thread.Sleep(2000);
+        }
+
+        [When(@"I click away from element '(.*)'")]
+        public void WhenITabOutOfElement(string elementId)
+        {
+            FindById(elementId).SendKeys("\t");
+            Thread.Sleep(2000);
         }
 
         private IWebElement FindById(string elementId)
@@ -53,9 +67,15 @@ namespace ntbs_ui_tests.StepDefinitions
 
         [When(@"I check '(.*)'")]
         [When(@"I select radio value '(.*)'")]
-        [When(@"I click on '(.*)'")]
+        public void WhenISelectRadioOrCheckbox(string elementId)
+        {
+            FindById(elementId).Click();
+        }
+
+        [When(@"I click on the '(.*)' button")]
         public void WhenIClickOn(string elementId)
         {
+            Thread.Sleep(1000);
             FindById(elementId).Click();
         }
 
@@ -72,12 +92,6 @@ namespace ntbs_ui_tests.StepDefinitions
                 .FindElement(By.ClassName("manage-notification"))
                 .FindElement(By.TagName("summary"));
             button.Click();
-        }
-
-        [When(@"I wait for 1 second")]
-        public void WhenIWaitBriefly()
-        {
-            Thread.Sleep(1000);
         }
 
         [Then(@"I should see the Notification")]
@@ -101,6 +115,8 @@ namespace ntbs_ui_tests.StepDefinitions
         {
             // Remove any query string parameters
             Assert.Equal(pageName, Browser.Url.Split('/').Last().Split('?').First());
+            // Wait for everything to load
+            Thread.Sleep(2000);
         }
 
         [Then(@"I should see all submission error messages")]
