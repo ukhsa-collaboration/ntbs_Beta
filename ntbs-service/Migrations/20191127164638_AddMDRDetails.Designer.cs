@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191127164638_AddMDRDetails")]
+    partial class AddMDRDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2442,13 +2444,6 @@ namespace ntbs_service.Migrations
                             CountryCode = "E92000001",
                             Name = "BROADGREEN HOSPITAL",
                             TBServiceCode = "TBS0109"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("fefd7cdd-bdaa-4be8-b839-780a7bb0d7ff"),
-                            CountryCode = "E92000001",
-                            Name = "BROMLEY HOSPITAL",
-                            TBServiceCode = "TBS0029"
                         },
                         new
                         {
@@ -5543,13 +5538,6 @@ namespace ntbs_service.Migrations
                             CountryCode = "E92000001",
                             Name = "TAMESIDE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0238"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("6fd71037-5957-4a18-97e7-65efdd524cf7"),
-                            CountryCode = "E92000001",
-                            Name = "TB SERVICE NCL - SOUTH HUB",
-                            TBServiceCode = "TBS0239"
                         },
                         new
                         {

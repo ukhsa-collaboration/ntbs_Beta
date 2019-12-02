@@ -93,6 +93,11 @@
                             Previous History
                         </a>
                     </li>
+                    <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMDRDetails ? "contents-list-item--current" : ""))">
+                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditMDRDetails, Model.NotificationId)">
+                            MDR Details
+                        </a>
+                    </li>
                 </ul>
             </nhs-grid-column>
         }

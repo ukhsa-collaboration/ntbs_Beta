@@ -24,6 +24,7 @@ namespace ntbs_service.Models
             TravelDetails = new TravelDetails();
             VisitorDetails = new VisitorDetails();
             ComorbidityDetails = new ComorbidityDetails();
+            MDRDetails = new MDRDetails();
         }
 
         [Display(Name = "NTBS Id")]
@@ -59,6 +60,7 @@ namespace ntbs_service.Models
         public virtual VisitorDetails VisitorDetails { get; set; }
         public virtual DenotificationDetails DenotificationDetails { get; set; }
         public virtual ComorbidityDetails ComorbidityDetails { get; set; }
+        public virtual MDRDetails MDRDetails { get; set; }
         public int? GroupId { get; set; }
         public virtual NotificationGroup Group { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
