@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification Date is a mandatory field");
+            resultDocument.AssertErrorMessage("notification-date", "Notification date is a mandatory field");
         }
 
         [Fact]
@@ -185,7 +185,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification Date is a mandatory field");
+            resultDocument.AssertErrorMessage("notification-date", "Notification date is a mandatory field");
             resultDocument.AssertErrorMessage("hospital", "Hospital is a mandatory field");
         }
 

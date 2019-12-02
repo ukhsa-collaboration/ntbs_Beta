@@ -39,7 +39,7 @@ namespace ntbs_service.Models
         public string DeletionReason { get; set; }
 
         [Display(Name = "Notification date")]
-        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.NotificationDateIsRequired)]
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? NotificationDate { get; set; }

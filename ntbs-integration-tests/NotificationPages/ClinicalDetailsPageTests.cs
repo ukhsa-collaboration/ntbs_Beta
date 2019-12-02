@@ -60,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorMessage("symptom", "Symptom onset date does not have a valid date selection");
             resultDocument.AssertErrorMessage("first-presentation", "Presentation to any health service must be today or earlier");
             resultDocument.AssertErrorMessage("tb-service-presentation", "Presentation to TB service must be today or earlier");
-            resultDocument.AssertErrorMessage("diagnosis", "Diagnosis Date must be today or earlier");
+            resultDocument.AssertErrorMessage("diagnosis", "Diagnosis date must be today or earlier");
             resultDocument.AssertErrorMessage("treatment", "Treatment start date does not have a valid date selection");
             resultDocument.AssertErrorMessage("short-course", "Short course and MDR treatment cannot both be true");
             resultDocument.AssertErrorMessage("mdr", "Short course and MDR treatment cannot both be true");
@@ -89,8 +89,8 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("other-site", "Other Field is a mandatory field");
-            resultDocument.AssertErrorMessage("bcg-vaccination", "BCG Year of vaccination is a mandatory field");
+            resultDocument.AssertErrorMessage("other-site", "Site description is a mandatory field");
+            resultDocument.AssertErrorMessage("bcg-vaccination", "BCG vaccination year is a mandatory field");
             resultDocument.AssertErrorMessage("postmortem", "Date of death is a mandatory field");
         }
 
@@ -291,7 +291,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal("Diagnosis Date does not have a valid date selection", result);
+            Assert.Equal("Diagnosis date does not have a valid date selection", result);
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal("Diagnosis Date must not be before 01/01/2010", result);
+            Assert.Equal("Diagnosis date must not be before 01/01/2010", result);
         }
 
         [Theory]
@@ -335,7 +335,7 @@ namespace ntbs_integration_tests.NotificationPages
 
         [Theory]
         [InlineData("false", "123", "Site description can only contain letters and the symbols ' - . ,")]
-        [InlineData("true", "", "Other Field is a mandatory field")]
+        [InlineData("true", "", "Site description is a mandatory field")]
         [InlineData("false", "", "")]
         public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(string shouldValidateFull, string value, string validationResult)
         {
@@ -363,7 +363,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["newYear"] = "1960",
-                ["existingYear"] = existingYear.ToString()
+                ["existingYear"] = existingYear.ToString(),
+                ["propertyName"] = "BCG vaccination year"
             };
 
             // Act

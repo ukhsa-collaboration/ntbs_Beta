@@ -12,7 +12,7 @@ namespace ntbs_service.Models
         public Site Site { get; set; }
         
         [Display(Name = "Site description")]
-        [RequiredIf("SiteId == SiteId.OTHER && ShouldValidateFull", ErrorMessage = ValidationMessages.DiseaseSiteOtherIsRequired)]
+        [RequiredIf("SiteId == SiteId.OTHER && ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SiteDescription { get; set; }
     }

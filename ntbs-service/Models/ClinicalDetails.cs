@@ -24,8 +24,8 @@ namespace ntbs_service.Models
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TBServicePresentationDate { get; set; }
 
-        [Display(Name = "Diagnosis Date")]
-        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.DiagnosisDateIsRequired)]
+        [Display(Name = "Diagnosis date")]
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DiagnosisDate { get; set; }
 
@@ -33,8 +33,8 @@ namespace ntbs_service.Models
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TreatmentStartDate { get; set; }
 
-        [Display(Name = "Date of Death")]
-        [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.DeathDateIsRequired)]
+        [Display(Name = "Date of death")]
+        [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.FieldRequired)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DeathDate { get; set; }
 
@@ -45,7 +45,7 @@ namespace ntbs_service.Models
 
         public Status? BCGVaccinationState { get; set; }
         [Display(Name = "BCG vaccination year")]
-        [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.BCGYearIsRequired)]
+        [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         public int? BCGVaccinationYear { get; set; }
         public HIVTestStatus? HIVTestState { get; set; }
 

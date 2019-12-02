@@ -32,16 +32,8 @@ namespace ntbs_service.Models.Validations
         #endregion
 
         #region Patient Details
-        public const string NhsNumberFormat = "NHS number can only contain digits 0-9";
-        public const string NhsNumberLength = "NHS number needs to be 10 digits long";
-        public const string FamilyNameIsRequired = "Family Name is a mandatory field";
-        public const string GivenNameIsRequired = "Given Name is a mandatory field";
-        public const string BirthDateIsRequired = "Date of birth is a mandatory field";
-        public const string SexIsRequired = "Sex is a mandatory field";
-        public const string EthnicGroupIsRequired = "Ethnic Group is a mandatory field";
-        public const string NHSNumberIsRequired = "NHS number is a mandatory field";
-        public const string BirthCountryIsRequired = "Country of Birth is a mandatory field";
-        public const string PostcodeIsRequired = "Postcode is a mandatory field";
+        public const string NhsNumberLength = "{0} needs to be 10 digits long";
+        public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
         public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
         public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year";
@@ -50,15 +42,9 @@ namespace ntbs_service.Models.Validations
         #region Clinical Details
         public const string RiskFactorSelection = "At least one field should be selected";
         public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
-        public const string DiseaseSiteOtherIsRequired = "Other Field is a mandatory field";
-        public const string SampleTakenIsRequired = "Sample taken is a mandatory field";
-        public const string DeathDateIsRequired = "Date of death is a mandatory field";
-        public const string DiagnosisDateIsRequired = "Diagnosis date is a mandatory field";
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
         public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
-        public const string MDRDateIsRequired = "RR/MDR/XDR treatment date is a mandatory field";
-        public const string BCGYearIsRequired = "BCG Year of vaccination is a mandatory field";
         #endregion
 
         #region Contact Tracing
@@ -75,13 +61,10 @@ namespace ntbs_service.Models.Validations
         #endregion
 
         #region Hospital Details
-        public const string TBServiceIsRequired = "TB Service is a mandatory field";
-        public const string TBServiceCantChange = "TB Service cannot be changed for non-draft notifications";
-        public const string HospitalIsRequired = "Hospital is a mandatory field";
-        public const string HospitalMustBelongToSelectedTbSerice = "Hospital must belong to selected TB Service";
-        public const string NotificationDateIsRequired = "Notification Date is a mandatory field";
-        public const string NotificationDateShouldBeLaterThanDob = "Notification date must be later than date of birth";
-        public const string CaseManagerMustBeAllowedForSelectedTbService = "Case Manager must be allowed for selected TB Service";
+        public const string TBServiceCantChange = "{0} cannot be changed for non-draft notifications";
+        public const string HospitalMustBelongToSelectedTbSerice = "{0} must belong to selected TB Service";
+        public const string NotificationDateShouldBeLaterThanDob = "{0} must be later than date of birth";
+        public const string CaseManagerMustBeAllowedForSelectedTbService = "{0} must be allowed for selected TB Service";
 
         #endregion
 
@@ -116,7 +99,6 @@ namespace ntbs_service.Models.Validations
 
         #region Previous History
         public const string PreviousTBDiagnosisYear = "Please enter a valid year. Year of diagnosis cannot be after 2000";
-        public const string TBHistoryIsRequired = "Year of previous TB diagnosis is a mandatory field";
         #endregion
     }
 

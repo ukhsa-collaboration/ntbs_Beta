@@ -35,7 +35,7 @@ namespace ntbs_service.Pages.Notifications
             // This check has to happen after authorization as otherwise patient will redirect to overview and we'd be stuck in a loop.
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
-                return RedirectToPage("./Edit/Patient", new { id = NotificationId });
+                return RedirectToPage("./Edit/PatientDetails", new { id = NotificationId });
             }
 
             return Page();

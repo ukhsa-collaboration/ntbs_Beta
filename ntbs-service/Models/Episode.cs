@@ -18,15 +18,18 @@ namespace ntbs_service.Models
         public string Consultant { get; set; }
 
         [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
+        [DisplayName("Case Manager")]
         public string CaseManagerEmail { get; set; }
         public virtual CaseManager CaseManager { get; set; }
 
-        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.TBServiceIsRequired)]
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
+        [DisplayName("TB Service")]
         public string TBServiceCode { get; set; }
         public virtual TBService TBService { get; set; }
 
-        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.HospitalIsRequired)]
+        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"HospitalBelongsToTbService", ErrorMessage = ValidationMessages.HospitalMustBelongToSelectedTbSerice)]
+        [DisplayName("Hospital")]
         public Guid? HospitalId { get; set; }
         public virtual Hospital Hospital { get; set; }
 
