@@ -10,7 +10,7 @@ namespace ntbs_service.Services
     public interface IAuthorizationService
     {
         Task<bool> CanEdit(ClaimsPrincipal user, Notification notification);
-        Task<IEnumerable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IEnumerable<Notification> notifications);
+        Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
     }
 
@@ -32,10 +32,25 @@ namespace ntbs_service.Services
 
         public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)
         {
-            return (await FilterNotificationsByUserAsync(user, new Notification[] { notification })).Count() == 1;
+            if (filter == null)
+            {
+                filter = await GetUserPermissionsFilterAsync(user);
+            }
+
+            if (filter.FilterByTBService)
+            {
+                return filter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
+            }
+            else if (filter.FilterByPHEC)
+            {
+                return filter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode)
+                    || filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
+            }
+
+            return true;
         }
 
-        public async Task<IEnumerable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IEnumerable<Notification> notifications)
+        public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)
         {
             if (filter == null)
             {
@@ -44,11 +59,15 @@ namespace ntbs_service.Services
     
             if (filter.FilterByTBService)
             {
-                notifications = notifications.Where(n => MatchesTBServiceCode(filter, n));
+                notifications = notifications.Where(n => filter.IncludedTBServiceCodes.Contains(n.Episode.TBServiceCode));
             }
             else if (filter.FilterByPHEC)
             {
-                notifications = notifications.Where(n => MatchesPHECCode(filter, n));
+                notifications = notifications.Where(n => (n.Episode.TBService != null && filter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode))
+                                                        || (n.PatientDetails.PostcodeLookup != null && 
+                                                            n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
+                                                            n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
+                                                            filter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)));
             }
             return notifications;
         }
@@ -56,17 +75,6 @@ namespace ntbs_service.Services
         private async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return await userService.GetUserPermissionsFilterAsync(user);
-        }
-
-        private bool MatchesTBServiceCode(UserPermissionsFilter filter, Notification notification)
-        {
-            return filter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
-        }
-
-        private bool MatchesPHECCode(UserPermissionsFilter filter, Notification notification)
-        {
-            return filter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode)
-                || filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
         }
     }
 }
