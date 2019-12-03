@@ -395,8 +395,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.MDR_DETAILS_EXIST);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var document = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
