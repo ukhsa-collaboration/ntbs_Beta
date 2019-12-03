@@ -52,6 +52,7 @@ namespace ntbs_service.Services
             if(alert.NotificationId != null)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId);
+                alert.CreationDate = DateTime.Now;
                 if(alert.CaseManagerEmail == null)
                 {
                     alert.CaseManagerEmail = notification?.Episode?.CaseManagerEmail;
