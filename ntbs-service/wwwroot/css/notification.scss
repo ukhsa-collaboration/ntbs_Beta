@@ -19,13 +19,24 @@
 }
 
 .manage-notification {
-    border-top-color: $phe-red;
     border-top-width: 10px;
     border-top-style: solid;
     padding-top: 16px;
 
     &.manage-notification--draft {
-        border-top-color: $ntbs-draft;
+        border-top-color: $banner-header--draft;
+    }
+
+    &.manage-notification--notified {
+        border-top-color: $banner-header--notified
+    }
+
+    &.manage-notification--denotified {
+        border-top-color: $banner-header--denotified;
+    }
+
+    &.manage-notification--legacy {
+        border-top-color: $banner-header--legacy;
     }
 
     // We're overriding some of the nhs-uk expander styling here to achieve the desired effect.
@@ -55,7 +66,6 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-
             padding: 12px;
         }
     }
@@ -82,12 +92,23 @@
     margin-top: 20px;
     margin-bottom: 20px;
 
-    border-top-color: $phe-red;
     border-top-width: 10px;
     border-top-style: solid;
 
     &.notification-banner-links--draft {
-        border-top-color: $ntbs-draft;
+        border-top-color: $banner-header--draft;
+    }
+
+    &.notification-banner-links--notified {
+        border-top-color: $banner-header--notified
+    }
+
+    &.notification-banner-links--denotified {
+        border-top-color: $banner-header--denotified;
+    }
+
+    &.notification-banner-links--legacy {
+        border-top-color: $banner-header--legacy;
     }
 
     border-bottom: 1px solid $grey;
@@ -103,13 +124,24 @@
 }
 
 .notification-page-end {
-    border-top-color: $phe-red;
     border-top-width: 10px;
     border-top-style: solid;
+    margin-top: 24px;
 
     &.notification-page-end--draft {
-        border-top-color: $ntbs-draft;
+        border-top-color: $banner-header--draft;
     }
 
-    margin-top: 24px
+    &.notification-page-end--notified {
+        border-top-color: $banner-header--notified
+    }
+
+    &.notification-page-end--denotified {
+        border-top-color: $banner-header--denotified;
+    }
+
+    &.notification-page-end--legacy {
+        border-top-color: $banner-header--legacy;
+    }
+
 }

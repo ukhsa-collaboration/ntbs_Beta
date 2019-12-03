@@ -1,9 +1,17 @@
 $phe-red: #7f0029;
 $phe-red-focus: #610925;
-$ntbs-draft: #DCC2C6;
 $dull-red: #D8D8D87f;
 $secondary-button: #425563;
 $secondary-button-focus: #384854;
 $button-drop-shadow: #003317;
 $grey: #999999;
 $lighter-grey: #CCCCCC;
+
+$banner-header--draft: #dcc2c6;
+$banner-border--draft: #8c3a47;
+$banner-header--notified: $phe-red;
+$banner-border--notified: $phe-red;
+$banner-header--denotified: #787878;
+$banner-border--denotified: black;
+$banner-header--legacy: #ffdbbc;
+$banner-border--legacy: #ff9c44;

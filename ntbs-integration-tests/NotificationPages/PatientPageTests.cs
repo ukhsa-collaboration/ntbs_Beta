@@ -74,8 +74,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -110,8 +109,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -137,8 +135,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -171,8 +168,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string givenName = "Test";
             const string familyName = "User";
@@ -290,8 +286,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(pageNotificationId);
 
             // Act
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             // Assert
             Assert.False(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));

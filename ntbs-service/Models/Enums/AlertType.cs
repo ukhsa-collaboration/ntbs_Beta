@@ -1,9 +1,11 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ntbs_service.Models.Enums 
 {
     public enum AlertType 
     {
+        [Display(Name = "Enhanced surveillance - MDR")]
         EnhancedSurveillanceMDR,
         EnhancedSurveillanceMBovis,
         MissingTreatmentOutcome,

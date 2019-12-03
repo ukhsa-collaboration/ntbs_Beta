@@ -14,10 +14,12 @@ namespace ntbs_ui_tests.Hooks
         private readonly IObjectContainer objectContainer;
         private readonly SeleniumServerFactory<Startup> Server;
         public IWebDriver Browser;
+        public TestSettings settings;
 
-        public DriverSetup(IObjectContainer objectContainer, SeleniumServerFactory<Startup> server)
+        public DriverSetup(IObjectContainer objectContainer, SeleniumServerFactory<Startup> server, TestSettings settings)
         {
             this.objectContainer = objectContainer;
+            this.settings = settings;
             Server = server;
             Server.CreateClient(); // Not sure why needed, see hanselman link referenced in SeleniumServerFactory
         }
@@ -27,7 +29,10 @@ namespace ntbs_ui_tests.Hooks
         {
             var opts = new ChromeOptions();
             opts.AddArgument("--no-sandbox"); // Necessary to avoid `unknown error: DevToolsActivePort file doesn't exist` when running on docker
-            opts.AddArgument("--headless"); // Optional, comment this out if you want to SEE the browser window
+            if (settings.IsHeadless)
+            {
+                opts.AddArgument("--headless");
+            }
 
             Browser = new RemoteWebDriver(opts);
             objectContainer.RegisterInstanceAs(Browser);

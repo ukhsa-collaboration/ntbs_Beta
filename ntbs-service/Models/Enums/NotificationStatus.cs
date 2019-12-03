@@ -1,9 +1,10 @@
-namespace ntbs_service.Models.Enums 
+﻿namespace ntbs_service.Models.Enums 
 {
     public enum NotificationStatus {
         Draft,
         Notified,
         Denotified,
-        Deleted
+        Deleted,
+        Legacy
     }
 }
