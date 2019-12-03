@@ -31,7 +31,7 @@ namespace ntbs_ui_tests.Hooks
             opts.AddArgument("--no-sandbox"); // Necessary to avoid `unknown error: DevToolsActivePort file doesn't exist` when running on docker
             if (settings.IsHeadless)
             {
-                opts.AddArgument("--headless"); // Optional, comment this out if you want to SEE the browser window
+                opts.AddArgument("--headless");
             }
 
             Browser = new RemoteWebDriver(opts);
