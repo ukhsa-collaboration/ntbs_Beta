@@ -301,6 +301,10 @@ namespace ntbs_service.Models
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("MDRDetails");
                 });
+                
+                entity.HasIndex(e => e.NotificationStatus);
+
+                entity.HasIndex(e => new { e.NotificationStatus, e.SubmissionDate });
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -399,6 +403,8 @@ namespace ntbs_service.Models
                 entity.HasDiscriminator<AlertType>("AlertType")
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR);
+                   
+                entity.HasIndex(e => new {e.AlertStatus, e.AlertType, e.TbServiceCode});
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();

@@ -10,63 +10,81 @@ namespace ntbs_service.Services
     public interface IAuthorizationService
     {
         Task<bool> CanEdit(ClaimsPrincipal user, Notification notification);
-        Task<IEnumerable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IEnumerable<Notification> notifications);
+        Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
     }
 
     public class AuthorizationService : IAuthorizationService
     {
-        private readonly IUserService userService;
-        private UserPermissionsFilter filter;
+        private readonly IUserService _userService;
+        private UserPermissionsFilter _filter;
 
         public AuthorizationService(IUserService userService)
         {
-            this.userService = userService;
+            _userService = userService;
         }
 
         public async Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert)
         {
-            var userTbServiceCodes = (await userService.GetTbServicesAsync(user)).Select(s => s.Code);
+            var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
             return userTbServiceCodes.Contains(alert.TbServiceCode);
         }
 
         public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)
         {
-            return (await FilterNotificationsByUserAsync(user, new Notification[] { notification })).Count() == 1;
+            if (_filter == null)
+            {
+                _filter = await GetUserPermissionsFilterAsync(user);
+            }
+
+            if (_filter.FilterByTBService)
+            {
+                return _filter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
+            }
+            else if (_filter.FilterByPHEC)
+            {
+                var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
+                var servicePhecCode = notification.Episode.TBService?.PHECCode;
+
+                var allowedCodes = _filter.IncludedPHECCodes;
+                return allowedCodes.Contains(servicePhecCode) || allowedCodes.Contains(locationPhecCode);
+            }
+
+            return true;
         }
 
-        public async Task<IEnumerable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IEnumerable<Notification> notifications)
+        public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)
         {
-            if (filter == null)
+            if (_filter == null)
             {
-                filter = await GetUserPermissionsFilterAsync(user);
+                _filter = await GetUserPermissionsFilterAsync(user);
             }
     
-            if (filter.FilterByTBService)
+            if (_filter.FilterByTBService)
             {
-                notifications = notifications.Where(n => MatchesTBServiceCode(filter, n));
+                notifications = notifications.Where(n => _filter.IncludedTBServiceCodes.Contains(n.Episode.TBServiceCode));
             }
-            else if (filter.FilterByPHEC)
+            else if (_filter.FilterByPHEC)
             {
-                notifications = notifications.Where(n => MatchesPHECCode(filter, n));
+                // Having a method in LINQ clause breaks IQuaryable abstraction. We have to use inline expression over methods
+                notifications = notifications.Where(n => 
+                    (
+                        n.Episode.TBService != null && 
+                        _filter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode)
+                    ) || (
+                        n.PatientDetails.PostcodeLookup != null && 
+                        n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
+                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
+                        _filter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
+                    )
+                );
             }
             return notifications;
         }
 
         private async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
-            return await userService.GetUserPermissionsFilterAsync(user);
-        }
-
-        private bool MatchesTBServiceCode(UserPermissionsFilter filter, Notification notification)
-        {
-            return filter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
-        }
-
-        private bool MatchesPHECCode(UserPermissionsFilter filter, Notification notification)
-        {
-            return filter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode)
-                || filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
+            return await _userService.GetUserPermissionsFilterAsync(user);
         }
     }
 }

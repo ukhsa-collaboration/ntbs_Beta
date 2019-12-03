@@ -10,8 +10,8 @@ namespace ntbs_service.DataAccess
     public interface INotificationRepository
     {
         IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
-        Task<IEnumerable<Notification>> GetRecentNotificationsAsync();
-        Task<IEnumerable<Notification>> GetDraftNotificationsAsync();
+        IQueryable<Notification> GetRecentNotificationsIQueryable();
+        IQueryable<Notification> GetDraftNotificationsIQueryable();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int? notificationId);
         Task UpdateNotificationAsync(Notification notification);
@@ -30,23 +30,22 @@ namespace ntbs_service.DataAccess
 
         public NotificationRepository(NtbsContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
-        public async Task<IEnumerable<Notification>> GetRecentNotificationsAsync()
+        public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
-            return await GetBaseNotificationIQueryable()
+            return GetBaseNotificationIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .OrderByDescending(n => n.SubmissionDate).ToListAsync();
+                .OrderByDescending(n => n.SubmissionDate);
         }
 
-        public async Task<IEnumerable<Notification>> GetDraftNotificationsAsync()
+        public  IQueryable<Notification> GetDraftNotificationsIQueryable()
         {
-            return await GetBaseNotificationIQueryable()
+            return GetBaseNotificationIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .OrderByDescending(n => n.SubmissionDate).ToListAsync();
+                .OrderByDescending(n => n.SubmissionDate);
         }
-
         public async Task UpdateNotificationAsync(Notification notification)
         {
             _context.Attach(notification).State = EntityState.Modified;
