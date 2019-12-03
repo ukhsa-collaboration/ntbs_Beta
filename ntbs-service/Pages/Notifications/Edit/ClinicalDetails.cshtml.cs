@@ -137,12 +137,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, OtherSite.GetType().Name);
             }
 
-            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) //TODO-370 drug resistance profile check
+            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) //TODO-384 drug resistance profile check
             {
                 var mdrAlert = new MdrAlert() {NotificationId = NotificationId};
                 await _alertService.AddUniqueAlertAsync(mdrAlert);
             }
-            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  //TODO-370 drug resistance profile check
+            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  //TODO-384 drug resistance profile check
             {
                 if (Notification.MDRDetails.MDRDetailsEntered)
                 {
