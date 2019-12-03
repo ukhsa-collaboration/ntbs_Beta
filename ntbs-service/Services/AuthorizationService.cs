@@ -43,8 +43,11 @@ namespace ntbs_service.Services
             }
             else if (_filter.FilterByPHEC)
             {
-                return _filter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode)
-                    || _filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
+                var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
+                var servicePhecCode = notification.Episode.TBService?.PHECCode;
+
+                var allowedCodes = _filter.IncludedPHECCodes;
+                return allowedCodes.Contains(servicePhecCode) || allowedCodes.Contains(locationPhecCode);
             }
 
             return true;
@@ -63,11 +66,18 @@ namespace ntbs_service.Services
             }
             else if (_filter.FilterByPHEC)
             {
-                notifications = notifications.Where(n => (n.Episode.TBService != null && _filter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode))
-                                                        || (n.PatientDetails.PostcodeLookup != null && 
-                                                            n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
-                                                            n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
-                                                            _filter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)));
+                // Having a method in LINQ clause breaks IQuaryable abstraction. We have to use inline expression over methods
+                notifications = notifications.Where(n => 
+                    (
+                        n.Episode.TBService != null && 
+                        _filter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode)
+                    ) || (
+                        n.PatientDetails.PostcodeLookup != null && 
+                        n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
+                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
+                        _filter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
+                    )
+                );
             }
             return notifications;
         }
