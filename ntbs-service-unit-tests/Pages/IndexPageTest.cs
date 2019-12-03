@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Moq;
 using ntbs_service.Models;
 using ntbs_service.Services;
@@ -28,12 +29,12 @@ namespace ntbs_service_unit_tests.Pages
         public async Task OnGetAsync_PopulatesPageModel_WithRecentAndDraftNotifications()
         {
             // Arrange
-            var recent = Task.FromResult(GetRecentNotifications());
-            var drafts = Task.FromResult(GetDraftNotifications());
-            mockNotificationRepository.Setup(s => s.GetRecentNotificationsAsync()).Returns(recent);
-            mockNotificationRepository.Setup(s => s.GetDraftNotificationsAsync()).Returns(drafts);
-            mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), recent.Result)).Returns(recent);
-            mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), drafts.Result)).Returns(drafts);
+            var recent = GetRecentNotifications().AsQueryable();
+            var drafts = GetDraftNotifications().AsQueryable();
+            mockNotificationRepository.Setup(s => s.GetRecentNotificationsIQueryable()).Returns(recent);
+            mockNotificationRepository.Setup(s => s.GetDraftNotificationsIQueryable()).Returns(drafts);
+            mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), recent)).Returns(Task.FromResult(recent));
+            mockAuthorizationService.Setup(s => s.FilterNotificationsByUserAsync(It.IsAny<ClaimsPrincipal>(), drafts)).Returns(Task.FromResult(drafts));
 
             var pageModel = new IndexModel(mockNotificationRepository.Object, mockAlertRepository.Object, mockAuthorizationService.Object, mockUserService.Object);
 
