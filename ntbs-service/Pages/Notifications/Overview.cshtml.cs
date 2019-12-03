@@ -11,7 +11,8 @@ namespace ntbs_service.Pages.Notifications
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            IAlertRepository alertRepository,
+            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository)
         {
         }
 
@@ -25,7 +26,7 @@ namespace ntbs_service.Pages.Notifications
 
             NotificationId = Notification.NotificationId;
             await GetLinkedNotifications();
-
+            await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {

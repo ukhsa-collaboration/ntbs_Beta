@@ -23,7 +23,8 @@ namespace ntbs_service.Pages.Notifications
         public DeleteModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            IAlertRepository alertRepository,
+            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository)
         {
             ValidationService = new ValidationService(this);
         }

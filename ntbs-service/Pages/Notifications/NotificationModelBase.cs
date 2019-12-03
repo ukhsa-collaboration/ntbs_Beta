@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,16 +13,19 @@ namespace ntbs_service.Pages.Notifications
     {
         protected INotificationService Service;
         protected IAuthorizationService AuthorizationService;
+        protected IAlertRepository AlertRepository;
         protected INotificationRepository NotificationRepository;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
+            IAlertRepository alertRepository,
             INotificationRepository notificationRepository = null)
         {
             this.Service = service;
-            this.NotificationRepository = notificationRepository;
             this.AuthorizationService = authorizationService;
+            this.AlertRepository = alertRepository;
+            this.NotificationRepository = notificationRepository;
         }
 
         protected NotificationGroup Group;
@@ -29,6 +33,7 @@ namespace ntbs_service.Pages.Notifications
 
         public Notification Notification { get; set; }
         public NotificationBannerModel NotificationBannerModel { get; set; }
+        public IList<Alert> Alerts { get; set; }
 
         [BindProperty]
         public bool HasEditPermission { get; set; }
@@ -65,6 +70,11 @@ namespace ntbs_service.Pages.Notifications
         private async Task<NotificationGroup> GetNotificationGroupAsync()
         {
             return await NotificationRepository.GetNotificationGroupAsync(NotificationId);
+        }
+
+        protected async Task GetAlertsAsync()
+        {
+            Alerts = await AlertRepository.GetAlertsForNotificationAsync(NotificationId);
         }
     }
 }

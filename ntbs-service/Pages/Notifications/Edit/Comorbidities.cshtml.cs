@@ -14,7 +14,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ComorbiditiesModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
+            IAlertRepository alertRepository,
+            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository) { }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
         {

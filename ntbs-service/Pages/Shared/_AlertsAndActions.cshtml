@@ -2,9 +2,22 @@
 
 <nhs-grid-row>
     <nhs-grid-column grid-column-width="TwoThirds">
-        &nbsp;
-        <!-- Alerts placeholder - &nbsp; needed so column doesn't collapse -->
-        <!-- <h2 class="govuk-heading-m"></h2> -->
+        <div class="manage-notification">
+            <h2>
+                Alerts
+            </h2>
+            @if(Model.Alerts != null)
+            {
+                @foreach (var alert in Model.Alerts)
+                {
+                    <div class="flex-container">
+                        <div>description</div>
+                        <div>some link</div>
+                        <div>dismiss boi</div>
+                    </div>
+                }
+            }
+            </div>
     </nhs-grid-column>
     <nhs-grid-column grid-column-width="OneThird">
         @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
