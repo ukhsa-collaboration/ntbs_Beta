@@ -137,12 +137,23 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, OtherSite.GetType().Name);
             }
 
-            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) //TODO-384 drug resistance profile check
+            await CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState();
+
+            if (ModelState.IsValid)
+            {
+                await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
+                await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
+            }
+        }
+
+        private async Task CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState()
+        {
+            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) // TODO NTBS-384 drug resistance profile check
             {
                 var mdrAlert = new MdrAlert() {NotificationId = NotificationId};
                 await _alertService.AddUniqueAlertAsync(mdrAlert);
             }
-            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  //TODO-384 drug resistance profile check
+            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  // TODO NTBS-384 drug resistance profile check
             {
                 if (Notification.MDRDetails.MDRDetailsEntered)
                 {
@@ -152,13 +163,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 {
                     await _alertService.DismissMatchingAlertAsync(NotificationId, AlertType.EnhancedSurveillanceMDR);
                 }
-
-            }
-
-            if (ModelState.IsValid)
-            {
-                await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
-                await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
             }
         }
 
