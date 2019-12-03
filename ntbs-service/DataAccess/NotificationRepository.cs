@@ -30,7 +30,7 @@ namespace ntbs_service.DataAccess
 
         public NotificationRepository(NtbsContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
