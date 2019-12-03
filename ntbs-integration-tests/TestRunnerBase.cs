@@ -20,6 +20,12 @@ namespace ntbs_integration_tests
             Client = Factory.CreateClientWithoutRedirects();
         }
 
+        protected async Task<IHtmlDocument> GetDocumentForUrl(string url)
+        {
+            var initialPage = await Client.GetAsync(url);
+            return await GetDocumentAsync(initialPage);
+        }
+
         protected async Task<IHtmlDocument> GetDocumentAsync(HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();

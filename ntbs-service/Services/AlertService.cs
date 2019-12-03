@@ -14,6 +14,7 @@ namespace ntbs_service.Services
     {
         Task<bool> AddUniqueAlertAsync(Alert alert);
         Task DismissAlertAsync(int alertId, string userId);
+        Task DismissMatchingAlertAsync(int notificationId, AlertType alertType);
 
     }
 
@@ -51,6 +52,7 @@ namespace ntbs_service.Services
             if(alert.NotificationId != null)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId);
+                alert.CreationDate = DateTime.Now;
                 if(alert.CaseManagerEmail == null)
                 {
                     alert.CaseManagerEmail = notification?.Episode?.CaseManagerEmail;
@@ -62,6 +64,15 @@ namespace ntbs_service.Services
             } 
             await _alertRepository.AddAlertAsync(alert);
             return true;
+        }
+
+        public async Task DismissMatchingAlertAsync(int notificationId, AlertType alertType)
+        {
+            var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(notificationId, alertType);
+            if (matchingAlert != null)
+            {
+                await DismissAlertAsync(matchingAlert.AlertId, "System");
+            }
         }
     }
 }

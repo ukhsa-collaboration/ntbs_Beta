@@ -45,6 +45,7 @@ namespace ntbs_service.Models.Validations
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
         public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
         public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
+        public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
         #endregion
 
         #region Contact Tracing

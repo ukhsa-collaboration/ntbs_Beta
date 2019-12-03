@@ -28,6 +28,7 @@ namespace ntbs_integration_tests.Helpers
         public const int PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER = 33;
 
         public const int NOTIFIED_WITH_TBSERVICE = 41;
+        public const int MDR_DETAILS_EXIST = 50;
 
         public const int NOTIFICATION_GROUP_ID = 1;
 
@@ -129,6 +130,18 @@ namespace ntbs_integration_tests.Helpers
                     {
                         new NotificationSite { NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
                     }
+                },
+                new Notification()
+                {
+                    NotificationId = MDR_DETAILS_EXIST,
+                    NotificationStatus = NotificationStatus.Notified,
+                    // Requires a notification site to pass full validation
+                    NotificationSites = new List<NotificationSite>
+                    {
+                        new NotificationSite { NotificationId = MDR_DETAILS_EXIST, SiteId = (int)SiteId.PULMONARY }
+                    },
+                    MDRDetails = new MDRDetails { ExposureToKnownCaseStatus = Status.Yes, RelationshipToCase = "test" },
+                    ClinicalDetails = new ClinicalDetails { IsMDRTreatment = true }
                 }
             };
         }

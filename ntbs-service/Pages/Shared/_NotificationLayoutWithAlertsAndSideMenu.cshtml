@@ -1,4 +1,5 @@
 @model ntbs_service.Pages.Notifications.NotificationModelBase
+@using ntbs_integration_tests.Helpers
 @using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.GridColumnWidth
 
@@ -9,8 +10,10 @@
     var mainGridWidth = isLinkedNotificationPage ? Full : ThreeQuarters;
 
     var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
-    var linksClass = isDraft ? "notification-banner-links--draft" : "";
-    var endClass = isDraft ? "notification-page-end--draft" : "";
+
+    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
+    var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
+    var endClass = $"notification-page-end notification-page-end{classSuffix}";
 }
 
 <form method="post" autocomplete="off">
@@ -18,7 +21,7 @@
     <partial name="./_AlertsAndActions" model="@Model" />
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="Full">
-            <div class="notification-banner-links @linksClass">
+            <div class="@linksClass">
                 @if (!isDraft)
                 {
                     <div class="@(currentPage == NotificationSubPaths.Overview ? "notification-banner-links--current" : "")">
@@ -93,11 +96,14 @@
                             Previous History
                         </a>
                     </li>
-                    <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMDRDetails ? "contents-list-item--current" : ""))">
-                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditMDRDetails, Model.NotificationId)">
-                            MDR Details
-                        </a>
-                    </li>
+                    @if(Model.Notification?.ClinicalDetails?.IsMDRTreatment == true) // TODO NTBS-384 drug resistance profile check
+                    {
+                        <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMDRDetails ? "contents-list-item--current" : ""))">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditMDRDetails, Model.NotificationId)">
+                                MDR Details
+                            </a>
+                        </li>
+                    }
                 </ul>
             </nhs-grid-column>
         }
@@ -106,7 +112,7 @@
             @RenderBody()
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="Full">
-            <div class="notification-page-end @endClass"> </div>
+            <div class="@endClass"> </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </form>

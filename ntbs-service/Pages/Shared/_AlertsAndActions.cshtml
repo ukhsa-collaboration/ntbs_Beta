@@ -1,4 +1,6 @@
+@using ntbs_integration_tests.Helpers
 @using ntbs_service.Helpers
+@model ntbs_service.Pages.Notifications.NotificationModelBase
 
 <nhs-grid-row>
     <nhs-grid-column grid-column-width="TwoThirds">
@@ -19,10 +21,16 @@
             }
             </div>
     </nhs-grid-column>
+
+    @{
+        var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
+        var manageNotificationClass = $"manage-notification manage-notification{classSuffix}";
+    }
+
     <nhs-grid-column grid-column-width="OneThird">
         @if (Model.Notification.NotificationStatus == NotificationStatus.Draft && Model.HasEditPermission)
         {
-            <div class="manage-notification manage-notification--no-expander manage-notification--draft">
+            <div class="@manageNotificationClass manage-notification--no-expander">
                 <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit" id="submit-button">
                     Submit
                 </button>
@@ -34,7 +42,7 @@
         }
         else if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview)
         {
-            <div class="manage-notification">
+            <div class="@manageNotificationClass">
                 <nhs-details display-text="Manage notification" nhs-details-type="Expander">
                     <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
                         New notification for this patient

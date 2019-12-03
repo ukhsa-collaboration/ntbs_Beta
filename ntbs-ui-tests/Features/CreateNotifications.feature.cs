@@ -79,11 +79,11 @@ namespace ntbs_ui_tests.Features
 #line 6
         testRunner.When("I enter 1 into \'SearchParameters_IdFilter\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 7
-        testRunner.And("I click on \'search-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I click on the \'search-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 8
         testRunner.Then("I should be on the Search page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 9
-        testRunner.When("I click on \'create-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I click on the \'create-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 10
         testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -122,44 +122,46 @@ namespace ntbs_ui_tests.Features
 #line 21
         testRunner.And("I select radio value \'nhs-number-unknown\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 22
-        testRunner.And("I select 1 for \'PatientDetails_CountryId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter Afghanistan into \'PatientDetails_CountryId\' autocomplete", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 23
-        testRunner.And("I select radio value \'postcode-no\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I wait", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
-        testRunner.And("I click on \'save-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 27
-        testRunner.Then("I should be on the Episode page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I select radio value \'postcode-no\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 25
+        testRunner.And("I click on the \'save-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 28
-        testRunner.When("I enter 1 into \'FormattedNotificationDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should be on the Episode page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 29
-        testRunner.And("I enter 1 into \'FormattedNotificationDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("I enter 1 into \'FormattedNotificationDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 30
-        testRunner.And("I enter 2019 into \'FormattedNotificationDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedNotificationDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 31
+        testRunner.And("I enter 2019 into \'FormattedNotificationDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 32
         testRunner.And("I select TBS0008 for \'Episode_TBServiceCode\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 33
-        testRunner.And("I wait for 1 second", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 34
-        testRunner.And("I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for \'Episode_HospitalId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I wait", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 35
-        testRunner.And("I click on \'save-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 38
-        testRunner.Then("I should be on the ClinicalDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for \'Episode_HospitalId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+        testRunner.And("I click on the \'save-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 39
-        testRunner.When("I check \'NotificationSiteMap_PULMONARY_\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should be on the ClinicalDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 40
-        testRunner.When("I enter 1 into \'FormattedDiagnosisDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I check \'NotificationSiteMap_PULMONARY_\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 41
-        testRunner.And("I enter 1 into \'FormattedDiagnosisDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedDiagnosisDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 42
-        testRunner.And("I enter 2018 into \'FormattedDiagnosisDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedDiagnosisDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 43
-        testRunner.And("I click on \'save-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 45
-        testRunner.Then("I should be on the ContactTracing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I enter 2018 into \'FormattedDiagnosisDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 44
+        testRunner.And("I click on the \'save-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 46
-        testRunner.When("I click on \'submit-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should be on the ContactTracing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 47
+        testRunner.When("I click on the \'submit-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 48
         testRunner.Then("I should see the Notification", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -171,16 +173,16 @@ namespace ntbs_ui_tests.Features
         public virtual void CreateAndSubmitNotificationWithoutContent()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create and submit notification without content", null, ((string[])(null)));
-#line 49
+#line 50
     this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 4
     this.FeatureBackground();
-#line 50
-        testRunner.When("I click on \'submit-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 51
-        testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.When("I click on the \'submit-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 52
+        testRunner.Then("I should be on the PatientDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 53
         testRunner.And("I should see all submission error messages", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -192,22 +194,22 @@ namespace ntbs_ui_tests.Features
         public virtual void CreateAndDeleteNotificationDraft()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create and delete notification draft", null, ((string[])(null)));
-#line 54
+#line 55
     this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 4
     this.FeatureBackground();
-#line 55
-        testRunner.When("I click on \'delete-draft-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 56
-        testRunner.Then("I should be on the Delete page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.When("I click on the \'delete-draft-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 57
-        testRunner.When("I click on \'confirm-deletion-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should be on the Delete page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 58
-        testRunner.Then("I should be on the Confirm page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.When("I click on the \'confirm-deletion-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 59
-        testRunner.When("I click on \'return-to-homepage\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should be on the Confirm page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 60
+        testRunner.When("I click on the \'return-to-homepage\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 61
         testRunner.Then("I should be on the Homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -219,82 +221,84 @@ namespace ntbs_ui_tests.Features
         public virtual void DenotifyANotification()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Denotify a notification", null, ((string[])(null)));
-#line 63
+#line 64
     this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 4
     this.FeatureBackground();
-#line 70
-        testRunner.When("I enter Test into \'PatientDetails_GivenName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 71
-        testRunner.And("I enter User into \'PatientDetails_FamilyName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("I enter Test into \'PatientDetails_GivenName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 72
-        testRunner.And("I enter 1 into \'FormattedDob_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter User into \'PatientDetails_FamilyName\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 73
-        testRunner.And("I enter 1 into \'FormattedDob_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedDob_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 74
-        testRunner.And("I enter 1970 into \'FormattedDob_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedDob_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 75
-        testRunner.And("I select radio value \'sexId-1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1970 into \'FormattedDob_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 76
-        testRunner.And("I select 1 for \'PatientDetails_EthnicityId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select radio value \'sexId-1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 77
-        testRunner.And("I select radio value \'nhs-number-unknown\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select 1 for \'PatientDetails_EthnicityId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 78
-        testRunner.And("I select 1 for \'PatientDetails_CountryId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select radio value \'nhs-number-unknown\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 79
-        testRunner.And("I select radio value \'postcode-no\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter Afghanistan into \'PatientDetails_CountryId\' autocomplete", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 80
-        testRunner.And("I click on \'save-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I wait", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 81
+        testRunner.And("I select radio value \'postcode-no\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 82
-        testRunner.Then("I should be on the Episode page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 83
-        testRunner.When("I enter 1 into \'FormattedNotificationDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I click on the \'save-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 84
-        testRunner.And("I enter 1 into \'FormattedNotificationDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.Then("I should be on the Episode page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 85
-        testRunner.And("I enter 2019 into \'FormattedNotificationDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("I enter 1 into \'FormattedNotificationDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 86
-        testRunner.And("I select TBS0008 for \'Episode_TBServiceCode\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedNotificationDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 87
-        testRunner.And("I wait for 1 second", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 2019 into \'FormattedNotificationDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 88
-        testRunner.And("I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for \'Episode_HospitalId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I select TBS0008 for \'Episode_TBServiceCode\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 89
-        testRunner.And("I click on \'save-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I wait", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 90
+        testRunner.And("I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for \'Episode_HospitalId\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 91
-        testRunner.Then("I should be on the ClinicalDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 92
-        testRunner.When("I check \'NotificationSiteMap_PULMONARY_\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I click on the \'save-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 93
-        testRunner.When("I enter 1 into \'FormattedDiagnosisDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should be on the ClinicalDetails page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 94
-        testRunner.And("I enter 1 into \'FormattedDiagnosisDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("I check \'NotificationSiteMap_PULMONARY_\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 95
-        testRunner.And("I enter 2018 into \'FormattedDiagnosisDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("I enter 1 into \'FormattedDiagnosisDate_Day\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 96
-        testRunner.And("I click on \'save-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I enter 1 into \'FormattedDiagnosisDate_Month\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 97
+        testRunner.And("I enter 2018 into \'FormattedDiagnosisDate_Year\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 98
-        testRunner.Then("I should be on the ContactTracing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 99
-        testRunner.When("I click on \'submit-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I click on the \'save-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 100
+        testRunner.Then("I should be on the ContactTracing page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 101
+        testRunner.When("I click on the \'submit-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 102
         testRunner.Then("I should see the Notification", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 103
-        testRunner.Given("I am on current notification overview page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 104
-        testRunner.When("I expand manage notification section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 105
-        testRunner.And("I click on \'denotify-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.Given("I am on current notification overview page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 106
-        testRunner.Then("I should be on the Denotify page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.When("I expand manage notification section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 107
-        testRunner.When("I select radio value \'denotify-radio-DuplicateEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I click on the \'denotify-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 108
-        testRunner.And("I click on \'confirm-denotification-button\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.Then("I should be on the Denotify page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 109
-        testRunner.Then("I should see the Notification", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.When("I select radio value \'denotify-radio-DuplicateEntry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 110
+        testRunner.And("I click on the \'confirm-denotification-button\' button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 111
+        testRunner.Then("I should see the Notification", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 112
         testRunner.And("The notification should be denotified", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

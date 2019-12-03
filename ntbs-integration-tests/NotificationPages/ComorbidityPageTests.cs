@@ -20,8 +20,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
