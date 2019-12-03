@@ -16,6 +16,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class ClinicalDetailsModel : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IAlertService _alertService;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -39,9 +40,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
+            IReferenceDataRepository referenceDataRepository,
+            IAlertService alertService) : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
+            _alertService = alertService;
         }
 
         protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
@@ -132,6 +135,24 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (OtherSite != null)
             {
                 TryValidateModel(OtherSite, OtherSite.GetType().Name);
+            }
+
+            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) //TODO-384 drug resistance profile check
+            {
+                var mdrAlert = new MdrAlert() {NotificationId = NotificationId};
+                await _alertService.AddUniqueAlertAsync(mdrAlert);
+            }
+            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  //TODO-384 drug resistance profile check
+            {
+                if (Notification.MDRDetails.MDRDetailsEntered)
+                {
+                    ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
+                }
+                else
+                {
+                    await _alertService.DismissMatchingAlertAsync(NotificationId, AlertType.EnhancedSurveillanceMDR);
+                }
+
             }
 
             if (ModelState.IsValid)

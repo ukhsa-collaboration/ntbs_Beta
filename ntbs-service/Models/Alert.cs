@@ -20,14 +20,12 @@ namespace ntbs_service.Models
         public string ClosingUserId { get; set; }
         [Display(Name = "Alert type")]
         public AlertType AlertType { get; set; }
-        public virtual string AlertReason { get; }
         public virtual string ActionLink { get; }
-        [Display(Name = "Actions")]
         public virtual string Action { get; }
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => FormatDate(CreationDate);
         [Display(Name = "Case manager")]
-        public string CaseManagerFullName => CaseManager?.FullName;
+        public string CaseManagerFullName => CaseManager?.FullName ?? "System";
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
 

@@ -32,7 +32,16 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
         {
-            return RedirectToPage("./MDRDetails", new { id = notificationId, isBeingSubmitted });
+            string nextPage;
+            if(Notification.ClinicalDetails?.IsMDRTreatment == true) //TODO-384 drug resistance profile check
+            {
+                nextPage = "./MDRDetails";
+            }
+            else
+            {
+                nextPage = "./PreviousHistory";
+            }
+            return RedirectToPage(nextPage, new { id = notificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()
