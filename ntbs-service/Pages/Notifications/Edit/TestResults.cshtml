@@ -31,6 +31,7 @@
                         @if (hasManualTestResults)
                         {
                             <span id="test-carried-out-disabled" class="govuk-visually-hidden">@hasTestCarriedOutDisabledText</span>
+                            <input type="hidden" asp-for="TestData.HasTestCarriedOut" />
                         }
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="TestData.HasTestCarriedOut" has-error="@hasTestCarriedOutError" id="test-carried-out-error"></span>
                         <nhs-radios nhs-radios-type="Standard" v-on:change="validate">
