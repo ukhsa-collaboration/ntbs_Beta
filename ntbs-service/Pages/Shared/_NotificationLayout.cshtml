@@ -1,20 +1,10 @@
+@using ntbs_integration_tests.Helpers
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 
 @{
     Layout = "./_Layout";
-    var notificationStatusTriangleCssClass = "";
-    switch (Model.Notification.NotificationStatus)
-    {
-        case NotificationStatus.Draft:
-            notificationStatusTriangleCssClass = "notification-banner-triangle--draft";
-            break;
-        case NotificationStatus.Notified:
-            notificationStatusTriangleCssClass = "notification-banner-triangle--notified";
-            break;
-        case NotificationStatus.Denotified:
-            notificationStatusTriangleCssClass = "notification-banner-triangle--denotified";
-            break;
-    }
+    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
+    var notificationStatusTriangleCssClass = $"notification-banner-triangle notification-banner-triangle{classSuffix}";
 }
 
 <nhs-width-container container-width="Standard">
@@ -22,7 +12,7 @@
         <nhs-grid-column grid-column-width="Full">
             <div class="notification-banner-container">
                 <partial name="../Shared/_NotificationBanner.cshtml" model="@Model.NotificationBannerModel" />
-                <div class="notification-banner-triangle @notificationStatusTriangleCssClass"> </div>
+                <div class="@notificationStatusTriangleCssClass"> </div>
             </div>
         </nhs-grid-column>
     </nhs-grid-row>

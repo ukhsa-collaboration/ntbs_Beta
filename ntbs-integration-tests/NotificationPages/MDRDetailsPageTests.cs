@@ -21,8 +21,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -31,14 +30,14 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("relationship-description", ValidationMessages.RelationshipToCaseIsRequired);
-            resultDocument.AssertErrorMessage("case-in-uk", ValidationMessages.CaseInUKStatusIsRequired);
+            resultDocument.AssertErrorMessage("relationship-description", "Please supply details of the relationship to case");
+            resultDocument.AssertErrorMessage("case-in-uk", "Please specify whether the contact was a case in the UK");
         }
 
         [Fact]
@@ -46,8 +45,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -59,14 +57,14 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("relationship-description", ValidationMessages.StandardStringFormat);
-            resultDocument.AssertErrorMessage("related-notification", ValidationMessages.RelatedNotificationIdInvalid);
+            resultDocument.AssertErrorMessage("relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorMessage("related-notification", "The NTBS ID does not match an existing ID in the system");
         }
 
         [Fact]
@@ -74,8 +72,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -106,8 +103,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -142,8 +138,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -176,8 +171,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -220,12 +214,12 @@ namespace ntbs_integration_tests.NotificationPages
 
              // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(ValidationMessages.StandardStringFormat, result);
+            Assert.Equal("Relationship of the current case to the contact can only contain letters and the symbols ' - . ,", result);
         }
 
         [Theory]
-        [InlineData("10000", ValidationMessages.RelatedNotificationIdInvalid)]
-        [InlineData("1e1", ValidationMessages.RelatedNotificationIdMustBeInteger)]
+        [InlineData("10000", "The NTBS ID does not match an existing ID in the system")]
+        [InlineData("1e1", "The NTBS ID must be an integer")]
         public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfInvalidId(string attemptedId, string errorMessage)
         {
             // Arrange
@@ -239,7 +233,7 @@ namespace ntbs_integration_tests.NotificationPages
 
              // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(errorMessage, result);
+            Assert.Contains(errorMessage, result);
         }
 
         [Fact]

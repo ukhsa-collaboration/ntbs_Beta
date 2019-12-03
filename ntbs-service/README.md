@@ -65,7 +65,7 @@ Before first running ui tests locally (the below steps are powershell specific, 
  - run   `.\node_modules\.bin\selenium-standalone install` to install  selenium-standalone - Flip slashes for bash
 
 To run ui tests, run the script `.\test.ps1` - If you don't have bash configured to be able to run powershell, `./test.sh` is a good alternative.
-To see the browser window when running them comment out the appropriate line in DriverSetup.
+To see the browser window when running them change the setting in Hooks\TestSettings.cs
 
 ## Database migrations
 

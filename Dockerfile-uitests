@@ -34,6 +34,11 @@ COPY ./ntbs-ui-tests/package*.json ./
 RUN npm ci
 RUN node_modules/.bin/selenium-standalone install
 
+WORKDIR /ntbs-service
+
+COPY ./ntbs-service/package*.json ./
+RUN npm install
+
 WORKDIR /
 COPY ./EFAuditer ./EFAuditer
 COPY ./ntbs-service ./ntbs-service

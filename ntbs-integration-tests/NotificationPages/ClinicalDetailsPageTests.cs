@@ -21,8 +21,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -49,7 +48,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -71,8 +70,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -83,7 +81,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -99,8 +97,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -110,7 +107,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -124,8 +121,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var initialPage = await Client.GetAsync(url);
-            var document = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -138,7 +134,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -152,8 +148,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -223,8 +218,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -394,6 +388,31 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert check just response.Content
             var result = await response.Content.ReadAsStringAsync();
             Assert.Contains("Short course and MDR treatment cannot both be true", result);
+        }
+
+        [Fact]
+        public async Task ValidateClinicalDetails_ReturnsModelError_WhenMDRTreatmentSetToNoWhenMdrDetailsFilledIn()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.MDR_DETAILS_EXIST);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.MDR_DETAILS_EXIST.ToString(),
+                ["NotificationSiteMap[PULMONARY]"] = "true",
+                ["ClinicalDetails.IsMDRTreatment"] = "false"
+            };
+
+            // Act
+            var result = await SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorMessage("mdr", 
+                "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk");
         }
     }
 }
