@@ -169,3 +169,16 @@ body {
     outline-offset: 4px;
   }
 }
+
+/* Overriding gratuitous margin on responsive tables */
+.nhsuk-table-responsive {
+    margin-top: 18px;
+    margin-bottom: 40px;
+}
+
+@media (min-width: 40.0625em) {
+    .nhsuk-table-responsive {
+        margin-top: 18px;
+        margin-bottom: 40px;
+    }
+}
