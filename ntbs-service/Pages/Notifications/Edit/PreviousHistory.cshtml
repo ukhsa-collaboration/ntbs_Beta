@@ -10,12 +10,14 @@
     var fullValidation = Model.PatientTbHistory.ShouldValidateFull ? "True" : "False";
 }
 
+<partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
+
 <h2>Previous History for New Patient</h2>
 
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <nhs-form-group nhs-form-group-type="Standard">
+    <nhs-form-group nhs-form-group-type="Standard" id="PatientTbHistory-PreviousTBDiagnosisYear">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard"> The patient has had TB in the past </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
@@ -37,7 +39,7 @@
                             <label nhs-label-type="Standard" asp-for="PatientTbHistory.PreviousTBDiagnosisYear"> Year of diagnosis </label>
                             <span nhs-span-type="ErrorMessage" id="previous-tb-diagnosis-year-error" ref="errorField"
                                   asp-validation-for="PatientTbHistory.PreviousTBDiagnosisYear" has-error="@hasPreviousTbDiagnosisError"></span>
-                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasPreviousTbDiagnosisError
+                            <input  type="number" ref="inputField" v-on:blur="validate" is-error-input=@hasPreviousTbDiagnosisError
                                    nhs-input-type="Standard" fixed-width="Four" asp-for="PatientTbHistory.PreviousTBDiagnosisYear">
                         </nhs-form-group>
                     </validate-input>

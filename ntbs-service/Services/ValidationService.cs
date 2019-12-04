@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ntbs_service.Models;
@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace ntbs_service.Services
 {
@@ -87,14 +89,16 @@ namespace ntbs_service.Services
         public ContentResult ValidateDate<T>(T model, string key, string day, string month, string year)
         {
             var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
+            var modelType = model.GetType();
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
-                model.GetType().GetProperty(key).SetValue(model, convertedDob);
+                modelType.GetProperty(key).SetValue(model, convertedDob);
                 return GetValidationResult(model, key);
             }
             else
             {
-                return pageModel.Content(ValidationMessages.ValidDate);
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                return pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
 
@@ -136,7 +140,7 @@ namespace ntbs_service.Services
             return ValidContent();
         }
 
-        private ContentResult ValidContent()
+        public ContentResult ValidContent()
         {
             return pageModel.Content("");
         }
@@ -156,13 +160,15 @@ namespace ntbs_service.Services
         /// <param name="formattedDate"> The FormattedDate to covert and set </param>
         public void TrySetFormattedDate(object model, string modelKey, string key, FormattedDate formattedDate)
         {
+            var modelType = model.GetType();
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
-                model.GetType().GetProperty(key).SetValue(model, convertedDob);
+                modelType.GetProperty(key)?.SetValue(model, convertedDob);
             }
             else
             {
-                ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.ValidDate);
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
 
@@ -189,16 +195,16 @@ namespace ntbs_service.Services
             }
         }
 
-        public ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare)
+        public ContentResult ValidateYearComparison(int yearToValidate, int yearToCompare, string propertyName)
         {
             if (!IsValidYear(yearToValidate))
             {
-                return pageModel.Content(ValidationMessages.ValidYear);
+                return pageModel.Content(ValidationMessages.InvalidYear(propertyName));
             }
 
             if (yearToValidate < yearToCompare)
             {
-                return pageModel.Content(ValidationMessages.ValidYearLaterThanBirthYear(yearToCompare));
+                return pageModel.Content(ValidationMessages.ValidYearLaterThanBirthYear(propertyName, yearToCompare));
             }
             else
             {
@@ -216,16 +222,20 @@ namespace ntbs_service.Services
         public void ValidateYearComparisonOnModel(object model, string key, int yearToValidate, int? yearToCompare)
         {
             string modelTypeName = model.GetType().Name;
+            var modelType = model.GetType();
+            string propertyDisplayName;
 
             if (!IsValidYear(yearToValidate))
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYear);
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(propertyDisplayName));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear((int)yearToCompare));
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(propertyDisplayName, (int)yearToCompare));
             }
         }
 

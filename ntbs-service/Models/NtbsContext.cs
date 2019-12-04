@@ -295,7 +295,20 @@ namespace ntbs_service.Models
                     i.ToTable("DenotificationDetails");
                 });
 
+                entity.OwnsOne(e => e.MDRDetails, i =>
+                {
+                    i.Property(e => e.ExposureToKnownCaseStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    i.Property(e => e.CaseInUKStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    i.ToTable("MDRDetails");
+                });
+                
+                entity.HasIndex(e => e.NotificationStatus);
 
+                entity.HasIndex(e => new { e.NotificationStatus, e.SubmissionDate });
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -442,7 +455,10 @@ namespace ntbs_service.Models
                 entity.Property(e => e.AlertType)
                     .HasConversion(alertTypeEnumConverter);
                 entity.HasDiscriminator<AlertType>("AlertType")
-                    .HasValue<TestAlert>(AlertType.Test);
+                    .HasValue<TestAlert>(AlertType.Test)
+                    .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR);
+                   
+                entity.HasIndex(e => new {e.AlertStatus, e.AlertType, e.TbServiceCode});
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();

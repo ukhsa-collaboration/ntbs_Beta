@@ -40,10 +40,10 @@ namespace ntbs_service.Pages
 
         private async Task SetUserNotificationsAsync()
         {
-            var draftNotificationsQueryable = await notificationRepository.GetDraftNotificationsAsync();
-            var recentNotifications = await notificationRepository.GetRecentNotificationsAsync();
+            var draftNotificationsQueryable = notificationRepository.GetDraftNotificationsIQueryable();
+            var recentNotificationsQueryable = notificationRepository.GetRecentNotificationsIQueryable();
             DraftNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, draftNotificationsQueryable)).Take(10).ToList();
-            RecentNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, recentNotifications)).Take(10).ToList();
+            RecentNotifications = (await authorizationService.FilterNotificationsByUserAsync(User, recentNotificationsQueryable)).Take(10).ToList();
         }
 
         private async Task SetUserAlertsAsync()

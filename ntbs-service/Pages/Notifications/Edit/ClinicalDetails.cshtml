@@ -11,6 +11,8 @@
     var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
 }
 
+<partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
+
 <!-- TODO: Split this into multiple partial pages for readability -->
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -22,7 +24,7 @@
     }
 
     <validate-required-checkboxes property="NotificationSites" shouldvalidatefull="@fullValidation" inline-template>
-        <nhs-form-group v-on:change="validate" ref="checkboxgroup" nhs-form-group-type="@notificationSitesGroupState">
+        <nhs-form-group v-on:change="validate" ref="checkboxgroup" nhs-form-group-type="@notificationSitesGroupState" id="Notification-NotificationSites">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
                     Sites of disease (required)
@@ -127,7 +129,7 @@
                                 var hasSiteDescriptionError = !Model.IsValid("OtherSite.SiteDescription");
                                 var siteDescriptionGroupState = hasSiteDescriptionError ? Error : Standard;
                             }
-                            <nhs-form-group nhs-form-group-type=@siteDescriptionGroupState aria-describedby="other-site-error">
+                            <nhs-form-group nhs-form-group-type=@siteDescriptionGroupState aria-describedby="other-site-error" id="OtherSite-SiteDescription">
                                 <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasSiteDescriptionError"
                                       asp-validation-for="OtherSite.SiteDescription" id="other-site-error"></span>
                                 <label asp-for="OtherSite.SiteDescription" class="govuk-visually-hidden">
@@ -154,7 +156,7 @@
 
     <h2>BCG Details</h2>
     <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset>
+        <nhs-fieldset id="ClinicalDetails-BCGVaccinationYear">
             <nhs-fieldset-legend nhs-legend-size="Standard">BCG Vaccination</nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
@@ -164,7 +166,8 @@
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-bcg-vaccination-conditional">
-                    <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" shouldvalidatefull="@fullValidation" inline-template>
+                    <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" shouldvalidatefull="@fullValidation"
+                        propertyname="BCG vaccination year" inline-template>
                         @{
                             var hasBcgVaccinationError = !Model.IsValid("ClinicalDetails.BCGVaccinationYear");
                             var bcgVaccinationGroupState = hasBcgVaccinationError ? Error : Standard;
@@ -217,7 +220,7 @@
                 </govuk-warning-text>
             </div>
 
-            <nhs-form-group nhs-form-group-type="Standard">
+            <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-SymptomStartDate">
                 <nhs-fieldset>
                     <nhs-fieldset-legend nhs-legend-size="Standard">Patient is symptomatic</nhs-fieldset-legend>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
@@ -233,7 +236,8 @@
                                 var hasSymptomError = !Model.IsValid("ClinicalDetails.SymptomStartDate");
                                 var symptomGroupState = hasSymptomError ? Error : Standard;
                             }
-                            <validate-date ref="date0" name="@Html.DisplayNameFor(model => model.ClinicalDetails.SymptomStartDate)" model="ClinicalDetails" property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
+                            <validate-date ref="date0" name="@Html.DisplayNameFor(model => model.ClinicalDetails.SymptomStartDate)" model="ClinicalDetails" 
+                                property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
                                 <nhs-form-group nhs-form-group-type=@symptomGroupState>
                                     <nhs-fieldset aria-describedby="symptom-error" role="group">
                                         <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
@@ -284,7 +288,7 @@
                     var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.FirstPresentationDate");
                     var presentationAnyHealthServiceGroupState = hasPresentationAnyHealthServiceError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@presentationAnyHealthServiceGroupState>
+                <nhs-form-group nhs-form-group-type=@presentationAnyHealthServiceGroupState id="ClinicalDetails-FirstPresentationDate">
                     <nhs-fieldset aria-describedby="first-presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
                             @Html.DisplayNameFor(model => model.ClinicalDetails.FirstPresentationDate)
@@ -324,7 +328,7 @@
                     var hasPresentationTbServiceError = !Model.IsValid("ClinicalDetails.TBServicePresentationDate");
                     var presentationTbServiceGroupState = hasPresentationTbServiceError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@presentationTbServiceGroupState>
+                <nhs-form-group nhs-form-group-type=@presentationTbServiceGroupState id="ClinicalDetails-TBServicePresentationDate">
                     <nhs-fieldset aria-describedby="tb-service-presentation-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
                             @Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)
@@ -364,7 +368,7 @@
                     var hasDiagnosisError = !Model.IsValid("ClinicalDetails.DiagnosisDate");
                     var diagnosisGroupState = hasDiagnosisError ? Error : Standard;
                 }
-                <nhs-form-group nhs-form-group-type=@diagnosisGroupState>
+                <nhs-form-group nhs-form-group-type=@diagnosisGroupState id="ClinicalDetails-DiagnosisDate">
                     <nhs-fieldset aria-describedby="diagnosis-error" role="group">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
                             @Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate) (required)
@@ -399,7 +403,7 @@
             </validate-date>
             <br />
 
-            <nhs-form-group nhs-form-group-type="Standard">
+            <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-TreatmentStartDate">
                 <nhs-fieldset>
                     <nhs-fieldset-legend nhs-legend-size="Standard">Patient started treatment</nhs-fieldset-legend>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
@@ -461,7 +465,7 @@
             <br />
 
             <h2>Post Mortem Diagnosis</h2>
-            <nhs-form-group nhs-form-group-type="Standard">
+            <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DeathDate">
                 <nhs-fieldset>
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
@@ -530,7 +534,8 @@
                 var hasShortCourseError = !Model.IsValid("ClinicalDetails.IsShortCourseTreatment");
                 var shortCourseGroupState = hasShortCourseError ? Error : Standard;
             }
-            <nhs-form-group nhs-form-group-type="@shortCourseGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <nhs-form-group nhs-form-group-type="@shortCourseGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}" 
+                id="ClinicalDetails-IsShortCourseTreatment">
                 <nhs-fieldset>
                     <nhs-fieldset-legend nhs-legend-size="Standard">Has started standard therapy?</nhs-fieldset-legend>
                     <span ref="errorField[0]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsShortCourseTreatment"
@@ -592,7 +597,7 @@
                 var hasMdrError = !Model.IsValid("ClinicalDetails.IsMDRTreatment");
                 var mdrGroupState = hasMdrError ? Error : Standard;
             }
-            <nhs-form-group nhs-form-group-type="@mdrGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}">
+            <nhs-form-group nhs-form-group-type="@mdrGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}" id="ClinicalDetails-IsMDRTreatment">
                 <nhs-fieldset>
                     <nhs-fieldset-legend nhs-legend-size="Standard">RR/MDR/XDR Treatment Planned?</nhs-fieldset-legend>
                     <span ref="errorField[1]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"
@@ -611,7 +616,7 @@
                                     var hasMdrTreatmentDateError = !Model.IsValid("ClinicalDetails.MDRTreatmentStartDate");
                                     var mdrTreatmentGroupState = hasMdrTreatmentDateError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState>
+                                <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState id="ClinicalDetails-MDRTreatmentStartDate">
                                     <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
                                         <nhs-fieldset-legend nhs-legend-size="Standard">Treatment date</nhs-fieldset-legend>
                                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.MDRTreatmentStartDate"

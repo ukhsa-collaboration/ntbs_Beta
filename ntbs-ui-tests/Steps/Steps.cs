@@ -1,8 +1,9 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using ntbs_service;
 using ntbs_service.Models.Validations;
+using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
@@ -22,13 +23,16 @@ namespace ntbs_ui_tests.StepDefinitions
         private readonly IWebDriver Browser;
         private readonly SeleniumServerFactory<Startup> Server;
         private readonly ITestOutputHelper output;
+        private readonly TestSettings Settings;
+
         private readonly StepsData stepsData = new StepsData();
 
-        public Steps(IWebDriver driver, SeleniumServerFactory<Startup> server, ITestOutputHelper output)
+        public Steps(IWebDriver driver, SeleniumServerFactory<Startup> server, ITestOutputHelper output, TestSettings settings)
         {
             Browser = driver;
             Server = server;
             this.output = output;
+            Settings = settings;
         }
 
         [Given(@"I am on current notification overview page")]
@@ -46,7 +50,25 @@ namespace ntbs_ui_tests.StepDefinitions
         [When(@"I enter (.*) into '(.*)'")]
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
+            FindById(elementId).Click();
             FindById(elementId).SendKeys(value);
+        }
+
+        [When(@"I wait")]
+        public void WhenIWait()
+        {
+            Thread.Sleep(1000);
+        }
+
+        [When(@"I enter (.*) into '(.*)' autocomplete")]
+        public void WhenIEnterValueIntoAutocompleteField(string value, string elementId)
+        {
+            WhenIEnterValueIntoFieldWithId(value, elementId);
+            FindById(elementId).SendKeys("\t");
+            if (!Settings.IsHeadless)
+            {
+                Thread.Sleep(2000);
+            }
         }
 
         private IWebElement FindById(string elementId)
@@ -56,7 +78,12 @@ namespace ntbs_ui_tests.StepDefinitions
 
         [When(@"I check '(.*)'")]
         [When(@"I select radio value '(.*)'")]
-        [When(@"I click on '(.*)'")]
+        public void WhenISelectRadioOrCheckbox(string elementId)
+        {
+            FindById(elementId).Click();
+        }
+
+        [When(@"I click on the '(.*)' button")]
         public void WhenIClickOn(string elementId)
         {
             FindById(elementId).Click();
@@ -75,12 +102,6 @@ namespace ntbs_ui_tests.StepDefinitions
                 .FindElement(By.ClassName("manage-notification"))
                 .FindElement(By.TagName("summary"));
             button.Click();
-        }
-
-        [When(@"I wait for 1 second")]
-        public void WhenIWaitBriefly()
-        {
-            Thread.Sleep(1000);
         }
 
         [Then(@"I should see the Notification")]
@@ -104,25 +125,29 @@ namespace ntbs_ui_tests.StepDefinitions
         {
             // Remove any query string parameters
             Assert.Equal(pageName, Browser.Url.Split('/').Last().Split('?').First());
+            // Wait for everything to load
+            if (!Settings.IsHeadless)
+            {
+                Thread.Sleep(2000);
+            }
         }
 
         [Then(@"I should see all submission error messages")]
         public void ThenIShouldSeeAllSubmissionErrorMessages()
         {
             var summaryText = Browser.FindElement(By.ClassName("nhsuk-error-summary")).Text;
-            Assert.Contains(ValidationMessages.BirthDateIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.SexIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.PostcodeIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.BirthCountryIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.GivenNameIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.NHSNumberIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.FamilyNameIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.EthnicGroupIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.NotificationDateIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.HospitalIsRequired, summaryText);
+            Assert.Contains("Notification date is a mandatory field", summaryText);
+            Assert.Contains("Hospital is a mandatory field", summaryText);
             Assert.Contains(ValidationMessages.DiseaseSiteIsRequired, summaryText);
-            Assert.Contains(ValidationMessages.DiagnosisDateIsRequired, summaryText);
-            Assert.Contains(string.Format(ValidationMessages.Mandatory, "Test carried out"), summaryText);
+            Assert.Contains("Diagnosis date is a mandatory field", summaryText);
+            Assert.Contains("Date of birth is a mandatory field", summaryText);
+            Assert.Contains("Sex is a mandatory field", summaryText);
+            Assert.Contains("Postcode is a mandatory field", summaryText);
+            Assert.Contains("Birth country is a mandatory field", summaryText);
+            Assert.Contains("Given name is a mandatory field", summaryText);
+            Assert.Contains("NHS number is a mandatory field", summaryText);
+            Assert.Contains("Family name is a mandatory field", summaryText);
+            Assert.Contains("Ethnic group is a mandatory field", summaryText);
         }
 
         [Then(@"The notification should be denotified")]

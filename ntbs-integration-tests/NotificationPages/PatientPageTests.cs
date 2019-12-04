@@ -15,7 +15,7 @@ namespace ntbs_integration_tests.NotificationPages
 {
     public class PatientPageTests : TestRunnerNotificationBase
     {
-        protected override string NotificationSubPath => NotificationSubPaths.EditPatient;
+        protected override string NotificationSubPath => NotificationSubPaths.EditPatientDetails;
 
         public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
@@ -74,20 +74,19 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["Patient.GivenName"] = "111",
-                ["Patient.FamilyName"] = "111",
+                ["PatientDetails.GivenName"] = "111",
+                ["PatientDetails.FamilyName"] = "111",
                 ["FormattedDob.Day"] = "31",
                 ["FormattedDob.Month"] = "12",
                 ["FormattedDob.Year"] = "1899",
-                ["Patient.NhsNumber"] = "123",
-                ["Patient.Address"] = "$$$",
-                ["Patient.LocalPatientId"] = "|||"
+                ["PatientDetails.NhsNumber"] = "123",
+                ["PatientDetails.Address"] = "$$$",
+                ["PatientDetails.LocalPatientId"] = "|||"
             };
 
             // Act
@@ -95,13 +94,13 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("given-name", ValidationMessages.StandardStringFormat);
-            resultDocument.AssertErrorMessage("family-name", ValidationMessages.StandardStringFormat);
+            resultDocument.AssertErrorMessage("given-name", "Given name can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorMessage("family-name", "Family name can only contain letters and the symbols ' - . ,");
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
-            Assert.Contains(ValidationMessages.DateValidityRangeStart("Date of birth", "01/01/1900"), resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NhsNumberLength);
-            resultDocument.AssertErrorMessage("address", ValidationMessages.StringWithNumbersAndForwardSlashFormat);
-            resultDocument.AssertErrorMessage("local-patient-id", ValidationMessages.InvalidCharacter);
+            Assert.Contains("Date of birth must not be before 01/01/1900", resultDocument.GetError("dob"));
+            resultDocument.AssertErrorMessage("nhs-number", "NHS number needs to be 10 digits long");
+            resultDocument.AssertErrorMessage("address", "Address can only contain letters, numbers and the symbols ' - . , /");
+            resultDocument.AssertErrorMessage("local-patient-id", "Invalid character found in Local Patient Id");
         }
 
         [Fact]
@@ -110,8 +109,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -119,8 +117,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDob.Day"] = "31",
                 ["FormattedDob.Month"] = "12",
                 ["FormattedDob.Year"] = "2000",
-                ["Patient.CountryId"] = "1",
-                ["Patient.YearOfUkEntry"] = "1999"
+                ["PatientDetails.CountryId"] = "1",
+                ["PatientDetails.YearOfUkEntry"] = "1999"
             };
 
             // Act
@@ -128,7 +126,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("year-of-entry", ValidationMessages.YearOfUkEntryMustBeAfterDob);
+            resultDocument.AssertErrorMessage("year-of-entry", "Year of entry to the UK must be after patient's date of birth");
         }
 
         [Fact]
@@ -137,14 +135,13 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
-                ["Patient.NhsNumberNotKnown"] = "false",
-                ["Patient.NoFixedAbode"] = "false",
+                ["PatientDetails.NhsNumberNotKnown"] = "false",
+                ["PatientDetails.NoFixedAbode"] = "false",
             };
 
             // Act
@@ -155,14 +152,14 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("family-name", ValidationMessages.FamilyNameIsRequired);
-            resultDocument.AssertErrorMessage("given-name", ValidationMessages.GivenNameIsRequired);
-            Assert.Contains(ValidationMessages.BirthDateIsRequired, resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", ValidationMessages.NHSNumberIsRequired);
-            resultDocument.AssertErrorMessage("postcode", ValidationMessages.PostcodeIsRequired);
-            resultDocument.AssertErrorMessage("sex", ValidationMessages.SexIsRequired);
-            resultDocument.AssertErrorMessage("ethnicity", ValidationMessages.EthnicGroupIsRequired);
-            resultDocument.AssertErrorMessage("birth-country", ValidationMessages.BirthCountryIsRequired);
+            resultDocument.AssertErrorMessage("family-name", "Family name is a mandatory field");
+            resultDocument.AssertErrorMessage("given-name", "Given name is a mandatory field");
+            Assert.Contains("Date of birth is a mandatory field", resultDocument.GetError("dob"));
+            resultDocument.AssertErrorMessage("nhs-number", "NHS number is a mandatory field");
+            resultDocument.AssertErrorMessage("postcode", "Postcode is a mandatory field");
+            resultDocument.AssertErrorMessage("sex", "Sex is a mandatory field");
+            resultDocument.AssertErrorMessage("ethnicity", "Ethnic group is a mandatory field");
+            resultDocument.AssertErrorMessage("birth-country", "Birth country is a mandatory field");
         }
 
         [Fact]
@@ -171,8 +168,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string givenName = "Test";
             const string familyName = "User";
@@ -189,20 +185,20 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
-                ["Patient.GivenName"] = givenName,
-                ["Patient.FamilyName"] = familyName,
+                ["PatientDetails.GivenName"] = givenName,
+                ["PatientDetails.FamilyName"] = familyName,
                 ["FormattedDob.Day"] = birthDay,
                 ["FormattedDob.Month"] = birthMonth,
                 ["FormattedDob.Year"] = birthYear,
-                ["Patient.NhsNumber"] = nhsNumber,
-                ["Patient.Address"] = address,
-                ["Patient.NoFixedAbode"] = "true",
-                ["Patient.Postcode"] = "NW5 1TL",
-                ["Patient.EthnicityId"] = ethnicityId,
-                ["Patient.SexId"] = sexId,
-                ["Patient.CountryId"] = countryId,
-                ["Patient.LocalPatientId"] = localPatientId,
-                ["Patient.OccupationId"] = occupationId
+                ["PatientDetails.NhsNumber"] = nhsNumber,
+                ["PatientDetails.Address"] = address,
+                ["PatientDetails.NoFixedAbode"] = "true",
+                ["PatientDetails.Postcode"] = "NW5 1TL",
+                ["PatientDetails.EthnicityId"] = ethnicityId,
+                ["PatientDetails.SexId"] = sexId,
+                ["PatientDetails.CountryId"] = countryId,
+                ["PatientDetails.LocalPatientId"] = localPatientId,
+                ["PatientDetails.OccupationId"] = occupationId
             };
 
             // Act
@@ -214,19 +210,19 @@ namespace ntbs_integration_tests.NotificationPages
 
             var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
-            reloadedDocument.AssertInputTextValue("Patient_GivenName", givenName);
-            reloadedDocument.AssertInputTextValue("Patient_FamilyName", familyName);
+            reloadedDocument.AssertInputTextValue("PatientDetails_GivenName", givenName);
+            reloadedDocument.AssertInputTextValue("PatientDetails_FamilyName", familyName);
             reloadedDocument.AssertInputTextValue("FormattedDob_Day", birthDay);
             reloadedDocument.AssertInputTextValue("FormattedDob_Month", birthMonth);
             reloadedDocument.AssertInputTextValue("FormattedDob_Year", birthYear);
-            reloadedDocument.AssertInputTextValue("Patient_NhsNumber", nhsNumber);
-            reloadedDocument.AssertInputTextValue("Patient_Postcode", string.Empty);
-            reloadedDocument.AssertInputTextValue("Patient_LocalPatientId", localPatientId);
-            reloadedDocument.AssertInputSelectValue("Patient_EthnicityId", ethnicityId);
-            reloadedDocument.AssertInputSelectValue("Patient_CountryId", countryId);
-            reloadedDocument.AssertInputSelectValue("Patient_OccupationId", occupationId);
+            reloadedDocument.AssertInputTextValue("PatientDetails_NhsNumber", nhsNumber);
+            reloadedDocument.AssertInputTextValue("PatientDetails_Postcode", string.Empty);
+            reloadedDocument.AssertInputTextValue("PatientDetails_LocalPatientId", localPatientId);
+            reloadedDocument.AssertInputSelectValue("PatientDetails_EthnicityId", ethnicityId);
+            reloadedDocument.AssertInputSelectValue("PatientDetails_CountryId", countryId);
+            reloadedDocument.AssertInputSelectValue("PatientDetails_OccupationId", occupationId);
             reloadedDocument.AssertInputRadioValue("sexId-2", true);
-            reloadedDocument.AssertTextAreaValue("Patient_Address", address);
+            reloadedDocument.AssertTextAreaValue("PatientDetails_Address", address);
         }
 
         [Fact]
@@ -290,8 +286,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(pageNotificationId);
 
             // Act
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             // Assert
             Assert.False(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));
@@ -360,16 +355,16 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDate"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsDate"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(ValidationMessages.DateValidityRangeStart("Date of birth", "01/01/1900"), result);
+            Assert.Equal("Date of birth must not be before 01/01/1900", result);
         }
 
         [Theory]
-        [InlineData("ABC", ValidationMessages.NhsNumberFormat)]
-        [InlineData("123", ValidationMessages.NhsNumberLength)]
+        [InlineData("ABC", "NHS number can only contain digits 0-9")]
+        [InlineData("123", "NHS number needs to be 10 digits long")]
         public async Task WhenNhsNumberInvalid_ValidatePatientProperty_ReturnsExpectedResult(string nhsNumber, string validationResult)
         {
             // Arrange
@@ -380,7 +375,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientProperty"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -388,7 +383,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("true", ValidationMessages.NHSNumberIsRequired)]
+        [InlineData("true", "NHS number is a mandatory field")]
         [InlineData("false", "")]
         public async Task DependentOnShouldValidateFull_ValidatePatientProperty_ReturnsRequiredOrNoError(string shouldValidateFull, string validationResult)
         {
@@ -400,7 +395,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientProperty"));
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsProperty"));
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

@@ -12,7 +12,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class PatientModel : NotificationEditModelBase
+    public class PatientDetailsModel : NotificationEditModelBase
     {
         private readonly IPostcodeService _postcodeService;
 
@@ -25,13 +25,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         public Dictionary<string, string> DuplicateNhsNumberNotifications { get; set; }
 
         [BindProperty]
-        public PatientDetails Patient { get; set; }
+        public PatientDetails PatientDetails { get; set; }
 
         [BindProperty]
-        [ValidFormattedDateCanConvertToDatetime(ErrorMessage = ValidationMessages.InvalidDate)]
         public FormattedDate FormattedDob { get; set; }
 
-        public PatientModel(
+        public PatientDetailsModel(
             INotificationService service,
             IPostcodeService postcodeService,
             IAuthorizationService authorizationService,
@@ -75,17 +74,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            Patient = Notification.PatientDetails;
-            await SetNotificationProperties(isBeingSubmitted, Patient);
+            PatientDetails = Notification.PatientDetails;
+            await SetNotificationProperties(isBeingSubmitted, PatientDetails);
 
-            FormattedDob = Patient.Dob.ConvertToFormattedDate();
+            FormattedDob = PatientDetails.Dob.ConvertToFormattedDate();
 
-            if (Patient.ShouldValidateFull)
+            if (PatientDetails.ShouldValidateFull)
             {
-                TryValidateModel(Patient, "Patient");
+                TryValidateModel(PatientDetails, "PatientDetails");
             }
 
-            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(Patient.NhsNumber);
+            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(PatientDetails.NhsNumber);
 
             return Page();
         }
@@ -116,32 +115,32 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            await Service.UpdatePatientFlagsAsync(Patient);
+            await Service.UpdatePatientFlagsAsync(PatientDetails);
             // Remove already invalidated states from modelState as rely
             // on changes made in UpdatePatientFlags
-            ModelState.ClearValidationState("Patient.Postcode");
-            ModelState.ClearValidationState("Patient.NHSNumber");
-            ModelState.ClearValidationState("Patient.OccupationOther");
-            if (Patient.UkBorn != false)
+            ModelState.ClearValidationState("PatientDetails.Postcode");
+            ModelState.ClearValidationState("PatientDetails.NHSNumber");
+            ModelState.ClearValidationState("PatientDetails.OccupationOther");
+            if (PatientDetails.UkBorn != false)
             {
-                ModelState.ClearValidationState("Patient.YearOfUkEntry");
+                ModelState.ClearValidationState("PatientDetails.YearOfUkEntry");
             }
 
-            Patient.SetFullValidation(Notification.NotificationStatus);
+            PatientDetails.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
 
-            ValidationService.TrySetFormattedDate(Patient, "Patient", nameof(Patient.Dob), FormattedDob);
+            ValidationService.TrySetFormattedDate(PatientDetails, "Patient", nameof(PatientDetails.Dob), FormattedDob);
 
-            if (TryValidateModel(Patient, "Patient"))
+            if (TryValidateModel(PatientDetails, "PatientDetails"))
             {
-                await Service.UpdatePatientAsync(Notification, Patient);
+                await Service.UpdatePatientAsync(Notification, PatientDetails);
             }
         }
 
         private async Task FindAndSetPostcodeAsync()
         {
-            var foundPostcode = await _postcodeService.FindPostcode(Patient.Postcode);
-            Patient.PostcodeToLookup = foundPostcode?.Postcode;
+            var foundPostcode = await _postcodeService.FindPostcode(PatientDetails.Postcode);
+            PatientDetails.PostcodeToLookup = foundPostcode?.Postcode;
         }
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
@@ -161,12 +160,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./Episode", new { NotificationId, isBeingSubmitted });
         }
 
-        public ContentResult OnGetValidatePatientProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnGetValidatePatientDetailsProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidatePatientDate(string key, string day, string month, string year)
+        public ContentResult OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
         {
             return ValidationService.ValidateDate<PatientDetails>(key, day, month, year);
         }

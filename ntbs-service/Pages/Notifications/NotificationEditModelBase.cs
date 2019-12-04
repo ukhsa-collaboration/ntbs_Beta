@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -160,6 +161,11 @@ namespace ntbs_service.Pages.Notifications
         public bool IsValid(string key)
         {
             return ValidationService.IsValid(key);
+        }
+
+        protected ContentResult CreateJsonResponse(object content)
+        {
+            return Content(JsonConvert.SerializeObject(content), "application/json");
         }
 
         protected abstract Task ValidateAndSave();

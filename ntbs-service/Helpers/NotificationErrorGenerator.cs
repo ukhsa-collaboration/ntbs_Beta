@@ -30,7 +30,7 @@ namespace ntbs_service.Helpers
                 switch (propertyKey)
                 {
                     case "PatientDetails":
-                        subPath = NotificationSubPaths.EditPatient;
+                        subPath = NotificationSubPaths.EditPatientDetails;
                         displayName = "Patient Details";
                         break;
                     // NotificationSites is part of Clinical Details page despite being property of Notification

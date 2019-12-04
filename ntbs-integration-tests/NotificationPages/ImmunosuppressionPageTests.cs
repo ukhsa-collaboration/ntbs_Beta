@@ -23,8 +23,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -39,7 +38,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("status", ValidationMessages.ImmunosuppressionTypeRequired);
+            resultDocument.AssertErrorMessage("status", "At least one field must be selected");
         }
 
         [Fact]
@@ -48,8 +47,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -65,7 +63,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("description", ValidationMessages.ImmunosuppressionDetailRequired);
+            resultDocument.AssertErrorMessage("description", "Please supply immunosuppression other details");
         }
 
         [Fact]
@@ -74,8 +72,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string description = "Other Therapy";
             var formData = new Dictionary<string, string>
@@ -103,8 +100,8 @@ namespace ntbs_integration_tests.NotificationPages
         [Theory]
         [InlineData("Unknown", "false", "", "")]
         [InlineData("No", "false", "", "")]
-        [InlineData("Yes", "false", "", ValidationMessages.ImmunosuppressionTypeRequired)]
-        [InlineData("Yes", "true", "", ValidationMessages.ImmunosuppressionDetailRequired)]
+        [InlineData("Yes", "false", "", "At least one field must be selected")]
+        [InlineData("Yes", "true", "", "Please supply immunosuppression other details")]
         [InlineData("Yes", "true", "Other", "")]
         public async Task Validate_ReturnsExpectedResult(string status, string isOther, string description, string validationResult)
         {

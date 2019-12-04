@@ -62,8 +62,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DENOTIFY_NO_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -98,8 +97,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DENOTIFY_WITH_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -136,8 +134,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "0";
             const string denotifyDateMonth = "1";
@@ -160,7 +157,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("date", ValidationMessages.ValidDate);
+            resultDocument.AssertErrorMessage("date", "Denotification date does not have a valid date selection");
         }
 
         [Fact]
@@ -169,8 +166,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -193,7 +189,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("date", ValidationMessages.DenotificationDateLatestToday);
+            resultDocument.AssertErrorMessage("date", "Date of denotification cannot be later than today");
         }
 
         [Fact]
@@ -202,8 +198,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -225,7 +220,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("date", ValidationMessages.DenotificationDateAfterNotification);
+            resultDocument.AssertErrorMessage("date", "Date of denotification must be after the date of notification");
         }
 
         [Fact]
@@ -234,8 +229,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -256,7 +250,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("reason", ValidationMessages.DenotificationReasonRequired);
+            resultDocument.AssertErrorMessage("reason", "Please supply a reason for denotification");
         }
 
         [Fact]
@@ -265,8 +259,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
+            var initialDocument = await GetDocumentForUrl(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -289,7 +282,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("description", ValidationMessages.DenotificationReasonOtherRequired);
+            resultDocument.AssertErrorMessage("description", "Please supply additional details for the denotification reason");
         }
     }
 }
