@@ -17,8 +17,7 @@ namespace ntbs_service.Pages.Notifications
         protected NotificationEditModelBase(
             INotificationService service, 
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
-            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
             ValidationService = new ValidationService(this);
         }
@@ -44,8 +43,6 @@ namespace ntbs_service.Pages.Notifications
             {
                 return RedirectToOverview(NotificationId);
             }
-
-            await GetAlertsAsync();
 
             return await PreparePageForGet(NotificationId, isBeingSubmitted);
         }

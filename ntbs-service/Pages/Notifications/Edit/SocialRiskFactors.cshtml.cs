@@ -15,8 +15,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SocialRiskFactorsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
-            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
         }
 

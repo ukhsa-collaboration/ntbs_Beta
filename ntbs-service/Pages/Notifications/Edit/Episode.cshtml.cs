@@ -34,9 +34,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
             IUserService userService,
-            NtbsContext context) : base(notificationService, authorizationService, alertRepository, notificationRepository)
+            NtbsContext context) : base(notificationService, authorizationService, notificationRepository)
         {
             this._context = context;
             this._userService = userService;

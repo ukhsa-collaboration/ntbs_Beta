@@ -40,9 +40,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IAlertRepository alertRepository,
             IReferenceDataRepository referenceDataRepository,
-            IAlertService alertService) : base(service, authorizationService, alertRepository, notificationRepository)
+            IAlertService alertService) : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;

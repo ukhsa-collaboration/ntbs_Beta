@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
@@ -8,12 +9,14 @@ namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
+        protected IAlertRepository AlertRepository;
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             IAlertRepository alertRepository,
-            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
+            this.AlertRepository = alertRepository;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -23,7 +26,6 @@ namespace ntbs_service.Pages.Notifications
             {
                 return NotFound();
             }
-
             NotificationId = Notification.NotificationId;
             await GetLinkedNotifications();
             await GetAlertsAsync();
@@ -48,6 +50,11 @@ namespace ntbs_service.Pages.Notifications
             var linkedNotification = await Service.CreateLinkedNotificationAsync(notification, User);
 
             return RedirectToPage("/Notifications/Edit/PatientDetails", new { id = linkedNotification.NotificationId });
+        }
+
+        public async Task GetAlertsAsync()
+        {
+            Alerts = await AlertRepository.GetAlertsForNotificationAsync(NotificationId);
         }
     }
 }

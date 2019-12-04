@@ -12,8 +12,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public PreviousHistoryModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
-            INotificationRepository notificationRepository) : base(service, authorizationService, alertRepository, notificationRepository) { }
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
 
         [BindProperty]
         public PatientTBHistory PatientTbHistory { get; set; }

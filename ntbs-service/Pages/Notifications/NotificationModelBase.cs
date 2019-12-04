@@ -13,18 +13,15 @@ namespace ntbs_service.Pages.Notifications
     {
         protected INotificationService Service;
         protected IAuthorizationService AuthorizationService;
-        protected IAlertRepository AlertRepository;
         protected INotificationRepository NotificationRepository;
 
         protected NotificationModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
             INotificationRepository notificationRepository = null)
         {
             this.Service = service;
             this.AuthorizationService = authorizationService;
-            this.AlertRepository = alertRepository;
             this.NotificationRepository = notificationRepository;
         }
 
@@ -70,11 +67,6 @@ namespace ntbs_service.Pages.Notifications
         private async Task<NotificationGroup> GetNotificationGroupAsync()
         {
             return await NotificationRepository.GetNotificationGroupAsync(NotificationId);
-        }
-
-        protected async Task GetAlertsAsync()
-        {
-            Alerts = await AlertRepository.GetAlertsForNotificationAsync(NotificationId);
         }
     }
 }

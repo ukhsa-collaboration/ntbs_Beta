@@ -1,0 +1,65 @@
+@model ntbs_service.Pages.Notifications.NotificationModelBase
+@using ntbs_integration_tests.Helpers
+@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.GridColumnWidth
+
+@{
+    Layout = "./_NotificationLayout.cshtml";
+    var currentPage = (string)ViewData["CurrentPage"];
+    var isLinkedNotificationPage = currentPage == NotificationSubPaths.LinkedNotifications;
+    var mainGridWidth = isLinkedNotificationPage ? Full : ThreeQuarters;
+
+    var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
+
+    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
+    var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
+    var endClass = $"notification-page-end notification-page-end{classSuffix}";
+}
+
+<form method="post" autocomplete="off">
+    @RenderSection("MainFormButton", required: false)
+    @if(isDraft)
+    {
+        <partial name="./_DraftSubmitDeleteButtons" model="@Model" />
+    }
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
+            <div class="@linksClass">
+                @if (!isDraft)
+                {
+                    <div class="@(currentPage == NotificationSubPaths.Overview ? "notification-banner-links--current" : "")">
+                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">
+                            Notification details
+                        </a>
+                    </div>
+                    <div class="notification-banner-link-separator"> </div>
+                }
+                @if (Model.NumberOfLinkedNotifications > 0)
+                {
+                    <div class="@(isLinkedNotificationPage ? "notification-banner-links--current" : "")">
+                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.LinkedNotifications, Model.NotificationId)">
+                            Linked Notifications (@Model.NumberOfLinkedNotifications)
+                        </a>
+                    </div>
+                    <div class="notification-banner-link-separator"> </div>
+                }
+                <div>
+                    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">
+                        Audit
+                    </a>
+                </div>
+            </div>
+        </nhs-grid-column>
+        @if (!isLinkedNotificationPage && Model.HasEditPermission)
+        {
+            <partial name="./_SideMenu" model="@Model" />
+        }
+        <nhs-grid-column grid-column-width=@mainGridWidth>
+            <input type="hidden" asp-for="NotificationId" />
+            @RenderBody()
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="Full">
+            <div class="@endClass"> </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</form>
