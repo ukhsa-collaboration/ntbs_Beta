@@ -42,7 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Children/ManualTestResult", new { NotificationId });
+            return RedirectToPage("./Children/NewManualTestResult", new { NotificationId });
         }
 
         protected override async Task ValidateAndSave()

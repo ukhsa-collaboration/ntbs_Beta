@@ -24,7 +24,7 @@
                     var hasTestCarriedOutDisabledText = hasManualTestResults ? "Cannot modify value when manual tests are logged against notification" : string.Empty;
                 }
                 <nhs-form-group nhs-form-group-type="@testCarriedOutGroupState">
-                    <nhs-fieldset aria-describedby="test-carried-out-error @(hasManualTestResults ? "test-carried-out-disabled" : string.Empty)" title="@hasTestCarriedOutDisabledText">
+                    <nhs-fieldset aria-describedby="test-carried-out-error@(hasManualTestResults ? " test-carried-out-disabled" : string.Empty)" title="@hasTestCarriedOutDisabledText">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
                             @Html.DisplayNameFor(m => m.TestData.HasTestCarriedOut)
                         </nhs-fieldset-legend>

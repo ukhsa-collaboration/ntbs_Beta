@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace ntbs_service.Helpers
 {
@@ -6,12 +7,33 @@ namespace ntbs_service.Helpers
     {
         public static string NotificationBasePath => "/Notifications/{0}/{1}";
 
-        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted = false)
+        public static string GetNotificationPath(string subPath, int id)
+        {
+            return GetNotificationPath(subPath, id, false, null);
+        }
+
+        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted)
+        {
+            return GetNotificationPath(subPath, id, isBeingSubmitted, null);
+        }
+
+        public static string GetNotificationPath(string subPath, int id, Dictionary<string, string> formData)
+        {
+            return GetNotificationPath(subPath, id, false, formData);
+        }
+
+        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted, Dictionary<string, string> formData)
         {
             var path = subPath;
+
             if (isBeingSubmitted)
             {
                 path = QueryHelpers.AddQueryString(path, "isBeingSubmitted", "True");
+            }
+
+            if (formData != null)
+            {
+                path = QueryHelpers.AddQueryString(path, formData);
             }
 
             return string.Format(NotificationBasePath, id, path);
@@ -42,7 +64,7 @@ namespace ntbs_service.Helpers
         public static string Delete => "Delete";
 
         public static string EditManualTestResult(int? TestResultId) => $"Edit/ManualTestResult/{TestResultId}";
-        public static string AddManualTestResult => $"Edit/ManualTestResult";
+        public static string AddManualTestResult => $"Edit/ManualTestResult/New";
     }
 
     public static class AlertSubPaths

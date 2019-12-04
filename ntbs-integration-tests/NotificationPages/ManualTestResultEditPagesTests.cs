@@ -19,7 +19,7 @@ namespace ntbs_integration_tests.NotificationPages
     {
         const int TEST_ID = 10;
         const int TEST_TO_DELETE_ID = 11;
-        protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult(null);
+        protected override string NotificationSubPath => NotificationSubPaths.EditManualTestResult(0);
 
         public ManualTestResultEditPagesTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
@@ -58,10 +58,8 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int notificationId = Utilities.DRAFT_ID;
-            var url = GetCurrentPathForId(notificationId);
-            var initialPage = await Client.GetAsync(url);
-            var initialDocument = await GetDocumentAsync(initialPage);
-
+            var url = GetPathForId(NotificationSubPaths.AddManualTestResult, notificationId);
+            var initialDocument = await GetDocumentForUrl(url);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -133,8 +131,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
-            var editPage = await Client.GetAsync(editUrl);
-            var editDocument = await GetDocumentAsync(editPage);
+            var editDocument = await GetDocumentForUrl(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -164,8 +161,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
-            var editPage = await Client.GetAsync(editUrl);
-            var editDocument = await GetDocumentAsync(editPage);
+            var editDocument = await GetDocumentForUrl(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -205,8 +201,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_TO_DELETE_ID;
-            var editPage = await Client.GetAsync(editUrl);
-            var editDocument = await GetDocumentAsync(editPage);
+            var editDocument = await GetDocumentForUrl(editUrl);
 
             // Act
             var formData = new Dictionary<string, string> { };
@@ -227,7 +222,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int manualTestTypeId = (int)ManualTestTypeId.Histology;
             const string handlerPath = "FilteredSampleTypesForManualTestType";
-            var endpointPath = $"{NotificationSubPath}{(isEdit ? "0/" : "")}{handlerPath}";
+            var notificationSubPath = isEdit ? NotificationSubPath : NotificationSubPaths.AddManualTestResult;
+            var endpointPath = $"{notificationSubPath}/{handlerPath}";
             var endpointUrl = GetPathForId($"{endpointPath}?value={manualTestTypeId.ToString()}", 0);
 
             // Act
@@ -255,9 +251,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["year"] = "1899"
             };
             const string handlerPath = "ValidateTestResultForEditDate";
-            var queryString = string.Join("&", formData.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-            var endpointPath = $"{NotificationSubPath}{(isEdit ? "0/" : "")}{handlerPath}";
-            var endpointUrl = GetPathForId($"{endpointPath}?{queryString}", 0);
+            var notificationSubPath = isEdit ? NotificationSubPath : NotificationSubPaths.AddManualTestResult;
+            var endpointPath = $"{notificationSubPath}/{handlerPath}";
+            var endpointUrl = GetPathForId($"{endpointPath}", 0, formData);
 
             // Act
             var response = await Client.GetAsync(endpointUrl);

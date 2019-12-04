@@ -8,6 +8,21 @@ type OptionValue = {
     group: string
 };
 
+/*
+ The component only works for a single select field to filter one or more other fields, 
+ any cascading nonsense will require more specific handling.
+
+ 'filteringRefs' prop is required to be an array of strings corresponding to a 
+ ref containing a select element (if ref is a vue component, requires a 'selectField' ref within that).
+ Each string in the array is also an expected response-object key from the endpoint:
+ see OnGetGetFilteredListsByTbService in Episode.cshtml.cs
+
+ Additionally to the ref requirements above the input to drive the filtering must be within a ref
+ of name 'filterContainer' containing a select element (if ref is a vue component, requires a 'selectField' ref within that).
+
+ waitForChildMount is intended to be used to either trigger filtering on mount of this component,
+ or if relevant to be triggered on mount of the filterContainer's vue component.
+*/
 const FilteredDropdown = Vue.extend({
     props: {
         filterHandlerPath: {

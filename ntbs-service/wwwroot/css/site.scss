@@ -174,10 +174,8 @@ body {
 .nhsuk-table-responsive {
     margin-top: 18px;
     margin-bottom: 40px;
-}
-
-@media (min-width: 40.0625em) {
-    .nhsuk-table-responsive {
+    
+    @media (min-width: 40.0625em) {
         margin-top: 18px;
         margin-bottom: 40px;
     }
