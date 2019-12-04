@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -11990,6 +11991,13 @@ namespace ntbs_service.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("TestData");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.MdrAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Alert");
+
+                    b.HasDiscriminator().HasValue("EnhancedSurveillanceMDR");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
