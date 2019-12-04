@@ -24,7 +24,6 @@
                             <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
                                 class="dismiss-alert-button--overview-view">
                                 @Html.AntiForgeryToken()
-                                <input hidden value="@alert.NotificationId"/>
                                 <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
                                     aria-label="Dismiss alert">
                                     X
@@ -39,10 +38,13 @@
 
     <nhs-grid-column grid-column-width="OneThird">
         <div class="@manageNotificationClass">
-            <nhs-details display-text="Manage notification" nhs-details-type="Expander">
-                <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
-                    New notification for this patient
-                </button>
+            <nhs-details display-text="Manage notification" nhs-details-type="Expander" id="manage-notification">
+                <form method="post">
+                    <input hidden value="@Model.NotificationId" name="NotificationId" />
+                    <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
+                        New notification for this patient
+                    </button>
+                </form>
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
                 {
                     var denotifyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);

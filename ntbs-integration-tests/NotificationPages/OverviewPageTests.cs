@@ -94,7 +94,6 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(GetRedirectLocation(result), url);
             var reloadedDocument = await GetDocumentForUrl(GetRedirectLocation(result));
             Assert.Null(reloadedDocument.QuerySelector("#alert-1"));
-            
         }
     }
 }
