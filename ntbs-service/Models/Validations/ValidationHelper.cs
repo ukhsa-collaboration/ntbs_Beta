@@ -100,6 +100,11 @@ namespace ntbs_service.Models.Validations
         public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
         #endregion
 
+        #region Social Context
+        public const string VenueDateShouldBeLaterThanDob = "Must be later than date of birth";
+        public const string VenueDateToShouldBeLaterThanDateFrom = "Must be later than date from";
+        #endregion
+
         #region Denotify
         public const string DenotificationDateAfterNotification = "Date of denotification must be after the date of notification";
         public const string DenotificationDateLatestToday = "Date of denotification cannot be later than today";

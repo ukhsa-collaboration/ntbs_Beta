@@ -1,0 +1,9 @@
+@page "/Notifications/{NotificationId:int}/Edit/SocialContextVenue/New/{handler?}"
+@model SocialContextVenueModel
+
+@{
+    Layout = "../../../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Notification - Create Social Context Venue";
+}
+
+<partial name="_SocialContextVenue" />

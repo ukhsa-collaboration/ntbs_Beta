@@ -19,7 +19,7 @@ const ValidateInput = Vue.extend({
                 headers: getHeaders(),
                 params: {
                     "value": newValue,
-                    "shouldValidateFull": this.$props.shouldvalidatefull,
+                    "shouldValidateFull": this.$props.shouldvalidatefull || false,
                     "key": this.$props.property
                 }
             };

@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Interfaces;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
     [Owned]
-    public class PatientDetails : ModelBase
+    public class PatientDetails : ModelBase, IHasPostcode
     {
         [StringLength(35)]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]

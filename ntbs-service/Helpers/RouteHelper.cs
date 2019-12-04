@@ -41,6 +41,7 @@ namespace ntbs_service.Helpers
         public static string EditTravel => "Edit/Travel";
         public static string EditComorbidities => "Edit/Comorbidities";
         public static string EditImmunosuppression => "Edit/Immunosuppression";
+        public static string EditSocialContextVenues => "Edit/SocialContextVenues";
         public static string EditPreviousHistory => "Edit/PreviousHistory";
         public static string EditMDRDetails => "Edit/MDRDetails";
         public static string Overview => string.Empty;
@@ -50,6 +51,10 @@ namespace ntbs_service.Helpers
 
         public static string EditManualTestResult(int? testResultId) => $"Edit/ManualTestResult/{testResultId}";
         public static string AddManualTestResult => $"Edit/ManualTestResult/New";
+
+        public static string EditSocialContextVenue(int? socialContextVenueId) => $"Edit/SocialContextVenue/{socialContextVenueId}";
+        public static string AddSocialContextVenue => "Edit/SocialContextVenue/New";
+        public static string EditSocialContextVenueSubPath => "Edit/SocialContextVenue/";
     }
 
     public static class AlertSubPaths

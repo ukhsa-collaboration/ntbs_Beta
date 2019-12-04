@@ -1,0 +1,247 @@
+@model SocialContextVenueModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using NHSUK.FrontEndLibrary.TagHelpers
+@using ntbs_service.Helpers
+
+<div class="table-row-form">
+    <nhs-width-container container-width="Standard">
+        <h3> @(Model.RowId == null ? "Add new " : "Edit ") social context venue</h3>
+        <form method="post" autocomplete="off">
+              <nhs-grid-row>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasVenueTypeError = !Model.IsValid("Venue.VenueTypeId");
+                        var venueTypeGroupState = hasVenueTypeError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type="@venueTypeGroupState" aria-describedby="venue-type-error">
+                        <label nhs-label-type="Standard" asp-for="Venue.VenueTypeId">
+                            @Html.DisplayNameFor(m => m.Venue.VenueTypeId)
+                        </label>
+                        <span id="venue-type-error" nhs-span-type="ErrorMessage" has-error="@hasVenueTypeError" asp-validation-for="Venue.VenueTypeId"></span>
+                        <select nhs-select-type="@(hasVenueTypeError ? SelectType.Error : SelectType.Standard)"
+                                asp-for="Venue.VenueTypeId"
+                                asp-items="Model.VenueTypes">
+                            <option value="">Please select</option>
+                        </select>
+                    </nhs-form-group>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasVenueNameError = !Model.IsValid("Venue.Name");
+                        var venueNameGroupState = hasVenueNameError ? Error : Standard;
+                    }
+                    <validate-input model="Venue" property="Name" inline-template>
+                        <nhs-form-group nhs-form-group-type="@venueNameGroupState" aria-describedby="venue-name-error">
+                        <label nhs-label-type="Standard" asp-for="Venue.Name">
+                            @Html.DisplayNameFor(m => m.Venue.Name)
+                        </label>
+                        <span id="venue-name-error" ref="errorField" nhs-span-type="ErrorMessage" has-error="@hasVenueNameError" asp-validation-for="Venue.Name"></span>
+                        <input ref="inputField" v-on:blur="validate" is-error-input=@hasVenueNameError nhs-input-type="Standard"
+                                          asp-for="Venue.Name">
+                    </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+            </nhs-grid-row>
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="OneThird">
+                    @{
+                        var hasAddressError = !Model.IsValid("Venue.Address");
+                        var addressFormState = hasAddressError ? Error : Standard;
+                        var addressTextAreaType = hasAddressError ? TextAreaType.Error : TextAreaType.Standard;
+                    }
+                    <validate-input model="Venue" property="Address" inline-template>
+                        <nhs-form-group nhs-form-group-type="@addressFormState">
+                            <label asp-for="Venue.Address" nhs-label-type="Standard">
+                                @Html.DisplayNameFor(m => m.Venue.Address)
+                            </label>
+                            <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField" asp-validation-for="Venue.Address" has-error="@hasAddressError"></span>
+                            <textarea asp-for="Venue.Address" nhs-textarea-type="@addressTextAreaType" rows="2" aria-describedby="address-error"
+                                    autocomplete="street-address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneThird">
+                    @{
+                        var hasPostcodeError = !Model.IsValid("Venue.Postcode");
+                        var postcodeGroupState = hasPostcodeError ? Error : Standard;
+                    }
+                    <validate-postcode inline-template>
+                        <nhs-form-group ref="formGroup" nhs-form-group-type="@postcodeGroupState" aria-describedby="postcode-error">
+                            <label nhs-label-type="Standard" asp-for="Venue.Postcode">
+                                @Html.DisplayNameFor(m => m.Venue.Postcode)
+                            </label>
+                            <span nhs-span-type="ErrorMessage" id="postcode-error" ref="errorField"
+                                asp-validation-for="Venue.Postcode" has-error="@hasPostcodeError"></span>
+                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasPostcodeError nhs-input-type="Standard"
+                                fixed-width="Ten" asp-for="Venue.Postcode">
+                        </nhs-form-group>
+                    </validate-postcode>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneThird">
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <label nhs-label-type="Standard" asp-for="Venue.Frequency">
+                            @Html.DisplayNameFor(m => m.Venue.Frequency)
+                        </label>
+                        <select nhs-select-type="Standard" asp-for="Venue.Frequency" asp-items="@Html.GetEnumSelectList<Frequency>()">
+                            <option value="" selected> Choose an option </option>
+                        </select>
+                    </nhs-form-group>
+                </nhs-grid-column>
+            </nhs-grid-row>
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="OneThird">
+                    <validate-date model="Venue" property="DateFrom" inline-template>
+                        @{
+                            var hasDateFromError = !Model.IsValid("Venue.DateFrom") || !Model.IsValid("FormattedDateFrom");
+                            var dateFromGroupState = hasDateFromError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@dateFromGroupState">
+                            <nhs-fieldset role="group" aria-describedby="date-from-error">
+                                <nhs-fieldset-legend nhs-legend-size="Standard">
+                                    @Html.DisplayNameFor(m => m.Venue.DateFrom)
+                                </nhs-fieldset-legend>
+                                <span nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="Venue.DateFrom"
+                                    has-error="@hasDateFromError"
+                                    id="date-from-error"></span>
+                                <nhs-date-input>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedDateFrom.Day">Day</label>
+                                            <input v-on:blur="validate"
+                                                is-error-input="@hasDateFromError"
+                                                ref="dayInput"
+                                                nhs-input-type="Date"
+                                                fixed-width="Two"
+                                                asp-for="FormattedDateFrom.Day" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedDateFrom.Month">Month</label>
+                                            <input v-on:blur="validate"
+                                                is-error-input="@hasDateFromError"
+                                                ref="monthInput"
+                                                nhs-input-type="Date"
+                                                fixed-width="Two"
+                                                asp-for="FormattedDateFrom.Month" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedDateFrom.Year">Year</label>
+                                            <input v-on:blur="validate"
+                                                is-error-input="@hasDateFromError"
+                                                ref="yearInput"
+                                                nhs-input-type="Date"
+                                                fixed-width="Four"
+                                                asp-for="FormattedDateFrom.Year" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                </nhs-date-input>
+                            </nhs-fieldset>
+                        </nhs-form-group>
+                    </validate-date>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneThird">
+                    <validate-date model="Venue" property="DateTo" inline-template>
+                        @{
+                            var hasDateToError = !Model.IsValid("Venue.DateTo") || !Model.IsValid("FormattedDateTo");
+                            var dateToGroupState = hasDateToError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@dateToGroupState">
+                            <nhs-fieldset role="group" aria-describedby="date-to-error">
+                                <nhs-fieldset-legend nhs-legend-size="Standard">
+                                    @Html.DisplayNameFor(m => m.Venue.DateTo)
+                                </nhs-fieldset-legend>
+                                <span nhs-span-type="ErrorMessage"
+                                    ref="errorField"
+                                    asp-validation-for="Venue.DateTo"
+                                    has-error="@hasDateToError"
+                                    id="date-to-error"></span>
+                                <nhs-date-input>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedDateTo.Day">Day</label>
+                                            <input v-on:blur="validate"
+                                                is-error-input="@hasDateToError"
+                                                ref="dayInput"
+                                                nhs-input-type="Date"
+                                                fixed-width="Two"
+                                                asp-for="FormattedDateTo.Day" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedDateTo.Month">Month</label>
+                                            <input v-on:blur="validate"
+                                                is-error-input="@hasDateToError"
+                                                ref="monthInput"
+                                                nhs-input-type="Date"
+                                                fixed-width="Two"
+                                                asp-for="FormattedDateTo.Month" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedDateTo.Year">Year</label>
+                                            <input v-on:blur="validate"
+                                                is-error-input="@hasDateToError"
+                                                ref="yearInput"
+                                                nhs-input-type="Date"
+                                                fixed-width="Four"
+                                                asp-for="FormattedDateTo.Year" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                </nhs-date-input>
+                            </nhs-fieldset>
+                        </nhs-form-group>
+                    </validate-date>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneThird">
+                    @{
+                        var hasDetailsError = !Model.IsValid("Venue.Details");
+                        var detailsFormState = hasDetailsError ? Error : Standard;
+                        var detailsTextAreaType = hasDetailsError ? TextAreaType.Error : TextAreaType.Standard;
+                    }
+                    <validate-input model="Venue" property="Details" inline-template>
+                        <nhs-form-group nhs-form-group-type="@detailsFormState">
+                            <label asp-for="Venue.Details" nhs-label-type="Standard">
+                                @Html.DisplayNameFor(m => m.Venue.Details)
+                            </label>
+                            <span nhs-span-type="ErrorMessage" id="details-error" ref="errorField" asp-validation-for="Venue.Details" has-error="@hasDetailsError"></span>
+                            <textarea asp-for="Venue.Details" nhs-textarea-type="@detailsTextAreaType" rows="2" aria-describedby="details-error"
+                                    v-on:blur="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+            </nhs-grid-row>
+
+            <button id="save-venue-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                Save
+            </button>
+            @if (Model.RowId != null)
+            {
+                <button id="delete-venue-result-button"
+                        asp-page-handler="Delete"
+                        nhs-button-type="Standard"
+                        classes="ntbsuk-button--secondary">
+                    Delete
+                </button>
+            }
+        </form>
+    </nhs-width-container>
+</div>
+@if(Model.Notification.SocialContextVenues.Count > 0)
+{
+    <nhs-width-container container-width="Standard">
+    <h2> Social Context Venues </h2>
+
+    <partial name="_SocialContextVenuesTable" for="Notification.SocialContextVenues" />
+
+    <a href="@RouteHelper.GetNotificationPath( Model.NotificationId, NotificationSubPaths.EditSocialContextVenues)">
+        Back to social context venues
+    </a>
+</nhs-width-container>
+}

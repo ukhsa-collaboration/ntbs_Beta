@@ -42,6 +42,8 @@ namespace ntbs_service.Models
         [MaxLength(150)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
+        public int? ClusterId { get; set; }
+
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
@@ -70,6 +72,7 @@ namespace ntbs_service.Models
         public virtual NotificationGroup Group { get; set; }
         public virtual TestData TestData { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
+        public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
 
         #endregion
 

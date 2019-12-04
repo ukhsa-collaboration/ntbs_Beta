@@ -41,6 +41,8 @@ namespace ntbs_service.Models
         public virtual DbSet<ManualTestType> ManualTestType { get; set; }
         public virtual DbSet<ManualTestResult> ManualTestResult { get; set; }
         public virtual DbSet<Alert> Alert { get; set; }
+        public virtual DbSet<VenueType> VenueType { get; set; }
+        public virtual DbSet<SocialContextVenue> SocialContextVenue { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -122,6 +124,7 @@ namespace ntbs_service.Models
             var testResultEnumConverter = new EnumToStringConverter<Result>();
             var alertStatusEnumConverter = new EnumToStringConverter<AlertStatus>();
             var alertTypeEnumConverter = new EnumToStringConverter<AlertType>();
+            var frequencyEnumConverter = new EnumToStringConverter<Frequency>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -462,6 +465,21 @@ namespace ntbs_service.Models
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();
+
+            modelBuilder.Entity<VenueType>().HasData(
+                SeedData.Venues.GetTypes()
+            );
+
+            modelBuilder.Entity<SocialContextVenue>(entity =>
+            {
+                entity.HasOne(e => e.PostcodeLookup)
+                    .WithOne()
+                    .HasForeignKey<SocialContextVenue>(e => e.PostcodeToLookup);
+
+                entity.Property(e => e.Frequency)
+                    .HasConversion(frequencyEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
         }
 
         private static List<object> GetTBServicesList()

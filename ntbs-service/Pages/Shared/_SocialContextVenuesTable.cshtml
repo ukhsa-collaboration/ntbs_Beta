@@ -1,0 +1,74 @@
+@model ICollection<ntbs_service.Models.SocialContextVenue>
+@using ntbs_service.Helpers
+
+@{ 
+    var header = Model.FirstOrDefault(); 
+    var showEditLinks = (bool) (ViewData["ShowSocialContextVenueEditLinks"] ?? false);
+    var orderedResults = Model.OrderByDescending(r => r.DateTo);
+}
+
+<nhs-table id="social-context-venues-table" caption="Social Context Venues" >
+    <nhs-table-head>
+        <nhs-table-item>
+            <p>Category</p>
+            <p>Type</p>
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.Name)
+        </nhs-table-item>
+        <nhs-table-item>
+            <p>@Html.DisplayNameFor(_ => header.Address)</p>
+            <p>@Html.DisplayNameFor(_ => header.Postcode)</p>
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.Frequency)
+        </nhs-table-item>
+        <nhs-table-item>
+            <p>@Html.DisplayNameFor(_ => header.DateFrom)</p>
+            <p>@Html.DisplayNameFor(_ => header.DateTo)</p>
+        </nhs-table-item>
+        <nhs-table-item>
+            @Html.DisplayNameFor(_ => header.Details)
+        </nhs-table-item>
+        @if (showEditLinks) 
+        {
+            <nhs-table-item>Edit</nhs-table-item>
+        }
+    </nhs-table-head>
+    <nhs-table-body>
+    @foreach (var result in orderedResults)
+    {
+        <nhs-table-body-row id="social-context-venue-@result.SocialContextVenueId">
+            <nhs-table-item>
+                <p>@result.VenueType.Category</p>
+                <p>@result.VenueType.Name</p>
+            </nhs-table-item>
+            <nhs-table-item>
+                @result.Name
+            </nhs-table-item>
+            <nhs-table-item>
+                 <p>@result.Address</p>
+                <p>@result.Postcode</p>
+            </nhs-table-item>
+            <nhs-table-item>
+                @result.Frequency
+            </nhs-table-item>
+            <nhs-table-item>
+                <p>@(result.DateFrom?.ToString("dd-MMM-yyyy"))</p>
+                <p>@(result.DateTo?.ToString("dd-MMM-yyyy"))</p>
+            </nhs-table-item>
+            <nhs-table-item>
+                @result.Details
+            </nhs-table-item>
+            @if (showEditLinks) 
+            {
+                var subPath = NotificationSubPaths.EditSocialContextVenue(result.SocialContextVenueId);
+                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                <nhs-table-item>
+                    <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
+                </nhs-table-item>
+            }
+        </nhs-table-body-row>
+    }
+    </nhs-table-body>
+</nhs-table>

@@ -1,0 +1,37 @@
+@page "/Notifications/{NotificationId:int}/Edit/SocialContextVenues/{handler?}"
+@model SocialContextVenuesModel
+
+@{
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - Social Context Venues";
+    ViewData["ShowSocialContextVenueEditLinks"] = true;
+}
+
+<h2>Social Context - Venues</h2>
+
+@if(Model.Notification.ClusterId != null)
+{
+    <h3>Cluster Information</h3>
+    <div>
+        <p><strong>Cluster ID: </strong>@Model.Notification.ClusterId</p>
+    </div>
+}
+
+<h3>Regular venues visited by the patient</h3>
+<div>
+    <input type="hidden" asp-for="NotificationId">
+    <p>Recording venues which the patient has regularly visited in the two years prior to TB diagnosis may help pin identifying transmissions settings.</p>
+
+    @if(Model.SocialContextVenues.Count > 0)
+    {
+        <partial name="_SocialContextVenuesTable" for="SocialContextVenues" view-data=@ViewData />
+    }
+
+    <button id="add-new-social-context-venue-button"
+            nhs-button-type="Standard"
+            classes="ntbsuk-button--primary"
+            name="actionName"
+            value="Create">
+        Add New
+    </button>
+</div>

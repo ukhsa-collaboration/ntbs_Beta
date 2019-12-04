@@ -14,7 +14,7 @@ const ValidatePostcode = Vue.extend({
                 url: `${window.location.pathname}/ValidatePostcode`,
                 headers: getHeaders(),
                 params: {
-                    "shouldValidateFull": this.$props.shouldvalidatefull,
+                    "shouldValidateFull": this.$props.shouldvalidatefull || false,
                     "postcode": newValue
                 }
             }

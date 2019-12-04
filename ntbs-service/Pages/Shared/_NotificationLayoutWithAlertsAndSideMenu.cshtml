@@ -97,6 +97,11 @@
                                 Immunosuppression
                             </a>
                         </li>
+                        <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditSocialContextVenues ? "contents-list-item--current" : ""))">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditSocialContextVenues)">
+                                Social Context - Venues
+                            </a>
+                        </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditPreviousHistory ? "contents-list-item--current" : ""))">
                             <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditPreviousHistory)">
                                 Previous History

@@ -14,7 +14,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class ManualTestResultPage : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly ITestResultsRepository _testResultsRepository;
+        private readonly IItemRepository<ManualTestResult> _testResultsRepository;
 
         public SelectList ManualTestTypes { get; set; }
         public SelectList SampleTypes { get; set; }
@@ -32,7 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            ITestResultsRepository testResultsRepository)
+            IItemRepository<ManualTestResult> testResultsRepository)
             : base(notificationService, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
@@ -68,12 +68,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 if (RowId == null)
                 {
-                    await _testResultsRepository.AddTestResultAsync(TestResultForEdit);
+                    await _testResultsRepository.AddAsync(TestResultForEdit);
                 }
                 else
                 {
                     TestResultForEdit.ManualTestResultId = RowId.Value;
-                    await _testResultsRepository.UpdateTestResultAsync(Notification, TestResultForEdit);
+                    await _testResultsRepository.UpdateAsync(Notification, TestResultForEdit);
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return NotFound();
             }
 
-            await _testResultsRepository.DeleteTestAsync(testResult);
+            await _testResultsRepository.DeleteAsync(testResult);
 
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }
