@@ -17,7 +17,7 @@ namespace ntbs_integration_tests
 
         protected string GetPathForId(string subPath, int id, Dictionary<string, string> queryDictionary = null)
         {
-            return RouteHelper.GetNotificationPath(subPath, id, queryDictionary);
+            return RouteHelper.GetNotificationPath(id, subPath, queryDictionary);
         }
 
         protected string GetHandlerPath(Dictionary<string, string> queryDictionary, string handlerPath, int id = 0)

@@ -295,7 +295,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             foreach (var notificationId in expectedWarningNotificationIds)
             {
-                var warningUrl = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, notificationId);
+                var warningUrl = RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.Overview);
                 Assert.Equal($"#{notificationId}", linksContainer.QuerySelector($"a[href='{warningUrl}']").TextContent);
             }
         }
@@ -332,7 +332,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["nhsNumber"] = nhsNumber
             };
             const int expectedWarningNotificationId = Utilities.PATIENT_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER;
-            var expectedWarningUrl = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, expectedWarningNotificationId);
+            var expectedWarningUrl = RouteHelper.GetNotificationPath(expectedWarningNotificationId, NotificationSubPaths.Overview);
 
             // Act
             var response = await Client.GetAsync(GetHandlerPath(formData, "NhsNumberDuplicates", id));

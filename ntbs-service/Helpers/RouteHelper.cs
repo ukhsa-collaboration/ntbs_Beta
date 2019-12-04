@@ -7,41 +7,26 @@ namespace ntbs_service.Helpers
     {
         public static string NotificationBasePath => "/Notifications/{0}/{1}";
 
-        public static string GetNotificationPath(string subPath, int id)
+        public static string GetSubmittingNotificationPath(int notificationId, string subPath)
         {
-            return GetNotificationPath(subPath, id, false, null);
+            return GetNotificationPath(notificationId, subPath, new Dictionary<string, string> { { "isBeingSubmitted", "True" } });
         }
 
-        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted)
-        {
-            return GetNotificationPath(subPath, id, isBeingSubmitted, null);
-        }
-
-        public static string GetNotificationPath(string subPath, int id, Dictionary<string, string> formData)
-        {
-            return GetNotificationPath(subPath, id, false, formData);
-        }
-
-        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted, Dictionary<string, string> formData)
+        public static string GetNotificationPath(int notificationId, string subPath, Dictionary<string, string> formData = null)
         {
             var path = subPath;
-
-            if (isBeingSubmitted)
-            {
-                path = QueryHelpers.AddQueryString(path, "isBeingSubmitted", "True");
-            }
 
             if (formData != null)
             {
                 path = QueryHelpers.AddQueryString(path, formData);
             }
 
-            return string.Format(NotificationBasePath, id, path);
+            return string.Format(NotificationBasePath, notificationId, path);
         }
 
-        public static string GetAlertPath(int id, string subPath)
+        public static string GetAlertPath(int alertId, string subPath)
         {
-            return string.Format("/Alerts/{0}/{1}", id, subPath);
+            return $"/Alerts/{alertId}/{subPath}";
         }
     }
 
@@ -63,7 +48,7 @@ namespace ntbs_service.Helpers
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
 
-        public static string EditManualTestResult(int? TestResultId) => $"Edit/ManualTestResult/{TestResultId}";
+        public static string EditManualTestResult(int? testResultId) => $"Edit/ManualTestResult/{testResultId}";
         public static string AddManualTestResult => $"Edit/ManualTestResult/New";
     }
 

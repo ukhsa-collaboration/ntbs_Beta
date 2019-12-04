@@ -44,7 +44,7 @@
             @if (showEditLinks) 
             {
                 var subPath = NotificationSubPaths.EditManualTestResult(result.ManualTestResultId);
-                var path = RouteHelper.GetNotificationPath(subPath, result.NotificationId);
+                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
                 <nhs-table-item>
                     <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
                 </nhs-table-item>

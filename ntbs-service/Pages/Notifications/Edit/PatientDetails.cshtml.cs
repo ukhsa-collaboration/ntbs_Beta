@@ -108,7 +108,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 .Where(n => n != NotificationId)
                 .ToDictionary(
                     id => id.ToString(),
-                    id => RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, id));
+                    id => RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview));
 
             return filteredIds;
         }

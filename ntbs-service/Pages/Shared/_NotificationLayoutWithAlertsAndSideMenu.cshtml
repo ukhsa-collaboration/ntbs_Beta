@@ -26,7 +26,7 @@
                     @if (!isDraft)
                     {
                         <div class="@(currentPage == NotificationSubPaths.Overview ? "notification-banner-links--current" : "")">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">
                                 Notification details
                             </a>
                         </div>
@@ -35,14 +35,14 @@
                     @if (Model.NumberOfLinkedNotifications > 0)
                     {
                         <div class="@(isLinkedNotificationPage ? "notification-banner-links--current" : "")">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.LinkedNotifications, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.LinkedNotifications)">
                                 Linked Notifications (@Model.NumberOfLinkedNotifications)
                             </a>
                         </div>
                         <div class="notification-banner-link-separator"> </div>
                     }
                     <div>
-                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, Model.NotificationId)">
+                        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">
                             Audit
                         </a>
                     </div>
@@ -53,52 +53,52 @@
                 <nhs-grid-column grid-column-width="OneQuarter">
                     <ul class="sub-nav-left">
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditPatientDetails ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditPatientDetails, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditPatientDetails)">
                                 Personal details
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditEpisode ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditEpisode, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditEpisode)">
                                 Hospital details
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditClinicalDetails ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditClinicalDetails, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditClinicalDetails)">
                                 Clinical Details
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditTestResults ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditTestResults, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditTestResults)">
                                 Test Results
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditContactTracing ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditContactTracing, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditContactTracing)">
                                 Contact Tracing
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditSocialRiskFactors ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditSocialRiskFactors, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditSocialRiskFactors)">
                                 Social Risk Factors
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditTravel ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditTravel, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditTravel)">
                                 Travel/visitor history
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditComorbidities ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditComorbidities, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditComorbidities)">
                                 Co-morbidities
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditImmunosuppression ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditImmunosuppression, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditImmunosuppression)">
                                 Immunosuppression
                             </a>
                         </li>
                         <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditPreviousHistory ? "contents-list-item--current" : ""))">
-                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(NotificationSubPaths.EditPreviousHistory, Model.NotificationId)">
+                            <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditPreviousHistory)">
                                 Previous History
                             </a>
                         </li>
