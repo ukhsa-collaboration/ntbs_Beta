@@ -40,6 +40,10 @@ namespace ntbs_service.Helpers
                         subPath = NotificationSubPaths.EditClinicalDetails;
                         displayName = "Clinical Details";
                         break;
+                    case "TestData":
+                        subPath = NotificationSubPaths.EditTestResults;
+                        displayName = "Test Results";
+                        break;
                     case "NotificationDate":
                     case "Episode":
                         subPath = NotificationSubPaths.EditEpisode;
@@ -64,7 +68,7 @@ namespace ntbs_service.Helpers
                         continue;
                 }
 
-                var url = RouteHelper.GetNotificationPath(subPath, notificationId, true);
+                var url = RouteHelper.GetSubmittingNotificationPath(notificationId, subPath);
                 AddErrorMessagesIntoDictionary(displayName, url,
                     modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList());
             }

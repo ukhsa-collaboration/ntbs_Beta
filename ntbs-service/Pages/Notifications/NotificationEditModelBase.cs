@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace ntbs_service.Pages.Notifications
         protected ValidationService ValidationService;
 
         protected NotificationEditModelBase(
-            INotificationService service, 
+            INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
@@ -24,93 +25,99 @@ namespace ntbs_service.Pages.Notifications
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
-        [ViewData]
-        public Dictionary<string, string> EditPageErrorDictionary { get; set; }
-        
 
-        public virtual async Task<IActionResult> OnGetAsync(int id, bool isBeingSubmitted = false)
+        /*
+        Post method accepts name of action specified by button clicked.
+        Using handler appends handler to the url and would require awkward javascript logic
+        to accommodate the URL changes for dynamic validation.
+        */
+        [BindProperty]
+        public string ActionName { get; set; }
+
+        public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
-            Notification = await GetNotification(id);
+            Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
             }
-
-            NotificationId = Notification.NotificationId;
 
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {
-                return RedirectToOverview(NotificationId);
+                return RedirectAfterSaveForNotified();
             }
 
-            return await PreparePageForGet(NotificationId, isBeingSubmitted);
+            return await PrepareAndDisplayPageAsync(isBeingSubmitted);
         }
 
-        protected virtual async Task<Notification> GetNotification(int notificationId)
+        public async Task<IActionResult> OnPostAsync(bool isBeingSubmitted)
         {
-            return await NotificationRepository.GetNotificationAsync(notificationId);
-        }
+            await SetNotification(ActionName);
 
-        /*
-        Post method accepts name of action specified by button clicked.
-        Using handler adds handler onto url and therefore breaking javascript
-        validation happening after form is submitted
-        */
-        public async Task<IActionResult> OnPostAsync(string actionName, bool isBeingSubmitted)
-        {
-            // Get Notifications with all owned properties to check for 
-            Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId); 
             if (Notification == null)
             {
                 return NotFound();
             }
-            else if (!(await AuthorizationService.CanEdit(User, Notification)))
+            if (!(await AuthorizationService.CanEdit(User, Notification)))
             {
                 return ForbiddenResult();
             }
 
             await AuthorizeAndSetBannerAsync();
+            var isValid = await TryValidateAndSave();
 
-            switch (actionName) 
+            if (!isValid)
             {
-                case "Save":
-                    return await Save(isBeingSubmitted);
+                return await PrepareAndDisplayPageAsync(isBeingSubmitted);
+            }
+
+            switch (ActionName)
+            {
                 case "Submit":
-                    return await Submit();
+                    return await SubmitAsync();
+                case "Create":
+                    return RedirectToCreate();
+                case "Save": // intentional fall-through: treating Save as the default case
                 default:
-                    return Page();
+                    return RedirectAfterSave(isBeingSubmitted);
             }
         }
 
-        public async Task<IActionResult> Submit()
+        private async Task SetNotification(string actionName)
         {
-            await ValidateAndSave();
-            if (!ModelState.IsValid) 
+            if (actionName == "Submit")
             {
-                return await OnGetAsync(NotificationId);
+                // When submitting, we need to validate the entire record, not just the currently edited page
+                Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);
             }
+            else
+            {
+                Notification = await GetNotificationAsync(NotificationId);
+            }
+        }
 
-            // IsRequired fields on Models requires ShouldValidateFull flag
+        private async Task<IActionResult> SubmitAsync()
+        {
             SetShouldValidateFull();
 
             if (!TryValidateModel(Notification))
             {
                 NotifyErrorDictionary = NotificationValidationErrorGenerator.MapToDictionary(ModelState, NotificationId);
                 return Partial("./NotificationErrorSummary", this);
-            } 
+            }
 
             await Service.SubmitNotificationAsync(Notification);
-            
-            return RedirectToOverview(NotificationId);
+
+            return RedirectAfterSaveForNotified();
         }
 
-        private void SetShouldValidateFull() 
+        private void SetShouldValidateFull()
         {
             Notification.ShouldValidateFull = true;
-            foreach (var property in Notification.GetType().GetProperties()) 
+            foreach (var property in Notification.GetType().GetProperties())
             {
-                if (property.PropertyType.IsSubclassOf(typeof(ModelBase))) 
+                if (property.PropertyType.IsSubclassOf(typeof(ModelBase)))
                 {
                     var ownedModel = property.GetValue(Notification);
                     ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
@@ -119,28 +126,21 @@ namespace ntbs_service.Pages.Notifications
             Notification.NotificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
         }
 
-        public async Task<IActionResult> Save(bool isBeingSubmitted)
-        {           
-            Notification.SetFullValidation(Notification.NotificationStatus);
-            await ValidateAndSave();
-
-            if (!ModelState.IsValid) 
+        private IActionResult RedirectAfterSave(bool isBeingSubmitted)
+        {
+            if (Notification.NotificationStatus != NotificationStatus.Draft)
             {
-                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
-                return await OnGetAsync(NotificationId);
+                return RedirectAfterSaveForNotified();
             }
 
-            if (Notification.NotificationStatus != NotificationStatus.Draft) 
-            {
-                return RedirectToOverview(NotificationId);
-            }
-
-            return RedirectToNextPage(NotificationId, isBeingSubmitted);
+            return RedirectAfterSaveForDraft(isBeingSubmitted);
         }
 
-        protected IActionResult RedirectToOverview(int id)
+        // By default saving a notified record takes user to Overview page,
+        // but this can be overriden for sub-entity pages such as TestResult
+        protected virtual IActionResult RedirectAfterSaveForNotified()
         {
-            return RedirectToPage("../Overview", new {id});
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
@@ -149,6 +149,13 @@ namespace ntbs_service.Pages.Notifications
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
 
             await GetLinkedNotifications();
+        }
+
+        private async Task<bool> TryValidateAndSave()
+        {
+            Notification.SetFullValidation(Notification.NotificationStatus);
+            await ValidateAndSave();
+            return ModelState.IsValid;
         }
 
         public bool IsValid(string key)
@@ -162,7 +169,12 @@ namespace ntbs_service.Pages.Notifications
         }
 
         protected abstract Task ValidateAndSave();
-        protected abstract Task<IActionResult> PreparePageForGet(int notificationId, bool isBeingSubmitted);
-        protected abstract IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted);
+        protected abstract Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted);
+        protected abstract IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted);
+
+        protected virtual IActionResult RedirectToCreate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

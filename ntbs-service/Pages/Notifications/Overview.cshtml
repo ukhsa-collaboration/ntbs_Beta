@@ -1,4 +1,4 @@
-@page "/Notifications/{id?}/{handler?}"
+@page "/Notifications/{NotificationId:int}/{handler?}"
 @using ntbs_service.Helpers
 @model OverviewModel
 
@@ -16,6 +16,8 @@
 <partial name="./OverviewPartials/_ClinicalDetailsOverviewPartial" model="@Model" />
 
 <partial name="./OverviewPartials/_ContactTracingOverviewPartial" for="Notification.ContactTracing" />
+
+<partial name="./OverviewPartials/_TestResultsOverviewPartial" for="Notification.TestData" />
 
 <partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial" model="@Model" />
 

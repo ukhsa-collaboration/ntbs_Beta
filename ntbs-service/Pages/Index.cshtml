@@ -49,7 +49,7 @@
                             <nhs-table-item>
                                 @if(item.NotificationId != null) 
                                 {
-                                    var overviewPageLink = @RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId.GetValueOrDefault());
+                                    var overviewPageLink = RouteHelper.GetNotificationPath(item.NotificationId.GetValueOrDefault(), NotificationSubPaths.Overview);
                                     <a href="@overviewPageLink" class="govuk-link govuk-link--no-visited-state">
                                         @Html.DisplayFor(_ => item.NotificationId) 
                                     </a>
@@ -106,7 +106,7 @@
             {
                 <nhs-table-body-row>
                     <nhs-table-item>
-                        <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link govuk-link--no-visited-state">
+                        <a href="@RouteHelper.GetNotificationPath(item.NotificationId, NotificationSubPaths.Overview)" class="govuk-link govuk-link--no-visited-state">
                             @Html.DisplayFor(_ => item.NotificationId)
                         </a>
                     </nhs-table-item>
@@ -144,7 +144,7 @@
             @foreach (var item in Model.RecentNotifications) {
                 <nhs-table-body-row>
                     <nhs-table-item>
-                        <a href="@RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, item.NotificationId)" class="govuk-link--no-visited-state">
+                        <a href="@RouteHelper.GetNotificationPath(item.NotificationId, NotificationSubPaths.Overview)" class="govuk-link--no-visited-state">
                             @Html.DisplayFor(modelItem => item.NotificationId)
                         </a>
                     </nhs-table-item>

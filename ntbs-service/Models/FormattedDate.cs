@@ -15,11 +15,6 @@ namespace ntbs_service.Models
             return string.IsNullOrEmpty(Year) && string.IsNullOrEmpty(Month) && string.IsNullOrEmpty(Day);
         }
 
-        public bool HasAnyEmpty()
-        {
-            return string.IsNullOrEmpty(Year) || string.IsNullOrEmpty(Month) || string.IsNullOrEmpty(Day);
-        }
-
         public bool TryConvertToDateTime(out DateTime? dateTime)
         {
             dateTime = null;

@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
         }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             SocialRiskFactors = Notification.SocialRiskFactors;
             await SetNotificationProperties(isBeingSubmitted, SocialRiskFactors);
@@ -36,9 +36,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./Travel", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./Travel", new { NotificationId, isBeingSubmitted });
         }
     }
 }

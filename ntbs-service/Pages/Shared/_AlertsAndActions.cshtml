@@ -21,7 +21,7 @@
                 <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit" id="submit-button">
                     Submit
                 </button>
-                @{ var deleteHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Delete, Model.NotificationId); }
+                @{ var deleteHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Delete); }
                 <a id="delete-draft-button" class="action-link" role="button" href="@deleteHref">
                     Delete draft
                 </a>
@@ -36,7 +36,7 @@
                     </button>
                     @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
                     {
-                        var denotifyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
+                        var denotifyHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Denotify);
                         <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">
                             Denotify
                         </a>

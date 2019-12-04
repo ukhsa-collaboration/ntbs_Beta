@@ -15,9 +15,9 @@ namespace ntbs_service.Pages.Notifications
         {
         }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(id);
+            Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
@@ -35,7 +35,7 @@ namespace ntbs_service.Pages.Notifications
             // This check has to happen after authorization as otherwise patient will redirect to overview and we'd be stuck in a loop.
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
-                return RedirectToPage("./Edit/PatientDetails", new { id = NotificationId });
+                return RedirectToPage("./Edit/PatientDetails", new { NotificationId });
             }
 
             return Page();
@@ -46,7 +46,7 @@ namespace ntbs_service.Pages.Notifications
             var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             var linkedNotification = await Service.CreateLinkedNotificationAsync(notification, User);
 
-            return RedirectToPage("/Notifications/Edit/PatientDetails", new { id = linkedNotification.NotificationId });
+            return RedirectToPage("/Notifications/Edit/PatientDetails", new { linkedNotification.NotificationId });
         }
     }
 }

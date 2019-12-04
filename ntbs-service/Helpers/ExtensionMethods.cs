@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,25 +11,36 @@ namespace ntbs_service.Helpers
 {
     public static class DateTimeExtension
     {
-        public static FormattedDate ConvertToFormattedDate(this DateTime? dateTime) {
+        public static FormattedDate ConvertToFormattedDate(this DateTime? dateTime)
+        {
+            return dateTime == null ? new FormattedDate() : dateTime.Value.ConvertToFormattedDate();
+        }
 
-            return new FormattedDate() { Day = dateTime?.Day.ToString(), Month = dateTime?.Month.ToString(), Year = dateTime?.Year.ToString() };
+        public static FormattedDate ConvertToFormattedDate(this DateTime dateTime)
+        {
+            return new FormattedDate
+            {
+                Day = dateTime.Day.ToString(),
+                Month = dateTime.Month.ToString(),
+                Year = dateTime.Year.ToString()
+            };
         }
     }
 
     public static class NotificationExtensions
     {
-        public static IEnumerable<NotificationBannerModel> CreateNotificationBanners(this IEnumerable<Notification> notifications,
-                                                                                     ClaimsPrincipal user,
-                                                                                     IAuthorizationService authorizationService)
+        public static IEnumerable<NotificationBannerModel> CreateNotificationBanners(
+            this IEnumerable<Notification> notifications,
+            ClaimsPrincipal user,
+            IAuthorizationService authorizationService)
         {
             return notifications.Select(async n =>
-            {
-                var fullAccess = await authorizationService.CanEdit(user, n);
-                return new NotificationBannerModel(n, fullAccess: fullAccess, showLink: true);
-            }
-            ).Select(n => n.Result);
+                    {
+                        var fullAccess = await authorizationService.CanEdit(user, n);
+                        return new NotificationBannerModel(n, fullAccess: fullAccess, showLink: true);
+                    })
+                .Select(n => n.Result);
         }
     }
-    
+
 }

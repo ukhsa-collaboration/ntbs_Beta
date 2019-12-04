@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,7 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public SelectList NotUKCountries { get; set; }
 
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             MDRDetails = Notification.MDRDetails;
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
@@ -45,10 +45,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             // This is the last page in the flow, so there's no next page to go to
-            return RedirectToPage("./MDRDetails", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./MDRDetails", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

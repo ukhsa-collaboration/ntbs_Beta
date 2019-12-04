@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System;
 using System.Threading.Tasks;
-using EFAuditer;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
@@ -15,7 +11,6 @@ namespace ntbs_service.Services
         Task<bool> AddUniqueAlertAsync(Alert alert);
         Task DismissAlertAsync(int alertId, string userId);
         Task DismissMatchingAlertAsync(int notificationId, AlertType alertType);
-
     }
 
     public class AlertService : IAlertService
@@ -34,7 +29,7 @@ namespace ntbs_service.Services
         public async Task DismissAlertAsync(int alertId, string userId)
         {
             var alert = await _alertRepository.GetAlertByIdAsync(alertId);
-            
+
             alert.ClosingUserId = userId;
             alert.ClosureDate = DateTime.Now;
             alert.AlertStatus = AlertStatus.Closed;
@@ -45,23 +40,23 @@ namespace ntbs_service.Services
         public async Task<bool> AddUniqueAlertAsync(Alert alert)
         {
             var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if(matchingAlert != null)
+            if (matchingAlert != null)
             {
                 return false;
             }
-            if(alert.NotificationId != null)
+            if (alert.NotificationId != null)
             {
-                var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId);
+                var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
                 alert.CreationDate = DateTime.Now;
-                if(alert.CaseManagerEmail == null)
+                if (alert.CaseManagerEmail == null)
                 {
                     alert.CaseManagerEmail = notification?.Episode?.CaseManagerEmail;
                 }
-                if(alert.TbServiceCode == null)
+                if (alert.TbServiceCode == null)
                 {
                     alert.TbServiceCode = notification?.Episode?.TBServiceCode;
                 }
-            } 
+            }
             await _alertRepository.AddAlertAsync(alert);
             return true;
         }

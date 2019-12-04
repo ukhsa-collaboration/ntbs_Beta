@@ -6,6 +6,9 @@
     Layout = "../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
-<div id="unauthorized-warning">
-    <p>@(Messages.UnauthorizedWarning)</p>
-</div>
+
+<nhs-width-container container-width="Standard">
+    <div id="unauthorized-warning">
+        <p>@(Messages.UnauthorizedWarning)</p>
+    </div>
+</nhs-width-container>
