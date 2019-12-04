@@ -6,6 +6,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -154,6 +155,22 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidateTestResultForEditDate(string key, string day, string month, string year)
         {
             return ValidationService.ValidateDate<ManualTestResult>(key, day, month, year);
+        }
+
+        public async Task<JsonResult> OnGetFilteredSampleTypesForManualTestType(int value)
+        {
+            var filteredSampleTypes = await _referenceDataRepository.GetSampleTypesForManualTestType(value);
+
+            return new JsonResult(
+                new FilteredManualTestPageSelectLists
+                {
+                    SampleTypes = filteredSampleTypes.Select(n => new OptionValue
+                    {
+                        Value = n.SampleTypeId.ToString(),
+                        Text = n.Description,
+                        Group = n.Category
+                    })
+                });
         }
     }
 }

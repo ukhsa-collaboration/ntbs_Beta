@@ -58,12 +58,12 @@
 
     <h2> Hospital details </h2>
 
-    <tb-service-filtered-dropdowns inline-template>
+    <filtered-dropdown filter-handler-path="GetFilteredListsByTbService" :filtering-refs="['caseManagers', 'hospitals']" inline-template>
         <div>
             @if (Model.Notification.NotificationStatus == NotificationStatus.Draft)
             {
                 <validate-input model="Episode" property="TBServiceCode" shouldvalidatefull="@fullValidation"
-                                ref="tbService" v-on:mounted="filteringValidateMounted" v-on:valid="filteringValidateChanged" inline-template>
+                                ref="filterContainer" v-on:mounted="filteringMounted" v-on:valid="filteringChanged" inline-template>
                     @{
                         var hasTbServiceCodeError = !Model.IsValid("Episode.TBServiceCode");
                         var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
@@ -111,7 +111,7 @@
                           ref="errorField" asp-validation-for="Episode.HospitalId"></span>
                     <select ref="selectField" nhs-select-type="@hospitalSelectErrorState" asp-for="Episode.HospitalId"
                             asp-items="Model.Hospitals" v-on:change="validate">
-                        <option value="" selected>Select Hospital</option>
+                        <option value="" selected>Please select</option>
                     </select>
                 </nhs-form-group>
             </validate-input>
@@ -145,14 +145,14 @@
                           ref="errorField" asp-validation-for="Episode.CaseManagerEmail"></span>
                     <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="Episode.CaseManagerEmail"
                             asp-items="Model.CaseManagers" v-on:change="validate">
-                        <option value="" selected>Select case manager</option>
+                        <option value="" selected>Please select</option>
                     </select>
                 </nhs-form-group>
             </validate-input>
             <br />
 
         </div>
-    </tb-service-filtered-dropdowns>
+    </filtered-dropdown>
 
     
 </div>

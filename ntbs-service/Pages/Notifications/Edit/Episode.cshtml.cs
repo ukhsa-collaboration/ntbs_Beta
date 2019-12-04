@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -159,21 +160,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public async Task<JsonResult> OnGetGetFilteredListsByTbService(string tbServiceCode)
+        public async Task<JsonResult> OnGetGetFilteredListsByTbService(string value)
         {
-            var tbServiceCodeAsList = new List<string> { tbServiceCode };
+            var tbServiceCodeAsList = new List<string> { value };
             var filteredHospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodeAsList);
             var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
 
             return new JsonResult(
                 new FilteredEpisodePageSelectLists
                 {
-                    Hospitals = filteredHospitals.Select(n => new ListEntry
+                    Hospitals = filteredHospitals.Select(n => new OptionValue
                     {
                         Value = n.HospitalId.ToString(),
                         Text = n.Name
                     }),
-                    CaseManagers = filteredCaseManagers.Select(n => new ListEntry
+                    CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
                         Value = n.Email,
                         Text = n.FullName

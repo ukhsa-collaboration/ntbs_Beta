@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Helpers;
+using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.Validations;
-using ntbs_service.Pages.Notifications.Edit;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -322,7 +322,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var formData = new Dictionary<string, string>
             {
-                ["tbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["value"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
             };
 
             // Act
