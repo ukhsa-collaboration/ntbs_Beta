@@ -158,7 +158,7 @@ namespace ntbs_integration_tests.Helpers
                     AlertStatus = AlertStatus.Open,
                     TbServiceCode = PERMITTED_SERVICE_CODE,
                     CreationDate = DateTime.Now,
-                    NotificationId = DRAFT_ID,
+                    NotificationId = NOTIFIED_ID,
                     AlertType = AlertType.Test
                 }
             };

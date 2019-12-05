@@ -99,7 +99,7 @@ namespace ntbs_ui_tests.StepDefinitions
         public void WhenIExpandNotificationSection()
         {
             var button = Browser
-                .FindElement(By.ClassName("manage-notification"))
+                .FindElement(By.Id("manage-notification"))
                 .FindElement(By.TagName("summary"));
             button.Click();
         }

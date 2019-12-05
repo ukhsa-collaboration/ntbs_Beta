@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,8 +21,8 @@ namespace ntbs_service.Pages.Notifications
             INotificationRepository notificationRepository = null)
         {
             this.Service = service;
-            this.NotificationRepository = notificationRepository;
             this.AuthorizationService = authorizationService;
+            this.NotificationRepository = notificationRepository;
         }
 
         protected NotificationGroup Group;
@@ -29,6 +30,7 @@ namespace ntbs_service.Pages.Notifications
 
         public Notification Notification { get; set; }
         public NotificationBannerModel NotificationBannerModel { get; set; }
+        public IList<Alert> Alerts { get; set; }
 
         [BindProperty]
         public bool HasEditPermission { get; set; }
