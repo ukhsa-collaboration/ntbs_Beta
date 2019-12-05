@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace ntbs_service.Helpers
 {
@@ -6,26 +7,33 @@ namespace ntbs_service.Helpers
     {
         public static string NotificationBasePath => "/Notifications/{0}/{1}";
 
-        public static string GetNotificationPath(string subPath, int id, bool isBeingSubmitted = false)
+        public static string GetSubmittingNotificationPath(int notificationId, string subPath)
         {
-            var path = subPath;
-            if (isBeingSubmitted)
-            {
-                path = QueryHelpers.AddQueryString(path, "isBeingSubmitted", "True");
-            }
-
-            return string.Format(NotificationBasePath, id, path);
+            return GetNotificationPath(notificationId, subPath, new Dictionary<string, string> { { "isBeingSubmitted", "True" } });
         }
 
-        public static string GetAlertPath(int id, string subPath)
+        public static string GetNotificationPath(int notificationId, string subPath, Dictionary<string, string> formData = null)
         {
-            return string.Format("/Alerts/{0}/{1}", id, subPath);
+            var path = subPath;
+
+            if (formData != null)
+            {
+                path = QueryHelpers.AddQueryString(path, formData);
+            }
+
+            return string.Format(NotificationBasePath, notificationId, path);
+        }
+
+        public static string GetAlertPath(int alertId, string subPath)
+        {
+            return $"/Alerts/{alertId}/{subPath}";
         }
     }
 
     public static class NotificationSubPaths
     {
         public static string EditClinicalDetails => "Edit/ClinicalDetails";
+        public static string EditTestResults => "Edit/TestResults";
         public static string EditPatientDetails => "Edit/PatientDetails";
         public static string EditEpisode => "Edit/Episode";
         public static string EditContactTracing => "Edit/ContactTracing";
@@ -39,6 +47,9 @@ namespace ntbs_service.Helpers
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
+
+        public static string EditManualTestResult(int? testResultId) => $"Edit/ManualTestResult/{testResultId}";
+        public static string AddManualTestResult => $"Edit/ManualTestResult/New";
     }
 
     public static class AlertSubPaths

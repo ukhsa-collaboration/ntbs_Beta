@@ -22,7 +22,6 @@ namespace ntbs_service.Models
         public AlertType AlertType { get; set; }
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
-        public virtual string Description { get; }
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => FormatDate(CreationDate);
         [Display(Name = "Case manager")]

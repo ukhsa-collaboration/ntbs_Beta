@@ -113,6 +113,7 @@ namespace ntbs_service
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
+            services.AddScoped<ITestResultsRepository, TestResultsRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }

@@ -1,0 +1,9 @@
+@page "/Notifications/{NotificationId:int}/Edit/ManualTestResult/New/{handler?}"
+@model ManualTestResultPage
+
+@{
+    Layout = "../../../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Notification - Create Manual Test Result";
+}
+
+<partial name="_ManualTestResult" />

@@ -48,7 +48,7 @@ namespace ntbs_service.Models
             Origin = "ntbs";
             ShowLink = showLink;
             FullAccess = fullAccess;
-            RedirectPath = RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, NotificationId);
+            RedirectPath = RouteHelper.GetNotificationPath(NotificationId, NotificationSubPaths.Overview);
         }
     }
 }

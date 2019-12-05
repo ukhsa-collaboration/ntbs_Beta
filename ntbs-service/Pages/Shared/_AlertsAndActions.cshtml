@@ -19,7 +19,7 @@
                     @foreach (var alert in Model.Alerts)
                     {
                         <div class="flex-container" id="alert-@alert.AlertId">
-                            <div class="alert-description--overview-view">@alert.Description</div>
+                            <div class="alert-description--overview-view">@alert.Action</div>
                             <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
                             <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
                                 class="dismiss-alert-button--overview-view">
@@ -47,7 +47,7 @@
                 </form>
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
                 {
-                    var denotifyHref = @RouteHelper.GetNotificationPath(NotificationSubPaths.Denotify, Model.NotificationId);
+                    var denotifyHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Denotify);
                     <a id='denotify-button' class="action-link" role="button" href="@denotifyHref">
                         Denotify
                     </a>

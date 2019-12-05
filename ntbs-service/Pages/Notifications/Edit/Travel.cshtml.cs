@@ -30,7 +30,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 nameof(Country.Name));
         }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             TravelDetails = Notification.TravelDetails;
             VisitorDetails = Notification.VisitorDetails;
@@ -45,9 +45,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./Comorbidities", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./Comorbidities", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

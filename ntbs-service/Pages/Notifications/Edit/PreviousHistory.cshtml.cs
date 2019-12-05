@@ -17,7 +17,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public PatientTBHistory PatientTbHistory { get; set; }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             PatientTbHistory = Notification.PatientTBHistory;
             await SetNotificationProperties(isBeingSubmitted, PatientTbHistory);
@@ -30,7 +30,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             string nextPage;
             if(Notification.ClinicalDetails?.IsMDRTreatment == true) // TODO NTBS-384 drug resistance profile check - should probably abstract check into method
@@ -41,7 +41,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 nextPage = "./PreviousHistory";
             }
-            return RedirectToPage(nextPage, new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage(nextPage, new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

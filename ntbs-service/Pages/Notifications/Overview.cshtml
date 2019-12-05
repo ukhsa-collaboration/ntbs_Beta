@@ -1,4 +1,4 @@
-@page "/Notifications/{id?}/{handler?}"
+@page "/Notifications/{NotificationId:int}/{handler?}"
 @using ntbs_service.Helpers
 @model OverviewModel
 
@@ -17,6 +17,8 @@
 
 <partial name="./OverviewPartials/_ContactTracingOverviewPartial" for="Notification.ContactTracing" />
 
+<partial name="./OverviewPartials/_TestResultsOverviewPartial" for="Notification.TestData" />
+
 <partial name="./OverviewPartials/_SocialRiskFactorsOverviewPartial" model="@Model" />
 
 <partial name="./OverviewPartials/_TravelOverviewPartial" model="@Model" />
@@ -24,5 +26,7 @@
 <partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial" model="@Model" />
 
 <partial name="./OverviewPartials/_PreviousHistoryOverviewPartial" model="@Model" />
+
+<partial name="./OverviewPartials/_MDRDetailsOverviewPartial" model="@Model" />
 
 <a href='#top' class="govuk-link--no-visited-state"> Back to top </a>

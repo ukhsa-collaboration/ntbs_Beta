@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
+﻿using System.Collections.Generic;
 using ntbs_service;
 using ntbs_service.Helpers;
 
@@ -20,15 +15,14 @@ namespace ntbs_integration_tests
             return GetPathForId(NotificationSubPath, id);
         }
 
-        protected string GetPathForId(string subPath, int id)
+        protected string GetPathForId(string subPath, int id, Dictionary<string, string> queryDictionary = null)
         {
-            return RouteHelper.GetNotificationPath(subPath, id);
+            return RouteHelper.GetNotificationPath(id, subPath, queryDictionary);
         }
 
-        protected string GetHandlerPath(Dictionary<string, string> formData, string handlerPath, int id = 0)
+        protected string GetHandlerPath(Dictionary<string, string> queryDictionary, string handlerPath, int id = 0)
         {
-            var queryString = string.Join("&", formData.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-            return GetPathForId($"{NotificationSubPath}/{handlerPath}?{queryString}", id);
+            return GetPathForId($"{NotificationSubPath}/{handlerPath}", id, queryDictionary);
         }
     }
 }
