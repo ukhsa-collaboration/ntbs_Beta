@@ -72,8 +72,8 @@ namespace ntbs_service.Pages.Search
 
             var draftStatusList = new List<NotificationStatus>() { NotificationStatus.Draft };
             var nonDraftStatusList = new List<NotificationStatus>() { NotificationStatus.Notified, NotificationStatus.Denotified };
-            var draftsQueryable = _notificationRepository.GetBaseQueryableNotificationByStatus(draftStatusList);
-            var nonDraftsQueryable = _notificationRepository.GetBaseQueryableNotificationByStatus(nonDraftStatusList);
+            var draftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(draftStatusList);
+            var nonDraftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(nonDraftStatusList);
 
             var draftSearchBuilder = new NotificationSearchBuilder(draftsQueryable);
             var nonDraftsSearchBuilder = new NotificationSearchBuilder(nonDraftsQueryable);
