@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using ntbs_service.Models;
-using ntbs_service.Models.Validations;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.ComponentModel;
-using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using ntbs_service.Models;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Services
 {

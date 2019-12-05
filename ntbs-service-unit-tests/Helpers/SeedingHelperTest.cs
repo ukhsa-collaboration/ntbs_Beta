@@ -1,5 +1,5 @@
-using ntbs_service.Helpers;
-using ntbs_service.Models;
+﻿using ntbs_service.Helpers;
+using ntbs_service.Models.Entities;
 using Xunit;
 
 namespace ntbs_service_unit_tests.Helpers

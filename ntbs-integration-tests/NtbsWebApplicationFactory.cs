@@ -1,10 +1,10 @@
-using EFAuditer;
+﻿using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
 
 namespace ntbs_integration_tests
 {

@@ -1,6 +1,7 @@
 ﻿using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models
 {

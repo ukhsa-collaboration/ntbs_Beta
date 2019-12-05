@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models.SeedData
 {

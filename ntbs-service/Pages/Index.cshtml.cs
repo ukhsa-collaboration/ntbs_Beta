@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ntbs_service.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.Services;
-using ntbs_service.DataAccess;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
+using ntbs_service.Services;
 
 namespace ntbs_service.Pages
 {

@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
-using System.Linq;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Helpers
 {

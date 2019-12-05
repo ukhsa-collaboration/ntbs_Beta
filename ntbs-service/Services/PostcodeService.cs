@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {

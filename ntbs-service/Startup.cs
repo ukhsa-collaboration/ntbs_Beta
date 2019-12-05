@@ -17,7 +17,7 @@ using ntbs_service.Authentication;
 using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
 using ntbs_service.Middleware;
-using ntbs_service.Models;
+using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
 

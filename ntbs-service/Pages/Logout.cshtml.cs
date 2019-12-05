@@ -1,12 +1,13 @@
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
+using ntbs_service.Properties;
 
 namespace ntbs_service.Pages
 {
-  public class LogoutModel : PageModel
+    public class LogoutModel : PageModel
     {
     private readonly string ReturnUrl;
     private readonly string BaseUrl;

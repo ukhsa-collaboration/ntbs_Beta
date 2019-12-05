@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Security.Claims;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Helpers

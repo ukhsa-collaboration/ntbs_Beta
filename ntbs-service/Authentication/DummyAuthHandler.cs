@@ -1,11 +1,13 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ntbs_service.Properties;
 
-namespace ntbs_service.Authentication {
+namespace ntbs_service.Authentication
+{
     public class DummyAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public static readonly string Name = "DummyAuth";
