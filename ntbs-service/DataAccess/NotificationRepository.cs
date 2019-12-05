@@ -125,6 +125,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.VisitorDetails.Country1)
                 .Include(n => n.VisitorDetails.Country2)
                 .Include(n => n.VisitorDetails.Country3)
+                .Include(n => n.MDRDetails.Country)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

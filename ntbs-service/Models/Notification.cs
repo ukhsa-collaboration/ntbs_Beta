@@ -122,6 +122,8 @@ namespace ntbs_service.Models
         public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
         public string TreatmentPHECName => Episode.TBService?.PHEC?.Name;
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
+        public string MDRCaseCountryName => MDRDetails.Country?.Name;
+        public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
 
         private string GetNotificationStatusString()
         {
