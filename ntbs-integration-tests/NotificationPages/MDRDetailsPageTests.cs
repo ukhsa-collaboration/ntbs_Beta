@@ -53,7 +53,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "123",
                 ["MDRDetails.CaseInUKStatus"] = "Yes",
-                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NEW_ID}",
+                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.DRAFT_ID}",
             };
 
             // Act
