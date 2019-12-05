@@ -115,7 +115,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (int.TryParse(value, out var notificationId))
             {
                 var relatedNotification = await GetRelatedNotification(notificationId);
-                if (relatedNotification == null)
+                if (relatedNotification == null || !relatedNotification.HasBeenNotified)
                 {
                     return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdInvalid });
                 }
