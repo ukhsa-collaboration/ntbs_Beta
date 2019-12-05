@@ -114,6 +114,7 @@ namespace ntbs_service
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
             services.AddScoped<ITestResultsRepository, TestResultsRepository>();
+            services.AddScoped<ILegacySearchService, LegacySearchService>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }
