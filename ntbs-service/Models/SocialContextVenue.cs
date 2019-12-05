@@ -74,5 +74,13 @@ namespace ntbs_service.Models
         public bool DateFromAfterDob => Dob == null || DateFrom >= Dob;
         [NotMapped]
         public bool DateToAfterDob => Dob == null || DateTo >= Dob;
+
+        public string FormattedDateFrom => FormatDate(DateFrom);
+        public string FormattedDateTo => FormatDate(DateTo);
+
+        private string FormatDate(DateTime? dateTime)
+        {
+            return dateTime?.ToString("dd MMM yyyy");
+        }
     }
 }

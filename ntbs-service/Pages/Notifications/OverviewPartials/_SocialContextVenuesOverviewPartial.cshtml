@@ -6,10 +6,13 @@
 }
 
 <div class="notification-overview-type-and-edit-container">
-    <h3 class="notification-details-type"> Test results </h3>
+    <h3 class="notification-details-type"> Social Context - Venues </h3>
     <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditSocialContextVenues)"
        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
 </div>
-<div class="notification-overview-details-container">
-    <partial name="Shared/_SocialContextVenuesTable" for="SocialContextVenues" />
-</div>
+@if(Model.SocialContextVenues.Count > 0)
+{
+    <div class="notification-overview-details-container">
+        <partial name="_SocialContextVenuesTable" for="SocialContextVenues" view-data=@ViewData />
+    </div>
+}
