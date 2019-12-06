@@ -33,7 +33,7 @@ namespace ntbs_service.Pages.Alerts
             }
             if (Request.Query["page"] == "Overview")
             {
-                return RedirectToPage("/Notifications/Overview", new { id = alertToDismiss.NotificationId });
+                return RedirectToPage("/Notifications/Overview", new { alertToDismiss.NotificationId });
             }
             // TODO:NTBS-376 This will need to be changed to link to the correct place instead of just the home page
             return RedirectToPage("/Index");
