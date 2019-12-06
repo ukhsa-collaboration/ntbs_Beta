@@ -105,8 +105,10 @@ namespace ntbs_service
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IAlertService, AlertService>();
             services.AddScoped<IAlertRepository, AlertRepository>();
-            services.AddScoped<INotificationSearcher, NotificationSearcher>();
+            services.AddScoped<INotificationMapper, NotificationMapper>();
+            services.AddScoped<IImportLogger, ImportLogger>();
             services.AddScoped<INotificationImportService, NotificationImportService>();
+            services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();

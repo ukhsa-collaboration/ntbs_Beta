@@ -6,7 +6,7 @@ using ntbs_service.DataMigration;
 using ntbs_service.Models;
 using System.Threading.Tasks;
 
-namespace ntbs_service.Pages_SearchOld
+namespace ntbs_service.Pages.Migration
 {
     public class IndexModel : PageModel
     {
@@ -30,12 +30,9 @@ namespace ntbs_service.Pages_SearchOld
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            var requestId = HttpContext.TraceIdentifier;
 
-            Results = await _service.ImportNotificationsAsync(NotificationId);
+            Results = await _service.ImportNotificationsAsync(requestId, NotificationId);
             return Page();
         }
     }

@@ -10,15 +10,29 @@ using ntbs_service.Models.Enums;
 
 namespace ntbs_service.DataMigration
 {
-    public interface INotificationSearcher
+    public interface INotificationMapper
     {
         Task<IEnumerable<Notification>> Search(string notificationId);
     }
 
-    public class NotificationSearcher : INotificationSearcher
+    public class NotificationMapper : INotificationMapper
     {
         const string Query = @"
-            SELECT *
+            SELECT *,
+            	trvl.Country1 AS travel_Country1,
+                trvl.Country2 AS travel_Country2,
+                trvl.Country3 AS travel_Country3,
+                trvl.TotalNumberOfCountries AS travel_TotalNumberOfCountries,
+                trvl.StayLengthInMonths1 AS travel_StayLengthInMonths1,
+                trvl.StayLengthInMonths2 AS travel_StayLengthInMonths2,
+                trvl.StayLengthInMonths3 AS travel_StayLengthInMonths3,
+                vstr.Country1 AS visitor_Country1,
+                vstr.Country2 AS visitor_Country2,
+                vstr.Country3 AS visitor_Country3,
+                vstr.TotalNumberOfCountries AS visitor_TotalNumberOfCountries,
+                vstr.StayLengthInMonths1 AS visitor_StayLengthInMonths1,
+                vstr.StayLengthInMonths2 AS visitor_StayLengthInMonths2,
+                vstr.StayLengthInMonths3 AS visitor_StayLengthInMonths3
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
@@ -35,7 +49,7 @@ namespace ntbs_service.DataMigration
 
         private readonly string connectionString;
 
-        public NotificationSearcher(IConfiguration _configuration)
+        public NotificationMapper(IConfiguration _configuration)
         {
             connectionString = _configuration.GetConnectionString("migration");
         }
@@ -76,7 +90,8 @@ namespace ntbs_service.DataMigration
 
         private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
         {
-            return new ImmunosuppressionDetails {
+            return new ImmunosuppressionDetails 
+            {
                 Status = GetStatusFromString(notification.Status),
                 HasBioTherapy = GetBoolValue(notification.HasBioTherapy),
                 HasTransplantation = GetBoolValue(notification.HasTransplantation),
@@ -87,7 +102,8 @@ namespace ntbs_service.DataMigration
 
         private static ComorbidityDetails ExtractComorbidityDetails(dynamic notification)
         {
-            return new ComorbidityDetails {
+            return new ComorbidityDetails 
+            {
                 DiabetesStatus = GetStatusFromString(notification.DiabetesStatus),
                 LiverDiseaseStatus = GetStatusFromString(notification.LiverDiseaseStatus),
                 RenalDiseaseStatus = GetStatusFromString(notification.RenalDiseaseStatus),
@@ -116,10 +132,10 @@ namespace ntbs_service.DataMigration
             return new TravelDetails
                 {
                     HasTravel = GetBoolValue(notification.HasTravel),
-                    TotalNumberOfCountries = notification.TotalNumberOfCountries,
-                    Country1Id = notification.Country1,
-                    Country2Id = notification.Country2,
-                    Country3Id = notification.Country3,
+                    TotalNumberOfCountries = notification.travel_TotalNumberOfCountries,
+                    Country1Id = notification.travel_Country1,
+                    Country2Id = notification.travel_Country2,
+                    Country3Id = notification.travel_Country3,
                     StayLengthInMonths1 = notification.StayLengthInMonths1,                    
                     StayLengthInMonths2 = notification.StayLengthInMonths2,
                     StayLengthInMonths3 = notification.StayLengthInMonths3
@@ -131,13 +147,13 @@ namespace ntbs_service.DataMigration
             return new VisitorDetails
                 {
                     HasVisitor = GetBoolValue(notification.HasVisitor),
-                    TotalNumberOfCountries = notification.TotalNumberOfCountries,
-                    Country1Id = notification.Country1,
-                    Country2Id = notification.Country2,
-                    Country3Id = notification.Country3,
-                    StayLengthInMonths1 = notification.StayLengthInMonths1,
-                    StayLengthInMonths2 = notification.StayLengthInMonths2,
-                    StayLengthInMonths3 = notification.StayLengthInMonths3
+                    TotalNumberOfCountries = notification.visitor_TotalNumberOfCountries,
+                    Country1Id = notification.visitor_Country1,
+                    Country2Id = notification.visitor_Country2,
+                    Country3Id = notification.visitor_Country3,
+                    StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
+                    StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
+                    StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
                 };
         }
 
@@ -151,6 +167,7 @@ namespace ntbs_service.DataMigration
                     Dob = notification.DateOfBirth,
                     YearOfUkEntry = notification.UkEntryYear,
                     UkBorn = GetBoolValue(notification.UkBorn),
+                    CountryId = notification.BirthCountryId,
                     LocalPatientId = notification.LocalPatientId,
                     Postcode = notification.Postcode,
                     Address = notification.Line1 + " " + notification.Line2,
