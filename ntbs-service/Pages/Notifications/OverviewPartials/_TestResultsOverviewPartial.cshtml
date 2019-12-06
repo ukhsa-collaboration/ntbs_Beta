@@ -11,5 +11,15 @@
        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
 </div>
 <div class="notification-overview-details-container">
-    <partial name="Shared/_ManualTestResultTable" for="ManualTestResults" />
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> @Html.DisplayNameFor(m => m.HasTestCarriedOut) </div>
+            <div class="cell-min-height"> @FormattingHelper.TrueFalseToYesNo(Model.HasTestCarriedOut) </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    
+    @if (Model.HasTestCarriedOut == true)
+    {
+        <partial name="Shared/_ManualTestResultTable" for="ManualTestResults" />
+    }
 </div>

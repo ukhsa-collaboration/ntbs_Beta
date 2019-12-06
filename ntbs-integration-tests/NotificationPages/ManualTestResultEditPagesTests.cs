@@ -152,8 +152,61 @@ namespace ntbs_integration_tests.NotificationPages
 
             resultDocument.AssertErrorMessage("test-date", string.Format(ValidationMessages.RequiredEnter, "Test date"));
             resultDocument.AssertErrorMessage("test-type", string.Format(ValidationMessages.RequiredSelect, "Test type"));
-            resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.RequiredSelect, "Sample type"));
             resultDocument.AssertErrorMessage("result", string.Format(ValidationMessages.RequiredSelect, "Result"));
+        }
+
+        [Fact]
+        public async Task PostEditOfManualTestResult_ReturnsAllRequiredValidationErrors_ForTestTypeWithNoSampleTypes()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
+            var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
+            var editDocument = await GetDocumentForUrl(editUrl);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedTestDate.Day"] = "",
+                ["FormattedTestDate.Month"] = "",
+                ["FormattedTestDate.Year"] = "",
+                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.ChestXRay).ToString(),
+                ["TestResultForEdit.SampleTypeId"] = "",
+                ["TestResultForEdit.Result"] = "",
+            };
+            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var resultDocument = await GetDocumentAsync(result);
+
+            // Assert
+            result.AssertValidationErrorResponse();
+
+            Assert.Null(resultDocument.GetError("sample-type"));
+        }
+
+        [Fact]
+        public async Task PostEditOfManualTestResult_ReturnsAllRequiredValidationErrors_ForTestTypeWithSampleTypes()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
+            var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
+            var editDocument = await GetDocumentForUrl(editUrl);
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedTestDate.Day"] = "",
+                ["FormattedTestDate.Month"] = "",
+                ["FormattedTestDate.Year"] = "",
+                ["TestResultForEdit.ManualTestTypeId"] = ((int)ManualTestTypeId.Smear).ToString(),
+                ["TestResultForEdit.SampleTypeId"] = "",
+                ["TestResultForEdit.Result"] = "",
+            };
+            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var resultDocument = await GetDocumentAsync(result);
+
+            // Assert
+            result.AssertValidationErrorResponse();
+
+            resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.RequiredSelect, "Sample type"));
         }
 
         [Fact]
