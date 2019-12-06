@@ -20,15 +20,13 @@ namespace ntbs_service.Pages.Notifications
         {
         }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(id);
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
             }
-
-            NotificationId = Notification.NotificationId;
 
             var hasLinkedNotifications = await TryGetLinkedNotifications();
             if (!hasLinkedNotifications)

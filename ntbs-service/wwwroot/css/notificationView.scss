@@ -19,6 +19,23 @@
     padding-bottom: 10px;
 }
 
+.dismiss-alert-button--overview-view {
+    margin-left: auto; 
+    margin-bottom: auto;
+}
+
+.alert-take-action-link {
+    padding-left: 10px;
+}
+
+.alert-description--overview-view {
+    width: 75%;
+}
+
+.submit-delete-buttons-container {
+    margin-left: auto;
+}
+
 .contact-tracing-row {
     display: table-row
 }
@@ -39,4 +56,11 @@
 /* This is used so that if a cell is missing data on the overview page the spacing is still correct */
 .cell-min-height {
     min-height: 20px;
+}
+
+.notification-info {
+    color: grey;
+    p {
+        margin: 0px;
+      }
 }

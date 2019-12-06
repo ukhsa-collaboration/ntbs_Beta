@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Models;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -8296,6 +8297,514 @@ namespace ntbs_service.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.ManualTestResult", b =>
+                {
+                    b.Property<int>("ManualTestResultId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ManualTestTypeId")
+                        .IsRequired();
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int?>("SampleTypeId")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("TestDate")
+                        .IsRequired();
+
+                    b.HasKey("ManualTestResultId");
+
+                    b.HasIndex("ManualTestTypeId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("SampleTypeId");
+
+                    b.ToTable("ManualTestResult");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ManualTestType", b =>
+                {
+                    b.Property<int>("ManualTestTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(40);
+
+                    b.HasKey("ManualTestTypeId");
+
+                    b.ToTable("ManualTestType");
+
+                    b.HasData(
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            Description = "Smear"
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            Description = "Culture"
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            Description = "Histology"
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 4,
+                            Description = "Chest x-ray"
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            Description = "PCR"
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            Description = "Line probe assay"
+                        });
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ManualTestTypeSampleType", b =>
+                {
+                    b.Property<int>("ManualTestTypeId");
+
+                    b.Property<int>("SampleTypeId");
+
+                    b.HasKey("ManualTestTypeId", "SampleTypeId");
+
+                    b.HasIndex("SampleTypeId");
+
+                    b.ToTable("ManualTestTypeSampleType");
+
+                    b.HasData(
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 1
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 2
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 3
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 4
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 5
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 6
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 7
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 9
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 10
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 11
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 14
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 15
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 16
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 18
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 19
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 21
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 22
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 1,
+                            SampleTypeId = 23
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 1
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 2
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 3
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 4
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 5
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 6
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 7
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 9
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 10
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 11
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 14
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 15
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 16
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 18
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 19
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 21
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 22
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 2,
+                            SampleTypeId = 23
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 2
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 3
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 7
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 8
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 12
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 13
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 15
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 17
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 20
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 22
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 3,
+                            SampleTypeId = 23
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 1
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 2
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 3
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 4
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 5
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 6
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 7
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 9
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 10
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 11
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 14
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 15
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 16
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 18
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 19
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 21
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 22
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 5,
+                            SampleTypeId = 23
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 1
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 2
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 3
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 4
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 5
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 6
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 7
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 9
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 10
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 11
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 14
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 15
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 16
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 18
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 19
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 21
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 22
+                        },
+                        new
+                        {
+                            ManualTestTypeId = 6,
+                            SampleTypeId = 23
+                        });
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -8697,6 +9206,163 @@ namespace ntbs_service.Migrations
                     b.HasKey("RegionId");
 
                     b.ToTable("Region");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.SampleType", b =>
+                {
+                    b.Property<int>("SampleTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(40);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(40);
+
+                    b.HasKey("SampleTypeId");
+
+                    b.ToTable("SampleType");
+
+                    b.HasData(
+                        new
+                        {
+                            SampleTypeId = 1,
+                            Category = "Respiratory",
+                            Description = "Bronchial washings"
+                        },
+                        new
+                        {
+                            SampleTypeId = 2,
+                            Category = "Respiratory",
+                            Description = "Bronchoscopy sample"
+                        },
+                        new
+                        {
+                            SampleTypeId = 3,
+                            Category = "Respiratory",
+                            Description = "Lung bronchial tree tissue"
+                        },
+                        new
+                        {
+                            SampleTypeId = 4,
+                            Category = "Respiratory",
+                            Description = "Sputum (induced)"
+                        },
+                        new
+                        {
+                            SampleTypeId = 5,
+                            Category = "Respiratory",
+                            Description = "Sputum (spontaneous)"
+                        },
+                        new
+                        {
+                            SampleTypeId = 6,
+                            Category = "Non-Respiratory",
+                            Description = "Blood"
+                        },
+                        new
+                        {
+                            SampleTypeId = 7,
+                            Category = "Non-Respiratory",
+                            Description = "Bone and joint"
+                        },
+                        new
+                        {
+                            SampleTypeId = 8,
+                            Category = "Non-Respiratory",
+                            Description = "CNS"
+                        },
+                        new
+                        {
+                            SampleTypeId = 9,
+                            Category = "Non-Respiratory",
+                            Description = "CSF"
+                        },
+                        new
+                        {
+                            SampleTypeId = 10,
+                            Category = "Non-Respiratory",
+                            Description = "Faeces"
+                        },
+                        new
+                        {
+                            SampleTypeId = 11,
+                            Category = "Non-Respiratory",
+                            Description = "Gastric washings"
+                        },
+                        new
+                        {
+                            SampleTypeId = 12,
+                            Category = "Non-Respiratory",
+                            Description = "Gastrointestinal"
+                        },
+                        new
+                        {
+                            SampleTypeId = 13,
+                            Category = "Non-Respiratory",
+                            Description = "Genitourinary"
+                        },
+                        new
+                        {
+                            SampleTypeId = 14,
+                            Category = "Non-Respiratory",
+                            Description = "Gynaecological"
+                        },
+                        new
+                        {
+                            SampleTypeId = 15,
+                            Category = "Non-Respiratory",
+                            Description = "Lymph node"
+                        },
+                        new
+                        {
+                            SampleTypeId = 16,
+                            Category = "Non-Respiratory",
+                            Description = "Peritoneal fluid"
+                        },
+                        new
+                        {
+                            SampleTypeId = 17,
+                            Category = "Non-Respiratory",
+                            Description = "Pleural"
+                        },
+                        new
+                        {
+                            SampleTypeId = 18,
+                            Category = "Non-Respiratory",
+                            Description = "Pleural fluid or biopsy"
+                        },
+                        new
+                        {
+                            SampleTypeId = 19,
+                            Category = "Non-Respiratory",
+                            Description = "Pus"
+                        },
+                        new
+                        {
+                            SampleTypeId = 20,
+                            Category = "Non-Respiratory",
+                            Description = "Skin"
+                        },
+                        new
+                        {
+                            SampleTypeId = 21,
+                            Category = "Non-Respiratory",
+                            Description = "Urine"
+                        },
+                        new
+                        {
+                            SampleTypeId = 22,
+                            Category = "Non-Respiratory",
+                            Description = "Other tissues"
+                        },
+                        new
+                        {
+                            SampleTypeId = 23,
+                            Category = "Non-Respiratory",
+                            Description = "Not known"
+                        });
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Sex", b =>
@@ -11316,6 +11982,24 @@ namespace ntbs_service.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
+                {
+                    b.Property<int>("NotificationId");
+
+                    b.Property<bool?>("HasTestCarriedOut");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("TestData");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.MdrAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Alert");
+
+                    b.HasDiscriminator().HasValue("EnhancedSurveillanceMDR");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Alert");
@@ -11371,6 +12055,37 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.ManualTestResult", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ManualTestType", "ManualTestType")
+                        .WithMany()
+                        .HasForeignKey("ManualTestTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.TestData")
+                        .WithMany("ManualTestResults")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.SampleType", "SampleType")
+                        .WithMany()
+                        .HasForeignKey("SampleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ManualTestTypeSampleType", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ManualTestType", "ManualTestType")
+                        .WithMany("ManualTestTypeSampleTypes")
+                        .HasForeignKey("ManualTestTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.SampleType", "SampleType")
+                        .WithMany("ManualTestTypeSampleTypes")
+                        .HasForeignKey("SampleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Notification", b =>
                 {
                     b.HasOne("ntbs_service.Models.NotificationGroup", "Group")
@@ -11411,8 +12126,6 @@ namespace ntbs_service.Migrations
                             b1.Property<bool?>("IsSymptomatic");
 
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
-
-                            b1.Property<bool>("NoSampleTaken");
 
                             b1.Property<DateTime?>("SymptomStartDate");
 
@@ -11957,6 +12670,14 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.PHEC", "PHEC")
                         .WithMany()
                         .HasForeignKey("PHECCode");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Notification")
+                        .WithOne("TestData")
+                        .HasForeignKey("ntbs_service.Models.TestData", "NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

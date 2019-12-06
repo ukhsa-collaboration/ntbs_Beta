@@ -12,15 +12,14 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContactTracingModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService,
-            notificationRepository)
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
         }
 
         [BindProperty]
         public ContactTracing ContactTracing { get; set; }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             ContactTracing = Notification.ContactTracing;
             await SetNotificationProperties<ContactTracing>(isBeingSubmitted, ContactTracing);
@@ -28,9 +27,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./SocialRiskFactors", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./SocialRiskFactors", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

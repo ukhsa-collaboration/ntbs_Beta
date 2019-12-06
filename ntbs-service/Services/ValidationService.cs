@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ntbs_service.Models;
@@ -34,7 +34,10 @@ namespace ntbs_service.Services
             return GetValidationResult(model, key);
         }
 
-        public ContentResult ValidateMultipleProperties<T>(IEnumerable<Tuple<string, object>> propertyValueTuples, bool shouldValidateFull = false) where T : ModelBase
+        public ContentResult ValidateMultipleProperties<T>(
+            IEnumerable<Tuple<string, object>> propertyValueTuples,
+            bool shouldValidateFull = false) 
+            where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));
             model.ShouldValidateFull = shouldValidateFull;
@@ -151,21 +154,21 @@ namespace ntbs_service.Services
             return ModelState()[key].Errors.Count == 0;
         }
 
-        public void TrySetAndValidateDateOnModel(object model, string key, FormattedDate formattedDate)
+        /// <param name="model"> The model on which date gets set </param>
+        /// <param name="modelKey"> Prefix for model state errors </param>
+        /// <param name="key"> Date key for model state errors </param>
+        /// <param name="formattedDate"> The FormattedDate to covert and set </param>
+        public void TrySetFormattedDate(object model, string modelKey, string key, FormattedDate formattedDate)
         {
-            string modelTypeName = model.GetType().Name;
             var modelType = model.GetType();
-
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {
-                modelType.GetProperty(key).SetValue(model, convertedDob);
-                pageModel.TryValidateModel(model, modelTypeName);
+                modelType.GetProperty(key)?.SetValue(model, convertedDob);
             }
             else
             {
                 var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
-                ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
-                return;
+                ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
 

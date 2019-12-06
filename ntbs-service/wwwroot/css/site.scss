@@ -1,170 +1,182 @@
-﻿@import './reset.scss';
+﻿@import "./reset.scss";
 // We're importing the raw scss instaed of a packaged css bundle since we're using some of the dynamic elements ourselves (colour variables, functions etc)
-@import '../../node_modules/nhsuk-frontend/packages/nhsuk.scss';
+@import "../../node_modules/nhsuk-frontend/packages/nhsuk.scss";
 // Govuk css - needed for things like conditionally revealed radios sections
-@import '../../node_modules/govuk-frontend/govuk/all.scss';
-@import './checkboxes.scss';
-@import './buttons.scss';
-@import './notification.scss';
-@import './notificationView.scss';
-@import './notificationBanner.scss';
-@import './footer.scss';
-@import './search.scss';
-@import './header.scss';
+@import "../../node_modules/govuk-frontend/govuk/all.scss";
+@import "./checkboxes.scss";
+@import "./buttons.scss";
+@import "./notification.scss";
+@import "./notificationView.scss";
+@import "./notificationBanner.scss";
+@import "./footer.scss";
+@import "./search.scss";
+@import "./table.scss";
+@import "./header.scss";
 @import "./home.scss";
-@import './fonts/webfontkit-helveticaneue/stylesheet.css';
-@import 'accessible-autocomplete';
-@import './autocomplete.scss';
+@import "./fonts/webfontkit-helveticaneue/stylesheet.css";
+@import "accessible-autocomplete";
+@import "./autocomplete.scss";
 
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 @media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+  html {
+    font-size: 16px;
+  }
 }
 
 .border-top {
-    border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #e5e5e5;
 }
 
 .border-bottom {
-    border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
 button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
+  font-size: 1rem;
+  line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-    position: relative;
-    min-height: 100%;
-    background-color: white;
+  position: relative;
+  min-height: 100%;
+  background-color: white;
 }
 
 body {
-    /* Padding bottom by footer height */
-    padding-bottom: 80px;
-    background-color: white;
+  /* Padding bottom by footer height */
+  padding-bottom: 80px;
+  background-color: white;
 }
 
 .contents-list-item {
-    list-style-type: none;
-    margin-bottom: 5px;
-    padding: 5px 0 5px 14px;
+  list-style-type: none;
+  margin-bottom: 5px;
+  padding: 5px 0 5px 14px;
 }
 
 .contents-list-item--current {
-    font-weight: bold;
-    padding-left: 10px;
-    border-left: 4px solid #1d70b8;
+  font-weight: bold;
+  padding-left: 10px;
+  border-left: 4px solid #1d70b8;
 }
 
 .text-align-right {
-    text-align: right;
+  text-align: right;
 }
 
 .text-align-left {
-    text-align: left;
+  text-align: left;
 }
 
 .top-margin-separator {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .fixed-width-separator {
-    width: 50px;
+  width: 50px;
 }
 
 .double-fixed-width-separator {
-    width: 100px;
+  width: 100px;
 }
 
 .text-warning {
-    color: orangered;
+  color: orangered;
 }
 
 .sub-nav-left {
-    font-size: 16px;
-    padding-left: 0;
-    line-height: 24px;
+  font-size: 16px;
+  padding-left: 0;
+  line-height: 24px;
 }
 
 .hidden,
 .hidden * {
-    display: none;
+  display: none;
 }
 
 .no-bottom-margin {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* Need to pin this to 38px to make icon circular */
 .govuk-warning-text {
-    color: orangered;
+  color: orangered;
 
-    .govuk-warning-text__icon {
-        width: 38px;
-        border: 3px solid orangered;
-        background: orangered;
+  .govuk-warning-text__icon {
+    width: 38px;
+    border: 3px solid orangered;
+    background: orangered;
+  }
+
+  .warning-container {
+    p {
+      margin-bottom: 12px;
     }
 
-    .warning-container {
-        p {
-            margin-bottom: 12px;
-        }
-
-        p:last-child {
-            margin-bottom: 0px;
-        }
+    p:last-child {
+      margin-bottom: 0px;
     }
+  }
 }
 
 .flex-container {
-    display: flex;
+  display: flex;
 }
 
 .button-link {
-    background: none;
-    border: none;
-    color: #003078;
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: large;
-    outline: none;
+  background: none;
+  border: none;
+  color: #003078;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: large;
+  outline: none;
 
-    &:hover {
-        background-color: #ffcd60;
-        box-shadow: 0 0 0 4px #ffcd60;
-        color: #212b32;
-        text-decoration: none;
-    }
+  &:hover {
+    background-color: #ffcd60;
+    box-shadow: 0 0 0 4px #ffcd60;
+    color: #212b32;
+    text-decoration: none;
+  }
 
-    &:focus {
-        background-color: #ffb81C;
-        box-shadow: 0 0 0 4px #ffb81C;
-        color: #212b32;
-        outline: 4px solid transparent;
-        outline-offset: 4px;
+  &:focus {
+    background-color: #ffb81c;
+    box-shadow: 0 0 0 4px #ffb81c;
+    color: #212b32;
+    outline: 4px solid transparent;
+    outline-offset: 4px;
+  }
+}
+
+/* Overriding gratuitous margin on responsive tables */
+.nhsuk-table-responsive {
+    margin-top: 18px;
+    margin-bottom: 40px;
+    
+    @media (min-width: 40.0625em) {
+        margin-top: 18px;
+        margin-bottom: 40px;
     }
 }

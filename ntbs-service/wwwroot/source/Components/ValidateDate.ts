@@ -60,9 +60,6 @@ const ValidateDate = Vue.extend({
                         this.$refs["yearInput"].classList.remove("nhsuk-input--error");
                         this.$refs["errorField"].classList.add("hidden");
                     }
-
-
-
                 })
                 .catch((error: any) => {
                     console.log(error.response);

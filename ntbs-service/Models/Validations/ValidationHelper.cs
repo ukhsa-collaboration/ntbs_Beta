@@ -4,6 +4,7 @@ namespace ntbs_service.Models.Validations
 {
     public static class ValidationMessages
     {
+        public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
         public static string InvalidYear(string name) => $"{name} has an invalid year";
         public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
         public static string DateValidityRangeStart(string name, string startDate) => $"{name} must not be before {startDate}";
@@ -13,7 +14,6 @@ namespace ntbs_service.Models.Validations
             return $"{name} should be later than birth year ({birthYear})";
         }
         
-        public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
 
         #region Shared
         public const string InvalidYearForAttribute = "{0} has an invalid year";
@@ -28,6 +28,9 @@ namespace ntbs_service.Models.Validations
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string ValidYearRange = "Year must be provided between {1} and {2}";
+        public const string Mandatory = "{0} is a mandatory field";
+        public const string RequiredEnter = "Please enter {0}";
+        public const string RequiredSelect = "Please select {0}";
 
         #endregion
 
@@ -46,6 +49,12 @@ namespace ntbs_service.Models.Validations
         public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
         public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
         public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
+        #endregion
+
+        #region Test Results
+        public const string InvalidTestAndSampleTypeCombination = "{0} does not match test type selected";
+        public const string NoTestResult = "Please add a test result or confirm no sample was taken";
+        public const string RemoveTestResultsBeforeSayingNoSample = "Please remove all test results or confirm sample was taken";
         #endregion
 
         #region Contact Tracing

@@ -1,4 +1,4 @@
-@page "/Notifications/{id:int}/Edit/Comorbidities/{handler?}"
+@page "/Notifications/{NotificationId:int}/Edit/Comorbidities/{handler?}"
 @using ntbs_service.Helpers
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
 
@@ -6,6 +6,7 @@
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Comorbidities";
     ViewData["CurrentPage"] = NotificationSubPaths.EditComorbidities;
+    var statuses = EnumHelper.GetEnumList<Status>();
 }
 
 <partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
@@ -21,7 +22,7 @@
                 Diabetes
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in StatusHelper.GetAll())
+                @foreach (var status in statuses)
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="ComorbidityDetails.DiabetesStatus" id="diabetes-radio-button-@status" type="radio" value="@status" />
@@ -38,7 +39,7 @@
                 Hepatitis B
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in StatusHelper.GetAll())
+                @foreach (var status in statuses)
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="ComorbidityDetails.HepatitisBStatus" id="hepatitis-b-radio-button-@status" type="radio" value="@status" />
@@ -55,7 +56,7 @@
                 Hepatitis C
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in StatusHelper.GetAll())
+                @foreach (var status in statuses)
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="ComorbidityDetails.HepatitisCStatus" id="hepatitis-c-radio-button-@status" type="radio" value="@status" />
@@ -72,7 +73,7 @@
                 Chronic Liver Disease
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in StatusHelper.GetAll())
+                @foreach (var status in statuses)
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="ComorbidityDetails.LiverDiseaseStatus" id="liver-radio-button-@status" type="radio" value="@status" />
@@ -89,7 +90,7 @@
                 Chronic Renal Disease
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in StatusHelper.GetAll())
+                @foreach (var status in statuses)
                 {
                     <nhs-radios-item>
                         <input nhs-input-type="Radios" asp-for="ComorbidityDetails.RenalDiseaseStatus" id="renal-radio-button-@status" type="radio" value="@status" />

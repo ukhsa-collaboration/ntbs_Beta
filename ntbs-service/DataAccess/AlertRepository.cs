@@ -14,6 +14,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
         Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
+        Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
     }
 
@@ -56,6 +57,13 @@ namespace ntbs_service.DataAccess
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId)
+        {
+            return await GetBaseAlertIQueryable()
+                .Where(a => a.NotificationId == notificationId)
+                .ToListAsync();
         }
 
         private IQueryable<Alert> GetBaseAlertIQueryable()

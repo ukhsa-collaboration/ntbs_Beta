@@ -3,9 +3,12 @@
 @using ntbs_service.Helpers
 
 @{
-    Layout = "../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../Shared/_NotificationLayoutWithSideMenu.cshtml";
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
-<div id="unauthorized-warning">
-    <p>@(Messages.UnauthorizedWarning)</p>
-</div>
+
+<nhs-width-container container-width="Standard">
+    <div id="unauthorized-warning">
+        <p>@(Messages.UnauthorizedWarning)</p>
+    </div>
+</nhs-width-container>

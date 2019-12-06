@@ -72,7 +72,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 .ToList();
         }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             PatientDetails = Notification.PatientDetails;
             await SetNotificationProperties(isBeingSubmitted, PatientDetails);
@@ -108,7 +108,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 .Where(n => n != NotificationId)
                 .ToDictionary(
                     id => id.ToString(),
-                    id => RouteHelper.GetNotificationPath(NotificationSubPaths.Overview, id));
+                    id => RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview));
 
             return filteredIds;
         }
@@ -129,7 +129,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             PatientDetails.SetFullValidation(Notification.NotificationStatus);
             await FindAndSetPostcodeAsync();
 
-            ValidationService.TrySetAndValidateDateOnModel(PatientDetails, nameof(PatientDetails.Dob), FormattedDob);
+            ValidationService.TrySetFormattedDate(PatientDetails, "Patient", nameof(PatientDetails.Dob), FormattedDob);
 
             if (TryValidateModel(PatientDetails, "PatientDetails"))
             {
@@ -155,9 +155,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./Episode", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./Episode", new { NotificationId, isBeingSubmitted });
         }
 
         public ContentResult OnGetValidatePatientDetailsProperty(string key, string value, bool shouldValidateFull)

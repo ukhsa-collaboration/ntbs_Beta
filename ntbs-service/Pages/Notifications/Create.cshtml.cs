@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
@@ -18,7 +18,7 @@ namespace ntbs_service.Pages_Notifications
         {
             var notification = await notificationService.CreateNewNotificationForUser(User);
 
-            return RedirectToPage("./Edit/PatientDetails", new { id = notification.NotificationId });
+            return RedirectToPage("./Edit/PatientDetails", new { notification.NotificationId });
         }
     }
 }

@@ -1,0 +1,21 @@
+@using ntbs_integration_tests.Helpers
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.Notifications.NotificationModelBase
+
+@{
+    var cssClasses = $"manage-notification manage-notification{CssClassHelpers.GetClassSuffixForNotificationStatus(NotificationStatus.Draft)} manage-notification--no-expander";
+}
+
+<nhs-grid-row classes="flex-container">
+    <nhs-grid-column grid-column-width="OneThird" classes="submit-delete-buttons-container">
+        <div class= "@cssClasses">
+            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit" id="submit-button">
+                Submit
+            </button>
+            @{ var deleteHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Delete); }
+            <a id="delete-draft-button" class="action-link" role="button" href="@deleteHref">
+                Delete draft
+            </a>
+        </div>
+    </nhs-grid-column>
+</nhs-grid-row>

@@ -37,20 +37,18 @@ namespace ntbs_service.Pages.Notifications
             }
         }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            Notification = await NotificationRepository.GetNotificationAsync(id);
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
                 return NotFound();
             }
 
-            NotificationId = Notification.NotificationId;
-
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission || Notification.NotificationStatus != NotificationStatus.Notified)
             {
-                return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
+                return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
             await GetLinkedNotifications();
@@ -67,7 +65,11 @@ namespace ntbs_service.Pages.Notifications
             }
 
             DenotificationDetails.DateOfNotification = Notification.NotificationDate;
-            ValidationService.TrySetAndValidateDateOnModel(DenotificationDetails, nameof(DenotificationDetails.DateOfDenotification), FormattedDenotificationDate);
+            ValidationService.TrySetFormattedDate(DenotificationDetails,
+                                                  "DenotificationDetails",
+                                                  nameof(DenotificationDetails.DateOfDenotification),
+                                                  FormattedDenotificationDate);
+            TryValidateModel(DenotificationDetails, "DenotificationDetails");
             if (!ModelState.IsValid)
             {
                 NotificationBannerModel = new NotificationBannerModel(Notification);
@@ -79,7 +81,7 @@ namespace ntbs_service.Pages.Notifications
                 await Service.DenotifyNotificationAsync(NotificationId, DenotificationDetails);
             }
 
-            return RedirectToPage("/Notifications/Overview", new { id = NotificationId });
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -42,7 +43,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             this._referenceDataRepository = referenceDataRepository;
         }
 
-        protected override async Task<IActionResult> PreparePageForGet(int id, bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
             await SetNotificationProperties(isBeingSubmitted, Episode);
@@ -51,7 +52,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (Episode.ShouldValidateFull)
             {
-                ValidationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+                ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
                 TryValidateModel(Episode, Episode.GetType().Name);
             }
 
@@ -93,9 +94,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
         }
 
-        protected override IActionResult RedirectToNextPage(int notificationId, bool isBeingSubmitted)
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./ClinicalDetails", new { id = notificationId, isBeingSubmitted });
+            return RedirectToPage("./ClinicalDetails", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()
@@ -105,8 +106,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
-
-            if (TryValidateModel(Episode, Episode.GetType().Name))
+            TryValidateModel(Episode, nameof(Episode));
+            TryValidateModel(Notification, nameof(Notification));
+            if (ModelState.IsValid)
             {
                 await Service.UpdateEpisodeAsync(Notification, Episode);
             }
@@ -134,7 +136,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         private async Task SetValuesForValidation()
         {
             Episode.SetFullValidation(Notification.NotificationStatus);
-            ValidationService.TrySetAndValidateDateOnModel(Notification, nameof(Notification.NotificationDate), FormattedNotificationDate);
+            ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
             Binding only sets the entity ids, but not the actual entities.
             There's a validation rule that needs to check the relationship between the entities,
@@ -159,21 +161,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public async Task<JsonResult> OnGetGetFilteredListsByTbService(string tbServiceCode)
+        public async Task<JsonResult> OnGetGetFilteredListsByTbService(string value)
         {
-            var tbServiceCodeAsList = new List<string> { tbServiceCode };
+            var tbServiceCodeAsList = new List<string> { value };
             var filteredHospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodeAsList);
             var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
 
             return new JsonResult(
                 new FilteredEpisodePageSelectLists
                 {
-                    Hospitals = filteredHospitals.Select(n => new ListEntry
+                    Hospitals = filteredHospitals.Select(n => new OptionValue
                     {
                         Value = n.HospitalId.ToString(),
                         Text = n.Name
                     }),
-                    CaseManagers = filteredCaseManagers.Select(n => new ListEntry
+                    CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
                         Value = n.Email,
                         Text = n.FullName
