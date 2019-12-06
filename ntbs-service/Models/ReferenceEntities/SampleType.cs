@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.ReferenceEntities
 {
     public class SampleType
     {

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Entities;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.ReferenceEntities
 {
     public class TBService
     {

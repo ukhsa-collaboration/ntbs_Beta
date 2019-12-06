@@ -10,6 +10,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages.Search;
 using ntbs_service.Services;
 using Xunit;

@@ -4,6 +4,7 @@ using ntbs_integration_tests.NotificationPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_integration_tests.Helpers
 {

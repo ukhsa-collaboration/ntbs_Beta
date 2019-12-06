@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using ntbs_service.Models.Entities;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.ReferenceEntities
 {
     public class Site
     {

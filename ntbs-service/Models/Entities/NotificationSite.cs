@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities

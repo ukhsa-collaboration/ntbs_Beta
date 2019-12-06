@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.ReferenceEntities
 {
     public class PHEC
     {

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.ReferenceEntities
 {
     public class Hospital
     {
