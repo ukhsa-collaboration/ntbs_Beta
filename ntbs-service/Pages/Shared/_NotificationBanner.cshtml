@@ -16,7 +16,15 @@
                     <div>
                         @if (@Model.ShowLink)
                         {
-                            <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
+                            @if (Model.NotificationStatus == NotificationStatus.Legacy)
+                            {
+                                var legacyId = Model.LTBRID ?? Model.ETSID;
+                                <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@legacyId</a>
+                            }
+                            else 
+                            {
+                                <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
+                            }
                         }
                         else
                         {

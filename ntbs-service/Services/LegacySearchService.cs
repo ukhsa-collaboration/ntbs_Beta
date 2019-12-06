@@ -17,7 +17,7 @@ namespace ntbs_service.Services
     
     public interface ILegacySearchService
     {
-        Task<IEnumerable<NotificationBannerModel>> Search(string notificationId);
+        Task<(IEnumerable<Notification> notifications, int count)> Search(int offset, int pageSize);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -26,21 +26,26 @@ namespace ntbs_service.Services
             SELECT *
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId";
+            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            ORDER BY n.NotificationDate DESC, n.OldNotificationId DESC
+            OFFSET @Offset ROWS
+            FETCH NEXT @Fetch ROWS ONLY";
+
+        const string CountQuery = @"
+            SELECT COUNT(*)
+            FROM Notifications n";
 
         private readonly IAuthorizationService _authorizationService;    
 
         private readonly string connectionString;
 
-        private readonly ClaimsPrincipal User;
-        public LegacySearchService(IConfiguration _configuration, IAuthorizationService authorizationService, ClaimsPrincipal user)
+        public LegacySearchService(IConfiguration _configuration, IAuthorizationService authorizationService)
         {
             connectionString = _configuration.GetConnectionString("migration");
             _authorizationService = authorizationService;
-            User = user;
         }
 
-        public async Task<IEnumerable<NotificationBannerModel>> Search(string notificationId)
+        public async Task<(IEnumerable<Notification> notifications, int count)> Search(int offset, int numberToFetch)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -48,10 +53,13 @@ namespace ntbs_service.Services
 
                 var results = await connection.QueryAsync(Query, new
                 {
-                    NotificationId = $"{notificationId}"
+                    Offset = offset,
+                    Fetch = numberToFetch
                 });
 
-                return results.Select(AsNotification).CreateNotificationBanners(User, _authorizationService);
+                var count = (await connection.QueryAsync<int>(CountQuery)).Single();
+
+                return (results.Select(AsNotification), count);
             }
         }
 
@@ -59,25 +67,15 @@ namespace ntbs_service.Services
         {
             var notification = new Notification
             {
+                ETSID = result.ETSID?.ToString(),
+                LTBRID = result.LTBRID?.ToString(),
+                NotificationStatus = NotificationStatus.Legacy,
                 NotificationDate = result.NotificationDate,
                 CreationDate = result.CreationDate,
                 PatientDetails = ExtractPatientDetails(result)
             };
             
             return notification;
-        }
-
-        private static NotificationBannerModel AsNotificationBannerModel(dynamic result)
-        {
-            var notification = new Notification
-            {
-                NotificationDate = result.NotificationDate,
-                CreationDate = result.CreationDate,
-                PatientDetails = ExtractPatientDetails(result)
-            };
-            
-            var notificationBannerModel = new NotificationBannerModel(notification);
-            return notificationBannerModel;
         }
 
         private static PatientDetails ExtractPatientDetails(dynamic notification)

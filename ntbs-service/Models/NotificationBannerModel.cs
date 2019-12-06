@@ -8,6 +8,8 @@ namespace ntbs_service.Models
     public class NotificationBannerModel
     {
         public int NotificationId;
+        public string LTBRID;
+        public string ETSID;
         public string SortByDate;
         public string NotificationDate;
         public string TbService;
@@ -28,6 +30,8 @@ namespace ntbs_service.Models
 
         public NotificationBannerModel(Notification notification, bool fullAccess = true, bool showLink = false) {
             NotificationId = notification.NotificationId;
+            LTBRID = notification.LTBRID;
+            ETSID = notification.ETSID;
             if (notification.NotificationStatus == NotificationStatus.Draft) {
                 SortByDate = notification.FormattedCreationDate;
             } else {

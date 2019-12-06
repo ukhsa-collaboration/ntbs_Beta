@@ -53,12 +53,15 @@ namespace ntbs_service.Services
 
         private IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 
         {
-            return query.OrderByDescending(n => n.NotificationDate ?? n.CreationDate);
+            return query
+                .OrderByDescending(n => n.NotificationDate ?? n.CreationDate)
+                // For notifications with the same NotificationDate order by NotificationId so that each search returns the same order each time
+                .OrderByDescending(n => n.NotificationId);
         }
 
         private async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
         {
-            return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
+            return await items.Skip(paginationParameters.NtbsOffset ?? 0)
                 .Take(paginationParameters.PageSize).ToListAsync();
         }
     }
