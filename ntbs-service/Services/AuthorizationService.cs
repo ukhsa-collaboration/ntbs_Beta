@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.Models;
-using ntbs_service.Models.Enums;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {

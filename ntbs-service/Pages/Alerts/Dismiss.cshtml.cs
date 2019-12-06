@@ -1,12 +1,11 @@
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.Services;
-using System.Security.Claims;
 using ntbs_service.DataAccess;
-using System.Linq;
+using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Alerts
 {
     public class DismissModel : PageModel
     {

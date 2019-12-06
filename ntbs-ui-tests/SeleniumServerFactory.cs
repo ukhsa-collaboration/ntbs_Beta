@@ -1,4 +1,4 @@
-using EFAuditer;
+﻿using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +8,7 @@ using System;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
+using ntbs_service.DataAccess;
 
 namespace ntbs_ui_tests
 {

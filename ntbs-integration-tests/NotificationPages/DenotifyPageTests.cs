@@ -1,14 +1,13 @@
-﻿using ntbs_integration_tests.Helpers;
-using ntbs_service;
-using ntbs_service.Models.Validations;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using ntbs_service.Models;
+using ntbs_integration_tests.Helpers;
+using ntbs_service;
+using ntbs_service.Helpers;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using Xunit;
-using System;
-using ntbs_service.Helpers;
 
 namespace ntbs_integration_tests.NotificationPages
 {
