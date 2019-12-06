@@ -1,56 +1,59 @@
 @using ntbs_service.Helpers
 @model ICollection<ntbs_service.Models.Entities.ManualTestResult>
 
-@{ 
+@{
     var header = Model.FirstOrDefault(); 
-    var showEditLinks = (bool) (ViewData["ShowManualResultsEditLinks"] ?? false);
+    var showEditLinks = (bool)(ViewData["ShowManualResultsEditLinks"] ?? false);
     var orderedResults = Model.OrderByDescending(r => r.TestDate);
 }
 
-<nhs-table id="manual-results" caption="Manual Test Results" >
-    <nhs-table-head>
-        <nhs-table-item>
-            @Html.DisplayNameFor(_ => header.TestDate)
-        </nhs-table-item>
-        <nhs-table-item>
-            @Html.DisplayNameFor(_ => header.ManualTestTypeId)
-        </nhs-table-item>
-        <nhs-table-item>
-            @Html.DisplayNameFor(_ => header.SampleTypeId)
-        </nhs-table-item>
-        <nhs-table-item>
-            @Html.DisplayNameFor(_ => header.Result)
-        </nhs-table-item>
-        @if (showEditLinks) 
-        {
-            <nhs-table-item>Edit</nhs-table-item>
-        }
-    </nhs-table-head>
-    <nhs-table-body>
-    @foreach (var result in orderedResults)
-    {
-        <nhs-table-body-row id="manual-test-result-@result.ManualTestResultId">
+@if (Model.Count != 0)
+{
+    <nhs-table id="manual-results" caption="Manual Test Results">
+        <nhs-table-head>
             <nhs-table-item>
-                @(result.TestDate?.ToString("dd-MMM-yyyy"))
+                @Html.DisplayNameFor(_ => header.TestDate)
             </nhs-table-item>
             <nhs-table-item>
-                @result.ManualTestType.Description
+                @Html.DisplayNameFor(_ => header.ManualTestTypeId)
             </nhs-table-item>
             <nhs-table-item>
-                @result.SampleType.Description
+                @Html.DisplayNameFor(_ => header.SampleTypeId)
             </nhs-table-item>
             <nhs-table-item>
-                @result.Result
+                @Html.DisplayNameFor(_ => header.Result)
             </nhs-table-item>
-            @if (showEditLinks) 
+            @if (showEditLinks)
             {
-                var subPath = NotificationSubPaths.EditManualTestResult(result.ManualTestResultId);
-                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
-                <nhs-table-item>
-                    <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
-                </nhs-table-item>
+                <nhs-table-item>Edit</nhs-table-item>
             }
-        </nhs-table-body-row>
-    }
-    </nhs-table-body>
-</nhs-table>
+        </nhs-table-head>
+        <nhs-table-body>
+            @foreach (var result in orderedResults)
+            {
+                <nhs-table-body-row id="manual-test-result-@result.ManualTestResultId">
+                    <nhs-table-item>
+                        @(result.TestDate?.ToString("dd-MMM-yyyy"))
+                    </nhs-table-item>
+                    <nhs-table-item>
+                        @result.ManualTestType.Description
+                    </nhs-table-item>
+                    <nhs-table-item>
+                        @result.SampleType.Description
+                    </nhs-table-item>
+                    <nhs-table-item>
+                        @result.Result
+                    </nhs-table-item>
+                    @if (showEditLinks)
+                    {
+                        var subPath = NotificationSubPaths.EditManualTestResult(result.ManualTestResultId);
+                        var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                        <nhs-table-item>
+                            <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
+                        </nhs-table-item>
+                    }
+                </nhs-table-body-row>
+            }
+        </nhs-table-body>
+    </nhs-table>
+}
