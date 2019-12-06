@@ -84,13 +84,14 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             var document = await GetDocumentForUrl(url);
-            var dismissPageRoute = "/Alerts/1/Dismiss";
+            var dismissPageRoute = "/Alerts/1/Dismiss?Page=Overview";
             Assert.NotNull(document.QuerySelector("#alert-1"));
 
             // Act
             var result = await SendPostFormWithData(document, null, dismissPageRoute);
 
             // Assert
+            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetRedirectLocation(result), url);
             var reloadedDocument = await GetDocumentForUrl(GetRedirectLocation(result));
             Assert.Null(reloadedDocument.QuerySelector("#alert-1"));
