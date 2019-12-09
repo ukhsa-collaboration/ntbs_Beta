@@ -7,7 +7,12 @@
     <nhs-width-container container-width="Standard">
         <h3> @(Model.RowId == null ? "Add new " : "Edit ") test result</h3>
         <form method="post" autocomplete="off">
-            <filtered-dropdown filter-handler-path="FilteredSampleTypesForManualTestType" :filtering-refs="['sampleTypes']" :wait-for-child-mount="false" inline-template>
+            <filtered-dropdown 
+                filter-handler-path="FilteredSampleTypesForManualTestType" 
+                :filtering-refs="['sampleTypes']" 
+                :wait-for-child-mount="false"
+                hide-on-empty="true"
+                inline-template>
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
                         <validate-date model="TestResultForEdit" property="TestDate" inline-template>
@@ -100,7 +105,7 @@
                             </select>
                         </nhs-form-group>
                     </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneHalf">
+                    <nhs-grid-column grid-column-width="Full">
                         @{
                             var hasResultError = !Model.IsValid("TestResultForEdit.Result");
                             var resultGroupState = hasResultError ? Error : Standard;

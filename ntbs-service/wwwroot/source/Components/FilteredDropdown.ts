@@ -22,6 +22,9 @@ type OptionValue = {
 
  waitForChildMount is intended to be used to either trigger filtering on mount of this component,
  or if relevant to be triggered on mount of the filterContainer's vue component.
+
+ hideOnEmptyOptions configures whether the component should hide the dependent control if the returned list 
+ of OptionValues from the server is empty.
 */
 const FilteredDropdown = Vue.extend({
     props: {
@@ -34,6 +37,10 @@ const FilteredDropdown = Vue.extend({
         waitForChildMount: {
             type: Boolean,
             default: true
+        },
+        hideOnEmpty: {
+            type: Boolean,
+            default: false
         }
     },
     mounted: function () {
@@ -78,6 +85,10 @@ const FilteredDropdown = Vue.extend({
 
             selectElement.innerHTML = optionInnerHtml;
             this.setSelectToValueOrDefault(selectElement, currentSelectedValue);
+
+            if (this.hideOnEmpty) {
+                this.hideOrShowDependentControl(refName, values.length === 0);
+            }
         },
         setSelectToValueOrDefault: function (selectElement: HTMLSelectElement, targetValue: string) {
             for (let i = 0; i < selectElement.options.length; i++) {
@@ -96,6 +107,22 @@ const FilteredDropdown = Vue.extend({
             }
 
             return filterValueContainer.getElementsByTagName("select")[0];
+        },
+        hideOrShowDependentControl: function (refName: string, isValuesEmpty: boolean) {
+            const ref = this.$refs[refName];
+            let controlContainer: any;
+
+            if (ref instanceof Vue) {
+                controlContainer = ref.$el;
+            } else {
+                controlContainer = ref;
+            }
+
+            if (isValuesEmpty) {
+                controlContainer.classList.add("hidden");
+            } else {
+                controlContainer.classList.remove("hidden");
+            }
         },
         generateOptionInnerHtml(values: OptionValue[]) {
             if (values.some(entry => entry.group)) {

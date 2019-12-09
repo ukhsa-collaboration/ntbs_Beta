@@ -85,13 +85,13 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "TB Service")]
         public string TBServiceName => Episode.TBService?.Name;
         public string HospitalName => Episode.Hospital?.Name;
-        public string IsPostMortemYesNo => TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
-        public string IsSymptomatic => TrueFalseToYesNo(ClinicalDetails.IsSymptomatic);
-        public string NotPreviouslyHadTBYesNo => TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
-        public string UkBornYesNo => TrueFalseToYesNo(PatientDetails.UkBorn);
-        public string IsShortCourseYesNo => TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
-        public string HasRecentVisitor => TrueFalseToYesNo(VisitorDetails.HasVisitor);
-        public string HasRecentTravel => TrueFalseToYesNo(TravelDetails.HasTravel);
+        public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
+        public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
+        public string NotPreviouslyHadTBYesNo => (!PatientTBHistory.NotPreviouslyHadTB).FormatYesNo();
+        public string UkBornYesNo => PatientDetails.UkBorn.FormatYesNo();
+        public string IsShortCourseYesNo => ClinicalDetails.IsShortCourseTreatment.FormatYesNo();
+        public string HasRecentVisitor => VisitorDetails.HasVisitor.FormatYesNo();
+        public string HasRecentTravel => TravelDetails.HasTravel.FormatYesNo();
         public string FormattedNhsNumber => FormatNhsNumberString();
         public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => PatientDetails.NoFixedAbode ? "No fixed abode" : PatientDetails.Postcode?.Trim();
@@ -152,18 +152,6 @@ namespace ntbs_service.Models.Entities
             return date?.ToString("dd MMM yyyy");
         }
 
-        private static string TrueFalseToYesNo(bool? x)
-        {
-            if (x == null)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return x.Value ? "Yes" : "No";
-            }
-        }
-
         private static string FormatStateAndYear(Status? state, int? year)
         {
             return state?.ToString() + (year != null ? " - " + year : string.Empty);
@@ -171,7 +159,7 @@ namespace ntbs_service.Models.Entities
 
         private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
-            return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : string.Empty);
+            return booleanState.FormatYesNo() + (date != null ? " - " + FormatDate(date) : string.Empty);
         }
 
         private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)

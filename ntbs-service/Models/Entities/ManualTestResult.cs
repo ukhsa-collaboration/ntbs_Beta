@@ -35,7 +35,7 @@ namespace ntbs_service.Models.Entities
         public int? ManualTestTypeId { get; set; }
         public virtual ManualTestType ManualTestType { get; set; }
 
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
+        [RequiredIf("TestHasSampleTypes", ErrorMessage = ValidationMessages.RequiredSelect)]
         [DisplayName("Sample type")]
         [AssertThat("TestAndSampleTypesMatch", ErrorMessage = ValidationMessages.InvalidTestAndSampleTypeCombination)]
         public int? SampleTypeId { get; set; }
@@ -50,6 +50,7 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         public bool TestDateBeforeDob => Dob == null || TestDate >= Dob;
 
+
         [NotMapped]
         public bool TestAndSampleTypesMatch =>
             // Either the navigation properties are not loaded yet, or...
@@ -57,5 +58,10 @@ namespace ntbs_service.Models.Entities
             // ... the entities and sample match
             ManualTestType.ManualTestTypeSampleTypes
                 .Any(ts => ts.SampleType == SampleType);
+
+        [NotMapped]
+        public bool TestHasSampleTypes =>
+            ManualTestType != null
+            && ManualTestType.ManualTestTypeSampleTypes.Any();
     }
 }
