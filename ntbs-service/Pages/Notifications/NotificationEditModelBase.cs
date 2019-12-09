@@ -26,6 +26,9 @@ namespace ntbs_service.Pages.Notifications
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
 
+        [ViewData]
+        public Dictionary<string, string> EditPageErrorDictionary { get; set; }
+
         /*
         Post method accepts name of action specified by button clicked.
         Using handler appends handler to the url and would require awkward javascript logic
@@ -69,6 +72,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!isValid)
             {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
                 return await PrepareAndDisplayPageAsync(isBeingSubmitted);
             }
 
