@@ -85,13 +85,13 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "TB Service")]
         public string TBServiceName => Episode.TBService?.Name;
         public string HospitalName => Episode.Hospital?.Name;
-        public string IsPostMortemYesNo => FormattingHelper.TrueFalseToYesNo(ClinicalDetails.IsPostMortem);
-        public string IsSymptomatic => FormattingHelper.TrueFalseToYesNo(ClinicalDetails.IsSymptomatic);
-        public string NotPreviouslyHadTBYesNo => FormattingHelper.TrueFalseToYesNo(!PatientTBHistory.NotPreviouslyHadTB);
-        public string UkBornYesNo => FormattingHelper.TrueFalseToYesNo(PatientDetails.UkBorn);
-        public string IsShortCourseYesNo => FormattingHelper.TrueFalseToYesNo(ClinicalDetails.IsShortCourseTreatment);
-        public string HasRecentVisitor => FormattingHelper.TrueFalseToYesNo(VisitorDetails.HasVisitor);
-        public string HasRecentTravel => FormattingHelper.TrueFalseToYesNo(TravelDetails.HasTravel);
+        public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
+        public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
+        public string NotPreviouslyHadTBYesNo => (!PatientTBHistory.NotPreviouslyHadTB).FormatYesNo();
+        public string UkBornYesNo => PatientDetails.UkBorn.FormatYesNo();
+        public string IsShortCourseYesNo => ClinicalDetails.IsShortCourseTreatment.FormatYesNo();
+        public string HasRecentVisitor => VisitorDetails.HasVisitor.FormatYesNo();
+        public string HasRecentTravel => TravelDetails.HasTravel.FormatYesNo();
         public string FormattedNhsNumber => FormatNhsNumberString();
         public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
         public string FormattedNoAbodeOrPostcodeString => PatientDetails.NoFixedAbode ? "No fixed abode" : PatientDetails.Postcode?.Trim();
@@ -159,7 +159,7 @@ namespace ntbs_service.Models.Entities
 
         private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
-            return FormattingHelper.TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : string.Empty);
+            return booleanState.FormatYesNo() + (date != null ? " - " + FormatDate(date) : string.Empty);
         }
 
         private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
