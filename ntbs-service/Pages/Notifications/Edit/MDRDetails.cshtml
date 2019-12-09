@@ -11,11 +11,11 @@
     var fullValidation = Model.MDRDetails.ShouldValidateFull ? "True" : "False";
 }
 
+<partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
+
 <h2>MDR Details</h2>
 
 <div>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.ExposureToKnownCaseStatus)</nhs-fieldset-legend>
@@ -32,7 +32,8 @@
                             var hasRelationshipDescriptionError = !Model.IsValid("MDRDetails.RelationshipToCase");
                             var relationshipDescriptionGroupState = hasRelationshipDescriptionError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type=@relationshipDescriptionGroupState aria-describedby="relationship-description-error">
+                        <nhs-form-group nhs-form-group-type=@relationshipDescriptionGroupState aria-describedby="relationship-description-error"
+                            id="MDRDetails-RelationshipToCase">
                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelationshipDescriptionError"
                                     asp-validation-for="MDRDetails.RelationshipToCase" id="relationship-description-error"></span>
                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelationshipToCase">
@@ -46,7 +47,7 @@
                         var hasCaseInUKError = !Model.IsValid("MDRDetails.CaseInUKStatus");
                         var caseInUKGroupState = hasCaseInUKError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@caseInUKGroupState aria-describedby="case-in-uk-error">
+                    <nhs-form-group nhs-form-group-type=@caseInUKGroupState aria-describedby="case-in-uk-error" id="MDRDetails-CaseInUKStatus">
                         <nhs-fieldset>
                             <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.CaseInUKStatus)</nhs-fieldset-legend>
                             <span id="case-in-uk-error" nhs-span-type="ErrorMessage"
