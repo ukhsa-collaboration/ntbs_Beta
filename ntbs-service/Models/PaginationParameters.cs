@@ -11,5 +11,6 @@ namespace ntbs_service.Models
         public int? LegacyOffset;
         public int? PreviousNtbsOffset;
         public int? PreviousLegacyOffset;
+        public int NumberOfNtbsNotificationsToFetch => NtbsOffset != null ? PageSize : PageIndex * PageSize;
     }
 }
