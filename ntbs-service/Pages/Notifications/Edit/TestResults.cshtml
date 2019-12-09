@@ -9,6 +9,8 @@
     var fullValidation = Model.TestData.ShouldValidateFull ? "True" : "False";
 }
 
+<partial name="_SinglePageErrorSummaryPartial" model="@Model" />
+
 <h2>Test Results</h2>
 
 <div>
@@ -23,7 +25,7 @@
                     var hasTestsCarriedOutAndRowsEntered = Model.TestData.HasTestCarriedOut == true && Model.TestData.ManualTestResults.Count != 0;
                     var hasTestCarriedOutDisabledText = hasTestsCarriedOutAndRowsEntered ? "Cannot modify value when manual tests are logged against notification" : string.Empty;
                 }
-                <nhs-form-group nhs-form-group-type="@testCarriedOutGroupState">
+                <nhs-form-group nhs-form-group-type="@testCarriedOutGroupState" id="TestData-HasTestCarriedOut">
                     <nhs-fieldset aria-describedby="test-carried-out-error@(hasTestsCarriedOutAndRowsEntered ? " test-carried-out-disabled" : string.Empty)" title="@hasTestCarriedOutDisabledText">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
                             @Html.DisplayNameFor(m => m.TestData.HasTestCarriedOut)

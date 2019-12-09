@@ -14,7 +14,7 @@
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> @Html.DisplayNameFor(m => m.HasTestCarriedOut) </div>
-            <div class="cell-min-height"> @FormattingHelper.TrueFalseToYesNo(Model.HasTestCarriedOut) </div>
+            <div class="cell-min-height"> @Model.HasTestCarriedOut.FormatYesNo() </div>
         </nhs-grid-column>
     </nhs-grid-row>
     
