@@ -128,8 +128,8 @@ namespace ntbs_service.Pages.Search
             {
                 var legacyNotificationsDisplayed = notificationsToDisplay.Count(n => n.NotificationStatus == NotificationStatus.Legacy);
                 var ntbsNotificationsDisplayed = PaginationParameters.PageSize - legacyNotificationsDisplayed;
-                nextNtbsOffset = ntbsNotificationsDisplayed + (int)ntbsOffset;
-                nextLegacyOffset = legacyNotificationsDisplayed + (int)legacyOffset;
+                nextNtbsOffset = ntbsNotificationsDisplayed + ntbsOffset ?? 0;
+                nextLegacyOffset = legacyNotificationsDisplayed + legacyOffset ?? 0;
             }
             else
             {

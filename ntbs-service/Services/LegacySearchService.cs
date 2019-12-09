@@ -81,22 +81,28 @@ namespace ntbs_service.Services
         private static PatientDetails ExtractPatientDetails(dynamic notification)
         {
             return new PatientDetails
-                {
-                    FamilyName = notification.FamilyName,
-                    GivenName = notification.GivenName,
-                    NhsNumber = notification.NhsNumber,
-                    Dob = notification.DateOfBirth,
-                    UkBorn = GetBoolValue(notification.CountryName),
-                    LocalPatientId = notification.LocalPatientId,
-                    Postcode = notification.Postcode,
-                    Address = notification.Line1 + " " + notification.Line2,
-                    EthnicityId = notification.NtbsEthnicGroupId,
-                    SexId = notification.NtbsSexId,
-                    NhsNumberNotKnown = notification.NhsNumberNotKnown == 1,
-                    NoFixedAbode = notification.NoFixedAbode == 1,
-                    OccupationId = notification.NtbsOccupationId,
-                    OccupationOther = notification.NtbsOccupationFreeText
-                };
+            {
+                FamilyName = notification.FamilyName,
+                GivenName = notification.GivenName,
+                NhsNumber = notification.NhsNumber,
+                Dob = notification.DateOfBirth,
+                UkBorn = GetBoolValue(notification.CountryName),
+                LocalPatientId = notification.LocalPatientId,
+                Postcode = notification.Postcode,
+                Address = notification.Line1 + " " + notification.Line2,
+                EthnicityId = notification.NtbsEthnicGroupId,
+                SexId = notification.NtbsSexId,
+                NhsNumberNotKnown = notification.NhsNumberNotKnown == 1,
+                NoFixedAbode = notification.NoFixedAbode == 1,
+                LegacyCountryName = notification.BirthCountryName
+            };
+        }
+
+        private static Episode ExtractEpisode(dynamic notification)
+        {
+            return new Episode
+            {
+            };
         }
 
         private static bool? GetBoolValue(int? value)
