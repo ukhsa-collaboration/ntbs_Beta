@@ -62,7 +62,7 @@ namespace ntbs_service.Services
         private async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
         {
             return await items.Skip(paginationParameters.NtbsOffset ?? 0)
-                .Take(paginationParameters.PageSize).ToListAsync();
+                .Take(paginationParameters.NumberOfNtbsNotificationsToFetch).ToListAsync();
         }
     }
 }
