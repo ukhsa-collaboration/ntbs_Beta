@@ -5,7 +5,6 @@
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Test Results";
-    ViewData["ShowManualResultsEditLinks"] = true;
     var fullValidation = Model.TestData.ShouldValidateFull ? "True" : "False";
 }
 
@@ -52,7 +51,10 @@
             <div ref="manual-test-results">
                 <h3>Manually-entered test results</h3>
 
-                <partial name="_ManualTestResultTable" for="TestData.ManualTestResults" view-data=@ViewData />
+                @{
+                    ViewData["ShowManualResultsEditLinks"] = true;
+                }
+                <partial name="_ManualTestResultTable" for="TestData.ManualTestResults" />
 
                 <button id="add-new-manual-test-result-button"
                         nhs-button-type="Standard"

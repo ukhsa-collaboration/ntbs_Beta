@@ -178,6 +178,13 @@ body {
     @media (min-width: 40.0625em) {
         margin-top: 18px;
         margin-bottom: 40px;
-        font-size: 16px;
+    }
+}
+
+@media (min-width: 40.0625em) {
+    .nhsuk-table--reduced-font {
+        td, th {
+            font-size: 16px;
+        }
     }
 }

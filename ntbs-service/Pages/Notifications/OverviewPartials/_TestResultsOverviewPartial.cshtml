@@ -20,6 +20,8 @@
     
     @if (Model.HasTestCarriedOut == true)
     {
+        ViewData["RenderReducedSizeManualResultsTable"] = true;
+        
         <partial name="Shared/_ManualTestResultTable" for="ManualTestResults" />
     }
 </div>
