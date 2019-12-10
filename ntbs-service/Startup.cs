@@ -124,6 +124,7 @@ namespace ntbs_service
             if (Env.IsEnvironment("Test"))
             {
                 app.UseStatusCodePagesWithReExecute("/errors/{0}");
+                app.UseExceptionHandler("/errors/500");
             }
             else if (env.IsDevelopment())
             {
@@ -137,6 +138,7 @@ namespace ntbs_service
             else
             {
                 app.UseStatusCodePagesWithReExecute("/errors/{0}");
+                app.UseExceptionHandler("/errors/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
