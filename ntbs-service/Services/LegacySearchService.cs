@@ -47,20 +47,21 @@ namespace ntbs_service.Services
 
         public async Task<(IEnumerable<Notification> notifications, int count)> Search(int offset, int numberToFetch)
         {
+            IEnumerable<dynamic> results;
+            int count;
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                var results = await connection.QueryAsync(Query, new
+                results = await connection.QueryAsync(Query, new
                 {
                     Offset = offset,
                     Fetch = numberToFetch
                 });
 
-                var count = (await connection.QueryAsync<int>(CountQuery)).Single();
-
-                return (results.Select(AsNotification), count);
+                count = (await connection.QueryAsync<int>(CountQuery)).Single();
             }
+            return (results.Select(AsNotification), count);
         }
 
         private static Notification AsNotification(dynamic result)
