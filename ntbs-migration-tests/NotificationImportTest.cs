@@ -10,7 +10,7 @@ using ntbs_service.DataAccess;
 using System.Threading.Tasks;
 using ntbs_service.Services;
 
-namespace ntbs_scheduled_tests
+namespace ntbs_migration_tests
 {
     public class NotificationImportTest
     {
@@ -47,7 +47,7 @@ namespace ntbs_scheduled_tests
         public async Task NotificationExists()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLtbrOrEtsIdExists("1")).Returns(true);
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists("1")).Returns(true);
 
             //When
             var importedNotifications = await _notifcationImportService.ImportNotificationsAsync(RequestId, "1");
@@ -61,7 +61,7 @@ namespace ntbs_scheduled_tests
         public async Task NotificationNotFound()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLtbrOrEtsIdExists(It.IsAny<string>())).Returns(false);
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>())).Returns(false);
 
             //When
             var importedNotifications = await _notifcationImportService.ImportNotificationsAsync(RequestId, "0");
@@ -75,7 +75,7 @@ namespace ntbs_scheduled_tests
         public async Task NotificationWithoutValidationErrors()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLtbrOrEtsIdExists(It.IsAny<string>()))
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>()))
                                         .Returns(false);
 
             var dummyPostcodeList = new List<PostcodeLookup> {
@@ -106,7 +106,7 @@ namespace ntbs_scheduled_tests
         public async Task NotificationValidationErrors()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLtbrOrEtsIdExists(It.IsAny<string>()))
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>()))
                                         .Returns(false);
 
             var dummyPostcodeList = new List<PostcodeLookup> {

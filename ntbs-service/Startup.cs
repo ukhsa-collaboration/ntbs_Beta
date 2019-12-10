@@ -81,6 +81,12 @@ namespace ntbs_service
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddAuthorization(options => {
+                options.AddPolicy("AdminOnly", policy => {
+                    policy.RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"]);
+                });
+            });
+
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );

@@ -25,7 +25,7 @@ namespace ntbs_service.DataMigration
             var group = new NotificationGroup();
             _context.NotificationGroup.Add(group);
 
-            notifications.ForEach(n => n.GroupId = group.NotificationGroupId);
+            notifications.ForEach(n => n.Group = group);
             _context.Notification.AddRange(notifications);
 
             _context.AddAuditCustomField(CustomFields.AuditDetails, AuditType.Imported);

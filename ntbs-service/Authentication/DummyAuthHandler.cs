@@ -25,8 +25,11 @@ namespace ntbs_service.Authentication {
             // Add role claim for base user role
             id.AddClaim(new Claim(ClaimTypes.Role, adfsOptions.AdGroupsPrefix + adfsOptions.BaseUserGroup, ClaimValueTypes.String));
             // Add role claim for user role - as specified in appsettings.Development.json
-            string group = adfsOptions.AdGroupsPrefix + (adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup);
-            id.AddClaim(new Claim(ClaimTypes.Role, group, ClaimValueTypes.String));
+            string groupAdmin = adfsOptions.AdGroupsPrefix + (adfsOptions.AdminUserGroup ?? adfsOptions.NationalTeamAdGroup);
+            id.AddClaim(new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String));
+            string groupDev = adfsOptions.AdGroupsPrefix + (adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup);
+            id.AddClaim(new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String));
+
             id.AddClaim(new Claim(ClaimTypes.Email, "Developer@ntbs.phe.com", ClaimValueTypes.String));
             this.id = new ClaimsPrincipal(id);
         }

@@ -12,7 +12,7 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<IEnumerable<Notification>> Search(string notificationId);
+        Task<IEnumerable<Notification>> Get(string notificationId);
     }
 
     public class NotificationMapper : INotificationMapper
@@ -54,7 +54,7 @@ namespace ntbs_service.DataMigration
             connectionString = _configuration.GetConnectionString("migration");
         }
 
-        public async Task<IEnumerable<Notification>> Search(string notificationId)
+        public async Task<IEnumerable<Notification>> Get(string notificationId)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -82,7 +82,8 @@ namespace ntbs_service.DataMigration
                 TravelDetails = ExtractTravelDetails(result),
                 VisitorDetails = ExtractVisitorDetails(result),
                 ComorbidityDetails = ExtractComorbidityDetails(result),
-                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(result)
+                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(result),
+                NotificationStatus = NotificationStatus.Notified
             };
 
             return notification;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -44,20 +45,20 @@ namespace ntbs_service.DataMigration
         {
             _logger.LogInformation(requestId, $"Request to import Notification with Id={notificationId}");
 
-            if (_notificationRepository.NotificationWithLtbrOrEtsIdExists(notificationId)) 
+            if (_notificationRepository.NotificationWithLegacyIdExists(notificationId)) 
             {
                 _logger.LogInformation(requestId, $"Notification with Id={notificationId} already exists in database");
                 return null;
             }
 
-            var notifications = (await _notificationMapper.Search(notificationId)).ToList();
+            var notifications = (await _notificationMapper.Get(notificationId)).ToList();
             if (notifications.Count == 0)
             {
                 _logger.LogInformation(requestId, $"No notifications found with Id={notificationId}");
                 return null;
             }
 
-            notifications = LookupAndAssignPostcode(notifications);
+            LookupAndAssignPostcode(notifications);
 
             var patientName = notifications.FirstOrDefault().FullName;
             _logger.LogInformation(requestId, $"{notifications.Count} notifications found to import for {patientName}");
@@ -76,7 +77,7 @@ namespace ntbs_service.DataMigration
                 else
                 {
                     isAnyNotificationInvalid = true;
-                    _logger.LogWarning(requestId, $"{validationErrors.Count()} validation errors found:");
+                    _logger.LogWarning(requestId, $"{validationErrors.Count()} validation errors found for notification with Id={linkedNotificationId}:");
                     foreach (var validationError in validationErrors)
                     {
                         _logger.LogWarning(requestId, validationError.ErrorMessage);
@@ -101,7 +102,7 @@ namespace ntbs_service.DataMigration
             return savedNotifications;
         }
 
-        private List<Notification> LookupAndAssignPostcode(List<Notification> notifications)
+        private void LookupAndAssignPostcode(List<Notification> notifications)
         {
             var postcodes = _postcodeService.FindPostcodes(notifications.Select(x => x.PatientDetails.Postcode).ToList());
             notifications.ForEach(n => {
@@ -110,18 +111,13 @@ namespace ntbs_service.DataMigration
                 n.PatientDetails.PostcodeToLookup = lookedUpPostcode?.Postcode;
                 n.PatientDetails.PostcodeLookup = lookedUpPostcode;
             });
-            return notifications;
         }
 
         private IEnumerable<ValidationResult> GetValidationErrors(Notification notification) 
         {
             var validationsResults = new List<ValidationResult>();
 
-            notification.ShouldValidateFull = true;  
-            notification.PatientDetails.ShouldValidateFull = true;  
-            notification.ClinicalDetails.ShouldValidateFull = true;  
-            notification.TravelDetails.ShouldValidateFull = true;  
-            notification.VisitorDetails.ShouldValidateFull = true;  
+            NotificationHelper.SetShouldValidateFull(notification);
 
             validationsResults.AddRange(ValidateObject(notification));
             validationsResults.AddRange(ValidateObject(notification.PatientDetails));
