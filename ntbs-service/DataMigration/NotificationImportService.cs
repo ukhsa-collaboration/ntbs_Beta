@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using Serilog;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Enums;

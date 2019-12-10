@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Enums;
 using Microsoft.Extensions.Configuration;
 using Xunit;

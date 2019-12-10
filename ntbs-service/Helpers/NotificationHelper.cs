@@ -1,4 +1,4 @@
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Helpers
 {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataMigration;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
