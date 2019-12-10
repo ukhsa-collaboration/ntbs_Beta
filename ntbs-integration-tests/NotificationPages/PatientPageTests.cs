@@ -91,13 +91,13 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("given-name", "Given name can only contain letters and the symbols ' - . ,");
-            resultDocument.AssertErrorMessage("family-name", "Family name can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-GivenName", "given-name", "Given name can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-FamilyName", "family-name", "Family name can only contain letters and the symbols ' - . ,");
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
             Assert.Contains("Date of birth must not be before 01/01/1900", resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", "NHS number needs to be 10 digits long");
-            resultDocument.AssertErrorMessage("address", "Address can only contain letters, numbers and the symbols ' - . , /");
-            resultDocument.AssertErrorMessage("local-patient-id", "Invalid character found in Local Patient Id");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-NhsNumber", "nhs-number", "NHS number needs to be 10 digits long");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-Address", "address", "Address can only contain letters, numbers and the symbols ' - . , /");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-LocalPatientId", "local-patient-id", "Invalid character found in Local Patient Id");
         }
 
         [Fact]

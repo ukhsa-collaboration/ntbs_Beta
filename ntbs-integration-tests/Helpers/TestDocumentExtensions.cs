@@ -1,4 +1,6 @@
-﻿using AngleSharp.Html.Dom;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AngleSharp.Html.Dom;
 using Xunit;
 
 namespace ntbs_integration_tests.Helpers
@@ -13,10 +15,32 @@ namespace ntbs_integration_tests.Helpers
             return errorSpan.TextContent;
         }
 
+        public static string GetErrorFromSummary(this IHtmlDocument document, string errorSummaryName, string errorSpanName)
+        {
+            var errorLink = (IHtmlAnchorElement) document?.QuerySelector($"a[id='error-summary-{errorSummaryName}']");
+            if (errorLink == null) return null;
+            var splitHrefLink = errorLink.Href.Split("#");
+            var errorParentId = splitHrefLink[splitHrefLink.Length - 1];
+            var errorParent = document.QuerySelector($"#{errorParentId}");
+            var errorSpan = errorParent.QuerySelector($"span[id='{errorSpanName}-error']");
+            if (errorSpan == null) return null;
+            if (errorSpan.ClassList.Contains("hidden")) return null;
+            return errorSpan.TextContent;
+        }
+
         public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage)
         {
             var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage);
             var actual = document.GetError(inputName);
+            Assert.Equal(expected, actual);
+        }
+
+        public static void AssertErrorSummaryMessage(this IHtmlDocument document, string summaryInputName, string spanInputName, string expectedMessage)
+        {
+            // error-summary-@notifyError.Key
+
+            var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage);
+            var actual = document.GetErrorFromSummary(summaryInputName, spanInputName);
             Assert.Equal(expected, actual);
         }
 
