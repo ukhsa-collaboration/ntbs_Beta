@@ -2,14 +2,17 @@
 @model ICollection<ntbs_service.Models.Entities.ManualTestResult>
 
 @{
-    var header = Model.FirstOrDefault(); 
+    var header = Model.FirstOrDefault();
     var showEditLinks = (bool)(ViewData["ShowManualResultsEditLinks"] ?? false);
+    var isReducedTable = (bool)(ViewData["RenderReducedSizeManualResultsTable"] ?? false);
     var orderedResults = Model.OrderByDescending(r => r.TestDate);
 }
 
 @if (Model.Count != 0)
 {
-    <nhs-table id="manual-results" caption="Manual Test Results">
+    <nhs-table id="manual-results" 
+           caption="Manual Test Results" 
+           classes="@(isReducedTable ? "reduced-table" : null)">
         <nhs-table-head>
             <nhs-table-item>
                 @Html.DisplayNameFor(_ => header.TestDate)

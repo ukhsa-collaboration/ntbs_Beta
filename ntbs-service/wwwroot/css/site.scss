@@ -178,6 +178,14 @@ body {
     @media (min-width: 40.0625em) {
         margin-top: 18px;
         margin-bottom: 40px;
-        font-size: 16px;
+
+        /* 
+            html structure is `div.nhsuk-table responsive > table.nhsuk-table.reduced-table`
+            cannot add class directly on the div using the tag helpers
+        */
+        & .reduced-table th,
+        & .reduced-table td {
+            font-size: 16px;
+        }
     }
 }
