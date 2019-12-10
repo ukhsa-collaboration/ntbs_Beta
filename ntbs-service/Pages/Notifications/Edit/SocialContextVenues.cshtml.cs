@@ -34,13 +34,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         #pragma warning disable 1998
         protected override async Task ValidateAndSave()
         {
-            // No validation happening on list
+            // No validation or saving happening on list
         }
         #pragma warning restore 1998
         
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Children/NewSocialContextVenue", new { NotificationId });
+            return RedirectToPage("./Items/NewSocialContextVenue", new { NotificationId });
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)

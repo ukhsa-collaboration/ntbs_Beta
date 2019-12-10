@@ -128,8 +128,8 @@ namespace ntbs_service.Services
                     if (modelStateByKey?.ValidationState == ModelValidationState.Invalid)
                     {
                         errorMessageMap.Add(errorIndex, modelStateByKey.Errors[0].ErrorMessage);
-                        errorIndex++;
                     }
+                    errorIndex++;
                 }
                 if (errorIndex > 0)
                 {

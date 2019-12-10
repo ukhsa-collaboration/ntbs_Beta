@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.Validations;
 using Xunit;
 
@@ -84,9 +81,7 @@ namespace ntbs_integration_tests.NotificationPages
             var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             // We can't pick based on id, as we don't know the id created
-            var venueTextContent = resultDocument.GetElementById("social-context-venues-table")
-                .GetElementsByTagName("tbody")[0]
-                .GetElementsByTagName("tr")[0]
+            var venueTextContent = resultDocument.GetElementById("social-context-venues-list")
                 .TextContent;
 
             Assert.Contains("Club", venueTextContent);
@@ -103,9 +98,10 @@ namespace ntbs_integration_tests.NotificationPages
 
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);
-            var venueBeforeChanges = editDocument.GetElementById($"social-context-venue-{VENUE_ID}").TextContent;
-            Assert.Contains("Test venue", venueBeforeChanges);
-            Assert.Contains("Test address", venueBeforeChanges);
+            var venueHeadingBeforeChanges = editDocument.GetElementById($"venue-heading-{VENUE_ID}").TextContent;
+            var venueBodyBeforeChanges = editDocument.GetElementById($"venue-body-{VENUE_ID}").TextContent;
+            Assert.Contains("Test venue", venueHeadingBeforeChanges);
+            Assert.Contains("Test address", venueBodyBeforeChanges);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -126,10 +122,11 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
             var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
-            var venueTextContent = resultDocument.GetElementById($"social-context-venue-{VENUE_ID}").TextContent;
+            var venueHeadingTextContent = resultDocument.GetElementById($"venue-heading-{VENUE_ID}").TextContent;
+            var venueBodyTextContent = resultDocument.GetElementById($"venue-body-{VENUE_ID}").TextContent;
 
-            Assert.Contains("New venue", venueTextContent);
-            Assert.Contains("New address", venueTextContent);
+            Assert.Contains("New venue", venueHeadingTextContent);
+            Assert.Contains("New address", venueBodyTextContent);
         }
 
         [Fact]
@@ -196,7 +193,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task GetEditForMissingVenye_ReturnsNotFound()
+        public async Task GetEditForMissingVenue_ReturnsNotFound()
         {
             // Arrange
             const int notificationId = Utilities.DRAFT_ID;
@@ -226,6 +223,31 @@ namespace ntbs_integration_tests.NotificationPages
             var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             Assert.Null(resultDocument.GetElementById($"social-context-venue-{VENUE_TO_DELETE_ID}"));
+        }
+
+        [Fact]
+        public async Task ValidateVenueDates_ReturnsErrorIfDateToBeforeDateFrom()
+        {
+            // Arrange
+            var keyValuePairs = new string[]
+            {
+                "keyValuePairs[0][key]=DateFrom",
+                "keyValuePairs[0][day]=1",
+                "keyValuePairs[0][month]=1",
+                "keyValuePairs[0][year]=2000",
+                "keyValuePairs[1][key]=DateTo",
+                "keyValuePairs[1][day]=1",
+                "keyValuePairs[1][month]=1",
+                "keyValuePairs[1][year]=1999",
+            };
+
+            // Act
+            var url = GetCurrentPathForId(0) + VENUE_ID;
+            var response = await Client.GetAsync($"{url}/ValidateVenueDates?{string.Join("&", keyValuePairs)}");
+
+            // Assert check just response.Content
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Must be later than date from", result);
         }
     }
 }

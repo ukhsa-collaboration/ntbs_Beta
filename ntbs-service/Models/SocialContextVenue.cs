@@ -70,9 +70,7 @@ namespace ntbs_service.Models
         [NotMapped]
         public DateTime? Dob { get; set; } = null;
 
-        [NotMapped]
         public bool DateFromAfterDob => Dob == null || DateFrom >= Dob;
-        [NotMapped]
         public bool DateToAfterDob => Dob == null || DateTo >= Dob;
 
         public string FormattedDateFrom => FormatDate(DateFrom);

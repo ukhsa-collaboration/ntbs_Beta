@@ -10,7 +10,7 @@
 <div id="social-context-venues-list">
     @foreach (var result in orderedResults)
     {
-        <div class="notification-overview-type-and-edit-container">
+        <div class="notification-overview-type-and-edit-container" id="venue-heading-@result.SocialContextVenueId">
             <h5 class="notification-details-type"> @(result.Name) - @(result.FormattedDateFrom) to @(result.FormattedDateTo) </h5>
             @if (showEditLinks) 
             {
@@ -19,7 +19,7 @@
                 <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
             }
         </div>
-        <dl class="notification-overview-details-container">
+        <dl class="notification-overview-details-container" id="venue-body-@result.SocialContextVenueId">
             <nhs-grid-row classes="notification-overview-details">
                 <nhs-grid-column grid-column-width="OneHalf">
                     <dt class="notification-details-label"> Category </dt>

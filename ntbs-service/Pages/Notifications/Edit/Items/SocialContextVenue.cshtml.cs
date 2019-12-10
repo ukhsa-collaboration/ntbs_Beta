@@ -163,23 +163,23 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.ValidateDate<SocialContextVenue>(key, day, month, year);
         }
 
-        // public ContentResult OnGetValidateVenueDates(IEnumerable<Dictionary<string, string>> keyValuePairs)
-        // {
-        //     var propertyValueTuples = new List<Tuple<string, object>>();
-        //     foreach (var keyValuePair in keyValuePairs)
-        //     {
-        //         var formattedDate = new FormattedDate() { Day = keyValuePair["day"], Month = keyValuePair["month"], Year = keyValuePair["year"] };
-        //         if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
-        //         {
-        //             propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], convertedDob));
-        //         }
-        //         else
-        //         {
-        //             // should not ever get here as we validate individual dates first before comparing
-        //             return Content(ValidationMessages.ValidDate);
-        //         }
-        //     }
-        //     return ValidationService.ValidateMultipleProperties<SocialContextVenue>(propertyValueTuples);
-        // }
+        public ContentResult OnGetValidateVenueDates(IEnumerable<Dictionary<string, string>> keyValuePairs)
+        {
+            var propertyValueTuples = new List<Tuple<string, object>>();
+            foreach (var keyValuePair in keyValuePairs)
+            {
+                var formattedDate = new FormattedDate() { Day = keyValuePair["day"], Month = keyValuePair["month"], Year = keyValuePair["year"] };
+                if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
+                {
+                    propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], convertedDob));
+                }
+                else
+                {
+                    // should not ever get here as we validate individual dates first before comparing
+                    return null;
+                }
+            }
+            return ValidationService.ValidateMultipleProperties<SocialContextVenue>(propertyValueTuples);
+        }
     }
 }
