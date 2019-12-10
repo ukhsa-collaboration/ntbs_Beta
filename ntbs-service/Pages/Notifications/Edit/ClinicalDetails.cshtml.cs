@@ -137,10 +137,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("Notification.NotificationSites", ValidationMessages.DiseaseSiteIsRequired);
             }
 
-            TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
+            TryValidateModel(ClinicalDetails, nameof(ClinicalDetails));
             if (OtherSite != null)
             {
-                TryValidateModel(OtherSite, OtherSite.GetType().Name);
+                TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
             await CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState();

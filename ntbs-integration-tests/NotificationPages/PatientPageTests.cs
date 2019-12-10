@@ -123,7 +123,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("year-of-entry", "Year of entry to the UK must be after patient's date of birth");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-YearOfUkEntry", "year-of-entry", "Year of entry to the UK must be after patient's date of birth");
         }
 
         [Fact]
@@ -149,39 +149,14 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("family-name", "Family name is a mandatory field");
-            resultDocument.AssertErrorMessage("given-name", "Given name is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-FamilyName", "family-name", "Family name is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-GivenName", "given-name", "Given name is a mandatory field");
             Assert.Contains("Date of birth is a mandatory field", resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", "NHS number is a mandatory field");
-            resultDocument.AssertErrorMessage("postcode", "Postcode is a mandatory field");
-            resultDocument.AssertErrorMessage("sex", "Sex is a mandatory field");
-            resultDocument.AssertErrorMessage("ethnicity", "Ethnic group is a mandatory field");
-            resultDocument.AssertErrorMessage("birth-country", "Birth country is a mandatory field");
-        }
-
-        [Fact]
-        public async Task PostNotified_ReturnsPageWithErrorSummary_IfModelNotValid()
-        {
-            // Arrange
-            const int id = Utilities.NOTIFIED_ID;
-            var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
-
-            var formData = new Dictionary<string, string>
-            {
-                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
-                ["PatientDetails.NhsNumber"] = "|a2"
-            };
-
-            // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
-
-            // Assert
-            var resultDocument = await GetDocumentAsync(result);
-
-            result.EnsureSuccessStatusCode();
-
-            Assert.Equal("NHS number can only contain digits 0-9", resultDocument.QuerySelector("#error-summary-PatientDetails-NhsNumber").TextContent);
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-NhsNumber", "nhs-number", "NHS number is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-Postcode", "postcode", "Postcode is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-SexId", "sex", "Sex is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-EthnicityId", "ethnicity", "Ethnic group is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-CountryId", "birth-country", "Birth country is a mandatory field");
         }
 
         [Fact]

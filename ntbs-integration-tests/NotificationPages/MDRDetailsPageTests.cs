@@ -36,8 +36,8 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("relationship-description", "Please supply details of the relationship to case");
-            resultDocument.AssertErrorMessage("case-in-uk", "Please specify whether the contact was a case in the UK");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Please supply details of the relationship to case");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-CaseInUKStatus", "case-in-uk", "Please specify whether the contact was a case in the UK");
         }
 
         [Fact]
@@ -63,8 +63,8 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
-            resultDocument.AssertErrorMessage("related-notification", "The NTBS ID does not match an existing ID in the system");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelatedNotificationId", "related-notification", "The NTBS ID does not match an existing ID in the system");
         }
 
         [Fact]

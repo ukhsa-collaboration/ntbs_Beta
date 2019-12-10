@@ -65,7 +65,8 @@
                                             var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
                                             var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
                                         }
-                                        <nhs-form-group nhs-form-group-type=@relatedNotificationGroupState aria-describedby="related-notification-error">
+                                        <nhs-form-group nhs-form-group-type=@relatedNotificationGroupState aria-describedby="related-notification-error"
+                                            id="MDRDetails-RelatedNotificationId">
                                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelatedNotificationError"
                                                     asp-validation-for="MDRDetails.RelatedNotificationId" id="related-notification-error"></span>
                                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
