@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
@@ -25,6 +25,9 @@ namespace ntbs_service.Pages.Notifications
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+
+        [ViewData]
+        public Dictionary<string, string> EditPageErrorDictionary { get; set; }
 
         /*
         Post method accepts name of action specified by button clicked.
@@ -69,6 +72,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!isValid)
             {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
                 return await PrepareAndDisplayPageAsync(isBeingSubmitted);
             }
 

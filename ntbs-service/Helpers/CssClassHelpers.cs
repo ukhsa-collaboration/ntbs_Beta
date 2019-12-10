@@ -1,6 +1,6 @@
 ﻿using ntbs_service.Models.Enums;
 
-namespace ntbs_integration_tests.Helpers
+namespace ntbs_service.Helpers
 {
     public static class CssClassHelpers
     {

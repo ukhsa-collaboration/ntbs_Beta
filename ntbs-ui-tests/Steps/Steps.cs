@@ -51,24 +51,17 @@ namespace ntbs_ui_tests.StepDefinitions
         public void WhenIEnterValueIntoFieldWithId(string value, string elementId)
         {
             FindById(elementId).Click();
-            FindById(elementId).SendKeys(value);
+            FindById(elementId).SendKeys(value + "\t");
+            if (!Settings.IsHeadless)
+            {
+                Thread.Sleep(1000);
+            }
         }
 
         [When(@"I wait")]
         public void WhenIWait()
         {
             Thread.Sleep(1000);
-        }
-
-        [When(@"I enter (.*) into '(.*)' autocomplete")]
-        public void WhenIEnterValueIntoAutocompleteField(string value, string elementId)
-        {
-            WhenIEnterValueIntoFieldWithId(value, elementId);
-            FindById(elementId).SendKeys("\t");
-            if (!Settings.IsHeadless)
-            {
-                Thread.Sleep(2000);
-            }
         }
 
         private IWebElement FindById(string elementId)

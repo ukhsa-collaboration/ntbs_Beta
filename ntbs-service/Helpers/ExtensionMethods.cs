@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Security.Claims;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Helpers
@@ -20,8 +19,8 @@ namespace ntbs_service.Helpers
         {
             return new FormattedDate
             {
-                Day = dateTime.Day.ToString(),
-                Month = dateTime.Month.ToString(),
+                Day = dateTime.Day.ToString(), 
+                Month = dateTime.Month.ToString(), 
                 Year = dateTime.Year.ToString()
             };
         }
@@ -35,12 +34,26 @@ namespace ntbs_service.Helpers
             IAuthorizationService authorizationService)
         {
             return notifications.Select(async n =>
-                    {
-                        var fullAccess = await authorizationService.CanEdit(user, n);
-                        return new NotificationBannerModel(n, fullAccess: fullAccess, showLink: true);
-                    })
+                {
+                    var fullAccess = await authorizationService.CanEdit(user, n);
+                    return new NotificationBannerModel(n, fullAccess: fullAccess, showLink: true);
+                })
                 .Select(n => n.Result);
         }
     }
 
+    public static class NullableBoolExtensions
+    {
+        public static string FormatYesNo(this bool? x)
+        {
+            if (x == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return x.Value ? "Yes" : "No";
+            }
+        }
+    }
 }

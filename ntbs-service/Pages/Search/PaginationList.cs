@@ -1,11 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 
-namespace ntbs_service.Pages_Search
+namespace ntbs_service.Pages.Search
 {
     public class PaginatedList<T> : List<T>
     {

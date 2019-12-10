@@ -1,5 +1,5 @@
-@using ntbs_integration_tests.Helpers
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 
 <nhs-grid-row>
@@ -14,11 +14,12 @@
                 <h2>
                     Alerts
                 </h2>
-                @if(Model.Alerts != null)
+                @if(Model.Alerts.Count > 0)
                 {
+                    <div class="overview-alerts-container">
                     @foreach (var alert in Model.Alerts)
                     {
-                        <div class="flex-container" id="alert-@alert.AlertId">
+                        <div class="flex-container overview-alert" id="alert-@alert.AlertId">
                             <div class="alert-description--overview-view">@alert.Action</div>
                             <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
                             <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
@@ -31,6 +32,7 @@
                             </form>
                         </div>
                     }
+                    </div>
                 }
                 </div>
         </nhs-grid-column>

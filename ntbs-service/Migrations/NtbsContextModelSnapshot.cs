@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
@@ -20,7 +20,7 @@ namespace ntbs_service.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ntbs_service.Models.Alert", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
                     b.Property<int>("AlertId")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator<string>("AlertType");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.CaseManager", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManager", b =>
                 {
                     b.Property<string>("Email")
                         .ValueGeneratedOnAdd()
@@ -80,7 +80,7 @@ namespace ntbs_service.Migrations
                     b.ToTable("CaseManager");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
                     b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
@@ -95,7 +95,113 @@ namespace ntbs_service.Migrations
                     b.ToTable("CaseManagerTbService");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Country", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
+                {
+                    b.Property<int>("ManualTestResultId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ManualTestTypeId")
+                        .IsRequired();
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int?>("SampleTypeId");
+
+                    b.Property<DateTime?>("TestDate")
+                        .IsRequired();
+
+                    b.HasKey("ManualTestResultId");
+
+                    b.HasIndex("ManualTestTypeId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("SampleTypeId");
+
+                    b.ToTable("ManualTestResult");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("DeletionReason")
+                        .HasMaxLength(150);
+
+                    b.Property<string>("ETSID")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("GroupId");
+
+                    b.Property<string>("LTBRID")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTime?>("NotificationDate");
+
+                    b.Property<string>("NotificationStatus")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime?>("SubmissionDate");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("NotificationStatus");
+
+                    b.HasIndex("NotificationStatus", "SubmissionDate");
+
+                    b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.NotificationGroup", b =>
+                {
+                    b.Property<int>("NotificationGroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("NotificationGroupId");
+
+                    b.ToTable("NotificationGroup");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.NotificationSite", b =>
+                {
+                    b.Property<int>("NotificationId");
+
+                    b.Property<int>("SiteId");
+
+                    b.Property<string>("SiteDescription");
+
+                    b.HasKey("NotificationId", "SiteId");
+
+                    b.HasIndex("SiteId");
+
+                    b.ToTable("NotificationSite");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
+                {
+                    b.Property<int>("NotificationId");
+
+                    b.Property<bool?>("HasTestCarriedOut");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("TestData");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Country", b =>
                 {
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
@@ -1865,7 +1971,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Ethnicity", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Ethnicity", b =>
                 {
                     b.Property<int>("EthnicityId")
                         .ValueGeneratedOnAdd()
@@ -1991,7 +2097,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Hospital", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>
                 {
                     b.Property<Guid>("HospitalId")
                         .ValueGeneratedOnAdd();
@@ -6080,7 +6186,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.LocalAuthority", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.LocalAuthority", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -7186,7 +7292,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.LocalAuthorityToPHEC", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", b =>
                 {
                     b.Property<string>("PHECCode")
                         .HasMaxLength(50);
@@ -8297,39 +8403,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ManualTestResult", b =>
-                {
-                    b.Property<int>("ManualTestResultId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ManualTestTypeId")
-                        .IsRequired();
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<int?>("SampleTypeId")
-                        .IsRequired();
-
-                    b.Property<DateTime?>("TestDate")
-                        .IsRequired();
-
-                    b.HasKey("ManualTestResultId");
-
-                    b.HasIndex("ManualTestTypeId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.HasIndex("SampleTypeId");
-
-                    b.ToTable("ManualTestResult");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.ManualTestType", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.ManualTestType", b =>
                 {
                     b.Property<int>("ManualTestTypeId")
                         .ValueGeneratedOnAdd()
@@ -8375,7 +8449,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ManualTestTypeSampleType", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.ManualTestTypeSampleType", b =>
                 {
                     b.Property<int>("ManualTestTypeId");
 
@@ -8805,71 +8879,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Notification", b =>
-                {
-                    b.Property<int>("NotificationId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<string>("DeletionReason")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("ETSID")
-                        .HasMaxLength(50);
-
-                    b.Property<int?>("GroupId");
-
-                    b.Property<string>("LTBRID")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("NotificationDate");
-
-                    b.Property<string>("NotificationStatus")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime?>("SubmissionDate");
-
-                    b.HasKey("NotificationId");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("NotificationStatus");
-
-                    b.HasIndex("NotificationStatus", "SubmissionDate");
-
-                    b.ToTable("Notification");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationGroup", b =>
-                {
-                    b.Property<int>("NotificationGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("NotificationGroupId");
-
-                    b.ToTable("NotificationGroup");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
-                {
-                    b.Property<int>("NotificationId");
-
-                    b.Property<int>("SiteId");
-
-                    b.Property<string>("SiteDescription");
-
-                    b.HasKey("NotificationId", "SiteId");
-
-                    b.HasIndex("SiteId");
-
-                    b.ToTable("NotificationSite");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Occupation", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Occupation", b =>
                 {
                     b.Property<int>("OccupationId")
                         .ValueGeneratedOnAdd()
@@ -9086,7 +9096,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.PHEC", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PHEC", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -9177,7 +9187,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.PostcodeLookup", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PostcodeLookup", b =>
                 {
                     b.Property<string>("Postcode")
                         .ValueGeneratedOnAdd()
@@ -9194,7 +9204,7 @@ namespace ntbs_service.Migrations
                     b.ToTable("PostcodeLookup");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Region", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Region", b =>
                 {
                     b.Property<int>("RegionId")
                         .ValueGeneratedOnAdd()
@@ -9208,7 +9218,7 @@ namespace ntbs_service.Migrations
                     b.ToTable("Region");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.SampleType", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.SampleType", b =>
                 {
                     b.Property<int>("SampleTypeId")
                         .ValueGeneratedOnAdd()
@@ -9365,7 +9375,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Sex", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Sex", b =>
                 {
                     b.Property<int>("SexId")
                         .ValueGeneratedOnAdd()
@@ -9396,7 +9406,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Site", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Site", b =>
                 {
                     b.Property<int>("SiteId")
                         .ValueGeneratedOnAdd()
@@ -9501,7 +9511,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TBService", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TBService", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -11982,117 +11992,72 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
                 {
-                    b.Property<int>("NotificationId");
-
-                    b.Property<bool?>("HasTestCarriedOut");
-
-                    b.HasKey("NotificationId");
-
-                    b.ToTable("TestData");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.MdrAlert", b =>
-                {
-                    b.HasBaseType("ntbs_service.Models.Alert");
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
                     b.HasDiscriminator().HasValue("EnhancedSurveillanceMDR");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.TestAlert", b =>
                 {
-                    b.HasBaseType("ntbs_service.Models.Alert");
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
                     b.HasDiscriminator().HasValue("Test");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Alert", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
-                    b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                    b.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                         .WithMany()
                         .HasForeignKey("CaseManagerEmail");
 
-                    b.HasOne("ntbs_service.Models.Notification", "Notification")
+                    b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("Alerts")
                         .HasForeignKey("NotificationId");
 
-                    b.HasOne("ntbs_service.Models.TBService", "TbService")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()
                         .HasForeignKey("TbServiceCode");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
-                    b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                    b.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                         .WithMany("CaseManagerTbServices")
                         .HasForeignKey("CaseManagerEmail")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.TBService", "TbService")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany("CaseManagerTbServices")
                         .HasForeignKey("TbServiceCode")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Hospital", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
                 {
-                    b.HasOne("ntbs_service.Models.TBService", "TBService")
-                        .WithMany()
-                        .HasForeignKey("TBServiceCode");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.LocalAuthorityToPHEC", b =>
-                {
-                    b.HasOne("ntbs_service.Models.LocalAuthority", "LocalAuthority")
-                        .WithOne("LocalAuthorityToPHEC")
-                        .HasForeignKey("ntbs_service.Models.LocalAuthorityToPHEC", "LocalAuthorityCode")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.PHEC", "PHEC")
-                        .WithOne()
-                        .HasForeignKey("ntbs_service.Models.LocalAuthorityToPHEC", "PHECCode")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.ManualTestResult", b =>
-                {
-                    b.HasOne("ntbs_service.Models.ManualTestType", "ManualTestType")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
                         .WithMany()
                         .HasForeignKey("ManualTestTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.TestData")
+                    b.HasOne("ntbs_service.Models.Entities.TestData")
                         .WithMany("ManualTestResults")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.SampleType", "SampleType")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.SampleType", "SampleType")
                         .WithMany()
-                        .HasForeignKey("SampleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SampleTypeId");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ManualTestTypeSampleType", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
                 {
-                    b.HasOne("ntbs_service.Models.ManualTestType", "ManualTestType")
-                        .WithMany("ManualTestTypeSampleTypes")
-                        .HasForeignKey("ManualTestTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.SampleType", "SampleType")
-                        .WithMany("ManualTestTypeSampleTypes")
-                        .HasForeignKey("SampleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Notification", b =>
-                {
-                    b.HasOne("ntbs_service.Models.NotificationGroup", "Group")
+                    b.HasOne("ntbs_service.Models.Entities.NotificationGroup", "Group")
                         .WithMany("Notifications")
                         .HasForeignKey("GroupId");
 
-                    b.OwnsOne("ntbs_service.Models.ClinicalDetails", "ClinicalDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ClinicalDetails", "ClinicalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12137,13 +12102,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ClinicalDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ClinicalDetails")
-                                .HasForeignKey("ntbs_service.Models.ClinicalDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ClinicalDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ComorbidityDetails", "ComorbidityDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ComorbidityDetails", "ComorbidityDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12166,13 +12131,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ComorbidityDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ComorbidityDetails")
-                                .HasForeignKey("ntbs_service.Models.ComorbidityDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ComorbidityDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ContactTracing", "ContactTracing", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ContactTracing", "ContactTracing", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12204,13 +12169,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ContactTracing");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ContactTracing")
-                                .HasForeignKey("ntbs_service.Models.ContactTracing", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ContactTracing", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.DenotificationDetails", "DenotificationDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.DenotificationDetails", "DenotificationDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12227,13 +12192,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("DenotificationDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("DenotificationDetails")
-                                .HasForeignKey("ntbs_service.Models.DenotificationDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.DenotificationDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Episode", "Episode", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Episode", "Episode", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12257,25 +12222,25 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("Episode");
 
-                            b1.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                            b1.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                                 .WithMany()
                                 .HasForeignKey("CaseManagerEmail");
 
-                            b1.HasOne("ntbs_service.Models.Hospital", "Hospital")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Hospital", "Hospital")
                                 .WithMany()
                                 .HasForeignKey("HospitalId");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("Episode")
-                                .HasForeignKey("ntbs_service.Models.Episode", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.Episode", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.HasOne("ntbs_service.Models.TBService", "TBService")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
                                 .WithMany()
                                 .HasForeignKey("TBServiceCode");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12295,13 +12260,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ImmunosuppressionDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ImmunosuppressionDetails")
-                                .HasForeignKey("ntbs_service.Models.ImmunosuppressionDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ImmunosuppressionDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.MDRDetails", "MDRDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.MDRDetails", "MDRDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12324,17 +12289,17 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("MDRDetails");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
                                 .WithMany()
                                 .HasForeignKey("CountryId");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("MDRDetails")
-                                .HasForeignKey("ntbs_service.Models.MDRDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.MDRDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.PatientDetails", "PatientDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.PatientDetails", "PatientDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12394,33 +12359,33 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("Patients");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
                                 .WithMany()
                                 .HasForeignKey("CountryId");
 
-                            b1.HasOne("ntbs_service.Models.Ethnicity", "Ethnicity")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Ethnicity", "Ethnicity")
                                 .WithMany()
                                 .HasForeignKey("EthnicityId");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("PatientDetails")
-                                .HasForeignKey("ntbs_service.Models.PatientDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.HasOne("ntbs_service.Models.Occupation", "Occupation")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Occupation", "Occupation")
                                 .WithMany()
                                 .HasForeignKey("OccupationId");
 
-                            b1.HasOne("ntbs_service.Models.PostcodeLookup", "PostcodeLookup")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.PostcodeLookup", "PostcodeLookup")
                                 .WithOne()
-                                .HasForeignKey("ntbs_service.Models.PatientDetails", "PostcodeToLookup");
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "PostcodeToLookup");
 
-                            b1.HasOne("ntbs_service.Models.Sex", "Sex")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Sex", "Sex")
                                 .WithMany()
                                 .HasForeignKey("SexId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.PatientTBHistory", "PatientTBHistory", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.PatientTBHistory", "PatientTBHistory", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12432,13 +12397,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("PatientTBHistories");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("PatientTBHistory")
-                                .HasForeignKey("ntbs_service.Models.PatientTBHistory", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientTBHistory", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.SocialRiskFactors", "SocialRiskFactors", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.SocialRiskFactors", "SocialRiskFactors", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12455,12 +12420,12 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("SocialRiskFactors");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("SocialRiskFactors")
-                                .HasForeignKey("ntbs_service.Models.SocialRiskFactors", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.SocialRiskFactors", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorDrugs", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorDrugs", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -12483,13 +12448,13 @@ namespace ntbs_service.Migrations
 
                                     b2.ToTable("RiskFactorDrugs");
 
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
+                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorDrugs")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -12512,13 +12477,13 @@ namespace ntbs_service.Migrations
 
                                     b2.ToTable("RiskFactorHomelessness");
 
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
+                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorHomelessness")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -12541,14 +12506,14 @@ namespace ntbs_service.Migrations
 
                                     b2.ToTable("RiskFactorImprisonment");
 
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
+                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorImprisonment")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });
 
-                    b.OwnsOne("ntbs_service.Models.TravelDetails", "TravelDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.TravelDetails", "TravelDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12578,25 +12543,25 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("TravelDetails");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country1")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country1")
                                 .WithMany()
                                 .HasForeignKey("Country1Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country2")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country2")
                                 .WithMany()
                                 .HasForeignKey("Country2Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country3")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country3")
                                 .WithMany()
                                 .HasForeignKey("Country3Id");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("TravelDetails")
-                                .HasForeignKey("ntbs_service.Models.TravelDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.TravelDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.VisitorDetails", "VisitorDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.VisitorDetails", "VisitorDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12626,58 +12591,91 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("VisitorDetails");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country1")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country1")
                                 .WithMany()
                                 .HasForeignKey("Country1Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country2")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country2")
                                 .WithMany()
                                 .HasForeignKey("Country2Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country3")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country3")
                                 .WithMany()
                                 .HasForeignKey("Country3Id");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("VisitorDetails")
-                                .HasForeignKey("ntbs_service.Models.VisitorDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.VisitorDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.NotificationSite", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Notification")
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
                         .WithMany("NotificationSites")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.Site", "Site")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Site", "Site")
                         .WithMany("NotificationSites")
                         .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.PostcodeLookup", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
                 {
-                    b.HasOne("ntbs_service.Models.LocalAuthority", "LocalAuthority")
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
+                        .WithOne("TestData")
+                        .HasForeignKey("ntbs_service.Models.Entities.TestData", "NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
+                        .WithMany()
+                        .HasForeignKey("TBServiceCode");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.LocalAuthority", "LocalAuthority")
+                        .WithOne("LocalAuthorityToPHEC")
+                        .HasForeignKey("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", "LocalAuthorityCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.PHEC", "PHEC")
+                        .WithOne()
+                        .HasForeignKey("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", "PHECCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.ManualTestTypeSampleType", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
+                        .WithMany("ManualTestTypeSampleTypes")
+                        .HasForeignKey("ManualTestTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.SampleType", "SampleType")
+                        .WithMany("ManualTestTypeSampleTypes")
+                        .HasForeignKey("SampleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PostcodeLookup", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.LocalAuthority", "LocalAuthority")
                         .WithMany("PostcodeLookups")
                         .HasForeignKey("LocalAuthorityCode");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TBService", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TBService", b =>
                 {
-                    b.HasOne("ntbs_service.Models.PHEC", "PHEC")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.PHEC", "PHEC")
                         .WithMany()
                         .HasForeignKey("PHECCode");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Notification")
-                        .WithOne("TestData")
-                        .HasForeignKey("ntbs_service.Models.TestData", "NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

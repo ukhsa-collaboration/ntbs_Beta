@@ -180,3 +180,11 @@ body {
         margin-bottom: 40px;
     }
 }
+
+@media (min-width: 40.0625em) {
+    .nhsuk-table--reduced-font {
+        td, th {
+            font-size: 16px;
+        }
+    }
+}

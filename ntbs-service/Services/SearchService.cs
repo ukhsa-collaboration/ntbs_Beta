@@ -1,12 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Models.Enums;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {

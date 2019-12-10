@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Services;
-using ntbs_service.Helpers;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {

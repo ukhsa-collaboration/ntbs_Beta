@@ -32,6 +32,15 @@
     width: 75%;
 }
 
+.overview-alerts-container {
+    border-top: 1px #cccccc solid;
+}
+
+.overview-alert {
+    border-bottom: 1px #cccccc solid;
+    padding: 10px 0;
+}
+
 .submit-delete-buttons-container {
     margin-left: auto;
 }

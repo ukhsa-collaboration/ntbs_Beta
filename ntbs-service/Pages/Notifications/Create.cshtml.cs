@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Notifications
 {
     public class CreateModel : PageModel
     {

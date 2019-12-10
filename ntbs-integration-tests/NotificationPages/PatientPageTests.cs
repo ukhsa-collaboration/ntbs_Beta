@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -160,6 +157,31 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorMessage("sex", "Sex is a mandatory field");
             resultDocument.AssertErrorMessage("ethnicity", "Ethnic group is a mandatory field");
             resultDocument.AssertErrorMessage("birth-country", "Birth country is a mandatory field");
+        }
+
+        [Fact]
+        public async Task PostNotified_ReturnsPageWithErrorSummary_IfModelNotValid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                ["PatientDetails.NhsNumber"] = "|a2"
+            };
+
+            // Act
+            var result = await SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+
+            Assert.Equal("NHS number can only contain digits 0-9", resultDocument.QuerySelector("#error-summary-PatientDetails-NhsNumber").TextContent);
         }
 
         [Fact]

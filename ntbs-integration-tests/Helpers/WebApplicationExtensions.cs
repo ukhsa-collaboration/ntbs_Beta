@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
 using ntbs_service.Services;
 
 namespace ntbs_integration_tests.Helpers

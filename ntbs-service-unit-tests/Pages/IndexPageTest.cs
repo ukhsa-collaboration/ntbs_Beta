@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Moq;
-using ntbs_service.Models;
-using ntbs_service.Services;
-using ntbs_service.Pages;
-using Xunit;
-using ntbs_service.DataAccess;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Moq;
+using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
+using ntbs_service.Pages;
+using ntbs_service.Services;
+using Xunit;
 
 namespace ntbs_service_unit_tests.Pages
 {

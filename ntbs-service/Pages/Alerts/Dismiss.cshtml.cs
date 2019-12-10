@@ -1,12 +1,11 @@
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.Services;
-using System.Security.Claims;
 using ntbs_service.DataAccess;
-using System.Linq;
+using ntbs_service.Services;
 
-namespace ntbs_service.Pages_Notifications
+namespace ntbs_service.Pages.Alerts
 {
     public class DismissModel : PageModel
     {
@@ -34,7 +33,7 @@ namespace ntbs_service.Pages_Notifications
             }
             if (Request.Query["page"] == "Overview")
             {
-                return RedirectToPage("/Notifications/Overview", new { id = alertToDismiss.NotificationId });
+                return RedirectToPage("/Notifications/Overview", new { alertToDismiss.NotificationId });
             }
             // TODO:NTBS-376 This will need to be changed to link to the correct place instead of just the home page
             return RedirectToPage("/Index");

@@ -1,5 +1,5 @@
 @using ntbs_service.Helpers
-@model ntbs_service.Models.TestData
+@model ntbs_service.Models.Entities.TestData
 
 @{
     var notificationId = (int)ViewData["NotificationId"];
@@ -11,5 +11,17 @@
        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
 </div>
 <div class="notification-overview-details-container">
-    <partial name="Shared/_ManualTestResultTable" for="ManualTestResults" />
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> @Html.DisplayNameFor(m => m.HasTestCarriedOut) </div>
+            <div class="cell-min-height"> @Model.HasTestCarriedOut.FormatYesNo() </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    
+    @if (Model.HasTestCarriedOut == true)
+    {
+        ViewData["RenderReducedSizeManualResultsTable"] = true;
+        
+        <partial name="Shared/_ManualTestResultTable" for="ManualTestResults" />
+    }
 </div>
