@@ -182,47 +182,62 @@ namespace ntbs_service.Pages.Search
             return ValidationService.ValidateProperty(this, key, value);
         }
 
-        public void SetPaginationDetails(int? nextNtbsOffset, int? nextLegacyOffset, 
-            int? previousNtbsOffset, int? previousLegacyOffset, int? ntbsOffset, int? legacyOffset)
+        public void SetPaginationDetails(int? nextNtbsOffset,
+                                         int? nextLegacyOffset,
+                                         int? previousNtbsOffset,
+                                         int? previousLegacyOffset,
+                                         int? ntbsOffset,
+                                         int? legacyOffset)
+        {
+            if (SearchResults.HasPreviousPage)
+            {
+                var previousPageParameters = CreateSearchPageParameters(SearchResults.PageIndex - 1, previousNtbsOffset, previousLegacyOffset);
+                // TODO move these to the SearchResults model
+                PreviousPageText = "Page " + (SearchResults.PageIndex - 1) + " of " + (SearchResults.TotalPages);
+                PreviousPageUrl = QueryHelpers.AddQueryString("/Search", previousPageParameters);
+            }
+            if (SearchResults.HasNextPage)
+            {
+                var nextPageParameters = CreateSearchPageParameters(SearchResults.PageIndex + 1, nextNtbsOffset, nextLegacyOffset, ntbsOffset, legacyOffset);
+                NextPageText = "Page " + (SearchResults.PageIndex + 1) + " of " + (SearchResults.TotalPages);
+                NextPageUrl = QueryHelpers.AddQueryString("/Search", nextPageParameters);
+            }
+        }
+
+        private Dictionary<string, string> CreateSearchPageParameters(int pageIndex,
+                                                                      int? ntbsOffset,
+                                                                      int? legacyOffset,
+                                                                      int? previousNtbsOffset = null,
+                                                                      int? previousLegacyOffset = null)
+        {
+            var queryStringDictionary = GetCurrentSearchParameters();
+            queryStringDictionary["pageIndex"] = pageIndex.ToString();
+            if (ntbsOffset != null && legacyOffset != null)
+            {
+                queryStringDictionary["ntbsOffset"] = ntbsOffset.ToString();
+                queryStringDictionary["legacyOffset"] = legacyOffset.ToString();
+            }
+            if (previousNtbsOffset != null && previousLegacyOffset != null)
+            {
+                queryStringDictionary["previousNtbsOffset"] = previousNtbsOffset.ToString();
+                queryStringDictionary["previousLegacyOffset"] = previousLegacyOffset.ToString();
+            }
+            return queryStringDictionary;
+        }
+
+        private Dictionary<string, string> GetCurrentSearchParameters()
         {
             var queryString = Request.Query;
-            var previousPageQueryString = new Dictionary<string, string>();
+            var searchParameterDictionary = new Dictionary<string, string>();
             foreach (var key in queryString.Keys)
             {
                 // Copy full query string over apart from any offset values
                 if(!key.Contains("Offset"))
                 {
-                    previousPageQueryString[key] = queryString[key].ToString();
+                    searchParameterDictionary[key] = queryString[key].ToString();
                 }
             }
-            var nextPageQueryString = previousPageQueryString;
-            if (SearchResults?.HasPreviousPage ?? false)
-            {
-                PreviousPageText = "Page " + (SearchResults.PageIndex - 1) + " of " + (SearchResults.TotalPages);
-                previousPageQueryString["pageIndex"] = (SearchResults.PageIndex - 1).ToString();
-                if (previousNtbsOffset != null && previousLegacyOffset != null) 
-                {
-                    previousPageQueryString["ntbsOffset"] = previousNtbsOffset.ToString();
-                    previousPageQueryString["legacyOffset"] = previousLegacyOffset.ToString();
-                }
-                PreviousPageUrl = QueryHelpers.AddQueryString("/Search", previousPageQueryString);
-            }
-            if (SearchResults?.HasNextPage ?? false)
-            {
-                NextPageText = "Page " + (SearchResults.PageIndex + 1) + " of " + (SearchResults.TotalPages);
-                nextPageQueryString["pageIndex"] = (SearchResults.PageIndex + 1).ToString();
-                if(nextNtbsOffset != null && nextLegacyOffset != null)
-                {
-                    nextPageQueryString["legacyOffset"] = nextLegacyOffset.ToString();
-                    nextPageQueryString["ntbsOffset"] = nextNtbsOffset.ToString();
-                }
-                if (ntbsOffset != null && legacyOffset != null) 
-                {
-                    nextPageQueryString["previousNtbsOffset"] = ntbsOffset.ToString();
-                    nextPageQueryString["previousLegacyOffset"] = legacyOffset.ToString();
-                }
-                NextPageUrl = QueryHelpers.AddQueryString("/Search", nextPageQueryString);
-            }
+            return searchParameterDictionary;
         }
     }
 }
