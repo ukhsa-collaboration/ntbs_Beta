@@ -25,17 +25,17 @@ namespace ntbs_integration_tests.Helpers
 
         public static void AssertErrorSummaryMessage(this IHtmlDocument document, string summaryInputName, string spanInputName, string expectedMessage)
         {
-            // assert summary text
+            // assert the error appears in the error summary
             var errorLink = (IHtmlAnchorElement) document?.QuerySelector($"a#error-summary-{summaryInputName}");
             Assert.NotNull(errorLink);
             Assert.Equal(expectedMessage, errorLink.TextContent);
 
-            // assert link works
+            // assert the link contained within the error in the error summary works
             var errorParentId = errorLink.Href.Split("#").Last();
             var errorParent = document.QuerySelector($"#{errorParentId}");
             Assert.NotNull(errorParent);
 
-            // assert error text
+            // assert the error is found where linked to by the error message and the correct error message is present
             errorParent.AssertErrorMessage(spanInputName, expectedMessage);
         }
 
