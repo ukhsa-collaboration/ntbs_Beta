@@ -8,6 +8,7 @@ using System;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
+using ntbs_ui_tests.Helpers;
 
 namespace ntbs_ui_tests
 {
@@ -61,6 +62,8 @@ namespace ntbs_ui_tests
                     var db = scopedServices.GetRequiredService<NtbsContext>();
 
                     db.Database.EnsureCreated();
+                    // TODO NTBS-725: Fix bug so we can seed database
+                    // Utilities.SeedDatabase(db);
                 }
             });
         }
