@@ -45,7 +45,7 @@ namespace ntbs_service.Services
             _authorizationService = authorizationService;
         }
 
-        public async Task<(IEnumerable<Notification> notifications, int count)> Search(int offset, int numberToFetch)
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> Search(int offset, int numberToFetch)
         {
             IEnumerable<dynamic> results;
             int count;
@@ -61,17 +61,19 @@ namespace ntbs_service.Services
 
                 count = (await connection.QueryAsync<int>(CountQuery)).Single();
             }
-            return (results.Select(AsNotification), count);
+            return (results.Select(AsNotificationBanner), count);
         }
 
-        private static Notification AsNotification(dynamic result)
+        private static NotificationBannerModel AsNotificationBanner(dynamic result)
         {
-            var notification = new Notification
+            var notification = new NotificationBannerModel
             {
                 ETSID = result.ETSID?.ToString(),
                 LTBRID = result.LTBRID?.ToString(),
                 NotificationStatus = NotificationStatus.Legacy,
                 NotificationDate = result.NotificationDate,
+                Origin = result.Source,
+                Sex = result.NtbsSexId,
                 CreationDate = result.CreationDate,
                 PatientDetails = ExtractPatientDetails(result)
             };

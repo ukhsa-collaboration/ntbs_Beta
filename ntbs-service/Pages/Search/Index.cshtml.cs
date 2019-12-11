@@ -150,18 +150,18 @@ namespace ntbs_service.Pages.Search
         {
             var numberOfNotificationsToFetch = PaginationParameters.PageSize * PaginationParameters.PageIndex;
             var (orderedNotificationIds, count) = await _searchService.OrderAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
-            var notifications = await _notificationRepository.GetNotificationsByIdsAsync(orderedNotificationIds);
+            var ntbsNotifications = await _notificationRepository.GetNotificationsByIdsAsync(orderedNotificationIds);
             var (legacyNotifications, legacyCount) = await _legacySearchService.Search(0, numberOfNotificationsToFetch);
             Count = legacyCount + count;
-            var allPossibleNotifications = notifications.Concat(legacyNotifications);
-            var notificationss = allPossibleNotifications
+            var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
+            var notifications = allPossibleNotifications
                 .OrderByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
                 .ThenByDescending(n => n.NotificationDate ?? n.CreationDate)
                 .ThenByDescending(n => n.NotificationId)
                 .ThenBy(n => n.LTBRID ?? n.ETSID)
                 .Skip(numberOfNotificationsToFetch - PaginationParameters.PageSize)
                 .Take(PaginationParameters.PageSize);
-            return notificationss;
+            return notifications;
         }
 
         public async Task<IEnumerable<Notification>> SearchWithOffsets(IQueryable<Notification> filteredDrafts, IQueryable<Notification> filteredNonDrafts)
@@ -202,27 +202,27 @@ namespace ntbs_service.Pages.Search
             if (SearchResults?.HasPreviousPage ?? false)
             {
                 PreviousPageText = "Page " + (SearchResults.PageIndex - 1) + " of " + (SearchResults.TotalPages);
-                previousPageQueryString["pageIndex"] = "" + (SearchResults.PageIndex - 1);
+                previousPageQueryString["pageIndex"] = (SearchResults.PageIndex - 1).ToString();
                 if (previousNtbsOffset != null && previousLegacyOffset != null) 
                 {
-                    previousPageQueryString["ntbsOffset"] = "" + previousNtbsOffset;
-                    previousPageQueryString["legacyOffset"] = "" + previousLegacyOffset;
+                    previousPageQueryString["ntbsOffset"] = previousNtbsOffset.ToString();
+                    previousPageQueryString["legacyOffset"] = previousLegacyOffset.ToString();
                 }
                 PreviousPageUrl = QueryHelpers.AddQueryString("/Search", previousPageQueryString);
             }
             if (SearchResults?.HasNextPage ?? false)
             {
                 NextPageText = "Page " + (SearchResults.PageIndex + 1) + " of " + (SearchResults.TotalPages);
-                nextPageQueryString["pageIndex"] = "" + (SearchResults.PageIndex + 1);
+                nextPageQueryString["pageIndex"] = (SearchResults.PageIndex + 1).ToString();
                 if(nextNtbsOffset != null && nextLegacyOffset != null)
                 {
-                    nextPageQueryString["legacyOffset"] = "" + nextLegacyOffset;
-                    nextPageQueryString["ntbsOffset"] = "" + nextNtbsOffset;
+                    nextPageQueryString["legacyOffset"] = nextLegacyOffset.ToString();
+                    nextPageQueryString["ntbsOffset"] = nextNtbsOffset.ToString();
                 }
                 if (ntbsOffset != null && legacyOffset != null) 
                 {
-                    nextPageQueryString["previousNtbsOffset"] = "" + ntbsOffset;
-                    nextPageQueryString["previousLegacyOffset"] = "" + legacyOffset;
+                    nextPageQueryString["previousNtbsOffset"] = ntbsOffset.ToString();
+                    nextPageQueryString["previousLegacyOffset"] = legacyOffset.ToString();
                 }
                 NextPageUrl = QueryHelpers.AddQueryString("/Search", nextPageQueryString);
             }
