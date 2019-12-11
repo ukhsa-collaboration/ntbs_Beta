@@ -80,7 +80,7 @@ namespace ntbs_service.Models
 
         public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Date notified")]
-        public string FormattedSubmissionDate => FormatDate(SubmissionDate);
+        public string FormattedSubmissionDate => SubmissionDate.ConvertToString();
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
@@ -110,16 +110,16 @@ namespace ntbs_service.Models
         public int? DaysFromDiagnosisToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
         public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
-        public string FormattedSymptomStartDate => FormatDate(ClinicalDetails.SymptomStartDate);
-        public string FormattedPresentationToAnyHealthServiceDate => FormatDate(ClinicalDetails.FirstPresentationDate);
-        public string FormattedPresentationToTBServiceDate => FormatDate(ClinicalDetails.TBServicePresentationDate);
-        public string FormattedDiagnosisDate => FormatDate(ClinicalDetails.DiagnosisDate);
-        public string FormattedTreatmentStartDate => FormatDate(ClinicalDetails.TreatmentStartDate);
-        public string FormattedDeathDate => FormatDate(ClinicalDetails.DeathDate);
-        public string FormattedDob => FormatDate(PatientDetails.Dob);
+        public string FormattedSymptomStartDate => ClinicalDetails.SymptomStartDate.ConvertToString();
+        public string FormattedPresentationToAnyHealthServiceDate => ClinicalDetails.FirstPresentationDate.ConvertToString();
+        public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
+        public string FormattedDiagnosisDate => ClinicalDetails.DiagnosisDate.ConvertToString();
+        public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
+        public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
+        public string FormattedDob => PatientDetails.Dob.ConvertToString();
         [Display(Name = "Date created")]
-        public string FormattedCreationDate => FormatDate(CreationDate);
-        public string FormattedNotificationDate => FormatDate(NotificationDate);
+        public string FormattedCreationDate => CreationDate.ConvertToString();
+        public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
@@ -148,11 +148,6 @@ namespace ntbs_service.Models
             throw new InvalidOperationException("Notification status is not currently set");
         }
 
-        private static string FormatDate(DateTime? date)
-        {
-            return date?.ToString("dd MMM yyyy");
-        }
-
         private static string TrueFalseToYesNo(bool? x)
         {
             if (x == null)
@@ -172,7 +167,7 @@ namespace ntbs_service.Models
 
         private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
-            return TrueFalseToYesNo(booleanState) + (date != null ? " - " + FormatDate(date) : string.Empty);
+            return TrueFalseToYesNo(booleanState) + (date != null ? " - " + date.ConvertToString() : string.Empty);
         }
 
         private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)

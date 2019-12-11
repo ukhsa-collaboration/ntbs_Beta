@@ -65,7 +65,7 @@
                         var hasPostcodeError = !Model.IsValid("Venue.Postcode");
                         var postcodeGroupState = hasPostcodeError ? Error : Standard;
                     }
-                    <validate-postcode inline-template>
+                    <validate-input model="Venue" property="Postcode" inline-template>
                         <nhs-form-group ref="formGroup" nhs-form-group-type="@postcodeGroupState" aria-describedby="postcode-error">
                             <label nhs-label-type="Standard" asp-for="Venue.Postcode">
                                 @Html.DisplayNameFor(m => m.Venue.Postcode)
@@ -75,7 +75,7 @@
                             <input ref="inputField" v-on:blur="validate" is-error-input=@hasPostcodeError nhs-input-type="Standard"
                                 fixed-width="Ten" asp-for="Venue.Postcode">
                         </nhs-form-group>
-                    </validate-postcode>
+                    </validate-input>
                 </nhs-grid-column>
                 <nhs-grid-column grid-column-width="OneThird">
                     <nhs-form-group nhs-form-group-type="Standard">

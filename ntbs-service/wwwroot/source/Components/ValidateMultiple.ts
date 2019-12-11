@@ -21,7 +21,7 @@ const ValidateMultiple = Vue.extend({
         // Each error message will be mapped to the corresponding field.
         validate: function () {
             const inputs = this.createArrayFromRefElements("input");
-            var queryString: any;
+            var queryString: string;
             if (this.isDateValidation) {
                 var dayInputs = inputs.map((i: any) => i.$refs.dayInput.value);
                 if (arrayContainsEmptyValues(dayInputs)) {
@@ -76,7 +76,7 @@ const ValidateMultiple = Vue.extend({
     }
 });
 
-function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<string>) {
+function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<string>): string {
     const queryStringObject: any = { keyValuePairs: [] };
     for (let i = 0; i < keys.length; i++) {
         queryStringObject["keyValuePairs"].push({ key: keys[i], value: values[i] });
@@ -84,7 +84,7 @@ function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<string
     return qs.stringify(queryStringObject);
 };
 
-function buildKeyDateValuesQueryString(keys: Array<string>, days: Array<string>, months: Array<string>, years: Array<string>) {
+function buildKeyDateValuesQueryString(keys: Array<string>, days: Array<string>, months: Array<string>, years: Array<string>): string {
     const queryStringObject: any = { keyValuePairs: [] };
     for (let i = 0; i < keys.length; i++) {
         queryStringObject["keyValuePairs"].push({ key: keys[i], day: days[i], month: months[i], year: years[i] });
@@ -92,13 +92,8 @@ function buildKeyDateValuesQueryString(keys: Array<string>, days: Array<string>,
     return qs.stringify(queryStringObject);
 };
 
-function arrayContainsEmptyValues(array: Array<string>) {
-    for (let i = 0; i < array.length; i++) {
-        if (!array[i]) {
-            return true;
-        }
-    }
-    return false;
+function arrayContainsEmptyValues(array: Array<string>): boolean {
+    return array.some(el => !el);
 }
 
 export {

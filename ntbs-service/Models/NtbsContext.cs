@@ -472,10 +472,6 @@ namespace ntbs_service.Models
 
             modelBuilder.Entity<SocialContextVenue>(entity =>
             {
-                entity.HasOne(e => e.PostcodeLookup)
-                    .WithOne()
-                    .HasForeignKey<SocialContextVenue>(e => e.PostcodeToLookup);
-
                 entity.Property(e => e.Frequency)
                     .HasConversion(frequencyEnumConverter)
                     .HasMaxLength(EnumMaxLength);

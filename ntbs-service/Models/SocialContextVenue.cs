@@ -3,18 +3,20 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Interfaces;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models
 {
-    public class SocialContextVenue : ModelBase, IHasPostcode
+    public class SocialContextVenue : ModelBase
     {
         public int SocialContextVenueId { get; set; }
 
         public int NotificationId { get; set; }
-        // public virtual Notification Notification { get; set; }
+        // We are not including a navigation property to Notification, otherwise it gets validated
+        // on every TryValidateModel(venue)
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [DisplayName("Venue type")]
@@ -34,12 +36,9 @@ namespace ntbs_service.Models
         [DisplayName("Address")]
         public string Address { get; set; }
 
-        [AssertThat(@"PostcodeToLookup != null", ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
+        [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
         [DisplayName("Postcode")]
         public string Postcode { get; set; }
-
-        public string PostcodeToLookup { get; set; }
-        public virtual PostcodeLookup PostcodeLookup { get; set; }
 
         [DisplayName("Frequency")]
         public Frequency? Frequency { get; set; }
@@ -73,12 +72,7 @@ namespace ntbs_service.Models
         public bool DateFromAfterDob => Dob == null || DateFrom >= Dob;
         public bool DateToAfterDob => Dob == null || DateTo >= Dob;
 
-        public string FormattedDateFrom => FormatDate(DateFrom);
-        public string FormattedDateTo => FormatDate(DateTo);
-
-        private string FormatDate(DateTime? dateTime)
-        {
-            return dateTime?.ToString("dd MMM yyyy");
-        }
+        public string FormattedDateFrom => DateFrom.ConvertToString();
+        public string FormattedDateTo => DateTo.ConvertToString();
     }
 }

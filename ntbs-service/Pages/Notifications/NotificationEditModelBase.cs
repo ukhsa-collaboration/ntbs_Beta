@@ -177,10 +177,10 @@ namespace ntbs_service.Pages.Notifications
         public async Task<ContentResult> OnGetValidatePostcode<T>(IPostcodeService postcodeService, string postcode, bool shouldValidateFull) where T : ModelBase, IHasPostcode
         {
             var foundPostcode = await postcodeService.FindPostcode(postcode);
-            var propertyValueTuples = new List<Tuple<string, object>>
+            var propertyValueTuples = new List<(string, object)>
             {
-                new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
-                new Tuple<string, object>("Postcode", postcode)
+                ("PostcodeToLookup", foundPostcode?.Postcode),
+                ("Postcode", postcode)
             };
 
             return ValidationService.ValidateMultipleProperties<T>(propertyValueTuples, shouldValidateFull);

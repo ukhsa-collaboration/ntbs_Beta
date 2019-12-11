@@ -15,7 +15,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class SocialContextVenueModel : NotificationEditModelBase
     {
-        private readonly IPostcodeService _postcodeService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IItemRepository<SocialContextVenue> _socialContextVenueRepository;
         public SelectList VenueTypes { get; set; }
@@ -34,13 +33,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public SocialContextVenueModel(
             INotificationService service,
-            IPostcodeService postcodeService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IItemRepository<SocialContextVenue> socialContextVenueRepository) : base(service, authorizationService, notificationRepository)
         {
-            _postcodeService = postcodeService;
             _referenceDataRepository = referenceDataRepository;
             _socialContextVenueRepository = socialContextVenueRepository;
         }
@@ -68,7 +65,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             Venue.NotificationId = NotificationId;
             Venue.Dob = Notification.PatientDetails.Dob;
-            await FindAndSetPostcodeAsync();
             SetDates();
             Venue.SetFullValidation(Notification.NotificationStatus);
 
@@ -142,17 +138,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             ValidationService.TrySetFormattedDate(Venue, "Venue", nameof(Venue.DateTo), FormattedDateTo);
         }
 
-        private async Task FindAndSetPostcodeAsync()
-        {
-            ModelState.ClearValidationState("Venue.Postcode");
-            await FindAndSetPostcodeAsync(_postcodeService, Venue);
-        }
-
-        public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
-        {
-            return await OnGetValidatePostcode<SocialContextVenue>(_postcodeService, postcode, shouldValidateFull);
-        }
-
         public ContentResult OnGetValidateVenueProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.ValidateModelProperty<SocialContextVenue>(key, value, shouldValidateFull);
@@ -165,13 +150,13 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateVenueDates(IEnumerable<Dictionary<string, string>> keyValuePairs)
         {
-            var propertyValueTuples = new List<Tuple<string, object>>();
+            List<(string, object)> propertyValueTuples = new List<(string key, object property)>();
             foreach (var keyValuePair in keyValuePairs)
             {
                 var formattedDate = new FormattedDate() { Day = keyValuePair["day"], Month = keyValuePair["month"], Year = keyValuePair["year"] };
                 if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
                 {
-                    propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], convertedDob));
+                    propertyValueTuples.Add((keyValuePair["key"], convertedDob));
                 }
                 else
                 {
