@@ -128,6 +128,8 @@ namespace ntbs_service.Models.Entities
         public string MDRCaseCountryName => MDRDetails.Country?.Name;
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
 
+        public string LegacyId => LTBRID ?? ETSID;
+
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)
