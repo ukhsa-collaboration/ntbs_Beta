@@ -168,7 +168,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>().DisplayName;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -228,14 +228,14 @@ namespace ntbs_service.Services
 
             if (!IsValidYear(yearToValidate))
             {
-                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>().DisplayName;
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(propertyDisplayName));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(propertyDisplayName, (int)yearToCompare));
             }
         }
