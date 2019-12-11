@@ -23,15 +23,16 @@ namespace ntbs_service.DataMigration
 
         public async Task<List<Notification>> AddLinkedNotificationsAsync(List<Notification> notifications)
         {
-            var group = new NotificationGroup();
-            _context.NotificationGroup.Add(group);
+            if (notifications.Count > 1)
+            {
+                var group = new NotificationGroup();
+                _context.NotificationGroup.Add(group);
 
             notifications.ForEach(n => n.Group = group);
             _context.Notification.AddRange(notifications);
-
-            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Imported);
+            _context.AddAuditCustomField(CustomFields.AuditDetails, AuditType.Imported);
             await _context.SaveChangesAsync();
             return notifications;
-        }    
+        }
     }
 }

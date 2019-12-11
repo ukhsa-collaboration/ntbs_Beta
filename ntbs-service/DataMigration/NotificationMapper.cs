@@ -12,7 +12,8 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<IEnumerable<Notification>> Get(string notificationId);
+        Task<List<List<Notification>>> GetById(List<string> notificationId);
+        Task<List<List<Notification>>> GetByDate(DateTime cutoffDate);
     }
 
     public class NotificationMapper : INotificationMapper
@@ -44,8 +45,11 @@ namespace ntbs_service.DataMigration
             LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
             WHERE GroupId IN (
                 SELECT GroupId
-                FROM Notifications n WHERE n.OldNotificationId = @NotificationId
+                FROM Notifications n {0}
             )";
+
+        const string WhereClauseById = @"WHERE n.OldNotificationId IN ({0})";
+        const string WhereClauseByDate = @"WHERE n.NotificationDate > {0}";
 
         const string NotificationSitesQuery = @"
             SELECT *
@@ -60,37 +64,70 @@ namespace ntbs_service.DataMigration
             connectionString = _configuration.GetConnectionString("migration");
         }
 
-        public async Task<IEnumerable<Notification>> Get(string notificationId)
-        {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                var results = await connection.QueryAsync(NotificationsQuery, new
-                {
-                    NotificationId = $"{notificationId}"
-                });
-
-                var notifications = results.Select(AsNotification).ToList();
-
-                var idsForInClause = string.Join(",", notifications.Select(x => $@"'{x.LegacyId}'"));
-                var notificationSites = await connection.QueryAsync(string.Format(NotificationSitesQuery, idsForInClause));
-                var groupingByLegacyId = notificationSites.GroupBy(x => x.OldNotificationId);
-                foreach (var group in groupingByLegacyId)
-                {
-                    notifications.FirstOrDefault(x => x.LegacyId == group.Key).NotificationSites = group.Select(AsNotificationSite).ToList();
-                }
-
-                return notifications;
-            }
-        }
-
         private static NotificationSite AsNotificationSite(dynamic result)
         {
             return new NotificationSite {
                 SiteId = result.DiseaseSiteId,
                 SiteDescription = result.DiseaseSiteText
             };
+        }
+
+        public async Task<List<List<Notification>>> GetByDate(DateTime cutoffDate)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var whereClause = string.Format(WhereClauseByDate, $@"'{cutoffDate.ToString("s")}'");
+                var queryWithWhereClause = string.Format(NotificationsQuery, whereClause);
+
+                var notificationsRaw = await connection.QueryAsync(queryWithWhereClause);
+
+                var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
+                
+                var idsForInClause = string.Join(",", legacyIds.Select(x => $@"'{x}'"));
+                var notificationSitesRaw = await connection.QueryAsync(string.Format(NotificationSitesQuery, idsForInClause));
+
+                return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
+            }
+        }
+
+        public async Task<List<List<Notification>>> SearchById(List<string> notificationIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var whereClause = string.Format(WhereClauseById, string.Join(",", notificationIds.Select(n => $@"'{n}'")));
+                var queryWithWhereClause = string.Format(NotificationsQuery, whereClause);
+
+                var notificationsRaw = await connection.QueryAsync(queryWithWhereClause);
+
+                var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
+                
+                var idsForInClause = string.Join(",", legacyIds.Select(x => $@"'{x}'"));
+                var notificationSitesRaw = await connection.QueryAsync(string.Format(NotificationSitesQuery, idsForInClause));
+
+                return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
+            }
+        }
+
+        private List<List<Notification>> GetGroupedResultsAsNotification(IEnumerable<dynamic> notificationsRaw, IEnumerable<dynamic> notificationSitesRaw)
+        {
+            var groupedResults = new List<List<Notification>>();
+            var notificationGroups = notificationsRaw.GroupBy(x => x.GroupId);
+            var notificationSiteGroups = notificationSitesRaw.GroupBy(x => x.OldNotificationId);
+            
+            foreach (var notificationGroup in notificationGroups)
+            {
+                var notifications = notificationGroup.Select(AsNotification).ToList();
+                foreach (var notificationSiteGroup in notificationSiteGroups)
+                {
+                    notifications.FirstOrDefault(x => x.LegacyId == notificationSiteGroup.Key).NotificationSites = notificationSiteGroup.Select(AsNotificationSite).ToList();
+                }
+                groupedResults.Add(notifications);
+            }
+
+            return groupedResults;
         }
 
         private static Notification AsNotification(dynamic result)
@@ -223,6 +260,5 @@ namespace ntbs_service.DataMigration
 
             return Enum.Parse<Status>(status);
         }
-    }
-  
+    } 
 }

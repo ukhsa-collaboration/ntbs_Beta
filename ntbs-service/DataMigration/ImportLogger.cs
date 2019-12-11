@@ -11,6 +11,7 @@ namespace ntbs_service.DataMigration
 
     public class ImportLogger : IImportLogger
     {
+        
         public void LogInformation(string requestId, string message)
         {
             Log.Information($"NOTIFICATION IMPORT - {requestId} - {message}");
