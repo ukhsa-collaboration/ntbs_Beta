@@ -49,7 +49,7 @@ namespace ntbs_service_unit_tests.Pages
             _mockNotificationRepository.Setup(s => s.GetBaseQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
 
             var unionAndPaginateResult = Task.FromResult(GetNotificationIdsAndCount());
-            _mockSearchService.Setup(s => s.OrderAndPaginateQueryables(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(),
+            _mockSearchService.Setup(s => s.OrderAndPaginateQueryablesAsync(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(),
                 It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
 
             var notifications = Task.FromResult(GetNotifications());

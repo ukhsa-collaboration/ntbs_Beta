@@ -17,7 +17,7 @@ namespace ntbs_service.Services
     
     public interface ILegacySearchService
     {
-        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> Search(int offset, int pageSize);
+        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int pageSize);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -45,7 +45,7 @@ namespace ntbs_service.Services
             _authorizationService = authorizationService;
         }
 
-        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> Search(int offset, int numberToFetch)
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch)
         {
             IEnumerable<dynamic> results;
             int count;
