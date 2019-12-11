@@ -15,7 +15,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
         };
 
         [Fact]
-        public void GetDisplayName_ReturnsNameFromDisplayAttribute()
+        public void GetDisplayName_ReturnsNameFromDisplayNameAttribute()
         {
             // Act
             var displayName = TestEnum.withDisplayAttribute.GetDisplayName();
@@ -25,7 +25,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
         }
 
         [Fact]
-        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayAttribute()
+        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayNameAttribute()
         {
             // Act
             var displayName = TestEnum.withoutDisplayAttribute.GetDisplayName();
