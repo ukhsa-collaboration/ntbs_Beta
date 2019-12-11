@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 
@@ -24,16 +25,11 @@ namespace ntbs_service.Models.Entities
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
         [Display(Name = "Alert date")]
-        public string FormattedCreationDate => FormatDate(CreationDate);
+        public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "Case manager")]
         public string CaseManagerFullName => CaseManager?.FullName ?? "System";
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
-
-        private string FormatDate(DateTime? date)
-        {
-            return date?.ToString("dd MMM yyyy");
-        }
     }
 
 }

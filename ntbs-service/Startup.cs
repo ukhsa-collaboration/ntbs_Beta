@@ -124,6 +124,7 @@ namespace ntbs_service
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
             services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
+            services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }

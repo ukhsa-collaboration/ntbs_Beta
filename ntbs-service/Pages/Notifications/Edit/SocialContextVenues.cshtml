@@ -9,13 +9,7 @@
 
 <h2>Social Context - Venues</h2>
 
-@if(Model.Notification.ClusterId != null)
-{
-    <h3>Cluster Information</h3>
-    <div>
-        <p><strong>Cluster ID: </strong>@Model.Notification.ClusterId</p>
-    </div>
-}
+<partial name="_ClusterInformation" for="Notification" />
 
 <h3>Regular venues visited by the patient</h3>
 <div>

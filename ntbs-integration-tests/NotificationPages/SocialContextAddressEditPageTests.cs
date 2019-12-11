@@ -12,13 +12,13 @@ using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class SocialContextVenueEditPageTests : TestRunnerNotificationBase
+    public class SocialContextAddressEditPageTests : TestRunnerNotificationBase
     {
-        const int VENUE_ID = 10;
-        const int VENUE_TO_DELETE_ID = 11;
-        protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextVenueSubPath;
+        const int ADDRESS_ID = 10;
+        const int ADDRESS_TO_DELETE_ID = 11;
+        protected override string NotificationSubPath => NotificationSubPaths.EditSocialContextAddressSubPath;
 
-        public SocialContextVenueEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public SocialContextAddressEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
         }
 
@@ -28,24 +28,22 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 new Notification
                 {
-                    NotificationId = Utilities.NOTIFICATION_WITH_VENUES,
+                    NotificationId = Utilities.NOTIFICATION_WITH_ADDRESSES,
                     NotificationStatus = NotificationStatus.Notified,
-                    SocialContextVenues = new List<SocialContextVenue> () {
-                        new SocialContextVenue {
-                            SocialContextVenueId = VENUE_ID,
+                    SocialContextAddresses = new List<SocialContextAddress> () {
+                        new SocialContextAddress {
+                            SocialContextAddressId = ADDRESS_ID,
                             DateFrom = new DateTime(2012, 1, 1),
                             DateTo = new DateTime(2013, 1, 1),
-                            Name = "Test venue",
-                            Address = "Test address",
-                            VenueTypeId = 1
+                            Address = "Softwire London",
+                            Postcode = "NW5 1TL"
                         },
-                        new SocialContextVenue {
-                            SocialContextVenueId = VENUE_TO_DELETE_ID,
+                        new SocialContextAddress {
+                            SocialContextAddressId = ADDRESS_TO_DELETE_ID,
                             DateFrom = new DateTime(2012, 1, 1),
                             DateTo = new DateTime(2013, 1, 1),
-                            Name = "Test venue 2",
-                            Address = "Test address 2",
-                            VenueTypeId = 2
+                            Address = "Softwire Manchester",
+                            Postcode = "M4 4BF"
                         },
                     }
                 }
@@ -53,11 +51,11 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostNewVenue_ReturnsSuccessAndAddsResultToTable()
+        public async Task PostNewAddress_ReturnsSuccessAndAddsResultToTable()
         {
             // Arrange
             const int notificationId = Utilities.DRAFT_ID;
-            var url = GetPathForId(NotificationSubPaths.AddSocialContextVenue, notificationId);
+            var url = GetPathForId(NotificationSubPaths.AddSocialContextAddress, notificationId);
             var initialDocument = await GetDocumentForUrl(url);
 
             // Act
@@ -69,39 +67,35 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateTo.Day"] = "1",
                 ["FormattedDateTo.Month"] = "1",
                 ["FormattedDateTo.Year"] = "2000",
-                ["Venue.Name"] = "Club",
-                ["Venue.Address"] = "123 Fake Street",
-                ["Venue.Frequency"] = ((int)Frequency.Weekly).ToString(),
-                ["Venue.VenueTypeId"] = "1"
+                ["Address.Address"] = "123 Fake Street",
+                ["Address.Postcode"] = "M4 4BF"
             };
             var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
-            var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
-            var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextAddresses, notificationId));
+            var socialContextAddressesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var resultDocument = await GetDocumentAsync(socialContextAddressesPage);
             // We can't pick based on id, as we don't know the id created
-            var venueTextContent = resultDocument.GetElementById("social-context-venues-list")
+            var addressTextContent = resultDocument.GetElementById("social-context-addresses-list")
                 .TextContent;
 
-            Assert.Contains("Club", venueTextContent);
-            Assert.Contains("123 Fake Street", venueTextContent);
-            Assert.Contains("Weekly", venueTextContent);
+            Assert.Contains("123 Fake Street", addressTextContent);
+            Assert.Contains("M4 4BF", addressTextContent);
         }
 
         [Fact]
-        public async Task PostEditOfVenue_ReturnsSuccessAndAmendsResultInTable()
+        public async Task PostEditOfAddress_ReturnsSuccessAndAmendsResultInTable()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_WITH_VENUES;
-            var editUrl = GetCurrentPathForId(notificationId) + VENUE_ID;
+            const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
 
             var editPage = await Client.GetAsync(editUrl);
             var editDocument = await GetDocumentAsync(editPage);
-            var venueHeadingBeforeChanges = editDocument.GetElementById($"venue-heading-{VENUE_ID}").TextContent;
-            var venueBodyBeforeChanges = editDocument.GetElementById($"venue-body-{VENUE_ID}").TextContent;
-            Assert.Contains("Test venue", venueHeadingBeforeChanges);
-            Assert.Contains("Test address", venueBodyBeforeChanges);
+            var addressBodyBeforeChanges = editDocument.GetElementById($"address-body-{ADDRESS_ID}").TextContent;
+            Assert.Contains("Softwire London", addressBodyBeforeChanges);
+            Assert.Contains("NW5 1TL", addressBodyBeforeChanges);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -112,29 +106,27 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateTo.Day"] = "1",
                 ["FormattedDateTo.Month"] = "1",
                 ["FormattedDateTo.Year"] = "2000",
-                ["Venue.Name"] = "New venue",
-                ["Venue.Address"] = "New address",
-                ["Venue.VenueTypeId"] = "1"
+                ["Address.Address"] = "New address",
+                ["Address.Postcode"] = "M4 4BF"
             };
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
-            var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
-            var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
-            var venueHeadingTextContent = resultDocument.GetElementById($"venue-heading-{VENUE_ID}").TextContent;
-            var venueBodyTextContent = resultDocument.GetElementById($"venue-body-{VENUE_ID}").TextContent;
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextAddresses, notificationId));
+            var socialContextAddressesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var resultDocument = await GetDocumentAsync(socialContextAddressesPage);
+            var addressBodyTextContent = resultDocument.GetElementById($"address-body-{ADDRESS_ID}").TextContent;
 
-            Assert.Contains("New venue", venueHeadingTextContent);
-            Assert.Contains("New address", venueBodyTextContent);
+            Assert.Contains("New address", addressBodyTextContent);
+            Assert.Contains("M4 4BF", addressBodyTextContent);
         }
 
         [Fact]
-        public async Task PostEditOfVenueWithMissingFields_ReturnsAllRequiredValidationErrors()
+        public async Task PostEditOfAddressWithMissingFields_ReturnsAllRequiredValidationErrors()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_WITH_VENUES;
-            var editUrl = GetCurrentPathForId(notificationId) + VENUE_ID;
+            const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
             var editDocument = await GetDocumentForUrl(editUrl);
 
             // Act
@@ -146,9 +138,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateTo.Day"] = "",
                 ["FormattedDateTo.Month"] = "",
                 ["FormattedDateTo.Year"] = "",
-                ["Venue.Name"] = "",
-                ["Venue.Address"] = "",
-                ["Venue.VenueTypeId"] = ""
+                ["Address.Address"] = "",
+                ["Address.Postcode"] = ""
             };
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
@@ -156,8 +147,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorMessage("venue-type", string.Format(ValidationMessages.RequiredSelect, "Venue type"));
-            resultDocument.AssertErrorMessage("venue-name", string.Format(ValidationMessages.RequiredEnter, "Venue name"));
+            resultDocument.AssertErrorMessage("postcode", string.Format(ValidationMessages.RequiredEnter, "Postcode"));
             resultDocument.AssertErrorMessage("address", string.Format(ValidationMessages.RequiredEnter, "Address"));
             resultDocument.AssertErrorMessage("date-from", string.Format(ValidationMessages.RequiredEnter, "From"));
             resultDocument.AssertErrorMessage("date-to", string.Format(ValidationMessages.RequiredEnter, "To"));
@@ -167,8 +157,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostEditWithDateFromBeforeDateTo_ReturnsErrors()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_WITH_VENUES;
-            var editUrl = GetCurrentPathForId(notificationId) + VENUE_ID;
+            const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
             var editDocument = await GetDocumentForUrl(editUrl);
 
             // Act
@@ -180,9 +170,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateTo.Day"] = "1",
                 ["FormattedDateTo.Month"] = "1",
                 ["FormattedDateTo.Year"] = "1999",
-                ["Venue.Name"] = "New venue",
-                ["Venue.Address"] = "New address",
-                ["Venue.VenueTypeId"] = "1"
+                ["Address.Address"] = "New address",
+                ["Address.Postcode"] = "M4 4BF"
             };
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
@@ -193,11 +182,11 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task GetEditForMissingVenue_ReturnsNotFound()
+        public async Task GetEditForMissingAddress_ReturnsNotFound()
         {
             // Arrange
             const int notificationId = Utilities.DRAFT_ID;
-            var editUrl = GetCurrentPathForId(notificationId) + VENUE_ID;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
 
             // Act
             var editPage = await Client.GetAsync(editUrl);
@@ -210,8 +199,8 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task PostDelete_ReturnsSuccessAndRemovesResult()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_WITH_VENUES;
-            var editUrl = GetCurrentPathForId(notificationId) + VENUE_TO_DELETE_ID;
+            const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
+            var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_TO_DELETE_ID;
             var editDocument = await GetDocumentForUrl(editUrl);
 
             // Act
@@ -219,10 +208,10 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
-            var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
-            var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
-            Assert.Null(resultDocument.GetElementById($"social-context-venue-{VENUE_TO_DELETE_ID}"));
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextAddresses, notificationId));
+            var socialContextAddressesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var resultDocument = await GetDocumentAsync(socialContextAddressesPage);
+            Assert.Null(resultDocument.GetElementById($"social-context-address-{ADDRESS_TO_DELETE_ID}"));
         }
 
         [Fact]
@@ -242,7 +231,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var url = GetCurrentPathForId(0) + VENUE_ID;
+            var url = GetCurrentPathForId(0) + ADDRESS_ID;
             var response = await Client.GetAsync($"{url}/ValidateSocialContextDates?{string.Join("&", keyValuePairs)}");
 
             // Assert check just response.Content

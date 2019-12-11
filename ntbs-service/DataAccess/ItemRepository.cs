@@ -26,23 +26,23 @@ namespace ntbs_service.DataAccess
         {
             var dbSet = GetDbSet();
             dbSet.Add(item);
-            await UpdateDatabaseAsync();
+            await UpdateDatabaseAsync(AuditType.Added);
         }
 
         public async Task UpdateAsync(Notification Notification, T item)
         {
             var entity = GetEntityToUpdate(Notification, item);
             _context.SetValues(entity, item);
-            await UpdateDatabaseAsync();
+            await UpdateDatabaseAsync(AuditType.Edit);
         }
 
         public async Task DeleteAsync(T item)
         {
             _context.Remove(item);
-            await UpdateDatabaseAsync();
+            await UpdateDatabaseAsync(AuditType.Deleted);
         }
 
-        private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)
+        private async Task UpdateDatabaseAsync(AuditType auditType)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await _context.SaveChangesAsync();
