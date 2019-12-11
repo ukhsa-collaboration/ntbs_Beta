@@ -54,8 +54,6 @@ namespace ntbs_service.Models
 
         public string PostcodeToLookup { get; set; }
         public virtual PostcodeLookup PostcodeLookup { get; set; }
-        [NotMapped]
-        public string LegacyCountryName { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [DisplayName("Birth country")]

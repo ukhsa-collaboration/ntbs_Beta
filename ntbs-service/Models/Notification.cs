@@ -81,7 +81,7 @@ namespace ntbs_service.Models
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
-        public string CountryName => PatientDetails.Country?.Name ?? PatientDetails.LegacyCountryName?.ToLower();
+        public string CountryName => PatientDetails.Country?.Name;
         [Display(Name = "TB Service")]
         public string TBServiceName => Episode.TBService?.Name;
         public string HospitalName => Episode.Hospital?.Name;

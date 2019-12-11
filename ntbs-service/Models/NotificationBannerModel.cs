@@ -1,16 +1,15 @@
 ﻿using ntbs_service.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
+using System;
 
 namespace ntbs_service.Models
 {
     [NotMapped]
     public class NotificationBannerModel
     {
-        public int NotificationId;
-        public string LTBRID;
-        public string ETSID;
-        public string SortByDate;
+        public string NotificationId;
+        public DateTime SortByDate;
         public string NotificationDate;
         public string TbService;
         public string CaseManager;
@@ -21,7 +20,7 @@ namespace ntbs_service.Models
         public string Name;
         public string Sex;
         public string DrugResistance;
-        public string Origin;
+        public string Source;
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
         public bool ShowLink = false;
@@ -29,14 +28,8 @@ namespace ntbs_service.Models
         public string RedirectPath;
 
         public NotificationBannerModel(Notification notification, bool fullAccess = true, bool showLink = false) {
-            NotificationId = notification.NotificationId;
-            LTBRID = notification.LTBRID;
-            ETSID = notification.ETSID;
-            if (notification.NotificationStatus == NotificationStatus.Draft) {
-                SortByDate = notification.FormattedCreationDate;
-            } else {
-                SortByDate = notification.FormattedSubmissionDate;
-            }
+            NotificationId = notification.NotificationId.ToString();
+            SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
             CaseManager = notification.Episode.CaseManagerName;
             NhsNumber = notification.FormattedNhsNumber;
@@ -49,10 +42,12 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatusString;
             NotificationDate = notification.FormattedNotificationDate;
             // TODO most likely need an enum for the different origins of notifications
-            Origin = "ntbs";
+            Source = "ntbs";
             ShowLink = showLink;
             FullAccess = fullAccess;
-            RedirectPath = RouteHelper.GetNotificationPath(NotificationId, NotificationSubPaths.Overview);
+            RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
         }
+        
+        public NotificationBannerModel() {}
     }
 }

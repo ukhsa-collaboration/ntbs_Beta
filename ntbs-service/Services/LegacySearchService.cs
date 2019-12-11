@@ -17,7 +17,7 @@ namespace ntbs_service.Services
     
     public interface ILegacySearchService
     {
-        Task<(IEnumerable<Notification> notifications, int count)> Search(int offset, int pageSize);
+        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> Search(int offset, int pageSize);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -68,53 +68,46 @@ namespace ntbs_service.Services
         {
             var notification = new NotificationBannerModel
             {
-                ETSID = result.ETSID?.ToString(),
-                LTBRID = result.LTBRID?.ToString(),
+                NotificationId = result.OldNotificationId,
                 NotificationStatus = NotificationStatus.Legacy,
-                NotificationDate = result.NotificationDate,
-                Origin = result.Source,
-                Sex = result.NtbsSexId,
-                CreationDate = result.CreationDate,
-                PatientDetails = ExtractPatientDetails(result)
+                NotificationStatusString = "Legacy",
+                NotificationDate = FormatDate(result.NotificationDate),
+                Source = result.Source,
+                // Sex = result.NtbsSexId, // fix
+                SortByDate = result.NotificationDate,
+                Name = result.FamilyName.ToUpper() + ", " + result.GivenName,
+                CountryOfBirth = result.BirthCountryName,
+                // TB SERVICE
+                Postcode = result.Postcode,
+                NhsNumber = FormatNhsNumberString(result.NhsNumber),
+                DateOfBirth = FormatDate(result.DateOfBirth),
+                // FullAccess authorisation
+
             };
             
             return notification;
         }
 
-        private static PatientDetails ExtractPatientDetails(dynamic notification)
+        private static string FormatDate(DateTime? date)
         {
-            return new PatientDetails
-            {
-                FamilyName = notification.FamilyName,
-                GivenName = notification.GivenName,
-                NhsNumber = notification.NhsNumber,
-                Dob = notification.DateOfBirth,
-                UkBorn = GetBoolValue(notification.CountryName),
-                LocalPatientId = notification.LocalPatientId,
-                Postcode = notification.Postcode,
-                Address = notification.Line1 + " " + notification.Line2,
-                EthnicityId = notification.NtbsEthnicGroupId,
-                SexId = notification.NtbsSexId,
-                NhsNumberNotKnown = notification.NhsNumberNotKnown == 1,
-                NoFixedAbode = notification.NoFixedAbode == 1,
-                LegacyCountryName = notification.BirthCountryName
-            };
+            return date?.ToString("dd MMM yyyy");
         }
 
-        private static Episode ExtractEpisode(dynamic notification)
+        private static string FormatNhsNumberString(string nhsNumber)
         {
-            return new Episode
+            if (nhsNumber == null)
             {
-            };
-        }
-
-        private static bool? GetBoolValue(int? value)
-        {
-            if (value == null)
-            {
-                return null;
+                return "Not known";
             }
-            return value == 1 ? true : false;
+            if (string.IsNullOrEmpty(nhsNumber))
+            {
+                return string.Empty;
+            }
+            return string.Join(" ",
+                nhsNumber.Substring(0, 3),
+                nhsNumber.Substring(3, 3),
+                nhsNumber.Substring(6, 4)
+            );
         }
     }
 }

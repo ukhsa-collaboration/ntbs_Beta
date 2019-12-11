@@ -53,7 +53,7 @@ namespace ntbs_service_unit_tests.Pages
                 It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
 
             var notifications = Task.FromResult(GetNotifications());
-            _mockNotificationRepository.Setup(s => s.GetNotificationsByIdsAsync(It.IsAny<List<int>>())).Returns(notifications);
+            _mockNotificationRepository.Setup(s => s.GetNotificationBannerModelsByIdsAsync(It.IsAny<List<int>>())).Returns(notifications);
 
             var httpContext = new DefaultHttpContext();
             var modelState = new ModelStateDictionary();

@@ -16,19 +16,19 @@
                     <div>
                         @if (@Model.ShowLink)
                         {
-                            @if (Model.NotificationStatus == NotificationStatus.Legacy)
-                            {
-                                var legacyId = Model.LTBRID ?? Model.ETSID;
-                                <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@legacyId</a>
-                            }
-                            else 
-                            {
-                                <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
-                            }
+                            <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
                         }
                         else
                         {
-                            @:#@(Model.NotificationId)
+                            @if (Model.NotificationStatus == NotificationStatus.Legacy)
+                            {
+                                var legacyIdString = Model.Source + " #" + Model.NotificationId;
+                                @legacyIdString
+                            }
+                            else
+                            {
+                                @:#@(Model.NotificationId)
+                            }
                         }
 
                         @if (!Model.FullAccess)

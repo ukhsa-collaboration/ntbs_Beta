@@ -112,7 +112,7 @@ namespace ntbs_service.Pages.Search
                 .FilterByTBService(SearchParameters.TBServiceCode)
                 .GetResult();
 
-            IEnumerable<Notification> notificationsToDisplay;
+            IEnumerable<NotificationBannerModel> notificationsToDisplay;
 
             if(PaginationParameters.LegacyOffset == null && PaginationParameters.NtbsOffset == null)
             {
@@ -137,47 +137,44 @@ namespace ntbs_service.Pages.Search
                 nextLegacyOffset = null;
             }
 
-
-            var notificationBannerModels = notificationsToDisplay.CreateNotificationBanners(User, _authorizationService);
-            SearchResults = new PaginatedList<NotificationBannerModel>(notificationBannerModels, Count, PaginationParameters);
+            // TODO NTBS-263 AUTHORISE banners properly
+            SearchResults = new PaginatedList<NotificationBannerModel>(notificationsToDisplay, Count, PaginationParameters);
 
             SetPaginationDetails(nextNtbsOffset, nextLegacyOffset, previousNtbsOffset, previousLegacyOffset, ntbsOffset, legacyOffset);
 
             return Page();
         }
 
-        public async Task<IEnumerable<Notification>> SearchWithoutOffsets(IQueryable<Notification> filteredDrafts, IQueryable<Notification> filteredNonDrafts)
+        public async Task<IEnumerable<NotificationBannerModel>> SearchWithoutOffsets(IQueryable<Notification> filteredDrafts, IQueryable<Notification> filteredNonDrafts)
         {
             var numberOfNotificationsToFetch = PaginationParameters.PageSize * PaginationParameters.PageIndex;
             var (orderedNotificationIds, count) = await _searchService.OrderAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
-            var ntbsNotifications = await _notificationRepository.GetNotificationsByIdsAsync(orderedNotificationIds);
+            var ntbsNotifications = await _notificationRepository.GetNotificationBannerModelsByIdsAsync(orderedNotificationIds);
             var (legacyNotifications, legacyCount) = await _legacySearchService.Search(0, numberOfNotificationsToFetch);
             Count = legacyCount + count;
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
             var notifications = allPossibleNotifications
                 .OrderByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
-                .ThenByDescending(n => n.NotificationDate ?? n.CreationDate)
+                .ThenByDescending(n => n.SortByDate)
                 .ThenByDescending(n => n.NotificationId)
-                .ThenBy(n => n.LTBRID ?? n.ETSID)
                 .Skip(numberOfNotificationsToFetch - PaginationParameters.PageSize)
                 .Take(PaginationParameters.PageSize);
             return notifications;
         }
 
-        public async Task<IEnumerable<Notification>> SearchWithOffsets(IQueryable<Notification> filteredDrafts, IQueryable<Notification> filteredNonDrafts)
+        public async Task<IEnumerable<NotificationBannerModel>> SearchWithOffsets(IQueryable<Notification> filteredDrafts, IQueryable<Notification> filteredNonDrafts)
         {
             var (orderedNotificationIds, count) = await _searchService.OrderAndPaginateQueryables(filteredDrafts, filteredNonDrafts, PaginationParameters);
-            var notifications = await _notificationRepository.GetNotificationsByIdsAsync(orderedNotificationIds);
+            var ntbsNotifications = await _notificationRepository.GetNotificationBannerModelsByIdsAsync(orderedNotificationIds);
             var (legacyNotifications, legacyCount) = await _legacySearchService.Search((int)PaginationParameters.LegacyOffset, PaginationParameters.PageSize);
             Count = legacyCount + count;
-            var allPossibleNotifications = notifications.Concat(legacyNotifications);
-            var notificationss = allPossibleNotifications
+            var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
+            var notifications = allPossibleNotifications
                 .OrderByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
-                .ThenByDescending(n => n.NotificationDate ?? n.CreationDate)
+                .ThenByDescending(n => n.SortByDate)
                 .ThenByDescending(n => n.NotificationId)
-                .ThenBy(n => n.LTBRID ?? n.ETSID)
                 .Take(PaginationParameters.PageSize);
-            return notificationss;  
+            return notifications;  
         }
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
