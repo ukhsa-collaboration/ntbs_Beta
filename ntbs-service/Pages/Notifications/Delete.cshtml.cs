@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -12,7 +13,7 @@ namespace ntbs_service.Pages.Notifications
     public class DeleteModel : NotificationModelBase
     {
         public ValidationService ValidationService { get; set; }
-        [Display(Name = "Deletion reason")]
+        [DisplayName("Deletion reason")]
         [BindProperty]
         [MaxLength(150)]
         [RegularExpression(
