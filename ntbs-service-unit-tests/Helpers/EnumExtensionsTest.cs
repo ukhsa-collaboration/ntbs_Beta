@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
 using Xunit;
 
 namespace ntbs_service_tests.UnitTests.Helpers
@@ -10,14 +7,15 @@ namespace ntbs_service_tests.UnitTests.Helpers
     public class EnumExtensionsTest
     {
 
-        private enum TestEnum {
-            [Display(Name = "display name")]
+        private enum TestEnum
+        {
+            [DisplayName("display name")]
             withDisplayAttribute,
             withoutDisplayAttribute
         };
 
         [Fact]
-        public void GetDisplayName_ReturnsNameFromDisplayAttribute() 
+        public void GetDisplayName_ReturnsNameFromDisplayAttribute()
         {
             // Act
             var displayName = TestEnum.withDisplayAttribute.GetDisplayName();
@@ -27,7 +25,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
         }
 
         [Fact]
-        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayAttribute() 
+        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayAttribute()
         {
             // Act
             var displayName = TestEnum.withoutDisplayAttribute.GetDisplayName();
