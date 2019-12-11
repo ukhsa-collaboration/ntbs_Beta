@@ -10,6 +10,7 @@ namespace ntbs_service.Services
     public interface IAuthorizationService
     {
         Task<bool> CanEdit(ClaimsPrincipal user, Notification notification);
+        Task<bool> CanEditBannerModel(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
     }
@@ -28,6 +29,12 @@ namespace ntbs_service.Services
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
             return userTbServiceCodes.Contains(alert.TbServiceCode);
+        }
+
+        public async Task<bool> CanEditBannerModel(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel)
+        {
+            var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
+            return  notificationBannerModel.TbServiceCode == null || userTbServiceCodes.Contains(notificationBannerModel.TbServiceCode);
         }
 
         public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)

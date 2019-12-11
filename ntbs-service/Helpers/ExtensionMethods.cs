@@ -43,4 +43,21 @@ namespace ntbs_service.Helpers
         }
     }
 
+    public static class NotificationBannerModelExtensions
+    {
+        public static IEnumerable<NotificationBannerModel> AuthorizeBanners(
+            this IEnumerable<NotificationBannerModel> notificationBanners,
+            ClaimsPrincipal user,
+            IAuthorizationService authorizationService)
+        {
+            return notificationBanners.Select(async n =>
+            {
+                var fullAccess = await authorizationService.CanEditBannerModel(user, n);
+                n.FullAccess = fullAccess;
+                return n;
+            })
+            .Select(n => n.Result);
+        }
+    }
+
 }

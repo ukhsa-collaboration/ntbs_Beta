@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Pages_Search;
@@ -85,8 +86,8 @@ namespace ntbs_service.Pages.Search
             var filteredNonDrafts = FilterBySearchParameters(nonDraftsQueryable);
 
             var (notificationsToDisplay, count) = await SearchAsync(filteredDrafts, filteredNonDrafts);
-            // TODO NTBS-263 AUTHORISE banners properly
-            SearchResults = new PaginatedList<NotificationBannerModel>(notificationsToDisplay, count, PaginationParameters);
+            var authorisedNotificationsToDisplay = notificationsToDisplay.AuthorizeBanners(User, _authorizationService);
+            SearchResults = new PaginatedList<NotificationBannerModel>(authorisedNotificationsToDisplay, count, PaginationParameters);
 
             var (nextLegacyOffset, nextNtbsOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
             SetPaginationDetails(nextNtbsOffset, nextLegacyOffset, previousNtbsOffset, previousLegacyOffset, ntbsOffset, legacyOffset);

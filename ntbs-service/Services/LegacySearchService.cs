@@ -11,6 +11,7 @@ using ntbs_service.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using ntbs_service.DataAccess;
 
 namespace ntbs_service.Services
 {
@@ -35,20 +36,23 @@ namespace ntbs_service.Services
             SELECT COUNT(*)
             FROM Notifications n";
 
-        private readonly IAuthorizationService _authorizationService;    
 
         private readonly string connectionString;
+        private readonly IReferenceDataRepository _referenceDataRepository;
+        public IList<Sex> Sexes;
 
-        public LegacySearchService(IConfiguration _configuration, IAuthorizationService authorizationService)
+        public LegacySearchService(IConfiguration _configuration, IReferenceDataRepository referenceDataRepository)
         {
             connectionString = _configuration.GetConnectionString("migration");
-            _authorizationService = authorizationService;
+            _referenceDataRepository = referenceDataRepository;
+            Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
         }
 
         public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch)
         {
             IEnumerable<dynamic> results;
             int count;
+            
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -61,31 +65,36 @@ namespace ntbs_service.Services
 
                 count = (await connection.QueryAsync<int>(CountQuery)).Single();
             }
-            return (results.Select(AsNotificationBanner), count);
+            var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
+            return (notificationBannerModels, count);
         }
 
-        private static NotificationBannerModel AsNotificationBanner(dynamic result)
+        private async Task<NotificationBannerModel> AsNotificationBannerAsync(dynamic result)
         {
-            var notification = new NotificationBannerModel
+            TBService tbService = null;
+            if(result.NtbsHospitalId is Guid guid)
+            {
+                tbService = await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid); 
+            }
+            var notificationBannerModel = new NotificationBannerModel
             {
                 NotificationId = result.OldNotificationId,
                 NotificationStatus = NotificationStatus.Legacy,
                 NotificationStatusString = "Legacy",
                 NotificationDate = FormatDate(result.NotificationDate),
                 Source = result.Source,
-                // Sex = result.NtbsSexId, // fix
+                Sex = Sexes.Where(s => s.SexId == result.NtbsSexId)?.Single().Label,
                 SortByDate = result.NotificationDate,
                 Name = result.FamilyName.ToUpper() + ", " + result.GivenName,
                 CountryOfBirth = result.BirthCountryName,
-                // TB SERVICE
+                TbService = tbService?.Name,
+                TbServiceCode = tbService?.Code,
                 Postcode = result.Postcode,
                 NhsNumber = FormatNhsNumberString(result.NhsNumber),
-                DateOfBirth = FormatDate(result.DateOfBirth),
-                // FullAccess authorisation
-
+                DateOfBirth = FormatDate(result.DateOfBirth)
             };
             
-            return notification;
+            return notificationBannerModel;
         }
 
         private static string FormatDate(DateTime? date)

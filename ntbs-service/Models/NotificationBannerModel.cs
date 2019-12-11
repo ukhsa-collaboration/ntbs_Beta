@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using System;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace ntbs_service.Models
 {
@@ -9,9 +11,10 @@ namespace ntbs_service.Models
     public class NotificationBannerModel
     {
         public string NotificationId;
-        public DateTime SortByDate;
+        public DateTime? SortByDate;
         public string NotificationDate;
         public string TbService;
+        public string TbServiceCode;
         public string CaseManager;
         public string NhsNumber;
         public string DateOfBirth;
@@ -31,6 +34,7 @@ namespace ntbs_service.Models
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
+            TbServiceCode = notification.Episode?.TBServiceCode;
             CaseManager = notification.Episode.CaseManagerName;
             NhsNumber = notification.FormattedNhsNumber;
             DateOfBirth = notification.FormattedDob;
@@ -41,7 +45,6 @@ namespace ntbs_service.Models
             NotificationStatus = notification.NotificationStatus;
             NotificationStatusString = notification.NotificationStatusString;
             NotificationDate = notification.FormattedNotificationDate;
-            // TODO most likely need an enum for the different origins of notifications
             Source = "ntbs";
             ShowLink = showLink;
             FullAccess = fullAccess;
