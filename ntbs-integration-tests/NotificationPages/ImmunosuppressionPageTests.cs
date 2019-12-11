@@ -63,7 +63,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("description", "Please supply immunosuppression other details");
+            resultDocument.AssertErrorSummaryMessage("ImmunosuppressionDetails-OtherDescription", "description", "Please supply immunosuppression other details");
         }
 
         [Fact]

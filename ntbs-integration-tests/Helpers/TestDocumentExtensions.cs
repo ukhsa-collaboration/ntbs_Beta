@@ -1,23 +1,42 @@
-﻿using AngleSharp.Html.Dom;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using Xunit;
 
 namespace ntbs_integration_tests.Helpers
 {
     public static class HtmlDocumentExtensions
     {
-        public static string GetError(this IHtmlDocument document, string input)
+        public static string GetError(this IParentNode document, string input)
         {
-            var errorSpan = document?.QuerySelector($"span[id='{input}-error']");
-            if (errorSpan == null) return null;
+            var errorSpan = document?.QuerySelector($"span#{input}-error");
+            Assert.NotNull(errorSpan);
             if (errorSpan.ClassList.Contains("hidden")) return null;
             return errorSpan.TextContent;
         }
 
-        public static void AssertErrorMessage(this IHtmlDocument document, string inputName, string expectedMessage)
+        public static void AssertErrorMessage(this IParentNode document, string inputName, string expectedMessage)
         {
             var expected = HtmlDocumentHelpers.FullErrorMessage(expectedMessage);
             var actual = document.GetError(inputName);
             Assert.Equal(expected, actual);
+        }
+
+        public static void AssertErrorSummaryMessage(this IHtmlDocument document, string summaryInputName, string spanInputName, string expectedMessage)
+        {
+            // assert the error appears in the error summary
+            var errorLink = (IHtmlAnchorElement) document?.QuerySelector($"a#error-summary-{summaryInputName}");
+            Assert.NotNull(errorLink);
+            Assert.Equal(expectedMessage, errorLink.TextContent);
+
+            // assert the link contained within the error in the error summary works
+            var errorParentId = errorLink.Href.Split("#").Last();
+            var errorParent = document.QuerySelector($"#{errorParentId}");
+            Assert.NotNull(errorParent);
+
+            // assert the error is found where linked to by the error message and the correct error message is present
+            errorParent.AssertErrorMessage(spanInputName, expectedMessage);
         }
 
         public static void AssertInputTextValue(this IHtmlDocument document, string inputId, string expectedValue)
