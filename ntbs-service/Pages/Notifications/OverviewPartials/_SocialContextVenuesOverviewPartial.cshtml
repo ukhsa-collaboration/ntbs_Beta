@@ -1,0 +1,18 @@
+@using ntbs_service.Helpers
+@model ntbs_service.Models.Entities.Notification
+
+@{
+    var notificationId = (int)ViewData["NotificationId"];
+}
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Social Context - Venues </h3>
+    <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditSocialContextVenues)"
+       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div>
+@if(Model.SocialContextVenues.Count > 0)
+{
+    <div class="notification-overview-details-container">
+        <partial name="_SocialContextVenuesTable" for="SocialContextVenues" view-data=@ViewData />
+    </div>
+}

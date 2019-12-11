@@ -11,12 +11,12 @@ using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages.Notifications.Edit.Children
+namespace ntbs_service.Pages.Notifications.Edit.Items
 {
     public class ManualTestResultPage : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly ITestResultsRepository _testResultsRepository;
+        private readonly IItemRepository<ManualTestResult> _testResultsRepository;
 
         public SelectList ManualTestTypes { get; set; }
         public SelectList SampleTypes { get; set; }
@@ -34,7 +34,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            ITestResultsRepository testResultsRepository)
+            IItemRepository<ManualTestResult> testResultsRepository)
             : base(notificationService, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
@@ -70,12 +70,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
             {
                 if (RowId == null)
                 {
-                    await _testResultsRepository.AddTestResultAsync(TestResultForEdit);
+                    await _testResultsRepository.AddAsync(TestResultForEdit);
                 }
                 else
                 {
                     TestResultForEdit.ManualTestResultId = RowId.Value;
-                    await _testResultsRepository.UpdateTestResultAsync(Notification, TestResultForEdit);
+                    await _testResultsRepository.UpdateAsync(Notification, TestResultForEdit);
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
                 return NotFound();
             }
 
-            await _testResultsRepository.DeleteTestAsync(testResult);
+            await _testResultsRepository.DeleteAsync(testResult);
 
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }

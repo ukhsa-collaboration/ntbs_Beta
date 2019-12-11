@@ -1,0 +1,55 @@
+@model ICollection<ntbs_service.Models.Entities.SocialContextVenue>
+@using ntbs_service.Helpers
+
+@{ 
+    var header = Model.FirstOrDefault(); 
+    var showEditLinks = (bool) (ViewData["ShowSocialContextVenueEditLinks"] ?? false);
+    var orderedResults = Model.OrderByDescending(r => r.DateTo);
+}
+
+<div id="social-context-venues-list">
+    @foreach (var result in orderedResults)
+    {
+        <div class="notification-overview-type-and-edit-container" id="venue-heading-@result.SocialContextVenueId">
+            <h5 class="notification-details-type"> @(result.Name) - @(result.FormattedDateFrom) to @(result.FormattedDateTo) </h5>
+            @if (showEditLinks) 
+            {
+                var subPath = NotificationSubPaths.EditSocialContextVenue(result.SocialContextVenueId);
+                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+            }
+        </div>
+        <dl class="notification-overview-details-container" id="venue-body-@result.SocialContextVenueId">
+            <nhs-grid-row classes="notification-overview-details">
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> Category </dt>
+                    <dd class="cell-min-height"> @result.VenueType.Category </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> Venue type </dt>
+                    <dd class="cell-min-height"> @result.VenueType.Name </dd>
+                </nhs-grid-column>
+            </nhs-grid-row>
+            <nhs-grid-row classes="notification-overview-details">
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Address) </dt>
+                    <dd class="cell-min-height"> @result.Address </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Postcode) </dt>
+                    <dd class="cell-min-height"> @result.Postcode </dd>
+                </nhs-grid-column>
+            </nhs-grid-row>
+            <nhs-grid-row classes="notification-overview-details">
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Frequency) </dt>
+                    <dd class="cell-min-height"> @result.Frequency </dd>
+                </nhs-grid-column>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
+                    <dd class="cell-min-height"> @result.Details </dd>
+                </nhs-grid-column>
+            </nhs-grid-row>
+        </dl>
+    }
+</div>

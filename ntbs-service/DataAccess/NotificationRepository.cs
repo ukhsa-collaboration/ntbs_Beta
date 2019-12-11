@@ -14,6 +14,7 @@ namespace ntbs_service.DataAccess
         IQueryable<Notification> GetDraftNotificationsIQueryable();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
+        Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task AddNotificationAsync(Notification notification);
         Task<Notification> GetNotificationAsync(int notificationId);
@@ -97,6 +98,14 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
+        public async Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.SocialContextVenues)
+                    .ThenInclude(s => s.VenueType)
+                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
@@ -119,6 +128,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.VisitorDetails.Country2)
                 .Include(n => n.VisitorDetails.Country3)
                 .Include(n => n.MDRDetails.Country)
+                .Include(n => n.SocialContextVenues)
+                    .ThenInclude(s => s.VenueType)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

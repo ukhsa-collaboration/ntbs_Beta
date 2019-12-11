@@ -24,6 +24,16 @@ namespace ntbs_service.Helpers
                 Year = dateTime.Year.ToString()
             };
         }
+
+        public static string ConvertToString(this DateTime? dateTime)
+        {
+            return dateTime?.ConvertToString();
+        }
+
+        public static string ConvertToString(this DateTime dateTime)
+        {
+            return dateTime.ToString("dd MMM yyyy");
+        }
     }
 
     public static class NotificationExtensions

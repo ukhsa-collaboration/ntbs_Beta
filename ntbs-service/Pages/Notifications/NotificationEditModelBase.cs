@@ -7,6 +7,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Interfaces;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
@@ -135,9 +136,13 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
         {
-            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            await SetNotificationProperties(isBeingSubmitted);
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
+        }
 
+        protected async Task SetNotificationProperties(bool isBeingSubmitted)
+        {
+            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             await GetLinkedNotifications();
         }
 
@@ -152,6 +157,25 @@ namespace ntbs_service.Pages.Notifications
         {
             return ValidationService.IsValid(key);
         }
+
+        protected async Task FindAndSetPostcodeAsync<T>(IPostcodeService postcodeService, T model) where T : IHasPostcode
+        {
+            var foundPostcode = await postcodeService.FindPostcode(model.Postcode);
+            model.PostcodeToLookup = foundPostcode?.Postcode;
+        }
+
+        public async Task<ContentResult> OnGetValidatePostcode<T>(IPostcodeService postcodeService, string postcode, bool shouldValidateFull) where T : ModelBase, IHasPostcode
+        {
+            var foundPostcode = await postcodeService.FindPostcode(postcode);
+            var propertyValueTuples = new List<(string, object)>
+            {
+                ("PostcodeToLookup", foundPostcode?.Postcode),
+                ("Postcode", postcode)
+            };
+
+            return ValidationService.ValidateMultipleProperties<T>(propertyValueTuples, shouldValidateFull);
+        }
+
 
         protected ContentResult CreateJsonResponse(object content)
         {

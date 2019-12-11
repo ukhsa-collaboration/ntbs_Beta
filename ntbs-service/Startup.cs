@@ -18,6 +18,7 @@ using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.Middleware;
+using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
@@ -121,7 +122,8 @@ namespace ntbs_service
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
-            services.AddScoped<ITestResultsRepository, TestResultsRepository>();
+            services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
+            services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }

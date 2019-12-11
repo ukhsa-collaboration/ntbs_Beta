@@ -36,7 +36,7 @@ namespace ntbs_service.Services
         }
 
         public ContentResult ValidateMultipleProperties<T>(
-            IEnumerable<Tuple<string, object>> propertyValueTuples,
+            IEnumerable<(string, object)> propertyValueTuples,
             bool shouldValidateFull = false) 
             where T : ModelBase
         {
@@ -129,10 +129,10 @@ namespace ntbs_service.Services
                     if (modelStateByKey?.ValidationState == ModelValidationState.Invalid)
                     {
                         errorMessageMap.Add(errorIndex, modelStateByKey.Errors[0].ErrorMessage);
-                        errorIndex++;
                     }
+                    errorIndex++;
                 }
-                if (errorIndex > 0)
+                if (errorMessageMap.Count > 0)
                 {
                     return pageModel.Content(JsonConvert.SerializeObject(errorMessageMap), "application/json");
                 }

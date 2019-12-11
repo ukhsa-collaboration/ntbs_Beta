@@ -23,7 +23,7 @@ namespace ntbs_service.Models.Entities
         [DisplayName("Test date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
-        [AssertThat(@"TestDateBeforeDob", ErrorMessage = ValidationMessages.NotificationDateShouldBeLaterThanDob)]
+        [AssertThat(@"TestDateBeforeDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TestDate { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]

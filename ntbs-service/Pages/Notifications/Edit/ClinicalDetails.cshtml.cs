@@ -269,10 +269,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
         {
-            var propertyValueTuples = new List<Tuple<string, object>>();
+            List<(string, object)> propertyValueTuples = new List<(string key, object property)>();
             foreach (var keyValuePair in keyValuePairs)
             {
-                propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], keyValuePair["value"]));
+                propertyValueTuples.Add((keyValuePair["key"], keyValuePair["value"]));
             }
             return ValidationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
         }
