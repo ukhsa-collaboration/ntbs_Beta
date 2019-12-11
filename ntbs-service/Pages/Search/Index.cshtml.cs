@@ -26,9 +26,7 @@ namespace ntbs_service.Pages.Search
         public string CurrentFilter { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
-        public string NextPageText;
         public string PreviousPageUrl;
-        public string PreviousPageText;
         public int Count;
         public PaginationParameters PaginationParameters;
 
@@ -191,15 +189,18 @@ namespace ntbs_service.Pages.Search
         {
             if (SearchResults.HasPreviousPage)
             {
-                var previousPageParameters = CreateSearchPageParameters(SearchResults.PageIndex - 1, previousNtbsOffset, previousLegacyOffset);
-                // TODO move these to the SearchResults model
-                PreviousPageText = "Page " + (SearchResults.PageIndex - 1) + " of " + (SearchResults.TotalPages);
+                var previousPageParameters = CreateSearchPageParameters(SearchResults.PageIndex - 1,
+                                                                        previousNtbsOffset,
+                                                                        previousLegacyOffset);
                 PreviousPageUrl = QueryHelpers.AddQueryString("/Search", previousPageParameters);
             }
             if (SearchResults.HasNextPage)
             {
-                var nextPageParameters = CreateSearchPageParameters(SearchResults.PageIndex + 1, nextNtbsOffset, nextLegacyOffset, ntbsOffset, legacyOffset);
-                NextPageText = "Page " + (SearchResults.PageIndex + 1) + " of " + (SearchResults.TotalPages);
+                var nextPageParameters = CreateSearchPageParameters(SearchResults.PageIndex + 1,
+                                                                    nextNtbsOffset,
+                                                                    nextLegacyOffset,
+                                                                    ntbsOffset,
+                                                                    legacyOffset);
                 NextPageUrl = QueryHelpers.AddQueryString("/Search", nextPageParameters);
             }
         }
