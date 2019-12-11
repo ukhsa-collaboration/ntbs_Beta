@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
 using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration;
 using ntbs_service.Middleware;
 using ntbs_service.Properties;
 using ntbs_service.Services;
@@ -80,6 +81,12 @@ namespace ntbs_service
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddAuthorization(options => {
+                options.AddPolicy("AdminOnly", policy => {
+                    policy.RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"]);
+                });
+            });
+
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
@@ -104,9 +111,10 @@ namespace ntbs_service
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IAlertService, AlertService>();
             services.AddScoped<IAlertRepository, AlertRepository>();
-            services.AddScoped<ISearchServiceLegacy, SearchServiceLegacy>();
-            services.AddScoped<IETSSearchService, ETSSearcher>();
-            services.AddScoped<ILTBRSearchService, LTBRSearcher>();
+            services.AddScoped<INotificationMapper, NotificationMapper>();
+            services.AddScoped<IImportLogger, ImportLogger>();
+            services.AddScoped<INotificationImportService, NotificationImportService>();
+            services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();

@@ -103,7 +103,7 @@ namespace ntbs_service.Pages.Notifications
 
         private async Task<IActionResult> SubmitAsync()
         {
-            SetShouldValidateFull();
+            NotificationHelper.SetShouldValidateFull(Notification);
 
             if (!TryValidateModel(Notification))
             {
@@ -114,21 +114,7 @@ namespace ntbs_service.Pages.Notifications
             await Service.SubmitNotificationAsync(Notification);
 
             return RedirectAfterSaveForNotified();
-        }
-
-        private void SetShouldValidateFull()
-        {
-            Notification.ShouldValidateFull = true;
-            foreach (var property in Notification.GetType().GetProperties())
-            {
-                if (property.PropertyType.IsSubclassOf(typeof(ModelBase)))
-                {
-                    var ownedModel = property.GetValue(Notification);
-                    ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
-                }
-            }
-            Notification.NotificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
-        }
+        }           
 
         private IActionResult RedirectAfterSave(bool isBeingSubmitted)
         {

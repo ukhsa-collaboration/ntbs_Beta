@@ -11,6 +11,9 @@
 
         /** Group that contains all users of NTBS, used for authorizing access to the app */
         public string BaseUserGroup { get; set; }
+        
+        /** Group that contains admin users only, used for authorizing access protected pages of the app */
+        public string AdminUserGroup { get; set; }
 
         /** Only used in development mode, allows developers to set their group membership via properties */
         public string DevGroup { get; set; }
