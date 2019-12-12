@@ -86,10 +86,9 @@ namespace ntbs_service.Pages.Search
             var filteredNonDrafts = FilterBySearchParameters(nonDraftsQueryable);
 
             var (notificationsToDisplay, count) = await SearchAsync(filteredDrafts, filteredNonDrafts);
-            var authorisedNotificationsToDisplay = notificationsToDisplay.AuthorizeBanners(User, _authorizationService);
+            var authorisedNotificationsToDisplay = _authorizationService.SetFullAccessOnNotificationBanners(notificationsToDisplay, User);
             SearchResults = new PaginatedList<NotificationBannerModel>(authorisedNotificationsToDisplay, count, PaginationParameters);
-
-            var (nextLegacyOffset, nextNtbsOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
+            var (nextNtbsOffset, nextLegacyOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
             SetPaginationDetails(nextNtbsOffset, nextLegacyOffset, previousNtbsOffset, previousLegacyOffset, ntbsOffset, legacyOffset);
 
             return Page();

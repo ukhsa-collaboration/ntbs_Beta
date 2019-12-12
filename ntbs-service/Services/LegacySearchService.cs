@@ -39,17 +39,24 @@ namespace ntbs_service.Services
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IConfiguration _configuration;
         public IList<Sex> Sexes;
 
-        public LegacySearchService(IConfiguration _configuration, IReferenceDataRepository referenceDataRepository)
+        public LegacySearchService(IConfiguration configuration, IReferenceDataRepository referenceDataRepository)
         {
-            connectionString = _configuration.GetConnectionString("migration");
+            _configuration = configuration;
+            connectionString = configuration.GetConnectionString("migration");
             _referenceDataRepository = referenceDataRepository;
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
         }
 
         public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch)
         {
+            if (!_configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE))
+            {
+                return (new List<NotificationBannerModel> {}, 0);
+            }
+
             IEnumerable<dynamic> results;
             int count;
             
@@ -91,7 +98,8 @@ namespace ntbs_service.Services
                 TbServiceCode = tbService?.Code,
                 Postcode = result.Postcode,
                 NhsNumber = FormatNhsNumberString(result.NhsNumber),
-                DateOfBirth = FormatDate(result.DateOfBirth)
+                DateOfBirth = FormatDate(result.DateOfBirth),
+                FullAccess = true
             };
             
             return notificationBannerModel;

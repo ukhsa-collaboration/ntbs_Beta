@@ -15,6 +15,8 @@ namespace ntbs_service.Models
         public string NotificationDate;
         public string TbService;
         public string TbServiceCode;
+        public string TbServicePHECCode;
+        public string LocationPHECCode;
         public string CaseManager;
         public string NhsNumber;
         public string DateOfBirth;
@@ -35,6 +37,8 @@ namespace ntbs_service.Models
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
             TbServiceCode = notification.Episode?.TBServiceCode;
+            TbServicePHECCode = notification.Episode.TBService?.PHECCode;
+            LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.Episode.CaseManagerName;
             NhsNumber = notification.FormattedNhsNumber;
             DateOfBirth = notification.FormattedDob;

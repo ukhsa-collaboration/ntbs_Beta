@@ -81,7 +81,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             Notification = await GetNotificationAsync(NotificationId);
-            if (!(await AuthorizationService.CanEdit(User, Notification)))
+            if (!(await AuthorizationService.CanEditNotification(User, Notification)))
             {
                 return ForbiddenResult();
             }

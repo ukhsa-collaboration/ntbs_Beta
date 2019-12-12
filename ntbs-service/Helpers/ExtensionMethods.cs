@@ -36,28 +36,10 @@ namespace ntbs_service.Helpers
         {
             return notifications.Select(async n =>
                     {
-                        var fullAccess = await authorizationService.CanEdit(user, n);
+                        var fullAccess = await authorizationService.CanEditNotification(user, n);
                         return new NotificationBannerModel(n, fullAccess: fullAccess, showLink: true);
                     })
                 .Select(n => n.Result);
         }
     }
-
-    public static class NotificationBannerModelExtensions
-    {
-        public static IEnumerable<NotificationBannerModel> AuthorizeBanners(
-            this IEnumerable<NotificationBannerModel> notificationBanners,
-            ClaimsPrincipal user,
-            IAuthorizationService authorizationService)
-        {
-            return notificationBanners.Select(async n =>
-            {
-                var fullAccess = await authorizationService.CanEditBannerModel(user, n);
-                n.FullAccess = fullAccess;
-                return n;
-            })
-            .Select(n => n.Result);
-        }
-    }
-
 }
