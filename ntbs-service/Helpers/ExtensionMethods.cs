@@ -66,4 +66,24 @@ namespace ntbs_service.Helpers
             }
         }
     }
+
+    public static class StringExtensions
+    {
+        public static string FormatStringToNhsNumberFormat(this string nhsNumber)
+        {
+            if (nhsNumber == null)
+            {
+                return "Not known";
+            }
+            if (string.IsNullOrEmpty(nhsNumber))
+            {
+                return string.Empty;
+            }
+            return string.Join(" ",
+                nhsNumber.Substring(0, 3),
+                nhsNumber.Substring(3, 3),
+                nhsNumber.Substring(6, 4)
+            );
+        }
+    }
 }

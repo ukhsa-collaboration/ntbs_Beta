@@ -89,7 +89,7 @@ namespace ntbs_service.Services
                 NotificationId = result.OldNotificationId,
                 NotificationStatus = NotificationStatus.Legacy,
                 NotificationStatusString = "Legacy",
-                NotificationDate = FormatDate(result.NotificationDate),
+                NotificationDate = (result.NotificationDate as DateTime?).ConvertToString(),
                 Source = result.Source,
                 Sex = Sexes.Where(s => s.SexId == result.NtbsSexId)?.Single().Label,
                 SortByDate = result.NotificationDate,
@@ -98,34 +98,12 @@ namespace ntbs_service.Services
                 TbService = tbService?.Name,
                 TbServiceCode = tbService?.Code,
                 Postcode = result.Postcode,
-                NhsNumber = FormatNhsNumberString(result.NhsNumber),
-                DateOfBirth = FormatDate(result.DateOfBirth),
+                NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),
+                DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
                 FullAccess = true
             };
             
             return notificationBannerModel;
-        }
-
-        private static string FormatDate(DateTime? date)
-        {
-            return date?.ToString("dd MMM yyyy");
-        }
-
-        private static string FormatNhsNumberString(string nhsNumber)
-        {
-            if (nhsNumber == null)
-            {
-                return "Not known";
-            }
-            if (string.IsNullOrEmpty(nhsNumber))
-            {
-                return string.Empty;
-            }
-            return string.Join(" ",
-                nhsNumber.Substring(0, 3),
-                nhsNumber.Substring(3, 3),
-                nhsNumber.Substring(6, 4)
-            );
         }
     }
 }
