@@ -1,20 +1,20 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ntbs_service.Models.Enums
 {
     public enum AlertType
     {
-        [DisplayName("Enhanced surveillance - MDR")]
+        [Display(Name = "Enhanced surveillance - MDR")]
         EnhancedSurveillanceMDR,
         EnhancedSurveillanceMBovis,
         MissingTreatmentOutcome,
         UnmatchedLabResult,
-        [DisplayName("Transfer Request")]
+        [Display(Name = "Transfer Request")]
         TransferRequest,
         TransferRejected,
         DataQualityIssue,
         SocialContext,
-        [DisplayName("Test Alert")]
+        [Display(Name = "Test Alert")]
         Test
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
@@ -14,14 +13,14 @@ namespace ntbs_service.Models.Entities
     {
         [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DenotificationDateAfterNotification)]
         [AssertThat("DenotificationNotAfterToday == true", ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
-        [DisplayName("Denotification date")]
+        [Display(Name = "Denotification date")]
         public DateTime DateOfDenotification { get; set; }
 
         /// <summary>
         /// Used for validation purposes only, requires consumer to populate it.
         /// </summary>
         [NotMapped]
-        [DisplayName("Denotification date")]
+        [Display(Name = "Denotification date")]
         public DateTime? DateOfNotification { get; set; }
 
         /// <summary>
@@ -41,7 +40,7 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlash,
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
-        [DisplayName("Description")]
+        [Display(Name = "Description")]
         public string OtherDescription { get; set; }
     }
 }

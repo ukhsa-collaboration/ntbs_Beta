@@ -13,8 +13,8 @@ namespace ntbs_service.Helpers
             return enumValue.GetType()
                             .GetMember(enumValue.ToString())
                             .First()
-                            .GetCustomAttribute<DisplayNameAttribute>()
-                            ?.DisplayName ?? string.Empty;
+                            .GetCustomAttribute<DisplayAttribute>()
+                            ?.Name ?? string.Empty;
         }
     }
 }
