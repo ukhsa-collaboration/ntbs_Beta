@@ -17,7 +17,7 @@ namespace ntbs_service.DataMigration
 
     public class NotificationMapper : INotificationMapper
     {
-        const string Query = @"
+        const string NotificationsQuery = @"
             SELECT *,
             	trvl.Country1 AS travel_Country1,
                 trvl.Country2 AS travel_Country2,
@@ -47,6 +47,12 @@ namespace ntbs_service.DataMigration
                 FROM Notifications n WHERE n.OldNotificationId = @NotificationId
             )";
 
+        const string NotificationSitesQuery = @"
+            SELECT *
+            FROM DiseaseSites
+            WHERE OldNotificationId IN ({0})
+        ";
+
         private readonly string connectionString;
 
         public NotificationMapper(IConfiguration _configuration)
@@ -60,13 +66,31 @@ namespace ntbs_service.DataMigration
             {
                 connection.Open();
 
-                var results = await connection.QueryAsync(Query, new
+                var results = await connection.QueryAsync(NotificationsQuery, new
                 {
                     NotificationId = $"{notificationId}"
                 });
 
-                return results.Select(AsNotification);
+                var notifications = results.Select(AsNotification).ToList();
+
+                var idsForInClause = string.Join(",", notifications.Select(x => $@"'{x.LegacyId}'"));
+                var notificationSites = await connection.QueryAsync(string.Format(NotificationSitesQuery, idsForInClause));
+                var groupingByLegacyId = notificationSites.GroupBy(x => x.OldNotificationId);
+                foreach (var group in groupingByLegacyId)
+                {
+                    notifications.FirstOrDefault(x => x.LegacyId == group.Key).NotificationSites = group.Select(AsNotificationSite).ToList();
+                }
+
+                return notifications;
             }
+        }
+
+        private static NotificationSite AsNotificationSite(dynamic result)
+        {
+            return new NotificationSite {
+                SiteId = result.DiseaseSiteId,
+                SiteDescription = result.DiseaseSiteText
+            };
         }
 
         private static Notification AsNotification(dynamic result)
