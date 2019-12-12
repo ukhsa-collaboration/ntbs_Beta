@@ -6,17 +6,8 @@ using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
-    public interface INotificationSearchBuilder
+    public interface INotificationSearchBuilder : ISearchBuilderParent
     {
-        INotificationSearchBuilder FilterById(string id);
-        INotificationSearchBuilder FilterByFamilyName(string familyName);
-        INotificationSearchBuilder FilterByGivenName(string givenName);
-        INotificationSearchBuilder FilterByPartialDob(PartialDate partialDob);
-        INotificationSearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate);
-        INotificationSearchBuilder FilterBySex(int? sexId);
-        INotificationSearchBuilder FilterByPostcode(string postcode);
-        INotificationSearchBuilder FilterByBirthCountry(int? countryId);
-        INotificationSearchBuilder FilterByTBService(string TBService);
         IQueryable<Notification> GetResult();
     }
 
@@ -29,7 +20,7 @@ namespace ntbs_service.Services
             this.notificationIQ = notificationIQ;
         }
 
-        public INotificationSearchBuilder FilterById(string id)
+        public ISearchBuilderParent FilterById(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -40,7 +31,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByFamilyName(string familyName)
+        public ISearchBuilderParent FilterByFamilyName(string familyName)
         {
             if (!String.IsNullOrEmpty(familyName))
             {
@@ -49,7 +40,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByGivenName(string givenName)
+        public ISearchBuilderParent FilterByGivenName(string givenName)
         {
             if (!String.IsNullOrEmpty(givenName))
             {
@@ -58,7 +49,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByPostcode(string postcode)
+        public ISearchBuilderParent FilterByPostcode(string postcode)
         {
             if (!String.IsNullOrEmpty(postcode))
             {
@@ -68,7 +59,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByPartialDob(PartialDate partialDob) 
+        public ISearchBuilderParent FilterByPartialDob(PartialDate partialDob) 
         {
             if(!(partialDob == null || partialDob.IsEmpty())) {
                 partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
@@ -78,7 +69,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
+        public ISearchBuilderParent FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
         {
             if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
                 partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
@@ -88,7 +79,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterBySex(int? sexId) 
+        public ISearchBuilderParent FilterBySex(int? sexId) 
         {
             if(sexId != null) {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.SexId.Equals(sexId));
@@ -96,7 +87,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByBirthCountry(int? countryId) 
+        public ISearchBuilderParent FilterByBirthCountry(int? countryId) 
         {
             if(countryId != null) {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.CountryId.Equals(countryId));
@@ -104,7 +95,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public INotificationSearchBuilder FilterByTBService(string TBService) 
+        public ISearchBuilderParent FilterByTBService(string TBService) 
         {
             if(TBService != null) {
                 notificationIQ = notificationIQ.Where(s => s.Episode.TBServiceCode.Equals(TBService));

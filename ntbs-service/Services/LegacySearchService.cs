@@ -25,18 +25,20 @@ namespace ntbs_service.Services
     public class LegacySearchService : ILegacySearchService
     {
         const string Query = @"
-            SELECT *
+            SELECT * 
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            WHERE n.OldNotificationId = '100-1' OR n.GroupId = '100-1' AND n.Source = 'LTBR' OR dmg.NhsNumber = '100-1'
             ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
         const string CountQuery = @"
             SELECT COUNT(*)
-            FROM Notifications n";
-
+            FROM Notifications n
+            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            WHERE n.OldNotificationId = '100-1' OR n.GroupId = '100-1' AND n.Source = 'LTBR' OR dmg.NhsNumber = '100-1'";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -51,7 +53,7 @@ namespace ntbs_service.Services
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
         }
 
-        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch)
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch, onbject x)
         {
             if (!_configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE))
             {
@@ -68,11 +70,13 @@ namespace ntbs_service.Services
                 results = await connection.QueryAsync(Query, new
                 {
                     Offset = offset,
-                    Fetch = numberToFetch
+                    Fetch = numberToFetch,
+                    id = x.IdFilter
                 });
 
                 count = (await connection.QueryAsync<int>(CountQuery)).Single();
             }
+            var xws = AsNotificationBannerAsync(results.First()).Result;
             var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
             return (notificationBannerModels, count);
         }

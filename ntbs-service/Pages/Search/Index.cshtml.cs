@@ -83,10 +83,11 @@ namespace ntbs_service.Pages.Search
                 NotificationStatus.Notified,
                 NotificationStatus.Denotified });
 
-            var filteredDrafts = FilterBySearchParameters(draftsQueryable);
-            var filteredNonDrafts = FilterBySearchParameters(nonDraftsQueryable);
+            var filteredDrafts = FilterBySearchParameters(new NotificationSearchBuilder(draftsQueryable));
+            var filteredNonDrafts = FilterBySearchParameters(new NotificationSearchBuilder(nonDraftsQueryable));
+            // var filteredX = FilterBySearchParameters(new LegacySearchBuilder());
 
-            var (notificationsToDisplay, count) = await SearchAsync(filteredDrafts, filteredNonDrafts);
+            var (notificationsToDisplay, count) = await SearchAsync(filteredDrafts.GetResult(), filteredNonDrafts.GetResult(), "");
             var authorisedNotificationsToDisplay = _authorizationService.SetFullAccessOnNotificationBanners(notificationsToDisplay, User);
             SearchResults = new PaginatedList<NotificationBannerModel>(authorisedNotificationsToDisplay, count, PaginationParameters);
             var (nextNtbsOffset, nextLegacyOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
@@ -100,9 +101,9 @@ namespace ntbs_service.Pages.Search
             return ValidationService.ValidateProperty(this, key, value);
         }
 
-        private IQueryable<Notification> FilterBySearchParameters(IQueryable<Notification> notificationsQueryable)
+        private INotificationSearchBuilder FilterBySearchParameters(NotificationSearchBuilder searchBuilder)
         {
-            return new NotificationSearchBuilder(notificationsQueryable)
+            return searchBuilder
                 .FilterById(SearchParameters.IdFilter)
                 .FilterByFamilyName(SearchParameters.FamilyName)
                 .FilterByGivenName(SearchParameters.GivenName)
@@ -111,13 +112,13 @@ namespace ntbs_service.Pages.Search
                 .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
                 .FilterByBirthCountry(SearchParameters.CountryId)
-                .FilterByTBService(SearchParameters.TBServiceCode)
-                .GetResult();
+                .FilterByTBService(SearchParameters.TBServiceCode);
         }
         
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchAsync(
             IQueryable<Notification> filteredDrafts,
-            IQueryable<Notification> filteredNonDrafts)
+            IQueryable<Notification> filteredNonDrafts,
+            string legacySqlQuery)
         {
             if (PaginationParameters.LegacyOffset == null && PaginationParameters.NtbsOffset == null)
             {
