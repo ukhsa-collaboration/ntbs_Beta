@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -94,13 +91,13 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("given-name", "Given name can only contain letters and the symbols ' - . ,");
-            resultDocument.AssertErrorMessage("family-name", "Family name can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-GivenName", "given-name", "Given name can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-FamilyName", "family-name", "Family name can only contain letters and the symbols ' - . ,");
             // Cannot easily check for equality with FullErrorMessage here as the error field is formatted oddly due to there being two fields in the error span.
             Assert.Contains("Date of birth must not be before 01/01/1900", resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", "NHS number needs to be 10 digits long");
-            resultDocument.AssertErrorMessage("address", "Address can only contain letters, numbers and the symbols ' - . , /");
-            resultDocument.AssertErrorMessage("local-patient-id", "Invalid character found in Local Patient Id");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-NhsNumber", "nhs-number", "NHS number needs to be 10 digits long");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-Address", "address", "Address can only contain letters, numbers and the symbols ' - . , /");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-LocalPatientId", "local-patient-id", "Invalid character found in Local Patient Id");
         }
 
         [Fact]
@@ -126,7 +123,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("year-of-entry", "Year of entry to the UK must be after patient's date of birth");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-YearOfUkEntry", "year-of-entry", "Year of entry to the UK must be after patient's date of birth");
         }
 
         [Fact]
@@ -152,14 +149,14 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("family-name", "Family name is a mandatory field");
-            resultDocument.AssertErrorMessage("given-name", "Given name is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-FamilyName", "family-name", "Family name is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-GivenName", "given-name", "Given name is a mandatory field");
             Assert.Contains("Date of birth is a mandatory field", resultDocument.GetError("dob"));
-            resultDocument.AssertErrorMessage("nhs-number", "NHS number is a mandatory field");
-            resultDocument.AssertErrorMessage("postcode", "Postcode is a mandatory field");
-            resultDocument.AssertErrorMessage("sex", "Sex is a mandatory field");
-            resultDocument.AssertErrorMessage("ethnicity", "Ethnic group is a mandatory field");
-            resultDocument.AssertErrorMessage("birth-country", "Birth country is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-NhsNumber", "nhs-number", "NHS number is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-Postcode", "postcode", "Postcode is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-SexId", "sex", "Sex is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-EthnicityId", "ethnicity", "Ethnic group is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("PatientDetails-CountryId", "birth-country", "Birth country is a mandatory field");
         }
 
         [Fact]

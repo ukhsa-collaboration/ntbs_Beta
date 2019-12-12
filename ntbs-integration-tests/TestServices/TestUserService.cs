@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
 namespace ntbs_integration_tests.TestServices

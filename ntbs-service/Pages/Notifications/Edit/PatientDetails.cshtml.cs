@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
-using ntbs_service.Models.Validations;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -139,20 +140,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task FindAndSetPostcodeAsync()
         {
-            var foundPostcode = await _postcodeService.FindPostcode(PatientDetails.Postcode);
-            PatientDetails.PostcodeToLookup = foundPostcode?.Postcode;
+            await FindAndSetPostcodeAsync(_postcodeService, PatientDetails);
         }
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {
-            var foundPostcode = await _postcodeService.FindPostcode(postcode);
-            var propertyValueTuples = new List<Tuple<string, object>>
-            {
-                new Tuple<string, object>("PostcodeToLookup", foundPostcode?.Postcode),
-                new Tuple<string, object>("Postcode", postcode)
-            };
-
-            return ValidationService.ValidateMultipleProperties<PatientDetails>(propertyValueTuples, shouldValidateFull);
+            return await OnGetValidatePostcode<PatientDetails>(_postcodeService, postcode, shouldValidateFull);
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)

@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using ntbs_service.Models;
-using ntbs_service.Models.Validations;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.ComponentModel;
-using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using ntbs_service.Models;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Services
 {
@@ -35,7 +36,7 @@ namespace ntbs_service.Services
         }
 
         public ContentResult ValidateMultipleProperties<T>(
-            IEnumerable<Tuple<string, object>> propertyValueTuples,
+            IEnumerable<(string, object)> propertyValueTuples,
             bool shouldValidateFull = false) 
             where T : ModelBase
         {
@@ -97,7 +98,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 return pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -128,10 +129,10 @@ namespace ntbs_service.Services
                     if (modelStateByKey?.ValidationState == ModelValidationState.Invalid)
                     {
                         errorMessageMap.Add(errorIndex, modelStateByKey.Errors[0].ErrorMessage);
-                        errorIndex++;
                     }
+                    errorIndex++;
                 }
-                if (errorIndex > 0)
+                if (errorMessageMap.Count > 0)
                 {
                     return pageModel.Content(JsonConvert.SerializeObject(errorMessageMap), "application/json");
                 }
@@ -167,7 +168,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -227,14 +228,14 @@ namespace ntbs_service.Services
 
             if (!IsValidYear(yearToValidate))
             {
-                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(propertyDisplayName));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(propertyDisplayName, (int)yearToCompare));
             }
         }

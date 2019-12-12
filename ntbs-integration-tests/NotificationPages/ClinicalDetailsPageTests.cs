@@ -54,15 +54,15 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("other-site", "Site description can only contain letters and the symbols ' - . ,");
-            resultDocument.AssertErrorMessage("bcg-vaccination", "BCG vaccination year has an invalid year");
-            resultDocument.AssertErrorMessage("symptom", "Symptom onset date does not have a valid date selection");
-            resultDocument.AssertErrorMessage("first-presentation", "Presentation to any health service must be today or earlier");
-            resultDocument.AssertErrorMessage("tb-service-presentation", "Presentation to TB service must be today or earlier");
-            resultDocument.AssertErrorMessage("diagnosis", "Diagnosis date must be today or earlier");
-            resultDocument.AssertErrorMessage("treatment", "Treatment start date does not have a valid date selection");
-            resultDocument.AssertErrorMessage("short-course", "Short course and MDR treatment cannot both be true");
-            resultDocument.AssertErrorMessage("mdr", "Short course and MDR treatment cannot both be true");
+            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site description can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year has an invalid year");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-SymptomStartDate", "symptom", "Symptom onset date does not have a valid date selection");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-FirstPresentationDate", "first-presentation", "Presentation to any health service must be today or earlier");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TBServicePresentationDate", "tb-service-presentation", "Presentation to TB service must be today or earlier");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DiagnosisDate", "diagnosis", "Diagnosis date must be today or earlier");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TreatmentStartDate", "treatment", "Treatment start date does not have a valid date selection");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsShortCourseTreatment", "short-course", "Short course and MDR treatment cannot both be true");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr", "Short course and MDR treatment cannot both be true");
         }
 
         [Fact]
@@ -88,8 +88,8 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorMessage("other-site", "Site description is a mandatory field");
-            resultDocument.AssertErrorMessage("bcg-vaccination", "BCG vaccination year is a mandatory field");
-            resultDocument.AssertErrorMessage("postmortem", "Date of death is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DeathDate", "postmortem", "Date of death is a mandatory field");
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-sites", "Please choose at least one site of disease");
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationSites", "notification-sites", "Please choose at least one site of disease");
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("diagnosis", "Diagnosis date is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DiagnosisDate", "diagnosis", "Diagnosis date is a mandatory field");
         }
 
         [Fact]
@@ -409,7 +409,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("mdr", 
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr", 
                 "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk");
         }
     }

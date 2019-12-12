@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services

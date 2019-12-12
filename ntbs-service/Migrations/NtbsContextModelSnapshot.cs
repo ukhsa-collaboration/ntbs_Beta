@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
@@ -20,7 +20,7 @@ namespace ntbs_service.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ntbs_service.Models.Alert", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
                     b.Property<int>("AlertId")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator<string>("AlertType");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.CaseManager", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManager", b =>
                 {
                     b.Property<string>("Email")
                         .ValueGeneratedOnAdd()
@@ -80,7 +80,7 @@ namespace ntbs_service.Migrations
                     b.ToTable("CaseManager");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
                     b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
@@ -95,7 +95,113 @@ namespace ntbs_service.Migrations
                     b.ToTable("CaseManagerTbService");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Country", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
+                {
+                    b.Property<int>("ManualTestResultId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ManualTestTypeId")
+                        .IsRequired();
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int?>("SampleTypeId");
+
+                    b.Property<DateTime?>("TestDate")
+                        .IsRequired();
+
+                    b.HasKey("ManualTestResultId");
+
+                    b.HasIndex("ManualTestTypeId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("SampleTypeId");
+
+                    b.ToTable("ManualTestResult");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("DeletionReason")
+                        .HasMaxLength(150);
+
+                    b.Property<string>("ETSID")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("GroupId");
+
+                    b.Property<string>("LTBRID")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTime?>("NotificationDate");
+
+                    b.Property<string>("NotificationStatus")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime?>("SubmissionDate");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("NotificationStatus");
+
+                    b.HasIndex("NotificationStatus", "SubmissionDate");
+
+                    b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.NotificationGroup", b =>
+                {
+                    b.Property<int>("NotificationGroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("NotificationGroupId");
+
+                    b.ToTable("NotificationGroup");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.NotificationSite", b =>
+                {
+                    b.Property<int>("NotificationId");
+
+                    b.Property<int>("SiteId");
+
+                    b.Property<string>("SiteDescription");
+
+                    b.HasKey("NotificationId", "SiteId");
+
+                    b.HasIndex("SiteId");
+
+                    b.ToTable("NotificationSite");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
+                {
+                    b.Property<int>("NotificationId");
+
+                    b.Property<bool?>("HasTestCarriedOut");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("TestData");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Country", b =>
                 {
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
@@ -1865,7 +1971,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Ethnicity", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Ethnicity", b =>
                 {
                     b.Property<int>("EthnicityId")
                         .ValueGeneratedOnAdd()
@@ -1991,7 +2097,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Hospital", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>
                 {
                     b.Property<Guid>("HospitalId")
                         .ValueGeneratedOnAdd();
@@ -6080,7 +6186,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.LocalAuthority", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.LocalAuthority", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -7186,7 +7292,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.LocalAuthorityToPHEC", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", b =>
                 {
                     b.Property<string>("PHECCode")
                         .HasMaxLength(50);
@@ -8297,39 +8403,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ManualTestResult", b =>
-                {
-                    b.Property<int>("ManualTestResultId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ManualTestTypeId")
-                        .IsRequired();
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<int?>("SampleTypeId")
-                        .IsRequired();
-
-                    b.Property<DateTime?>("TestDate")
-                        .IsRequired();
-
-                    b.HasKey("ManualTestResultId");
-
-                    b.HasIndex("ManualTestTypeId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.HasIndex("SampleTypeId");
-
-                    b.ToTable("ManualTestResult");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.ManualTestType", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.ManualTestType", b =>
                 {
                     b.Property<int>("ManualTestTypeId")
                         .ValueGeneratedOnAdd()
@@ -8375,7 +8449,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ManualTestTypeSampleType", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.ManualTestTypeSampleType", b =>
                 {
                     b.Property<int>("ManualTestTypeId");
 
@@ -8805,71 +8879,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Notification", b =>
-                {
-                    b.Property<int>("NotificationId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<string>("DeletionReason")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("ETSID")
-                        .HasMaxLength(50);
-
-                    b.Property<int?>("GroupId");
-
-                    b.Property<string>("LTBRID")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("NotificationDate");
-
-                    b.Property<string>("NotificationStatus")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime?>("SubmissionDate");
-
-                    b.HasKey("NotificationId");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("NotificationStatus");
-
-                    b.HasIndex("NotificationStatus", "SubmissionDate");
-
-                    b.ToTable("Notification");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationGroup", b =>
-                {
-                    b.Property<int>("NotificationGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("NotificationGroupId");
-
-                    b.ToTable("NotificationGroup");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
-                {
-                    b.Property<int>("NotificationId");
-
-                    b.Property<int>("SiteId");
-
-                    b.Property<string>("SiteDescription");
-
-                    b.HasKey("NotificationId", "SiteId");
-
-                    b.HasIndex("SiteId");
-
-                    b.ToTable("NotificationSite");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Occupation", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Occupation", b =>
                 {
                     b.Property<int>("OccupationId")
                         .ValueGeneratedOnAdd()
@@ -9086,7 +9096,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.PHEC", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PHEC", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -9177,7 +9187,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.PostcodeLookup", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PostcodeLookup", b =>
                 {
                     b.Property<string>("Postcode")
                         .ValueGeneratedOnAdd()
@@ -9194,7 +9204,7 @@ namespace ntbs_service.Migrations
                     b.ToTable("PostcodeLookup");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Region", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Region", b =>
                 {
                     b.Property<int>("RegionId")
                         .ValueGeneratedOnAdd()
@@ -9208,7 +9218,7 @@ namespace ntbs_service.Migrations
                     b.ToTable("Region");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.SampleType", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.SampleType", b =>
                 {
                     b.Property<int>("SampleTypeId")
                         .ValueGeneratedOnAdd()
@@ -9365,7 +9375,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Sex", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Sex", b =>
                 {
                     b.Property<int>("SexId")
                         .ValueGeneratedOnAdd()
@@ -9396,7 +9406,7 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Site", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Site", b =>
                 {
                     b.Property<int>("SiteId")
                         .ValueGeneratedOnAdd()
@@ -9501,7 +9511,49 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TBService", b =>
+            modelBuilder.Entity("ntbs_service.Models.SocialContextVenue", b =>
+                {
+                    b.Property<int>("SocialContextVenueId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(150);
+
+                    b.Property<DateTime?>("DateFrom")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("DateTo")
+                        .IsRequired();
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Frequency")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40);
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("Postcode");
+
+                    b.Property<int?>("VenueTypeId")
+                        .IsRequired();
+
+                    b.HasKey("SocialContextVenueId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("VenueTypeId");
+
+                    b.ToTable("SocialContextVenue");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TBService", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -11982,15 +12034,578 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
                 {
-                    b.Property<int>("NotificationId");
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
                     b.Property<bool?>("HasTestCarriedOut");
 
                     b.HasKey("NotificationId");
 
                     b.ToTable("TestData");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.VenueType", b =>
+                {
+                    b.Property<int>("VenueTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Category");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("VenueTypeId");
+
+                    b.ToTable("VenueType");
+
+                    b.HasData(
+                        new
+                        {
+                            VenueTypeId = 1,
+                            Category = "Workplace",
+                            Name = "Armed forces"
+                        },
+                        new
+                        {
+                            VenueTypeId = 2,
+                            Category = "Workplace",
+                            Name = "Catering"
+                        },
+                        new
+                        {
+                            VenueTypeId = 3,
+                            Category = "Workplace",
+                            Name = "Construction"
+                        },
+                        new
+                        {
+                            VenueTypeId = 4,
+                            Category = "Workplace",
+                            Name = "Driving"
+                        },
+                        new
+                        {
+                            VenueTypeId = 5,
+                            Category = "Workplace",
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            VenueTypeId = 6,
+                            Category = "Workplace",
+                            Name = "Emergency services"
+                        },
+                        new
+                        {
+                            VenueTypeId = 7,
+                            Category = "Workplace",
+                            Name = "Factory"
+                        },
+                        new
+                        {
+                            VenueTypeId = 8,
+                            Category = "Workplace",
+                            Name = "Farming"
+                        },
+                        new
+                        {
+                            VenueTypeId = 9,
+                            Category = "Workplace",
+                            Name = "Hospital or medical centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 10,
+                            Category = "Workplace",
+                            Name = "Office"
+                        },
+                        new
+                        {
+                            VenueTypeId = 11,
+                            Category = "Workplace",
+                            Name = "Pub, bar or club"
+                        },
+                        new
+                        {
+                            VenueTypeId = 12,
+                            Category = "Workplace",
+                            Name = "Restaurant or cafe"
+                        },
+                        new
+                        {
+                            VenueTypeId = 13,
+                            Category = "Workplace",
+                            Name = "Hospitality"
+                        },
+                        new
+                        {
+                            VenueTypeId = 14,
+                            Category = "Workplace",
+                            Name = "Retail"
+                        },
+                        new
+                        {
+                            VenueTypeId = 15,
+                            Category = "Workplace",
+                            Name = "Warehouse"
+                        },
+                        new
+                        {
+                            VenueTypeId = 16,
+                            Category = "Workplace",
+                            Name = "Hair/beauty salon"
+                        },
+                        new
+                        {
+                            VenueTypeId = 17,
+                            Category = "Workplace",
+                            Name = "Health club or spa"
+                        },
+                        new
+                        {
+                            VenueTypeId = 18,
+                            Category = "Workplace",
+                            Name = "Recreational centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 19,
+                            Category = "Workplace",
+                            Name = "Other workplace"
+                        },
+                        new
+                        {
+                            VenueTypeId = 20,
+                            Category = "Place of worship",
+                            Name = "Church"
+                        },
+                        new
+                        {
+                            VenueTypeId = 21,
+                            Category = "Place of worship",
+                            Name = "Temple"
+                        },
+                        new
+                        {
+                            VenueTypeId = 22,
+                            Category = "Place of worship",
+                            Name = "Mosque"
+                        },
+                        new
+                        {
+                            VenueTypeId = 23,
+                            Category = "Place of worship",
+                            Name = "Community centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 24,
+                            Category = "Place of worship",
+                            Name = "Multi-faith centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 25,
+                            Category = "Place of worship",
+                            Name = "Synagogue"
+                        },
+                        new
+                        {
+                            VenueTypeId = 26,
+                            Category = "Place of worship",
+                            Name = "Other place of worship"
+                        },
+                        new
+                        {
+                            VenueTypeId = 27,
+                            Category = "Social",
+                            Name = "Arcade/gambling venue"
+                        },
+                        new
+                        {
+                            VenueTypeId = 28,
+                            Category = "Social",
+                            Name = "Pub, bar or club"
+                        },
+                        new
+                        {
+                            VenueTypeId = 29,
+                            Category = "Social",
+                            Name = "Restaurant or cafe"
+                        },
+                        new
+                        {
+                            VenueTypeId = 30,
+                            Category = "Social",
+                            Name = "Library"
+                        },
+                        new
+                        {
+                            VenueTypeId = 31,
+                            Category = "Social",
+                            Name = "Cinema"
+                        },
+                        new
+                        {
+                            VenueTypeId = 32,
+                            Category = "Social",
+                            Name = "Shopping centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 33,
+                            Category = "Social",
+                            Name = "Hair/beauty salon"
+                        },
+                        new
+                        {
+                            VenueTypeId = 34,
+                            Category = "Social",
+                            Name = "Health club or spa"
+                        },
+                        new
+                        {
+                            VenueTypeId = 35,
+                            Category = "Social",
+                            Name = "Exercise class"
+                        },
+                        new
+                        {
+                            VenueTypeId = 36,
+                            Category = "Social",
+                            Name = "Recreational centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 37,
+                            Category = "Social",
+                            Name = "Music classes"
+                        },
+                        new
+                        {
+                            VenueTypeId = 38,
+                            Category = "Social",
+                            Name = "Community centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 39,
+                            Category = "Social",
+                            Name = "Job/unemployment centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 40,
+                            Category = "Social",
+                            Name = "Crack house/smoking den"
+                        },
+                        new
+                        {
+                            VenueTypeId = 41,
+                            Category = "Social",
+                            Name = "Friends house"
+                        },
+                        new
+                        {
+                            VenueTypeId = 42,
+                            Category = "Social",
+                            Name = "Other social venue"
+                        },
+                        new
+                        {
+                            VenueTypeId = 43,
+                            Category = "Childcare & education",
+                            Name = "Pre-school or play group"
+                        },
+                        new
+                        {
+                            VenueTypeId = 44,
+                            Category = "Childcare & education",
+                            Name = "Nursery"
+                        },
+                        new
+                        {
+                            VenueTypeId = 45,
+                            Category = "Childcare & education",
+                            Name = "Primary school"
+                        },
+                        new
+                        {
+                            VenueTypeId = 46,
+                            Category = "Childcare & education",
+                            Name = "Secondary school"
+                        },
+                        new
+                        {
+                            VenueTypeId = 47,
+                            Category = "Childcare & education",
+                            Name = "College or sixth form"
+                        },
+                        new
+                        {
+                            VenueTypeId = 48,
+                            Category = "Childcare & education",
+                            Name = "After school clubs"
+                        },
+                        new
+                        {
+                            VenueTypeId = 49,
+                            Category = "Childcare & education",
+                            Name = "University"
+                        },
+                        new
+                        {
+                            VenueTypeId = 50,
+                            Category = "Childcare & education",
+                            Name = "Adult education"
+                        },
+                        new
+                        {
+                            VenueTypeId = 51,
+                            Category = "Childcare & education",
+                            Name = "Private tutoring"
+                        },
+                        new
+                        {
+                            VenueTypeId = 52,
+                            Category = "Childcare & education",
+                            Name = "Religious learning centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 53,
+                            Category = "Childcare & education",
+                            Name = "Other childcare & education"
+                        },
+                        new
+                        {
+                            VenueTypeId = 54,
+                            Category = "Place of detention",
+                            Name = "Immigration detention centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 55,
+                            Category = "Place of detention",
+                            Name = "Prison"
+                        },
+                        new
+                        {
+                            VenueTypeId = 56,
+                            Category = "Place of detention",
+                            Name = "Youth detention centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 57,
+                            Category = "Place of detention",
+                            Name = "Other place of detention"
+                        },
+                        new
+                        {
+                            VenueTypeId = 58,
+                            Category = "Treatment and rehab",
+                            Name = "Alcohol rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 59,
+                            Category = "Treatment and rehab",
+                            Name = "Drug rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 60,
+                            Category = "Treatment and rehab",
+                            Name = "Medical or physical rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 61,
+                            Category = "Treatment and rehab",
+                            Name = "Mental health rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 62,
+                            Category = "Treatment and rehab",
+                            Name = "Other treatment or rehab centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 63,
+                            Category = "Health and care",
+                            Name = "Crisis centre or refuge"
+                        },
+                        new
+                        {
+                            VenueTypeId = 64,
+                            Category = "Residential",
+                            Name = "Initial accommodation centre "
+                        },
+                        new
+                        {
+                            VenueTypeId = 65,
+                            Category = "Residential",
+                            Name = "Dispersal accommodation "
+                        },
+                        new
+                        {
+                            VenueTypeId = 66,
+                            Category = "Residential",
+                            Name = "Homeless shelter"
+                        },
+                        new
+                        {
+                            VenueTypeId = 67,
+                            Category = "Residential",
+                            Name = "Squat"
+                        },
+                        new
+                        {
+                            VenueTypeId = 68,
+                            Category = "Residential",
+                            Name = "Care home"
+                        },
+                        new
+                        {
+                            VenueTypeId = 69,
+                            Category = "Residential",
+                            Name = "Halfway house"
+                        },
+                        new
+                        {
+                            VenueTypeId = 70,
+                            Category = "Residential",
+                            Name = "Hostel"
+                        },
+                        new
+                        {
+                            VenueTypeId = 71,
+                            Category = "Residential",
+                            Name = "Hall of residence"
+                        },
+                        new
+                        {
+                            VenueTypeId = 72,
+                            Category = "Residential",
+                            Name = "Sofa surfing"
+                        },
+                        new
+                        {
+                            VenueTypeId = 73,
+                            Category = "Residential",
+                            Name = "Other residential"
+                        },
+                        new
+                        {
+                            VenueTypeId = 74,
+                            Category = "Health and care",
+                            Name = "Hospital"
+                        },
+                        new
+                        {
+                            VenueTypeId = 75,
+                            Category = "Health and care",
+                            Name = "Walk-in Centre/Minor Injuries"
+                        },
+                        new
+                        {
+                            VenueTypeId = 76,
+                            Category = "Health and care",
+                            Name = "Pharmacy"
+                        },
+                        new
+                        {
+                            VenueTypeId = 77,
+                            Category = "Health and care",
+                            Name = "GP Practice"
+                        },
+                        new
+                        {
+                            VenueTypeId = 78,
+                            Category = "Health and care",
+                            Name = "Nursing Home"
+                        },
+                        new
+                        {
+                            VenueTypeId = 79,
+                            Category = "Health and care",
+                            Name = "Hospice"
+                        },
+                        new
+                        {
+                            VenueTypeId = 80,
+                            Category = "Health and care",
+                            Name = "Health Centre/Clinic"
+                        },
+                        new
+                        {
+                            VenueTypeId = 81,
+                            Category = "Health and care",
+                            Name = "Other heathcare"
+                        },
+                        new
+                        {
+                            VenueTypeId = 82,
+                            Category = "Transport",
+                            Name = "Car"
+                        },
+                        new
+                        {
+                            VenueTypeId = 83,
+                            Category = "Transport",
+                            Name = "Bus"
+                        },
+                        new
+                        {
+                            VenueTypeId = 84,
+                            Category = "Transport",
+                            Name = "Train"
+                        },
+                        new
+                        {
+                            VenueTypeId = 85,
+                            Category = "Transport",
+                            Name = "Tram"
+                        },
+                        new
+                        {
+                            VenueTypeId = 86,
+                            Category = "Transport",
+                            Name = "Metro"
+                        },
+                        new
+                        {
+                            VenueTypeId = 87,
+                            Category = "Transport",
+                            Name = "Plane"
+                        },
+                        new
+                        {
+                            VenueTypeId = 88,
+                            Category = "Transport",
+                            Name = "Taxi"
+                        },
+                        new
+                        {
+                            VenueTypeId = 89,
+                            Category = "Transport",
+                            Name = "Boat"
+                        },
+                        new
+                        {
+                            VenueTypeId = 90,
+                            Category = "Transport",
+                            Name = "Cruise ship"
+                        },
+                        new
+                        {
+                            VenueTypeId = 91,
+                            Category = "Transport",
+                            Name = "Other transport"
+                        });
                 });
 
             modelBuilder.Entity("ntbs_service.Models.MdrAlert", b =>
@@ -12000,99 +12615,65 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("EnhancedSurveillanceMDR");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TestAlert", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.TestAlert", b =>
                 {
-                    b.HasBaseType("ntbs_service.Models.Alert");
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
                     b.HasDiscriminator().HasValue("Test");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Alert", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
-                    b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                    b.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                         .WithMany()
                         .HasForeignKey("CaseManagerEmail");
 
-                    b.HasOne("ntbs_service.Models.Notification", "Notification")
+                    b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("Alerts")
                         .HasForeignKey("NotificationId");
 
-                    b.HasOne("ntbs_service.Models.TBService", "TbService")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()
                         .HasForeignKey("TbServiceCode");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.CaseManagerTbService", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
-                    b.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                    b.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                         .WithMany("CaseManagerTbServices")
                         .HasForeignKey("CaseManagerEmail")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.TBService", "TbService")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany("CaseManagerTbServices")
                         .HasForeignKey("TbServiceCode")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Hospital", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
                 {
-                    b.HasOne("ntbs_service.Models.TBService", "TBService")
-                        .WithMany()
-                        .HasForeignKey("TBServiceCode");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.LocalAuthorityToPHEC", b =>
-                {
-                    b.HasOne("ntbs_service.Models.LocalAuthority", "LocalAuthority")
-                        .WithOne("LocalAuthorityToPHEC")
-                        .HasForeignKey("ntbs_service.Models.LocalAuthorityToPHEC", "LocalAuthorityCode")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.PHEC", "PHEC")
-                        .WithOne()
-                        .HasForeignKey("ntbs_service.Models.LocalAuthorityToPHEC", "PHECCode")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.ManualTestResult", b =>
-                {
-                    b.HasOne("ntbs_service.Models.ManualTestType", "ManualTestType")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
                         .WithMany()
                         .HasForeignKey("ManualTestTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.TestData")
+                    b.HasOne("ntbs_service.Models.Entities.TestData")
                         .WithMany("ManualTestResults")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.SampleType", "SampleType")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.SampleType", "SampleType")
                         .WithMany()
-                        .HasForeignKey("SampleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SampleTypeId");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ManualTestTypeSampleType", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
                 {
-                    b.HasOne("ntbs_service.Models.ManualTestType", "ManualTestType")
-                        .WithMany("ManualTestTypeSampleTypes")
-                        .HasForeignKey("ManualTestTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.SampleType", "SampleType")
-                        .WithMany("ManualTestTypeSampleTypes")
-                        .HasForeignKey("SampleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Notification", b =>
-                {
-                    b.HasOne("ntbs_service.Models.NotificationGroup", "Group")
+                    b.HasOne("ntbs_service.Models.Entities.NotificationGroup", "Group")
                         .WithMany("Notifications")
                         .HasForeignKey("GroupId");
 
-                    b.OwnsOne("ntbs_service.Models.ClinicalDetails", "ClinicalDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ClinicalDetails", "ClinicalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12137,13 +12718,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ClinicalDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ClinicalDetails")
-                                .HasForeignKey("ntbs_service.Models.ClinicalDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ClinicalDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ComorbidityDetails", "ComorbidityDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ComorbidityDetails", "ComorbidityDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12166,13 +12747,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ComorbidityDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ComorbidityDetails")
-                                .HasForeignKey("ntbs_service.Models.ComorbidityDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ComorbidityDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ContactTracing", "ContactTracing", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ContactTracing", "ContactTracing", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12204,13 +12785,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ContactTracing");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ContactTracing")
-                                .HasForeignKey("ntbs_service.Models.ContactTracing", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ContactTracing", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.DenotificationDetails", "DenotificationDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.DenotificationDetails", "DenotificationDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12227,13 +12808,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("DenotificationDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("DenotificationDetails")
-                                .HasForeignKey("ntbs_service.Models.DenotificationDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.DenotificationDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Episode", "Episode", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.Episode", "Episode", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12257,25 +12838,25 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("Episode");
 
-                            b1.HasOne("ntbs_service.Models.CaseManager", "CaseManager")
+                            b1.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                                 .WithMany()
                                 .HasForeignKey("CaseManagerEmail");
 
-                            b1.HasOne("ntbs_service.Models.Hospital", "Hospital")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Hospital", "Hospital")
                                 .WithMany()
                                 .HasForeignKey("HospitalId");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("Episode")
-                                .HasForeignKey("ntbs_service.Models.Episode", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.Episode", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.HasOne("ntbs_service.Models.TBService", "TBService")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
                                 .WithMany()
                                 .HasForeignKey("TBServiceCode");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.ImmunosuppressionDetails", "ImmunosuppressionDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12295,13 +12876,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("ImmunosuppressionDetails");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("ImmunosuppressionDetails")
-                                .HasForeignKey("ntbs_service.Models.ImmunosuppressionDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.ImmunosuppressionDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.MDRDetails", "MDRDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.MDRDetails", "MDRDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12324,17 +12905,17 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("MDRDetails");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
                                 .WithMany()
                                 .HasForeignKey("CountryId");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("MDRDetails")
-                                .HasForeignKey("ntbs_service.Models.MDRDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.MDRDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.PatientDetails", "PatientDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.PatientDetails", "PatientDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12394,33 +12975,33 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("Patients");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
                                 .WithMany()
                                 .HasForeignKey("CountryId");
 
-                            b1.HasOne("ntbs_service.Models.Ethnicity", "Ethnicity")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Ethnicity", "Ethnicity")
                                 .WithMany()
                                 .HasForeignKey("EthnicityId");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("PatientDetails")
-                                .HasForeignKey("ntbs_service.Models.PatientDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.HasOne("ntbs_service.Models.Occupation", "Occupation")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Occupation", "Occupation")
                                 .WithMany()
                                 .HasForeignKey("OccupationId");
 
-                            b1.HasOne("ntbs_service.Models.PostcodeLookup", "PostcodeLookup")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.PostcodeLookup", "PostcodeLookup")
                                 .WithOne()
-                                .HasForeignKey("ntbs_service.Models.PatientDetails", "PostcodeToLookup");
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "PostcodeToLookup");
 
-                            b1.HasOne("ntbs_service.Models.Sex", "Sex")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Sex", "Sex")
                                 .WithMany()
                                 .HasForeignKey("SexId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.PatientTBHistory", "PatientTBHistory", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.PatientTBHistory", "PatientTBHistory", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12432,13 +13013,13 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("PatientTBHistories");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("PatientTBHistory")
-                                .HasForeignKey("ntbs_service.Models.PatientTBHistory", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientTBHistory", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.SocialRiskFactors", "SocialRiskFactors", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.SocialRiskFactors", "SocialRiskFactors", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12455,12 +13036,12 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("SocialRiskFactors");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("SocialRiskFactors")
-                                .HasForeignKey("ntbs_service.Models.SocialRiskFactors", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.SocialRiskFactors", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorDrugs", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorDrugs", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -12483,13 +13064,13 @@ namespace ntbs_service.Migrations
 
                                     b2.ToTable("RiskFactorDrugs");
 
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
+                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorDrugs")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorHomelessness", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -12512,13 +13093,13 @@ namespace ntbs_service.Migrations
 
                                     b2.ToTable("RiskFactorHomelessness");
 
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
+                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorHomelessness")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
 
-                            b1.OwnsOne("ntbs_service.Models.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
+                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorImprisonment", b2 =>
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
@@ -12541,14 +13122,14 @@ namespace ntbs_service.Migrations
 
                                     b2.ToTable("RiskFactorImprisonment");
 
-                                    b2.HasOne("ntbs_service.Models.SocialRiskFactors")
+                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorImprisonment")
-                                        .HasForeignKey("ntbs_service.Models.RiskFactorDetails", "SocialRiskFactorsNotificationId")
+                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });
 
-                    b.OwnsOne("ntbs_service.Models.TravelDetails", "TravelDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.TravelDetails", "TravelDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12578,25 +13159,25 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("TravelDetails");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country1")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country1")
                                 .WithMany()
                                 .HasForeignKey("Country1Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country2")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country2")
                                 .WithMany()
                                 .HasForeignKey("Country2Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country3")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country3")
                                 .WithMany()
                                 .HasForeignKey("Country3Id");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("TravelDetails")
-                                .HasForeignKey("ntbs_service.Models.TravelDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.TravelDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.VisitorDetails", "VisitorDetails", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.VisitorDetails", "VisitorDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -12626,58 +13207,104 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("VisitorDetails");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country1")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country1")
                                 .WithMany()
                                 .HasForeignKey("Country1Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country2")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country2")
                                 .WithMany()
                                 .HasForeignKey("Country2Id");
 
-                            b1.HasOne("ntbs_service.Models.Country", "Country3")
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country3")
                                 .WithMany()
                                 .HasForeignKey("Country3Id");
 
-                            b1.HasOne("ntbs_service.Models.Notification")
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
                                 .WithOne("VisitorDetails")
-                                .HasForeignKey("ntbs_service.Models.VisitorDetails", "NotificationId")
+                                .HasForeignKey("ntbs_service.Models.Entities.VisitorDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.NotificationSite", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.NotificationSite", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Notification")
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
                         .WithMany("NotificationSites")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ntbs_service.Models.Site", "Site")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Site", "Site")
                         .WithMany("NotificationSites")
                         .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.PostcodeLookup", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
                 {
-                    b.HasOne("ntbs_service.Models.LocalAuthority", "LocalAuthority")
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
+                        .WithOne("TestData")
+                        .HasForeignKey("ntbs_service.Models.Entities.TestData", "NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.SocialContextVenue", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Notification")
+                        .WithMany("SocialContextVenues")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.VenueType", "VenueType")
+                        .WithMany()
+                        .HasForeignKey("VenueTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")
+                        .WithMany()
+                        .HasForeignKey("TBServiceCode");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.LocalAuthority", "LocalAuthority")
+                        .WithOne("LocalAuthorityToPHEC")
+                        .HasForeignKey("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", "LocalAuthorityCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.PHEC", "PHEC")
+                        .WithOne()
+                        .HasForeignKey("ntbs_service.Models.ReferenceEntities.LocalAuthorityToPHEC", "PHECCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.ManualTestTypeSampleType", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
+                        .WithMany("ManualTestTypeSampleTypes")
+                        .HasForeignKey("ManualTestTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.SampleType", "SampleType")
+                        .WithMany("ManualTestTypeSampleTypes")
+                        .HasForeignKey("SampleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.PostcodeLookup", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.LocalAuthority", "LocalAuthority")
                         .WithMany("PostcodeLookups")
                         .HasForeignKey("LocalAuthorityCode");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.TBService", b =>
+            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TBService", b =>
                 {
-                    b.HasOne("ntbs_service.Models.PHEC", "PHEC")
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.PHEC", "PHEC")
                         .WithMany()
                         .HasForeignKey("PHECCode");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.TestData", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Notification")
-                        .WithOne("TestData")
-                        .HasForeignKey("ntbs_service.Models.TestData", "NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

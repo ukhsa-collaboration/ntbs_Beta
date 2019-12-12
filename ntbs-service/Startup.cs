@@ -16,8 +16,10 @@ using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
 using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration;
 using ntbs_service.Middleware;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
+using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
 
@@ -80,6 +82,12 @@ namespace ntbs_service
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddAuthorization(options => {
+                options.AddPolicy("AdminOnly", policy => {
+                    policy.RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"]);
+                });
+            });
+
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
@@ -104,17 +112,19 @@ namespace ntbs_service
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IAlertService, AlertService>();
             services.AddScoped<IAlertRepository, AlertRepository>();
-            services.AddScoped<ISearchServiceLegacy, SearchServiceLegacy>();
-            services.AddScoped<IETSSearchService, ETSSearcher>();
-            services.AddScoped<ILTBRSearchService, LTBRSearcher>();
+            services.AddScoped<INotificationMapper, NotificationMapper>();
+            services.AddScoped<IImportLogger, ImportLogger>();
+            services.AddScoped<INotificationImportService, NotificationImportService>();
+            services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
-            services.AddScoped<ITestResultsRepository, TestResultsRepository>();
             services.AddScoped<ILegacySearchService, LegacySearchService>();
+            services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
+            services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }
@@ -122,11 +132,7 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (Env.IsEnvironment("Test"))
-            {
-                app.UseStatusCodePagesWithReExecute("/errors/{0}");
-            }
-            else if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
@@ -138,6 +144,7 @@ namespace ntbs_service
             else
             {
                 app.UseStatusCodePagesWithReExecute("/errors/{0}");
+                app.UseExceptionHandler("/errors/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

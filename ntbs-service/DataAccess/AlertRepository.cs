@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.DataAccess
@@ -14,6 +14,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
         Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
+        Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
     }
 
@@ -48,6 +49,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseAlertIQueryable()
                 .Where(a => tbServices.Contains(a.TbServiceCode))
+                .Where(a => a.NotificationId == null || a.Notification.NotificationStatus != NotificationStatus.Draft)
                 .OrderByDescending(a => a.CreationDate)
                 .ToListAsync();
         }
@@ -56,6 +58,13 @@ namespace ntbs_service.DataAccess
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId)
+        {
+            return await GetBaseAlertIQueryable()
+                .Where(a => a.NotificationId == notificationId)
+                .ToListAsync();
         }
 
         private IQueryable<Alert> GetBaseAlertIQueryable()

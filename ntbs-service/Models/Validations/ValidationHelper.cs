@@ -31,7 +31,7 @@ namespace ntbs_service.Models.Validations
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
-
+        public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth";
         #endregion
 
         #region Patient Details
@@ -73,7 +73,6 @@ namespace ntbs_service.Models.Validations
         #region Hospital Details
         public const string TBServiceCantChange = "{0} cannot be changed for non-draft notifications";
         public const string HospitalMustBelongToSelectedTbSerice = "{0} must belong to selected TB Service";
-        public const string NotificationDateShouldBeLaterThanDob = "{0} must be later than date of birth";
         public const string CaseManagerMustBeAllowedForSelectedTbService = "{0} must be allowed for selected TB Service";
 
         #endregion
@@ -98,6 +97,10 @@ namespace ntbs_service.Models.Validations
         #region Immunosuppression
         public const string ImmunosuppressionDetailRequired = "Please supply immunosuppression other details";
         public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
+        #endregion
+
+        #region Social Context
+        public const string VenueDateToShouldBeLaterThanDateFrom = "{0} must be later than date from";
         #endregion
 
         #region Denotify
@@ -133,5 +136,7 @@ namespace ntbs_service.Models.Validations
         public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
         public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?]+";
+        // Taken from https://stackoverflow.com/a/164994/2363767
+        public const string PostcodeValidation = @"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})";
     }
 }

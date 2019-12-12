@@ -3,7 +3,7 @@
 @model OverviewModel
 
 @{
-    Layout = "../Shared/_NotificationLayoutWithAlertsAndSideMenu.cshtml";
+    Layout = "../Shared/_NotificationOverviewLayout.cshtml";
     ViewData["Title"] = "Overview";
     ViewData["NotificationId"] = @Model.NotificationId;
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
@@ -25,6 +25,10 @@
 
 <partial name="./OverviewPartials/_ComorbiditiesAndImmunosuppresionOverviewPartial" model="@Model" />
 
+<partial name="./OverviewPartials/_SocialContextVenuesOverviewPartial" for="Notification" />
+
 <partial name="./OverviewPartials/_PreviousHistoryOverviewPartial" model="@Model" />
+
+<partial name="./OverviewPartials/_MDRDetailsOverviewPartial" model="@Model" />
 
 <a href='#top' class="govuk-link--no-visited-state"> Back to top </a>

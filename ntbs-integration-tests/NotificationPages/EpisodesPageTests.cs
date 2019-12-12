@@ -6,10 +6,10 @@ using Newtonsoft.Json;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
-using ntbs_service.Models.Validations;
+using ntbs_service.Models.ReferenceEntities;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -59,7 +59,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification date does not have a valid date selection");
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationDate", "notification-date", "Notification date does not have a valid date selection");
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
             var expectedMessage = "Notification date must not be before 01/01/2010";
-            resultDocument.AssertErrorMessage("notification-date", expectedMessage);
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationDate", "notification-date", expectedMessage);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification date is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationDate", "notification-date", "Notification date is a mandatory field");
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification date does not have a valid date selection");
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationDate", "notification-date", "Notification date does not have a valid date selection");
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification date must not be before 01/01/2010");
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationDate", "notification-date", "Notification date must not be before 01/01/2010");
         }
 
         [Fact]
@@ -179,8 +179,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("notification-date", "Notification date is a mandatory field");
-            resultDocument.AssertErrorMessage("hospital", "Hospital is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("Notification-NotificationDate", "notification-date", "Notification date is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("Episode-HospitalId", "hospital", "Hospital is a mandatory field");
         }
 
         [Fact]
@@ -203,7 +203,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("consultant", "Consultant can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("Episode-Consultant", "consultant", "Consultant can only contain letters and the symbols ' - . ,");
         }
 
         [Fact]
@@ -254,7 +254,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("hospital", "Hospital must belong to selected TB Service");
+            resultDocument.AssertErrorSummaryMessage("Episode-HospitalId", "hospital", "Hospital must belong to selected TB Service");
         }
 
         [Fact]
@@ -277,7 +277,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("case-manager", "Case Manager must be allowed for selected TB Service");
+            resultDocument.AssertErrorSummaryMessage("Episode-CaseManagerEmail", "case-manager", "Case Manager must be allowed for selected TB Service");
         }
 
         [Fact]

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -65,9 +65,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task ValidateRelatedNotification()
         {
-            if (MDRDetails.RelatedNotificationId != null) {
+            if (MDRDetails.RelatedNotificationId != null)
+            {
                 var relatedNotification = await GetRelatedNotification(MDRDetails.RelatedNotificationId.Value);
-                if (relatedNotification == null)
+                if (!CanLinkToNotification(relatedNotification))
                 {
                     ModelState.AddModelError("MDRDetails.RelatedNotificationId", ValidationMessages.RelatedNotificationIdInvalid);
                 }
@@ -115,7 +116,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (int.TryParse(value, out var notificationId))
             {
                 var relatedNotification = await GetRelatedNotification(notificationId);
-                if (relatedNotification == null)
+                if (!CanLinkToNotification(relatedNotification))
                 {
                     return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdInvalid });
                 }
@@ -123,6 +124,11 @@ namespace ntbs_service.Pages.Notifications.Edit
                 return CreateJsonResponse(new { relatedNotification = info });
             }
             return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdMustBeInteger });
+        }
+
+        private static bool CanLinkToNotification(Notification notification)
+        {
+            return notification != null && notification.HasBeenNotified;
         }
     }
 }

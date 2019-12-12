@@ -1,4 +1,5 @@
-@model ntbs_service.Models.Notification
+@using ntbs_service.Models.Enums
+@model ntbs_service.Models.Entities.Notification
 
 @{
     var buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";

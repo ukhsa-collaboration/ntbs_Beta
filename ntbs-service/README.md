@@ -95,7 +95,7 @@ We're using ACR to store docker images. When logged in to Azure, run this comman
 ## Deploying to environments
 `master` branch deploys to `int` automatically.
 
-For `test` and `research` and `uat` environments, pick the docker image <TAG> of the build from registery and from root directory run:
+For `test` and `uat` environments, pick the docker image <TAG> of the build from registery and from root directory run:
 
 `.\scripts\release.sh <ENV> <TAG>`
 
@@ -123,14 +123,3 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
 - purging registrey - every once in a while the images registery [should be pureged](../scripts/purge-images.ps1) so it doesn't grow too big. It runs with `--dry-run` by defualt, make sure to remove the flag once you're happy nothing relevant will be deleted.
 - SSL cerificates - see [dedicated readme](./deployments/README.md)
-
-## Basic auth securing
-Research env is set up with basic http auth, configured as per
-[these instructions](https://blog.bigbinary.com/2018/08/14/using-kubernetes-ingress-authentication.html).
-The credentials can be updated by running:
-```
-kubectl delete secret research-basic-auth
-htpasswd -c auth <username>
-# provide <password>
-kubectl create secret generic research-basic-auth --from-file=auth
-```

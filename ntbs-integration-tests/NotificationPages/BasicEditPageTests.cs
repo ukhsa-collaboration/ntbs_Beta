@@ -160,7 +160,8 @@ namespace ntbs_integration_tests.NotificationPages
             NotificationSubPaths.EditComorbidities,
             NotificationSubPaths.EditImmunosuppression,
             NotificationSubPaths.EditPreviousHistory,
-            NotificationSubPaths.EditMDRDetails
+            NotificationSubPaths.EditMDRDetails,
+            NotificationSubPaths.EditSocialContextVenues
         };
     }
 }

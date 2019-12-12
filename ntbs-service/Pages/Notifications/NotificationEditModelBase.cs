@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Interfaces;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
@@ -25,6 +26,9 @@ namespace ntbs_service.Pages.Notifications
 
         [ViewData]
         public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+
+        [ViewData]
+        public Dictionary<string, string> EditPageErrorDictionary { get; set; }
 
         /*
         Post method accepts name of action specified by button clicked.
@@ -69,6 +73,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!isValid)
             {
+                EditPageErrorDictionary = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
                 return await PrepareAndDisplayPageAsync(isBeingSubmitted);
             }
 
@@ -99,7 +104,7 @@ namespace ntbs_service.Pages.Notifications
 
         private async Task<IActionResult> SubmitAsync()
         {
-            SetShouldValidateFull();
+            NotificationHelper.SetShouldValidateFull(Notification);
 
             if (!TryValidateModel(Notification))
             {
@@ -110,21 +115,7 @@ namespace ntbs_service.Pages.Notifications
             await Service.SubmitNotificationAsync(Notification);
 
             return RedirectAfterSaveForNotified();
-        }
-
-        private void SetShouldValidateFull()
-        {
-            Notification.ShouldValidateFull = true;
-            foreach (var property in Notification.GetType().GetProperties())
-            {
-                if (property.PropertyType.IsSubclassOf(typeof(ModelBase)))
-                {
-                    var ownedModel = property.GetValue(Notification);
-                    ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
-                }
-            }
-            Notification.NotificationSites.ForEach(x => x.ShouldValidateFull = Notification.ShouldValidateFull);
-        }
+        }           
 
         private IActionResult RedirectAfterSave(bool isBeingSubmitted)
         {
@@ -145,9 +136,13 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
         {
-            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            await SetNotificationProperties(isBeingSubmitted);
             ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
+        }
 
+        protected async Task SetNotificationProperties(bool isBeingSubmitted)
+        {
+            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
             await GetLinkedNotifications();
         }
 
@@ -162,6 +157,25 @@ namespace ntbs_service.Pages.Notifications
         {
             return ValidationService.IsValid(key);
         }
+
+        protected async Task FindAndSetPostcodeAsync<T>(IPostcodeService postcodeService, T model) where T : IHasPostcode
+        {
+            var foundPostcode = await postcodeService.FindPostcode(model.Postcode);
+            model.PostcodeToLookup = foundPostcode?.Postcode;
+        }
+
+        public async Task<ContentResult> OnGetValidatePostcode<T>(IPostcodeService postcodeService, string postcode, bool shouldValidateFull) where T : ModelBase, IHasPostcode
+        {
+            var foundPostcode = await postcodeService.FindPostcode(postcode);
+            var propertyValueTuples = new List<(string, object)>
+            {
+                ("PostcodeToLookup", foundPostcode?.Postcode),
+                ("Postcode", postcode)
+            };
+
+            return ValidationService.ValidateMultipleProperties<T>(propertyValueTuples, shouldValidateFull);
+        }
+
 
         protected ContentResult CreateJsonResponse(object content)
         {

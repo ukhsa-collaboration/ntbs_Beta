@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.DataAccess
 {
@@ -35,6 +37,7 @@ namespace ntbs_service.DataAccess
         Task<SampleType> GetSampleTypeAsync(int value);
         Task<IList<SampleType>> GetSampleTypesAsync();
         Task<IList<SampleType>> GetSampleTypesForManualTestType(int manualTestTypeId);
+        Task<IList<VenueType>> GetAllVenueTypesAsync();
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -194,6 +197,11 @@ namespace ntbs_service.DataAccess
             return await _context.SampleType
                 .Where(s => s.ManualTestTypeSampleTypes.Any(join => join.ManualTestTypeId == manualTestTypeId))
                 .ToListAsync();
+        }
+
+        public async Task<IList<VenueType>> GetAllVenueTypesAsync()
+        {
+            return await _context.VenueType.ToListAsync();
         }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {

@@ -63,11 +63,8 @@ AND nhsnumber LIKE @NhsNumber
             return new SearchResult
             {
                 Source = "Annual Report",
-                FamilyNames = result.FamilyNames.ToString(),
-                GivenNames = result.GivenNames.ToString(),
                 NhsNumber = result.NHSNumber.ToString(),
-                DateOfBirth = DateTime.Parse(result.DateOfBirth),
-                DateOfNotification = DateTime.Parse(result.NotificationDate)
+                NotificationDate = DateTime.Parse(result.NotificationDate)
             };
         }
     }

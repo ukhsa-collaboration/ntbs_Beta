@@ -2,28 +2,28 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Migrations;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses);
+        IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
+        Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
-        Task UpdateNotificationAsync(Notification notification);
         Task AddNotificationAsync(Notification notification);
-        Task DeleteNotificationAsync(Notification notification);
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<IList<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         bool NotificationExists(int notificationId);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
+        bool NotificationWithLegacyIdExists(string id);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -48,11 +48,6 @@ namespace ntbs_service.DataAccess
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
                 .OrderByDescending(n => n.SubmissionDate);
         }
-        public async Task UpdateNotificationAsync(Notification notification)
-        {
-            _context.Attach(notification).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
 
         public async Task AddNotificationAsync(Notification notification)
         {
@@ -60,15 +55,9 @@ namespace ntbs_service.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteNotificationAsync(Notification notification)
-        {
-            _context.Notification.Remove(notification);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await GetBaseNotificationsIQueryable()
+            return await GetBannerReadyNotificationsIQueryable()
                 .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
@@ -76,6 +65,12 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Any(e => e.NotificationId == notificationId);
+        }
+
+        public bool NotificationWithLegacyIdExists(string id)
+        {
+            return _context.Notification
+                .Any(e => e.LTBRID == id || e.ETSID == id);
         }
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
@@ -89,14 +84,14 @@ namespace ntbs_service.DataAccess
 
         public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId)
         {
-            return await GetBaseNotificationsIQueryable()
+            return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.NotificationSites)
                 .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithTestsAsync(int notificationId)
         {
-            return await GetBaseNotificationsIQueryable()
+            return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.TestData.ManualTestResults)
                     .ThenInclude(t => t.ManualTestType.ManualTestTypeSampleTypes)
                         .ThenInclude(t => t.SampleType)
@@ -105,12 +100,21 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
+        public async Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.SocialContextVenues)
+                    .ThenInclude(s => s.VenueType)
+                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
         {
-            return await GetBaseNotificationsIQueryable()
+            return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Occupation)
                 .Include(n => n.Episode).ThenInclude(p => p.Hospital)
+                .Include(n => n.Episode.CaseManager.CaseManagerTbServices)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
@@ -125,17 +129,20 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.VisitorDetails.Country1)
                 .Include(n => n.VisitorDetails.Country2)
                 .Include(n => n.VisitorDetails.Country3)
+                .Include(n => n.MDRDetails.Country)
+                .Include(n => n.SocialContextVenues)
+                    .ThenInclude(s => s.VenueType)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
-        public IQueryable<Notification> GetBaseQueryableNotificationByStatus(IList<NotificationStatus> statuses)
+        public IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses)
         {
-            return GetBaseNotificationsIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
+            return GetBannerReadyNotificationsIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
         }
 
         public async Task<IList<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids)
         {
-            return await GetBaseNotificationsIQueryable()
+            return await GetBannerReadyNotificationsIQueryable()
                         .Where(n => ids.Contains(n.NotificationId))
                         .Select(n => new NotificationBannerModel(n, true, true))
                         .ToListAsync();
@@ -150,25 +157,28 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
 
+        // Adds enough information to display notification banner, which makes it a good
+        // base for most notification queries. Can be expanded upon for further pages as needed.
+        private IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
+        {
+            return GetBaseNotificationsIQueryable()
+                .Include(n => n.PatientDetails.Country)
+                .Include(n => n.PatientDetails.Sex);
+        } 
+
+        // The base notification model for use in notifications homepage lists.
+        // Can be expanded upon for further pages as needed.
         private IQueryable<Notification> GetBaseNotificationsIQueryable()
         {
             return _context.Notification
                 .Where(n => n.NotificationStatus != NotificationStatus.Deleted)
                 .Include(n => n.PatientDetails)
-                    .ThenInclude(p => p.Sex)
-                .Include(n => n.PatientDetails)
-                    .ThenInclude(p => p.Country)
-                .Include(n => n.PatientDetails)
                     .ThenInclude(p => p.PostcodeLookup)
                         .ThenInclude(pc => pc.LocalAuthority)
                             .ThenInclude(la => la.LocalAuthorityToPHEC)
                                 .ThenInclude(pl => pl.PHEC)
-                .Include(n => n.Episode)
-                    .ThenInclude(p => p.TBService)
-                        .ThenInclude(p => p.PHEC)
-                .Include(n => n.Episode)
-                    .ThenInclude(p => p.CaseManager)
-                        .ThenInclude(p => p.CaseManagerTbServices);
+                .Include(n => n.Episode.TBService.PHEC)
+                .Include(n => n.Episode.CaseManager);
         }
     }
 }

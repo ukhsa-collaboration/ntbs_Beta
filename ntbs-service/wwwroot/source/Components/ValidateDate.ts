@@ -59,6 +59,7 @@ const ValidateDate = Vue.extend({
                         this.$refs["monthInput"].classList.remove("nhsuk-input--error");
                         this.$refs["yearInput"].classList.remove("nhsuk-input--error");
                         this.$refs["errorField"].classList.add("hidden");
+                        this.$emit("validate-multiple");
                     }
                 })
                 .catch((error: any) => {

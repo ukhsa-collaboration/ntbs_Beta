@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Pages_Search;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Search
@@ -76,9 +77,9 @@ namespace ntbs_service.Pages.Search
                 NtbsOffset = ntbsOffset
             };
 
-            var draftsQueryable = _notificationRepository.GetBaseQueryableNotificationByStatus(new List<NotificationStatus>() {
+            var draftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(new List<NotificationStatus>() {
                 NotificationStatus.Draft });
-            var nonDraftsQueryable = _notificationRepository.GetBaseQueryableNotificationByStatus(new List<NotificationStatus>() {
+            var nonDraftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(new List<NotificationStatus>() {
                 NotificationStatus.Notified,
                 NotificationStatus.Denotified });
 

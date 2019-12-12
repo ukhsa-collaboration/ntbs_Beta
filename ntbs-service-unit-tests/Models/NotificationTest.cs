@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
-using ntbs_service.Models;
+﻿using System;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using Xunit;
 

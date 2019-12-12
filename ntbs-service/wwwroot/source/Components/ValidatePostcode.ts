@@ -14,7 +14,7 @@ const ValidatePostcode = Vue.extend({
                 url: `${window.location.pathname}/ValidatePostcode`,
                 headers: getHeaders(),
                 params: {
-                    "shouldValidateFull": this.$props.shouldvalidatefull,
+                    "shouldValidateFull": this.$props.shouldvalidatefull || false,
                     "postcode": newValue
                 }
             }
@@ -26,7 +26,8 @@ const ValidatePostcode = Vue.extend({
                         this.$refs["formGroup"].classList.add("nhsuk-form-group--error");
                         this.$refs["inputField"].classList.add("nhsuk-input--error");
                         this.$refs["errorField"].classList.remove("hidden");
-                        this.$refs["errorField"].textContent = errorMessages[0];
+                        // Get the first error message that was returned
+                        this.$refs["errorField"].textContent = errorMessages[Object.keys(errorMessages)[0]];
                     } else {
                         this.$refs["formGroup"].classList.remove("nhsuk-form-group--error");
                         this.$refs["inputField"].classList.remove("nhsuk-input--error");

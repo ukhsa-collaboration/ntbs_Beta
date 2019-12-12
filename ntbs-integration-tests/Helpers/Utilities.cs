@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ntbs_integration_tests.NotificationPages;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_integration_tests.Helpers
 {
@@ -31,6 +32,8 @@ namespace ntbs_integration_tests.Helpers
         public const int MDR_DETAILS_EXIST = 50;
 
         public const int NOTIFICATION_WITH_MANUAL_TESTS = 51;
+
+        public const int NOTIFICATION_WITH_VENUES = 60;
 
         public const int NOTIFICATION_GROUP_ID = 1;
 
@@ -69,6 +72,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());
             context.Notification.AddRange(EpisodesPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
+            context.Notification.AddRange(SocialContextVenueEditPageTests.GetSeedingNotifications());
 
             context.SaveChanges();
         }
@@ -158,7 +162,7 @@ namespace ntbs_integration_tests.Helpers
                     AlertStatus = AlertStatus.Open,
                     TbServiceCode = PERMITTED_SERVICE_CODE,
                     CreationDate = DateTime.Now,
-                    NotificationId = DRAFT_ID,
+                    NotificationId = NOTIFIED_ID,
                     AlertType = AlertType.Test
                 }
             };

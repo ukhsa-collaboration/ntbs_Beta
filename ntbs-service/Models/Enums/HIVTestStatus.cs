@@ -1,18 +1,18 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
-namespace ntbs_service.Models.Enums 
+namespace ntbs_service.Models.Enums
 {
-    public enum HIVTestStatus {
-        [Display(Name = "HIV status already known")]
+    public enum HIVTestStatus
+    {
+        [DisplayName("HIV status already known")]
         HIVStatusKnown,
-        [Display(Name = "Not offered")]
+        [DisplayName("Not offered")]
         NotOffered,
-        [Display(Name = "Offered and done")]
+        [DisplayName("Offered and done")]
         Offered,
-        [Display(Name = "Offered but not done")]
+        [DisplayName("Offered but not done")]
         OfferedButNotDone,
-        [Display(Name = "Offered but refused")]
+        [DisplayName("Offered but refused")]
         OfferedButRefused
-
     }
 }

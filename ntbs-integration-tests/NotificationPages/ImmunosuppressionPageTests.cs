@@ -63,7 +63,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
 
-            resultDocument.AssertErrorMessage("description", "Please supply immunosuppression other details");
+            resultDocument.AssertErrorSummaryMessage("ImmunosuppressionDetails-OtherDescription", "description", "Please supply immunosuppression other details");
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditPreviousHistory, id), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditSocialContextVenues, id), GetRedirectLocation(result));
 
             var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);

@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages.Search;
-using ntbs_service.Pages_Search;
 using ntbs_service.Services;
 using Xunit;
 
@@ -50,7 +51,7 @@ namespace ntbs_service_unit_tests.Pages
             var tbServiceList = Task.FromResult(tbServices);
             _mockReferenceDataRepository.Setup(s => s.GetAllTbServicesAsync()).Returns(tbServiceList);
 
-            _mockNotificationRepository.Setup(s => s.GetBaseQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
+            _mockNotificationRepository.Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
 
             var unionAndPaginateResult = Task.FromResult(GetNotificationIdsAndCount());
             _mockSearchService.Setup(s => s.OrderAndPaginateQueryablesAsync(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(),

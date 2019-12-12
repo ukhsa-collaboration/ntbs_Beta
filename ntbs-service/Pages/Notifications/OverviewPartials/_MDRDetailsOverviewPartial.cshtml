@@ -1,0 +1,34 @@
+@using ntbs_service.Helpers
+@model OverviewModel
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> MDR Details </h3>
+    <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMDRDetails)"
+       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div>
+<div class="notification-overview-details-container">
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Exposure to known TB case </div>
+            <div class="cell-min-height"> @Model.Notification.MDRDetails.ExposureToKnownCaseStatus </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Relationship to case </div>
+            <div class="cell-min-height"> @Model.Notification.MDRDetails.RelationshipToCase </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Contact case in UK </div>
+            <div class="cell-min-height"> @Model.Notification.MDRDetails.CaseInUKStatus </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> NTBS ID </div>
+            <div class="cell-min-height"> @Model.Notification.MDRDetails.RelatedNotificationId </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Country of contact </div>
+            <div class="cell-min-height"> @Model.Notification.MDRCaseCountryName </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</div>

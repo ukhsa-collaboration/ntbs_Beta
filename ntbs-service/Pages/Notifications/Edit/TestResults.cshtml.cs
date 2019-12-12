@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -42,7 +41,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Children/NewManualTestResult", new { NotificationId });
+            return RedirectToPage("./Items/NewManualTestResult", new { NotificationId });
         }
 
         protected override async Task ValidateAndSave()

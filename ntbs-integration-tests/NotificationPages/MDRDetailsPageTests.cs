@@ -36,8 +36,8 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("relationship-description", "Please supply details of the relationship to case");
-            resultDocument.AssertErrorMessage("case-in-uk", "Please specify whether the contact was a case in the UK");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Please supply details of the relationship to case");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-CaseInUKStatus", "case-in-uk", "Please specify whether the contact was a case in the UK");
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "123",
                 ["MDRDetails.CaseInUKStatus"] = "Yes",
-                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NEW_ID}",
+                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.DRAFT_ID}",
             };
 
             // Act
@@ -63,8 +63,8 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
-            resultDocument.AssertErrorMessage("related-notification", "The NTBS ID does not match an existing ID in the system");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelatedNotificationId", "related-notification", "The NTBS ID does not match an existing ID in the system");
         }
 
         [Fact]
@@ -218,14 +218,15 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("10000", "The NTBS ID does not match an existing ID in the system")]
-        [InlineData("1e1", "The NTBS ID must be an integer")]
-        public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfInvalidId(string attemptedId, string errorMessage)
+        [InlineData(Utilities.DRAFT_ID)]
+        [InlineData(Utilities.DENOTIFIED_ID)]
+        [InlineData(Utilities.NEW_ID)]
+        public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfInvalidId(int attemptedId)
         {
             // Arrange
             var formData = new Dictionary<string, string>
             {
-                ["value"] = attemptedId
+                ["value"] = $"{attemptedId}"
             };
 
             // Act
@@ -233,7 +234,24 @@ namespace ntbs_integration_tests.NotificationPages
 
              // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains(errorMessage, result);
+            Assert.Contains("The NTBS ID does not match an existing ID in the system", result);
+        }
+
+        [Fact]
+        public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfIdNotInteger()
+        {
+            // Arrange
+            var formData = new Dictionary<string, string>
+            {
+                ["value"] = "1e1"
+            };
+
+            // Act
+            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateMDRDetailsRelatedNotification"));
+
+             // Assert
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains("The NTBS ID must be an integer", result);
         }
 
         [Fact]

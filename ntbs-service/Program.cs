@@ -4,7 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ntbs_service.Models;
+using ntbs_service.DataAccess;
 using Serilog;
 using Serilog.Events;
 

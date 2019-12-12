@@ -2,8 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using System;
-using System.Security.Claims;
-using System.Collections.Generic;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models
 {

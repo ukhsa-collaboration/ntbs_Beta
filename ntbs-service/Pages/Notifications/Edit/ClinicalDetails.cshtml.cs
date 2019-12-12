@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -135,10 +137,10 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("Notification.NotificationSites", ValidationMessages.DiseaseSiteIsRequired);
             }
 
-            TryValidateModel(ClinicalDetails, ClinicalDetails.GetType().Name);
+            TryValidateModel(ClinicalDetails, nameof(ClinicalDetails));
             if (OtherSite != null)
             {
-                TryValidateModel(OtherSite, OtherSite.GetType().Name);
+                TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
             await CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState();
@@ -267,10 +269,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
         {
-            var propertyValueTuples = new List<Tuple<string, object>>();
+            List<(string, object)> propertyValueTuples = new List<(string key, object property)>();
             foreach (var keyValuePair in keyValuePairs)
             {
-                propertyValueTuples.Add(new Tuple<string, object>(keyValuePair["key"], keyValuePair["value"]));
+                propertyValueTuples.Add((keyValuePair["key"], keyValuePair["value"]));
             }
             return ValidationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
         }
