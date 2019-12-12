@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 
@@ -8,7 +8,7 @@ namespace ntbs_service.Models.Entities
     public abstract class Alert
     {
         public int AlertId { get; set; }
-        [DisplayName("NTBS Id")]
+        [Display(Name = "NTBS Id")]
         public int? NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
         public DateTime CreationDate { get; set; }
@@ -19,15 +19,15 @@ namespace ntbs_service.Models.Entities
         public AlertStatus AlertStatus { get; set; }
         public DateTime? ClosureDate { get; set; }
         public string ClosingUserId { get; set; }
-        [DisplayName("Alert type")]
+        [Display(Name = "Alert type")]
         public AlertType AlertType { get; set; }
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
-        [DisplayName("Alert date")]
+        [Display(Name = "Alert date")]
         public string FormattedCreationDate => FormatDate(CreationDate);
-        [DisplayName("Case manager")]
+        [Display(Name = "Case manager")]
         public string CaseManagerFullName => CaseManager?.FullName ?? "System";
-        [DisplayName("TB Service")]
+        [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
 
         private string FormatDate(DateTime? date)

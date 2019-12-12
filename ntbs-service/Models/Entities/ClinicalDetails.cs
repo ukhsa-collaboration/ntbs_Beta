@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
@@ -12,28 +12,28 @@ namespace ntbs_service.Models.Entities
     {
         public bool? IsSymptomatic { get; set; }
 
-        [DisplayName("Symptom onset date")]
+        [Display(Name = "Symptom onset date")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? SymptomStartDate { get; set; }
 
-        [DisplayName("Presentation to any health service")]
+        [Display(Name = "Presentation to any health service")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? FirstPresentationDate { get; set; }
 
-        [DisplayName("Presentation to TB service")]
+        [Display(Name = "Presentation to TB service")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TBServicePresentationDate { get; set; }
 
-        [DisplayName("Diagnosis date")]
+        [Display(Name = "Diagnosis date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DiagnosisDate { get; set; }
 
-        [DisplayName("Treatment start date")]
+        [Display(Name = "Treatment start date")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? TreatmentStartDate { get; set; }
 
-        [DisplayName("Date of death")]
+        [Display(Name = "Date of death")]
         [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.FieldRequired)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? DeathDate { get; set; }
@@ -42,7 +42,7 @@ namespace ntbs_service.Models.Entities
         public bool? IsPostMortem { get; set; }
 
         public Status? BCGVaccinationState { get; set; }
-        [DisplayName("BCG vaccination year")]
+        [Display(Name = "BCG vaccination year")]
         [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         public int? BCGVaccinationYear { get; set; }
         public HIVTestStatus? HIVTestState { get; set; }
@@ -53,7 +53,7 @@ namespace ntbs_service.Models.Entities
         [OnlyOneTrue("IsShortCourseTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
         public bool? IsMDRTreatment { get; set; }
 
-        [DisplayName("RR/MDR/XDR treatment date")]
+        [Display(Name = "RR/MDR/XDR treatment date")]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         public DateTime? MDRTreatmentStartDate { get; set; }
         public Status? DotStatus { get; set; }

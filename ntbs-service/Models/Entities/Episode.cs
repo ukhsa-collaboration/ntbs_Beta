@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,22 +14,22 @@ namespace ntbs_service.Models.Entities
     {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [DisplayName("Consultant")]
+        [Display(Name = "Consultant")]
         public string Consultant { get; set; }
 
         [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
-        [DisplayName("Case Manager")]
+        [Display(Name = "Case Manager")]
         public string CaseManagerEmail { get; set; }
         public virtual CaseManager CaseManager { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
-        [DisplayName("TB Service")]
+        [Display(Name = "TB Service")]
         public string TBServiceCode { get; set; }
         public virtual TBService TBService { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"HospitalBelongsToTbService", ErrorMessage = ValidationMessages.HospitalMustBelongToSelectedTbSerice)]
-        [DisplayName("Hospital")]
+        [Display(Name = "Hospital")]
         public Guid? HospitalId { get; set; }
         public virtual Hospital Hospital { get; set; }
 
@@ -59,7 +58,7 @@ namespace ntbs_service.Models.Entities
 
 
         [NotMapped]
-        [DisplayName("Case Manager")]
+        [Display(Name = "Case Manager")]
         public string CaseManagerName => CaseManager?.FullName;
     }
 }

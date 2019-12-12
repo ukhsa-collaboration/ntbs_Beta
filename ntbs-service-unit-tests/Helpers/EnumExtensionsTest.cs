@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using ntbs_service.Helpers;
 using Xunit;
 
@@ -9,13 +10,13 @@ namespace ntbs_service_tests.UnitTests.Helpers
 
         private enum TestEnum
         {
-            [DisplayName("display name")]
+            [Display(Name = "display name")]
             withDisplayAttribute,
             withoutDisplayAttribute
         };
 
         [Fact]
-        public void GetDisplayName_ReturnsNameFromDisplayNameAttribute()
+        public void GetDisplayName_ReturnsNameFromDisplayAttribute()
         {
             // Act
             var displayName = TestEnum.withDisplayAttribute.GetDisplayName();
@@ -25,7 +26,7 @@ namespace ntbs_service_tests.UnitTests.Helpers
         }
 
         [Fact]
-        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayNameAttribute()
+        public void GetDisplayName_ReturnsEmptyStringIfNoDisplayAttribute()
         {
             // Act
             var displayName = TestEnum.withoutDisplayAttribute.GetDisplayName();

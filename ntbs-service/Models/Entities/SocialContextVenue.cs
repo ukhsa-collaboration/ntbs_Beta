@@ -1,11 +1,9 @@
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.Interfaces;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
@@ -19,13 +17,13 @@ namespace ntbs_service.Models.Entities
         // on every TryValidateModel(venue)
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
-        [DisplayName("Venue type")]
+        [Display(Name = "Venue type")]
         public int? VenueTypeId { get; set; }
         public virtual VenueType VenueType { get; set; }
 
         [MaxLength(40)]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
-        [DisplayName("Venue name")]
+        [Display(Name = "Venue name")]
         public string Name { get; set; }
 
         [MaxLength(150)]
@@ -33,34 +31,34 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
-        [DisplayName("Address")]
+        [Display(Name = "Address")]
         public string Address { get; set; }
 
         [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
-        [DisplayName("Postcode")]
+        [Display(Name = "Postcode")]
         public string Postcode { get; set; }
 
-        [DisplayName("Frequency")]
+        [Display(Name = "Frequency")]
         public Frequency? Frequency { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [AssertThat(@"DateFromAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
-        [DisplayName("From")]
+        [Display(Name = "From")]
         public DateTime? DateFrom { get ; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [AssertThat(@"DateToAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [AssertThat(@"DateFrom == null || DateTo > DateFrom", ErrorMessage = ValidationMessages.VenueDateToShouldBeLaterThanDateFrom)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
-        [DisplayName("To")]
+        [Display(Name = "To")]
         public DateTime? DateTo { get ; set; }
 
         [MaxLength(100)]
         [RegularExpression(
             ValidationRegexes.CharacterValidation,
             ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [DisplayName("Comments")]
+        [Display(Name = "Comments")]
         public string Details { get; set; }
 
         /// <summary>
