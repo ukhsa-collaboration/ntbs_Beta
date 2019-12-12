@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Interfaces;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
@@ -15,29 +15,29 @@ namespace ntbs_service.Models.Entities
         [StringLength(35)]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [Display(Name = "Family name")]
+        [DisplayName("Family name")]
         public string FamilyName { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [StringLength(35)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [Display(Name = "Given name")]
+        [DisplayName("Given name")]
         public string GivenName { get; set; }
 
         [RequiredIf(@"ShouldValidateFull && !NhsNumberNotKnown", ErrorMessage = ValidationMessages.FieldRequired)]
         [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
         [StringLength(10, MinimumLength = 10, ErrorMessage = ValidationMessages.NhsNumberLength)]
-        [Display(Name = "NHS number")]
+        [DisplayName("NHS number")]
         public string NhsNumber { get; set; }
 
         [MaxLength(50)]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
-        [Display(Name = "Local Patient Id")]
+        [DisplayName("Local Patient Id")]
         public string LocalPatientId { get; set; }
 
-        [Display(Name = "Date of birth")]
+        [DisplayName("Date of birth")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
         public DateTime? Dob { get; set; }

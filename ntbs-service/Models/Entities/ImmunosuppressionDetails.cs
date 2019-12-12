@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace ntbs_service.Models.Entities
     public class ImmunosuppressionDetails : ModelBase
     {
         [AssertThat(@"Status != Enums.Status.Yes
-            || (HasBioTherapy || HasTransplantation || HasOther)", 
+            || (HasBioTherapy || HasTransplantation || HasOther)",
             ErrorMessage = ValidationMessages.ImmunosuppressionTypeRequired)]
         public Status? Status { get; set; }
 
@@ -23,7 +24,7 @@ namespace ntbs_service.Models.Entities
             ErrorMessage = ValidationMessages.ImmunosuppressionDetailRequired)]
         [MaxLength(100)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [Display(Name = "Details")]
+        [DisplayName("Details")]
         public string OtherDescription { get; set; }
 
         public string CreateTypesOfImmunosuppressionString()

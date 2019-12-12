@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities
     {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [Display(Name = "Consultant")]
+        [DisplayName("Consultant")]
         public string Consultant { get; set; }
 
         [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
