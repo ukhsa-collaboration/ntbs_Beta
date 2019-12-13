@@ -39,7 +39,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Children/NewTreatmentEvent", new { NotificationId });
+            return RedirectToPage("./Items/NewTreatmentEvent", new { NotificationId });
         }
 
 #pragma warning disable 1998

@@ -12,7 +12,7 @@ using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages.Notifications.Edit.Children
+namespace ntbs_service.Pages.Notifications.Edit.Items
 {
     public class TreatmentEventModel : NotificationEditModelBase
     {
