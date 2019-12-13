@@ -150,9 +150,18 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorMessage("test-date", string.Format(ValidationMessages.RequiredEnter, "Test date"));
-            resultDocument.AssertErrorMessage("test-type", string.Format(ValidationMessages.RequiredSelect, "Test type"));
-            resultDocument.AssertErrorMessage("result", string.Format(ValidationMessages.RequiredSelect, "Result"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TestResultForEdit-TestDate",
+                "test-date", 
+                string.Format(ValidationMessages.RequiredEnter, "Test date"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TestResultForEdit-ManualTestTypeId",
+                "test-type", 
+                string.Format(ValidationMessages.RequiredSelect, "Test type"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TestResultForEdit-Result",
+                "result", 
+                string.Format(ValidationMessages.RequiredSelect, "Result"));
         }
 
         [Fact]
@@ -206,7 +215,10 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.RequiredSelect, "Sample type"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TestResultForEdit-SampleTypeId",
+                "sample-type",
+    string.Format(ValidationMessages.RequiredSelect, "Sample type"));
         }
 
         [Fact]
@@ -232,7 +244,10 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertValidationErrorResponse();
-            resultDocument.AssertErrorMessage("sample-type", string.Format(ValidationMessages.InvalidTestAndSampleTypeCombination, "Sample type"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TestResultForEdit-SampleTypeId",
+                "sample-type",
+                string.Format(ValidationMessages.InvalidTestAndSampleTypeCombination, "Sample type"));
         }
 
         [Fact]

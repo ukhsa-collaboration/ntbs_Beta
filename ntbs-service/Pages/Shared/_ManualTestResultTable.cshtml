@@ -36,7 +36,7 @@
             {
                 <nhs-table-body-row id="manual-test-result-@result.ManualTestResultId">
                     <nhs-table-item>
-                        @result.TestDate?.ConvertToFormattedDate()
+                        @result.TestDate?.ConvertToString()
                     </nhs-table-item>
                     <nhs-table-item>
                         @result.ManualTestType.Description

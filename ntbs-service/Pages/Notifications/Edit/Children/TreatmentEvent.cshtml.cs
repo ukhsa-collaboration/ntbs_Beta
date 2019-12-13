@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -87,8 +86,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
             TreatmentEvent.Dob = Notification.PatientDetails.Dob;
             TreatmentEvent.DateOfNotification = Notification.NotificationDate;
 
-            // Manual handling of TreatmentOutcomeId below will cover all validation on property
-            ModelState.Remove("TreatmentEvent.TreatmentOutcomeId");
+
             switch (TreatmentEvent.TreatmentEventType)
             {
                 case TreatmentEventType.TreatmentOutcome:
@@ -110,6 +108,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
                     TreatmentEvent.TreatmentEventId = RowId.Value;
                     await _treatmentEventRepository.UpdateAsync(Notification, TreatmentEvent);
                 }
+            }
+            else
+            {
+                // Manual handling of TreatmentOutcomeId in switch statement above will cover all validation for property
+                ModelState.Remove("TreatmentEvent.TreatmentOutcomeId");
             }
         }
 
@@ -169,7 +172,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

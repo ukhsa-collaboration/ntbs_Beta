@@ -6,6 +6,9 @@
 
 <div class="table-row-form">
     <nhs-width-container container-width="Standard">
+
+        <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial" />
+
         <h3> @(Model.RowId == null ? "Add new " : "Edit ") treatment event</h3>
 
         <form method="post" autocomplete="off">
@@ -18,7 +21,9 @@
                             var hasEventDateError = !Model.IsValid("TreatmentEvent.EventDate");
                             var eventDateGroupState = hasEventDateError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type="@eventDateGroupState" aria-describedby="event-date-error">
+                        <nhs-form-group nhs-form-group-type="@eventDateGroupState"
+                                        aria-describedby="event-date-error"
+                                        id="TreatmentEvent-EventDate">
                             <nhs-fieldset role="group" aria-describedby="event-date-error">
                                 <nhs-fieldset-legend nhs-legend-size="Standard">
                                     @Html.DisplayNameFor(m => m.TreatmentEvent.EventDate)
@@ -80,7 +85,9 @@
                                     var hasTreatmentEventTypeError = !Model.IsValid("TreatmentEvent.TreatmentEventType");
                                     var treatmentEventTypeGroupState = hasTreatmentEventTypeError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type="@treatmentEventTypeGroupState" aria-describedby="treatmentevent-type-error">
+                                <nhs-form-group nhs-form-group-type="@treatmentEventTypeGroupState" 
+                                                aria-describedby="treatmentevent-type-error"
+                                                id="TreatmentEvent-TreatmentEventType">
                                     <label nhs-label-type="Standard" for="treatmentevent-type">
                                         @Html.DisplayNameFor(m => m.TreatmentEvent.TreatmentEventType)
                                     </label>
@@ -111,7 +118,9 @@
                                             var outcomeTypeGroupState = hasOutcomeTypeError ? Error : Standard;
                                             var outcomeTypeSelectErrorState = hasOutcomeTypeError ? SelectType.Error : SelectType.Standard;
                                         }
-                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState" aria-describedby="treatmentoutcome-type-error">
+                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState" 
+                                                        aria-describedby="treatmentoutcome-type-error"
+                                                        id="SelectedTreatmentOutcomeType">
                                             <label nhs-label-type="Standard" for="treatmentoutcome-type">
                                                 @Html.DisplayNameFor(m => m.SelectedTreatmentOutcomeType)
                                             </label>
@@ -138,7 +147,9 @@
                                         var outcomeSubTypeGroupState = hasOutcomeSubTypeError ? Error : Standard;
                                         var outcomeSubTypeSelectErrorState = hasOutcomeSubTypeError ? SelectType.Error : SelectType.Standard;
                                     }
-                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState" aria-describedby="treatmentoutcome-subtype-error">
+                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState" 
+                                                    aria-describedby="treatmentoutcome-subtype-error"
+                                                    id="SelectedTreatmentOutcomeSubType">
                                         <label nhs-label-type="Standard" for="treatmentoutcome-subtype">
                                             @Html.DisplayNameFor(m => m.SelectedTreatmentOutcomeSubType)
                                         </label>
@@ -167,7 +178,9 @@
                         var noteTextAreaType = hasNoteError ? TextAreaType.Error : TextAreaType.Standard;
                     }
                     <validate-input model="TreatmentEvent" property="Note" inline-template>
-                        <nhs-form-group nhs-form-group-type="@noteFormState" aria-describedby="treatmentevent-note-error">
+                        <nhs-form-group nhs-form-group-type="@noteFormState" 
+                                        aria-describedby="treatmentevent-note-error"
+                                        id="TreatmentEvent-Note">
                             <label nhs-label-type="Standard" for="treatmentevent-note">
                                 @Html.DisplayNameFor(m => m.TreatmentEvent.Note)
                             </label>

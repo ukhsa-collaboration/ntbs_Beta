@@ -252,8 +252,14 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertValidationErrorResponse();
             var resultDocument = await GetDocumentAsync(result);
 
-            resultDocument.AssertErrorMessage("event-date", string.Format(ValidationMessages.RequiredEnter, "Event Date"));
-            resultDocument.AssertErrorMessage("treatmentevent-type", string.Format(ValidationMessages.RequiredSelect, "Event"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TreatmentEvent-EventDate",
+                "event-date",
+                string.Format(ValidationMessages.RequiredEnter, "Event Date"));
+            resultDocument.AssertErrorSummaryMessage(
+                "TreatmentEvent-TreatmentEventType",
+                "treatmentevent-type", 
+                string.Format(ValidationMessages.RequiredSelect, "Event"));
         }
 
         [Fact]
@@ -275,7 +281,10 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertValidationErrorResponse();
             var resultDocument = await GetDocumentAsync(result);
 
-            resultDocument.AssertErrorMessage("treatmentoutcome-type", string.Format(ValidationMessages.RequiredSelect, "Outcome value"));
+            resultDocument.AssertErrorSummaryMessage(
+                "SelectedTreatmentOutcomeType",
+                "treatmentoutcome-type", 
+                string.Format(ValidationMessages.RequiredSelect, "Outcome value"));
         }
 
 
