@@ -38,11 +38,13 @@ namespace ntbs_service.Services
             return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
         }
 
-        public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
+        public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(
+            INotificationSearchBuilder firstBuilder,
+            INotificationSearchBuilder secondBuilder,
             PaginationParameters paginationParameters)
         {
-            IQueryable<Notification> notificationIdsQueryable = OrderQueryableByNotificationDate(firstQueryable)
-                                                                .Union(OrderQueryableByNotificationDate(secondQueryable));
+            var notificationIdsQueryable = OrderQueryableByNotificationDate(firstBuilder.GetResult())
+                                                                .Union(OrderQueryableByNotificationDate(secondBuilder.GetResult()));
 
             var notificationIds = await GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), paginationParameters);
             var count = await notificationIdsQueryable.CountAsync();

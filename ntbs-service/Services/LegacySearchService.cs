@@ -19,7 +19,7 @@ namespace ntbs_service.Services
     
     public interface ILegacySearchService
     {
-        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int pageSize);
+        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -29,7 +29,9 @@ namespace ntbs_service.Services
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            WHERE n.OldNotificationId = '100-1' OR n.GroupId = '100-1' AND n.Source = 'LTBR' OR dmg.NhsNumber = '100-1'
+            ";
+            
+        const string QueryEnd = @"
             ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
@@ -53,7 +55,7 @@ namespace ntbs_service.Services
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
         }
 
-        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch, onbject x)
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int numberToFetch)
         {
             if (!_configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE))
             {
@@ -62,21 +64,22 @@ namespace ntbs_service.Services
 
             IEnumerable<dynamic> results;
             int count;
+            var (sqlQuery, parameters) = builder.GetResult();
+            parameters.Offset = offset;
+            parameters.Fetch = numberToFetch;
+            
+            object parametersObject = parameters;
+            string fullQuery = Query + sqlQuery + QueryEnd;
             
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                results = await connection.QueryAsync(Query, new
-                {
-                    Offset = offset,
-                    Fetch = numberToFetch,
-                    id = x.IdFilter
-                });
+                results = await connection.QueryAsync(fullQuery, parametersObject);
 
                 count = (await connection.QueryAsync<int>(CountQuery)).Single();
             }
-            var xws = AsNotificationBannerAsync(results.First()).Result;
+            
             var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
             return (notificationBannerModels, count);
         }

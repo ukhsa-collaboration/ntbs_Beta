@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
@@ -8,25 +9,25 @@ namespace ntbs_service.Services
 {
     public interface ILegacySearchBuilder : ISearchBuilderParent
     {
-        string GetResult();
+        (string, dynamic) GetResult();
     }
 
     public class LegacySearchBuilder : ILegacySearchBuilder
     {
         string sqlSearchBuilder;
-        object parameters;
+        dynamic parameters;
         
         public LegacySearchBuilder()
         {
             this.sqlSearchBuilder = "";
-            this.parameters = new object();
+            this.parameters = new ExpandoObject();
         }
 
         public ISearchBuilderParent FilterById(string id)
         {
             if (!string.IsNullOrEmpty(id))
             {
-                sqlSearchBuilder += "WHERE n.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @IdFilter";
+                sqlSearchBuilder += "WHERE n.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id";
                 parameters.id = id;
             }
             return this;
@@ -72,9 +73,9 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public string GetResult()
+        public (string, dynamic) GetResult()
         {
-            return (sqlSearchBuilder, params);
+            return (sqlSearchBuilder, parameters);
         }
     }
 }
