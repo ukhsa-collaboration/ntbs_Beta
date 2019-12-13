@@ -144,7 +144,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBannerReadyNotificationsIQueryable()
                         .Where(n => ids.Contains(n.NotificationId))
-                        .Select(n => new NotificationBannerModel(n, true, true))
+                        .Select(n => new NotificationBannerModel(n, false, true))
                         .ToListAsync();
         }
 

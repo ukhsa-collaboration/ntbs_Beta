@@ -62,7 +62,7 @@ namespace ntbs_service.Pages.Search
                 nameof(Country.Name));
         }
 
-        public async Task<IActionResult> OnGetAsync(int? pageIndex, int? legacyOffset, int? ntbsOffset, int? previousLegacyOffset, int? previousNtbsOffset)
+        public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? legacyOffset = null, int? ntbsOffset = null, int? previousLegacyOffset = null, int? previousNtbsOffset = null)
         {
             if (!ModelState.IsValid)
             {
