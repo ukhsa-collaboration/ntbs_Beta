@@ -140,12 +140,12 @@ namespace ntbs_service.DataAccess
             return GetBannerReadyNotificationsIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
         }
 
-        public async Task<IList<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids)
+        public async Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids)
         {
-            return await GetBannerReadyNotificationsIQueryable()
+            return (await GetBannerReadyNotificationsIQueryable()
                         .Where(n => ids.Contains(n.NotificationId))
-                        .Select(n => new NotificationBannerModel(n, false, true))
-                        .ToListAsync();
+                        .ToListAsync())
+                        .Select(n => new NotificationBannerModel(n, showLink: true));
         }
 
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)
