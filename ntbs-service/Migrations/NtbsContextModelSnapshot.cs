@@ -132,6 +132,8 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ClusterId");
+
                     b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("DeletionReason")
@@ -155,7 +157,11 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
+                    b.HasIndex("ETSID");
+
                     b.HasIndex("GroupId");
+
+                    b.HasIndex("LTBRID");
 
                     b.HasIndex("NotificationStatus");
 
@@ -190,6 +196,48 @@ namespace ntbs_service.Migrations
                     b.ToTable("NotificationSite");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextVenue", b =>
+                {
+                    b.Property<int>("SocialContextVenueId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(150);
+
+                    b.Property<DateTime?>("DateFrom")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("DateTo")
+                        .IsRequired();
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Frequency")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40);
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("Postcode");
+
+                    b.Property<int?>("VenueTypeId")
+                        .IsRequired();
+
+                    b.HasKey("SocialContextVenueId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("VenueTypeId");
+
+                    b.ToTable("SocialContextVenue");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
                 {
                     b.Property<int>("NotificationId");
@@ -199,6 +247,569 @@ namespace ntbs_service.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("TestData");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.VenueType", b =>
+                {
+                    b.Property<int>("VenueTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Category");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("VenueTypeId");
+
+                    b.ToTable("VenueType");
+
+                    b.HasData(
+                        new
+                        {
+                            VenueTypeId = 1,
+                            Category = "Workplace",
+                            Name = "Armed forces"
+                        },
+                        new
+                        {
+                            VenueTypeId = 2,
+                            Category = "Workplace",
+                            Name = "Catering"
+                        },
+                        new
+                        {
+                            VenueTypeId = 3,
+                            Category = "Workplace",
+                            Name = "Construction"
+                        },
+                        new
+                        {
+                            VenueTypeId = 4,
+                            Category = "Workplace",
+                            Name = "Driving"
+                        },
+                        new
+                        {
+                            VenueTypeId = 5,
+                            Category = "Workplace",
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            VenueTypeId = 6,
+                            Category = "Workplace",
+                            Name = "Emergency services"
+                        },
+                        new
+                        {
+                            VenueTypeId = 7,
+                            Category = "Workplace",
+                            Name = "Factory"
+                        },
+                        new
+                        {
+                            VenueTypeId = 8,
+                            Category = "Workplace",
+                            Name = "Farming"
+                        },
+                        new
+                        {
+                            VenueTypeId = 9,
+                            Category = "Workplace",
+                            Name = "Hospital or medical centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 10,
+                            Category = "Workplace",
+                            Name = "Office"
+                        },
+                        new
+                        {
+                            VenueTypeId = 11,
+                            Category = "Workplace",
+                            Name = "Pub, bar or club"
+                        },
+                        new
+                        {
+                            VenueTypeId = 12,
+                            Category = "Workplace",
+                            Name = "Restaurant or cafe"
+                        },
+                        new
+                        {
+                            VenueTypeId = 13,
+                            Category = "Workplace",
+                            Name = "Hospitality"
+                        },
+                        new
+                        {
+                            VenueTypeId = 14,
+                            Category = "Workplace",
+                            Name = "Retail"
+                        },
+                        new
+                        {
+                            VenueTypeId = 15,
+                            Category = "Workplace",
+                            Name = "Warehouse"
+                        },
+                        new
+                        {
+                            VenueTypeId = 16,
+                            Category = "Workplace",
+                            Name = "Hair/beauty salon"
+                        },
+                        new
+                        {
+                            VenueTypeId = 17,
+                            Category = "Workplace",
+                            Name = "Health club or spa"
+                        },
+                        new
+                        {
+                            VenueTypeId = 18,
+                            Category = "Workplace",
+                            Name = "Recreational centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 19,
+                            Category = "Workplace",
+                            Name = "Other workplace"
+                        },
+                        new
+                        {
+                            VenueTypeId = 20,
+                            Category = "Place of worship",
+                            Name = "Church"
+                        },
+                        new
+                        {
+                            VenueTypeId = 21,
+                            Category = "Place of worship",
+                            Name = "Temple"
+                        },
+                        new
+                        {
+                            VenueTypeId = 22,
+                            Category = "Place of worship",
+                            Name = "Mosque"
+                        },
+                        new
+                        {
+                            VenueTypeId = 23,
+                            Category = "Place of worship",
+                            Name = "Community centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 24,
+                            Category = "Place of worship",
+                            Name = "Multi-faith centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 25,
+                            Category = "Place of worship",
+                            Name = "Synagogue"
+                        },
+                        new
+                        {
+                            VenueTypeId = 26,
+                            Category = "Place of worship",
+                            Name = "Other place of worship"
+                        },
+                        new
+                        {
+                            VenueTypeId = 27,
+                            Category = "Social",
+                            Name = "Arcade/gambling venue"
+                        },
+                        new
+                        {
+                            VenueTypeId = 28,
+                            Category = "Social",
+                            Name = "Pub, bar or club"
+                        },
+                        new
+                        {
+                            VenueTypeId = 29,
+                            Category = "Social",
+                            Name = "Restaurant or cafe"
+                        },
+                        new
+                        {
+                            VenueTypeId = 30,
+                            Category = "Social",
+                            Name = "Library"
+                        },
+                        new
+                        {
+                            VenueTypeId = 31,
+                            Category = "Social",
+                            Name = "Cinema"
+                        },
+                        new
+                        {
+                            VenueTypeId = 32,
+                            Category = "Social",
+                            Name = "Shopping centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 33,
+                            Category = "Social",
+                            Name = "Hair/beauty salon"
+                        },
+                        new
+                        {
+                            VenueTypeId = 34,
+                            Category = "Social",
+                            Name = "Health club or spa"
+                        },
+                        new
+                        {
+                            VenueTypeId = 35,
+                            Category = "Social",
+                            Name = "Exercise class"
+                        },
+                        new
+                        {
+                            VenueTypeId = 36,
+                            Category = "Social",
+                            Name = "Recreational centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 37,
+                            Category = "Social",
+                            Name = "Music classes"
+                        },
+                        new
+                        {
+                            VenueTypeId = 38,
+                            Category = "Social",
+                            Name = "Community centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 39,
+                            Category = "Social",
+                            Name = "Job/unemployment centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 40,
+                            Category = "Social",
+                            Name = "Crack house/smoking den"
+                        },
+                        new
+                        {
+                            VenueTypeId = 41,
+                            Category = "Social",
+                            Name = "Friends house"
+                        },
+                        new
+                        {
+                            VenueTypeId = 42,
+                            Category = "Social",
+                            Name = "Other social venue"
+                        },
+                        new
+                        {
+                            VenueTypeId = 43,
+                            Category = "Childcare & education",
+                            Name = "Pre-school or play group"
+                        },
+                        new
+                        {
+                            VenueTypeId = 44,
+                            Category = "Childcare & education",
+                            Name = "Nursery"
+                        },
+                        new
+                        {
+                            VenueTypeId = 45,
+                            Category = "Childcare & education",
+                            Name = "Primary school"
+                        },
+                        new
+                        {
+                            VenueTypeId = 46,
+                            Category = "Childcare & education",
+                            Name = "Secondary school"
+                        },
+                        new
+                        {
+                            VenueTypeId = 47,
+                            Category = "Childcare & education",
+                            Name = "College or sixth form"
+                        },
+                        new
+                        {
+                            VenueTypeId = 48,
+                            Category = "Childcare & education",
+                            Name = "After school clubs"
+                        },
+                        new
+                        {
+                            VenueTypeId = 49,
+                            Category = "Childcare & education",
+                            Name = "University"
+                        },
+                        new
+                        {
+                            VenueTypeId = 50,
+                            Category = "Childcare & education",
+                            Name = "Adult education"
+                        },
+                        new
+                        {
+                            VenueTypeId = 51,
+                            Category = "Childcare & education",
+                            Name = "Private tutoring"
+                        },
+                        new
+                        {
+                            VenueTypeId = 52,
+                            Category = "Childcare & education",
+                            Name = "Religious learning centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 53,
+                            Category = "Childcare & education",
+                            Name = "Other childcare & education"
+                        },
+                        new
+                        {
+                            VenueTypeId = 54,
+                            Category = "Place of detention",
+                            Name = "Immigration detention centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 55,
+                            Category = "Place of detention",
+                            Name = "Prison"
+                        },
+                        new
+                        {
+                            VenueTypeId = 56,
+                            Category = "Place of detention",
+                            Name = "Youth detention centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 57,
+                            Category = "Place of detention",
+                            Name = "Other place of detention"
+                        },
+                        new
+                        {
+                            VenueTypeId = 58,
+                            Category = "Treatment and rehab",
+                            Name = "Alcohol rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 59,
+                            Category = "Treatment and rehab",
+                            Name = "Drug rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 60,
+                            Category = "Treatment and rehab",
+                            Name = "Medical or physical rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 61,
+                            Category = "Treatment and rehab",
+                            Name = "Mental health rehabilitation centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 62,
+                            Category = "Treatment and rehab",
+                            Name = "Other treatment or rehab centre"
+                        },
+                        new
+                        {
+                            VenueTypeId = 63,
+                            Category = "Health and care",
+                            Name = "Crisis centre or refuge"
+                        },
+                        new
+                        {
+                            VenueTypeId = 64,
+                            Category = "Residential",
+                            Name = "Initial accommodation centre "
+                        },
+                        new
+                        {
+                            VenueTypeId = 65,
+                            Category = "Residential",
+                            Name = "Dispersal accommodation "
+                        },
+                        new
+                        {
+                            VenueTypeId = 66,
+                            Category = "Residential",
+                            Name = "Homeless shelter"
+                        },
+                        new
+                        {
+                            VenueTypeId = 67,
+                            Category = "Residential",
+                            Name = "Squat"
+                        },
+                        new
+                        {
+                            VenueTypeId = 68,
+                            Category = "Residential",
+                            Name = "Care home"
+                        },
+                        new
+                        {
+                            VenueTypeId = 69,
+                            Category = "Residential",
+                            Name = "Halfway house"
+                        },
+                        new
+                        {
+                            VenueTypeId = 70,
+                            Category = "Residential",
+                            Name = "Hostel"
+                        },
+                        new
+                        {
+                            VenueTypeId = 71,
+                            Category = "Residential",
+                            Name = "Hall of residence"
+                        },
+                        new
+                        {
+                            VenueTypeId = 72,
+                            Category = "Residential",
+                            Name = "Sofa surfing"
+                        },
+                        new
+                        {
+                            VenueTypeId = 73,
+                            Category = "Residential",
+                            Name = "Other residential"
+                        },
+                        new
+                        {
+                            VenueTypeId = 74,
+                            Category = "Health and care",
+                            Name = "Hospital"
+                        },
+                        new
+                        {
+                            VenueTypeId = 75,
+                            Category = "Health and care",
+                            Name = "Walk-in Centre/Minor Injuries"
+                        },
+                        new
+                        {
+                            VenueTypeId = 76,
+                            Category = "Health and care",
+                            Name = "Pharmacy"
+                        },
+                        new
+                        {
+                            VenueTypeId = 77,
+                            Category = "Health and care",
+                            Name = "GP Practice"
+                        },
+                        new
+                        {
+                            VenueTypeId = 78,
+                            Category = "Health and care",
+                            Name = "Nursing Home"
+                        },
+                        new
+                        {
+                            VenueTypeId = 79,
+                            Category = "Health and care",
+                            Name = "Hospice"
+                        },
+                        new
+                        {
+                            VenueTypeId = 80,
+                            Category = "Health and care",
+                            Name = "Health Centre/Clinic"
+                        },
+                        new
+                        {
+                            VenueTypeId = 81,
+                            Category = "Health and care",
+                            Name = "Other heathcare"
+                        },
+                        new
+                        {
+                            VenueTypeId = 82,
+                            Category = "Transport",
+                            Name = "Car"
+                        },
+                        new
+                        {
+                            VenueTypeId = 83,
+                            Category = "Transport",
+                            Name = "Bus"
+                        },
+                        new
+                        {
+                            VenueTypeId = 84,
+                            Category = "Transport",
+                            Name = "Train"
+                        },
+                        new
+                        {
+                            VenueTypeId = 85,
+                            Category = "Transport",
+                            Name = "Tram"
+                        },
+                        new
+                        {
+                            VenueTypeId = 86,
+                            Category = "Transport",
+                            Name = "Metro"
+                        },
+                        new
+                        {
+                            VenueTypeId = 87,
+                            Category = "Transport",
+                            Name = "Plane"
+                        },
+                        new
+                        {
+                            VenueTypeId = 88,
+                            Category = "Transport",
+                            Name = "Taxi"
+                        },
+                        new
+                        {
+                            VenueTypeId = 89,
+                            Category = "Transport",
+                            Name = "Boat"
+                        },
+                        new
+                        {
+                            VenueTypeId = 90,
+                            Category = "Transport",
+                            Name = "Cruise ship"
+                        },
+                        new
+                        {
+                            VenueTypeId = 91,
+                            Category = "Transport",
+                            Name = "Other transport"
+                        });
                 });
 
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Country", b =>
@@ -9511,48 +10122,6 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.SocialContextVenue", b =>
-                {
-                    b.Property<int>("SocialContextVenueId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(150);
-
-                    b.Property<DateTime?>("DateFrom")
-                        .IsRequired();
-
-                    b.Property<DateTime?>("DateTo")
-                        .IsRequired();
-
-                    b.Property<string>("Details")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Frequency")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(40);
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<string>("Postcode");
-
-                    b.Property<int?>("VenueTypeId")
-                        .IsRequired();
-
-                    b.HasKey("SocialContextVenueId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.HasIndex("VenueTypeId");
-
-                    b.ToTable("SocialContextVenue");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TBService", b =>
                 {
                     b.Property<string>("Code")
@@ -12038,580 +12607,6 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
-                    b.Property<bool?>("HasTestCarriedOut");
-
-                    b.HasKey("NotificationId");
-
-                    b.ToTable("TestData");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.VenueType", b =>
-                {
-                    b.Property<int>("VenueTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Category");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("VenueTypeId");
-
-                    b.ToTable("VenueType");
-
-                    b.HasData(
-                        new
-                        {
-                            VenueTypeId = 1,
-                            Category = "Workplace",
-                            Name = "Armed forces"
-                        },
-                        new
-                        {
-                            VenueTypeId = 2,
-                            Category = "Workplace",
-                            Name = "Catering"
-                        },
-                        new
-                        {
-                            VenueTypeId = 3,
-                            Category = "Workplace",
-                            Name = "Construction"
-                        },
-                        new
-                        {
-                            VenueTypeId = 4,
-                            Category = "Workplace",
-                            Name = "Driving"
-                        },
-                        new
-                        {
-                            VenueTypeId = 5,
-                            Category = "Workplace",
-                            Name = "Education"
-                        },
-                        new
-                        {
-                            VenueTypeId = 6,
-                            Category = "Workplace",
-                            Name = "Emergency services"
-                        },
-                        new
-                        {
-                            VenueTypeId = 7,
-                            Category = "Workplace",
-                            Name = "Factory"
-                        },
-                        new
-                        {
-                            VenueTypeId = 8,
-                            Category = "Workplace",
-                            Name = "Farming"
-                        },
-                        new
-                        {
-                            VenueTypeId = 9,
-                            Category = "Workplace",
-                            Name = "Hospital or medical centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 10,
-                            Category = "Workplace",
-                            Name = "Office"
-                        },
-                        new
-                        {
-                            VenueTypeId = 11,
-                            Category = "Workplace",
-                            Name = "Pub, bar or club"
-                        },
-                        new
-                        {
-                            VenueTypeId = 12,
-                            Category = "Workplace",
-                            Name = "Restaurant or cafe"
-                        },
-                        new
-                        {
-                            VenueTypeId = 13,
-                            Category = "Workplace",
-                            Name = "Hospitality"
-                        },
-                        new
-                        {
-                            VenueTypeId = 14,
-                            Category = "Workplace",
-                            Name = "Retail"
-                        },
-                        new
-                        {
-                            VenueTypeId = 15,
-                            Category = "Workplace",
-                            Name = "Warehouse"
-                        },
-                        new
-                        {
-                            VenueTypeId = 16,
-                            Category = "Workplace",
-                            Name = "Hair/beauty salon"
-                        },
-                        new
-                        {
-                            VenueTypeId = 17,
-                            Category = "Workplace",
-                            Name = "Health club or spa"
-                        },
-                        new
-                        {
-                            VenueTypeId = 18,
-                            Category = "Workplace",
-                            Name = "Recreational centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 19,
-                            Category = "Workplace",
-                            Name = "Other workplace"
-                        },
-                        new
-                        {
-                            VenueTypeId = 20,
-                            Category = "Place of worship",
-                            Name = "Church"
-                        },
-                        new
-                        {
-                            VenueTypeId = 21,
-                            Category = "Place of worship",
-                            Name = "Temple"
-                        },
-                        new
-                        {
-                            VenueTypeId = 22,
-                            Category = "Place of worship",
-                            Name = "Mosque"
-                        },
-                        new
-                        {
-                            VenueTypeId = 23,
-                            Category = "Place of worship",
-                            Name = "Community centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 24,
-                            Category = "Place of worship",
-                            Name = "Multi-faith centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 25,
-                            Category = "Place of worship",
-                            Name = "Synagogue"
-                        },
-                        new
-                        {
-                            VenueTypeId = 26,
-                            Category = "Place of worship",
-                            Name = "Other place of worship"
-                        },
-                        new
-                        {
-                            VenueTypeId = 27,
-                            Category = "Social",
-                            Name = "Arcade/gambling venue"
-                        },
-                        new
-                        {
-                            VenueTypeId = 28,
-                            Category = "Social",
-                            Name = "Pub, bar or club"
-                        },
-                        new
-                        {
-                            VenueTypeId = 29,
-                            Category = "Social",
-                            Name = "Restaurant or cafe"
-                        },
-                        new
-                        {
-                            VenueTypeId = 30,
-                            Category = "Social",
-                            Name = "Library"
-                        },
-                        new
-                        {
-                            VenueTypeId = 31,
-                            Category = "Social",
-                            Name = "Cinema"
-                        },
-                        new
-                        {
-                            VenueTypeId = 32,
-                            Category = "Social",
-                            Name = "Shopping centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 33,
-                            Category = "Social",
-                            Name = "Hair/beauty salon"
-                        },
-                        new
-                        {
-                            VenueTypeId = 34,
-                            Category = "Social",
-                            Name = "Health club or spa"
-                        },
-                        new
-                        {
-                            VenueTypeId = 35,
-                            Category = "Social",
-                            Name = "Exercise class"
-                        },
-                        new
-                        {
-                            VenueTypeId = 36,
-                            Category = "Social",
-                            Name = "Recreational centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 37,
-                            Category = "Social",
-                            Name = "Music classes"
-                        },
-                        new
-                        {
-                            VenueTypeId = 38,
-                            Category = "Social",
-                            Name = "Community centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 39,
-                            Category = "Social",
-                            Name = "Job/unemployment centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 40,
-                            Category = "Social",
-                            Name = "Crack house/smoking den"
-                        },
-                        new
-                        {
-                            VenueTypeId = 41,
-                            Category = "Social",
-                            Name = "Friends house"
-                        },
-                        new
-                        {
-                            VenueTypeId = 42,
-                            Category = "Social",
-                            Name = "Other social venue"
-                        },
-                        new
-                        {
-                            VenueTypeId = 43,
-                            Category = "Childcare & education",
-                            Name = "Pre-school or play group"
-                        },
-                        new
-                        {
-                            VenueTypeId = 44,
-                            Category = "Childcare & education",
-                            Name = "Nursery"
-                        },
-                        new
-                        {
-                            VenueTypeId = 45,
-                            Category = "Childcare & education",
-                            Name = "Primary school"
-                        },
-                        new
-                        {
-                            VenueTypeId = 46,
-                            Category = "Childcare & education",
-                            Name = "Secondary school"
-                        },
-                        new
-                        {
-                            VenueTypeId = 47,
-                            Category = "Childcare & education",
-                            Name = "College or sixth form"
-                        },
-                        new
-                        {
-                            VenueTypeId = 48,
-                            Category = "Childcare & education",
-                            Name = "After school clubs"
-                        },
-                        new
-                        {
-                            VenueTypeId = 49,
-                            Category = "Childcare & education",
-                            Name = "University"
-                        },
-                        new
-                        {
-                            VenueTypeId = 50,
-                            Category = "Childcare & education",
-                            Name = "Adult education"
-                        },
-                        new
-                        {
-                            VenueTypeId = 51,
-                            Category = "Childcare & education",
-                            Name = "Private tutoring"
-                        },
-                        new
-                        {
-                            VenueTypeId = 52,
-                            Category = "Childcare & education",
-                            Name = "Religious learning centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 53,
-                            Category = "Childcare & education",
-                            Name = "Other childcare & education"
-                        },
-                        new
-                        {
-                            VenueTypeId = 54,
-                            Category = "Place of detention",
-                            Name = "Immigration detention centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 55,
-                            Category = "Place of detention",
-                            Name = "Prison"
-                        },
-                        new
-                        {
-                            VenueTypeId = 56,
-                            Category = "Place of detention",
-                            Name = "Youth detention centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 57,
-                            Category = "Place of detention",
-                            Name = "Other place of detention"
-                        },
-                        new
-                        {
-                            VenueTypeId = 58,
-                            Category = "Treatment and rehab",
-                            Name = "Alcohol rehabilitation centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 59,
-                            Category = "Treatment and rehab",
-                            Name = "Drug rehabilitation centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 60,
-                            Category = "Treatment and rehab",
-                            Name = "Medical or physical rehabilitation centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 61,
-                            Category = "Treatment and rehab",
-                            Name = "Mental health rehabilitation centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 62,
-                            Category = "Treatment and rehab",
-                            Name = "Other treatment or rehab centre"
-                        },
-                        new
-                        {
-                            VenueTypeId = 63,
-                            Category = "Health and care",
-                            Name = "Crisis centre or refuge"
-                        },
-                        new
-                        {
-                            VenueTypeId = 64,
-                            Category = "Residential",
-                            Name = "Initial accommodation centre "
-                        },
-                        new
-                        {
-                            VenueTypeId = 65,
-                            Category = "Residential",
-                            Name = "Dispersal accommodation "
-                        },
-                        new
-                        {
-                            VenueTypeId = 66,
-                            Category = "Residential",
-                            Name = "Homeless shelter"
-                        },
-                        new
-                        {
-                            VenueTypeId = 67,
-                            Category = "Residential",
-                            Name = "Squat"
-                        },
-                        new
-                        {
-                            VenueTypeId = 68,
-                            Category = "Residential",
-                            Name = "Care home"
-                        },
-                        new
-                        {
-                            VenueTypeId = 69,
-                            Category = "Residential",
-                            Name = "Halfway house"
-                        },
-                        new
-                        {
-                            VenueTypeId = 70,
-                            Category = "Residential",
-                            Name = "Hostel"
-                        },
-                        new
-                        {
-                            VenueTypeId = 71,
-                            Category = "Residential",
-                            Name = "Hall of residence"
-                        },
-                        new
-                        {
-                            VenueTypeId = 72,
-                            Category = "Residential",
-                            Name = "Sofa surfing"
-                        },
-                        new
-                        {
-                            VenueTypeId = 73,
-                            Category = "Residential",
-                            Name = "Other residential"
-                        },
-                        new
-                        {
-                            VenueTypeId = 74,
-                            Category = "Health and care",
-                            Name = "Hospital"
-                        },
-                        new
-                        {
-                            VenueTypeId = 75,
-                            Category = "Health and care",
-                            Name = "Walk-in Centre/Minor Injuries"
-                        },
-                        new
-                        {
-                            VenueTypeId = 76,
-                            Category = "Health and care",
-                            Name = "Pharmacy"
-                        },
-                        new
-                        {
-                            VenueTypeId = 77,
-                            Category = "Health and care",
-                            Name = "GP Practice"
-                        },
-                        new
-                        {
-                            VenueTypeId = 78,
-                            Category = "Health and care",
-                            Name = "Nursing Home"
-                        },
-                        new
-                        {
-                            VenueTypeId = 79,
-                            Category = "Health and care",
-                            Name = "Hospice"
-                        },
-                        new
-                        {
-                            VenueTypeId = 80,
-                            Category = "Health and care",
-                            Name = "Health Centre/Clinic"
-                        },
-                        new
-                        {
-                            VenueTypeId = 81,
-                            Category = "Health and care",
-                            Name = "Other heathcare"
-                        },
-                        new
-                        {
-                            VenueTypeId = 82,
-                            Category = "Transport",
-                            Name = "Car"
-                        },
-                        new
-                        {
-                            VenueTypeId = 83,
-                            Category = "Transport",
-                            Name = "Bus"
-                        },
-                        new
-                        {
-                            VenueTypeId = 84,
-                            Category = "Transport",
-                            Name = "Train"
-                        },
-                        new
-                        {
-                            VenueTypeId = 85,
-                            Category = "Transport",
-                            Name = "Tram"
-                        },
-                        new
-                        {
-                            VenueTypeId = 86,
-                            Category = "Transport",
-                            Name = "Metro"
-                        },
-                        new
-                        {
-                            VenueTypeId = 87,
-                            Category = "Transport",
-                            Name = "Plane"
-                        },
-                        new
-                        {
-                            VenueTypeId = 88,
-                            Category = "Transport",
-                            Name = "Taxi"
-                        },
-                        new
-                        {
-                            VenueTypeId = 89,
-                            Category = "Transport",
-                            Name = "Boat"
-                        },
-                        new
-                        {
-                            VenueTypeId = 90,
-                            Category = "Transport",
-                            Name = "Cruise ship"
-                        },
-                        new
-                        {
-                            VenueTypeId = 91,
-                            Category = "Transport",
-                            Name = "Other transport"
-                        });
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.MdrAlert", b =>
-                {
-                    b.HasBaseType("ntbs_service.Models.Alert");
-
                     b.HasDiscriminator().HasValue("EnhancedSurveillanceMDR");
                 });
 
@@ -13239,24 +13234,24 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextVenue", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
+                        .WithMany("SocialContextVenues")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.Entities.VenueType", "VenueType")
+                        .WithMany()
+                        .HasForeignKey("VenueTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.Notification")
                         .WithOne("TestData")
                         .HasForeignKey("ntbs_service.Models.Entities.TestData", "NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.SocialContextVenue", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Notification")
-                        .WithMany("SocialContextVenues")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.VenueType", "VenueType")
-                        .WithMany()
-                        .HasForeignKey("VenueTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
