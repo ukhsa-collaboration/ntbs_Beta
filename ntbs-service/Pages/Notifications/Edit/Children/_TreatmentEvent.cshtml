@@ -72,7 +72,7 @@
                 </nhs-grid-column>
 
                 @{
-                    var conditionalString = $"function(value) {{ return value && \"{(int)TreatmentEventType.TreatmentOutcome}\" === value }}";
+                    var conditionalString = $"function(value) {{ return value && '{(int)TreatmentEventType.TreatmentOutcome}' === value }}";
                 }
                 <conditional-select-wrapper :value-condition-function='@conditionalString' inline-template>
                     <div>

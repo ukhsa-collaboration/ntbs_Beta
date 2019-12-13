@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -88,13 +89,14 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
 
             // Manual handling of TreatmentOutcomeId below will cover all validation on property
             ModelState.Remove("TreatmentEvent.TreatmentOutcomeId");
-            if (TreatmentEvent.TreatmentEventType == TreatmentEventType.TreatmentOutcome)
+            switch (TreatmentEvent.TreatmentEventType)
             {
-                await TrySetOutcomeFromTypeAndSubTypeAsync();
-            }
-            else if (TreatmentEvent.TreatmentEventType == TreatmentEventType.TreatmentRestart)
-            {
-                TreatmentEvent.TreatmentOutcomeId = null;
+                case TreatmentEventType.TreatmentOutcome:
+                    await TrySetOutcomeFromTypeAndSubTypeAsync();
+                    break;
+                case TreatmentEventType.TreatmentRestart:
+                    TreatmentEvent.TreatmentOutcomeId = null;
+                    break;
             }
 
             if (TryValidateModel(TreatmentEvent, nameof(TreatmentEvent)))
