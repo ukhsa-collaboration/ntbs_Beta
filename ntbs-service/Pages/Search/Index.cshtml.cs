@@ -163,8 +163,8 @@ namespace ntbs_service.Pages.Search
             ILegacySearchBuilder legacySqlQuery)
         {
             var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryablesAsync(
-                filteredDrafts.GetResult(),
-                filteredNonDrafts.GetResult(),
+                filteredDrafts,
+                filteredNonDrafts,
                 PaginationParameters);
             var ntbsNotifications = await _notificationRepository.GetNotificationBannerModelsByIdsAsync(orderedNotificationIds);
             var (legacyNotifications, legacyCount) = await _legacySearchService.SearchAsync(

@@ -13,8 +13,8 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
-        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(IQueryable<Notification> firstQueryable, 
-            IQueryable<Notification> secondQueryable, PaginationParameters paginationParameters);
+        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(INotificationSearchBuilder firstQueryable, 
+            INotificationSearchBuilder secondQueryable, PaginationParameters paginationParameters);
     }
 
     public class SearchService : ISearchService

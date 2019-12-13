@@ -70,6 +70,7 @@ namespace ntbs_service.Services
             
             object parametersObject = parameters;
             string fullQuery = Query + sqlQuery + QueryEnd;
+            string countQuery = CountQuery + sqlQuery;
             
             using (var connection = new SqlConnection(connectionString))
             {
