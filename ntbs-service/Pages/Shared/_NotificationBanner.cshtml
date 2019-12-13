@@ -1,4 +1,5 @@
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @model ntbs_service.Models.NotificationBannerModel
 
 @{
@@ -20,7 +21,15 @@
                         }
                         else
                         {
-                            @:#@(Model.NotificationId)
+                            @if (Model.NotificationStatus == NotificationStatus.Legacy)
+                            {
+                                var legacyIdString = Model.Source + " #" + Model.NotificationId;
+                                @legacyIdString
+                            }
+                            else
+                            {
+                                @:#@(Model.NotificationId)
+                            }
                         }
 
                         @if (!Model.FullAccess)

@@ -63,7 +63,7 @@ namespace ntbs_service.Pages.Notifications
             {
                 return NotFound();
             }
-            if (!(await AuthorizationService.CanEdit(User, Notification)))
+            if (!(await AuthorizationService.CanEditNotificationAsync(User, Notification)))
             {
                 return ForbiddenResult();
             }

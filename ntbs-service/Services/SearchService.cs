@@ -13,7 +13,7 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
-        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryables(IQueryable<Notification> firstQueryable, 
+        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(IQueryable<Notification> firstQueryable, 
             IQueryable<Notification> secondQueryable, PaginationParameters paginationParameters);
     }
 
@@ -38,7 +38,7 @@ namespace ntbs_service.Services
             return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
         }
 
-        public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryables(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
+        public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
             PaginationParameters paginationParameters)
         {
             IQueryable<Notification> notificationIdsQueryable = OrderQueryableByNotificationDate(firstQueryable)
@@ -51,13 +51,16 @@ namespace ntbs_service.Services
 
         private IQueryable<Notification> OrderQueryableByNotificationDate(IQueryable<Notification> query) 
         {
-            return query.OrderByDescending(n => n.NotificationDate ?? n.CreationDate);
+            return query
+                .OrderByDescending(n => n.NotificationDate ?? n.CreationDate)
+                // For notifications with the same NotificationDate order by NotificationId so that each search returns the same order each time
+                .OrderByDescending(n => n.NotificationId);
         }
 
         private async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, PaginationParameters paginationParameters)
         {
-            return await items.Skip((paginationParameters.PageIndex - 1) * paginationParameters.PageSize)
-                .Take(paginationParameters.PageSize).ToListAsync();
+            return await items.Skip(paginationParameters.NtbsOffset ?? 0)
+                .Take(paginationParameters.NumberOfNtbsNotificationsToFetch).ToListAsync();
         }
     }
 }

@@ -20,6 +20,7 @@ namespace ntbs_service.DataAccess
         Task<CaseManager> GetCaseManagerByEmailAsync(string email);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<CaseManager>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
+        Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
         Task<IList<Sex>> GetAllSexesAsync();
         Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync();
@@ -78,6 +79,14 @@ namespace ntbs_service.DataAccess
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
         {
             return await _context.TbService.SingleOrDefaultAsync(t => t.Code == code);
+        }
+
+        public async Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId)
+        {
+            return await _context.Hospital
+                .Where(h => h.HospitalId == hospitalId)
+                .Select(h => h.TBService)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<CaseManager> GetCaseManagerByEmailAsync(string email)

@@ -46,7 +46,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            HasEditPermission = await AuthorizationService.CanEdit(User, Notification);
+            HasEditPermission = await AuthorizationService.CanEditNotificationAsync(User, Notification);
             NotificationBannerModel = new NotificationBannerModel(Notification, HasEditPermission);
         }
 
