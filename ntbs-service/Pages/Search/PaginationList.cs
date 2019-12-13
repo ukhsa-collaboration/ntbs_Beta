@@ -34,5 +34,8 @@ namespace ntbs_service.Pages.Search
                 return (PageIndex < TotalPages);
             }
         }
+
+        public string PreviousPageText => HasPreviousPage ? "Page " + (PageIndex - 1) + " of " + (TotalPages) : null;
+        public string NextPageText => HasNextPage ? "Page " + (PageIndex + 1) + " of " + (TotalPages) : null;
     }
 }

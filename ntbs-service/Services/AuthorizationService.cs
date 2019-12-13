@@ -1,16 +1,22 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<bool> CanEdit(ClaimsPrincipal user, Notification notification);
+        Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification);
+        Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
+        IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
+            IEnumerable<NotificationBannerModel> notificationBanners,
+            ClaimsPrincipal user);
     }
 
     public class AuthorizationService : IAuthorizationService
@@ -29,7 +35,37 @@ namespace ntbs_service.Services
             return userTbServiceCodes.Contains(alert.TbServiceCode);
         }
 
-        public async Task<bool> CanEdit(ClaimsPrincipal user, Notification notification)
+        public IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
+            IEnumerable<NotificationBannerModel> notificationBanners,
+            ClaimsPrincipal user)
+        {
+            notificationBanners.ToList().ForEach(async n =>
+            {
+                if(n.NotificationStatus != NotificationStatus.Legacy)
+                {
+                    n.FullAccess = await CanEditBannerModelAsync(user, n);
+                }
+            });
+            return notificationBanners;
+        }
+
+        public async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel)
+        {
+            var tbServiceCode = notificationBannerModel.TbServiceCode;
+            var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
+            var locationPhecCode = notificationBannerModel.LocationPHECCode;
+            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+        }
+
+        public async Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification)
+        {
+            var tbServiceCode = notification.Episode.TBServiceCode;
+            var tbServicePhecCode = notification.Episode.TBService?.PHECCode;
+            var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
+            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+        }
+
+        private async Task<bool> AuthorizeUserAccess(ClaimsPrincipal user, string tbServiceCode, string locationPhecCode, string tbServicePhecCode)
         {
             if (_filter == null)
             {
@@ -38,15 +74,13 @@ namespace ntbs_service.Services
 
             if (_filter.FilterByTBService)
             {
-                return _filter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
+                return _filter.IncludedTBServiceCodes.Contains(tbServiceCode);
             }
+
             else if (_filter.FilterByPHEC)
             {
-                var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-                var servicePhecCode = notification.Episode.TBService?.PHECCode;
-
                 var allowedCodes = _filter.IncludedPHECCodes;
-                return allowedCodes.Contains(servicePhecCode) || allowedCodes.Contains(locationPhecCode);
+                return allowedCodes.Contains(tbServicePhecCode) || allowedCodes.Contains(locationPhecCode);
             }
 
             return true;

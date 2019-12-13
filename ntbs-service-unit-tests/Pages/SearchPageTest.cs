@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,12 +25,14 @@ namespace ntbs_service_unit_tests.Pages
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<ISearchService> _mockSearchService;
         private readonly Mock<IAuthorizationService> _mockAuthorizationService;
+        private readonly Mock<ILegacySearchService> _mockLegacySearchService;
         public SearchPageTest()
         {
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockSearchService = new Mock<ISearchService>();
             _mockAuthorizationService = new Mock<IAuthorizationService>();
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
+            _mockLegacySearchService = new Mock<ILegacySearchService>();
         }
 
         [Fact]
@@ -50,18 +54,29 @@ namespace ntbs_service_unit_tests.Pages
             _mockNotificationRepository.Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
 
             var unionAndPaginateResult = Task.FromResult(GetNotificationIdsAndCount());
-            _mockSearchService.Setup(s => s.OrderAndPaginateQueryables(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(),
+            _mockSearchService.Setup(s => s.OrderAndPaginateQueryablesAsync(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(),
                 It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
 
-            var notifications = Task.FromResult(GetNotifications());
-            _mockNotificationRepository.Setup(s => s.GetNotificationsByIdsAsync(It.IsAny<List<int>>())).Returns(notifications);
+            var notifications = Task.FromResult(GetNotificationBanners());
+            _mockNotificationRepository.Setup(s => s.GetNotificationBannerModelsByIdsAsync(It.IsAny<List<int>>())).Returns(notifications);
+
+            var legacyNotificationsAndCount = Task.FromResult(GetLegacyNotificationBanner());
+            _mockLegacySearchService.Setup(s => s.SearchAsync(It.IsAny<int>(), It.IsAny<int>())).Returns(legacyNotificationsAndCount);
+
+            _mockAuthorizationService.Setup(s => s.SetFullAccessOnNotificationBanners(It.IsAny<IEnumerable<NotificationBannerModel>>(), It.IsAny<ClaimsPrincipal>()))
+                .Returns(GetAuthorisedBanners());
 
             var httpContext = new DefaultHttpContext();
             var modelState = new ModelStateDictionary();
             var actionContext = new ActionContext(httpContext, new Microsoft.AspNetCore.Routing.RouteData(), new PageActionDescriptor(), modelState);
             var pageContext = new PageContext(actionContext);
 
-            var pageModel = new IndexModel(_mockNotificationRepository.Object, _mockSearchService.Object, _mockAuthorizationService.Object, _mockReferenceDataRepository.Object)
+            var pageModel = new IndexModel(
+                _mockNotificationRepository.Object,
+                _mockSearchService.Object,
+                _mockAuthorizationService.Object,
+                _mockReferenceDataRepository.Object,
+                _mockLegacySearchService.Object)
             {
                 SearchParameters = new SearchParameters(),
                 PageContext = pageContext
@@ -72,22 +87,37 @@ namespace ntbs_service_unit_tests.Pages
 
             // Assert
             var results = Assert.IsAssignableFrom<PaginatedList<NotificationBannerModel>>(pageModel.SearchResults);
-            Assert.True(results.Count == 2);
-            Assert.Equal("Bob", results[0].Name);
-            Assert.Equal("Ross", results[1].Name);
+            Assert.True(results.Count == 3);
+            Assert.Equal("Bob Ross", results[0].Name);
+            Assert.Equal("Jack Jill", results[1].Name);
+            Assert.Equal("Luke Arrow", results[2].Name);
         }
 
         public (IList<int> notificationIds, int count) GetNotificationIdsAndCount()
         {
-            return (notificationIds: new List<int> { 1, 2 }, count: 1);
+            return (notificationIds: new List<int> { 1, 2 }, count: 2);
         }
 
-        public IList<Notification> GetNotifications()
+        public IEnumerable<NotificationBannerModel> GetNotificationBanners()
         {
-            var patient1 = new PatientDetails { GivenName = "Bob" };
-            var patient2 = new PatientDetails { GivenName = "Ross" };
+            return new List<NotificationBannerModel> { 
+                new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now }, 
+                new NotificationBannerModel { Name = "Jack Jill", NotificationId = "2", SortByDate = DateTime.Now.AddDays(-1) } 
+                };
+        }
 
-            return new List<Notification> { new Notification { PatientDetails = patient1, NotificationId = 1 }, new Notification { PatientDetails = patient2, NotificationId = 2 } };
+        public (IEnumerable<NotificationBannerModel>, int) GetLegacyNotificationBanner()
+        {
+            return (new List<NotificationBannerModel> { new NotificationBannerModel { Name = "Luke Arrow", NotificationId = "134-1", SortByDate = DateTime.Now.AddDays(-2) } }, 1);
+        }
+
+        public IEnumerable<NotificationBannerModel> GetAuthorisedBanners()
+        {
+            return new List<NotificationBannerModel> { 
+                new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now }, 
+                new NotificationBannerModel { Name = "Jack Jill", NotificationId = "2", SortByDate = DateTime.Now.AddDays(-1) }, 
+                new NotificationBannerModel { Name = "Luke Arrow", NotificationId = "134-1", SortByDate = DateTime.Now.AddDays(-2) } 
+                };
         }
     }
 }

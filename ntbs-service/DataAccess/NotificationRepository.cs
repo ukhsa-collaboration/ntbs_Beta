@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
@@ -19,7 +20,8 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task AddNotificationAsync(Notification notification);
         Task<Notification> GetNotificationAsync(int notificationId);
-        Task<IList<Notification>> GetNotificationsByIdsAsync(IList<int> ids);
+        Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
+        bool NotificationExists(int notificationId);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         bool NotificationWithLegacyIdExists(string id);
@@ -147,11 +149,12 @@ namespace ntbs_service.DataAccess
             return GetBannerReadyNotificationsIQueryable().Where(n => statuses.Contains(n.NotificationStatus));
         }
 
-        public async Task<IList<Notification>> GetNotificationsByIdsAsync(IList<int> ids)
+        public async Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids)
         {
-            return await GetBannerReadyNotificationsIQueryable()
+            return (await GetBannerReadyNotificationsIQueryable()
                         .Where(n => ids.Contains(n.NotificationId))
-                        .ToListAsync();
+                        .ToListAsync())
+                        .Select(n => new NotificationBannerModel(n, showLink: true));
         }
 
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)

@@ -244,19 +244,22 @@
         </nhs-width-container>
     </div>
 
-    <nhs-width-container container-width="Standard">
-        <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
-            <ul class="nhsuk-list nhsuk-pagination__list">
-                <nhs-pagination next-link-text="@Model.NextPageText" next-url="@Model.NextPageUrl"
-                                previous-link-text="@Model.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
-            </ul>
-        </nav>
-        @if(Model.SearchResults?.Count > 3)
-        {
-            <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
-                Create Notification
-            </a>
-        }
-    </nhs-width-container>
-    <br>
+    @if (Model.SearchResults != null)
+    {
+        <nhs-width-container container-width="Standard">
+            <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
+                <ul class="nhsuk-list nhsuk-pagination__list">
+                    <nhs-pagination next-link-text="@Model.SearchResults.NextPageText" next-url="@Model.NextPageUrl"
+                                    previous-link-text="@Model.SearchResults.PreviousPageText" previous-url="@Model.PreviousPageUrl"></nhs-pagination>
+                </ul>
+            </nav>
+            @if(Model.SearchResults?.Count > 3)
+            {
+                <a href="/Notifications/Create" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
+                    Create Notification
+                </a>
+            }
+        </nhs-width-container>
+        <br>
+    }
 }
