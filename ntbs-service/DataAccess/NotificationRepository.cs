@@ -19,7 +19,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task AddNotificationAsync(Notification notification);
         Task<Notification> GetNotificationAsync(int notificationId);
-        Task<IList<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
+        Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         bool NotificationExists(int notificationId);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);

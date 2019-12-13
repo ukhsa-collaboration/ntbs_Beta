@@ -98,7 +98,7 @@ namespace ntbs_service_unit_tests.Pages
             return (notificationIds: new List<int> { 1, 2 }, count: 2);
         }
 
-        public IList<NotificationBannerModel> GetNotificationBanners()
+        public IEnumerable<NotificationBannerModel> GetNotificationBanners()
         {
             return new List<NotificationBannerModel> { 
                 new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now }, 
