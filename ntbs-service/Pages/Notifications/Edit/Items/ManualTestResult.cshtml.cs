@@ -20,7 +20,6 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public SelectList ManualTestTypes { get; set; }
         public SelectList SampleTypes { get; set; }
-        public SelectList ResultOptions { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
@@ -112,8 +111,6 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 dataTextField: nameof(SampleType.Description),
                 selectedValue: null,
                 dataGroupField: nameof(SampleType.Category));
-
-            ResultOptions = new SelectList(EnumHelper.GetEnumList<Result>());
         }
 
         protected override IActionResult RedirectAfterSaveForNotified()

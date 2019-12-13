@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public class DenotificationDetails
     {
-        [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DenotificationDateAfterNotification)]
+        [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
         [AssertThat("DenotificationNotAfterToday == true", ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
         [Display(Name = "Denotification date")]
         public DateTime DateOfDenotification { get; set; }

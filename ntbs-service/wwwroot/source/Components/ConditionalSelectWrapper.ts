@@ -27,10 +27,19 @@ const ConditionalSelectWrapper = Vue.extend({
             this.hideOrShowControlBasedOnValue(inputValue);
         },
         hideOrShowControlBasedOnValue: function (value: String) {
+            const conditionalElement = this.getRefElement("conditional-control");
             if (this.$props.valueConditionFunction && this.$props.valueConditionFunction(value)) {
-                this.$refs["conditional-control"].classList.remove("hidden");
+                conditionalElement.classList.remove("hidden");
             } else {
-                this.$refs["conditional-control"].classList.add("hidden");
+                conditionalElement.classList.add("hidden");
+            }
+        },
+        getRefElement: function (refName: string) {
+            const ref = this.$refs[refName];
+            if (ref instanceof Vue) {
+                return ref.$el;
+            } else {
+                return ref;
             }
         }
     }

@@ -1,0 +1,209 @@
+﻿@model TreatmentEventModel
+@using NHSUK.FrontEndLibrary.TagHelpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+
+<div class="table-row-form">
+    <nhs-width-container container-width="Standard">
+        <h3> @(Model.RowId == null ? "Add new " : "Edit ") treatment event</h3>
+
+        <form method="post" autocomplete="off">
+            <input type="hidden" asp-for="TreatmentEvent.TreatmentOutcomeId" />
+
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="Full">
+                    <validate-date model="TreatmentEvent" property="EventDate" inline-template>
+                        @{
+                            var hasEventDateError = !Model.IsValid("TreatmentEvent.EventDate");
+                            var eventDateGroupState = hasEventDateError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type="@eventDateGroupState" aria-describedby="event-date-error">
+                            <nhs-fieldset role="group" aria-describedby="event-date-error">
+                                <nhs-fieldset-legend nhs-legend-size="Standard">
+                                    @Html.DisplayNameFor(m => m.TreatmentEvent.EventDate)
+                                </nhs-fieldset-legend>
+                                <span nhs-span-type="ErrorMessage"
+                                      ref="errorField"
+                                      asp-validation-for="TreatmentEvent.EventDate"
+                                      has-error="@hasEventDateError"
+                                      id="event-date-error"></span>
+                                <nhs-date-input>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedEventDate.Day">Day</label>
+                                            <input v-on:blur="validate"
+                                                   is-error-input="@hasEventDateError"
+                                                   ref="dayInput"
+                                                   nhs-input-type="Date"
+                                                   fixed-width="Two"
+                                                   asp-for="FormattedEventDate.Day" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedEventDate.Month">Month</label>
+                                            <input v-on:blur="validate"
+                                                   is-error-input="@hasEventDateError"
+                                                   ref="monthInput"
+                                                   nhs-input-type="Date"
+                                                   fixed-width="Two"
+                                                   asp-for="FormattedEventDate.Month" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedEventDate.Year">Year</label>
+                                            <input v-on:blur="validate"
+                                                   is-error-input="@hasEventDateError"
+                                                   ref="yearInput"
+                                                   nhs-input-type="Date"
+                                                   fixed-width="Four"
+                                                   asp-for="FormattedEventDate.Year" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                </nhs-date-input>
+                            </nhs-fieldset>
+                        </nhs-form-group>
+                    </validate-date>
+                </nhs-grid-column>
+
+                @{
+                    var conditionalString = $"function(value) {{ return value && \"{(int)TreatmentEventType.TreatmentOutcome}\" === value }}";
+                }
+                <conditional-select-wrapper :value-condition-function='@conditionalString' inline-template>
+                    <div>
+                        <nhs-grid-column grid-column-width="Full">
+                            <validate-input model="TreatmentEvent" property="TreatmentEventType"
+                                            ref="inner-validate" v-on:mounted="innerValidateMounted" v-on:validate="handleChange" inline-template>
+                                @{
+                                    var hasTreatmentEventTypeError = !Model.IsValid("TreatmentEvent.TreatmentEventType");
+                                    var treatmentEventTypeGroupState = hasTreatmentEventTypeError ? Error : Standard;
+                                }
+                                <nhs-form-group nhs-form-group-type="@treatmentEventTypeGroupState" aria-describedby="treatmentevent-type-error">
+                                    <label nhs-label-type="Standard" asp-for="TreatmentEvent.TreatmentEventType">
+                                        @Html.DisplayNameFor(m => m.TreatmentEvent.TreatmentEventType)
+                                    </label>
+                                    <span id="treatmentevent-type-error"
+                                          nhs-span-type="ErrorMessage"
+                                          has-error="@hasTreatmentEventTypeError"
+                                          asp-validation-for="TreatmentEvent.TreatmentEventType"
+                                          ref="errorField"></span>
+                                    <select nhs-select-type="@(hasTreatmentEventTypeError ? SelectType.Error : SelectType.Standard)"
+                                            asp-for="TreatmentEvent.TreatmentEventType"
+                                            asp-items="Html.GetEnumSelectList<TreatmentEventType>()"
+                                            ref="selectField"
+                                            v-on:change="validate">
+                                        <option value="">Please select</option>
+                                    </select>
+                                </nhs-form-group>
+                            </validate-input>
+                        </nhs-grid-column>
+
+                        <filtered-dropdown filter-handler-path="FilteredOutcomeSubTypesForType" :filtering-refs="['subTypes']" ref="conditional-control" :hide-on-empty="true" inline-template>
+                            <div>
+                                <validate-input model="SelectedTreatmentOutcomeType" property="SelectedTreatmentOutcomeType" ref="filterContainer"
+                                                v-on:mounted="filteringMounted" v-on:validate="filteringChanged" inline-template>
+                                    <nhs-grid-column grid-column-width="OneThird">
+                                        @{
+                                            var hasOutcomeTypeError = !Model.IsValid("SelectedTreatmentOutcomeType");
+                                            var outcomeTypeGroupState = hasOutcomeTypeError ? Error : Standard;
+                                            var outcomeTypeSelectErrorState = hasOutcomeTypeError ? SelectType.Error : SelectType.Standard;
+                                        }
+                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState" aria-describedby="treatmentoutcometype-error">
+                                            <label nhs-label-type="Standard" asp-for="SelectedTreatmentOutcomeType">
+                                                @Html.DisplayNameFor(m => m.SelectedTreatmentOutcomeType)
+                                            </label>
+                                            <span nhs-span-type="ErrorMessage" id="treatmentoutcometype-error"
+                                                  has-error="@hasOutcomeTypeError"
+                                                  ref="errorField"
+                                                  asp-validation-for="SelectedTreatmentOutcomeType"></span>
+                                            <select ref="selectField"
+                                                    nhs-select-type="@outcomeTypeSelectErrorState"
+                                                    asp-for="SelectedTreatmentOutcomeType"
+                                                    asp-items="Html.GetEnumSelectList<TreatmentOutcomeType>()"
+                                                    v-on:change="validate">
+                                                <option value="">Please select</option>
+                                            </select>
+                                        </nhs-form-group>
+                                    </nhs-grid-column>
+                                </validate-input>
+
+                                <nhs-grid-column grid-column-width="OneThird" ref="subTypes">
+                                    @{
+                                        var hasOutcomeSubTypeError = !Model.IsValid("SelectedTreatmentOutcomeSubType");
+                                        var outcomeSubTypeGroupState = hasOutcomeSubTypeError ? Error : Standard;
+                                        var outcomeSubTypeSelectErrorState = hasOutcomeSubTypeError ? SelectType.Error : SelectType.Standard;
+                                    }
+                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState" aria-describedby="treatmentoutcomesubtype-error">
+                                        <label nhs-label-type="Standard" asp-for="SelectedTreatmentOutcomeSubType">
+                                            @Html.DisplayNameFor(m => m.SelectedTreatmentOutcomeSubType)
+                                        </label>
+                                        <span nhs-span-type="ErrorMessage" id="treatmentoutcomesubtype-error"
+                                              has-error="@hasOutcomeSubTypeError"
+                                              asp-validation-for="SelectedTreatmentOutcomeSubType"></span>
+                                        <select nhs-select-type="@outcomeSubTypeSelectErrorState"
+                                                asp-for="SelectedTreatmentOutcomeSubType"
+                                                asp-items="Html.GetEnumSelectList<TreatmentOutcomeSubType>()">
+                                            <option value="">Please select</option>
+                                        </select>
+                                    </nhs-form-group>
+                                </nhs-grid-column>
+                            </div>
+                        </filtered-dropdown>
+                    </div>
+                </conditional-select-wrapper>
+
+
+                <nhs-grid-column grid-column-width="Full">
+                    @{
+                        var hasNoteError = !Model.IsValid("TreatmentEvent.Note");
+                        var noteFormState = hasNoteError ? Error : Standard;
+                        var addressTextAreaType = hasNoteError ? TextAreaType.Error : TextAreaType.Standard;
+                    }
+                    <validate-input model="TreatmentEvent" property="Note" inline-template>
+                        <nhs-form-group nhs-form-group-type="@noteFormState" aria-describedby="treatmenteventnotes-error">
+                            <label asp-for="TreatmentEvent.Note" nhs-label-type="Standard">
+                                @Html.DisplayNameFor(m => m.TreatmentEvent.Note)
+                            </label>
+                            <span id="treatmenteventnotes-error"
+                                  nhs-span-type="ErrorMessage"
+                                  ref="errorField"
+                                  asp-validation-for="TreatmentEvent.Note"
+                                  has-error="@hasNoteError"></span>
+                            <textarea asp-for="TreatmentEvent.Note"
+                                      v-on:change="validate"
+                                      ref="textareaField"
+                                      nhs-textarea-type="@addressTextAreaType"
+                                      rows="2"
+                                      classes="nhsuk-input--width-30"> </textarea>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+
+            </nhs-grid-row>
+
+            <button id="save-treatment-event-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                Save
+            </button>
+            @if (Model.RowId != null)
+            {
+                <button id="delete-treatment-event-button"
+                        asp-page-handler="Delete"
+                        nhs-button-type="Standard"
+                        classes="ntbsuk-button--secondary">
+                    Delete
+                </button>
+            }
+        </form>
+    </nhs-width-container>
+</div>
+<nhs-width-container container-width="Standard">
+    <h2> Treatment events </h2>
+
+    <partial name="_TreatmentEventTable" for="Notification.TreatmentEvents" />
+
+    <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditTreatmentEvents)">
+        Back to treatment events
+    </a>
+</nhs-width-container>

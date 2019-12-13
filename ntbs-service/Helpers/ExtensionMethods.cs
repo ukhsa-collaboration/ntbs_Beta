@@ -19,8 +19,8 @@ namespace ntbs_service.Helpers
         {
             return new FormattedDate
             {
-                Day = dateTime.Day.ToString(), 
-                Month = dateTime.Month.ToString(), 
+                Day = dateTime.Day.ToString(),
+                Month = dateTime.Month.ToString(),
                 Year = dateTime.Year.ToString()
             };
         }

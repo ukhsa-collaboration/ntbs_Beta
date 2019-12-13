@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
@@ -9,7 +9,7 @@ namespace ntbs_service.DataAccess
     public interface IItemRepository<T> where T : class
     {
         Task AddAsync(T item);
-        Task UpdateAsync(Notification Notification, T item);
+        Task UpdateAsync(Notification notification, T item);
         Task DeleteAsync(T item);
     }
 
@@ -17,7 +17,7 @@ namespace ntbs_service.DataAccess
     {
         protected readonly NtbsContext _context;
 
-        public ItemRepository(NtbsContext context)
+        protected ItemRepository(NtbsContext context)
         {
             _context = context;
         }
@@ -29,9 +29,9 @@ namespace ntbs_service.DataAccess
             await UpdateDatabaseAsync();
         }
 
-        public async Task UpdateAsync(Notification Notification, T item)
+        public async Task UpdateAsync(Notification notification, T item)
         {
-            var entity = GetEntityToUpdate(Notification, item);
+            var entity = GetEntityToUpdate(notification, item);
             _context.SetValues(entity, item);
             await UpdateDatabaseAsync();
         }

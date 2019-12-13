@@ -2,6 +2,7 @@
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 
 <div class="table-row-form">
     <nhs-width-container container-width="Standard">
@@ -117,7 +118,7 @@
                             <span id="result-error" nhs-span-type="ErrorMessage" has-error="@hasResultError" asp-validation-for="TestResultForEdit.Result"></span>
                             <select nhs-select-type="@(hasResultError ? SelectType.Error : SelectType.Standard)"
                                     asp-for="TestResultForEdit.Result"
-                                    asp-items="Model.ResultOptions">
+                                    asp-items="Html.GetEnumSelectList<Result>()">
                                 <option value="">Please select</option>
                             </select>
                         </nhs-form-group>

@@ -1,0 +1,25 @@
+@page "/Notifications/{NotificationId:int}/Edit/TreatmentEvents/{handler?}"
+@model TreatmentEventsModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - Treatment events";
+    ViewData["ShowTreatmentEventEditLinks"] = true;
+}
+
+<partial name="_SinglePageErrorSummaryPartial" model="@Model" />
+
+<h2>Treatment Events</h2>
+
+<div>
+    <partial name="_TreatmentEventTable" for="Notification.TreatmentEvents" />
+
+    <button id="add-new-treatment-event-button"
+            nhs-button-type="Standard"
+            classes="ntbsuk-button--primary"
+            name="actionName"
+            value="Create">
+        Add New
+    </button>
+</div>

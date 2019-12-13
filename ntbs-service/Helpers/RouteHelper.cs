@@ -44,6 +44,7 @@ namespace ntbs_service.Helpers
         public static string EditSocialContextVenues => "Edit/SocialContextVenues";
         public static string EditPreviousHistory => "Edit/PreviousHistory";
         public static string EditMDRDetails => "Edit/MDRDetails";
+        public static string EditTreatmentEvents => "Edit/TreatmentEvents";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
@@ -55,6 +56,9 @@ namespace ntbs_service.Helpers
         public static string EditSocialContextVenue(int? socialContextVenueId) => $"Edit/SocialContextVenue/{socialContextVenueId}";
         public static string AddSocialContextVenue => "Edit/SocialContextVenue/New";
         public static string EditSocialContextVenueSubPath => "Edit/SocialContextVenue/";
+
+        public static string EditTreatmentEvent(int treatmentEventId) => $"Edit/TreatmentEvent/{treatmentEventId}";
+        public static string AddTreatmentEvent => $"Edit/TreatmentEvent/New";
     }
 
     public static class AlertSubPaths
