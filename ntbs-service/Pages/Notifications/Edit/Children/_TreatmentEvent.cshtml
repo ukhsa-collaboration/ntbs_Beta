@@ -6,6 +6,9 @@
 
 <div class="table-row-form">
     <nhs-width-container container-width="Standard">
+
+        <div asp-validation-summary="All"></div>
+
         <h3> @(Model.RowId == null ? "Add new " : "Edit ") treatment event</h3>
 
         <form method="post" autocomplete="off">
@@ -81,7 +84,7 @@
                                     var treatmentEventTypeGroupState = hasTreatmentEventTypeError ? Error : Standard;
                                 }
                                 <nhs-form-group nhs-form-group-type="@treatmentEventTypeGroupState" aria-describedby="treatmentevent-type-error">
-                                    <label nhs-label-type="Standard" asp-for="TreatmentEvent.TreatmentEventType">
+                                    <label nhs-label-type="Standard" for="treatmentevent-type">
                                         @Html.DisplayNameFor(m => m.TreatmentEvent.TreatmentEventType)
                                     </label>
                                     <span id="treatmentevent-type-error"
@@ -89,7 +92,8 @@
                                           has-error="@hasTreatmentEventTypeError"
                                           asp-validation-for="TreatmentEvent.TreatmentEventType"
                                           ref="errorField"></span>
-                                    <select nhs-select-type="@(hasTreatmentEventTypeError ? SelectType.Error : SelectType.Standard)"
+                                    <select id="treatmentevent-type"
+                                            nhs-select-type="@(hasTreatmentEventTypeError ? SelectType.Error : SelectType.Standard)"
                                             asp-for="TreatmentEvent.TreatmentEventType"
                                             asp-items="Html.GetEnumSelectList<TreatmentEventType>()"
                                             ref="selectField"
@@ -110,15 +114,17 @@
                                             var outcomeTypeGroupState = hasOutcomeTypeError ? Error : Standard;
                                             var outcomeTypeSelectErrorState = hasOutcomeTypeError ? SelectType.Error : SelectType.Standard;
                                         }
-                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState" aria-describedby="treatmentoutcometype-error">
-                                            <label nhs-label-type="Standard" asp-for="SelectedTreatmentOutcomeType">
+                                        <nhs-form-group nhs-form-group-type="@outcomeTypeGroupState" aria-describedby="treatmentoutcome-type-error">
+                                            <label nhs-label-type="Standard" for="treatmentoutcome-type">
                                                 @Html.DisplayNameFor(m => m.SelectedTreatmentOutcomeType)
                                             </label>
-                                            <span nhs-span-type="ErrorMessage" id="treatmentoutcometype-error"
+                                            <span id="treatmentoutcome-type-error"
+                                                  nhs-span-type="ErrorMessage"
                                                   has-error="@hasOutcomeTypeError"
                                                   ref="errorField"
                                                   asp-validation-for="SelectedTreatmentOutcomeType"></span>
-                                            <select ref="selectField"
+                                            <select id="treatmentoutcome-type"
+                                                    ref="selectField"
                                                     nhs-select-type="@outcomeTypeSelectErrorState"
                                                     asp-for="SelectedTreatmentOutcomeType"
                                                     asp-items="Html.GetEnumSelectList<TreatmentOutcomeType>()"
@@ -135,14 +141,16 @@
                                         var outcomeSubTypeGroupState = hasOutcomeSubTypeError ? Error : Standard;
                                         var outcomeSubTypeSelectErrorState = hasOutcomeSubTypeError ? SelectType.Error : SelectType.Standard;
                                     }
-                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState" aria-describedby="treatmentoutcomesubtype-error">
-                                        <label nhs-label-type="Standard" asp-for="SelectedTreatmentOutcomeSubType">
+                                    <nhs-form-group nhs-form-group-type="@outcomeSubTypeGroupState" aria-describedby="treatmentoutcome-subtype-error">
+                                        <label nhs-label-type="Standard" for="treatmentoutcome-subtype">
                                             @Html.DisplayNameFor(m => m.SelectedTreatmentOutcomeSubType)
                                         </label>
-                                        <span nhs-span-type="ErrorMessage" id="treatmentoutcomesubtype-error"
+                                        <span id="treatmentoutcome-subtype-error"
+                                              nhs-span-type="ErrorMessage"
                                               has-error="@hasOutcomeSubTypeError"
                                               asp-validation-for="SelectedTreatmentOutcomeSubType"></span>
-                                        <select nhs-select-type="@outcomeSubTypeSelectErrorState"
+                                        <select id="treatmentoutcome-subtype"
+                                                nhs-select-type="@outcomeSubTypeSelectErrorState"
                                                 asp-for="SelectedTreatmentOutcomeSubType"
                                                 asp-items="Html.GetEnumSelectList<TreatmentOutcomeSubType>()">
                                             <option value="">Please select</option>
@@ -159,22 +167,23 @@
                     @{
                         var hasNoteError = !Model.IsValid("TreatmentEvent.Note");
                         var noteFormState = hasNoteError ? Error : Standard;
-                        var addressTextAreaType = hasNoteError ? TextAreaType.Error : TextAreaType.Standard;
+                        var noteTextAreaType = hasNoteError ? TextAreaType.Error : TextAreaType.Standard;
                     }
                     <validate-input model="TreatmentEvent" property="Note" inline-template>
-                        <nhs-form-group nhs-form-group-type="@noteFormState" aria-describedby="treatmenteventnotes-error">
-                            <label asp-for="TreatmentEvent.Note" nhs-label-type="Standard">
+                        <nhs-form-group nhs-form-group-type="@noteFormState" aria-describedby="treatmentevent-note-error">
+                            <label nhs-label-type="Standard" for="treatmentevent-note">
                                 @Html.DisplayNameFor(m => m.TreatmentEvent.Note)
                             </label>
-                            <span id="treatmenteventnotes-error"
+                            <span id="treatmentevent-note-error"
                                   nhs-span-type="ErrorMessage"
                                   ref="errorField"
                                   asp-validation-for="TreatmentEvent.Note"
                                   has-error="@hasNoteError"></span>
-                            <textarea asp-for="TreatmentEvent.Note"
+                            <textarea id="treatmentevent-note"
+                                      asp-for="TreatmentEvent.Note"
                                       v-on:change="validate"
                                       ref="textareaField"
-                                      nhs-textarea-type="@addressTextAreaType"
+                                      nhs-textarea-type="@noteTextAreaType"
                                       rows="2"
                                       classes="nhsuk-input--width-30"> </textarea>
                         </nhs-form-group>

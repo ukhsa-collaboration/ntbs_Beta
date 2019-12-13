@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ExpressiveAnnotations.Attributes;
@@ -21,11 +20,11 @@ namespace ntbs_service.Models.Entities
         public DateTime? EventDate { get; set; }
 
         [Display(Name = "Event")]
-        [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
+        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         public TreatmentEventType? TreatmentEventType { get; set; }
 
         [RequiredIf("TreatmentEventTypeIsOutcome", ErrorMessage = ValidationMessages.TreatmentOutcomeRequiredForOutcome)]
-        [AssertThat("TreatmentEventTypeIsRestart", ErrorMessage = ValidationMessages.TreatmentOutcomeInvalidForRestart)]
+        [AssertThat("TreatmentEventTypeIsNotRestart", ErrorMessage = ValidationMessages.TreatmentOutcomeInvalidForRestart)]
         public int? TreatmentOutcomeId { get; set; }
         public virtual TreatmentOutcome TreatmentOutcome { get; set; }
 
@@ -45,7 +44,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? DateOfNotification { get; set; }
 
         public bool TreatmentEventTypeIsOutcome => TreatmentEventType == Enums.TreatmentEventType.TreatmentOutcome;
-        public bool TreatmentEventTypeIsRestart => TreatmentEventType == Enums.TreatmentEventType.TreatmentRestart;
+        public bool TreatmentEventTypeIsNotRestart => TreatmentEventType != Enums.TreatmentEventType.TreatmentRestart;
 
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
         public bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;

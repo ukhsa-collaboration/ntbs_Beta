@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -45,9 +46,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
         }
 
         // Pragma disabled 'not using async' to allow auto-magical wrapping in a Task
-        #pragma warning disable 1998
+#pragma warning disable 1998
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
-        #pragma warning restore 1998
+#pragma warning restore 1998
         {
             if (Notification.NotificationStatus == NotificationStatus.Draft)
             {
@@ -72,7 +73,6 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
 
             return Page();
         }
-
 
         protected override async Task ValidateAndSave()
         {
@@ -137,9 +137,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
             if (!SelectedTreatmentOutcomeType.HasValue)
             {
                 ModelState.AddModelError(
-                    nameof(SelectedTreatmentOutcomeType), 
+                    nameof(SelectedTreatmentOutcomeType),
                     string.Format(
-                        ValidationMessages.RequiredEnter, 
+                        ValidationMessages.RequiredSelect,
                         this.GetMemberDisplayNameValue(nameof(SelectedTreatmentOutcomeType))));
                 return;
             }
@@ -151,7 +151,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
             if (treatmentOutcome == null)
             {
                 ModelState.AddModelError(
-                    nameof(SelectedTreatmentOutcomeSubType), 
+                    nameof(SelectedTreatmentOutcomeSubType),
                     ValidationMessages.SubTypeDoesNotCorrespondToOutcome);
                 return;
             }
@@ -185,15 +185,13 @@ namespace ntbs_service.Pages.Notifications.Edit.Children
             return ValidationService.ValidateDate<TreatmentEvent>(key, day, month, year);
         }
 
-        public ContentResult OnGetValidateSelectedTreatmentOutcomeTypeProperty(string key, string value)
+        public ContentResult OnGetValidateSelectedTreatmentOutcomeTypeProperty(string key, TreatmentOutcomeType? value)
         {
             if (value == null)
             {
-                ModelState.AddModelError(
-                    nameof(SelectedTreatmentOutcomeType),
-                    string.Format(
-                        ValidationMessages.RequiredEnter, 
-                        this.GetMemberDisplayNameValue(nameof(SelectedTreatmentOutcomeType))));
+                var errorMessage = string.Format(ValidationMessages.RequiredSelect,
+                    this.GetMemberDisplayNameValue(nameof(SelectedTreatmentOutcomeType)));
+                return Content(errorMessage);
             }
 
             return ValidationService.ValidContent();
