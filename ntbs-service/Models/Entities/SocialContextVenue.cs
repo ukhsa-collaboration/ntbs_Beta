@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Enums;
@@ -20,10 +19,6 @@ namespace ntbs_service.Models.Entities
         [DisplayName("Venue name")]
         public string Name { get; set; }
 
-        [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
-        [DisplayName("Postcode")]
-        public string Postcode { get; set; }
-
         [DisplayName("Frequency")]
         public Frequency? Frequency { get; set; }
 
@@ -34,9 +29,13 @@ namespace ntbs_service.Models.Entities
         [DisplayName("Comments")]
         public string Details { get; set; }
 
-        public override void SetModelId(int id)
+        public override bool PostcodeIsRequired => false;
+
+        public override int Id
         {
-            SocialContextVenueId = id;
+            set {
+                SocialContextVenueId = value;
+            }
         }
     }
 }

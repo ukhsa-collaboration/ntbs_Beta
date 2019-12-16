@@ -52,7 +52,7 @@ namespace ntbs_service.DataAccess
         public async Task AddNotificationAsync(Notification notification)
         {
             _context.Notification.Add(notification);
-            _context.AddAuditCustomField(CustomFields.AuditDetails, AuditType.Added);
+            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Added);
             await _context.SaveChangesAsync();
         }
 

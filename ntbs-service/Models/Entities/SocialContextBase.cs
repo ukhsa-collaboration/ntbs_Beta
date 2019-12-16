@@ -22,6 +22,11 @@ namespace ntbs_service.Models.Entities
         [DisplayName("Address")]
         public string Address { get; set; }
 
+        [RequiredIf("PostcodeIsRequired", ErrorMessage =  ValidationMessages.RequiredEnter)]
+        [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
+        [DisplayName("Postcode")]
+        public string Postcode { get; set; }
+
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [AssertThat(@"DateFromAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
@@ -48,6 +53,8 @@ namespace ntbs_service.Models.Entities
         public string FormattedDateFrom => DateFrom.ConvertToString();
         public string FormattedDateTo => DateTo.ConvertToString();
 
-        public abstract void SetModelId(int id);
+        public abstract bool PostcodeIsRequired { get; }
+
+        public abstract int Id { set; }
     }
 }

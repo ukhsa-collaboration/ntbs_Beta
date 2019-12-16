@@ -26,7 +26,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             _referenceDataRepository = referenceDataRepository;
         }
 
-         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
+        protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             if (RowId != null)
             {

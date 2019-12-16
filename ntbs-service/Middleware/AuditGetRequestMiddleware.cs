@@ -44,7 +44,7 @@ namespace ntbs_service.Middleware
                     // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
                     if (string.IsNullOrEmpty(userName)) userName = context.User.Identity.Name;
                     // TODO: Differentiate between Cluster and Full view.
-                    await auditService.OnGetAuditAsync(id, model: "Notification", auditDetails: AuditType.Full, userName: userName);
+                    await auditService.OnGetAuditAsync(id, model: "Notification", auditDetails: NotificationAuditType.Full, userName: userName);
                 };
             }
         }

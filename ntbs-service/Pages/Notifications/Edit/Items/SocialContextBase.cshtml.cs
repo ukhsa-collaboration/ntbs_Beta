@@ -53,7 +53,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 }
                 else
                 {
-                    model.SetModelId(RowId.Value);
+                    model.Id = RowId.Value;
                     await _socialContextRepository.UpdateAsync(Notification, model);
                 }
             }

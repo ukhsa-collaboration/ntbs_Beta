@@ -6,7 +6,7 @@ namespace ntbs_service.Services
 {
     public interface IAuditService
     {
-        Task OnGetAuditAsync(int notificationId, string model, AuditType auditDetails, string userName);
+        Task OnGetAuditAsync(int notificationId, string model, NotificationAuditType auditDetails, string userName);
     }
 
     public class AuditService : IAuditService
@@ -20,7 +20,7 @@ namespace ntbs_service.Services
             this.auditContext = auditContext;
         }
         
-        public async Task OnGetAuditAsync(int notificationId, string model, AuditType auditDetails, string userName)
+        public async Task OnGetAuditAsync(int notificationId, string model, NotificationAuditType auditDetails, string userName)
         {
             await auditContext.AuditOperationAsync(notificationId, model, auditDetails.ToString(), READ_EVENT, userName);
         }

@@ -34,7 +34,7 @@ namespace ntbs_service.Services
             alert.ClosureDate = DateTime.Now;
             alert.AlertStatus = AlertStatus.Closed;
 
-            await _alertRepository.UpdateAlertAsync(AuditType.Deleted);
+            await _alertRepository.UpdateAlertAsync();
         }
 
         public async Task<bool> AddUniqueAlertAsync(Alert alert)
