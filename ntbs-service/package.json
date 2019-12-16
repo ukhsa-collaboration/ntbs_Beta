@@ -19,7 +19,7 @@
     "nhsuk-frontend": "2.3.0",
     "qs": "6.9.0",
     "url-loader": "2.1.0",
-    "vue": "2.6.10"
+    "vue": "2.6.11"
   },
   "devDependencies": {
     "@types/node": "12.7.1",
