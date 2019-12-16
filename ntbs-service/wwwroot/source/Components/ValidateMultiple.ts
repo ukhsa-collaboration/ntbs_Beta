@@ -23,8 +23,7 @@ const ValidateMultiple = Vue.extend({
             const inputs = this.createArrayFromRefElements("input");
             var queryString: string;
             if (this.isDateValidation) {
-                const vueInputs: Array<Vue> = inputs // In the case of date validation, we expect all inputs to be vue components
-                var dayInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.dayInput).value);
+                var dayInputs = inputs.map((i: any) => i.$refs.dayInput.value);
                 if (arrayContainsEmptyValues(dayInputs)) {
                     return;
                 }
@@ -85,14 +84,12 @@ function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<string
     return qs.stringify(queryStringObject);
 };
 
-type KeyValuePairs = Array<{[key: string]: string}>
-
 function buildKeyDateValuesQueryString(keys: Array<string>, days: Array<string>, months: Array<string>, years: Array<string>): string {
-    const keyValuePairs: KeyValuePairs = []
+    const queryStringObject: any = { keyValuePairs: [] };
     for (let i = 0; i < keys.length; i++) {
-        keyValuePairs.push({ key: keys[i], day: days[i], month: months[i], year: years[i] });
+        queryStringObject["keyValuePairs"].push({ key: keys[i], day: days[i], month: months[i], year: years[i] });
     }
-    return qs.stringify({keyValuePairs});
+    return qs.stringify(queryStringObject);
 };
 
 function arrayContainsEmptyValues(array: Array<string>): boolean {
