@@ -31,8 +31,7 @@ namespace ntbs_service.Services
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             ";
             
-        const string SelectQueryEnd = @"
-            ORDER BY n.NotificationDate DESC, n.OldNotificationId
+        const string SelectQueryEnd = @"ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 

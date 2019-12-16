@@ -19,7 +19,6 @@ namespace ntbs_service.Services
         
         public LegacySearchBuilder()
         {
-            this.sqlQuery = "";
             this.parameters = new ExpandoObject();
         }
 
@@ -27,7 +26,8 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
-                sqlQuery += "WHERE n.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id";
+                sqlQuery += @"WHERE dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id
+                    ";
                 parameters.id = id;
             }
             return this;
@@ -35,11 +35,42 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterByFamilyName(string familyName)
         {
+            if (!string.IsNullOrEmpty(familyName))
+            {
+                var wildcardedFamilyName = '%' + familyName + '%';
+                if(sqlQuery == null)
+                {
+                    sqlQuery += @"WHERE dmg.FamilyName LIKE @familyName
+                        ";
+                }
+                else
+                {
+                    sqlQuery += @"AND dmg.FamilyName LIKE @familyName
+                        ";
+                }
+                
+                parameters.familyName = wildcardedFamilyName;
+            }
             return this;
         }
 
         public ISearchBuilder FilterByGivenName(string givenName)
         {
+            if (!string.IsNullOrEmpty(givenName))
+            {
+                var wildcardedGivenName = '%' + givenName + '%';
+                if(sqlQuery == null)
+                {
+                    sqlQuery += @"WHERE dmg.GivenName LIKE @givenName
+                        ";
+                }
+                else
+                {
+                    sqlQuery += @"AND dmg.GivenName LIKE @givenName
+                        ";
+                }
+                parameters.givenName = wildcardedGivenName;
+            }
             return this;
         }
 
@@ -60,6 +91,11 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterBySex(int? sexId) 
         {
+            if (sexId != null)
+            {
+                sqlQuery += "WHERE dmg.NtbsSexId = @sexId";
+                parameters.sexId = sexId;
+            }
             return this;
         }
 
