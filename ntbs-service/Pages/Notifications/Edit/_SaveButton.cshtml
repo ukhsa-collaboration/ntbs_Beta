@@ -2,7 +2,13 @@
 @model ntbs_service.Models.Entities.Notification
 
 @{
-    var buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";
+    var buttonName = "";
+    if (@ViewData.ContainsKey("ShowContinueButton") && (bool)@ViewData["ShowContinueButton"])
+    {
+        buttonName = "Continue";
+    } else {
+        buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";
+    }
     var id = @ViewData.ContainsKey("id") ? @ViewData["id"] : "save-button";
 }
 <button
