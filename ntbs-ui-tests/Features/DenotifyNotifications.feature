@@ -1,6 +1,6 @@
 Feature: Denotify notifications
-    Happy and error paths for notification creation
 
+    # TODO: NTBS-725: No need for this background once we can seed database properly
     Background: Create new notification
         Given I am on the Search page
         When I enter 1 into 'SearchParameters_IdFilter'
@@ -8,22 +8,6 @@ Feature: Denotify notifications
         Then I should be on the Search page
         When I click on the 'create-button' button
         Then I should be on the PatientDetails page
-
-    Scenario: Create and delete notification draft
-        When I click on the 'delete-draft-button' button
-        Then I should be on the Delete page
-        When I click on the 'confirm-deletion-button' button
-        Then I should be on the Confirm page
-        When I click on the 'return-to-homepage' button
-        Then I should be on the Homepage
-
-    Scenario: Denotify a notification
-        # TODO NTBS-663
-        # This is an aweful copy-paste to make sure the notification is created.
-        # We should figure out a better way of seeding these
-        # A half-way point would be to at least create a separate feature file, but
-        # that's currentyl blocked by the setup which for some reason ignores requets
-        # to run features sequentially, but fials in parallel due to port competition
         When I enter Test into 'PatientDetails_GivenName'
         And I enter User into 'PatientDetails_FamilyName'
         And I enter 1 into 'FormattedDob_Day'
@@ -69,7 +53,7 @@ Feature: Denotify notifications
         When I click on the 'submit-button' button
         Then I should see the Notification
 
-        # This is where the actual test starts
+    Scenario: Denotify a notification
         Given I am on current notification overview page
         When I expand manage notification section
         And I click on the 'denotify-button' button

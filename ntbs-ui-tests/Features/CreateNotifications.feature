@@ -1,5 +1,6 @@
 Feature: Notification creation
     Happy and error paths for notification creation
+    Notification deletion
 
     Background: Create new notification
         Given I am on the Search page
@@ -65,3 +66,11 @@ Feature: Notification creation
         When I click on the 'submit-button' button
         Then I should be on the PatientDetails page
         And I should see all submission error messages
+
+    Scenario: Create and delete notification draft
+        When I click on the 'delete-draft-button' button
+        Then I should be on the Delete page
+        When I click on the 'confirm-deletion-button' button
+        Then I should be on the Confirm page
+        When I click on the 'return-to-homepage' button
+        Then I should be on the Homepage
