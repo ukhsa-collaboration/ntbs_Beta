@@ -19,4 +19,20 @@ namespace ntbs_service.DataAccess
                 .First(s => s.SocialContextVenueId == venue.SocialContextVenueId);
         }
     }
+
+    public class SocialContextAddressRepository : ItemRepository<SocialContextAddress>
+    {
+        public SocialContextAddressRepository(NtbsContext context) : base(context) {}
+
+        protected override DbSet<SocialContextAddress> GetDbSet()
+        {
+            return _context.SocialContextAddress;
+        }
+
+        protected override SocialContextAddress GetEntityToUpdate(Notification notification, SocialContextAddress address)
+        {
+            return notification.SocialContextAddresses
+                .First(s => s.SocialContextAddressId == address.SocialContextAddressId);
+        }
+    }
 }

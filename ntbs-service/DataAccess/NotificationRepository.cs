@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -15,6 +16,7 @@ namespace ntbs_service.DataAccess
         IQueryable<Notification> GetDraftNotificationsIQueryable();
         Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
+        Task<Notification> GetNotificationWithSocialContextAddressesAsync(int notificationId);
         Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task AddNotificationAsync(Notification notification);
@@ -52,6 +54,7 @@ namespace ntbs_service.DataAccess
         public async Task AddNotificationAsync(Notification notification)
         {
             _context.Notification.Add(notification);
+            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Added);
             await _context.SaveChangesAsync();
         }
 
@@ -100,6 +103,13 @@ namespace ntbs_service.DataAccess
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
+        public async Task<Notification> GetNotificationWithSocialContextAddressesAsync(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.SocialContextAddresses)
+                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
         public async Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
@@ -130,8 +140,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.VisitorDetails.Country2)
                 .Include(n => n.VisitorDetails.Country3)
                 .Include(n => n.MDRDetails.Country)
-                .Include(n => n.SocialContextVenues)
-                    .ThenInclude(s => s.VenueType)
+                .Include(n => n.SocialContextAddresses)
+                .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

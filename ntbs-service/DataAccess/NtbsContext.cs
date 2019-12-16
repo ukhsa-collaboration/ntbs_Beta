@@ -45,6 +45,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<Alert> Alert { get; set; }
         public virtual DbSet<VenueType> VenueType { get; set; }
         public virtual DbSet<SocialContextVenue> SocialContextVenue { get; set; }
+        public virtual DbSet<SocialContextAddress> SocialContextAddress { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {

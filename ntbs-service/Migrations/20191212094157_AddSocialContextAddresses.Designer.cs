@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191212094157_AddSocialContextAddresses")]
+    partial class AddSocialContextAddresses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,6 +198,33 @@ namespace ntbs_service.Migrations
                     b.ToTable("NotificationSite");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextAddress", b =>
+                {
+                    b.Property<int>("SocialContextAddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(150);
+
+                    b.Property<DateTime?>("DateFrom")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("DateTo")
+                        .IsRequired();
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("Postcode");
+
+                    b.HasKey("SocialContextAddressId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("SocialContextAddress");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextVenue", b =>
                 {
                     b.Property<int>("SocialContextVenueId")
@@ -236,33 +265,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("VenueTypeId");
 
                     b.ToTable("SocialContextVenue");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.SocialContextAddress", b =>
-                {
-                    b.Property<int>("SocialContextAddressId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(150);
-
-                    b.Property<DateTime?>("DateFrom")
-                        .IsRequired();
-
-                    b.Property<DateTime?>("DateTo")
-                        .IsRequired();
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<string>("Postcode");
-
-                    b.HasKey("SocialContextAddressId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.ToTable("SocialContextAddress");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.TestData", b =>

@@ -13,7 +13,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByIdAsync(int? alertId);
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
-        Task UpdateAlertAsync(AuditType auditType = AuditType.Edit);
+        Task UpdateAlertAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
     }
@@ -54,7 +54,7 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
         
-        public async Task UpdateAlertAsync(AuditType auditType = AuditType.Edit)
+        public async Task UpdateAlertAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await _context.SaveChangesAsync();
