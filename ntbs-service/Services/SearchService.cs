@@ -13,8 +13,8 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
-        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(INotificationSearchBuilder firstQueryable, 
-            INotificationSearchBuilder secondQueryable, PaginationParameters paginationParameters);
+        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(INtbsSearchBuilder firstQueryable, 
+            INtbsSearchBuilder secondQueryable, PaginationParameters paginationParameters);
     }
 
     public class SearchService : ISearchService
@@ -39,8 +39,8 @@ namespace ntbs_service.Services
         }
 
         public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(
-            INotificationSearchBuilder firstBuilder,
-            INotificationSearchBuilder secondBuilder,
+            INtbsSearchBuilder firstBuilder,
+            INtbsSearchBuilder secondBuilder,
             PaginationParameters paginationParameters)
         {
             var notificationIdsQueryable = OrderQueryableByNotificationDate(firstBuilder.GetResult())

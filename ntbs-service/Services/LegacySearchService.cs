@@ -24,14 +24,14 @@ namespace ntbs_service.Services
 
     public class LegacySearchService : ILegacySearchService
     {
-        const string Query = @"
+        const string SelectQueryStart = @"
             SELECT * 
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             ";
             
-        const string QueryEnd = @"
+        const string SelectQueryEnd = @"
             ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
@@ -40,7 +40,7 @@ namespace ntbs_service.Services
             SELECT COUNT(*)
             FROM Notifications n
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            WHERE n.OldNotificationId = '100-1' OR n.GroupId = '100-1' AND n.Source = 'LTBR' OR dmg.NhsNumber = '100-1'";
+            ";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -68,17 +68,15 @@ namespace ntbs_service.Services
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
             
-            object parametersObject = parameters;
-            string fullQuery = Query + sqlQuery + QueryEnd;
-            string countQuery = CountQuery + sqlQuery;
+            string fullSelectQuery = SelectQueryStart + sqlQuery + SelectQueryEnd;
+            string fullCountQuery = CountQuery + sqlQuery;
             
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                results = await connection.QueryAsync(fullQuery, parametersObject);
-
-                count = (await connection.QueryAsync<int>(CountQuery)).Single();
+                results = await connection.QueryAsync(fullSelectQuery, (object)parameters);
+                count = (await connection.QueryAsync<int>(fullCountQuery)).Single();
             }
             
             var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);

@@ -6,23 +6,23 @@ using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
-    public interface INotificationSearchBuilder : ISearchBuilderParent
+    public interface INtbsSearchBuilder : ISearchBuilder
     {
         IQueryable<Notification> GetResult();
     }
 
-    public class NotificationSearchBuilder : INotificationSearchBuilder
+    public class NtbsSearchBuilder : INtbsSearchBuilder
     {
         IQueryable<Notification> notificationIQ;
         
-        public NotificationSearchBuilder(IQueryable<Notification> notificationIQ)
+        public NtbsSearchBuilder(IQueryable<Notification> notificationIQ)
         {
             this.notificationIQ = notificationIQ;
         }
 
-        public ISearchBuilderParent FilterById(string id)
+        public ISearchBuilder FilterById(string id)
         {
-            if (!String.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id))
             {
                 int.TryParse(id, out int parsedId);
                 notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(parsedId) 
@@ -31,27 +31,27 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilderParent FilterByFamilyName(string familyName)
+        public ISearchBuilder FilterByFamilyName(string familyName)
         {
-            if (!String.IsNullOrEmpty(familyName))
+            if (!string.IsNullOrEmpty(familyName))
             {
                 notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.FamilyName, $"%{familyName}%"));
             }
             return this;
         }
 
-        public ISearchBuilderParent FilterByGivenName(string givenName)
+        public ISearchBuilder FilterByGivenName(string givenName)
         {
-            if (!String.IsNullOrEmpty(givenName))
+            if (!string.IsNullOrEmpty(givenName))
             {
                 notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.GivenName, $"%{givenName}%"));
             }
             return this;
         }
 
-        public ISearchBuilderParent FilterByPostcode(string postcode)
+        public ISearchBuilder FilterByPostcode(string postcode)
         {
-            if (!String.IsNullOrEmpty(postcode))
+            if (!string.IsNullOrEmpty(postcode))
             {
                 var postcodeNoWhitespace = postcode.Replace(" ", "");
                 notificationIQ = notificationIQ.Where(s => EF.Functions.Like(s.PatientDetails.PostcodeToLookup, $"{postcodeNoWhitespace}%"));
@@ -59,7 +59,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilderParent FilterByPartialDob(PartialDate partialDob) 
+        public ISearchBuilder FilterByPartialDob(PartialDate partialDob) 
         {
             if(!(partialDob == null || partialDob.IsEmpty())) {
                 partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
@@ -69,7 +69,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilderParent FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
+        public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
         {
             if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
                 partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
@@ -79,7 +79,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilderParent FilterBySex(int? sexId) 
+        public ISearchBuilder FilterBySex(int? sexId) 
         {
             if(sexId != null) {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.SexId.Equals(sexId));
@@ -87,7 +87,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilderParent FilterByBirthCountry(int? countryId) 
+        public ISearchBuilder FilterByBirthCountry(int? countryId) 
         {
             if(countryId != null) {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.CountryId.Equals(countryId));
@@ -95,7 +95,7 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilderParent FilterByTBService(string TBService) 
+        public ISearchBuilder FilterByTBService(string TBService) 
         {
             if(TBService != null) {
                 notificationIQ = notificationIQ.Where(s => s.Episode.TBServiceCode.Equals(TBService));

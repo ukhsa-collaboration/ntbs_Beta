@@ -7,75 +7,75 @@ using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
-    public interface ILegacySearchBuilder : ISearchBuilderParent
+    public interface ILegacySearchBuilder : ISearchBuilder
     {
         (string, dynamic) GetResult();
     }
 
     public class LegacySearchBuilder : ILegacySearchBuilder
     {
-        string sqlSearchBuilder;
+        string sqlQuery;
         dynamic parameters;
         
         public LegacySearchBuilder()
         {
-            this.sqlSearchBuilder = "";
+            this.sqlQuery = "";
             this.parameters = new ExpandoObject();
         }
 
-        public ISearchBuilderParent FilterById(string id)
+        public ISearchBuilder FilterById(string id)
         {
             if (!string.IsNullOrEmpty(id))
             {
-                sqlSearchBuilder += "WHERE n.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id";
+                sqlQuery += "WHERE n.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id";
                 parameters.id = id;
             }
             return this;
         }
 
-        public ISearchBuilderParent FilterByFamilyName(string familyName)
+        public ISearchBuilder FilterByFamilyName(string familyName)
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterByGivenName(string givenName)
+        public ISearchBuilder FilterByGivenName(string givenName)
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterByPostcode(string postcode)
+        public ISearchBuilder FilterByPostcode(string postcode)
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterByPartialDob(PartialDate partialDob) 
+        public ISearchBuilder FilterByPartialDob(PartialDate partialDob) 
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
+        public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterBySex(int? sexId) 
+        public ISearchBuilder FilterBySex(int? sexId) 
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterByBirthCountry(int? countryId) 
+        public ISearchBuilder FilterByBirthCountry(int? countryId) 
         {
             return this;
         }
 
-        public ISearchBuilderParent FilterByTBService(string TBService) 
+        public ISearchBuilder FilterByTBService(string TBService) 
         {
             return this;
         }
 
         public (string, dynamic) GetResult()
         {
-            return (sqlSearchBuilder, parameters);
+            return (sqlQuery, parameters);
         }
     }
 }

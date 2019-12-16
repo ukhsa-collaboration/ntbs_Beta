@@ -54,14 +54,14 @@ namespace ntbs_service_unit_tests.Pages
             _mockNotificationRepository.Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
 
             var unionAndPaginateResult = Task.FromResult(GetNotificationIdsAndCount());
-            _mockSearchService.Setup(s => s.OrderAndPaginateQueryablesAsync(It.IsAny<IQueryable<Notification>>(), It.IsAny<IQueryable<Notification>>(),
+            _mockSearchService.Setup(s => s.OrderAndPaginateQueryablesAsync(It.IsAny<INtbsSearchBuilder>(), It.IsAny<INtbsSearchBuilder>(),
                 It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
 
             var notifications = Task.FromResult(GetNotificationBanners());
             _mockNotificationRepository.Setup(s => s.GetNotificationBannerModelsByIdsAsync(It.IsAny<List<int>>())).Returns(notifications);
 
             var legacyNotificationsAndCount = Task.FromResult(GetLegacyNotificationBanner());
-            _mockLegacySearchService.Setup(s => s.SearchAsync(It.IsAny<int>(), It.IsAny<int>())).Returns(legacyNotificationsAndCount);
+            _mockLegacySearchService.Setup(s => s.SearchAsync(It.IsAny<ILegacySearchBuilder>(), It.IsAny<int>(), It.IsAny<int>())).Returns(legacyNotificationsAndCount);
 
             _mockAuthorizationService.Setup(s => s.SetFullAccessOnNotificationBanners(It.IsAny<IEnumerable<NotificationBannerModel>>(), It.IsAny<ClaimsPrincipal>()))
                 .Returns(GetAuthorisedBanners());
@@ -98,7 +98,7 @@ namespace ntbs_service_unit_tests.Pages
             return (notificationIds: new List<int> { 1, 2 }, count: 2);
         }
 
-        public IList<NotificationBannerModel> GetNotificationBanners()
+        public IEnumerable<NotificationBannerModel> GetNotificationBanners()
         {
             return new List<NotificationBannerModel> { 
                 new NotificationBannerModel { Name = "Bob Ross", NotificationId = "1", SortByDate = DateTime.Now }, 

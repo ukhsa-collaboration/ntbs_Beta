@@ -83,8 +83,8 @@ namespace ntbs_service.Pages.Search
                 NotificationStatus.Notified,
                 NotificationStatus.Denotified });
 
-            var ntbsFilteredDraftsBuilder = (INotificationSearchBuilder)FilterBySearchParameters(new NotificationSearchBuilder(draftsQueryable));
-            var ntbsFilteredNonDraftsBuilder = (INotificationSearchBuilder)FilterBySearchParameters(new NotificationSearchBuilder(nonDraftsQueryable));
+            var ntbsFilteredDraftsBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(draftsQueryable));
+            var ntbsFilteredNonDraftsBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(nonDraftsQueryable));
             var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder());
 
             var (notificationsToDisplay, count) = await SearchAsync(ntbsFilteredDraftsBuilder, ntbsFilteredNonDraftsBuilder, legacyFilteredSearchBuilder);
@@ -101,7 +101,7 @@ namespace ntbs_service.Pages.Search
             return ValidationService.ValidateProperty(this, key, value);
         }
 
-        private ISearchBuilderParent FilterBySearchParameters(ISearchBuilderParent searchBuilder)
+        private ISearchBuilder FilterBySearchParameters(ISearchBuilder searchBuilder)
         {
             return searchBuilder
                 .FilterById(SearchParameters.IdFilter)
@@ -116,8 +116,8 @@ namespace ntbs_service.Pages.Search
         }
         
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchAsync(
-            INotificationSearchBuilder filteredDrafts,
-            INotificationSearchBuilder filteredNonDrafts,
+            INtbsSearchBuilder filteredDrafts,
+            INtbsSearchBuilder filteredNonDrafts,
             ILegacySearchBuilder legacySqlQuery)
         {
             if (PaginationParameters.LegacyOffset == null && PaginationParameters.NtbsOffset == null)
@@ -132,8 +132,8 @@ namespace ntbs_service.Pages.Search
 
         // Given no offsets from the previous page perform a search without using skip and take in SQL queries
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchWithoutOffsetsAsync(
-            INotificationSearchBuilder filteredDrafts,
-            INotificationSearchBuilder filteredNonDrafts,
+            INtbsSearchBuilder filteredDrafts,
+            INtbsSearchBuilder filteredNonDrafts,
             ILegacySearchBuilder legacySqlQuery)
         {
             var numberOfNotificationsToFetch = PaginationParameters.PageSize * PaginationParameters.PageIndex;
@@ -158,8 +158,8 @@ namespace ntbs_service.Pages.Search
 
         // Given offsets from the previous page perform a search with the correct skip and take to be efficient
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchWithOffsetsAsync(
-            INotificationSearchBuilder filteredDrafts,
-            INotificationSearchBuilder filteredNonDrafts,
+            INtbsSearchBuilder filteredDrafts,
+            INtbsSearchBuilder filteredNonDrafts,
             ILegacySearchBuilder legacySqlQuery)
         {
             var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryablesAsync(
