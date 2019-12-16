@@ -46,8 +46,17 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByGivenName("Bob")).GetResult();
 
-            Assert.Contains(@"WHERE dmg.GivenName LIKE @givenName", sqlQuery);
+            Assert.Contains("WHERE dmg.GivenName LIKE @givenName", sqlQuery);
             Assert.Equal("%Bob%", parameters.givenName);
+        }
+
+        [Fact]
+        public void SearchBySex_ReturnsCorrectSqlQueryAndParameters()
+        {
+            var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterBySex(2)).GetResult();
+
+            Assert.Contains("WHERE dmg.NtbsSexId = @sexId", sqlQuery);
+            Assert.Equal(2, parameters.sexId);
         }
     }
 }

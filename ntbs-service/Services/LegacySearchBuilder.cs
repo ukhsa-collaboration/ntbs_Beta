@@ -93,7 +93,16 @@ namespace ntbs_service.Services
         {
             if (sexId != null)
             {
-                sqlQuery += "WHERE dmg.NtbsSexId = @sexId";
+                if(sqlQuery == null)
+                {
+                    sqlQuery += @"WHERE dmg.NtbsSexId = @sexId
+                        ";
+                }
+                else
+                {
+                    sqlQuery += @"AND dmg.NtbsSexId = @sexId
+                        ";
+                }
                 parameters.sexId = sexId;
             }
             return this;
