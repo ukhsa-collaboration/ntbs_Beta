@@ -76,7 +76,7 @@ namespace ntbs_service.Services
                 connection.Open();
 
                 results = await connection.QueryAsync(fullSelectQuery, (object)parameters);
-                count = (await connection.QueryAsync<int>(fullCountQuery)).Single();
+                count = (await connection.QueryAsync<int>(fullCountQuery, (object)parameters)).Single();
             }
             
             var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
