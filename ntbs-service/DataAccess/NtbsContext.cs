@@ -55,7 +55,7 @@ namespace ntbs_service.DataAccess
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseLazyLoadingProxies().UseSqlServer("name=ntbsContext");
+                optionsBuilder.UseSqlServer("name=ntbsContext");
             }
         }
 
