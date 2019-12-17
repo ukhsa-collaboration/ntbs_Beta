@@ -9,7 +9,7 @@ namespace ntbs_service.Models
     public class SearchParameters
     {
         [Display(Name = "Id filter")]
-        [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
+        [RegularExpression(ValidationRegexes.NumbersAndHyphenValidation, ErrorMessage = ValidationMessages.NumberAndHyphenFormat)]
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
         public int? CountryId { get; set; }

@@ -1,0 +1,34 @@
+@page "/Notifications/{NotificationId:int}/Edit/SocialContextAddresses/{handler?}"
+@using ntbs_service.Helpers
+@model SocialContextAddressesModel
+
+@{
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - Social Context Addresses";
+    ViewData["ShowSocialContextAddressEditLinks"] = true;
+    ViewData["ShowContinueButton"] = true;
+    ViewData["CurrentPage"] = NotificationSubPaths.EditSocialContextAddresses;
+}
+
+<h2>Social Context - Addresses</h2>
+
+<partial name="_ClusterInformation" for="Notification" />
+
+<h3>Previous addresses</h3>
+<div>
+    <input type="hidden" asp-for="NotificationId">
+    <p>Please provide previous addresses which the patient resided at in the two years prior to TB diagnosis</p>
+
+    @if(Model.SocialContextAddresses.Count > 0)
+    {
+        <partial name="_SocialContextAddressesTable" for="SocialContextAddresses" view-data=@ViewData />
+    }
+
+    <button id="add-new-social-context-address-button"
+            nhs-button-type="Standard"
+            classes="ntbsuk-button--primary"
+            name="actionName"
+            value="Create">
+        Add New
+    </button>
+</div>

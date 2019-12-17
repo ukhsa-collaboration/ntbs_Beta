@@ -1,0 +1,35 @@
+@model ICollection<ntbs_service.Models.Entities.SocialContextAddress>
+@using ntbs_service.Helpers
+
+@{ 
+    var header = Model.FirstOrDefault(); 
+    var showEditLinks = (bool) (ViewData["ShowSocialContextAddressEditLinks"] ?? false);
+    var orderedResults = Model.OrderByDescending(r => r.DateTo);
+}
+
+<div id="social-context-addresses-list">
+    @foreach (var result in orderedResults)
+    {
+        <div class="notification-overview-type-and-edit-container" id="address-heading-@result.SocialContextAddressId">
+            <h5 class="notification-details-type"> @(result.FormattedDateFrom) to @(result.FormattedDateTo) </h5>
+            @if (showEditLinks) 
+            {
+                var subPath = NotificationSubPaths.EditSocialContextAddress(result.SocialContextAddressId);
+                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+            }
+        </div>
+        <dl class="notification-overview-details-container" id="address-body-@result.SocialContextAddressId">
+            <nhs-grid-row classes="notification-overview-details">
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Address) </dt>
+                    <dd class="cell-min-height"> @result.Address </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Postcode) </dt>
+                    <dd class="cell-min-height"> @result.Postcode </dd>
+                </nhs-grid-column>
+            </nhs-grid-row>
+        </dl>
+    }
+</div>

@@ -41,6 +41,7 @@ namespace ntbs_service.Helpers
         public static string EditTravel => "Edit/Travel";
         public static string EditComorbidities => "Edit/Comorbidities";
         public static string EditImmunosuppression => "Edit/Immunosuppression";
+        public static string EditSocialContextAddresses => "Edit/SocialContextAddresses";
         public static string EditSocialContextVenues => "Edit/SocialContextVenues";
         public static string EditPreviousHistory => "Edit/PreviousHistory";
         public static string EditMDRDetails => "Edit/MDRDetails";
@@ -52,6 +53,10 @@ namespace ntbs_service.Helpers
 
         public static string EditManualTestResult(int? testResultId) => $"Edit/ManualTestResult/{testResultId}";
         public static string AddManualTestResult => $"Edit/ManualTestResult/New";
+
+        public static string EditSocialContextAddress(int? socialContextAddressId) => $"Edit/SocialContextAddress/{socialContextAddressId}";
+        public static string AddSocialContextAddress => "Edit/SocialContextAddress/New";
+        public static string EditSocialContextAddressSubPath => "Edit/SocialContextAddress/";
 
         public static string EditSocialContextVenue(int? socialContextVenueId) => $"Edit/SocialContextVenue/{socialContextVenueId}";
         public static string AddSocialContextVenue => "Edit/SocialContextVenue/New";

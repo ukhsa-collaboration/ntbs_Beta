@@ -20,7 +20,7 @@
     <ProjectReference Include="..\ntbs-service\ntbs-service.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
+  <ItemGroup>
     <Content Update="xunit.runner.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

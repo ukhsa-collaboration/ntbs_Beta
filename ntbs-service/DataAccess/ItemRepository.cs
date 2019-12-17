@@ -42,9 +42,9 @@ namespace ntbs_service.DataAccess
             await UpdateDatabaseAsync();
         }
 
-        private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)
+        private async Task UpdateDatabaseAsync()
         {
-            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Edited);
             await _context.SaveChangesAsync();
         }
 

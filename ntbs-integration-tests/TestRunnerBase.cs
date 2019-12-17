@@ -33,6 +33,12 @@ namespace ntbs_integration_tests
             return (IHtmlDocument)document;
         }
 
+        public async Task<HttpResponseMessage> AssertAndFollowRedirect(HttpResponseMessage response, string expectedUrl)
+        {
+            response.AssertRedirectTo(expectedUrl);
+            return await Client.GetAsync(GetRedirectLocation(response));
+        }
+
         protected string GetRedirectLocation(HttpResponseMessage response)
         {
             return response.Headers.Location.OriginalString;

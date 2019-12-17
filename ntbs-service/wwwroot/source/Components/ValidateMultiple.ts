@@ -23,16 +23,17 @@ const ValidateMultiple = Vue.extend({
             const inputs = this.createArrayFromRefElements("input");
             var queryString: string;
             if (this.isDateValidation) {
-                const vueInputs: Array<Vue> = inputs // In the case of date validation, we expect all inputs to be vue components
+                // In the case of data validation, inputs will be vue components (ValidateDate.ts)
+                const vueInputs: Array<Vue> = inputs;
                 var dayInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.dayInput).value);
                 if (arrayContainsEmptyValues(dayInputs)) {
                     return;
                 }
-                var monthInputs = inputs.map((i: any) => i.$refs.monthInput.value);
+                var monthInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.monthInput).value);
                 if (arrayContainsEmptyValues(monthInputs)) {
                     return;
                 }
-                var yearInputs = inputs.map((i: any) => i.$refs.yearInput.value);
+                var yearInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.yearInput).value);
                 if (arrayContainsEmptyValues(yearInputs)) {
                     return;
                 }
@@ -41,7 +42,8 @@ const ValidateMultiple = Vue.extend({
             }
             else if (inputs[0].type === "radio") {
                 // TODO: Do this mapping for other types if element is reused for non-radio inputs.
-                var inputValues = inputs.map((i: any) => i.checked);
+                const radioInputs: Array<HTMLInputElement> = inputs;
+                var inputValues = radioInputs.map(i => i.checked);
                 queryString = buildKeyValuePairsQueryString(this.properties, inputValues);
                 this.errorFields = this.createArrayFromRefElements("errorField");
             }
@@ -77,18 +79,18 @@ const ValidateMultiple = Vue.extend({
     }
 });
 
-function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<string>): string {
-    const queryStringObject: any = { keyValuePairs: [] };
-    for (let i = 0; i < keys.length; i++) {
-        queryStringObject["keyValuePairs"].push({ key: keys[i], value: values[i] });
-    }
-    return qs.stringify(queryStringObject);
-};
-
 type KeyValuePairs = Array<{[key: string]: string}>
 
+function buildKeyValuePairsQueryString(keys: Array<string>, values: Array<boolean>): string {
+    const keyValuePairs: KeyValuePairs = [];
+    for (let i = 0; i < keys.length; i++) {
+        keyValuePairs.push({ key: keys[i], value: values[i].toString() });
+    }
+    return qs.stringify({keyValuePairs});
+};
+
 function buildKeyDateValuesQueryString(keys: Array<string>, days: Array<string>, months: Array<string>, years: Array<string>): string {
-    const keyValuePairs: KeyValuePairs = []
+    const keyValuePairs: KeyValuePairs = [];
     for (let i = 0; i < keys.length; i++) {
         keyValuePairs.push({ key: keys[i], day: days[i], month: months[i], year: years[i] });
     }

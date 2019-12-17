@@ -1,0 +1,9 @@
+@model ntbs_service.Models.Entities.Notification
+
+@if(Model.ClusterId != null)
+{
+    <h3>Cluster Information</h3>
+    <div>
+        <p><strong>Cluster ID: </strong>@Model.ClusterId</p>
+    </div>
+}

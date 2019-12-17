@@ -34,6 +34,7 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFICATION_WITH_MANUAL_TESTS = 51;
 
         public const int NOTIFICATION_WITH_VENUES = 60;
+        public const int NOTIFICATION_WITH_ADDRESSES = 61;
 
         public const int NOTIFICATION_WITH_TREATMENT_EVENTS = 70;
         public const int NOTIFICATION_WITH_TREATMENT_EVENTS_FOR_EDIT = 71;
@@ -77,6 +78,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(EpisodesPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextVenueEditPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(TreatmentEventEditPageTests.GetSeedingNotifications());
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
 
