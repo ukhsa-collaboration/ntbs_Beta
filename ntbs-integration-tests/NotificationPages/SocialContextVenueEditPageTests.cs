@@ -143,9 +143,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateFrom.Day"] = "",
                 ["FormattedDateFrom.Month"] = "",
                 ["FormattedDateFrom.Year"] = "",
-                ["FormattedDateTo.Day"] = "",
-                ["FormattedDateTo.Month"] = "",
-                ["FormattedDateTo.Year"] = "",
                 ["Venue.Name"] = "",
                 ["Venue.Address"] = "",
                 ["Venue.VenueTypeId"] = ""
@@ -172,10 +169,6 @@ namespace ntbs_integration_tests.NotificationPages
                 "Venue-DateFrom",
                 "date-from",
                 string.Format(ValidationMessages.RequiredEnter, "From"));
-            resultDocument.AssertErrorSummaryMessage(
-                "Venue-DateTo",
-                "date-to", 
-                string.Format(ValidationMessages.RequiredEnter, "To"));
         }
 
         [Fact]
