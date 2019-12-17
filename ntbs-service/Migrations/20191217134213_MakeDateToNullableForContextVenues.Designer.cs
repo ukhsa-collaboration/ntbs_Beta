@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191217134213_MakeDateToNullableForContextVenues")]
+    partial class MakeDateToNullableForContextVenues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,35 +274,6 @@ namespace ntbs_service.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("TestData");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.TreatmentEvent", b =>
-                {
-                    b.Property<int>("TreatmentEventId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("EventDate")
-                        .IsRequired();
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(150);
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<string>("TreatmentEventType")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<int?>("TreatmentOutcomeId");
-
-                    b.HasKey("TreatmentEventId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.HasIndex("TreatmentOutcomeId");
-
-                    b.ToTable("TreatmentEvent");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.VenueType", b =>
@@ -12657,114 +12630,6 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TreatmentOutcome", b =>
-                {
-                    b.Property<int>("TreatmentOutcomeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TreatmentOutcomeSubType")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("TreatmentOutcomeType")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.HasKey("TreatmentOutcomeId");
-
-                    b.ToTable("TreatmentOutcome");
-
-                    b.HasData(
-                        new
-                        {
-                            TreatmentOutcomeId = 1,
-                            TreatmentOutcomeSubType = "StandardTherapy",
-                            TreatmentOutcomeType = "Completed"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 2,
-                            TreatmentOutcomeSubType = "MdrRegimen",
-                            TreatmentOutcomeType = "Completed"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 3,
-                            TreatmentOutcomeSubType = "Other",
-                            TreatmentOutcomeType = "Completed"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 4,
-                            TreatmentOutcomeSubType = "StandardTherapy",
-                            TreatmentOutcomeType = "Cured"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 5,
-                            TreatmentOutcomeSubType = "MdrRegimen",
-                            TreatmentOutcomeType = "Cured"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 6,
-                            TreatmentOutcomeSubType = "Other",
-                            TreatmentOutcomeType = "Cured"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 7,
-                            TreatmentOutcomeSubType = "TbCausedDeath",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 8,
-                            TreatmentOutcomeSubType = "TbContributedToDeath",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 9,
-                            TreatmentOutcomeSubType = "TbIncidentalToDeath",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 10,
-                            TreatmentOutcomeSubType = "Unknown",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 11,
-                            TreatmentOutcomeSubType = "PatientLeftUk",
-                            TreatmentOutcomeType = "Lost"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 12,
-                            TreatmentOutcomeSubType = "PatientNotLeftUk",
-                            TreatmentOutcomeType = "Lost"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 13,
-                            TreatmentOutcomeSubType = "Other",
-                            TreatmentOutcomeType = "Lost"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 14,
-                            TreatmentOutcomeType = "TreatmentStopped"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 15,
-                            TreatmentOutcomeType = "NotEvaluated"
-                        });
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
@@ -13423,18 +13288,6 @@ namespace ntbs_service.Migrations
                         .WithOne("TestData")
                         .HasForeignKey("ntbs_service.Models.Entities.TestData", "NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.TreatmentEvent", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
-                        .WithMany("TreatmentEvents")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.TreatmentOutcome", "TreatmentOutcome")
-                        .WithMany()
-                        .HasForeignKey("TreatmentOutcomeId");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>
