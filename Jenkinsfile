@@ -79,13 +79,13 @@ pipeline {
   }
   post {
     success {
-      notifySlack(":green_heart: Build succeeded. New deployment on int: ${NTBS_BUILD}")
+      notifySlack(":green_heart: :computer: Build succeeded. New deployment on int: ${NTBS_BUILD}")
     }
     failure {
-      notifySlack(":red_circle: Build failed")
+      notifySlack(":red_circle: :computer: Build failed")
     }
     unstable {
-      notifySlack(":large_orange_diamond: Build unstable")
+      notifySlack(":large_orange_diamond: :computer: Build unstable")
     }
   }
 }
