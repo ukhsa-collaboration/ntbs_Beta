@@ -1,4 +1,5 @@
 @page "/Notifications/{NotificationId:int}/Edit/SocialContextVenues/{handler?}"
+@using ntbs_service.Helpers
 @model SocialContextVenuesModel
 
 @{
@@ -6,6 +7,7 @@
     ViewData["Title"] = "Notification - Social Context Venues";
     ViewData["ShowSocialContextVenueEditLinks"] = true;
     ViewData["ShowContinueButton"] = true;
+    ViewData["CurrentPage"] = NotificationSubPaths.EditSocialContextVenues;
 }
 
 <h2>Social Context - Venues</h2>
