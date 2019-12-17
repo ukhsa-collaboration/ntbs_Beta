@@ -4,7 +4,7 @@
 @{ 
     var header = Model.FirstOrDefault(); 
     var showEditLinks = (bool) (ViewData["ShowSocialContextAddressEditLinks"] ?? false);
-    var orderedResults = Model.OrderByDescending(r => r.DateTo);
+    var orderedResults = Model.OrderByDescending(r => r.DateTo).ThenByDescending(r => r.DateFrom);
 }
 
 <div id="social-context-addresses-list">
@@ -15,7 +15,7 @@
             @if (showEditLinks) 
             {
                 var subPath = NotificationSubPaths.EditSocialContextAddress(result.SocialContextAddressId);
-                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath) + "#social-context-address-form";
                 <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
             }
         </div>

@@ -4,7 +4,7 @@
 @using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
 
-<div class="table-row-form">
+<div id="social-context-venue-form" class="table-row-form">
     <nhs-width-container container-width="Standard">
         <h3> @(Model.RowId == null ? "Add new " : "Edit ") social context venue</h3>
         <form method="post" autocomplete="off">
@@ -201,6 +201,7 @@
                                     </nhs-fieldset>
                                 </nhs-form-group>
                             </validate-date>
+                            <p>Leave blank if still frequenting venue</p>
                         </nhs-grid-column>
                     </div>
                 </validate-multiple>    
