@@ -1,8 +1,11 @@
 @page
 @model ntbs_service.Pages.Migration.IndexModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     ViewData["Title"] = "Migration";
+    Layout = "../Shared/_Layout.cshtml";
+
 }
 
 <h1>Search</h1>
@@ -10,15 +13,51 @@
 <h4>Parameters</h4>
 <hr />
 <div>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly"></div>
+        <nhs-form-group>
+            <label asp-for="UploadedFile">Upload File</label>
+            <input type="file" asp-for="UploadedFile"/>
+        </nhs-form-group>
+        <br/>
+
         <div>
-            <label asp-for="NotificationId"></label>
-            <input asp-for="NotificationId" />
-            <span asp-validation-for="NotificationId"></span>
+            @{
+                var notificationDateError = !Model.ValidationService.IsValid("CutoffNotificationDate");
+                var notificationDateGroupState = notificationDateError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--import-by-date">
+                <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="import-error"
+                    asp-validation-for="CutoffNotificationDate" has-error="@notificationDateError"></span>
+                <label nhs-label-type="Standard" for="notification-date"> Notification Date </label>
+                <nhs-date-input id="notification-date">
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="CutoffNotificationDate.Day">Day</label>
+                            <input nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@notificationDateError asp-for="CutoffNotificationDate.Day" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="CutoffNotificationDate.Month">Month</label>
+                            <input nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@notificationDateError asp-for="CutoffNotificationDate.Month" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="CutoffNotificationDate.Year">Year</label>
+                            <input nhs-input-type="Date" fixed-width="Four"
+                                is-error-input=@notificationDateError asp-for="CutoffNotificationDate.Year" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
+            </nhs-form-group>
         </div>
+
         <div>
-            <input type="submit" value="Search" />
+            <input type="submit" value="Import" />
         </div>
     </form>
 </div>

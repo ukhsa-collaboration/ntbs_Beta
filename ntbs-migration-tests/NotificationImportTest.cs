@@ -49,9 +49,10 @@ namespace ntbs_migration_tests
         {
             //Given
             _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists("1")).Returns(true);
+            var ids = new List<string>() { "1" };
 
             //When
-            var importedNotifications = await _notifcationImportService.ImportNotificationsAsync(RequestId, "1");
+            var importedNotifications = await _notifcationImportService.ImportNotificationsByIdAsync(RequestId, ids);
 
             //Then
             _mockLogger.Verify(x => x.LogInformation(RequestId, "Notification with Id=1 already exists in database"));
@@ -63,13 +64,14 @@ namespace ntbs_migration_tests
         {
             //Given
             _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>())).Returns(false);
+            var ids = new List<string>() { "0" };
 
             //When
-            var importedNotifications = await _notifcationImportService.ImportNotificationsAsync(RequestId, "0");
+            var importedNotifications = await _notifcationImportService.ImportNotificationsByIdAsync(RequestId, ids);
 
             //Then
-            _mockLogger.Verify(x => x.LogInformation(RequestId, "No notifications found with Id=0"));
-            Assert.Null(importedNotifications);
+            _mockLogger.Verify(x => x.LogInformation(RequestId, "No validation errors found"), Times.Never);
+            Assert.Equal(0, importedNotifications.Count);
         }
 
         [Fact]
@@ -79,6 +81,7 @@ namespace ntbs_migration_tests
             _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>()))
                                         .Returns(false);
 
+            var ids = new List<string>() { "66-1" };
             var dummyPostcodeList = new List<PostcodeLookup> {
                 new PostcodeLookup {
                     Postcode = "SW154JY",
@@ -93,7 +96,7 @@ namespace ntbs_migration_tests
             var patientName = "TYLER, Kamala";
 
             //When
-            var importedNotifications = await _notifcationImportService.ImportNotificationsAsync(RequestId, "66-1");
+            var importedNotifications = await _notifcationImportService.ImportNotificationsByIdAsync(RequestId, ids);
 
             //Then
             _mockLogger.Verify(x => x.LogInformation(RequestId, $"2 notifications found to import for {patientName}"));
@@ -110,6 +113,7 @@ namespace ntbs_migration_tests
             _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>()))
                                         .Returns(false);
 
+            var ids = new List<string>() { "41-1" };
             var dummyPostcodeList = new List<PostcodeLookup> {
                 new PostcodeLookup {
                     Postcode = "EC1N7SS",
@@ -121,14 +125,16 @@ namespace ntbs_migration_tests
             var patientName = "STETLER, Michael";
 
             //When
-            var importedNotifications = await _notifcationImportService.ImportNotificationsAsync(RequestId, "41-1");
+            var importedNotifications = await _notifcationImportService.ImportNotificationsByIdAsync(RequestId, ids);
 
             //Then
             _mockLogger.Verify(x => x.LogInformation(RequestId, $"2 notifications found to import for {patientName}"));
-            _mockLogger.Verify(x => x.LogWarning(RequestId, "Diagnosis date is a mandatory field"));
-            _mockLogger.Verify(x => x.LogInformation(RequestId, "Terminating importing notifications for a patient due to validation errors"));
+            _mockLogger.Verify(x => x.LogWarning(RequestId, "2 validation errors found for notification with Id=41-1:"));
+            _mockLogger.Verify(x => x.LogWarning(RequestId, "Notification date must not be before 01/01/2010"));
+            _mockLogger.Verify(x => x.LogWarning(RequestId, "Diagnosis date must not be before 01/01/2010"));
+            _mockLogger.Verify(x => x.LogInformation(RequestId, $"Terminating importing notifications for {patientName} due to validation errors"));
             _mockNotificationImportRepository.Verify(x => x.AddLinkedNotificationsAsync(It.IsAny<List<Notification>>()), Times.Never);
-            Assert.Null(importedNotifications);
+            Assert.Equal(0, importedNotifications.Count);
         }
     }
 }

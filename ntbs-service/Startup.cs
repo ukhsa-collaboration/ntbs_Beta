@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using EFAuditer;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
@@ -45,6 +48,20 @@ namespace ntbs_service
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddHangfire(config => config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(@"data source=.\NTBSSERVER;initial catalog=ntbsHangfire;trusted_connection=true", new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    UsePageLocksOnDequeue = true,
+                    DisableGlobalLocks = true
+                }));
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var setupDummyAuth = adfsConfig.GetValue<bool>("UseDummyAuth", false);
@@ -134,6 +151,9 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseHangfireDashboard();
+            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

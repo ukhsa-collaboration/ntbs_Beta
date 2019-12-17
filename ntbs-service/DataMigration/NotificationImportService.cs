@@ -49,6 +49,7 @@ namespace ntbs_service.DataMigration
 
             var notificationsGroups = (await _notificationMapper.GetByDate(cutoffDate)).ToList();
 
+            // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
             foreach (var notificationsGroup in notificationsGroups)
             {
@@ -59,10 +60,11 @@ namespace ntbs_service.DataMigration
                 }
             }
 
+            // Validate and Import valid notifications
             var savedNotifications = new List<Notification>();
             foreach (var notificationsGroup in notificationsGroupsToImport)
             {
-                var savedNotificationsGroup = ValidateAndImportNotificationGroup(requestId, notificationsGroup);
+                var savedNotificationsGroup = await ValidateAndImportNotificationGroupAsync(requestId, notificationsGroup);
                 if (savedNotificationsGroup != null)
                 {
                     savedNotifications.AddRange(savedNotificationsGroup);
@@ -84,17 +86,24 @@ namespace ntbs_service.DataMigration
                 return null;
             }
 
-            var notificationsGroups = (await _notificationMapper.GetById(notificationIds)).ToList();
+            var notificationsGroups = (await _notificationMapper.GetById(notificationIdsToImport)).ToList();
+            
+            // Validate and Import valid notifications
+            var importedNotification = new List<Notification>();
             foreach (var notificationsGroup in notificationsGroups)
             {
-                ValidateAndImportNotificationGroup(requestId, notificationsGroup);
+                var savedNotifications = await ValidateAndImportNotificationGroupAsync(requestId, notificationsGroup);
+                if (savedNotifications != null && savedNotifications.Count > 0)
+                {
+                    importedNotification.AddRange(savedNotifications);
+                }
             }
 
             _logger.LogInformation(requestId, $"Request to import by Id finished");
-            return null;
+            return importedNotification;
         }
 
-        private List<Notification> ValidateAndImportNotificationGroup(string requestId, List<Notification> notifications)
+        private async Task<List<Notification>> ValidateAndImportNotificationGroupAsync(string requestId, List<Notification> notifications)
         {
             LookupAndAssignPostcode(notifications);
 
@@ -130,7 +139,7 @@ namespace ntbs_service.DataMigration
             }
 
             _logger.LogInformation(requestId, $"Importing {notifications.Count()} valid notifications");
-            var savedNotifications = notifications; // await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
+            var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
 
             var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
             _logger.LogInformation(requestId, $"Imported notifications have following Ids: {newIdsString}");
