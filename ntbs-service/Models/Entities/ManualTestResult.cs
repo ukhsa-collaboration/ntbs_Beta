@@ -22,7 +22,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Test date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
-        [AssertThat(@"TestDateBeforeDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
+        [AssertThat(@"TestDateAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TestDate { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
@@ -47,7 +47,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? Dob { get; set; } = null;
 
         [NotMapped]
-        public bool TestDateBeforeDob => Dob == null || TestDate >= Dob;
+        public bool TestDateAfterDob => Dob == null || TestDate >= Dob;
 
 
         [NotMapped]

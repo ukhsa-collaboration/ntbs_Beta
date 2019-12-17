@@ -219,7 +219,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("date", "Date of denotification must be after the date of notification");
+            resultDocument.AssertErrorMessage("date", "Denotification date must be after the date of notification");
         }
 
         [Fact]

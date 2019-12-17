@@ -74,6 +74,7 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
+        public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
 
         #endregion
 

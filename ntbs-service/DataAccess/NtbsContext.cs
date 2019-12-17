@@ -45,6 +45,8 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<Alert> Alert { get; set; }
         public virtual DbSet<VenueType> VenueType { get; set; }
         public virtual DbSet<SocialContextVenue> SocialContextVenue { get; set; }
+        public virtual DbSet<TreatmentEvent> TreatmentEvent { get; set; }
+        public virtual DbSet<TreatmentOutcome> TreatmentOutcome { get; set; }
         public virtual DbSet<SocialContextAddress> SocialContextAddress { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
@@ -120,6 +122,10 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<Hospital>().HasData(GetHospitalsList());
 
+            /*
+             * Converters do not nicely handle null values, outputting 'NULL' string into the database.
+             * This isn't a major issue though, as the mapping in application is accurate.
+             */
             var statusEnumConverter = new EnumToStringConverter<Status>();
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
@@ -128,6 +134,9 @@ namespace ntbs_service.DataAccess
             var alertStatusEnumConverter = new EnumToStringConverter<AlertStatus>();
             var alertTypeEnumConverter = new EnumToStringConverter<AlertType>();
             var frequencyEnumConverter = new EnumToStringConverter<Frequency>();
+            var treatmentEventTypeEnumConverter = new EnumToStringConverter<TreatmentEventType>();
+            var treatmentOutcomeTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeType>();
+            var treatmentOutcomeSubTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeSubType>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -311,7 +320,7 @@ namespace ntbs_service.DataAccess
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("MDRDetails");
                 });
-                
+
                 entity.HasIndex(e => e.NotificationStatus);
 
                 entity.HasIndex(e => new { e.NotificationStatus, e.SubmissionDate });
@@ -451,6 +460,7 @@ namespace ntbs_service.DataAccess
                 entity.HasKey(e => e.NotificationId);
                 entity.HasMany(e => e.ManualTestResults);
             });
+
             modelBuilder.Entity<Alert>(entity =>
             {
                 entity.Property(e => e.AlertStatus)
@@ -459,14 +469,14 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
                 entity.Property(e => e.TbServiceCode).HasMaxLength(16);
                 entity.Property(e => e.ClosingUserId).HasMaxLength(64);
-                entity.HasIndex(p => new { p.NotificationId, p.AlertType});
+                entity.HasIndex(p => new { p.NotificationId, p.AlertType });
                 entity.Property(e => e.AlertType)
                     .HasConversion(alertTypeEnumConverter);
                 entity.HasDiscriminator<AlertType>("AlertType")
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR);
-                   
-                entity.HasIndex(e => new {e.AlertStatus, e.AlertType, e.TbServiceCode});
+
+                entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();
@@ -480,6 +490,26 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.Frequency)
                     .HasConversion(frequencyEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+            });
+
+            modelBuilder.Entity<TreatmentEvent>(entity =>
+            {
+                entity.Property(e => e.TreatmentEventType)
+                    .HasConversion(treatmentEventTypeEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+
+            modelBuilder.Entity<TreatmentOutcome>(entity =>
+            {
+                entity.Property(e => e.TreatmentOutcomeType)
+                    .HasConversion(treatmentOutcomeTypeEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.Property(e => e.TreatmentOutcomeSubType)
+                    .HasConversion(treatmentOutcomeSubTypeEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.HasData(Models.SeedData.TreatmentOutcomes.GetTreatmentOutcomes());
             });
         }
 
