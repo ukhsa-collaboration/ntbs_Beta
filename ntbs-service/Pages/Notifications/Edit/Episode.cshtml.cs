@@ -83,17 +83,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             // If case manager not yet set, and current user is an allowed case manager for
             // the current tbServices then set currentUser as default case manager
-            if (Episode.CaseManagerEmail == null)
+            if (Episode.CaseManagerUsername == null)
             {
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 var upperUserEmail = userEmail?.ToUpperInvariant();
-                if (caseManagers.Any(c => c.Email.ToUpperInvariant() == upperUserEmail))
+                if (caseManagers.Any(c => c.Username.ToUpperInvariant() == upperUserEmail))
                 {
-                    Episode.CaseManagerEmail = userEmail;
+                    Episode.CaseManagerUsername = userEmail;
                 }
             };
 
-            CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
+            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.FullName));
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -157,9 +157,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 Episode.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(Episode.TBServiceCode);
             }
-            if (Episode.CaseManagerEmail != null)
+            if (Episode.CaseManagerUsername != null)
             {
-                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByEmailAsync(Episode.CaseManagerEmail);
+                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByEmailAsync(Episode.CaseManagerUsername);
             }
         }
 
@@ -179,7 +179,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                     }),
                     CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
-                        Value = n.Email,
+                        Value = n.Username,
                         Text = n.FullName
                     })
                 });

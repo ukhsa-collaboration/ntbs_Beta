@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191219122659_AddMoreFieldsToUserTable")]
+    partial class AddMoreFieldsToUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,13 +67,13 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
-                    b.Property<string>("CaseManagerUsername")
+                    b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
 
                     b.Property<string>("TbServiceCode")
                         .HasMaxLength(16);
 
-                    b.HasKey("CaseManagerUsername", "TbServiceCode");
+                    b.HasKey("CaseManagerEmail", "TbServiceCode");
 
                     b.HasIndex("TbServiceCode");
 
@@ -12672,7 +12674,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany("CaseManagerTbServices")
-                        .HasForeignKey("CaseManagerUsername")
+                        .HasForeignKey("CaseManagerEmail")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")

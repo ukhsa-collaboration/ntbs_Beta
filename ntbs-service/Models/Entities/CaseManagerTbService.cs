@@ -7,7 +7,7 @@ namespace ntbs_service.Models.Entities
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
 
-        public string CaseManagerEmail { get; set; }
-        public virtual CaseManager CaseManager { get; set; }
+        public string CaseManagerUsername { get; set; }
+        public virtual User CaseManager { get; set; }
     }
 }
