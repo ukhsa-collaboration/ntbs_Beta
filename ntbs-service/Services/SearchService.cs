@@ -13,8 +13,8 @@ namespace ntbs_service.Services
         IQueryable<Notification> FilterById(IQueryable<Notification> IQ, string IdFilter);
         IQueryable<Notification> FilterBySex(IQueryable<Notification> IQ, int sexId);
         IQueryable<Notification> FilterByPartialDate(IQueryable<Notification> IQ, PartialDate partialDate);
-        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(IQueryable<Notification> firstQueryable, 
-            IQueryable<Notification> secondQueryable, PaginationParameters paginationParameters);
+        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(INtbsSearchBuilder firstQueryable, 
+            INtbsSearchBuilder secondQueryable, PaginationParameters paginationParameters);
     }
 
     public class SearchService : ISearchService
@@ -38,11 +38,13 @@ namespace ntbs_service.Services
             return notifications.Where(s => s.PatientDetails.SexId.Equals(sexId));
         }
 
-        public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(IQueryable<Notification> firstQueryable, IQueryable<Notification> secondQueryable, 
+        public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryablesAsync(
+            INtbsSearchBuilder firstBuilder,
+            INtbsSearchBuilder secondBuilder,
             PaginationParameters paginationParameters)
         {
-            IQueryable<Notification> notificationIdsQueryable = OrderQueryableByNotificationDate(firstQueryable)
-                                                                .Union(OrderQueryableByNotificationDate(secondQueryable));
+            var notificationIdsQueryable = OrderQueryableByNotificationDate(firstBuilder.GetResult())
+                                                                .Union(OrderQueryableByNotificationDate(secondBuilder.GetResult()));
 
             var notificationIds = await GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), paginationParameters);
             var count = await notificationIdsQueryable.CountAsync();

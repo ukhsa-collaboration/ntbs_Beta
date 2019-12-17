@@ -19,24 +19,28 @@ namespace ntbs_service.Services
     
     public interface ILegacySearchService
     {
-        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int pageSize);
+        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize);
     }
 
     public class LegacySearchService : ILegacySearchService
     {
-        const string Query = @"
-            SELECT *
+        const string SelectQueryStart = @"
+            SELECT * 
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            ";
+            
+        const string SelectQueryEnd = @"
             ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
         const string CountQuery = @"
             SELECT COUNT(*)
-            FROM Notifications n";
-
+            FROM Notifications n
+            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            ";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -51,7 +55,7 @@ namespace ntbs_service.Services
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
         }
 
-        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(int offset, int numberToFetch)
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int numberToFetch)
         {
             if (!LegacySearchEnabled)
             {
@@ -60,19 +64,21 @@ namespace ntbs_service.Services
 
             IEnumerable<dynamic> results;
             int count;
+            var (sqlQuery, parameters) = builder.GetResult();
+            parameters.Offset = offset;
+            parameters.Fetch = numberToFetch;
+            
+            string fullSelectQuery = SelectQueryStart + sqlQuery + SelectQueryEnd;
+            string fullCountQuery = CountQuery + sqlQuery;
             
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                results = await connection.QueryAsync(Query, new
-                {
-                    Offset = offset,
-                    Fetch = numberToFetch
-                });
-
-                count = (await connection.QueryAsync<int>(CountQuery)).Single();
+                results = await connection.QueryAsync(fullSelectQuery, (object)parameters);
+                count = (await connection.QueryAsync<int>(fullCountQuery, (object)parameters)).Single();
             }
+            
             var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
             return (notificationBannerModels, count);
         }

@@ -39,7 +39,7 @@ namespace ntbs_integration_tests.SearchPage
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorMessage("id", "Id filter can only contain digits 0-9");
+            resultDocument.AssertErrorMessage("id", "Id filter can only contain digits 0-9 and the symbol -");
             resultDocument.AssertErrorMessage("family-name", "Family name can only contain letters and the symbols ' - . ,");
             resultDocument.AssertErrorMessage("given-name", "Given name can only contain letters and the symbols ' - . ,");
             resultDocument.AssertErrorMessage("postcode", "Postcode can only contain letters, numbers and the symbols ' - . ,");
