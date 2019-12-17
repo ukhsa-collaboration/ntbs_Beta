@@ -68,7 +68,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(GetSeedingNotifications());
             context.PostcodeLookup.AddRange(GetTestPostcodeLookups());
             context.NotificationGroup.AddRange(GetTestNotificationGroups());
-            context.CaseManager.AddRange(GetCaseManagers());
+            context.User.AddRange(GetCaseManagers());
             context.CaseManagerTbService.AddRange(GetCaseManagerTbServicesJoinEntries());
             context.Alert.AddRange(GetSeedingAlerts());
 
@@ -106,12 +106,14 @@ namespace ntbs_integration_tests.Helpers
             };
         }
 
-        private static IEnumerable<CaseManager> GetCaseManagers()
+        private static IEnumerable<User> GetCaseManagers()
         {
-            return new List<CaseManager>
+            return new List<User>
             {
-                new CaseManager { Email = CASEMANAGER_ABINGDON_EMAIL, GivenName = "TestCase", FamilyName = "TestManager" },
-                new CaseManager { Email = CASEMANAGER_ABINGDON_EMAIL2, GivenName = "TestCase2", FamilyName = "TestManager"}
+                new User { Username = CASEMANAGER_ABINGDON_EMAIL, GivenName = "TestCase", FamilyName = "TestManager",
+                           AdGroup = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true },
+                new User { Username = CASEMANAGER_ABINGDON_EMAIL2, GivenName = "TestCase2", FamilyName = "TestManager",
+                            AdGroup = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true }
             };
         }
 
@@ -119,8 +121,8 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<CaseManagerTbService>
             {
-                new CaseManagerTbService { TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, CaseManagerEmail = CASEMANAGER_ABINGDON_EMAIL },
-                new CaseManagerTbService { TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, CaseManagerEmail = CASEMANAGER_ABINGDON_EMAIL2 }
+                new CaseManagerTbService { TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL },
+                new CaseManagerTbService { TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL2 }
             };
         }
 
@@ -142,7 +144,7 @@ namespace ntbs_integration_tests.Helpers
                     {
                         TBServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         HospitalId = Guid.Parse(HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
-                        CaseManagerEmail = CASEMANAGER_ABINGDON_EMAIL
+                        CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
                     }
                 },
                 new Notification()

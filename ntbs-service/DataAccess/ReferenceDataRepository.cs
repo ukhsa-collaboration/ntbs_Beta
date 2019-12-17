@@ -18,9 +18,9 @@ namespace ntbs_service.DataAccess
         Task<Country> GetCountryByIdAsync(int id);
         Task<IList<TBService>> GetAllTbServicesAsync();
         Task<TBService> GetTbServiceByCodeAsync(string code);
-        Task<CaseManager> GetCaseManagerByEmailAsync(string email);
+        Task<User> GetCaseManagerByUsernameAsync(string email);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
-        Task<IList<CaseManager>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
+        Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
         Task<IList<Sex>> GetAllSexesAsync();
@@ -92,12 +92,13 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<CaseManager> GetCaseManagerByEmailAsync(string email)
+        public async Task<User> GetCaseManagerByUsernameAsync(string email)
         {
-            return await _context.CaseManager
+            return await _context.User
                 .Include(c => c.CaseManagerTbServices)
                 .ThenInclude(ct => ct.TbService)
-                .SingleOrDefaultAsync(c => c.Email == email);
+                .Where(u => u.IsCaseManager)
+                .SingleOrDefaultAsync(c => c.Username == email);
         }
 
         public async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
@@ -107,7 +108,7 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task<IList<CaseManager>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes)
+        public async Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes)
         {
             return await _context.TbService
                 .Where(t => tbServiceCodes.Contains(t.Code))
