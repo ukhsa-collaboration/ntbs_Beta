@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Middleware
@@ -43,7 +44,7 @@ namespace ntbs_service.Middleware
                     // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
                     if (string.IsNullOrEmpty(userName)) userName = context.User.Identity.Name;
                     // TODO: Differentiate between Cluster and Full view.
-                    await auditService.OnGetAuditAsync(id, model: "Notification", viewType: "Full", userName: userName);
+                    await auditService.OnGetAuditAsync(id, model: "Notification", auditDetails: NotificationAuditType.Full, userName: userName);
                 };
             }
         }

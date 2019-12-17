@@ -75,8 +75,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
-            var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var testsListPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
+            // Follow the redirect to see results table
             var testsListDocument = await GetDocumentAsync(testsListPage);
             // We can't pick based on id, as we don't know the id created
             var manualResultText = testsListDocument.GetElementById("manual-results")
@@ -116,8 +116,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
-            var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var testsListPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
+            // Follow the redirect to see results table
             var testsListDocument = await GetDocumentAsync(testsListPage);
             var manualResultText = testsListDocument.GetElementById($"manual-test-result-{TEST_ID}").TextContent;
 
@@ -262,8 +262,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
-            var testsListPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var testsListPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
+            // Follow the redirect to see results table
             var testsListDocument = await GetDocumentAsync(testsListPage);
             Assert.Null(testsListDocument.GetElementById($"manual-test-result-{TEST_TO_DELETE_ID}"));
         }

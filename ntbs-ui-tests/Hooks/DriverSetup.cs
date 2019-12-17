@@ -1,4 +1,3 @@
-using System;
 using BoDi;
 using ntbs_service;
 using OpenQA.Selenium;
@@ -12,7 +11,6 @@ namespace ntbs_ui_tests.Hooks
     public class DriverSetup
     {
         private readonly IObjectContainer objectContainer;
-        private readonly SeleniumServerFactory<Startup> Server;
         public IWebDriver Browser;
         public TestSettings settings;
 
@@ -20,8 +18,7 @@ namespace ntbs_ui_tests.Hooks
         {
             this.objectContainer = objectContainer;
             this.settings = settings;
-            Server = server;
-            Server.CreateClient(); // Not sure why needed, see hanselman link referenced in SeleniumServerFactory
+            server.CreateClient(); // Not sure why needed, see hanselman link referenced in SeleniumServerFactory
         }
 
         [BeforeScenario]

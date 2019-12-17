@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Models.Validations;
 
@@ -9,27 +8,27 @@ namespace ntbs_service.Models
     [AtLeastOneProperty("IdFilter", "FamilyName", "PartialDobExists", "Postcode", ErrorMessage = ValidationMessages.SupplyAParameter)]
     public class SearchParameters
     {
-        [DisplayName("Id filter")]
+        [Display(Name = "Id filter")]
         [RegularExpression(ValidationRegexes.NumbersAndHyphenValidation, ErrorMessage = ValidationMessages.NumberAndHyphenFormat)]
         public string IdFilter { get; set; }
         public int? SexId { get; set; }
         public int? CountryId { get; set; }
         public string TBServiceCode { get; set; }
-        [DisplayName("Date of birth")]
+        [Display(Name = "Date of birth")]
         public PartialDate PartialDob { get; set; }
-        [DisplayName("Notification date")]
+        [Display(Name = "Notification date")]
         public PartialDate PartialNotificationDate { get; set; }
 
         [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidationWithNumbers, ErrorMessage = ValidationMessages.StandardStringWithNumbersFormat)]
         public string Postcode { get; set; }
 
-        [DisplayName("Family name")]
+        [Display(Name = "Family name")]
         [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string FamilyName { get; set; }
 
-        [DisplayName("Given name")]
+        [Display(Name = "Given name")]
         [MinLength(2, ErrorMessage = ValidationMessages.MinTwoCharacters)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string GivenName { get; set; }

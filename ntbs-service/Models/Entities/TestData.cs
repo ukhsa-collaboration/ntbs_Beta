@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using ExpressiveAnnotations.Attributes;
@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Entities
     {
         public int NotificationId { get; set; }
 
-        [DisplayName("Test carried out")]
+        [Display(Name = "Test carried out")]
         [RequiredIf("ShouldValidateFull", ErrorMessage = ValidationMessages.Mandatory)]
         [AssertThat("ResultAddedIfTestCarriedOut", ErrorMessage = ValidationMessages.NoTestResult)]
         public bool? HasTestCarriedOut { get; set; }

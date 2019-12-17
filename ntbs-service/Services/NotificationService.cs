@@ -293,7 +293,7 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.SubmissionDate = DateTime.UtcNow;
 
-            await UpdateDatabaseAsync(AuditType.Notified);
+            await UpdateDatabaseAsync(NotificationAuditType.Notified);
         }
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
@@ -349,7 +349,7 @@ namespace ntbs_service.Services
             return caseManagersForTbService.Any(c => c.Email.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
         }
 
-        private async Task UpdateDatabaseAsync(AuditType auditType = AuditType.Edit)
+        private async Task UpdateDatabaseAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             await _context.SaveChangesAsync();
@@ -374,7 +374,7 @@ namespace ntbs_service.Services
             }
 
             notification.NotificationStatus = NotificationStatus.Denotified;
-            await UpdateDatabaseAsync(AuditType.Denotified);
+            await UpdateDatabaseAsync(NotificationAuditType.Denotified);
         }
 
         public async Task DeleteNotificationAsync(int notificationId, string deletionReason)
@@ -383,7 +383,7 @@ namespace ntbs_service.Services
             notification.DeletionReason = deletionReason;
             notification.GroupId = null;
             notification.NotificationStatus = NotificationStatus.Deleted;
-            await UpdateDatabaseAsync(AuditType.Deleted);
+            await UpdateDatabaseAsync(NotificationAuditType.Deleted);
         }
     }
 }

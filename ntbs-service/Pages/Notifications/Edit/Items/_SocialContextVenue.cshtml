@@ -31,7 +31,7 @@
                         var hasVenueNameError = !Model.IsValid("Venue.Name");
                         var venueNameGroupState = hasVenueNameError ? Error : Standard;
                     }
-                    <validate-input model="Venue" property="Name" inline-template>
+                    <validate-input model="SocialContext" property="Name" inline-template>
                         <nhs-form-group nhs-form-group-type="@venueNameGroupState" aria-describedby="venue-name-error">
                         <label nhs-label-type="Standard" asp-for="Venue.Name">
                             @Html.DisplayNameFor(m => m.Venue.Name)
@@ -50,7 +50,7 @@
                         var addressFormState = hasAddressError ? Error : Standard;
                         var addressTextAreaType = hasAddressError ? TextAreaType.Error : TextAreaType.Standard;
                     }
-                    <validate-input model="Venue" property="Address" inline-template>
+                    <validate-input model="SocialContext" property="Address" inline-template>
                         <nhs-form-group nhs-form-group-type="@addressFormState">
                             <label asp-for="Venue.Address" nhs-label-type="Standard">
                                 @Html.DisplayNameFor(m => m.Venue.Address)
@@ -66,7 +66,7 @@
                         var hasPostcodeError = !Model.IsValid("Venue.Postcode");
                         var postcodeGroupState = hasPostcodeError ? Error : Standard;
                     }
-                    <validate-input model="Venue" property="Postcode" inline-template>
+                    <validate-input model="SocialContext" property="Postcode" inline-template>
                         <nhs-form-group ref="formGroup" nhs-form-group-type="@postcodeGroupState" aria-describedby="postcode-error">
                             <label nhs-label-type="Standard" asp-for="Venue.Postcode">
                                 @Html.DisplayNameFor(m => m.Venue.Postcode)
@@ -90,10 +90,10 @@
                 </nhs-grid-column>
             </nhs-grid-row>
             <nhs-grid-row>
-                <validate-multiple model="Venue" :properties="['DateFrom', 'DateTo']" is-date-validation inline-template>
+                <validate-multiple model="SocialContext" :properties="['DateFrom', 'DateTo']" is-date-validation inline-template>
                     <div>
                         <nhs-grid-column grid-column-width="OneThird">
-                            <validate-date model="Venue" property="DateFrom" v-on:validate-multiple="validate" ref="input[0]" inline-template>
+                            <validate-date model="SocialContext" property="DateFrom" v-on:validate-multiple="validate" ref="input[0]" inline-template>
                                 @{
                                     var hasDateFromError = !Model.IsValid("Venue.DateFrom") || !Model.IsValid("FormattedDateFrom");
                                     var dateFromGroupState = hasDateFromError ? Error : Standard;
@@ -148,7 +148,7 @@
                             </validate-date>
                         </nhs-grid-column>
                         <nhs-grid-column grid-column-width="OneThird">
-                            <validate-date model="Venue" property="DateTo" v-on:validate-multiple="validate" ref="input[1]" inline-template>
+                            <validate-date model="SocialContext" property="DateTo" v-on:validate-multiple="validate" ref="input[1]" inline-template>
                                 @{
                                     var hasDateToError = !Model.IsValid("Venue.DateTo") || !Model.IsValid("FormattedDateTo");
                                     var dateToGroupState = hasDateToError ? Error : Standard;
@@ -210,7 +210,7 @@
                         var detailsFormState = hasDetailsError ? Error : Standard;
                         var detailsTextAreaType = hasDetailsError ? TextAreaType.Error : TextAreaType.Standard;
                     }
-                    <validate-input model="Venue" property="Details" inline-template>
+                    <validate-input model="SocialContext" property="Details" inline-template>
                         <nhs-form-group nhs-form-group-type="@detailsFormState">
                             <label asp-for="Venue.Details" nhs-label-type="Standard">
                                 @Html.DisplayNameFor(m => m.Venue.Details)

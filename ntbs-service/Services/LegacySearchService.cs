@@ -44,12 +44,12 @@ namespace ntbs_service.Services
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly IConfiguration _configuration;
+        private readonly bool LegacySearchEnabled;
         public IList<Sex> Sexes;
 
         public LegacySearchService(IConfiguration configuration, IReferenceDataRepository referenceDataRepository)
         {
-            _configuration = configuration;
+            LegacySearchEnabled = configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE);
             connectionString = configuration.GetConnectionString("migration");
             _referenceDataRepository = referenceDataRepository;
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
@@ -57,7 +57,7 @@ namespace ntbs_service.Services
 
         public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int numberToFetch)
         {
-            if (!_configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE))
+            if (!LegacySearchEnabled)
             {
                 return (new List<NotificationBannerModel> {}, 0);
             }

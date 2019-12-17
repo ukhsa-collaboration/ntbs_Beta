@@ -62,6 +62,8 @@ namespace ntbs_ui_tests
                     var db = scopedServices.GetRequiredService<NtbsContext>();
 
                     db.Database.EnsureCreated();
+                    // TODO NTBS-725: Fix bug so we can seed database
+                    // Utilities.SeedDatabase(db);
                 }
             });
         }
@@ -70,7 +72,12 @@ namespace ntbs_ui_tests
         {
             //Real TCP port
             host = builder.Build();
+            // When running features in parallel, this line gets called twice leading to a port in use error.
+            // We disable parallelisation in xunit.runner.json, but if there was a way to only start up one host for the whole process
+            // that would be preferable. Cannot call this method from a BeforeTestRun binding (which would only be called once)
+            // as it only accepts static method and the ServerFactory cannot be DIed
             host.Start();
+
             RootUri = host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.LastOrDefault(); //port 5001
 
             // This is a 'fake' server, needed to be returned by the method but will not actually be used.

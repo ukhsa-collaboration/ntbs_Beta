@@ -30,7 +30,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./SocialContextVenues", new { NotificationId, isBeingSubmitted });
+            return RedirectToPage("./SocialContextAddresses", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

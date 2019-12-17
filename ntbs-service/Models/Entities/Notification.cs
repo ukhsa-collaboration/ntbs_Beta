@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ExpressiveAnnotations.Attributes;
@@ -31,7 +30,7 @@ namespace ntbs_service.Models.Entities
 
         #region DB Mapped Fields
 
-        [DisplayName("NTBS Id")]
+        [Display(Name = "NTBS Id")]
         public int NotificationId { get; set; }
         [MaxLength(50)]
         public string ETSID { get; set; }
@@ -39,13 +38,13 @@ namespace ntbs_service.Models.Entities
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
-        [DisplayName("Deletion reason")]
+        [Display(Name = "Deletion reason")]
         [MaxLength(150)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
         public int? ClusterId { get; set; }
 
-        [DisplayName("Notification date")]
+        [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
@@ -74,19 +73,20 @@ namespace ntbs_service.Models.Entities
         public virtual TestData TestData { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
+        public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
 
         #endregion
 
         #region Display and Formatting methods/fields
 
         public string NotificationStatusString => GetNotificationStatusString();
-        [DisplayName("Date notified")]
+        [Display(Name = "Date notified")]
         public string FormattedSubmissionDate => SubmissionDate.ConvertToString();
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
-        [DisplayName("TB Service")]
+        [Display(Name = "TB Service")]
         public string TBServiceName => Episode.TBService?.Name;
         public string HospitalName => Episode.Hospital?.Name;
         public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
@@ -118,7 +118,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
         public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
-        [DisplayName("Date created")]
+        [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
