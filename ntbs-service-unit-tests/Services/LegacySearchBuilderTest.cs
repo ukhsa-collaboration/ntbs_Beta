@@ -19,7 +19,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterById("1")).GetResult();
 
-            Assert.Contains("WHERE dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id", sqlQuery);
+            Assert.Contains("WHERE (dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id)", sqlQuery);
             Assert.Equal("1", parameters.id);
         }
 
@@ -37,7 +37,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterById("1").FilterByFamilyName("Smith")).GetResult();
 
-            Assert.Contains("WHERE dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id", sqlQuery);
+            Assert.Contains("WHERE (dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id)", sqlQuery);
             Assert.Contains("AND dmg.FamilyName LIKE @familyName", sqlQuery);
             Assert.Equal("1", parameters.id);
             Assert.Equal("%Smith%", parameters.familyName);
@@ -68,6 +68,15 @@ namespace ntbs_service_unit_tests.Services
 
             Assert.Contains("WHERE dmg.BirthCountryId = @countryId", sqlQuery);
             Assert.Equal(2, parameters.countryId);
+        }
+
+        [Fact]
+        public void SearchByPostcode_ReturnsCorrectSqlQueryAndParameters()
+        {
+            var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPostcode("AWX2N")).GetResult();
+
+            Assert.Contains("WHERE REPLACE(dmg.Postcode, ' ', '') LIKE @postcode", sqlQuery);
+            Assert.Equal("AWX2N%", parameters.postcode);
         }
 
         [Fact]
