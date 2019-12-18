@@ -26,7 +26,7 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
-                AppendCondition("dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id");
+                AppendCondition("(dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id)");
                 parameters.id = id;
             }
             return this;
@@ -56,16 +56,36 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterByPostcode(string postcode)
         {
+            if (!string.IsNullOrEmpty(postcode))
+            {
+                var postcodeNoWhitespace = postcode.Replace(" ", "") + "%";
+                AppendCondition("REPLACE(dmg.Postcode, ' ', '') LIKE @postcode");
+                parameters.postcode = postcodeNoWhitespace;
+            }
             return this;
         }
 
         public ISearchBuilder FilterByPartialDob(PartialDate partialDob) 
         {
+            if(!(partialDob == null || partialDob.IsEmpty())) {
+                partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                AppendCondition("dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd");
+                parameters.dobDateRangeStart = dateRangeStart;
+                parameters.dobDateRangeEnd = dateRangeEnd;
+            }
+
             return this;
         }
 
         public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
         {
+            if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
+                partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
+                AppendCondition("n.NotificationDate >= @notificationDateRangeStart AND n.NotificationDate < @notificationDateRangeEnd");
+                parameters.notificationDateRangeStart = dateRangeStart;
+                parameters.notificationDateRangeEnd = dateRangeEnd;
+            }
+            
             return this;
         }
 

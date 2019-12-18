@@ -1,3 +1,5 @@
+using System;
+using ntbs_service.Models;
 using ntbs_service.Services;
 using Xunit;
 
@@ -66,6 +68,26 @@ namespace ntbs_service_unit_tests.Services
 
             Assert.Contains("WHERE dmg.BirthCountryId = @countryId", sqlQuery);
             Assert.Equal(2, parameters.countryId);
+        }
+
+        [Fact]
+        public void SearchByPartialNotificationDate_ReturnsMatchOnNotificationDate()
+        {
+            var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() {Day = "1", Month = "1", Year = "2000"})).GetResult();
+
+            Assert.Contains("n.NotificationDate >= @notificationDateRangeStart AND n.NotificationDate < @notificationDateRangeEnd", sqlQuery);
+            Assert.Equal(new DateTime(2000, 1, 1), parameters.notificationDateRangeStart);
+            Assert.Equal(new DateTime(2000, 1, 2), parameters.notificationDateRangeEnd);
+        }
+
+        [Fact]
+        public void SearchByPartialDob_ReturnsMatchOnDob()
+        {
+            var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPartialDob(new PartialDate() {Day = "1", Month = "1", Year = "1990"})).GetResult();
+
+            Assert.Contains("WHERE dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd", sqlQuery);
+            Assert.Equal(new DateTime(1990, 1, 1), parameters.dobDateRangeStart);
+            Assert.Equal(new DateTime(1990, 1, 2), parameters.dobDateRangeEnd);
         }
     }
 }
