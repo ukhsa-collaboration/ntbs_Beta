@@ -81,6 +81,10 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterByBirthCountry(int? countryId) 
         {
+            if(countryId != null) {
+                AppendCondition("dmg.BirthCountryId = @countryId");
+                parameters.countryId = countryId;
+            }
             return this;
         }
 

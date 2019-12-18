@@ -58,5 +58,14 @@ namespace ntbs_service_unit_tests.Services
             Assert.Contains("WHERE dmg.NtbsSexId = @sexId", sqlQuery);
             Assert.Equal(2, parameters.sexId);
         }
+
+        [Fact]
+        public void SearchByCountryId_ReturnsCorrectSqlQueryAndParameters()
+        {
+            var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByBirthCountry(2)).GetResult();
+
+            Assert.Contains("WHERE dmg.BirthCountryId = @countryId", sqlQuery);
+            Assert.Equal(2, parameters.countryId);
+        }
     }
 }
