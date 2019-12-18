@@ -19,7 +19,6 @@ namespace ntbs_service.Services
         
         public LegacySearchBuilder()
         {
-            this.sqlQuery = "";
             this.parameters = new ExpandoObject();
         }
 
@@ -27,7 +26,7 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
-                sqlQuery += "WHERE n.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id";
+                AppendCondition("dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id");
                 parameters.id = id;
             }
             return this;
@@ -35,11 +34,23 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterByFamilyName(string familyName)
         {
+            if (!string.IsNullOrEmpty(familyName))
+            {
+                AppendCondition("dmg.FamilyName LIKE @familyName");
+                var wildcardedFamilyName = '%' + familyName + '%';
+                parameters.familyName = wildcardedFamilyName;
+            }
             return this;
         }
 
         public ISearchBuilder FilterByGivenName(string givenName)
         {
+            if (!string.IsNullOrEmpty(givenName))
+            {
+                AppendCondition("dmg.GivenName LIKE @givenName");
+                var wildcardedGivenName = '%' + givenName + '%';
+                parameters.givenName = wildcardedGivenName;
+            }
             return this;
         }
 
@@ -60,6 +71,11 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterBySex(int? sexId) 
         {
+            if (sexId != null)
+            {
+                AppendCondition("dmg.NtbsSexId = @sexId");
+                parameters.sexId = sexId;
+            }
             return this;
         }
 
@@ -76,6 +92,20 @@ namespace ntbs_service.Services
         public (string, dynamic) GetResult()
         {
             return (sqlQuery, parameters);
+        }
+
+        private void AppendCondition(string condition) 
+        {
+            if(sqlQuery == null)
+            {
+                sqlQuery += $@"WHERE {condition}
+                    ";
+            }
+            else
+            {
+                sqlQuery += $@"AND {condition}
+                    ";
+            }
         }
     }
 }

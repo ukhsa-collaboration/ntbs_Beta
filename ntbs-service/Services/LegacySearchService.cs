@@ -8,15 +8,12 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
-    
+
     public interface ILegacySearchService
     {
         Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize);
