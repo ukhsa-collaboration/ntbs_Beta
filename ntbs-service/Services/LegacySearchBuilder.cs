@@ -26,8 +26,7 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
-                sqlQuery += @"WHERE dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id
-                    ";
+                AppendCondition("dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id");
                 parameters.id = id;
             }
             return this;
@@ -37,18 +36,8 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(familyName))
             {
+                AppendCondition("dmg.FamilyName LIKE @familyName");
                 var wildcardedFamilyName = '%' + familyName + '%';
-                if(sqlQuery == null)
-                {
-                    sqlQuery += @"WHERE dmg.FamilyName LIKE @familyName
-                        ";
-                }
-                else
-                {
-                    sqlQuery += @"AND dmg.FamilyName LIKE @familyName
-                        ";
-                }
-                
                 parameters.familyName = wildcardedFamilyName;
             }
             return this;
@@ -58,17 +47,8 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(givenName))
             {
+                AppendCondition("dmg.GivenName LIKE @givenName");
                 var wildcardedGivenName = '%' + givenName + '%';
-                if(sqlQuery == null)
-                {
-                    sqlQuery += @"WHERE dmg.GivenName LIKE @givenName
-                        ";
-                }
-                else
-                {
-                    sqlQuery += @"AND dmg.GivenName LIKE @givenName
-                        ";
-                }
                 parameters.givenName = wildcardedGivenName;
             }
             return this;
@@ -93,16 +73,7 @@ namespace ntbs_service.Services
         {
             if (sexId != null)
             {
-                if(sqlQuery == null)
-                {
-                    sqlQuery += @"WHERE dmg.NtbsSexId = @sexId
-                        ";
-                }
-                else
-                {
-                    sqlQuery += @"AND dmg.NtbsSexId = @sexId
-                        ";
-                }
+                AppendCondition("dmg.NtbsSexId = @sexId");
                 parameters.sexId = sexId;
             }
             return this;
@@ -121,6 +92,20 @@ namespace ntbs_service.Services
         public (string, dynamic) GetResult()
         {
             return (sqlQuery, parameters);
+        }
+
+        private void AppendCondition(string condition) 
+        {
+            if(sqlQuery == null)
+            {
+                sqlQuery += $@"WHERE {condition}
+                    ";
+            }
+            else
+            {
+                sqlQuery += $@"AND {condition}
+                    ";
+            }
         }
     }
 }
