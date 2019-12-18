@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ntbs-integration-tests", "n
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ntbs-ui-tests", "ntbs-ui-tests\ntbs-ui-tests.csproj", "{E200EC24-CF7C-489E-86C2-868B2CF25A25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ntbs-migration-tests", "ntbs-migration-tests\ntbs-migration-tests.csproj", "{AB9431EE-9AB5-404E-9AC7-C02D4EA84B04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ntbs-migration-tests", "ntbs-migration-tests\ntbs-migration-tests.csproj", "{AB9431EE-9AB5-404E-9AC7-C02D4EA84B04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
