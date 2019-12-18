@@ -14,7 +14,9 @@ namespace ntbs_service.DataAccess
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
-        Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId);
+
+        Task<Notification> GetNotificationWithNotificationSitesAsync(int notificationId);
+        Task<Notification> GetNotificationWithCaseManagerTbServices(int notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
         Task<Notification> GetNotificationWithSocialContextAddressesAsync(int notificationId);
         Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
@@ -86,11 +88,18 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task<Notification> GetNotificationWithNotificationSitesAsync(int? notificationId)
+        public async Task<Notification> GetNotificationWithNotificationSitesAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.NotificationSites)
                 .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
+        }
+
+        public async Task<Notification> GetNotificationWithCaseManagerTbServices(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.Episode.CaseManager.CaseManagerTbServices)
+                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithTestsAsync(int notificationId)

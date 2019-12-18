@@ -216,7 +216,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["Episode.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.Consultant"] = "Consultant",
@@ -232,6 +232,35 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetPathForId(NotificationSubPaths.EditClinicalDetails, id), GetRedirectLocation(result));
+        }
+
+        [Fact]
+        public async Task PostNotifiedChangingCaseManager_RedirectToNextPage_IfModelIsValid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["Episode.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["Episode.Consultant"] = "Consultant",
+                ["Episode.CaseManagerEmail"] = Utilities.CASEMANAGER_ABINGDON_EMAIL2,
+                ["FormattedNotificationDate.Day"] = "1",
+                ["FormattedNotificationDate.Month"] = "1",
+                ["FormattedNotificationDate.Year"] = "2012",
+            };
+
+            // Act
+            var result = await SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
+            // Actual and expected flipped to accomodate trailing slash differences
+            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
         }
 
         [Fact]

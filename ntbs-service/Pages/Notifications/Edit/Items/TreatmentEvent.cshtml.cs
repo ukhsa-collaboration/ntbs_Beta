@@ -182,12 +182,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public ContentResult OnGetValidateTreatmentEventProperty(string key, string value)
         {
-            return ValidationService.ValidateModelProperty<TreatmentEvent>(key, value, true);
+            return ValidationService.GetPropertyValidationResult<TreatmentEvent>(key, value, true);
         }
 
         public ContentResult OnGetValidateTreatmentEventDate(string key, string day, string month, string year)
         {
-            return ValidationService.ValidateDate<TreatmentEvent>(key, day, month, year);
+            return ValidationService.GetDateValidationResult<TreatmentEvent>(key, day, month, year);
         }
 
         public ContentResult OnGetValidateSelectedTreatmentOutcomeTypeProperty(string key, TreatmentOutcomeType? value)

@@ -153,7 +153,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public ContentResult OnGetValidateTestResultForEditDate(string key, string day, string month, string year)
         {
-            return ValidationService.ValidateDate<ManualTestResult>(key, day, month, year);
+            return ValidationService.GetDateValidationResult<ManualTestResult>(key, day, month, year);
         }
 
         public async Task<JsonResult> OnGetFilteredSampleTypesForManualTestType(int value)

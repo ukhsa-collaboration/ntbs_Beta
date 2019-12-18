@@ -98,7 +98,7 @@ namespace ntbs_service.Pages.Search
 
         public ContentResult OnGetValidateSearchProperty(string key, string value)
         {
-            return ValidationService.ValidateProperty(this, key, value);
+            return ValidationService.GetPropertyValidationResult(this, key, value);
         }
 
         private ISearchBuilder FilterBySearchParameters(ISearchBuilder searchBuilder)
