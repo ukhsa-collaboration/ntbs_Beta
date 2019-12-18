@@ -42,7 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateContactTracing(ContactTracing model, string key)
         {
-            return ValidationService.ValidateFullModel(model);
+            return ValidationService.GetFullModelValidationResult(model);
         }
     }
 }

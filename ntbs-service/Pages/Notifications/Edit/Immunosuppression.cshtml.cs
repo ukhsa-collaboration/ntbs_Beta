@@ -58,7 +58,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 OtherDescription = string.IsNullOrEmpty(otherDescription) ? null : otherDescription
             };
 
-            return ValidationService.ValidateFullModel(model);
+            return ValidationService.GetFullModelValidationResult(model);
         }
     }
 }

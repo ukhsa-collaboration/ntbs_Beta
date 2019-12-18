@@ -173,7 +173,7 @@ namespace ntbs_service.Pages.Notifications
                 ("Postcode", postcode)
             };
 
-            return ValidationService.ValidateMultipleProperties<T>(propertyValueTuples, shouldValidateFull);
+            return ValidationService.GetMultiplePropertiesValidationResult<T>(propertyValueTuples, shouldValidateFull);
         }
 
 

@@ -120,7 +120,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (ClinicalDetails.BCGVaccinationYear != null)
             {
-                ValidationService.ValidateYearComparisonOnModel(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
+                ValidationService.ValidateYearComparison(ClinicalDetails, nameof(ClinicalDetails.BCGVaccinationYear),
                 (int)ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             }
 
@@ -234,7 +234,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.ValidateDate<ClinicalDetails>(key, day, month, year);
+            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
@@ -249,7 +249,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 });
             }
 
-            return ValidationService.ValidateModelProperty<Notification>(key, notificationSites, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<Notification>(key, notificationSites, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateNotificationSiteProperty(string key, string value, bool shouldValidateFull)
@@ -259,12 +259,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ShouldValidateFull = shouldValidateFull,
                 SiteId = (int)SiteId.OTHER
             };
-            return ValidationService.ValidateProperty(notificationSite, key, value);
+            return ValidationService.GetPropertyValidationResult(notificationSite, key, value);
         }
 
         public ContentResult OnGetValidateClinicalDetailsYearComparison(int newYear, int existingYear, string propertyName)
         {
-            return ValidationService.ValidateYearComparison(newYear, existingYear, propertyName);
+            return ValidationService.GetYearComparisonValidationResult(newYear, existingYear, propertyName);
         }
 
         public ContentResult OnGetValidateClinicalDetailsProperties(IEnumerable<Dictionary<string, string>> keyValuePairs)
@@ -274,7 +274,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 propertyValueTuples.Add((keyValuePair["key"], keyValuePair["value"]));
             }
-            return ValidationService.ValidateMultipleProperties<ClinicalDetails>(propertyValueTuples);
+            return ValidationService.GetMultiplePropertiesValidationResult<ClinicalDetails>(propertyValueTuples);
         }
     }
 }
