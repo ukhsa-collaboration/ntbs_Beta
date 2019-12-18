@@ -73,7 +73,7 @@ namespace ntbs_service.Services
         {
             if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
                 partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
-                notificationIQ = notificationIQ.Where(s => s.SubmissionDate >= dateRangeStart && s.SubmissionDate < dateRangeEnd);
+                notificationIQ = notificationIQ.Where(s => s.NotificationDate >= dateRangeStart && s.NotificationDate < dateRangeEnd);
             }
             
             return this;

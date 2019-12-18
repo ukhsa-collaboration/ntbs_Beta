@@ -271,7 +271,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() {Day = "1", Month = "1", Year = "2000"})).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal(new DateTime(2000, 1, 1), result.FirstOrDefault().SubmissionDate);
+            Assert.Equal(new DateTime(2000, 1, 1), result.FirstOrDefault().NotificationDate);
         }
 
         [Fact]
