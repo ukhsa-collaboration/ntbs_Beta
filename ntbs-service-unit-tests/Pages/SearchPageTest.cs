@@ -83,7 +83,7 @@ namespace ntbs_service_unit_tests.Pages
             };
 
             // Act
-            await pageModel.OnGetAsync(1, null, null, null, null);
+            await pageModel.OnGetAsync(1);
 
             // Assert
             var results = Assert.IsAssignableFrom<PaginatedList<NotificationBannerModel>>(pageModel.SearchResults);

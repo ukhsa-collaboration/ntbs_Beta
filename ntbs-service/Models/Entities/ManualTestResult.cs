@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,23 +19,23 @@ namespace ntbs_service.Models.Entities
         // We are not including a navigation property to Notification, otherwise it gets validated
         // on every TryValidateModel(manualTestResult)
 
-        [DisplayName("Test date")]
+        [Display(Name = "Test date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
-        [AssertThat(@"TestDateBeforeDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
+        [AssertThat(@"TestDateAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TestDate { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
-        [DisplayName("Result")]
+        [Display(Name = "Result")]
         public Result? Result { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
-        [DisplayName("Test type")]
+        [Display(Name = "Test type")]
         public int? ManualTestTypeId { get; set; }
         public virtual ManualTestType ManualTestType { get; set; }
 
         [RequiredIf("TestHasSampleTypes", ErrorMessage = ValidationMessages.RequiredSelect)]
-        [DisplayName("Sample type")]
+        [Display(Name = "Sample type")]
         [AssertThat("TestAndSampleTypesMatch", ErrorMessage = ValidationMessages.InvalidTestAndSampleTypeCombination)]
         public int? SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
@@ -48,7 +47,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? Dob { get; set; } = null;
 
         [NotMapped]
-        public bool TestDateBeforeDob => Dob == null || TestDate >= Dob;
+        public bool TestDateAfterDob => Dob == null || TestDate >= Dob;
 
 
         [NotMapped]

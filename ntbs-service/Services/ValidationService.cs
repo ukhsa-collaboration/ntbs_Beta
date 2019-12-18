@@ -37,7 +37,7 @@ namespace ntbs_service.Services
 
         public ContentResult ValidateMultipleProperties<T>(
             IEnumerable<(string, object)> propertyValueTuples,
-            bool shouldValidateFull = false) 
+            bool shouldValidateFull = false)
             where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));
@@ -98,7 +98,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
                 return pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -168,7 +168,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
                 ModelState().AddModelError($"{modelKey}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -228,14 +228,14 @@ namespace ntbs_service.Services
 
             if (!IsValidYear(yearToValidate))
             {
-                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(propertyDisplayName));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
                 ModelState().AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(propertyDisplayName, (int)yearToCompare));
             }
         }

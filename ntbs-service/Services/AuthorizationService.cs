@@ -10,8 +10,8 @@ namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<bool> CanEditNotification(ClaimsPrincipal user, Notification notification);
-        Task<bool> CanEditBannerModel(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
+        Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification);
+        Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
@@ -39,35 +39,33 @@ namespace ntbs_service.Services
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user)
         {
-            return notificationBanners.Select(async n =>
+            notificationBanners.ToList().ForEach(async n =>
             {
                 if(n.NotificationStatus != NotificationStatus.Legacy)
                 {
-                    var fullAccess = await CanEditBannerModel(user, n);
-                    n.FullAccess = fullAccess;
+                    n.FullAccess = await CanEditBannerModelAsync(user, n);
                 }
-                return n;
-            })
-            .Select(n => n.Result);
+            });
+            return notificationBanners;
         }
 
-        public async Task<bool> CanEditBannerModel(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel)
+        public async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel)
         {
             var tbServiceCode = notificationBannerModel.TbServiceCode;
             var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
             var locationPhecCode = notificationBannerModel.LocationPHECCode;
-            return await GetUserPermissionFromLocationAndService(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
         }
 
-        public async Task<bool> CanEditNotification(ClaimsPrincipal user, Notification notification)
+        public async Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification)
         {
             var tbServiceCode = notification.Episode.TBServiceCode;
             var tbServicePhecCode = notification.Episode.TBService?.PHECCode;
             var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return await GetUserPermissionFromLocationAndService(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
         }
 
-        private async Task<bool> GetUserPermissionFromLocationAndService(ClaimsPrincipal user, string tbServiceCode, string locationPhecCode, string tbServicePhecCode)
+        private async Task<bool> AuthorizeUserAccess(ClaimsPrincipal user, string tbServiceCode, string locationPhecCode, string tbServicePhecCode)
         {
             if (_filter == null)
             {

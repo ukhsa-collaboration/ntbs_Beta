@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.DataAccess
@@ -38,6 +39,8 @@ namespace ntbs_service.DataAccess
         Task<IList<SampleType>> GetSampleTypesAsync();
         Task<IList<SampleType>> GetSampleTypesForManualTestType(int manualTestTypeId);
         Task<IList<VenueType>> GetAllVenueTypesAsync();
+        Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type);
+        Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType type, TreatmentOutcomeSubType? subType);
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -199,9 +202,25 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
+        public async Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type)
+        {
+            return await _context.TreatmentOutcome
+                .Where(t => t.TreatmentOutcomeType == type)
+                .ToListAsync();
+        }
+
         public async Task<IList<VenueType>> GetAllVenueTypesAsync()
         {
             return await _context.VenueType.ToListAsync();
+        }
+
+        public async Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(
+            TreatmentOutcomeType type,
+            TreatmentOutcomeSubType? subType)
+        {
+            return await _context.TreatmentOutcome.SingleOrDefaultAsync(t => 
+                t.TreatmentOutcomeType == type
+                && t.TreatmentOutcomeSubType == subType);
         }
     }
 }

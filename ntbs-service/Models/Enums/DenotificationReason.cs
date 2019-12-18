@@ -1,19 +1,19 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ntbs_service.Models.Enums
 {
     public enum DenotificationReason
     {
         NotSelected,
-        [DisplayName("Duplicate entry")]
+        [Display(Name = "Duplicate entry")]
         DuplicateEntry,
-        [DisplayName("Duplicate episode (episodes less than 12 months apart)")]
+        [Display(Name = "Duplicate episode (episodes less than 12 months apart)")]
         DuplicateEpisode,
-        [DisplayName("Patient found not to have TB (atypical mycobacteria)")]
+        [Display(Name = "Patient found not to have TB (atypical mycobacteria)")]
         NotTbAtypicalMyco,
-        [DisplayName("Patient found not to have TB (other)")]
+        [Display(Name = "Patient found not to have TB (other)")]
         NotTbOther,
-        [DisplayName("Other")]
+        [Display(Name = "Other")]
         Other
     }
 }

@@ -35,7 +35,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Items/NewSocialContextVenue", new { NotificationId });
+            return RedirectToPage("./Items/NewSocialContextVenue", "", new { NotificationId }, "social-context-venue-form");
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)

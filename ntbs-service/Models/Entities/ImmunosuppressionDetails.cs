@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +23,7 @@ namespace ntbs_service.Models.Entities
             ErrorMessage = ValidationMessages.ImmunosuppressionDetailRequired)]
         [MaxLength(100)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [DisplayName("Details")]
+        [Display(Name = "Details")]
         public string OtherDescription { get; set; }
 
         public string CreateTypesOfImmunosuppressionString()

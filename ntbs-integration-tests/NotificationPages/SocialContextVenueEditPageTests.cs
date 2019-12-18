@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -77,8 +77,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
-            var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
+            // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             // We can't pick based on id, as we don't know the id created
             var venueTextContent = resultDocument.GetElementById("social-context-venues-list")
@@ -119,8 +119,8 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
-            var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
+            // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             var venueHeadingTextContent = resultDocument.GetElementById($"venue-heading-{VENUE_ID}").TextContent;
             var venueBodyTextContent = resultDocument.GetElementById($"venue-body-{VENUE_ID}").TextContent;
@@ -143,9 +143,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateFrom.Day"] = "",
                 ["FormattedDateFrom.Month"] = "",
                 ["FormattedDateFrom.Year"] = "",
-                ["FormattedDateTo.Day"] = "",
-                ["FormattedDateTo.Month"] = "",
-                ["FormattedDateTo.Year"] = "",
                 ["Venue.Name"] = "",
                 ["Venue.Address"] = "",
                 ["Venue.VenueTypeId"] = ""
@@ -156,11 +153,22 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorMessage("venue-type", string.Format(ValidationMessages.RequiredSelect, "Venue type"));
-            resultDocument.AssertErrorMessage("venue-name", string.Format(ValidationMessages.RequiredEnter, "Venue name"));
-            resultDocument.AssertErrorMessage("address", string.Format(ValidationMessages.RequiredEnter, "Address"));
-            resultDocument.AssertErrorMessage("date-from", string.Format(ValidationMessages.RequiredEnter, "From"));
-            resultDocument.AssertErrorMessage("date-to", string.Format(ValidationMessages.RequiredEnter, "To"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-VenueTypeId",
+                "venue-type",
+                string.Format(ValidationMessages.RequiredSelect, "Venue type"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-Name",
+                "venue-name",
+                string.Format(ValidationMessages.RequiredEnter, "Venue name"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-Address",
+                "address",
+                string.Format(ValidationMessages.RequiredEnter, "Address"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-DateFrom",
+                "date-from",
+                string.Format(ValidationMessages.RequiredEnter, "From"));
         }
 
         [Fact]
@@ -189,7 +197,10 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertValidationErrorResponse();
-            resultDocument.AssertErrorMessage("date-to", "To must be later than date from");
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-DateTo",
+                "date-to", 
+                "To must be later than date from");
         }
 
         [Fact]
@@ -218,15 +229,15 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string> { };
             var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
-            // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
-            var socialContextVenuesPage = await Client.GetAsync(GetRedirectLocation(result)); // Follow the redirect to see results table
+            // Assert;
+            var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
+            // Follow the redirect to see results table
             var resultDocument = await GetDocumentAsync(socialContextVenuesPage);
             Assert.Null(resultDocument.GetElementById($"social-context-venue-{VENUE_TO_DELETE_ID}"));
         }
 
         [Fact]
-        public async Task ValidateVenueDates_ReturnsErrorIfDateToBeforeDateFrom()
+        public async Task ValidateSocialContextDates_ReturnsErrorIfDateToBeforeDateFrom()
         {
             // Arrange
             var keyValuePairs = new string[]
@@ -243,7 +254,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Act
             var url = GetCurrentPathForId(0) + VENUE_ID;
-            var response = await Client.GetAsync($"{url}/ValidateVenueDates?{string.Join("&", keyValuePairs)}");
+            var response = await Client.GetAsync($"{url}/ValidateSocialContextDates?{string.Join("&", keyValuePairs)}");
 
             // Assert check just response.Content
             var result = await response.Content.ReadAsStringAsync();

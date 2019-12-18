@@ -4,7 +4,7 @@
 @{ 
     var header = Model.FirstOrDefault(); 
     var showEditLinks = (bool) (ViewData["ShowSocialContextVenueEditLinks"] ?? false);
-    var orderedResults = Model.OrderByDescending(r => r.DateTo);
+    var orderedResults = Model.OrderByDescending(r => !r.DateTo.HasValue).ThenByDescending(r => r.DateFrom);
 }
 
 <div id="social-context-venues-list">
@@ -15,19 +15,19 @@
             @if (showEditLinks) 
             {
                 var subPath = NotificationSubPaths.EditSocialContextVenue(result.SocialContextVenueId);
-                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath) + "#social-context-venue-form";
                 <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
             }
         </div>
         <dl class="notification-overview-details-container" id="venue-body-@result.SocialContextVenueId">
             <nhs-grid-row classes="notification-overview-details">
                 <nhs-grid-column grid-column-width="OneHalf">
-                    <dt class="notification-details-label"> Category </dt>
-                    <dd class="cell-min-height"> @result.VenueType.Category </dd>
+                    <dt class="notification-details-label"> Venue Type </dt>
+                    <dd class="cell-min-height"> @result.VenueType.FormatCategoryAndName() </dd>
                 </nhs-grid-column>
                 <nhs-grid-column grid-column-width="OneHalf">
-                    <dt class="notification-details-label"> Venue type </dt>
-                    <dd class="cell-min-height"> @result.VenueType.Name </dd>
+                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Frequency) </dt>
+                    <dd class="cell-min-height"> @result.Frequency </dd>
                 </nhs-grid-column>
             </nhs-grid-row>
             <nhs-grid-row classes="notification-overview-details">
@@ -41,11 +41,7 @@
                 </nhs-grid-column>
             </nhs-grid-row>
             <nhs-grid-row classes="notification-overview-details">
-                <nhs-grid-column grid-column-width="OneHalf">
-                    <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Frequency) </dt>
-                    <dd class="cell-min-height"> @result.Frequency </dd>
-                </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneHalf">
+                    <nhs-grid-column grid-column-width="Full">
                     <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
                     <dd class="cell-min-height"> @result.Details </dd>
                 </nhs-grid-column>

@@ -125,6 +125,8 @@ namespace ntbs_service
             services.AddScoped<ILegacySearchService, LegacySearchService>();
             services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
+            services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
+            services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
         }
