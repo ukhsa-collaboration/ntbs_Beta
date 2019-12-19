@@ -48,6 +48,17 @@ namespace ntbs_service.Helpers
 
     public static class StringExtensions
     {
+        public static string FormatStringToPostcodeFormat(this string postcode)
+        {
+            if(postcode != null)
+            {
+                return postcode.Substring(0, postcode.Length - 3) + " " + postcode.Substring(postcode.Length - 3, 3);
+            }
+            else
+            {
+                return null;
+            }
+        }
         public static string FormatStringToNhsNumberFormat(this string nhsNumber)
         {
             if (nhsNumber == null)
@@ -64,5 +75,6 @@ namespace ntbs_service.Helpers
                 nhsNumber.Substring(6, 4)
             );
         }
+
     }
 }

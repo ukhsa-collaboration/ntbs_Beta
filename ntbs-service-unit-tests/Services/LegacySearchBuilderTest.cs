@@ -75,7 +75,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPostcode("AWX2N")).GetResult();
 
-            Assert.Contains("WHERE REPLACE(dmg.Postcode, ' ', '') LIKE @postcode", sqlQuery);
+            Assert.Contains("WHERE dmg.Postcode LIKE @postcode", sqlQuery);
             Assert.Equal("AWX2N%", parameters.postcode);
         }
 

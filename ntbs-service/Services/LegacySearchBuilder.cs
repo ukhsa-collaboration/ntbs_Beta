@@ -59,7 +59,7 @@ namespace ntbs_service.Services
             if (!string.IsNullOrEmpty(postcode))
             {
                 var postcodeNoWhitespace = postcode.Replace(" ", "") + "%";
-                AppendCondition("REPLACE(dmg.Postcode, ' ', '') LIKE @postcode");
+                AppendCondition("dmg.Postcode LIKE @postcode");
                 parameters.postcode = postcodeNoWhitespace;
             }
             return this;
