@@ -10092,22 +10092,22 @@ namespace ntbs_service.Migrations
                         new
                         {
                             SiteId = 2,
-                            Description = "Bone/joint: spine"
+                            Description = "Spine"
                         },
                         new
                         {
                             SiteId = 3,
-                            Description = "Bone/joint: other"
+                            Description = "Bone/joint: Other"
                         },
                         new
                         {
                             SiteId = 4,
-                            Description = "meningitis"
+                            Description = "Meningitis"
                         },
                         new
                         {
                             SiteId = 5,
-                            Description = "other"
+                            Description = "CNS: Other"
                         },
                         new
                         {
@@ -10168,11 +10168,6 @@ namespace ntbs_service.Migrations
                         {
                             SiteId = 17,
                             Description = "Other extra-pulmonary"
-                        },
-                        new
-                        {
-                            SiteId = 18,
-                            Description = "Unknown"
                         });
                 });
 

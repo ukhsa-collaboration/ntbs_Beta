@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site description can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name can only contain letters and the symbols ' - . ,");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year has an invalid year");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-SymptomStartDate", "symptom", "Symptom onset date does not have a valid date selection");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-FirstPresentationDate", "first-presentation", "Presentation to any health service must be today or earlier");
@@ -87,7 +87,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("other-site", "Site description is a mandatory field");
+            resultDocument.AssertErrorMessage("other-site", "Site name is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DeathDate", "postmortem", "Date of death is a mandatory field");
         }
@@ -326,8 +326,8 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("false", "123", "Site description can only contain letters and the symbols ' - . ,")]
-        [InlineData("true", "", "Site description is a mandatory field")]
+        [InlineData("false", "123", "Site name can only contain letters and the symbols ' - . ,")]
+        [InlineData("true", "", "Site name is a mandatory field")]
         [InlineData("false", "", "")]
         public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(string shouldValidateFull, string value, string validationResult)
         {

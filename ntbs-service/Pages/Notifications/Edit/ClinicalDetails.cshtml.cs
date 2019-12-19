@@ -79,6 +79,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (ClinicalDetails.ShouldValidateFull)
             {
                 TryValidateModel(this);
+                
+                // EditPageErrorDictionary is null only if coming from a GET call, we want to guard here
+                // only in a GET call
+                if (EditPageErrorDictionary == null && 
+                    (!NotificationSiteMap.ContainsKey(SiteId.OTHER) || !NotificationSiteMap[SiteId.OTHER]))
+                {
+                    ModelState.Remove("OtherSite.SiteDescription");
+                }
             }
 
             return Page();

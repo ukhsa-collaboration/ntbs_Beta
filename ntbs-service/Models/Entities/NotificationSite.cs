@@ -12,8 +12,8 @@ namespace ntbs_service.Models.Entities
         public int SiteId { get; set; }
         public virtual Site Site { get; set; }
 
-        [Display(Name = "Site description")]
-        [RequiredIf("SiteId == SiteId.OTHER && ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
+        [Display(Name = "Site name")]
+        [RequiredIf("ShouldValidateFull && SiteId == SiteId.OTHER", ErrorMessage = ValidationMessages.FieldRequired)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SiteDescription { get; set; }
     }
