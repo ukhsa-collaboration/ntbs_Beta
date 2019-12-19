@@ -37,7 +37,7 @@
             }
 
             <nhs-details display-text="Extra-Pulmonary" nhs-details-type="Standard" classes="disease-sites" is-open="@hasValidationErrors">
-                <label nhs-label-type="Bold">Bone/joint</label>
+                <h3 class="nhsuk-label nhsuk-label--s">Bone/joint</h3>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.BONE_SPINE]" />
@@ -49,7 +49,7 @@
                     </nhs-checkboxes-item>
                 </nhs-checkboxes>
 
-                <label nhs-label-type="Bold">CNS</label>
+                <h3 class="nhsuk-label nhsuk-label--s">CNS</h3>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CNS_MENINGITIS]" />
@@ -61,7 +61,7 @@
                     </nhs-checkboxes-item>
                 </nhs-checkboxes>
 
-                <label nhs-label-type="Bold">Lymph nodes</label>
+                <h3 class="nhsuk-label nhsuk-label--s">Lymph nodes</h3>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]" />
@@ -73,7 +73,7 @@
                     </nhs-checkboxes-item>
                 </nhs-checkboxes>
 
-                <label nhs-label-type="Bold">Other</label>
+                <h3 class="nhsuk-label nhsuk-label--s">Other</h3>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.CRYPTIC]" />
