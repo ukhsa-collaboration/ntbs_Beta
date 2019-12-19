@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using Xunit;
 
@@ -76,6 +78,8 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
                 ["NotificationSiteMap[OTHER]"] = "true",
+                ["OtherSite.SiteId"] = ((int)SiteId.OTHER).ToString(),
+                ["OtherSite.SiteDescription"] = null,
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.IsPostMortem"] = "true"
             };
@@ -87,9 +91,55 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorMessage("other-site", "Site name is a mandatory field");
+            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DeathDate", "postmortem", "Date of death is a mandatory field");
+        }
+
+        [Fact]
+        public async Task ExpandableDiseaseSites_SingleOpen_IfValidModel()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var siteExpanders = document.QuerySelectorAll(".disease-sites");
+            Assert.Equal(2, siteExpanders.Length);
+            var openSiteExpanders = document.QuerySelectorAll(".disease-sites[open]");
+            Assert.Equal(1, openSiteExpanders.Length);
+        }
+
+        [Fact]
+        public async Task ExpandableDiseaseSites_BothOpen_IfSitesValidationError()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var initialDocument = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
+                ["NotificationSiteMap[OTHER]"] = "true",
+                ["OtherSite.SiteId"] = ((int)SiteId.OTHER).ToString(),
+                ["OtherSite.SiteDescription"] = null
+            };
+
+            // Act
+            var result = await SendPostFormWithData(initialDocument, formData, url, submitType:"Save");
+
+            // Assert
+            result.EnsureSuccessStatusCode();
+            var resultDocument = await GetDocumentAsync(result);
+
+            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name is a mandatory field");
+
+            var siteExpanders = resultDocument.QuerySelectorAll(".disease-sites");
+            Assert.Equal(2, siteExpanders.Length);
+            var openSiteExpanders = resultDocument.QuerySelectorAll(".disease-sites[open]");
+            Assert.Equal(2, openSiteExpanders.Length);
         }
 
         [Fact]

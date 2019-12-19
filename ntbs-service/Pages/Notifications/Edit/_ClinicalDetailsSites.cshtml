@@ -34,10 +34,9 @@
             
             @{
                 var hasValidationErrors = hasNotificationSitesError || !Model.IsValid("OtherSite.SiteDescription");
-                var conditionalDetailsOpenAttribute = hasValidationErrors ? "open" : "";
             }
 
-            <nhs-details display-text="Extra-Pulmonary" nhs-details-type="Standard" classes="disease-sites">
+            <nhs-details display-text="Extra-Pulmonary" nhs-details-type="Standard" classes="disease-sites" is-open="@hasValidationErrors">
                 <label nhs-label-type="Bold">Bone/joint</label>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
@@ -125,7 +124,7 @@
                             <nhs-form-group nhs-form-group-type=@siteDescriptionGroupState aria-describedby="other-site-error" id="OtherSite-SiteDescription">
                                 <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasSiteDescriptionError"
                                       asp-validation-for="OtherSite.SiteDescription" id="other-site-error"></span>
-                                <label asp-for="OtherSite.SiteDescription">
+                                <label nhs-label-type="Standard" asp-for="OtherSite.SiteDescription">
                                     Enter site name
                                 </label>
                                 <input type="hidden" asp-for="OtherSite.SiteId" />
