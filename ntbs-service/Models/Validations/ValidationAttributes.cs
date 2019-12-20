@@ -163,7 +163,7 @@ namespace ntbs_service.Models.Validations
 
             if(!ValidateNhsNumber(nhsNumber))
             {
-                return new ValidationResult("invalid numero m8");
+                return new ValidationResult(ValidationMessages.InvalidNhsNumber);
             }
 
             return null;
@@ -171,6 +171,34 @@ namespace ntbs_service.Models.Validations
 
         public bool ValidateNhsNumber(string nhsNumber)
         {
+            int multiplicationTotal = 0;
+            string currentString;
+            int currentNumber;
+
+            for(var i = 0; i <= 8; i++)
+            {
+                currentString = nhsNumber.Substring(i, 1);
+                currentNumber = Convert.ToInt16(currentString);
+                multiplicationTotal += currentNumber * (10 - i);
+            }
+
+            var remainder = multiplicationTotal % 11;
+            var checkNumberCalculated = 11 - remainder;
+            var checkDigit = Convert.ToInt16(nhsNumber.Substring(nhsNumber.Length - 1, 1));
+
+            if (checkNumberCalculated == 11)
+            {
+                checkNumberCalculated = 0;
+            }
+            if(checkNumberCalculated == 10)
+            {
+                return false;
+            }
+            if(checkNumberCalculated == checkDigit)
+            {
+                return true;
+            }
+
             return false;
         }
     }

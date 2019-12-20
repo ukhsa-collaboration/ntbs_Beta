@@ -37,36 +37,34 @@ namespace ntbs_service_unit_tests.Models
             Assert.True(result);
         }
 
-        private static readonly List<string> ExcludedFirstDigitNumbers = new List<string>()
-        {
-            "0123456789",
-            "1234567890",
-            "2345678901"
-        };
-
         public static IEnumerable<object[]> ScottishNhsNumbers()
         {
-            return ExcludedFirstDigitNumbers.Select(number => new object[] { number });
+            return new List<string>()
+            {
+                "0123456789",
+                "1234567890",
+                "2345678901"
+            }
+            .Select(number => new object[] { number });
         }
 
         [Theory, MemberData(nameof(ScottishNhsNumbers))]
-        public void CheckNhsNumberValidationAttributeReturnsValid_ForExcludedFirstDigits(string nhsNumber) {
+        public void CheckNhsNumberValidationAttributeReturnsValid_ForScottishFirstDigits(string nhsNumber) {
             var attribute = new ValidNhsNumberAttribute();
             var result = attribute.IsValid(nhsNumber);
 
             Assert.True(result);
         }
 
-        private static readonly List<string> InvalidNhsNumbers = new List<string>()
-        {
-            "0123456789",
-            "1234567890",
-            "2345678901"
-        };
-
         public static IEnumerable<object[]> GetInvalidNhsNumbers()
         {
-            return ExcludedFirstDigitNumbers.Select(number => new object[] { number });
+            return new List<string>()
+            {
+                "4123456789",
+                "5234567890",
+                "6345678901"
+            }
+            .Select(number => new object[] { number });
         }
         
         [Theory, MemberData(nameof(GetInvalidNhsNumbers))]
@@ -77,16 +75,15 @@ namespace ntbs_service_unit_tests.Models
             Assert.False(result);
         }
 
-        private static readonly List<string> ValidNhsNumbers = new List<string>()
-        {
-            "0123456789",
-            "1234567890",
-            "2345678901"
-        };
-
         public static IEnumerable<object[]> GetValidNhsNumbers()
         {
-            return ValidNhsNumbers.Select(number => new object[] { number });
+            return new List<string>()
+            {
+                "6511195635",
+                "8881441519",
+                "5864552852"
+            }
+            .Select(number => new object[] { number });
         }
 
         [Theory, MemberData(nameof(GetValidNhsNumbers))]

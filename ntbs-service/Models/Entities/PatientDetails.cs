@@ -12,8 +12,7 @@ namespace ntbs_service.Models.Entities
     public class PatientDetails : ModelBase, IHasPostcode
     {
         [StringLength(35)]
-        [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
-        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [ValidNhsNumber]
         [Display(Name = "Family name")]
         public string FamilyName { get; set; }
 

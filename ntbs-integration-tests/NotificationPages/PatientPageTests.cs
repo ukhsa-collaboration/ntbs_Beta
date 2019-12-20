@@ -362,6 +362,7 @@ namespace ntbs_integration_tests.NotificationPages
         [Theory]
         [InlineData("ABC", "NHS number can only contain digits 0-9")]
         [InlineData("123", "NHS number needs to be 10 digits long")]
+        [InlineData("5647382911", "This NHS number is not valid. Confirm you have entered it correctly")]
         public async Task WhenNhsNumberInvalid_ValidatePatientProperty_ReturnsExpectedResult(string nhsNumber, string validationResult)
         {
             // Arrange
