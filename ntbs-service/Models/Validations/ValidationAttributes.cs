@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace ntbs_service.Models.Validations
 {
@@ -134,6 +136,42 @@ namespace ntbs_service.Models.Validations
                 return new ValidationResult(ValidationMessages.InvalidDate(validationContext.DisplayName));
             }
             return null;
+        }
+    }
+
+    public class ValidNhsNumberAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var nhsNumber = value.ToString();
+            var match = Regex.Match(nhsNumber, "(\\d+)");
+            if(!match.Success)
+            {
+                return new ValidationResult(ValidationMessages.NumberFormat);
+            }
+            else if(nhsNumber.Length != 10)
+            {
+                return new ValidationResult(ValidationMessages.NhsNumberLength);
+            }
+            
+            var firstDigit = nhsNumber.Substring(0, 1);
+            var  scottishAndTestDigits = new List<string> {"0", "1", "2", "9"};
+            if (scottishAndTestDigits.Contains(firstDigit))
+            {
+                return null;
+            }
+
+            if(!ValidateNhsNumber(nhsNumber))
+            {
+                return new ValidationResult("invalid numero m8");
+            }
+
+            return null;
+        }
+
+        public bool ValidateNhsNumber(string nhsNumber)
+        {
+            return false;
         }
     }
 }
