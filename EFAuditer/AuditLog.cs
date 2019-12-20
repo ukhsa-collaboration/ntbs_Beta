@@ -13,6 +13,6 @@ namespace EFAuditer
         public DateTime AuditDateTime { get; set; }
         public string AuditUser { get; set; }
         public string RootEntity { get; set; }
-        public int? RootId { get; set; }
+        public string RootId { get; set; }
     }
 }

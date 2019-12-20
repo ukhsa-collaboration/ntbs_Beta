@@ -55,10 +55,7 @@ namespace EFAuditer
             audit.AuditDateTime = DateTime.Now;
             audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
             audit.RootEntity = GetCustomKey(ev, CustomFields.RootEntity);
-            if (int.TryParse(GetCustomKey(ev, CustomFields.RootId), out int parsedInt))
-            {
-                audit.RootId = parsedInt;
-            }
+            audit.RootId = GetCustomKey(ev, CustomFields.RootId);
         }
 
         private static string GetCustomKey(AuditEvent ev, string key)

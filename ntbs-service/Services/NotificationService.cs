@@ -363,7 +363,7 @@ namespace ntbs_service.Services
         private async Task UpdateDatabaseAsync(
             int? notificationId,
             NotificationAuditType auditType = NotificationAuditType.Edited,
-            string rootEntity = "Notification")
+            string rootEntity = RootEntities.Notification)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
             _context.AddAuditCustomField(CustomFields.RootId, notificationId);

@@ -41,7 +41,7 @@ namespace EFAuditer.Migrations
 
                     b.Property<string>("RootEntity");
 
-                    b.Property<int?>("RootId");
+                    b.Property<string>("RootId");
 
                     b.HasKey("Id");
 
