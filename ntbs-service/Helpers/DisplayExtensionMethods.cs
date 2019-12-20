@@ -56,7 +56,8 @@ namespace ntbs_service.Helpers
                 {
                     return postcode;
                 }
-                else {
+                else
+                {
                     return postcode.Substring(0, postcode.Length - 3) + " " + postcode.Substring(postcode.Length - 3, 3);
                 }
             }
