@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "12.12.21",
-    "@types/webpack-env": "1.14.0",
+    "@types/webpack-env": "1.14.1",
     "aspnet-webpack": "3.0.0",
     "css-loader": "3.4.0",
     "mini-css-extract-plugin": "0.8.2",
