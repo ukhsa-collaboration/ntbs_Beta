@@ -39,7 +39,7 @@ namespace ntbs_service.DataMigration
             LEFT JOIN DeathDates dd ON dd.OldNotificationId = n.OldNotificationId
             LEFT JOIN VisitorHistory vstr ON vstr.OldNotificationId = n.OldNotificationId
             LEFT JOIN TravelHistory trvl ON trvl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ClinicalDates clncl ON clncl.OldNotificationId = n.OldNotificationId
+            LEFT JOIN ClinicalDetails clncl ON clncl.OldNotificationId = n.OldNotificationId
             LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
             LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
             WHERE GroupId IN (
