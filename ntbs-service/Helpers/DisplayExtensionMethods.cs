@@ -52,13 +52,20 @@ namespace ntbs_service.Helpers
         {
             if(postcode != null)
             {
-                return postcode.Substring(0, postcode.Length - 3) + " " + postcode.Substring(postcode.Length - 3, 3);
+                if (postcode.Length < 3) // If the postcode is too short (e.g. from the legacy database) the Substring methods will fail
+                {
+                    return postcode;
+                }
+                else {
+                    return postcode.Substring(0, postcode.Length - 3) + " " + postcode.Substring(postcode.Length - 3, 3);
+                }
             }
             else
             {
                 return null;
             }
         }
+
         public static string FormatStringToNhsNumberFormat(this string nhsNumber)
         {
             if (nhsNumber == null)
@@ -68,6 +75,10 @@ namespace ntbs_service.Helpers
             if (string.IsNullOrEmpty(nhsNumber))
             {
                 return string.Empty;
+            }
+            if(nhsNumber.Length != 10) // If the NHS number is the wrong length (e.g. from the legacy database) the Substring methods will fail
+            {
+                return nhsNumber;
             }
             return string.Join(" ",
                 nhsNumber.Substring(0, 3),
