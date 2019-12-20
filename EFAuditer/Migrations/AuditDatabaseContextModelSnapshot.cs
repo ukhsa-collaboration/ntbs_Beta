@@ -39,6 +39,10 @@ namespace EFAuditer.Migrations
 
                     b.Property<string>("OriginalId");
 
+                    b.Property<string>("RootEntity");
+
+                    b.Property<int?>("RootId");
+
                     b.HasKey("Id");
 
                     b.ToTable("AuditLogs");

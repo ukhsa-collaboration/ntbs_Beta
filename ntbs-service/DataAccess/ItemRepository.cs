@@ -17,6 +17,9 @@ namespace ntbs_service.DataAccess
     {
         protected readonly NtbsContext _context;
 
+        protected abstract int? ItemRootId(T item);
+        protected abstract string ItemRootEntity { get; }
+
         protected ItemRepository(NtbsContext context)
         {
             _context = context;
@@ -26,25 +29,30 @@ namespace ntbs_service.DataAccess
         {
             var dbSet = GetDbSet();
             dbSet.Add(item);
-            await UpdateDatabaseAsync();
+            await UpdateDatabaseAsync(ItemRootId(item), ItemRootEntity);
         }
 
         public async Task UpdateAsync(Notification notification, T item)
         {
             var entity = GetEntityToUpdate(notification, item);
             _context.SetValues(entity, item);
-            await UpdateDatabaseAsync();
+            await UpdateDatabaseAsync(ItemRootId(item), ItemRootEntity);
         }
 
         public async Task DeleteAsync(T item)
         {
             _context.Remove(item);
-            await UpdateDatabaseAsync();
+            await UpdateDatabaseAsync(ItemRootId(item), ItemRootEntity);
         }
 
-        private async Task UpdateDatabaseAsync()
+        private async Task UpdateDatabaseAsync(
+            int? rootEntityId,
+            string rootEntity)
         {
+            _context.AddAuditCustomField(CustomFields.RootId, rootEntityId);
             _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Edited);
+            _context.AddAuditCustomField(CustomFields.RootEntity, rootEntity);
+
             await _context.SaveChangesAsync();
         }
 

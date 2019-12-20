@@ -8,6 +8,9 @@ namespace ntbs_service.DataAccess
     {
         public TreatmentEventRepository(NtbsContext context) : base(context) { }
 
+        protected override int? ItemRootId(TreatmentEvent item) => item.NotificationId;
+        protected override string ItemRootEntity => "Notification";
+
         protected override DbSet<TreatmentEvent> GetDbSet()
         {
             return _context.TreatmentEvent;
