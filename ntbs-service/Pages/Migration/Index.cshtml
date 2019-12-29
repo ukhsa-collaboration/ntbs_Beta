@@ -27,7 +27,7 @@
                 var notificationDateGroupState = notificationDateError ? Error : Standard;
             }
             <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--import-by-date">
-                <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="import-error"
+                <span nhs-span-type="ErrorMessage" id="notification-date-error" classes="import-error"
                     asp-validation-for="CutoffNotificationDate" has-error="@notificationDateError"></span>
                 <label nhs-label-type="Standard" for="notification-date"> Notification Date </label>
                 <nhs-date-input id="notification-date">

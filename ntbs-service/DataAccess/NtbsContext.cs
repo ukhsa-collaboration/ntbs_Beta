@@ -326,6 +326,7 @@ namespace ntbs_service.DataAccess
                 entity.HasIndex(e => new { e.NotificationStatus, e.SubmissionDate });
                 entity.HasIndex(e => e.LTBRID);
                 entity.HasIndex(e => e.ETSID);
+                entity.HasIndex(e => e.LTBRPatientId);
             });
 
             modelBuilder.Entity<Region>(entity =>

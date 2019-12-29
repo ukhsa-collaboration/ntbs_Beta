@@ -26,7 +26,7 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
-                AppendCondition("dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id");
+                AppendCondition("(dmg.OldNotificationId = @id OR n.GroupId = @id AND n.Source = 'LTBR' OR dmg.NhsNumber = @id)");
                 parameters.id = id;
             }
             return this;
@@ -96,16 +96,7 @@ namespace ntbs_service.Services
 
         private void AppendCondition(string condition) 
         {
-            if(sqlQuery == null)
-            {
-                sqlQuery += $@"WHERE {condition}
-                    ";
-            }
-            else
-            {
-                sqlQuery += $@"AND {condition}
-                    ";
-            }
+            sqlQuery += $@"AND {condition}";
         }
     }
 }

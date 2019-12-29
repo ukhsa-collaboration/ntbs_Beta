@@ -31,7 +31,7 @@ namespace ntbs_service.DataMigration
             }
             
             _context.Notification.AddRange(notifications);
-            _context.AddAuditCustomField(CustomFields.AuditDetails, AuditType.Imported);
+            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Imported);
             await _context.SaveChangesAsync();
             return notifications;
         }

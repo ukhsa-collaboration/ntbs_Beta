@@ -19,12 +19,8 @@ namespace ntbs_service.Pages.Migration
     [Authorize(Policy = "AdminOnly")]
     public class IndexModel : PageModel
     {
-        private readonly INotificationImportService _service;
-
-        public IndexModel(INotificationImportService service)
+        public IndexModel()
         {
-            _service = service;
-            Results = new List<Notification>();
             ValidationService = new ValidationService(this);
         }
 
@@ -38,7 +34,7 @@ namespace ntbs_service.Pages.Migration
         [Display(Name = "Cutoff Notification Date")]
         public PartialDate CutoffNotificationDate { get; set; }
 
-        public IList<Notification> Results { get; set; }
+        public IList<Notification> Results { get; set; } = new List<Notification>();
         public ValidationService ValidationService { get; }
 
         public IActionResult OnGetAsync()
@@ -58,17 +54,22 @@ namespace ntbs_service.Pages.Migration
             if (UploadedFile != null)
             {
                 var notificationIds = await GetIdListFromFile(UploadedFile);
-                var IdGroups = splitList(notificationIds, 10);
+                var IdBatches = splitList(notificationIds);
 
-                foreach (var idGroup in IdGroups)
+                foreach (var IdBatch in IdBatches)
                 {
-                    BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportNotificationsByIdAsync(requestId, idGroup));
+                    BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByLegacyIdsAsync(null, requestId, IdBatch));
                 }
             }
             else if (CutoffNotificationDate != null)
             {
-                CutoffNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
-                Results = await _service.ImportNotificationsByDateAsync(requestId, (DateTime) dateRangeStart);
+                CutoffNotificationDate.TryConvertToDateTimeRange(out DateTime? startDate, out DateTime? endDate);
+
+                for (var dateRangeStart = (DateTime) startDate; dateRangeStart < DateTime.Now; dateRangeStart = dateRangeStart.AddMonths(6))
+                {
+                    var dateRangeEnd = dateRangeStart.AddMonths(6);
+                    BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByDateAsync(null, requestId, dateRangeStart, dateRangeEnd));
+                }
             }
 
             return Page();
@@ -76,20 +77,20 @@ namespace ntbs_service.Pages.Migration
 
         private async Task<List<string>> GetIdListFromFile(IFormFile file)
         {
-            var ids = new List<string>();
+            var legacyIds = new List<string>();
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
                 while (reader.Peek() >= 0)
-                    ids.Add(await reader.ReadLineAsync()); 
+                    legacyIds.Add(await reader.ReadLineAsync()); 
             }
-            return ids;
+            return legacyIds;
         }
 
-        public static IEnumerable<List<T>> splitList<T>(List<T> ids, int nSize=1000)  
+        public static IEnumerable<List<T>> splitList<T>(List<T> legacyIds, int nSize=1000)  
         {        
-            for (int index = 0; index < ids.Count; index += nSize) 
+            for (int index = 0; index < legacyIds.Count; index += nSize) 
             { 
-                yield return ids.GetRange(index, Math.Min(nSize, ids.Count - index)); 
+                yield return legacyIds.GetRange(index, Math.Min(nSize, legacyIds.Count - index)); 
             }  
         } 
     }

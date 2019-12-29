@@ -13,101 +13,37 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<List<List<Notification>>> GetById(List<string> notificationId);
-        Task<List<List<Notification>>> GetByDate(DateTime cutoffDate);
+        Task<List<List<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
+        Task<List<List<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
     {
-        const string NotificationsQuery = @"
-            SELECT *,
-            	trvl.Country1 AS travel_Country1,
-                trvl.Country2 AS travel_Country2,
-                trvl.Country3 AS travel_Country3,
-                trvl.TotalNumberOfCountries AS travel_TotalNumberOfCountries,
-                trvl.StayLengthInMonths1 AS travel_StayLengthInMonths1,
-                trvl.StayLengthInMonths2 AS travel_StayLengthInMonths2,
-                trvl.StayLengthInMonths3 AS travel_StayLengthInMonths3,
-                vstr.Country1 AS visitor_Country1,
-                vstr.Country2 AS visitor_Country2,
-                vstr.Country3 AS visitor_Country3,
-                vstr.TotalNumberOfCountries AS visitor_TotalNumberOfCountries,
-                vstr.StayLengthInMonths1 AS visitor_StayLengthInMonths1,
-                vstr.StayLengthInMonths2 AS visitor_StayLengthInMonths2,
-                vstr.StayLengthInMonths3 AS visitor_StayLengthInMonths3
-            FROM Notifications n 
-            LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            LEFT JOIN DeathDates dd ON dd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN VisitorHistory vstr ON vstr.OldNotificationId = n.OldNotificationId
-            LEFT JOIN TravelHistory trvl ON trvl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ClinicalDates clncl ON clncl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
-            WHERE GroupId IN (
-                SELECT GroupId
-                FROM Notifications n {0}
-            )";
-
-        const string WhereClauseById = @"WHERE n.OldNotificationId IN ({0})";
-        const string WhereClauseByDate = @"WHERE n.NotificationDate > {0}";
-
-        const string NotificationSitesQuery = @"
-            SELECT *
-            FROM DiseaseSites
-            WHERE OldNotificationId IN ({0})
-        ";
-
         private readonly string connectionString;
+        private readonly IMigrationRepository _migrationRepository;
 
-        public NotificationMapper(IConfiguration _configuration)
+        public NotificationMapper(IConfiguration configuration, IMigrationRepository migrationRepository)
         {
-            connectionString = _configuration.GetConnectionString("migration");
+            connectionString = configuration.GetConnectionString("migration");
+            _migrationRepository = migrationRepository;
         }
 
-        public async Task<List<List<Notification>>> GetByDate(DateTime cutoffDate)
+        public async Task<List<List<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                var whereClause = string.Format(WhereClauseByDate, $@"'{cutoffDate.ToString("s")}'");
-                var queryWithWhereClause = string.Format(NotificationsQuery, whereClause);
+            var notificationsRaw = await _migrationRepository.GetNotificationsByDate(rangeStartDate, endStartDate);
+            var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
+            var notificationSitesRaw = await _migrationRepository.GetNotificationSites(legacyIds);
 
-                var notificationsRaw = await connection.QueryAsync(queryWithWhereClause);
-                var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
-
-                var notificationSitesRaw = await GetNotificationSites(connection, legacyIds);
-
-                return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
-            }
+            return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
         }
 
-        public async Task<List<List<Notification>>> GetById(List<string> notificationIds)
+        public async Task<List<List<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
+            var notificationsRaw = await _migrationRepository.GetNotificationsById(notificationIds);
+            var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
+            var notificationSitesRaw = await _migrationRepository.GetNotificationSites(legacyIds);
 
-                var whereClause = string.Format(WhereClauseById, string.Join(",", notificationIds.Select(n => $@"'{n}'")));
-                var queryWithWhereClause = string.Format(NotificationsQuery, whereClause);
-
-                var notificationsRaw = await connection.QueryAsync(queryWithWhereClause);
-                var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
-
-                var notificationSitesRaw = await GetNotificationSites(connection, legacyIds);
-
-                return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
-            }
-        }
-
-        private async Task<IEnumerable<dynamic>> GetNotificationSites(SqlConnection connection, IEnumerable<string> legacyIds)
-        {
-            if (legacyIds.Count() == 0)
-            {
-                return new List<dynamic>();
-            }
-            var idsForInClause = string.Join(",", legacyIds.Select(x => $@"'{x}'"));
-            return await connection.QueryAsync(string.Format(NotificationSitesQuery, idsForInClause));
+            return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
         }
 
         private List<List<Notification>> GetGroupedResultsAsNotification(IEnumerable<dynamic> notificationsRaw, IEnumerable<dynamic> notificationSitesRaw)
@@ -119,14 +55,18 @@ namespace ntbs_service.DataMigration
             var notificationSiteDictionary = new Dictionary<string, List<NotificationSite>>();
             foreach (var notificationSiteGroup in notificationSiteGroups)
             {
-                notificationSiteDictionary.Add(notificationSiteGroup.Key, notificationSiteGroup.Select(AsNotificationSite).ToList());
+                var notificationSites = notificationSiteGroup.Select(AsNotificationSite).Where(x => x != null);
+                if (notificationSites.Count() > 0)
+                {
+                    notificationSiteDictionary.Add(notificationSiteGroup.Key, notificationSites.ToList());
+                }
             }
 
             foreach (var notificationGroup in notificationGroups)
             {
                 var notifications = notificationGroup.Select(AsNotification).ToList();
                 notifications.ForEach(x => {
-                    if (notificationSiteDictionary.ContainsKey(x.LegacyId))
+                    if (notificationSiteDictionary.ContainsKey(x.LegacyId) && notificationSiteDictionary[x.LegacyId] != null)
                     {
                         x.NotificationSites = notificationSiteDictionary[x.LegacyId];
                     }
@@ -142,8 +82,9 @@ namespace ntbs_service.DataMigration
         {
             var notification = new Notification
             {
-                ETSID = result.ETSID?.ToString(),
-                LTBRID = result.LTBRID?.ToString(),
+                ETSID = result.Source == "ETS" ? result.OldNotificationId.ToString() : null,
+                LTBRID = result.Source == "LTBR" ? result.OldNotificationId.ToString() : null,
+                LTBRPatientId = result.Source == "LTBR" ? result.GroupId : null,
                 NotificationDate = result.NotificationDate,
                 CreationDate = result.CreationDate,
                 PatientDetails = ExtractPatientDetails(result),

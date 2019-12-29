@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
+using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
@@ -16,8 +17,8 @@ namespace ntbs_service.DataMigration
 
     public interface INotificationImportService
     {
-        Task<IList<Notification>> ImportNotificationsByIdAsync(string requestId, List<string> notificationId);
-        Task<IList<Notification>> ImportNotificationsByDateAsync(string requestId, DateTime cutoffDate);
+        Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> notificationId);
+        Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
     }
 
     public class NotificationImportService : INotificationImportService
@@ -28,137 +29,147 @@ namespace ntbs_service.DataMigration
         private readonly INotificationImportRepository _notificationImportRepository;
         private readonly IPostcodeService _postcodeService;
         private readonly IImportLogger _logger;
+        private readonly IMigrationRepository _migrationRepository;
 
         public NotificationImportService(INotificationMapper notificationMapper,
                              INotificationRepository notificationRepository,
                              INotificationImportRepository notificationImportRepository,
                              IPostcodeService postcodeService,
-                             IImportLogger logger)
+                             IImportLogger logger,
+                             IMigrationRepository migrationRepository)
         {
             _notificationMapper = notificationMapper;
             _notificationRepository = notificationRepository;
             _notificationImportRepository = notificationImportRepository;
             _postcodeService = postcodeService;
             _logger = logger;
+            _migrationRepository = migrationRepository;
         }
 
 
-        public async Task<IList<Notification>> ImportNotificationsByDateAsync(string requestId, DateTime cutoffDate)
+        public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
         {
-            _logger.LogInformation(requestId, $"Request to import by Date started");
+            _logger.LogInformation(context, requestId, $"Request to import by Date started");
+            _logger.LogInformation(context, requestId, $"Importing notifications in range from {rangeStartDate.Date} to {rangeEndDate.Date}");
 
-            var notificationsGroups = (await _notificationMapper.GetByDate(cutoffDate)).ToList();
+            var notificationsGroups = await _notificationMapper.GetNotificationsGroupedByPatient(rangeStartDate, rangeEndDate);
 
             // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
             foreach (var notificationsGroup in notificationsGroups)
-            {
-                var notificationsToImport = GetNotificationsToImport(requestId, notificationsGroup.Select(x => x.LTBRID ?? x.ETSID).ToList());
+            {	            
+                var legacyIds = notificationsGroup.Select(x => x.LegacyId).ToList();
+                var notificationsToImport = GetNotificationsToImport(context, requestId, legacyIds);
                 if (notificationsToImport.Count() == notificationsGroup.Count())
                 {
                     notificationsGroupsToImport.Add(notificationsGroup);
                 }
-            }
-
-            // Validate and Import valid notifications
-            var savedNotifications = new List<Notification>();
-            foreach (var notificationsGroup in notificationsGroupsToImport)
-            {
-                var savedNotificationsGroup = await ValidateAndImportNotificationGroupAsync(requestId, notificationsGroup);
-                if (savedNotificationsGroup != null)
+                else if (notificationsToImport.Count() != 0)
                 {
-                    savedNotifications.AddRange(savedNotificationsGroup);
+                    _logger.LogFailure(context, requestId, $"Invalid state. Some notifications already exist database. Manual intervention needed");
                 }
             }
+            
+            var importResults = new List<ImportResult>();
+            if (notificationsGroupsToImport.Count() > 0)
+            {
+                // Validate and Import valid notifications
+                importResults = notificationsGroupsToImport
+                    .Select(notificationsGroup => ValidateAndImportNotificationGroupAsync(context, requestId, notificationsGroup))
+                    .Select(t => t.Result)
+                    .ToList();
+            }
 
-            _logger.LogInformation(requestId, $"Request to import by Date finished");
-            return savedNotifications;
+            _logger.LogInformation(context, requestId, $"Request to import by Date finished");
+            return importResults;
         }
         
-        public async Task<IList<Notification>> ImportNotificationsByIdAsync(string requestId, List<string> notificationIds)
+        public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> notificationIds)
         {
-            _logger.LogInformation(requestId, $"Request to import by Id started");
+            _logger.LogInformation(context, requestId, $"Request to import by Id started");
 
             // Filtering out notifications that already exist in ntbs database.
-            var notificationIdsToImport = GetNotificationsToImport(requestId, notificationIds);
-            if (notificationIdsToImport.Count() == 0)
+            var notificationIdsToImport = GetNotificationsToImport(context, requestId, notificationIds);
+
+            var importResults = new List<ImportResult>();
+            if (notificationIdsToImport.Count() > 0)
             {
-                return null;
+                var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(notificationIdsToImport);
+                // Validate and Import valid notifications
+                importResults = notificationsGroupsToImport
+                    .Select(notificationsGroup => ValidateAndImportNotificationGroupAsync(context, requestId, notificationsGroup))
+                    .Select(t => t.Result)
+                    .ToList();
             }
 
-            var notificationsGroups = (await _notificationMapper.GetById(notificationIdsToImport)).ToList();
-            
-            // Validate and Import valid notifications
-            var importedNotification = new List<Notification>();
-            foreach (var notificationsGroup in notificationsGroups)
-            {
-                var savedNotifications = await ValidateAndImportNotificationGroupAsync(requestId, notificationsGroup);
-                if (savedNotifications != null && savedNotifications.Count > 0)
-                {
-                    importedNotification.AddRange(savedNotifications);
-                }
-            }
-
-            _logger.LogInformation(requestId, $"Request to import by Id finished");
-            return importedNotification;
+            _logger.LogInformation(context, requestId, $"Request to import by Id finished");
+            return importResults;
         }
 
-        private async Task<List<Notification>> ValidateAndImportNotificationGroupAsync(string requestId, List<Notification> notifications)
+        private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
+            var patientName = notifications.FirstOrDefault().FullName;
+            var importResult = new ImportResult(patientName);
+
             LookupAndAssignPostcode(notifications);
 
-            var patientName = notifications.FirstOrDefault().FullName;
-            _logger.LogInformation(requestId, $"{notifications.Count} notifications found to import for {patientName}");
+            _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import for {patientName}");
 
             bool isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
-                var linkedNotificationId = notification.LTBRID ?? notification.ETSID;  
-                _logger.LogInformation(requestId, $"Validating notification with Id={linkedNotificationId}");
+                var linkedNotificationId = notification.LegacyId;  
+                _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
                 var validationErrors = GetValidationErrors(notification);
                 if (validationErrors.Count() == 0)
                 {
-                    _logger.LogInformation(requestId, $"No validation errors found");
+                    _logger.LogInformation(context, requestId, $"No validation errors found");
+                    importResult.AddValidNotification(linkedNotificationId);
                 }
                 else
                 {
                     isAnyNotificationInvalid = true;
-                    _logger.LogWarning(requestId, $"{validationErrors.Count()} validation errors found for notification with Id={linkedNotificationId}:");
+                    importResult.AddValidationErrorsMessages(linkedNotificationId, validationErrors.ToList());
+                    _logger.LogWarning(context, requestId, $"{validationErrors.Count()} validation errors found for notification with Id={linkedNotificationId}:");
                     foreach (var validationError in validationErrors)
                     {
-                        _logger.LogWarning(requestId, validationError.ErrorMessage);
+                        _logger.LogWarning(context, requestId, validationError.ErrorMessage);
                     }
                 }
             }
 
             if (isAnyNotificationInvalid)
             {
-                _logger.LogInformation(requestId, $"Terminating importing notifications for {patientName} due to validation errors");
-                return null;
+                _logger.LogFailure(context, requestId, $"Terminating importing notifications for {patientName} due to validation errors");
+                return importResult;
             }
 
-            _logger.LogInformation(requestId, $"Importing {notifications.Count()} valid notifications");
+            _logger.LogSuccess(context, requestId, $"Importing {notifications.Count()} valid notifications");
             var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
+            await _migrationRepository.updatedImportedNotificiationsAsync(savedNotifications);
+
 
             var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
-            _logger.LogInformation(requestId, $"Imported notifications have following Ids: {newIdsString}");
+            _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
 
-            _logger.LogInformation(requestId, $"Finished importing notification for {patientName}");
-            return savedNotifications;
+            _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+            return importResult;
         }
 
-        private List<string> GetNotificationsToImport(string requestId, List<string> notificationIds)
+        private List<string> GetNotificationsToImport(PerformContext context, string requestId, List<string> notificationIds)
         {
             var notificationIdsToImport = new List<string>();
             foreach (var notificationId in notificationIds)
             {
                 if (_notificationRepository.NotificationWithLegacyIdExists(notificationId))
                 {
-                    _logger.LogInformation(requestId, $"Notification with Id={notificationId} already exists in database");
-                    continue;
+                    _logger.LogWarning(context, requestId, $"Notification with Id={notificationId} already exists in database");
                 }
-                notificationIdsToImport.Add(notificationId);
+                else
+                {
+                    notificationIdsToImport.Add(notificationId);
+                }
             };
 
             return notificationIdsToImport;

@@ -2,6 +2,7 @@
 using System.Globalization;
 using EFAuditer;
 using Hangfire;
+using Hangfire.Console;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -49,19 +50,21 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(config => config
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(@"data source=.\NTBSSERVER;initial catalog=ntbsHangfire;trusted_connection=true", new SqlServerStorageOptions
-                {
-                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    QueuePollInterval = TimeSpan.Zero,
-                    UseRecommendedIsolationLevel = true,
-                    UsePageLocksOnDequeue = true,
-                    DisableGlobalLocks = true
-                }));
+            services.AddHangfire(config => {
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(Configuration.GetConnectionString("hangfireContext"), new SqlServerStorageOptions
+                    {
+                        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                        QueuePollInterval = TimeSpan.Zero,
+                        UseRecommendedIsolationLevel = true,
+                        UsePageLocksOnDequeue = true,
+                        DisableGlobalLocks = true
+                    })
+                    .UseConsole();              
+            });
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var setupDummyAuth = adfsConfig.GetValue<bool>("UseDummyAuth", false);
@@ -133,6 +136,7 @@ namespace ntbs_service
             services.AddScoped<IImportLogger, ImportLogger>();
             services.AddScoped<INotificationImportService, NotificationImportService>();
             services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
+            services.AddScoped<IMigrationRepository, MigrationRepository>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
@@ -150,8 +154,10 @@ namespace ntbs_service
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            app.UseHangfireDashboard();
+        {         
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions {
+                Authorization = new [] { new HangfireAuthorisationFilter("AdminOnly") }
+            });
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
 
             if (env.IsDevelopment())
