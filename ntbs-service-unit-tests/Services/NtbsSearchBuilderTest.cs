@@ -19,7 +19,7 @@ namespace ntbs_service_unit_tests.Services
                     NotificationId = 1,
                     ETSID = "12",
                     LTBRID = "222",
-                    SubmissionDate = new DateTime(2000, 1, 1),
+                    NotificationDate = new DateTime(2000, 1, 1),
                     PatientDetails = new PatientDetails {
                         FamilyName = "Merry", 
                         GivenName = "Christmas", 
@@ -37,7 +37,7 @@ namespace ntbs_service_unit_tests.Services
                     NotificationId = 2,
                     ETSID = "13",
                     LTBRID = "223",
-                    SubmissionDate = new DateTime(2001, 1, 1),
+                    NotificationDate = new DateTime(2001, 1, 1),
                     PatientDetails = new PatientDetails { 
                         FamilyName = "Merry", 
                         GivenName = "Goround",
@@ -271,7 +271,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() {Day = "1", Month = "1", Year = "2000"})).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal(new DateTime(2000, 1, 1), result.FirstOrDefault().SubmissionDate);
+            Assert.Equal(new DateTime(2000, 1, 1), result.FirstOrDefault().NotificationDate);
         }
 
         [Fact]

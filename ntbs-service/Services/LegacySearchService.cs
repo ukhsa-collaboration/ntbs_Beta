@@ -106,7 +106,7 @@ namespace ntbs_service.Services
                 CountryOfBirth = result.BirthCountryName,
                 TbService = tbService?.Name,
                 TbServiceCode = tbService?.Code,
-                Postcode = result.Postcode,
+                Postcode = (result.Postcode as string).FormatStringToPostcodeFormat(),
                 NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
                 FullAccess = true

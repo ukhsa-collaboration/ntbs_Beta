@@ -1,0 +1,60 @@
+﻿@model ntbs_service.Pages.Notifications.Edit.ClinicalDetailsModel
+@using ntbs_service.Models.Enums
+@using ntbs_service.Models.ReferenceEntities
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    var fullValidation = (string)ViewData["FullValidation"];
+}
+
+<h2>Other Details</h2>
+
+<nhs-form-group nhs-form-group-type="Standard">
+    <nhs-fieldset id="ClinicalDetails-BCGVaccinationYear">
+        <nhs-fieldset-legend nhs-legend-size="Standard">BCG Vaccination</nhs-fieldset-legend>
+        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+            <div class="nhsuk-radios__item">
+                <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">
+                <label class="nhsuk-label nhsuk-radios__label" for="bcg-vaccination-yes">
+                    Yes
+                </label>
+            </div>
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-bcg-vaccination-conditional">
+                <year-comparison model="ClinicalDetails" yeartocompare="@Model.PatientBirthYear" shouldvalidatefull="@fullValidation"
+                                 propertyname="BCG vaccination year" inline-template>
+                    @{
+                        var hasBcgVaccinationError = !Model.IsValid("ClinicalDetails.BCGVaccinationYear");
+                        var bcgVaccinationGroupState = hasBcgVaccinationError ? Error : Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type=@bcgVaccinationGroupState aria-describedby="bcg-vaccination-error">
+                        <label nhs-label-type="Standard" asp-for="ClinicalDetails.BCGVaccinationYear">Year of vaccination </label>
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.BCGVaccinationYear"
+                              id="bcg-vaccination-error" has-error="@hasBcgVaccinationError"></span>
+                        <input ref="inputField" nhs-input-type="Standard" v-on:blur="validate" fixed-width="Four"
+                               asp-for="ClinicalDetails.BCGVaccinationYear" type="number">
+                    </nhs-form-group>
+                </year-comparison>
+            </div>
+            <div class="nhsuk-radios__item">
+                <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                <label class="nhsuk-label nhsuk-radios__label" for="bcg-vaccination-no">
+                    No
+                </label>
+            </div>
+            <div class="nhsuk-radios__item">
+                <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                <label class="nhsuk-label nhsuk-radios__label" for="bcg-vaccination-unknown">
+                    Unknown
+                </label>
+            </div>
+        </div>
+    </nhs-fieldset>
+</nhs-form-group>
+<br />
+
+<nhs-form-group nhs-form-group-type="Standard">
+    <label nhs-label-type="Standard" asp-for="ClinicalDetails.HIVTestState">HIV test offered</label>
+    <select nhs-select-type="Standard" asp-for="ClinicalDetails.HIVTestState" asp-items="@Html.GetEnumSelectList<HIVTestStatus>()">
+        <option value="" selected> Choose an option </option>
+    </select>
+</nhs-form-group>

@@ -357,10 +357,10 @@ namespace ntbs_service.DataAccess
 
             modelBuilder.Entity<Site>().HasData(
                 new Site { SiteId = (int)SiteId.PULMONARY, Description = "Pulmonary" },
-                new Site { SiteId = (int)SiteId.BONE_SPINE, Description = "Bone/joint: spine" },
-                new Site { SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: other" },
-                new Site { SiteId = (int)SiteId.CNS_MENINGITIS, Description = "meningitis" },
-                new Site { SiteId = (int)SiteId.CNS_OTHER, Description = "other" },
+                new Site { SiteId = (int)SiteId.BONE_SPINE, Description = "Spine" },
+                new Site { SiteId = (int)SiteId.BONE_OTHER, Description = "Bone/joint: Other" },
+                new Site { SiteId = (int)SiteId.CNS_MENINGITIS, Description = "Meningitis" },
+                new Site { SiteId = (int)SiteId.CNS_OTHER, Description = "CNS: Other" },
                 new Site { SiteId = (int)SiteId.OCULAR, Description = "Ocular" },
                 new Site { SiteId = (int)SiteId.CRYPTIC, Description = "Cryptic disseminated" },
                 new Site { SiteId = (int)SiteId.GASTROINTESTINAL, Description = "Gastrointestinal/peritoneal" },
@@ -372,8 +372,7 @@ namespace ntbs_service.DataAccess
                 new Site { SiteId = (int)SiteId.PLEURAL, Description = "Pleural" },
                 new Site { SiteId = (int)SiteId.PERICARDIAL, Description = "Pericardial" },
                 new Site { SiteId = (int)SiteId.SKIN, Description = "Soft tissue/Skin" },
-                new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" },
-                new Site { SiteId = (int)SiteId.UNKNOWN, Description = "Unknown" }
+                new Site { SiteId = (int)SiteId.OTHER, Description = "Other extra-pulmonary" }
             );
 
             modelBuilder.Entity<Occupation>(entity =>

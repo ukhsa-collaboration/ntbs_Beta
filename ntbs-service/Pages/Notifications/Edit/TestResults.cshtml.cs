@@ -58,7 +58,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateTestDataProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.ValidateModelProperty<TestData>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<TestData>(key, value, shouldValidateFull);
         }
         
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
