@@ -54,6 +54,27 @@ namespace ntbs_service.DataMigration
 
             var notificationsGroups = await _notificationMapper.GetNotificationsGroupedByPatient(rangeStartDate, rangeEndDate);
 
+            var importResults = ImportNotificationGroups(context, requestId, notificationsGroups);
+
+            _logger.LogInformation(context, requestId, $"Request to import by Date finished");
+            return importResults;
+        }
+
+
+        public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
+        {
+            _logger.LogInformation(context, requestId, $"Request to import by Id started");
+
+            var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(legacyIds);
+
+            var importResults = ImportNotificationGroups(context, requestId, notificationsGroupsToImport);
+
+            _logger.LogInformation(context, requestId, $"Request to import by Id finished");
+            return importResults;
+        }
+
+        private List<ImportResult> ImportNotificationGroups(PerformContext context, string requestId, List<List<Notification>> notificationsGroups)
+        {
             // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
             foreach (var notificationsGroup in notificationsGroups)
@@ -80,32 +101,8 @@ namespace ntbs_service.DataMigration
                     .ToList();
             }
 
-            _logger.LogInformation(context, requestId, $"Request to import by Date finished");
             return importResults;
         }
-
-        public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
-        {
-            _logger.LogInformation(context, requestId, $"Request to import by Id started");
-
-            // Filtering out notifications that already exist in ntbs database.
-            var legacyIdsToImport = FilterOutImportedIds(context, requestId, legacyIds);
-
-            var importResults = new List<ImportResult>();
-            if (legacyIdsToImport.Count() > 0)
-            {
-                var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(legacyIdsToImport);
-                // Validate and Import valid notifications
-                importResults = notificationsGroupsToImport
-                    .Select(notificationsGroup => ValidateAndImportNotificationGroupAsync(context, requestId, notificationsGroup))
-                    .Select(t => t.Result)
-                    .ToList();
-            }
-
-            _logger.LogInformation(context, requestId, $"Request to import by Id finished");
-            return importResults;
-        }
-
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
             var patientName = notifications.FirstOrDefault().FullName;
