@@ -9,11 +9,10 @@ namespace ntbs_service.DataMigration
         {
             _policyName = policyName;
         }
-        
+
         public bool Authorize(DashboardContext context)
         {
-            var isAllowed = context.GetHttpContext().User.IsInRole(_policyName);
-            return true;
+            return context.GetHttpContext().User.IsInRole(_policyName);
         }
     }
 }

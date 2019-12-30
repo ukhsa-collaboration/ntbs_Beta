@@ -11,17 +11,17 @@ namespace ntbs_service.DataMigration
 {
     public interface IMigrationRepository
     {
-        Task updatedImportedNotificiationsAsync(IEnumerable<Notification> notifications);
-         Task<IEnumerable<dynamic>> GetNotificationsById(IEnumerable<string> legacyIds);
-         Task<IEnumerable<dynamic>> GetNotificationsByDate(DateTime rangeStartDate, DateTime endStartDate);
-         Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds);
+        Task MarkNotificiationsAsImportedAsync(IEnumerable<Notification> notifications);
+        Task<IEnumerable<dynamic>> GetNotificationsById(IEnumerable<string> legacyIds);
+        Task<IEnumerable<dynamic>> GetNotificationsByDate(DateTime rangeStartDate, DateTime endStartDate);
+        Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds);
     }
 
     public class MigrationRepository : IMigrationRepository
     {
         const string InsertImportedNotificationsQuery = @"
             INSERT INTO ImportedNotifications (LegacyId, ImportedAt)
-            VALUES {0};
+            VALUES (@LegacyId, @ImportedAt);
         ";
 
         const string NotificationsQuery = @"
@@ -69,15 +69,19 @@ namespace ntbs_service.DataMigration
             connectionString = _configuration.GetConnectionString("migration");
         }
 
-        public async Task updatedImportedNotificiationsAsync(IEnumerable<Notification> notifications)
+        public async Task MarkNotificiationsAsImportedAsync(IEnumerable<Notification> notifications)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var valuesToInsert = notifications.Select(x => $"('{x.LegacyId}', GETDATE())");
-                var queryWithInsertValues = string.Format(InsertImportedNotificationsQuery, string.Join(',', valuesToInsert));
 
-                var notificationsRaw = await connection.QueryAsync(queryWithInsertValues);
+                var importedAt = DateTime.Now.ToString("s");
+                var markNotificationTasks = notifications.Select(n =>
+                {
+                    return connection.QueryAsync(InsertImportedNotificationsQuery, new { n.LegacyId, ImportedAt = importedAt });
+                });
+
+                await Task.WhenAll(markNotificationTasks);
             }
         }
 
@@ -86,7 +90,7 @@ namespace ntbs_service.DataMigration
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync(NotificationsByIdQuery, new {Ids = legacyIds});
+                return await connection.QueryAsync(NotificationsByIdQuery, new { Ids = legacyIds });
             }
         }
 
@@ -95,7 +99,7 @@ namespace ntbs_service.DataMigration
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync(NotificationsByDateQuery, 
+                return await connection.QueryAsync(NotificationsByDateQuery,
                                                     new { StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s") });
             }
         }
@@ -109,7 +113,7 @@ namespace ntbs_service.DataMigration
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync(NotificationsByIdQuery, new {Ids = legacyIds});
+                return await connection.QueryAsync(NotificationSitesQuery, new { Ids = legacyIds });
             }
         }
     }

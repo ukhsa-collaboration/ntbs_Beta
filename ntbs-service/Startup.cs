@@ -104,7 +104,7 @@ namespace ntbs_service
 
             services.AddAuthorization(options => {
                 options.AddPolicy("AdminOnly", policy => {
-                    policy.RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"]);
+                    policy.RequireRole(GetAdminRoleName());
                 });
             });
 
@@ -155,11 +155,6 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {         
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions {
-                Authorization = new [] { new HangfireAuthorisationFilter("AdminOnly") }
-            });
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -202,9 +197,20 @@ namespace ntbs_service
 
             app.UseMvc();
 
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions {
+                Authorization = new [] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
+            });
+            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
+
             var cultureInfo = new CultureInfo("en-GB");
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+        }
+
+        private string GetAdminRoleName() 
+        {
+            var adfsConfig = Configuration.GetSection("AdfsOptions");
+            return adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"];
         }
     }
 }

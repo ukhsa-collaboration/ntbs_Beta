@@ -57,19 +57,19 @@ namespace ntbs_service.DataMigration
             // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
             foreach (var notificationsGroup in notificationsGroups)
-            {	            
+            {
                 var legacyIds = notificationsGroup.Select(x => x.LegacyId).ToList();
-                var notificationsToImport = GetNotificationsToImport(context, requestId, legacyIds);
-                if (notificationsToImport.Count() == notificationsGroup.Count())
+                var legacyIdsToImport = FilterOutImportedIds(context, requestId, legacyIds);
+                if (legacyIdsToImport.Count() == notificationsGroup.Count())
                 {
                     notificationsGroupsToImport.Add(notificationsGroup);
                 }
-                else if (notificationsToImport.Count() != 0)
+                else if (legacyIdsToImport.Count() != 0)
                 {
-                    _logger.LogFailure(context, requestId, $"Invalid state. Some notifications already exist database. Manual intervention needed");
+                    _logger.LogFailure(context, requestId, $"Invalid state. Some notifications already exist in NTBS database. Manual intervention needed");
                 }
             }
-            
+
             var importResults = new List<ImportResult>();
             if (notificationsGroupsToImport.Count() > 0)
             {
@@ -83,18 +83,18 @@ namespace ntbs_service.DataMigration
             _logger.LogInformation(context, requestId, $"Request to import by Date finished");
             return importResults;
         }
-        
-        public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> notificationIds)
+
+        public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
         {
             _logger.LogInformation(context, requestId, $"Request to import by Id started");
 
             // Filtering out notifications that already exist in ntbs database.
-            var notificationIdsToImport = GetNotificationsToImport(context, requestId, notificationIds);
+            var legacyIdsToImport = FilterOutImportedIds(context, requestId, legacyIds);
 
             var importResults = new List<ImportResult>();
-            if (notificationIdsToImport.Count() > 0)
+            if (legacyIdsToImport.Count() > 0)
             {
-                var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(notificationIdsToImport);
+                var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(legacyIdsToImport);
                 // Validate and Import valid notifications
                 importResults = notificationsGroupsToImport
                     .Select(notificationsGroup => ValidateAndImportNotificationGroupAsync(context, requestId, notificationsGroup))
@@ -118,7 +118,7 @@ namespace ntbs_service.DataMigration
             bool isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
             {
-                var linkedNotificationId = notification.LegacyId;  
+                var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
                 var validationErrors = GetValidationErrors(notification);
@@ -147,7 +147,7 @@ namespace ntbs_service.DataMigration
 
             _logger.LogSuccess(context, requestId, $"Importing {notifications.Count()} valid notifications");
             var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-            await _migrationRepository.updatedImportedNotificiationsAsync(savedNotifications);
+            await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
 
 
             var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
@@ -157,28 +157,29 @@ namespace ntbs_service.DataMigration
             return importResult;
         }
 
-        private List<string> GetNotificationsToImport(PerformContext context, string requestId, List<string> notificationIds)
+        private List<string> FilterOutImportedIds(PerformContext context, string requestId, List<string> legacyIds)
         {
-            var notificationIdsToImport = new List<string>();
-            foreach (var notificationId in notificationIds)
+            var legacyIdsToImport = new List<string>();
+            foreach (var legacyId in legacyIds)
             {
-                if (_notificationRepository.NotificationWithLegacyIdExists(notificationId))
+                if (_notificationRepository.NotificationWithLegacyIdExists(legacyId))
                 {
-                    _logger.LogWarning(context, requestId, $"Notification with Id={notificationId} already exists in database");
+                    _logger.LogWarning(context, requestId, $"Notification with Id={legacyId} already exists in NTBS database");
                 }
                 else
                 {
-                    notificationIdsToImport.Add(notificationId);
+                    legacyIdsToImport.Add(legacyId);
                 }
             };
 
-            return notificationIdsToImport;
+            return legacyIdsToImport;
         }
 
         private void LookupAndAssignPostcode(List<Notification> notifications)
         {
             var postcodes = _postcodeService.FindPostcodes(notifications.Select(x => x.PatientDetails.Postcode).ToList());
-            notifications.ForEach(n => {
+            notifications.ForEach(n =>
+            {
                 var normalisedPostcode = n.PatientDetails.Postcode?.Replace(" ", "").ToUpper();
                 var lookedUpPostcode = postcodes.FirstOrDefault(p => p.Postcode == normalisedPostcode);
                 n.PatientDetails.PostcodeToLookup = lookedUpPostcode?.Postcode;
@@ -186,7 +187,7 @@ namespace ntbs_service.DataMigration
             });
         }
 
-        private IEnumerable<ValidationResult> GetValidationErrors(Notification notification) 
+        private IEnumerable<ValidationResult> GetValidationErrors(Notification notification)
         {
             var validationsResults = new List<ValidationResult>();
 
@@ -204,7 +205,7 @@ namespace ntbs_service.DataMigration
         private IEnumerable<ValidationResult> ValidateObject<T>(T objectToValidate)
         {
             var validationContext = new ValidationContext(objectToValidate);
-            var validationsResults = new List<ValidationResult>();  
+            var validationsResults = new List<ValidationResult>();
 
             Validator.TryValidateObject(objectToValidate, validationContext, validationsResults, true);
 
