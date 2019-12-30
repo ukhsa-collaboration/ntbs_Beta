@@ -31,8 +31,13 @@ namespace ntbs_service.Pages.Migration
         public IFormFile UploadedFile { get; set; }
 
         [BindProperty]
-        [Display(Name = "Cutoff Notification Date")]
-        public PartialDate CutoffNotificationDate { get; set; }
+        [Display(Name = "Start Notification Date")]
+        public PartialDate NotificationDateRangeStart { get; set; }
+
+
+        [BindProperty]
+        [Display(Name = "End Notification Date")]
+        public PartialDate NotificationDateRangeEnd { get; set; }
 
         public IList<Notification> Results { get; set; } = new List<Notification>();
         public ValidationService ValidationService { get; }
@@ -61,13 +66,20 @@ namespace ntbs_service.Pages.Migration
                     BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByLegacyIdsAsync(null, requestId, IdBatch));
                 }
             }
-            else if (CutoffNotificationDate != null)
+            else if (NotificationDateRangeStart != null)
             {
-                CutoffNotificationDate.TryConvertToDateTimeRange(out DateTime? startDate, out DateTime? endDate);
+                NotificationDateRangeStart.TryConvertToDateTimeRange(out DateTime? notificationDateRangeStart, out DateTime? endDate);
+                NotificationDateRangeEnd.TryConvertToDateTimeRange(out DateTime? notificationDateRangeEnd, out DateTime? endDate2);
 
-                for (var dateRangeStart = (DateTime) startDate; dateRangeStart < DateTime.Now; dateRangeStart = dateRangeStart.AddMonths(6))
+                var rangeEnd = notificationDateRangeEnd ?? DateTime.Now;
+
+                for (var dateRangeStart = (DateTime)notificationDateRangeStart; dateRangeStart <= rangeEnd; dateRangeStart = dateRangeStart.AddMonths(6))
                 {
                     var dateRangeEnd = dateRangeStart.AddMonths(6);
+                    if (dateRangeEnd > rangeEnd)
+                    {
+                        dateRangeStart = rangeEnd;
+                    }
                     BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByDateAsync(null, requestId, dateRangeStart, dateRangeEnd));
                 }
             }
@@ -81,17 +93,17 @@ namespace ntbs_service.Pages.Migration
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
                 while (reader.Peek() >= 0)
-                    legacyIds.Add(await reader.ReadLineAsync()); 
+                    legacyIds.Add(await reader.ReadLineAsync());
             }
             return legacyIds;
         }
 
-        public static IEnumerable<List<T>> splitList<T>(List<T> legacyIds, int nSize=1000)  
-        {        
-            for (int index = 0; index < legacyIds.Count; index += nSize) 
-            { 
-                yield return legacyIds.GetRange(index, Math.Min(nSize, legacyIds.Count - index)); 
-            }  
-        } 
+        public static IEnumerable<List<T>> splitList<T>(List<T> legacyIds, int nSize = 1000)
+        {
+            for (int index = 0; index < legacyIds.Count; index += nSize)
+            {
+                yield return legacyIds.GetRange(index, Math.Min(nSize, legacyIds.Count - index));
+            }
+        }
     }
 }

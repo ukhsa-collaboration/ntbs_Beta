@@ -15,12 +15,7 @@ namespace ntbs_service.Helpers
                     ownedModel.GetType().GetProperty("ShouldValidateFull").SetValue(ownedModel, true);
                 }
             }
-            notification.NotificationSites?.ForEach(ntfSite => {
-                if (ntfSite != null)
-                {
-                    ntfSite.ShouldValidateFull = notification.ShouldValidateFull;
-                }
-            });
+            notification.NotificationSites?.ForEach(site => site.ShouldValidateFull = notification.ShouldValidateFull);
         }
     }
 }

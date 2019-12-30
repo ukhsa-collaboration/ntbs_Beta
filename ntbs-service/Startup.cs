@@ -50,11 +50,12 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(config => {
+            services.AddHangfire(config =>
+            {
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
-                    .UseSqlServerStorage(Configuration.GetConnectionString("hangfireContext"), new SqlServerStorageOptions
+                    .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"), new SqlServerStorageOptions
                     {
                         CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                         SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
@@ -63,7 +64,7 @@ namespace ntbs_service
                         UsePageLocksOnDequeue = true,
                         DisableGlobalLocks = true
                     })
-                    .UseConsole();              
+                    .UseConsole();
             });
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
@@ -102,8 +103,10 @@ namespace ntbs_service
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddAuthorization(options => {
-                options.AddPolicy("AdminOnly", policy => {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                {
                     policy.RequireRole(GetAdminRoleName());
                 });
             });
@@ -154,7 +157,7 @@ namespace ntbs_service
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {         
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -197,8 +200,9 @@ namespace ntbs_service
 
             app.UseMvc();
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions {
-                Authorization = new [] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
             });
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
 
@@ -207,7 +211,7 @@ namespace ntbs_service
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
         }
 
-        private string GetAdminRoleName() 
+        private string GetAdminRoleName()
         {
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             return adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"];

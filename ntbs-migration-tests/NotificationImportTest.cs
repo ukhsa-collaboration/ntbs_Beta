@@ -60,7 +60,7 @@ namespace ntbs_migration_tests
             var importedNotifications = await _notifcationImportService.ImportByLegacyIdsAsync(_performContext, RequestId, ids);
 
             //Then
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, "Notification with Id=1 already exists in database"));
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, "Notification with Id=1 already exists in database"));
             Assert.Null(importedNotifications);
         }
 
@@ -75,7 +75,7 @@ namespace ntbs_migration_tests
             var importedNotifications = await _notifcationImportService.ImportByLegacyIdsAsync(_performContext, RequestId, ids);
 
             //Then
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, "No validation errors found"), Times.Never);
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, "No validation errors found"), Times.Never);
             Assert.Equal(0, importedNotifications.Count);
         }
 
@@ -104,10 +104,10 @@ namespace ntbs_migration_tests
             var importedNotifications = await _notifcationImportService.ImportByLegacyIdsAsync(_performContext, RequestId, ids);
 
             //Then
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, $"2 notifications found to import for {patientName}"));
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, "No validation errors found"));
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, $"2 notifications found to import for {patientName}"));
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, "No validation errors found"));
             _mockNotificationImportRepository.Verify(x => x.AddLinkedNotificationsAsync(It.Is<List<Notification>>(n => n.Count == 2)), Times.Once);
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, $"Finished importing notification for {patientName}"));
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, $"Finished importing notification for {patientName}"));
             Assert.Equal(2, importedNotifications.Count);
         }
 
@@ -133,11 +133,11 @@ namespace ntbs_migration_tests
             var importedNotifications = await _notifcationImportService.ImportByLegacyIdsAsync(_performContext, RequestId, ids);
 
             //Then
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, $"2 notifications found to import for {patientName}"));
-            _mockLogger.Verify(x => x.LogWarning(It.IsAny<PerformContext>(), RequestId, "2 validation errors found for notification with Id=41-1:"));
-            _mockLogger.Verify(x => x.LogFailure(It.IsAny<PerformContext>(), RequestId, "Notification date must not be before 01/01/2010"));
-            _mockLogger.Verify(x => x.LogFailure(It.IsAny<PerformContext>(), RequestId, "Diagnosis date must not be before 01/01/2010"));
-            _mockLogger.Verify(x => x.LogInformation(It.IsAny<PerformContext>(), RequestId, $"Terminating importing notifications for {patientName} due to validation errors"));
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, $"2 notifications found to import for {patientName}"));
+            _mockLogger.Verify(x => x.LogWarning(_performContext, RequestId, "2 validation errors found for notification with Id=41-1:"));
+            _mockLogger.Verify(x => x.LogFailure(_performContext, RequestId, "Notification date must not be before 01/01/2010"));
+            _mockLogger.Verify(x => x.LogFailure(_performContext, RequestId, "Diagnosis date must not be before 01/01/2010"));
+            _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, $"Terminating importing notifications for {patientName} due to validation errors"));
             _mockNotificationImportRepository.Verify(x => x.AddLinkedNotificationsAsync(It.IsAny<List<Notification>>()), Times.Never);
             Assert.Equal(0, importedNotifications.Count);
         }

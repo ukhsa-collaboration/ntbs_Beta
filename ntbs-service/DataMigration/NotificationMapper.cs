@@ -13,8 +13,8 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<List<List<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
-        Task<List<List<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
+        Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
+        Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
@@ -28,7 +28,7 @@ namespace ntbs_service.DataMigration
             _migrationRepository = migrationRepository;
         }
 
-        public async Task<List<List<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
+        public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
         {
             var notificationsRaw = await _migrationRepository.GetNotificationsByDate(rangeStartDate, endStartDate);
             var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
@@ -37,7 +37,7 @@ namespace ntbs_service.DataMigration
             return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
         }
 
-        public async Task<List<List<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
+        public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
         {
             var notificationsRaw = await _migrationRepository.GetNotificationsById(notificationIds);
             var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
@@ -46,66 +46,50 @@ namespace ntbs_service.DataMigration
             return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
         }
 
-        private List<List<Notification>> GetGroupedResultsAsNotification(IEnumerable<dynamic> notificationsRaw, IEnumerable<dynamic> notificationSitesRaw)
+        private IEnumerable<IEnumerable<Notification>> GetGroupedResultsAsNotification(IEnumerable<dynamic> notificationsRaw, IEnumerable<dynamic> notificationSitesRaw)
         {
-            var groupedResults = new List<List<Notification>>();
-            var notificationGroups = notificationsRaw.GroupBy(x => x.GroupId);
             var notificationSiteGroups = notificationSitesRaw.GroupBy(x => x.OldNotificationId);
-            
-            var notificationSiteDictionary = new Dictionary<string, List<NotificationSite>>();
-            foreach (var notificationSiteGroup in notificationSiteGroups)
-            {
-                var notificationSites = notificationSiteGroup.Select(AsNotificationSite).Where(x => x != null);
-                if (notificationSites.Count() > 0)
-                {
-                    notificationSiteDictionary.Add(notificationSiteGroup.Key, notificationSites.ToList());
-                }
-            }
+            var notifications = notificationsRaw.Join(notificationSiteGroups,
+                n => n.LegacyId,
+                nsGroup => nsGroup.Key,
+                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null)));
 
-            foreach (var notificationGroup in notificationGroups)
-            {
-                var notifications = notificationGroup.Select(AsNotification).ToList();
-                notifications.ForEach(x => {
-                    if (notificationSiteDictionary.ContainsKey(x.LegacyId) && notificationSiteDictionary[x.LegacyId] != null)
-                    {
-                        x.NotificationSites = notificationSiteDictionary[x.LegacyId];
-                    }
-                });
-                
-                groupedResults.Add(notifications);
-            }
-
-            return groupedResults;
+            return notifications.GroupBy(x => x.rawNotification.GroupId)
+                .Select(group => group.Select(AsNotification));
         }
 
-        private static Notification AsNotification(dynamic result)
+        private static Notification AsNotification((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
         {
+            var rawNotification = rawResult.rawNotification;
+            var sites = rawResult.rawSites.Select(AsNotificationSite).ToList();
             var notification = new Notification
             {
-                ETSID = result.Source == "ETS" ? result.OldNotificationId.ToString() : null,
-                LTBRID = result.Source == "LTBR" ? result.OldNotificationId.ToString() : null,
-                LTBRPatientId = result.Source == "LTBR" ? result.GroupId : null,
-                NotificationDate = result.NotificationDate,
-                CreationDate = result.CreationDate,
-                PatientDetails = ExtractPatientDetails(result),
-                ClinicalDetails = ExtractClinicalDetails(result),
-                TravelDetails = ExtractTravelDetails(result),
-                VisitorDetails = ExtractVisitorDetails(result),
-                ComorbidityDetails = ExtractComorbidityDetails(result),
-                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(result),
-                NotificationStatus = NotificationStatus.Notified
+                ETSID = rawNotification.Source == "ETS" ? rawNotification.OldNotificationId.ToString() : null,
+                LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null,
+                LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null,
+                NotificationDate = rawNotification.NotificationDate,
+                CreationDate = rawNotification.CreationDate,
+                PatientDetails = ExtractPatientDetails(rawNotification),
+                ClinicalDetails = ExtractClinicalDetails(rawNotification),
+                TravelDetails = ExtractTravelDetails(rawNotification),
+                VisitorDetails = ExtractVisitorDetails(rawNotification),
+                ComorbidityDetails = ExtractComorbidityDetails(rawNotification),
+                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification),
+                NotificationStatus = NotificationStatus.Notified,
+                NotificationSites = sites
             };
 
             return notification;
         }
-        
+
         private static NotificationSite AsNotificationSite(dynamic result)
         {
             if (result.DiseaseSiteId == null)
             {
                 return null;
             }
-            return new NotificationSite {
+            return new NotificationSite
+            {
                 SiteId = result.DiseaseSiteId,
                 SiteDescription = result.DiseaseSiteText
             };
@@ -184,5 +168,5 @@ namespace ntbs_service.DataMigration
             OccupationId = notification.NtbsOccupationId,
             OccupationOther = notification.NtbsOccupationFreeText
         };
-    } 
+    }
 }

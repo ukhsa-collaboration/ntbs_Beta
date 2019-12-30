@@ -73,7 +73,7 @@ namespace ntbs_service.DataMigration
             return importResults;
         }
 
-        private List<ImportResult> ImportNotificationGroups(PerformContext context, string requestId, List<List<Notification>> notificationsGroups)
+        private List<ImportResult> ImportNotificationGroups(PerformContext context, string requestId, IEnumerable<IEnumerable<Notification>> notificationsGroups)
         {
             // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
@@ -83,7 +83,7 @@ namespace ntbs_service.DataMigration
                 var legacyIdsToImport = FilterOutImportedIds(context, requestId, legacyIds);
                 if (legacyIdsToImport.Count() == notificationsGroup.Count())
                 {
-                    notificationsGroupsToImport.Add(notificationsGroup);
+                    notificationsGroupsToImport.Add(notificationsGroup.ToList());
                 }
                 else if (legacyIdsToImport.Count() != 0)
                 {
