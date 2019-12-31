@@ -78,7 +78,7 @@ namespace ntbs_service.Pages.Migration
                     var dateRangeEnd = dateRangeStart.AddMonths(6);
                     if (dateRangeEnd > rangeEnd)
                     {
-                        dateRangeStart = rangeEnd;
+                        dateRangeEnd = rangeEnd;
                     }
                     BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByDateAsync(null, requestId, dateRangeStart, dateRangeEnd));
                 }
