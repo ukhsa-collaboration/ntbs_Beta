@@ -1,3 +1,7 @@
+// The line below ensures that the `module` variable below is resolved to the correct declaration by TS
+// - otherwise it clashes with the definition created for Node which doesn't include the `hot` property
+///<reference types="webpack-env" />
+
 // Root styles import - other global styles are imported from this sass file
 import "../css/site.scss"
 // @ts-ignore
