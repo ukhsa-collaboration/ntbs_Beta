@@ -49,7 +49,9 @@ namespace ntbs_service.Services
         }
         public virtual bool IsUserEnabled(DirectoryEntry de)
         {
+            // See the ACCOUNTDISABLE property on
             // https://support.microsoft.com/en-gb/help/305144/how-to-use-useraccountcontrol-to-manipulate-user-account-properties
+            
             // ReSharper disable once StringLiteralTypo
             var uac = (int)de.Properties["useraccountcontrol"].Value;
             return !Convert.ToBoolean(uac & 2);
