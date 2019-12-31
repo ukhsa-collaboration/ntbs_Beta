@@ -68,34 +68,40 @@ namespace ntbs_service_unit_tests.Services
             mockDirectoryService.Setup(s => s.GetDistinguisedGroupNames(firstMockDirectoryEntry.Object))
                 .Returns(new List<string> { "CN=Global.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com", "CN=Global.NIS.NTBS.EMS,CN=Users,DC=ntbs,DC=phe,DC=com"});
             mockDirectoryService.Setup(s => s.GetDistinguisedGroupNames(secondMockDirectoryEntry.Object))
-                .Returns(new List<string> { "CN=Global.NIS.NTBS.NTA,CN=Users,DC=ntbs,DC=phe,DC=com", "CN=RandomOtherGroup,CN=Users,DC=ntbs,DC=phe,DC=com"});
+                .Returns(new List<string>
+                {
+                    "CN=Global.NIS.NTBS.NTA,CN=Users,DC=ntbs,DC=phe,DC=com",
+                    "CN=RandomOtherGroup,CN=Users,DC=ntbs,DC=phe,DC=com"
+                });
+            List<User> savedUsers = new List<User>();
+            mockUserRepository
+                .Setup(r => r.AddOrUpdateUser(It.IsAny<User>(), It.IsAny<IEnumerable<TBService>>()))
+                .Callback<User, IEnumerable<TBService>>((user, _) => savedUsers.Add(user));
 
             // Act
             _service.RunCaseManagerImport();
 
             // Assert
-            mockUserRepository.Verify(r => r.AddOrUpdateUser(It.Is<User>
-                (u => u.Username == firstUserPrincipal.UserPrincipalName &&
-                      u.GivenName == firstUserPrincipal.GivenName &&
-                      u.FamilyName == firstUserPrincipal.Surname &&
-                      u.DisplayName == firstUserPrincipal.DisplayName &&
-                      u.IsActive &&
-                      u.IsCaseManager &&
-                      u.AdGroup.Contains("Global.NIS.NTBS.Service_Nottingham") &&
-                      u.AdGroup.Contains("Global.NIS.NTBS.EMS")
-                ), It.IsAny<IEnumerable<TBService>>()), Times.Once()
-            );
+            Assert.Equal(2, savedUsers.Count);
 
-            mockUserRepository.Verify(r => r.AddOrUpdateUser(It.Is<User>
-                (u => u.Username == secondUserPrincipal.UserPrincipalName &&
-                      u.GivenName == secondUserPrincipal.GivenName &&
-                      u.FamilyName == secondUserPrincipal.Surname &&
-                      u.DisplayName == secondUserPrincipal.DisplayName &&
-                      !u.IsActive &&
-                      !u.IsCaseManager &&
-                      u.AdGroup.Contains("Global.NIS.NTBS.NTA")
-                ), It.IsAny<IEnumerable<TBService>>()), Times.Once()
-            );
+            var savedUser = savedUsers[0];
+            Assert.Equal(savedUser.Username, firstUserPrincipal.UserPrincipalName);
+            Assert.Equal(savedUser.GivenName, firstUserPrincipal.GivenName);
+            Assert.Equal(savedUser.FamilyName, firstUserPrincipal.Surname);
+            Assert.Equal(savedUser.DisplayName, firstUserPrincipal.DisplayName);
+            Assert.True(savedUser.IsActive);
+            Assert.True(savedUser.IsCaseManager);
+            Assert.Contains("Global.NIS.NTBS.Service_Nottingham", savedUser.AdGroup);
+            Assert.Contains("Global.NIS.NTBS.EMS", savedUser.AdGroup);
+
+            var savedInactiveUser = savedUsers[1];
+            Assert.Equal(savedInactiveUser.Username, secondUserPrincipal.UserPrincipalName);
+            Assert.Equal(savedInactiveUser.GivenName, secondUserPrincipal.GivenName);
+            Assert.Equal(savedInactiveUser.FamilyName, secondUserPrincipal.Surname);
+            Assert.Equal(savedInactiveUser.DisplayName, secondUserPrincipal.DisplayName);
+            Assert.False(savedInactiveUser.IsActive);
+            Assert.False(savedInactiveUser.IsCaseManager);
+            Assert.Contains("Global.NIS.NTBS.NTA", savedInactiveUser.AdGroup);
         }
     }
 }

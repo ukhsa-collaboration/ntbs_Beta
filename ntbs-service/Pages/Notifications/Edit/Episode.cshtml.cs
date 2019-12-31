@@ -159,7 +159,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             if (Episode.CaseManagerUsername != null)
             {
-                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByEmailAsync(Episode.CaseManagerUsername);
+                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(Episode.CaseManagerUsername);
             }
         }
 
