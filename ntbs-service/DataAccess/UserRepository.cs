@@ -45,6 +45,9 @@ namespace ntbs_service.DataAccess
 
         private async Task UpdateUser(User existingUser, User newUser, IEnumerable<TBService> tbServices)
         {
+            // This seemingly un-needed line is actually a hack around the fact that sql server performs
+            // case insensitive string comparison.
+            newUser.Username = existingUser.Username;
             _context.Entry(existingUser).CurrentValues.SetValues(newUser);
             AddCaseManagerTbServices(existingUser, tbServices);
             await _context.SaveChangesAsync();

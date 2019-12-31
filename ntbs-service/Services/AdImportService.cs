@@ -10,7 +10,7 @@ namespace ntbs_service.Services
 {
     public interface IAdImportService
     {
-        Task RunCaseManagerImport();
+        Task RunCaseManagerImportAsync();
     }
 
     public class AdImportService : IAdImportService
@@ -27,7 +27,7 @@ namespace ntbs_service.Services
             _userRepository = userRepository;
         }
 
-        public async Task RunCaseManagerImport()
+        public async Task RunCaseManagerImportAsync()
         {
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             using (var adDirectoryService = _adDirectoryFactory.Create())
