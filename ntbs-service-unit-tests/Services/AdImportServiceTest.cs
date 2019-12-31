@@ -65,7 +65,7 @@ namespace ntbs_service_unit_tests.Services
                 .Callback<User, IEnumerable<TBService>>((user, _) => savedUsers.Add(user));
 
             // Act
-            _service.RunCaseManagerImport();
+            _service.RunCaseManagerImportAsync();
 
             // Assert
             Assert.Equal(2, savedUsers.Count);
