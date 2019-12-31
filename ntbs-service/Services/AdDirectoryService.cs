@@ -2,24 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
-using Microsoft.Extensions.Options;
+using System.Linq;
 using ntbs_service.Properties;
 
 namespace ntbs_service.Services
 {
-    public interface IAdDirectoryFactory
+    public interface IAdDirectoryService : IDisposable
     {
-        AdDirectoryService Create();
+        IEnumerable<DirectoryEntry> GetAllDirectoryEntries();
+        string GetUsername(DirectoryEntry de);
+        bool IsUserEnabled(DirectoryEntry de);
+        UserPrincipal GetUserPrincipal(string userName);
+        IEnumerable<string> GetDistinguishedGroupNames(DirectoryEntry directoryEntry);
     }
 
-    public class AdDirectoryService : IDisposable
+    public class AdDirectoryService : IAdDirectoryService
     {
         private readonly PrincipalContext context;
         private readonly PrincipalSearcher searcher;
 
         public AdDirectoryService(AdConnectionSettings adConnectionSettings)
         {
-            context = new PrincipalContext(ContextType.Domain, adConnectionSettings.DomainName, adConnectionSettings.UserName, adConnectionSettings.Password);
+            context = new PrincipalContext(
+                ContextType.Domain,
+                adConnectionSettings.DomainName,
+                adConnectionSettings.UserName,
+                adConnectionSettings.Password);
             searcher = new PrincipalSearcher(new UserPrincipal(context));
         }
 
@@ -31,10 +39,8 @@ namespace ntbs_service.Services
 
         public virtual IEnumerable<DirectoryEntry> GetAllDirectoryEntries()
         {
-            foreach (var result in searcher.FindAll())
-            {
-                yield return result.GetUnderlyingObject() as DirectoryEntry;
-            }       
+            return searcher.FindAll()
+                .Select(result => result.GetUnderlyingObject() as DirectoryEntry);
         }
 
         public virtual string GetUsername(DirectoryEntry de)
@@ -44,6 +50,7 @@ namespace ntbs_service.Services
         public virtual bool IsUserEnabled(DirectoryEntry de)
         {
             // https://support.microsoft.com/en-gb/help/305144/how-to-use-useraccountcontrol-to-manipulate-user-account-properties
+            // ReSharper disable once StringLiteralTypo
             var uac = (int)de.Properties["useraccountcontrol"].Value;
             return !Convert.ToBoolean(uac & 2);
         }
@@ -53,26 +60,12 @@ namespace ntbs_service.Services
             return UserPrincipal.FindByIdentity(context, userName);
         }
 
-        public virtual IEnumerable<string> GetDistinguisedGroupNames(DirectoryEntry directoryEntry)
+        public virtual IEnumerable<string> GetDistinguishedGroupNames(DirectoryEntry directoryEntry)
         {
             foreach (var group in directoryEntry.Properties["memberOf"])
             {
                 yield return group.ToString();
             }
-        }
-    }
-    public class AdDirectoryFactory : IAdDirectoryFactory
-    {
-        private readonly AdConnectionSettings adConnectionSettings;
-
-        public AdDirectoryFactory(IOptions<AdConnectionSettings> options)
-        {
-            adConnectionSettings = options.Value;
-        }
-
-        public AdDirectoryService Create()
-        {
-            return new AdDirectoryService(adConnectionSettings);
         }
     }
 }
