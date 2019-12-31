@@ -8,20 +8,19 @@ using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
-
     public interface IAdImportService
     {
         Task RunCaseManagerImport();
     }
+
     public class AdImportService : IAdImportService
     {
         private readonly IAdDirectoryFactory _adDirectoryFactory;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserRepository _userRepository;
 
-        private static readonly Regex DistinguishedNameRegex = new Regex("(CN=)(Global.NIS.NTBS[^,]+)(,.*)");
-
-        public AdImportService(IAdDirectoryFactory adDirectoryFactory, IReferenceDataRepository referenceDataRepository, IUserRepository userRepository)
+        public AdImportService(IAdDirectoryFactory adDirectoryFactory, IReferenceDataRepository referenceDataRepository,
+            IUserRepository userRepository)
         {
             _adDirectoryFactory = adDirectoryFactory;
             _referenceDataRepository = referenceDataRepository;
@@ -56,16 +55,23 @@ namespace ntbs_service.Services
                     user.IsCaseManager = filteredTbServices.Any();
 
                     await _userRepository.AddOrUpdateUser(user, filteredTbServices);
-                }  
+                }
             }
         }
+
+        // Example of the distinguished name format:
+        // "CN=Global.NIS.NTBS.Service_Nottingham,CN=Users,DC=ntbs,DC=phe,DC=com"
+        // We are interested in the group names, e.g. Global.NIS.NTBS.Service_Nottingham 
+        private static readonly Regex DistinguishedNameRegex = new Regex("(CN=)(Global.NIS.NTBS[^,]+)(,.*)");
 
         private static List<string> GetAdGroups(IAdDirectoryService adDirectoryService, DirectoryEntry directoryEntry)
         {
             var adGroups = new List<string>();
             // The more natural way to obtain membership groups would have been to use user.GetAuthorizationGroups()
-            // However, all operations trying to fetch AD groups failed with an error "PrincipalOperationException: Information about the domain could not be retrieved"
-            // This is caused by not being in the same network as the AD server. None of the suggested workarounds worked, so fetching this via this property instead
+            // However, all operations trying to fetch AD groups failed with an error
+            // "PrincipalOperationException: Information about the domain could not be retrieved"
+            // This is caused by not being in the same network as the AD server.
+            // None of the suggested workarounds worked, so fetching this via this property instead.
             foreach (var distinguishedName in adDirectoryService.GetDistinguishedGroupNames(directoryEntry))
             {
                 var match = DistinguishedNameRegex.Match(distinguishedName);
@@ -73,8 +79,10 @@ namespace ntbs_service.Services
                 {
                     continue;
                 }
+
                 adGroups.Add(match.Groups[2].Captures[0].Value);
             }
+
             return adGroups;
         }
     }
