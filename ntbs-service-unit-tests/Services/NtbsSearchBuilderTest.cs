@@ -14,15 +14,16 @@ namespace ntbs_service_unit_tests.Services
 
         public NtbsSearchBuilderTest()
         {
-            IQueryable<Notification> notifications = (new List<Notification> { 
-                new Notification { 
+            IQueryable<Notification> notifications = (new List<Notification> {
+                new Notification {
                     NotificationId = 1,
                     ETSID = "12",
                     LTBRID = "222",
+                    LTBRPatientId = "22",
                     NotificationDate = new DateTime(2000, 1, 1),
                     PatientDetails = new PatientDetails {
-                        FamilyName = "Merry", 
-                        GivenName = "Christmas", 
+                        FamilyName = "Merry",
+                        GivenName = "Christmas",
                         NhsNumber = "1234567890",
                         SexId = 1,
                         CountryId = 1,
@@ -37,9 +38,10 @@ namespace ntbs_service_unit_tests.Services
                     NotificationId = 2,
                     ETSID = "13",
                     LTBRID = "223",
+                    LTBRPatientId = "23",
                     NotificationDate = new DateTime(2001, 1, 1),
-                    PatientDetails = new PatientDetails { 
-                        FamilyName = "Merry", 
+                    PatientDetails = new PatientDetails {
+                        FamilyName = "Merry",
                         GivenName = "Goround",
                         NhsNumber = "1234567891",
                         SexId = 2,
@@ -89,7 +91,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterById("1234567890")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal( "1234567890", result.FirstOrDefault().PatientDetails.NhsNumber);
+            Assert.Equal("1234567890", result.FirstOrDefault().PatientDetails.NhsNumber);
         }
 
         [Fact]
@@ -106,7 +108,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("merry")).GetResult().ToList();
 
             Assert.Equal(2, result.Count());
-            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);       
+            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
         [Fact]
@@ -115,7 +117,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("ry")).GetResult().ToList();
 
             Assert.Equal(2, result.Count());
-            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);       
+            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
         [Fact]
@@ -124,7 +126,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("merr")).GetResult().ToList();
 
             Assert.Equal(2, result.Count());
-            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);       
+            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
         [Fact]
@@ -133,7 +135,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByFamilyName("err")).GetResult().ToList();
 
             Assert.Equal(2, result.Count());
-            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);       
+            Assert.Equal("Merry", result.FirstOrDefault().PatientDetails.FamilyName);
         }
 
         [Fact]
@@ -150,7 +152,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByGivenName("Christmas")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("Christmas", result.FirstOrDefault().PatientDetails.GivenName);       
+            Assert.Equal("Christmas", result.FirstOrDefault().PatientDetails.GivenName);
         }
 
         [Fact]
@@ -159,7 +161,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByGivenName("mas")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("Christmas", result.FirstOrDefault().PatientDetails.GivenName);       
+            Assert.Equal("Christmas", result.FirstOrDefault().PatientDetails.GivenName);
         }
 
         [Fact]
@@ -168,7 +170,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByGivenName("Go")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("Goround", result.FirstOrDefault().PatientDetails.GivenName);       
+            Assert.Equal("Goround", result.FirstOrDefault().PatientDetails.GivenName);
         }
 
         [Fact]
@@ -177,7 +179,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByGivenName("roun")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("Goround", result.FirstOrDefault().PatientDetails.GivenName);       
+            Assert.Equal("Goround", result.FirstOrDefault().PatientDetails.GivenName);
         }
 
         [Fact]
@@ -194,7 +196,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByPostcode("SW1 2RT")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.PostcodeToLookup);       
+            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.PostcodeToLookup);
         }
 
         [Fact]
@@ -203,7 +205,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByPostcode("SW1")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.PostcodeToLookup);       
+            Assert.Equal("SW12RT", result.FirstOrDefault().PatientDetails.PostcodeToLookup);
         }
 
         [Fact]
@@ -268,7 +270,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public void SearchByPartialNotificationDate_ReturnsMatchOnNotificationDate()
         {
-            var result = ((INtbsSearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() {Day = "1", Month = "1", Year = "2000"})).GetResult().ToList();
+            var result = ((INtbsSearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() { Day = "1", Month = "1", Year = "2000" })).GetResult().ToList();
 
             Assert.Single(result);
             Assert.Equal(new DateTime(2000, 1, 1), result.FirstOrDefault().NotificationDate);
@@ -277,7 +279,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public void SearchByPartialNotificationDate_NoResults()
         {
-            var result = ((INtbsSearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() {Day = "1", Month = "1", Year = "3000"})).GetResult().ToList();
+            var result = ((INtbsSearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() { Day = "1", Month = "1", Year = "3000" })).GetResult().ToList();
 
             Assert.Empty(result);
         }
@@ -285,7 +287,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public void SearchByPartialDob_ReturnsMatchOnDob()
         {
-            var result = ((INtbsSearchBuilder)builder.FilterByPartialDob(new PartialDate() {Day = "1", Month = "1", Year = "1990"})).GetResult().ToList();
+            var result = ((INtbsSearchBuilder)builder.FilterByPartialDob(new PartialDate() { Day = "1", Month = "1", Year = "1990" })).GetResult().ToList();
 
             Assert.Single(result);
             Assert.Equal(new DateTime(1990, 1, 1), result.FirstOrDefault().PatientDetails.Dob);
@@ -294,7 +296,7 @@ namespace ntbs_service_unit_tests.Services
         [Fact]
         public void SearchByPartialDob_NoResults()
         {
-            var result = ((INtbsSearchBuilder)builder.FilterByPartialDob(new PartialDate() {Day = "1", Month = "1", Year = "3000"})).GetResult().ToList();
+            var result = ((INtbsSearchBuilder)builder.FilterByPartialDob(new PartialDate() { Day = "1", Month = "1", Year = "3000" })).GetResult().ToList();
 
             Assert.Empty(result);
         }

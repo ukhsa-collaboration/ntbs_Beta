@@ -19,7 +19,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterById("1")).GetResult();
 
-            Assert.Contains("WHERE (dmg.OldNotificationId = @id OR (n.GroupId = @id AND n.Source = 'LTBR') OR dmg.NhsNumber = @id)", sqlQuery);
+            Assert.Contains("AND (dmg.OldNotificationId = @id OR (n.GroupId = @id AND n.Source = 'LTBR') OR dmg.NhsNumber = @id)", sqlQuery);
             Assert.Equal("1", parameters.id);
         }
 
@@ -28,7 +28,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByFamilyName("Smith")).GetResult();
 
-            Assert.Contains("WHERE dmg.FamilyName LIKE @familyName", sqlQuery);
+            Assert.Contains("AND dmg.FamilyName LIKE @familyName", sqlQuery);
             Assert.Equal("%Smith%", parameters.familyName);
         }
 
@@ -37,7 +37,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterById("1").FilterByFamilyName("Smith")).GetResult();
 
-            Assert.Contains("WHERE (dmg.OldNotificationId = @id OR (n.GroupId = @id AND n.Source = 'LTBR') OR dmg.NhsNumber = @id)", sqlQuery);
+            Assert.Contains("AND (dmg.OldNotificationId = @id OR (n.GroupId = @id AND n.Source = 'LTBR') OR dmg.NhsNumber = @id)", sqlQuery);
             Assert.Contains("AND dmg.FamilyName LIKE @familyName", sqlQuery);
             Assert.Equal("1", parameters.id);
             Assert.Equal("%Smith%", parameters.familyName);
@@ -48,7 +48,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByGivenName("Bob")).GetResult();
 
-            Assert.Contains("WHERE dmg.GivenName LIKE @givenName", sqlQuery);
+            Assert.Contains("AND dmg.GivenName LIKE @givenName", sqlQuery);
             Assert.Equal("%Bob%", parameters.givenName);
         }
 
@@ -57,7 +57,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterBySex(2)).GetResult();
 
-            Assert.Contains("WHERE dmg.NtbsSexId = @sexId", sqlQuery);
+            Assert.Contains("AND dmg.NtbsSexId = @sexId", sqlQuery);
             Assert.Equal(2, parameters.sexId);
         }
 
@@ -66,7 +66,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByBirthCountry(2)).GetResult();
 
-            Assert.Contains("WHERE dmg.BirthCountryId = @countryId", sqlQuery);
+            Assert.Contains("AND dmg.BirthCountryId = @countryId", sqlQuery);
             Assert.Equal(2, parameters.countryId);
         }
 
@@ -75,7 +75,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPostcode("AWX2N")).GetResult();
 
-            Assert.Contains("WHERE dmg.Postcode LIKE @postcode", sqlQuery);
+            Assert.Contains("AND dmg.Postcode LIKE @postcode", sqlQuery);
             Assert.Equal("AWX2N%", parameters.postcode);
         }
 
@@ -94,7 +94,7 @@ namespace ntbs_service_unit_tests.Services
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPartialDob(new PartialDate() {Day = "1", Month = "1", Year = "1990"})).GetResult();
 
-            Assert.Contains("WHERE dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd", sqlQuery);
+            Assert.Contains("AND dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd", sqlQuery);
             Assert.Equal(new DateTime(1990, 1, 1), parameters.dobDateRangeStart);
             Assert.Equal(new DateTime(1990, 1, 2), parameters.dobDateRangeEnd);
         }

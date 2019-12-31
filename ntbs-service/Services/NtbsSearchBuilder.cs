@@ -14,7 +14,7 @@ namespace ntbs_service.Services
     public class NtbsSearchBuilder : INtbsSearchBuilder
     {
         IQueryable<Notification> notificationIQ;
-        
+
         public NtbsSearchBuilder(IQueryable<Notification> notificationIQ)
         {
             this.notificationIQ = notificationIQ;
@@ -25,7 +25,7 @@ namespace ntbs_service.Services
             if (!string.IsNullOrEmpty(id))
             {
                 int.TryParse(id, out int parsedId);
-                notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(parsedId) 
+                notificationIQ = notificationIQ.Where(s => s.NotificationId.Equals(parsedId)
                     || (s.ETSID != null && s.ETSID.Equals(id)) || (s.LTBRID != null && s.LTBRID.Equals(id)) || s.PatientDetails.NhsNumber.Equals(id) || s.LTBRPatientId.Equals(id));
             }
             return this;
@@ -59,45 +59,50 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilder FilterByPartialDob(PartialDate partialDob) 
+        public ISearchBuilder FilterByPartialDob(PartialDate partialDob)
         {
-            if(!(partialDob == null || partialDob.IsEmpty())) {
+            if (!(partialDob == null || partialDob.IsEmpty()))
+            {
                 partialDob.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.Dob >= dateRangeStart && s.PatientDetails.Dob < dateRangeEnd);
             }
-            
+
             return this;
         }
 
-        public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate) 
+        public ISearchBuilder FilterByPartialNotificationDate(PartialDate partialNotificationDate)
         {
-            if(!(partialNotificationDate == null || partialNotificationDate.IsEmpty())) {
+            if (!(partialNotificationDate == null || partialNotificationDate.IsEmpty()))
+            {
                 partialNotificationDate.TryConvertToDateTimeRange(out DateTime? dateRangeStart, out DateTime? dateRangeEnd);
                 notificationIQ = notificationIQ.Where(s => s.NotificationDate >= dateRangeStart && s.NotificationDate < dateRangeEnd);
             }
-            
+
             return this;
         }
 
-        public ISearchBuilder FilterBySex(int? sexId) 
+        public ISearchBuilder FilterBySex(int? sexId)
         {
-            if(sexId != null) {
+            if (sexId != null)
+            {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.SexId.Equals(sexId));
             }
             return this;
         }
 
-        public ISearchBuilder FilterByBirthCountry(int? countryId) 
+        public ISearchBuilder FilterByBirthCountry(int? countryId)
         {
-            if(countryId != null) {
+            if (countryId != null)
+            {
                 notificationIQ = notificationIQ.Where(s => s.PatientDetails.CountryId.Equals(countryId));
             }
             return this;
         }
 
-        public ISearchBuilder FilterByTBService(string TBService) 
+        public ISearchBuilder FilterByTBService(string TBService)
         {
-            if(TBService != null) {
+            if (TBService != null)
+            {
                 notificationIQ = notificationIQ.Where(s => s.Episode.TBServiceCode.Equals(TBService));
             }
             return this;
