@@ -89,19 +89,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-
-            // If case manager not yet set, and current user is an allowed case manager for
-            // the current tbServices then set currentUser as default case manager
-            if (Episode.CaseManagerEmail == null)
-            {
-                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                var upperUserEmail = userEmail?.ToUpperInvariant();
-                if (caseManagers.Any(c => c.Email.ToUpperInvariant() == upperUserEmail))
-                {
-                    Episode.CaseManagerEmail = userEmail;
-                }
-            };
-
             CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
         }
 
