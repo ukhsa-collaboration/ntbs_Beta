@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities
         public string GivenName { get; set; }
         public string FamilyName { get; set; }
         public string DisplayName { get; set; }
-        public string AdGroup { get; set; }
+        public string AdGroups { get; set; }
         public bool IsActive { get; set; }
         public bool IsCaseManager { get; set; }
 
@@ -26,7 +26,7 @@ namespace ntbs_service.Models.Entities
         internal void SetAdGroups(List<string> groups)
         {
             AdGroupNames = groups;
-            AdGroup = string.Join(",", groups);
+            AdGroups = string.Join(",", groups);
         }
     }
 }

@@ -77,8 +77,8 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(savedUser.DisplayName, FirstUserPrincipal.DisplayName);
             Assert.True(savedUser.IsActive);
             Assert.True(savedUser.IsCaseManager);
-            Assert.Contains("Global.NIS.NTBS.Service_Nottingham", savedUser.AdGroup);
-            Assert.Contains("Global.NIS.NTBS.EMS", savedUser.AdGroup);
+            Assert.Contains("Global.NIS.NTBS.Service_Nottingham", savedUser.AdGroups);
+            Assert.Contains("Global.NIS.NTBS.EMS", savedUser.AdGroups);
 
             var savedInactiveUser = savedUsers[1];
             Assert.Equal(savedInactiveUser.Username, SecondUserPrincipal.UserPrincipalName);
@@ -87,7 +87,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(savedInactiveUser.DisplayName, SecondUserPrincipal.DisplayName);
             Assert.False(savedInactiveUser.IsActive);
             Assert.False(savedInactiveUser.IsCaseManager);
-            Assert.Contains("Global.NIS.NTBS.NTA", savedInactiveUser.AdGroup);
+            Assert.Contains("Global.NIS.NTBS.NTA", savedInactiveUser.AdGroups);
         }
 
         private class MockAdDirectoryService : IAdDirectoryService

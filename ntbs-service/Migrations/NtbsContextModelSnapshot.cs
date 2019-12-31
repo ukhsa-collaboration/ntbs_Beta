@@ -265,7 +265,7 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64);
 
-                    b.Property<string>("AdGroup");
+                    b.Property<string>("AdGroups");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(64);

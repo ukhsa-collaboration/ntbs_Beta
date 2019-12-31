@@ -128,7 +128,7 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
             services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAdDirectoryFactory, AdDirectoryFactory>();
+            services.AddScoped<IAdDirectoryFactory, AdDirectoryServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
 
             services.Configure<AdfsOptions>(adfsConfig);
