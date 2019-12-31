@@ -28,7 +28,6 @@ namespace ntbs_service.Services
             _userRepository = userRepository;
         }
 
-        // get those values from settings
         public async Task RunCaseManagerImport()
         {
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();

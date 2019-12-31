@@ -111,9 +111,9 @@ namespace ntbs_integration_tests.Helpers
             return new List<User>
             {
                 new User { Username = CASEMANAGER_ABINGDON_EMAIL, GivenName = "TestCase", FamilyName = "TestManager",
-                           AdGroup = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true },
+                           AdGroups = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true },
                 new User { Username = CASEMANAGER_ABINGDON_EMAIL2, GivenName = "TestCase2", FamilyName = "TestManager",
-                            AdGroup = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true }
+                            AdGroups = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true }
             };
         }
 
