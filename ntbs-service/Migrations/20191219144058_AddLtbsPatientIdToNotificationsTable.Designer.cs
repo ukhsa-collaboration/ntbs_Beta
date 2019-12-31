@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191219144058_AddLtbsPatientIdToNotificationsTable")]
+    partial class AddLtbsPatientIdToNotificationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -10097,22 +10099,22 @@ namespace ntbs_service.Migrations
                         new
                         {
                             SiteId = 2,
-                            Description = "Spine"
+                            Description = "Bone/joint: spine"
                         },
                         new
                         {
                             SiteId = 3,
-                            Description = "Bone/joint: Other"
+                            Description = "Bone/joint: other"
                         },
                         new
                         {
                             SiteId = 4,
-                            Description = "Meningitis"
+                            Description = "meningitis"
                         },
                         new
                         {
                             SiteId = 5,
-                            Description = "CNS: Other"
+                            Description = "other"
                         },
                         new
                         {
@@ -10173,6 +10175,11 @@ namespace ntbs_service.Migrations
                         {
                             SiteId = 17,
                             Description = "Other extra-pulmonary"
+                        },
+                        new
+                        {
+                            SiteId = 18,
+                            Description = "Unknown"
                         });
                 });
 

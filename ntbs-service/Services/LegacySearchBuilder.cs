@@ -120,16 +120,7 @@ namespace ntbs_service.Services
 
         private void AppendCondition(string condition) 
         {
-            if(sqlQuery == null)
-            {
-                sqlQuery += $@"WHERE {condition}
-                    ";
-            }
-            else
-            {
-                sqlQuery += $@"AND {condition}
-                    ";
-            }
+            sqlQuery += $@"AND {condition}";
         }
     }
 }

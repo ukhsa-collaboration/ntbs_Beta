@@ -26,6 +26,9 @@ namespace ntbs_service.Services
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            WHERE NOT EXISTS (SELECT *
+              FROM ImportedNotifications impNtfc
+              WHERE impNtfc.LegacyId = n.OldNotificationId)
             ";
             
         const string SelectQueryEnd = @"
@@ -37,6 +40,9 @@ namespace ntbs_service.Services
             SELECT COUNT(*)
             FROM Notifications n
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            WHERE NOT EXISTS (SELECT *
+              FROM ImportedNotifications impNtfc
+              WHERE impNtfc.LegacyId = n.OldNotificationId)
             ";
 
         private readonly string connectionString;
