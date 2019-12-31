@@ -61,13 +61,13 @@ namespace ntbs_service.Services
             }
         }
 
-        private static List<string> GetAdGroups(AdDirectoryService adDirectoryService, DirectoryEntry directoryEntry)
+        private static List<string> GetAdGroups(IAdDirectoryService adDirectoryService, DirectoryEntry directoryEntry)
         {
             var adGroups = new List<string>();
             // The more natural way to obtain membership groups would have been to use user.GetAuthorizationGroups()
             // However, all operations trying to fetch AD groups failed with an error "PrincipalOperationException: Information about the domain could not be retrieved"
             // This is caused by not being in the same network as the AD server. None of the suggested workarounds worked, so fetching this via this property instead
-            foreach (var distinguishedName in adDirectoryService.GetDistinguisedGroupNames(directoryEntry))
+            foreach (var distinguishedName in adDirectoryService.GetDistinguishedGroupNames(directoryEntry))
             {
                 var match = DistinguishedNameRegex.Match(distinguishedName);
                 if (!match.Success)

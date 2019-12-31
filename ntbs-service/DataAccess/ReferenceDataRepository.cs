@@ -13,11 +13,11 @@ namespace ntbs_service.DataAccess
     {
         Task<IList<Country>> GetAllCountriesAsync();
         Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync();
-        Task<IList<Country>> GetAllCountriesApartFromUKAsync();
+        Task<IList<Country>> GetAllCountriesApartFromUkAsync();
         Task<Country> GetCountryByIdAsync(int id);
         Task<IList<TBService>> GetAllTbServicesAsync();
         Task<TBService> GetTbServiceByCodeAsync(string code);
-        Task<User> GetCaseManagerByUsernameAsync(string email);
+        Task<User> GetCaseManagerByUsernameAsync(string username);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
@@ -61,7 +61,7 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task<IList<Country>> GetAllCountriesApartFromUKAsync()
+        public async Task<IList<Country>> GetAllCountriesApartFromUkAsync()
         {
             return await _context.Country.Where(c => c.IsoCode != Countries.UkCode).ToListAsync();
         }
@@ -89,13 +89,13 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<User> GetCaseManagerByUsernameAsync(string email)
+        public async Task<User> GetCaseManagerByUsernameAsync(string username)
         {
             return await _context.User
                 .Include(c => c.CaseManagerTbServices)
                 .ThenInclude(ct => ct.TbService)
                 .Where(u => u.IsCaseManager)
-                .SingleOrDefaultAsync(c => c.Username == email);
+                .SingleOrDefaultAsync(c => c.Username == username);
         }
 
         public async Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices)
