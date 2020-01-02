@@ -4,10 +4,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
+using ntbs_service.DataAccess;
 
 namespace ntbs_service.DataMigration
 {
@@ -21,11 +23,13 @@ namespace ntbs_service.DataMigration
     {
         private readonly string connectionString;
         private readonly IMigrationRepository _migrationRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
-        public NotificationMapper(IConfiguration configuration, IMigrationRepository migrationRepository)
+        public NotificationMapper(IConfiguration configuration, IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository)
         {
             connectionString = configuration.GetConnectionString("migration");
             _migrationRepository = migrationRepository;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
@@ -54,11 +58,16 @@ namespace ntbs_service.DataMigration
                 nsGroup => nsGroup.Key,
                 (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.DiseaseSiteId != null)));
 
-            return notifications.GroupBy(x => x.rawNotification.GroupId)
-                .Select(group => group.Select(AsNotification));
+            var notificationGroups = notifications.GroupBy(x => x.rawNotification.GroupId);
+
+            return Task.WhenAll(notificationGroups
+                .Select(group =>
+                {
+                    return Task.WhenAll(group.Select(AsNotificationAsync));
+                })).Result;
         }
 
-        private static Notification AsNotification((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
+        private async Task<Notification> AsNotificationAsync((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
         {
             var rawNotification = rawResult.rawNotification;
             var sites = rawResult.rawSites.Select(AsNotificationSite).ToList();
@@ -75,11 +84,27 @@ namespace ntbs_service.DataMigration
                 VisitorDetails = ExtractVisitorDetails(rawNotification),
                 ComorbidityDetails = ExtractComorbidityDetails(rawNotification),
                 ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification),
+                Episode = ExtractEpisodeDetails(rawNotification),
                 NotificationStatus = NotificationStatus.Notified,
                 NotificationSites = sites
             };
 
+            if (notification.Episode.HospitalId is Guid guid)
+            {
+                var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
+                notification.Episode.TBServiceCode = tbService.Code;
+            }
+
             return notification;
+        }
+
+        private static Episode ExtractEpisodeDetails(dynamic rawNotification)
+        {
+            return new Episode
+            {
+                HospitalId = rawNotification.NtbsHospitalId,
+                Consultant = rawNotification.Consultant
+            };
         }
 
         private static NotificationSite AsNotificationSite(dynamic result)
