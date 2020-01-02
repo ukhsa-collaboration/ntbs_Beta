@@ -20,6 +20,7 @@ namespace ntbs_migration_tests
         private readonly NotificationMapper _notificationMapper;
         private readonly Mock<INotificationRepository> _mockNotificationRepository;
         private readonly Mock<IMigrationRepository> _mockMigrationRepository;
+        private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<INotificationImportRepository> _mockNotificationImportRepository;
         private readonly Mock<IImportLogger> _mockLogger;
         private readonly Mock<IPostcodeService> _mockPostcodeService;
@@ -34,14 +35,18 @@ namespace ntbs_migration_tests
             _mockConfiguration.Setup(x => x.GetSection(It.IsAny<string>())[It.IsAny<string>()]).Returns(_connectionString);
 
             _mockMigrationRepository = new Mock<IMigrationRepository>();
+            _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
+            _mockReferenceDataRepository
+                .Setup(x => x.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
+                .Returns(Task.FromResult(new TBService { Code = "TBS0002", Name = "Addenbrooke's Hospital" }));
 
-            _notificationMapper = new NotificationMapper(_mockConfiguration.Object, _mockMigrationRepository.Object);
+            _notificationMapper = new NotificationMapper(_mockConfiguration.Object, _mockMigrationRepository.Object, _mockReferenceDataRepository.Object);
 
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockNotificationImportRepository = new Mock<INotificationImportRepository>();
             _mockLogger = new Mock<IImportLogger>();
             _mockPostcodeService = new Mock<IPostcodeService>();
-            _notifcationImportService = new NotificationImportService(_notificationMapper, 
+            _notifcationImportService = new NotificationImportService(_notificationMapper,
                                                                     _mockNotificationRepository.Object,
                                                                     _mockNotificationImportRepository.Object,
                                                                     _mockPostcodeService.Object,
