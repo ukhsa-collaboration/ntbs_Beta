@@ -46,7 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void AuditAction(AuditEvent ev, Audit.EntityFramework.EventEntry entry, AuditLog audit)
         {
             audit.AuditData = entry.ToJson();
-            audit.OriginalId = entry.PrimaryKey.First().Value.ToString();
+            audit.OriginalId = int.Parse(entry.PrimaryKey.First().Value.ToString());
             audit.EntityType = entry.EntityType.Name;
             audit.EventType = entry.Action;
             audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);

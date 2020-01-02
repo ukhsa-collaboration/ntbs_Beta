@@ -37,7 +37,7 @@ namespace EFAuditer.Migrations
 
                     b.Property<string>("EventType");
 
-                    b.Property<string>("OriginalId");
+                    b.Property<int>("OriginalId");
 
                     b.HasKey("Id");
 

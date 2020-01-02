@@ -10,7 +10,7 @@ namespace ntbs_service.Migrations
         {
             migrationBuilder.InsertData(
                 table: "CaseManager",
-                columns: new[] { "Email", "GivenName", "FamilyName" },
+                columns: new[] { nameof(CaseManager.Email), nameof(CaseManager.GivenName), nameof(CaseManager.FamilyName) },
                 values: new object[,]
                 {
                     {"Conor.Sheehan@ntbs.phe.com", "Conor", "Sheehan"},

@@ -43,11 +43,6 @@ spec:
                 key: migration
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io"
-          - name: AdConnectionSettings__Password
-            valueFrom:
-              secretKeyRef:
-                name: development-ad-sync-credentials
-                key: password
       imagePullSecrets:
       - name: registery-password
 ---

@@ -21,7 +21,7 @@ namespace EFAuditer
         private AuditLog CreateAuditLog(int primaryKeyId, string entity, string details, string eventType, string userName)
         {
             return new AuditLog() {
-                OriginalId = primaryKeyId.ToString(),
+                OriginalId = primaryKeyId,
                 EntityType = entity,
                 EventType = eventType,
                 AuditDateTime = DateTime.Now,
