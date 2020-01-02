@@ -89,7 +89,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-            CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
+            CaseManagers = new SelectList(caseManagers, 
+                nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.FullName));
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -157,9 +159,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 Episode.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(Episode.TBServiceCode);
             }
-            if (Episode.CaseManagerEmail != null)
+            if (Episode.CaseManagerUsername != null)
             {
-                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByEmailAsync(Episode.CaseManagerEmail);
+                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(Episode.CaseManagerUsername);
             }
         }
 
@@ -179,7 +181,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                     }),
                     CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
-                        Value = n.Email,
+                        Value = n.Username,
                         Text = n.FullName
                     })
                 });

@@ -5,7 +5,7 @@ namespace EFAuditer
     public class AuditLog
     {
         public int Id { get; set; }
-        public int OriginalId { get; set; }
+        public string OriginalId { get; set; }
         public string EntityType { get; set; }
         public string EventType { get; set; }
         public string AuditDetails { get; set; }
