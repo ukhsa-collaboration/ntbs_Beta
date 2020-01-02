@@ -8,17 +8,17 @@
 
 }
 
-<h1>Search</h1>
+<nhs-width-container container-width="Standard">
+    <h1>Import Legacy Notifications</h1>
 
-<h4>Parameters</h4>
-<hr />
-<div>
     <form method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly"></div>
-        <nhs-form-group>
-            <label asp-for="UploadedFile">Upload File</label>
-            <input type="file" asp-for="UploadedFile"/>
-        </nhs-form-group>
+        <div>
+            <nhs-form-group>
+                <label asp-for="UploadedFile">Upload File</label>
+                <input type="file" asp-for="UploadedFile"/>
+            </nhs-form-group>
+        </div>
         <br/>
 
         <div>
@@ -27,9 +27,9 @@
                 var notificationDateStartGroupState = notificationDateStartError ? Error : Standard;
             }
             <nhs-form-group nhs-form-group-type=@notificationDateStartGroupState classes="nhs-form-group--import-by-date">
-                <span nhs-span-type="ErrorMessage" id="notification-date-error" classes="import-error"
+                <span nhs-span-type="ErrorMessage" id="notification-start-date-error" classes="import-error"
                     asp-validation-for="NotificationDateRangeStart" has-error="@notificationDateStartError"></span>
-                <label nhs-label-type="Standard" for="notification-date"> Start Notification Date </label>
+                <label nhs-label-type="Standard" for="notification-start-date"> Start Notification Date Range </label>
                 <nhs-date-input id="notification-date">
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
@@ -62,9 +62,9 @@
                 var notificationDateEndGroupState = notificationDateEndError ? Error : Standard;
             }
             <nhs-form-group nhs-form-group-type=@notificationDateEndGroupState classes="nhs-form-group--import-by-date">
-                <span nhs-span-type="ErrorMessage" id="notification-date-error" classes="import-error"
+                <span nhs-span-type="ErrorMessage" id="notification-end-date-error" classes="import-error"
                     asp-validation-for="NotificationDateRangeEnd" has-error="@notificationDateEndError"></span>
-                <label nhs-label-type="Standard" for="notification-date"> End Notification Date </label>
+                <label nhs-label-type="Standard" for="notification-end-date"> End Notification Date Range </label>
                 <nhs-date-input id="notification-date">
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
@@ -92,34 +92,9 @@
         </div>
 
         <div>
-            <input type="submit" value="Import" />
+            <button nhs-button-type="Standard" type="submit" value="Import" classes="ntbsuk-button--primary submit-search-button" id="search-button" formaction="#search-results-section">
+                Import
+            </button>
         </div>
     </form>
-</div>
-@if (Model.Results != null)
-{
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Results[0].NotificationId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Results[0].NotificationDate)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model.Results) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NotificationId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NotificationDate)
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>
-}
+</nhs-width-container>

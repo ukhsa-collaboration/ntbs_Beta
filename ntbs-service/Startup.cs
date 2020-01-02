@@ -50,22 +50,25 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(config =>
+            if (!Env.IsEnvironment("Test"))
             {
-                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"), new SqlServerStorageOptions
-                    {
-                        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                        QueuePollInterval = TimeSpan.Zero,
-                        UseRecommendedIsolationLevel = true,
-                        UsePageLocksOnDequeue = true,
-                        DisableGlobalLocks = true
-                    })
-                    .UseConsole();
-            });
+                services.AddHangfire(config =>
+                {
+                    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseRecommendedSerializerSettings()
+                        .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"), new SqlServerStorageOptions
+                        {
+                            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                            QueuePollInterval = TimeSpan.Zero,
+                            UseRecommendedIsolationLevel = true,
+                            UsePageLocksOnDequeue = true,
+                            DisableGlobalLocks = true
+                        })
+                        .UseConsole();
+                });
+            }
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var setupDummyAuth = adfsConfig.GetValue<bool>("UseDummyAuth", false);
@@ -200,11 +203,14 @@ namespace ntbs_service
 
             app.UseMvc();
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            if (!Env.IsEnvironment("Test"))
             {
-                Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
-            });
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
+                app.UseHangfireDashboard("/hangfire", new DashboardOptions
+                {
+                    Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
+                });
+                app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
+            }
 
             var cultureInfo = new CultureInfo("en-GB");
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
