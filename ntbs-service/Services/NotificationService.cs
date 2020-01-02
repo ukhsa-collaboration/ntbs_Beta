@@ -331,7 +331,7 @@ namespace ntbs_service.Services
                 Episode =
                 {
                     TBService = defaultTbService,
-                    CaseManagerUsername = caseManagerEmail
+                    CaseManagerEmail = caseManagerEmail
                 }
             };
 
@@ -346,7 +346,7 @@ namespace ntbs_service.Services
             var userEmail = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var upperUserEmail = userEmail?.ToUpperInvariant();
 
-            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
+            return caseManagersForTbService.Any(c => c.Email.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
         }
 
         private async Task UpdateDatabaseAsync(NotificationAuditType auditType = NotificationAuditType.Edited)

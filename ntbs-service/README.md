@@ -37,7 +37,7 @@ Use [dotnet secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-s
 For example, to override the main connection database string:
 `dotnet user-secrets set "ConnectionStrings:ntbsContext" "my-alternative-connection-string"`
 
-A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI:
+A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI.
 
 ```PowerShell
 # Use `az login` to authenticate first if necessary

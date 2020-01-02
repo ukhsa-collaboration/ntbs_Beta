@@ -131,20 +131,20 @@
                 </nhs-form-group>
             </validate-input>
 
-            <validate-input model="Episode" property="CaseManagerUsername" shouldvalidatefull="@fullValidation"
+            <validate-input model="Episode" property="CaseManagerEmail" shouldvalidatefull="@fullValidation"
                             ref="caseManagers" inline-template>
                 @{
-                    var hasCaseManagerError = !Model.IsValid("Episode.CaseManagerUsername");
+                    var hasCaseManagerError = !Model.IsValid("Episode.CaseManagerEmail");
                     var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                     var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                 }
-                <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="Episode-CaseManagerUsername">
-                    <label nhs-label-type="Standard" asp-for="Episode.CaseManagerUsername">
+                <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="Episode-CaseManagerEmail">
+                    <label nhs-label-type="Standard" asp-for="Episode.CaseManagerEmail">
                         Add details of case manager
                     </label>
                     <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
-                          ref="errorField" asp-validation-for="Episode.CaseManagerUsername"></span>
-                    <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="Episode.CaseManagerUsername"
+                          ref="errorField" asp-validation-for="Episode.CaseManagerEmail"></span>
+                    <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="Episode.CaseManagerEmail"
                             asp-items="Model.CaseManagers" v-on:change="validate">
                         <option value="" selected>Please select</option>
                     </select>
