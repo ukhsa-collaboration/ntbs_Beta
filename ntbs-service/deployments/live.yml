@@ -31,23 +31,28 @@ spec:
                 secretKeyRef:
                   name: live-audit-db-connection-string
                   key: connectionString
-            # - name: ConnectionStrings__ltbr
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: lgeacy-and-migration-connection-strings
-            #       key: ltbr
-            # - name: ConnectionStrings__ets
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: lgeacy-and-migration-connection-strings
-            #       key: ets
-            # - name: ConnectionStrings__migration
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: lgeacy-and-migration-connection-strings
-            #       key: migration
+#             - name: ConnectionStrings__ltbr
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: lgeacy-and-migration-connection-strings
+#                   key: ltbr
+#             - name: ConnectionStrings__ets
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: lgeacy-and-migration-connection-strings
+#                   key: ets
+#             - name: ConnectionStrings__migration
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: lgeacy-and-migration-connection-strings
+#                   key: migration
             - name: AdfsOptions__UseDummyAuth
               value: "true"
+#            - name: AdConnectionSettings__Password
+#              valueFrom:
+#                secretKeyRef:
+#                  name: development-ad-sync-credentials
+#                  key: password
       imagePullSecrets:
         - name: registery-password
 ---
