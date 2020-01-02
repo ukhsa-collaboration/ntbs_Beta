@@ -39,6 +39,7 @@ namespace ntbs_service.Models.Validations
             return null;
         }
 
+        // Adapted from https://github.com/pfwd/NHSNumber-Validation/blob/master/C%23/NHSNumberValidation.cs
         public bool ValidateNhsNumber(string nhsNumber)
         {
             int multiplicationTotal = 0;
