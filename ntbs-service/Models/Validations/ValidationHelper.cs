@@ -36,8 +36,9 @@
         #endregion
 
         #region Patient Details
-        public const string NhsNumberLength = "{0} needs to be 10 digits long";
+        public const string NhsNumberLength = "NHS number needs to be 10 digits long";
         public const string InvalidNhsNumber = "This NHS number is not valid. Confirm you have entered it correctly";
+        public const string NhsNumberFormat = "NHS number can only contain digits 0-9";
         public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
         public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
