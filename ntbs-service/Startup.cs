@@ -51,12 +51,14 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(config =>
+            if (!Env.IsEnvironment("Test"))
             {
-                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"),
+                services.AddHangfire(config =>
+                {
+                    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseRecommendedSerializerSettings()
+                        .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"),
                         new SqlServerStorageOptions
                         {
                             CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
@@ -66,8 +68,9 @@ namespace ntbs_service
                             UsePageLocksOnDequeue = true,
                             DisableGlobalLocks = true
                         })
-                    .UseConsole();
-            });
+                        .UseConsole();
+                });
+            }
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var adConnectionSettings = Configuration.GetSection("AdConnectionSettings");
@@ -217,6 +220,11 @@ namespace ntbs_service
 
         private void ConfigureHangfire(IApplicationBuilder app)
         {
+            if (Env.IsEnvironment("Test"))
+            {
+                return;
+            }
+                
             var dashboardOptions = new DashboardOptions
             {
                 Authorization = new[] {new HangfireAuthorisationFilter(GetAdminRoleName())}
