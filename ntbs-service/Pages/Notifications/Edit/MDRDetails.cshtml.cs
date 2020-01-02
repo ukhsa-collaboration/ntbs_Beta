@@ -104,7 +104,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidateMDRDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.ValidateModelProperty<MDRDetails>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<MDRDetails>(key, value, shouldValidateFull);
         }
 
         public async Task<ContentResult> OnGetValidateMDRDetailsRelatedNotificationAsync(string value)

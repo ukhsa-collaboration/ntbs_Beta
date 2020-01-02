@@ -7,222 +7,166 @@ using ntbs_service.Models.Entities;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Enums;
+using ntbs_service.Helpers;
 
 namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<IEnumerable<Notification>> Get(string notificationId);
+        Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
+        Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
     {
-        const string NotificationsQuery = @"
-            SELECT *,
-            	trvl.Country1 AS travel_Country1,
-                trvl.Country2 AS travel_Country2,
-                trvl.Country3 AS travel_Country3,
-                trvl.TotalNumberOfCountries AS travel_TotalNumberOfCountries,
-                trvl.StayLengthInMonths1 AS travel_StayLengthInMonths1,
-                trvl.StayLengthInMonths2 AS travel_StayLengthInMonths2,
-                trvl.StayLengthInMonths3 AS travel_StayLengthInMonths3,
-                vstr.Country1 AS visitor_Country1,
-                vstr.Country2 AS visitor_Country2,
-                vstr.Country3 AS visitor_Country3,
-                vstr.TotalNumberOfCountries AS visitor_TotalNumberOfCountries,
-                vstr.StayLengthInMonths1 AS visitor_StayLengthInMonths1,
-                vstr.StayLengthInMonths2 AS visitor_StayLengthInMonths2,
-                vstr.StayLengthInMonths3 AS visitor_StayLengthInMonths3
-            FROM Notifications n 
-            LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            LEFT JOIN DeathDates dd ON dd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN VisitorHistory vstr ON vstr.OldNotificationId = n.OldNotificationId
-            LEFT JOIN TravelHistory trvl ON trvl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ClinicalDates clncl ON clncl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
-            WHERE GroupId IN (
-                SELECT GroupId
-                FROM Notifications n WHERE n.OldNotificationId = @NotificationId
-            )";
-
-        const string NotificationSitesQuery = @"
-            SELECT *
-            FROM DiseaseSites
-            WHERE OldNotificationId IN ({0})
-        ";
-
         private readonly string connectionString;
+        private readonly IMigrationRepository _migrationRepository;
 
-        public NotificationMapper(IConfiguration _configuration)
+        public NotificationMapper(IConfiguration configuration, IMigrationRepository migrationRepository)
         {
-            connectionString = _configuration.GetConnectionString("migration");
+            connectionString = configuration.GetConnectionString("migration");
+            _migrationRepository = migrationRepository;
         }
 
-        public async Task<IEnumerable<Notification>> Get(string notificationId)
+        public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
+            var notificationsRaw = await _migrationRepository.GetNotificationsByDate(rangeStartDate, endStartDate);
+            var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
+            var notificationSitesRaw = await _migrationRepository.GetNotificationSites(legacyIds);
 
-                var results = await connection.QueryAsync(NotificationsQuery, new
-                {
-                    NotificationId = $"{notificationId}"
-                });
-
-                var notifications = results.Select(AsNotification).ToList();
-
-                var idsForInClause = string.Join(",", notifications.Select(x => $@"'{x.LegacyId}'"));
-                var notificationSites = await connection.QueryAsync(string.Format(NotificationSitesQuery, idsForInClause));
-                var groupingByLegacyId = notificationSites.GroupBy(x => x.OldNotificationId);
-                foreach (var group in groupingByLegacyId)
-                {
-                    notifications.FirstOrDefault(x => x.LegacyId == group.Key).NotificationSites = group.Select(AsNotificationSite).ToList();
-                }
-
-                return notifications;
-            }
+            return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
         }
 
-        private static NotificationSite AsNotificationSite(dynamic result)
+        public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
         {
-            return new NotificationSite {
-                SiteId = result.DiseaseSiteId,
-                SiteDescription = result.DiseaseSiteText
-            };
+            var notificationsRaw = await _migrationRepository.GetNotificationsById(notificationIds);
+            var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
+            var notificationSitesRaw = await _migrationRepository.GetNotificationSites(legacyIds);
+
+            return GetGroupedResultsAsNotification(notificationsRaw, notificationSitesRaw);
         }
 
-        private static Notification AsNotification(dynamic result)
+        private IEnumerable<IEnumerable<Notification>> GetGroupedResultsAsNotification(IEnumerable<dynamic> notificationsRaw, IEnumerable<dynamic> notificationSitesRaw)
         {
+            var notificationSiteGroups = notificationSitesRaw.GroupBy(x => x.OldNotificationId);
+            var notifications = notificationsRaw.Join(notificationSiteGroups,
+                n => n.OldNotificationId,
+                nsGroup => nsGroup.Key,
+                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.DiseaseSiteId != null)));
+
+            return notifications.GroupBy(x => x.rawNotification.GroupId)
+                .Select(group => group.Select(AsNotification));
+        }
+
+        private static Notification AsNotification((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
+        {
+            var rawNotification = rawResult.rawNotification;
+            var sites = rawResult.rawSites.Select(AsNotificationSite).ToList();
             var notification = new Notification
             {
-                ETSID = result.ETSID?.ToString(),
-                LTBRID = result.LTBRID?.ToString(),
-                NotificationDate = result.NotificationDate,
-                CreationDate = result.CreationDate,
-                PatientDetails = ExtractPatientDetails(result),
-                ClinicalDetails = ExtractClinicalDetails(result),
-                TravelDetails = ExtractTravelDetails(result),
-                VisitorDetails = ExtractVisitorDetails(result),
-                ComorbidityDetails = ExtractComorbidityDetails(result),
-                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(result),
-                NotificationStatus = NotificationStatus.Notified
+                ETSID = rawNotification.Source == "ETS" ? rawNotification.OldNotificationId.ToString() : null,
+                LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null,
+                LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null,
+                NotificationDate = rawNotification.NotificationDate,
+                CreationDate = rawNotification.CreationDate,
+                PatientDetails = ExtractPatientDetails(rawNotification),
+                ClinicalDetails = ExtractClinicalDetails(rawNotification),
+                TravelDetails = ExtractTravelDetails(rawNotification),
+                VisitorDetails = ExtractVisitorDetails(rawNotification),
+                ComorbidityDetails = ExtractComorbidityDetails(rawNotification),
+                ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification),
+                NotificationStatus = NotificationStatus.Notified,
+                NotificationSites = sites
             };
 
             return notification;
         }
 
-        private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
+        private static NotificationSite AsNotificationSite(dynamic result)
         {
-            return new ImmunosuppressionDetails 
-            {
-                Status = GetStatusFromString(notification.Status),
-                HasBioTherapy = GetBoolValue(notification.HasBioTherapy),
-                HasTransplantation = GetBoolValue(notification.HasTransplantation),
-                HasOther = GetBoolValue(notification.HasOther),
-                OtherDescription = notification.OtherDescription
-            };
-        }
-
-        private static ComorbidityDetails ExtractComorbidityDetails(dynamic notification)
-        {
-            return new ComorbidityDetails 
-            {
-                DiabetesStatus = GetStatusFromString(notification.DiabetesStatus),
-                LiverDiseaseStatus = GetStatusFromString(notification.LiverDiseaseStatus),
-                RenalDiseaseStatus = GetStatusFromString(notification.RenalDiseaseStatus),
-                HepatitisBStatus = GetStatusFromString(notification.HepatitisBStatus),
-                HepatitisCStatus = GetStatusFromString(notification.HepatitisCStatus)
-            };
-        }
-
-        private static ClinicalDetails ExtractClinicalDetails(dynamic notification)
-        {
-            return new ClinicalDetails
-                {
-                    SymptomStartDate = notification.SymptomStartDate,
-                    FirstPresentationDate = notification.FirstPresentationDate,
-                    TBServicePresentationDate = notification.TbServicePresentationDate,
-                    DiagnosisDate = notification.DiagnosisDate,
-                    DidNotStartTreatment = GetBoolValue(notification.DidNotStartTreatment),
-                    MDRTreatmentStartDate = notification.StartOfTreatmentDay,
-                    IsSymptomatic = GetBoolValue(notification.IsSymptomatic),
-                    DeathDate = notification.DeathDate
-                };
-        }
-
-        private static TravelDetails ExtractTravelDetails(dynamic notification)
-        {
-            return new TravelDetails
-                {
-                    HasTravel = GetBoolValue(notification.HasTravel),
-                    TotalNumberOfCountries = notification.travel_TotalNumberOfCountries,
-                    Country1Id = notification.travel_Country1,
-                    Country2Id = notification.travel_Country2,
-                    Country3Id = notification.travel_Country3,
-                    StayLengthInMonths1 = notification.StayLengthInMonths1,                    
-                    StayLengthInMonths2 = notification.StayLengthInMonths2,
-                    StayLengthInMonths3 = notification.StayLengthInMonths3
-                };
-        }
-
-        private static VisitorDetails ExtractVisitorDetails(dynamic notification)
-        {
-            return new VisitorDetails
-                {
-                    HasVisitor = GetBoolValue(notification.HasVisitor),
-                    TotalNumberOfCountries = notification.visitor_TotalNumberOfCountries,
-                    Country1Id = notification.visitor_Country1,
-                    Country2Id = notification.visitor_Country2,
-                    Country3Id = notification.visitor_Country3,
-                    StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
-                    StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
-                    StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
-                };
-        }
-
-        private static PatientDetails ExtractPatientDetails(dynamic notification)
-        {
-            return new PatientDetails
-                {
-                    FamilyName = notification.FamilyName,
-                    GivenName = notification.GivenName,
-                    NhsNumber = notification.NhsNumber,
-                    Dob = notification.DateOfBirth,
-                    YearOfUkEntry = notification.UkEntryYear,
-                    UkBorn = GetBoolValue(notification.UkBorn),
-                    CountryId = notification.BirthCountryId,
-                    LocalPatientId = notification.LocalPatientId,
-                    Postcode = notification.Postcode,
-                    Address = notification.Line1 + " " + notification.Line2,
-                    EthnicityId = notification.NtbsEthnicGroupId,
-                    SexId = notification.NtbsSexId,
-                    NhsNumberNotKnown = notification.NhsNumberNotKnown == 1,
-                    NoFixedAbode = notification.NoFixedAbode == 1,
-                    OccupationId = notification.NtbsOccupationId,
-                    OccupationOther = notification.NtbsOccupationFreeText
-                };
-        }
-
-        private static bool? GetBoolValue(int? value)
-        {
-            if (value == null)
+            if (result.DiseaseSiteId == null)
             {
                 return null;
             }
-            return value == 1 ? true : false;
-        }
-
-        private static Status? GetStatusFromString(string status)
-        {
-            if (string.IsNullOrEmpty(status))
+            return new NotificationSite
             {
-                return null;
-            }
-
-            return Enum.Parse<Status>(status);
+                SiteId = result.DiseaseSiteId,
+                SiteDescription = result.DiseaseSiteText
+            };
         }
+
+        private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification) => new ImmunosuppressionDetails
+        {
+            Status = StringToValueConverter.GetStatusFromString(notification.Status),
+            HasBioTherapy = StringToValueConverter.GetBoolValue(notification.HasBioTherapy),
+            HasTransplantation = StringToValueConverter.GetBoolValue(notification.HasTransplantation),
+            HasOther = StringToValueConverter.GetBoolValue(notification.HasOther),
+            OtherDescription = notification.OtherDescription
+        };
+
+        private static ComorbidityDetails ExtractComorbidityDetails(dynamic notification) => new ComorbidityDetails
+        {
+            DiabetesStatus = StringToValueConverter.GetStatusFromString(notification.DiabetesStatus),
+            LiverDiseaseStatus = StringToValueConverter.GetStatusFromString(notification.LiverDiseaseStatus),
+            RenalDiseaseStatus = StringToValueConverter.GetStatusFromString(notification.RenalDiseaseStatus),
+            HepatitisBStatus = StringToValueConverter.GetStatusFromString(notification.HepatitisBStatus),
+            HepatitisCStatus = StringToValueConverter.GetStatusFromString(notification.HepatitisCStatus)
+        };
+
+        private static ClinicalDetails ExtractClinicalDetails(dynamic notification) => new ClinicalDetails
+        {
+            SymptomStartDate = notification.SymptomStartDate,
+            FirstPresentationDate = notification.FirstPresentationDate,
+            TBServicePresentationDate = notification.TbServicePresentationDate,
+            DiagnosisDate = notification.DiagnosisDate,
+            DidNotStartTreatment = StringToValueConverter.GetNullableBoolValue(notification.DidNotStartTreatment),
+            MDRTreatmentStartDate = notification.StartOfTreatmentDay,
+            IsSymptomatic = StringToValueConverter.GetNullableBoolValue(notification.IsSymptomatic),
+            DeathDate = notification.DeathDate
+        };
+
+        private static TravelDetails ExtractTravelDetails(dynamic notification) => new TravelDetails
+        {
+            HasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel),
+            TotalNumberOfCountries = StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries),
+            Country1Id = notification.travel_Country1,
+            Country2Id = notification.travel_Country2,
+            Country3Id = notification.travel_Country3,
+            StayLengthInMonths1 = notification.StayLengthInMonths1,
+            StayLengthInMonths2 = notification.StayLengthInMonths2,
+            StayLengthInMonths3 = notification.StayLengthInMonths3
+        };
+
+        private static VisitorDetails ExtractVisitorDetails(dynamic notification) => new VisitorDetails
+        {
+            HasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor),
+            TotalNumberOfCountries = StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries),
+            Country1Id = notification.visitor_Country1,
+            Country2Id = notification.visitor_Country2,
+            Country3Id = notification.visitor_Country3,
+            StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
+            StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
+            StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
+        };
+
+        private static PatientDetails ExtractPatientDetails(dynamic notification) => new PatientDetails
+        {
+            FamilyName = notification.FamilyName,
+            GivenName = notification.GivenName,
+            NhsNumber = notification.NhsNumber,
+            Dob = notification.DateOfBirth,
+            YearOfUkEntry = notification.UkEntryYear,
+            UkBorn = StringToValueConverter.GetNullableBoolValue(notification.UkBorn),
+            CountryId = notification.BirthCountryId,
+            LocalPatientId = notification.LocalPatientId,
+            Postcode = notification.Postcode,
+            Address = notification.Line1 + " " + notification.Line2,
+            EthnicityId = notification.NtbsEthnicGroupId,
+            SexId = notification.NtbsSexId,
+            NhsNumberNotKnown = notification.NhsNumberNotKnown == 1,
+            NoFixedAbode = notification.NoFixedAbode == 1,
+            OccupationId = notification.NtbsOccupationId,
+            OccupationOther = notification.NtbsOccupationFreeText
+        };
     }
-  
 }

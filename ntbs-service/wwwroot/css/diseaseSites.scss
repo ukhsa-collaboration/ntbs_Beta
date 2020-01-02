@@ -1,0 +1,16 @@
+﻿/* Primarily for use in ClinicalDetails Disease Sites section for adjusting whitespace */
+
+.disease-sites {
+    & .nhsuk-details__text {
+        margin-top: 0px;
+    }
+
+    & .nhsuk-label--s {
+        margin-top: 8px;
+        margin-bottom: 8px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+}

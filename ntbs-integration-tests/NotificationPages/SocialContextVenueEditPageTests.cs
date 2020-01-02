@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -143,9 +143,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateFrom.Day"] = "",
                 ["FormattedDateFrom.Month"] = "",
                 ["FormattedDateFrom.Year"] = "",
-                ["FormattedDateTo.Day"] = "",
-                ["FormattedDateTo.Month"] = "",
-                ["FormattedDateTo.Year"] = "",
                 ["Venue.Name"] = "",
                 ["Venue.Address"] = "",
                 ["Venue.VenueTypeId"] = ""
@@ -156,11 +153,22 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorMessage("venue-type", string.Format(ValidationMessages.RequiredSelect, "Venue type"));
-            resultDocument.AssertErrorMessage("venue-name", string.Format(ValidationMessages.RequiredEnter, "Venue name"));
-            resultDocument.AssertErrorMessage("address", string.Format(ValidationMessages.RequiredEnter, "Address"));
-            resultDocument.AssertErrorMessage("date-from", string.Format(ValidationMessages.RequiredEnter, "From"));
-            resultDocument.AssertErrorMessage("date-to", string.Format(ValidationMessages.RequiredEnter, "To"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-VenueTypeId",
+                "venue-type",
+                string.Format(ValidationMessages.RequiredSelect, "Venue type"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-Name",
+                "venue-name",
+                string.Format(ValidationMessages.RequiredEnter, "Venue name"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-Address",
+                "address",
+                string.Format(ValidationMessages.RequiredEnter, "Address"));
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-DateFrom",
+                "date-from",
+                string.Format(ValidationMessages.RequiredEnter, "From"));
         }
 
         [Fact]
@@ -189,7 +197,10 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertValidationErrorResponse();
-            resultDocument.AssertErrorMessage("date-to", "To must be later than date from");
+            resultDocument.AssertErrorSummaryMessage(
+                "Venue-DateTo",
+                "date-to", 
+                "To must be later than date from");
         }
 
         [Fact]

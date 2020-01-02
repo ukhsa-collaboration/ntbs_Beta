@@ -96,7 +96,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Potential duplication of validation here so that both Server and Dynamic/JS routes to warnings
             // can use the same method.
             if (string.IsNullOrEmpty(nhsNumber) || !string.IsNullOrEmpty(
-                ValidationService.ValidateModelProperty<PatientDetails>("NhsNumber", nhsNumber, false).Content))
+                ValidationService.GetPropertyValidationResult<PatientDetails>("NhsNumber", nhsNumber, false).Content))
             {
                 return null;
             }
@@ -155,12 +155,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidatePatientDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.ValidateModelProperty<PatientDetails>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<PatientDetails>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.ValidateDate<PatientDetails>(key, day, month, year);
+            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year);
         }
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)

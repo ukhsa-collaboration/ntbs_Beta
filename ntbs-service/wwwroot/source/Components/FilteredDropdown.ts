@@ -8,6 +8,8 @@ type OptionValue = {
     group: string
 };
 
+const DEFAULT_SELECT_INNER_HTML = "<option value=\"\">Please select</option>";
+
 /*
  The component only works for a single select field to filter one or more other fields, 
  any cascading nonsense will require more specific handling.
@@ -80,14 +82,19 @@ const FilteredDropdown = Vue.extend({
         },
         updateSelectList: function (refName: string, values: OptionValue[]) {
             const selectElement = this.getSelectElementInRef(refName);
-            const currentSelectedValue = selectElement.value;
-            const optionInnerHtml = this.generateOptionInnerHtml(values);
+            let currentSelectedValue = selectElement.value;
 
-            selectElement.innerHTML = optionInnerHtml;
+            if (values) {
+                const optionInnerHtml = this.generateOptionInnerHtml(values);
+                selectElement.innerHTML = optionInnerHtml;
+            } else {
+                currentSelectedValue = "";
+            }
+
             this.setSelectToValueOrDefault(selectElement, currentSelectedValue);
 
             if (this.hideOnEmpty) {
-                this.hideOrShowDependentControl(refName, values.length === 0);
+                this.hideOrShowDependentControl(refName, !values || values.length === 0);
             }
         },
         setSelectToValueOrDefault: function (selectElement: HTMLSelectElement, targetValue: string) {
@@ -129,12 +136,12 @@ const FilteredDropdown = Vue.extend({
                 return this.generateGroupedOptionsInnerHtml(values);
             }
 
-            let optionInnerHtml = "<option value=\"\">Please select</option>";
+            let optionInnerHtml = DEFAULT_SELECT_INNER_HTML;
             values.forEach(item => optionInnerHtml += `<option value="${item.value}">${item.text}</option>`);
             return optionInnerHtml;
         },
         generateGroupedOptionsInnerHtml(values: OptionValue[]) {
-            let optionInnerHtml = "<option value=\"\">Please select</option>";
+            let optionInnerHtml = DEFAULT_SELECT_INNER_HTML;
 
             values.sort((a, b) => {
                 if (a.group > b.group) { return -1 }

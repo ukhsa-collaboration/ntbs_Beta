@@ -29,6 +29,7 @@ namespace ntbs_service.Models.Entities
         public string Details { get; set; }
 
         public override bool PostcodeIsRequired => false;
+        public override bool DateToIsRequired => false;
 
         public override int Id
         {

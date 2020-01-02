@@ -14,8 +14,8 @@ namespace ntbs_service.Helpers
         {
             return new FormattedDate
             {
-                Day = dateTime.Day.ToString(), 
-                Month = dateTime.Month.ToString(), 
+                Day = dateTime.Day.ToString(),
+                Month = dateTime.Month.ToString(),
                 Year = dateTime.Year.ToString()
             };
         }
@@ -48,6 +48,25 @@ namespace ntbs_service.Helpers
 
     public static class StringExtensions
     {
+        public static string FormatStringToPostcodeFormat(this string postcode)
+        {
+            if(postcode != null)
+            {
+                if (postcode.Length < 3) // If the postcode is too short (e.g. from the legacy database) the Substring methods will fail
+                {
+                    return postcode;
+                }
+                else
+                {
+                    return postcode.Substring(0, postcode.Length - 3) + " " + postcode.Substring(postcode.Length - 3, 3);
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static string FormatStringToNhsNumberFormat(this string nhsNumber)
         {
             if (nhsNumber == null)
@@ -58,11 +77,16 @@ namespace ntbs_service.Helpers
             {
                 return string.Empty;
             }
+            if(nhsNumber.Length != 10) // If the NHS number is the wrong length (e.g. from the legacy database) the Substring methods will fail
+            {
+                return nhsNumber;
+            }
             return string.Join(" ",
                 nhsNumber.Substring(0, 3),
                 nhsNumber.Substring(3, 3),
                 nhsNumber.Substring(6, 4)
             );
         }
+
     }
 }

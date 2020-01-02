@@ -89,12 +89,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public ContentResult OnGetValidateSocialContextProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.ValidateModelProperty<SocialContextVenue>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<SocialContextVenue>(key, value, shouldValidateFull);
         }
 
         public ContentResult OnGetValidateSocialContextDate(string key, string day, string month, string year)
         {
-            return ValidationService.ValidateDate<T>(key, day, month, year);
+            return ValidationService.GetDateValidationResult<T>(key, day, month, year);
         }
 
         public ContentResult OnGetValidateSocialContextDates(IEnumerable<Dictionary<string, string>> keyValuePairs)
@@ -113,7 +113,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     return null;
                 }
             }
-            return ValidationService.ValidateMultipleProperties<T>(propertyValueTuples);
+            return ValidationService.GetMultiplePropertiesValidationResult<T>(propertyValueTuples);
         }
 
         protected abstract T GetSocialContextBaseById(Notification notification, int id);

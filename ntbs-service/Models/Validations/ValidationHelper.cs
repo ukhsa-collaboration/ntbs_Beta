@@ -1,6 +1,4 @@
-﻿﻿using System;
-
-namespace ntbs_service.Models.Validations
+﻿namespace ntbs_service.Models.Validations
 {
     public static class ValidationMessages
     {
@@ -23,6 +21,7 @@ namespace ntbs_service.Models.Validations
         public const string MinTwoCharacters = "Enter at least 2 characters";
         public const string InvalidCharacter = "Invalid character found in {0}";
         public const string NumberFormat = "{0} can only contain digits 0-9";
+        public const string NumberAndHyphenFormat = "{0} can only contain digits 0-9 and the symbol -";
         public const string PositiveNumbersOnly = "Please enter a positive value";
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
@@ -31,7 +30,9 @@ namespace ntbs_service.Models.Validations
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
-        public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth";
+        public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth"; 
+        public const string DateShouldBeLaterThanNotification = "{0} must be after the date of notification";
+
         #endregion
 
         #region Patient Details
@@ -120,6 +121,15 @@ namespace ntbs_service.Models.Validations
         public const string RelatedNotificationIdInvalid = "The NTBS ID does not match an existing ID in the system";
         public const string RelatedNotificationIdMustBeInteger = "The NTBS ID must be an integer";
         #endregion
+
+        #region TreatmentEvent
+
+        public const string SubTypeDoesNotCorrespondToOutcome = "Please supply additional information for outcome value";
+        // Below are not currently surfaced in the application - but adding messages if down the line import uses these.
+        public const string TreatmentOutcomeRequiredForOutcome = "Please supply treatment outcome type for a treatment outcome";
+        public const string TreatmentOutcomeInvalidForRestart = "Treatment outcome type is not allowed for a treatment restart";
+
+        #endregion
     }
 
     public static class ValidDates
@@ -136,6 +146,7 @@ namespace ntbs_service.Models.Validations
         public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
         public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?]+";
+        public const string NumbersAndHyphenValidation = @"[0-9\-]+";
         // Taken from https://stackoverflow.com/a/164994/2363767
         public const string PostcodeValidation = @"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})";
     }

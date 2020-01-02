@@ -33,7 +33,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "From")]
         public DateTime? DateFrom { get ; set; }
 
-        [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
+        [RequiredIf("DateToIsRequired", ErrorMessage =  ValidationMessages.RequiredEnter)]
         [AssertThat(@"DateToAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [AssertThat(@"DateFrom == null || DateTo > DateFrom", ErrorMessage = ValidationMessages.VenueDateToShouldBeLaterThanDateFrom)]
         [ValidDateRange(ValidDates.EarliestBirthDate)]
@@ -51,9 +51,10 @@ namespace ntbs_service.Models.Entities
         public bool DateToAfterDob => Dob == null || DateTo >= Dob;
 
         public string FormattedDateFrom => DateFrom.ConvertToString();
-        public string FormattedDateTo => DateTo.ConvertToString();
+        public string FormattedDateTo => DateTo.HasValue ? DateTo.ConvertToString() : "Present";
 
         public abstract bool PostcodeIsRequired { get; }
+        public abstract bool DateToIsRequired { get; }
 
         public abstract int Id { set; }
     }

@@ -45,6 +45,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             this._referenceDataRepository = referenceDataRepository;
         }
 
+        protected override Task<Notification> GetNotificationAsync(int notificationId)
+        {
+            return NotificationRepository.GetNotificationWithCaseManagerTbServices(notificationId);
+        }
+
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             Episode = Notification.Episode;
@@ -54,7 +59,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (Episode.ShouldValidateFull)
             {
-                ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
+                ValidationService.TrySetFormattedDate(
+                    Notification, 
+                    nameof(Notification), 
+                    nameof(Notification.NotificationDate), 
+                    FormattedNotificationDate);
                 TryValidateModel(Episode, Episode.GetType().Name);
             }
 
@@ -80,20 +89,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-
-            // If case manager not yet set, and current user is an allowed case manager for
-            // the current tbServices then set currentUser as default case manager
-            if (Episode.CaseManagerUsername == null)
-            {
-                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                var upperUserEmail = userEmail?.ToUpperInvariant();
-                if (caseManagers.Any(c => c.Username.ToUpperInvariant() == upperUserEmail))
-                {
-                    Episode.CaseManagerUsername = userEmail;
-                }
-            };
-
-            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.FullName));
+            CaseManagers = new SelectList(caseManagers, 
+                nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.FullName));
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -109,7 +107,11 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
             TryValidateModel(Episode, nameof(Episode));
-            TryValidateModel(Notification, nameof(Notification));
+            ValidationService.ValidateProperty(
+                Notification,
+                nameof(Notification),
+                Notification.NotificationDate,
+                nameof(Notification.NotificationDate));
             if (ModelState.IsValid)
             {
                 await Service.UpdateEpisodeAsync(Notification, Episode);
@@ -119,20 +121,20 @@ namespace ntbs_service.Pages.Notifications.Edit
                 // Detach notification to avoid getting cached notification when retrieving from context,
                 // because cached notification date will change notification date on a banner even when invalid
                 _context.Entry(Notification).State = EntityState.Detached;
-                
+
             }
         }
 
         public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.ValidateModelProperty<Episode>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<Episode>(key, value, shouldValidateFull);
         }
 
         public async Task<ContentResult> OnGetValidateNotificationDateAsync(string key, string day, string month, string year, int notificationId)
         {
             // Query notification by Id when date validation depends on other properties of model
             Notification notification = await NotificationRepository.GetNotificationAsync(notificationId);
-            return ValidationService.ValidateDate(notification, key, day, month, year);
+            return ValidationService.GetDateValidationResult(notification, key, day, month, year);
         }
 
         private async Task SetValuesForValidation()

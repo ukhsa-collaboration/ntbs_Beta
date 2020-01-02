@@ -65,7 +65,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.ValidateModelProperty<PatientTBHistory>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<PatientTBHistory>(key, value, shouldValidateFull);
         }
     }
 }

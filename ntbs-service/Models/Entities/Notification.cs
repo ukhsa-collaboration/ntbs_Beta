@@ -35,6 +35,8 @@ namespace ntbs_service.Models.Entities
         [MaxLength(50)]
         public string ETSID { get; set; }
         [MaxLength(50)]
+        public string LTBRPatientId { get; set; }
+        [MaxLength(50)]
         public string LTBRID { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime? SubmissionDate { get; set; }
@@ -74,6 +76,7 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
+        public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
 
         #endregion
 
