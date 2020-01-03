@@ -37,7 +37,7 @@ namespace EFAuditer_tests.UnitTests.Services
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
 
             // Assert
-            Assert.Equal(123, audit.OriginalId);
+            Assert.Equal("123", audit.OriginalId);
             Assert.Equal("Entity", audit.EntityType);
             Assert.Equal("Update", audit.EventType);
             Assert.Equal(entry.ToJson(), audit.AuditData);
@@ -75,7 +75,7 @@ namespace EFAuditer_tests.UnitTests.Services
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
 
             // Assert
-            Assert.Equal(123, audit.OriginalId);
+            Assert.Equal("123", audit.OriginalId);
             Assert.Equal("Entity", audit.EntityType);
             Assert.Equal("Update", audit.EventType);
             Assert.Equal(entry.ToJson(), audit.AuditData);
