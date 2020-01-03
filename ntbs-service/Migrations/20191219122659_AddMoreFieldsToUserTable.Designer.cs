@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20191219122659_AddMoreFieldsToUserTable")]
+    partial class AddMoreFieldsToUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,13 +67,13 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
-                    b.Property<string>("CaseManagerUsername")
+                    b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
 
                     b.Property<string>("TbServiceCode")
                         .HasMaxLength(16);
 
-                    b.HasKey("CaseManagerUsername", "TbServiceCode");
+                    b.HasKey("CaseManagerEmail", "TbServiceCode");
 
                     b.HasIndex("TbServiceCode");
 
@@ -130,9 +132,6 @@ namespace ntbs_service.Migrations
                     b.Property<string>("LTBRID")
                         .HasMaxLength(50);
 
-                    b.Property<string>("LTBRPatientId")
-                        .HasMaxLength(50);
-
                     b.Property<DateTime?>("NotificationDate");
 
                     b.Property<string>("NotificationStatus")
@@ -148,8 +147,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("GroupId");
 
                     b.HasIndex("LTBRID");
-
-                    b.HasIndex("LTBRPatientId");
 
                     b.HasIndex("NotificationStatus");
 
@@ -197,7 +194,8 @@ namespace ntbs_service.Migrations
                     b.Property<DateTime?>("DateFrom")
                         .IsRequired();
 
-                    b.Property<DateTime?>("DateTo");
+                    b.Property<DateTime?>("DateTo")
+                        .IsRequired();
 
                     b.Property<int>("NotificationId");
 
@@ -223,7 +221,8 @@ namespace ntbs_service.Migrations
                     b.Property<DateTime?>("DateFrom")
                         .IsRequired();
 
-                    b.Property<DateTime?>("DateTo");
+                    b.Property<DateTime?>("DateTo")
+                        .IsRequired();
 
                     b.Property<string>("Details")
                         .HasMaxLength(100);
@@ -262,42 +261,13 @@ namespace ntbs_service.Migrations
                     b.ToTable("TestData");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.TreatmentEvent", b =>
-                {
-                    b.Property<int>("TreatmentEventId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("EventDate")
-                        .IsRequired();
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(150);
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<string>("TreatmentEventType")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<int?>("TreatmentOutcomeId");
-
-                    b.HasKey("TreatmentEventId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.HasIndex("TreatmentOutcomeId");
-
-                    b.ToTable("TreatmentEvent");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.User", b =>
                 {
                     b.Property<string>("Username")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64);
 
-                    b.Property<string>("AdGroups");
+                    b.Property<string>("AdGroup");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(64);
@@ -10106,22 +10076,22 @@ namespace ntbs_service.Migrations
                         new
                         {
                             SiteId = 2,
-                            Description = "Spine"
+                            Description = "Bone/joint: spine"
                         },
                         new
                         {
                             SiteId = 3,
-                            Description = "Bone/joint: Other"
+                            Description = "Bone/joint: other"
                         },
                         new
                         {
                             SiteId = 4,
-                            Description = "Meningitis"
+                            Description = "meningitis"
                         },
                         new
                         {
                             SiteId = 5,
-                            Description = "CNS: Other"
+                            Description = "other"
                         },
                         new
                         {
@@ -10182,6 +10152,11 @@ namespace ntbs_service.Migrations
                         {
                             SiteId = 17,
                             Description = "Other extra-pulmonary"
+                        },
+                        new
+                        {
+                            SiteId = 18,
+                            Description = "Unknown"
                         });
                 });
 
@@ -10850,7 +10825,7 @@ namespace ntbs_service.Migrations
                         new
                         {
                             Code = "TBS0107",
-                            Name = "Leicester, Leicestershire & Rutland TB Service",
+                            Name = "Leicester Royal Infirmary",
                             PHECCode = "E45000016"
                         },
                         new
@@ -12666,114 +12641,6 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.TreatmentOutcome", b =>
-                {
-                    b.Property<int>("TreatmentOutcomeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TreatmentOutcomeSubType")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("TreatmentOutcomeType")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.HasKey("TreatmentOutcomeId");
-
-                    b.ToTable("TreatmentOutcome");
-
-                    b.HasData(
-                        new
-                        {
-                            TreatmentOutcomeId = 1,
-                            TreatmentOutcomeSubType = "StandardTherapy",
-                            TreatmentOutcomeType = "Completed"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 2,
-                            TreatmentOutcomeSubType = "MdrRegimen",
-                            TreatmentOutcomeType = "Completed"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 3,
-                            TreatmentOutcomeSubType = "Other",
-                            TreatmentOutcomeType = "Completed"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 4,
-                            TreatmentOutcomeSubType = "StandardTherapy",
-                            TreatmentOutcomeType = "Cured"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 5,
-                            TreatmentOutcomeSubType = "MdrRegimen",
-                            TreatmentOutcomeType = "Cured"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 6,
-                            TreatmentOutcomeSubType = "Other",
-                            TreatmentOutcomeType = "Cured"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 7,
-                            TreatmentOutcomeSubType = "TbCausedDeath",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 8,
-                            TreatmentOutcomeSubType = "TbContributedToDeath",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 9,
-                            TreatmentOutcomeSubType = "TbIncidentalToDeath",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 10,
-                            TreatmentOutcomeSubType = "Unknown",
-                            TreatmentOutcomeType = "Died"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 11,
-                            TreatmentOutcomeSubType = "PatientLeftUk",
-                            TreatmentOutcomeType = "Lost"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 12,
-                            TreatmentOutcomeSubType = "PatientNotLeftUk",
-                            TreatmentOutcomeType = "Lost"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 13,
-                            TreatmentOutcomeSubType = "Other",
-                            TreatmentOutcomeType = "Lost"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 14,
-                            TreatmentOutcomeType = "TreatmentStopped"
-                        },
-                        new
-                        {
-                            TreatmentOutcomeId = 15,
-                            TreatmentOutcomeType = "NotEvaluated"
-                        });
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
@@ -12807,7 +12674,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                         .WithMany("CaseManagerTbServices")
-                        .HasForeignKey("CaseManagerUsername")
+                        .HasForeignKey("CaseManagerEmail")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
@@ -13432,18 +13299,6 @@ namespace ntbs_service.Migrations
                         .WithOne("TestData")
                         .HasForeignKey("ntbs_service.Models.Entities.TestData", "NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.TreatmentEvent", b =>
-                {
-                    b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
-                        .WithMany("TreatmentEvents")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.TreatmentOutcome", "TreatmentOutcome")
-                        .WithMany()
-                        .HasForeignKey("TreatmentOutcomeId");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Hospital", b =>

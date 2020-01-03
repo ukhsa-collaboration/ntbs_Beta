@@ -21,6 +21,7 @@ using ntbs_service.Authentication;
 using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
+using ntbs_service.Jobs;
 using ntbs_service.Middleware;
 using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
@@ -37,8 +38,8 @@ namespace ntbs_service
             Env = env;
         }
 
-        public IConfiguration Configuration { get; }
-        public IHostingEnvironment Env { get; }
+        private IConfiguration Configuration { get; }
+        private IHostingEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -57,35 +58,38 @@ namespace ntbs_service
                     config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                         .UseSimpleAssemblyNameTypeSerializer()
                         .UseRecommendedSerializerSettings()
-                        .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"), new SqlServerStorageOptions
-                        {
-                            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                            QueuePollInterval = TimeSpan.Zero,
-                            UseRecommendedIsolationLevel = true,
-                            UsePageLocksOnDequeue = true,
-                            DisableGlobalLocks = true
-                        })
+                        .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"),
+                            new SqlServerStorageOptions
+                            {
+                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                                QueuePollInterval = TimeSpan.Zero,
+                                UseRecommendedIsolationLevel = true,
+                                UsePageLocksOnDequeue = true,
+                                DisableGlobalLocks = true
+                            })
                         .UseConsole();
                 });
             }
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
-            var setupDummyAuth = adfsConfig.GetValue<bool>("UseDummyAuth", false);
+            var ldapConnectionSettings = Configuration.GetSection("LdapConnectionSettings");
+            var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
             var authSetup = services.AddAuthentication(sharedOptions =>
-                    {
-                        sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                        sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                        sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                    }).AddWsFederation(options =>
-                    {
-                        options.MetadataAddress = adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
-                        options.Wtrealm = adfsConfig["Wtrealm"];
-                    })
-                    .AddCookie(options =>
-                    {
-                        options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
-                    });
+                {
+                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                }).AddWsFederation(options =>
+                {
+                    options.MetadataAddress =
+                        adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
+                    options.Wtrealm = adfsConfig["Wtrealm"];
+                })
+                .AddCookie(options =>
+                {
+                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
+                });
 
             if (setupDummyAuth)
             {
@@ -93,18 +97,18 @@ namespace ntbs_service
             }
 
             services.AddMvc(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                .RequireAuthenticatedUser()
-                                .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
-                                .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            }).AddRazorPagesOptions(options =>
-            {
-                options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
-                options.Conventions.AllowAnonymousToPage("/Logout");
-            })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .RequireRole(adfsConfig["BaseUserGroup"])
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                }).AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
+                    options.Conventions.AllowAnonymousToPage("/Logout");
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddAuthorization(options =>
             {
@@ -153,9 +157,13 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
             services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
+            services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
+            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -166,8 +174,7 @@ namespace ntbs_service
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                    HotModuleReplacement = true,
-                    ConfigFile = "webpack.dev.js"
+                    HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
                 });
             }
             else
@@ -183,15 +190,16 @@ namespace ntbs_service
             if (!Env.IsEnvironment("Test"))
             {
                 /*
-                Making this conidtional is the result of serilog not playing nicely with WebApplicationFactory
+                Making this conditional is the result of serilog not playing nicely with WebApplicationFactory
                 used by the ui tests, see: https://github.com/serilog/serilog-aspnetcore/issues/105
                 Using env directly as check is an unsatisfying solution, but configuration values were not picked up consistently correctly here.
                 */
                 app.UseSerilogRequestLogging(options => // Needs to be before MVC handlers
                 {
-                    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
+                    options.MessageTemplate =
+                        "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
                 });
-            };
+            }
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
@@ -203,24 +211,34 @@ namespace ntbs_service
 
             app.UseMvc();
 
-            if (!Env.IsEnvironment("Test"))
-            {
-                app.UseHangfireDashboard("/hangfire", new DashboardOptions
-                {
-                    Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
-                });
-                app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
-            }
+            ConfigureHangfire(app);
 
             var cultureInfo = new CultureInfo("en-GB");
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
         }
 
+        private void ConfigureHangfire(IApplicationBuilder app)
+        {
+            if (Env.IsEnvironment("Test"))
+            {
+                return;
+            }
+
+            var dashboardOptions = new DashboardOptions
+            {
+                Authorization = new[] {new HangfireAuthorisationFilter(GetAdminRoleName())}
+            };
+            app.UseHangfireDashboard("/hangfire", dashboardOptions);
+            app.UseHangfireServer(new BackgroundJobServerOptions {WorkerCount = 1});
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
+            HangfireJobScheduler.ScheduleRecurringJobs();
+        }
+
         private string GetAdminRoleName()
         {
             var adfsConfig = Configuration.GetSection("AdfsOptions");
-            return adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"];
+            return adfsConfig["AdminUserGroup"];
         }
     }
 }

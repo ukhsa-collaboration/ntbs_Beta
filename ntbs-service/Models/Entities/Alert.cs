@@ -15,8 +15,8 @@ namespace ntbs_service.Models.Entities
         public DateTime CreationDate { get; set; }
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
-        public string CaseManagerEmail { get; set; }
-        public virtual CaseManager CaseManager { get; set; }
+        public string CaseManagerUsername { get; set; }
+        public virtual User CaseManager { get; set; }
         public AlertStatus AlertStatus { get; set; }
         public DateTime? ClosureDate { get; set; }
         public string ClosingUserId { get; set; }

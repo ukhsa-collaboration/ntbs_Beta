@@ -220,7 +220,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Episode.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.Consultant"] = "Consultant",
-                ["Episode.CaseManagerEmail"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["Episode.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",
@@ -248,7 +248,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Episode.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.Consultant"] = "Consultant",
-                ["Episode.CaseManagerEmail"] = Utilities.CASEMANAGER_ABINGDON_EMAIL2,
+                ["Episode.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL2,
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",
@@ -297,7 +297,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
-                ["Episode.CaseManagerEmail"] = Utilities.CASEMANAGER_ABINGDON_EMAIL
+                ["Episode.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL
             };
 
             // Act
@@ -306,7 +306,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("Episode-CaseManagerEmail", "case-manager", "Case Manager must be allowed for selected TB Service");
+            resultDocument.AssertErrorSummaryMessage("Episode-CaseManagerUsername", "case-manager", "Case Manager must be allowed for selected TB Service");
         }
 
         [Fact]
