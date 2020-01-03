@@ -11,8 +11,8 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public class PatientDetails : ModelBase, IHasPostcode
     {
-        [StringLength(35)]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
+        [StringLength(35)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [Display(Name = "Family name")]
         public string FamilyName { get; set; }
@@ -24,8 +24,7 @@ namespace ntbs_service.Models.Entities
         public string GivenName { get; set; }
 
         [RequiredIf(@"ShouldValidateFull && !NhsNumberNotKnown", ErrorMessage = ValidationMessages.FieldRequired)]
-        [RegularExpression(@"[0-9]+", ErrorMessage = ValidationMessages.NumberFormat)]
-        [StringLength(10, MinimumLength = 10, ErrorMessage = ValidationMessages.NhsNumberLength)]
+        [ValidNhsNumber]
         [Display(Name = "NHS number")]
         public string NhsNumber { get; set; }
 
