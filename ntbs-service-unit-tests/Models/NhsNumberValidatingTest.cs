@@ -4,39 +4,33 @@ using ntbs_service.Models;
 using Xunit;
 using ntbs_service.Models.Validations;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service_unit_tests.Models
 {
     public class NhsNumberValidatingTest
     {
-        public ValidNhsNumberAttribute validationAttribute;
-        public NhsNumberValidatingTest()
-        {
-            validationAttribute = new ValidNhsNumberAttribute();
-        }
 
         [Fact]
         public void CheckNhsNumberValidationAttributeReturnsInvalid_ForIncorrectStringWithLetters() {
             var nhsNumber = "123ab";
-            var result = validationAttribute.IsValid(nhsNumber);
-
-            Assert.False(result);
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.False(IsValid);
         }
 
         [Fact]
         public void CheckNhsNumberValidationAttributeReturnsInvalid_ForIncorrectLength() {
             var nhsNumber = "123";
-            var result = validationAttribute.IsValid(nhsNumber);
-
-            Assert.False(result);
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.False(IsValid);
         }
 
         [Fact]
         public void CheckNhsNumberValidationAttributeReturnsValid_ForTestFirstDigit() {
             var nhsNumber = "9123456780";
-            var result = validationAttribute.IsValid(nhsNumber);
-
-            Assert.True(result);
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.True(IsValid);
         }
 
         public static IEnumerable<object[]> ScottishNhsNumbers()
@@ -52,9 +46,8 @@ namespace ntbs_service_unit_tests.Models
 
         [Theory, MemberData(nameof(ScottishNhsNumbers))]
         public void CheckNhsNumberValidationAttributeReturnsValid_ForScottishFirstDigits(string nhsNumber) {
-            var result = validationAttribute.IsValid(nhsNumber);
-
-            Assert.True(result);
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.True(IsValid);
         }
 
         public static IEnumerable<object[]> GetInvalidNhsNumbers()
@@ -70,9 +63,8 @@ namespace ntbs_service_unit_tests.Models
         
         [Theory, MemberData(nameof(GetInvalidNhsNumbers))]
         public void CheckNhsNumberValidationAttributeReturnsInvalid_ForInvalidCheckDigits(string nhsNumber) {
-            var result = validationAttribute.IsValid(nhsNumber);
-
-            Assert.False(result);
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.False(IsValid);
         }
 
         public static IEnumerable<object[]> GetValidNhsNumbers()
@@ -88,9 +80,16 @@ namespace ntbs_service_unit_tests.Models
 
         [Theory, MemberData(nameof(GetValidNhsNumbers))]
         public void CheckNhsNumberValidationAttributeReturnsValid_ForValidCheckDigits(string nhsNumber) {
-            var result = validationAttribute.IsValid(nhsNumber);
+            var IsValid = ValidateNhsNumber(nhsNumber);
+            Assert.True(IsValid);
+        }
 
-            Assert.True(result);
+        public bool ValidateNhsNumber(string nhsNumber)
+        {
+            var target = new PatientDetails() {NhsNumber = nhsNumber};
+            var context = new ValidationContext(target);
+            var results = new List<ValidationResult>();
+            return Validator.TryValidateObject(target, context, results, true);
         }
     }
 }
