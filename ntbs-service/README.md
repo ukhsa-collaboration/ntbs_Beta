@@ -23,11 +23,11 @@ The frontend assets are compiled through Webpack, with hot-reload enabled automa
 
 ### Debugging
 
-VS Code should pick up the debugging configuration automtically. Open the debugging panel and launch the debug configuration available. Note that this launches the web app itself, so there's no need to run `dotnet` commands directly - but it is _not_ compatible with hot relaoding!
+VS Code should pick up the debugging configuration automtically. Open the debugging panel and launch the debug configuration available. Note that this launches the web app itself, so there's no need to run `dotnet` commands directly - but it is _not_ compatible with hot reloading!
 
 ### Dev resources
 #### Frontend guides and libraries
-We are following the [NHS Digital Service Manual](https://beta.nhs.uk/service-manual/) as the baseline for the project's styling and frontend, supplemented by [GOV.UK Service Manual](). We are making using of the NHS [implemenatation of the components in Razor](https://github.com/nhsuk/frontend-dotnetcore/) (note, that the useful bits of documentation can be fuond on READMEs of individual directories, e.g. [layout](https://github.com/nhsuk/frontend-dotnetcore/tree/master/src/NHSUKFrontEndLibraryTagHelpers/NHSUK.FrontEndLibrary.TagHelpers/Tags/Layout)).
+We are following the [NHS Digital Service Manual](https://beta.nhs.uk/service-manual/) as the baseline for the project's styling and frontend, supplemented by [GOV.UK Service Manual](). We are making using of the NHS [implemenatation of the components in Razor](https://github.com/nhsuk/frontend-dotnetcore/) (note, that the useful bits of documentation can be found on READMEs of individual directories, e.g. [layout](https://github.com/nhsuk/frontend-dotnetcore/tree/master/src/NHSUKFrontEndLibraryTagHelpers/NHSUK.FrontEndLibrary.TagHelpers/Tags/Layout)).
 
 ### Dev-mode secrets
 
@@ -70,7 +70,7 @@ To see the browser window when running them change the setting in Hooks\TestSett
 ## Database migrations
 
 To minimize friction in development and deployments, the app uses Entity Framework migrations.
-The simplest way to make a schema change is to make the appropriate changes in the model (e.g. [Notification](Models/Notification.cs) and the [database context](Models/NtbsContext.cs) and run
+The simplest way to make a schema change is to make the appropriate changes in the model (e.g. [Notification](Models/Entities/Notification.cs) and the [database context](DataAccess/NtbsContext.cs) and run
 `dotnet ef migrations add <NameOfMigration>`
 This will create a migration file, that can be edited further to match needs. It will be run at application startup, or can be envoked by hand using
 `dotnet ef database update`
@@ -88,8 +88,8 @@ Ensure you have `azure-cli` installed
 - `az aks install-cli` to install `kubectl`
 - `az aks get-credentials -g phe-ntbs -n ntbs-envs` to add appropriate credentials to your `~/.kube/config` file
 
-## Images registery
-We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registery user.
+## Images registry
+We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registry user.
 `az acr credential show -n ntbsContainerRegistry`
 
 ## Deploying to environments
@@ -102,7 +102,7 @@ For `test` and `uat` environments, pick the docker image <TAG> of the build from
 For `live` environment, the process is the same once
 [you've connected to Openshift successfully](https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/163446793/Deployments+on+PHE+infrastructure)
 
-## Running the app in Docker (builds in produciton mode)
+## Running the app in Docker (builds in production mode)
 ```
 docker build -t ntbs .
 docker run -it --rm -p 8000:80 --name ntbs ntbs
@@ -121,5 +121,5 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 - logs: `kuebctl logs deployment/ntbs-<env>` - specific <env>
 - dashboard - UI access to env health, logs, etc : `az aks browse --resource-group PHE-NTBS --name ntbs-envs`
 - adding kubernetes secrets: `kubectl create secret generic <secret> --from-literal=<key>=<value>`
-- purging registrey - every once in a while the images registery [should be pureged](../scripts/purge-images.ps1) so it doesn't grow too big. It runs with `--dry-run` by defualt, make sure to remove the flag once you're happy nothing relevant will be deleted.
+- purging registry - every once in a while the images registry [should be purged](../scripts/purge-images.ps1) so it doesn't grow too big. It runs with `--dry-run` by default, make sure to remove the flag once you're happy nothing relevant will be deleted.
 - SSL cerificates - see [dedicated readme](./deployments/README.md)
