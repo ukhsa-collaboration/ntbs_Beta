@@ -27,15 +27,17 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             var alertToDismiss = await alertRepository.GetAlertByIdAsync(AlertId);
+            
             if(await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
                 await alertService.DismissAlertAsync(AlertId, User.FindFirstValue(ClaimTypes.Email));
             }
+
             if (Request.Query["page"] == "Overview")
             {
                 return RedirectToPage("/Notifications/Overview", new { alertToDismiss.NotificationId });
             }
-            // TODO:NTBS-376 This will need to be changed to link to the correct place instead of just the home page
+
             return RedirectToPage("/Index");
         }
     }

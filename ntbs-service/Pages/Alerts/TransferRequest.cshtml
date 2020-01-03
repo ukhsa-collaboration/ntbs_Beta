@@ -1,0 +1,100 @@
+@page "/Alerts/{NotificationId:int}/Transfer/{handler?}"
+
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@model ntbs_service.Pages.Alerts.TransferRequestModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"Transfer Request - {Model.AlertId}";
+}
+
+<nhs-width-container container-width="Standard">
+    <form method="post" autocomplete="off">
+        <input type="hidden" asp-for="AlertId" />
+        <h2> You are about to transfer this notification </h2>
+        @* do some dropdown filtering *@
+        <div>
+            dropdowns for TB service stuff
+        </div>
+        @{
+            var hasReasonError = !Model.ValidationService.IsValid("TransferAlert.TransferReason");
+            var reasonFormGroupType = hasReasonError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
+            <nhs-fieldset aria-describedby="reason-error">
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Reason for transfer (required)
+                </nhs-fieldset-legend>
+
+                <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferReason" has-error="@hasReasonError"></span>
+
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    @foreach (TransferReason reason in Enum.GetValues(typeof(TransferReason)))
+                    {
+
+                        var id = $"transfer-radio-{reason}";
+                        var displayText = reason.GetDisplayName();
+                        if (reason != TransferReason.Other)
+                        {
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="TransferAlert.TransferReason" nhs-input-type="Radios" type="radio"
+                                    value="@reason" id="@id" aria-describedby="reason-error">
+                                <label nhs-label-type="Radios" for="@id">
+                                    @displayText
+                                </label>
+                            </div>
+                        }
+                        else if (reason == TransferReason.Other)
+                        {
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="TransferAlert.TransferReason" nhs-input-type="Radios" type="radio"
+                                    value="@reason" id="@id" data-aria-controls="conditional-radio" aria-describedby="reason-error">
+                                <label nhs-label-type="Radios" for="@id">
+                                    @displayText
+                                </label>
+                            </div>
+                        }
+                    }
+
+                    @{
+                        var hasReasonDescriptionError = !Model.ValidationService.IsValid("TransferAlert.OtherReasonDescription");
+                        var reasonDescriptionFormGroupType = hasReasonDescriptionError ? Error : Standard;
+                    }
+
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
+                        <nhs-form-group nhs-form-group-type="@reasonDescriptionFormGroupType">
+                            <label asp-for="TransferAlert.OtherReasonDescription" nhs-label-type="Standard">
+                                Provide reason
+                            </label>
+                            <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.OtherReasonDescription" has-error="@hasReasonDescriptionError"></span>
+                            <input asp-for="TransferAlert.OtherReasonDescription" nhs-input-type="Standard" is-error-input="@hasReasonDescriptionError" aria-describedby="description-error" />
+                        </nhs-form-group>
+                    </div>
+                </div>
+            </nhs-fieldset>
+        </nhs-form-group>
+
+        @{
+            var hasRequestNoteError = !Model.ValidationService.IsValid("TransferAlert.TransferRequestNote");
+            var requestNoteFormGroupType = hasRequestNoteError ? Error : Standard;
+        }
+
+        <nhs-form-group nhs-form-group-type="@requestNoteFormGroupType">
+            <label asp-for="TransferAlert.TransferRequestNote" nhs-label-type="Standard">
+                Add optional note to display to receiving case manager
+            </label>
+            <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferRequestNote" has-error="@hasRequestNoteError"></span>
+            <input asp-for="TransferAlert.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="note-error" />
+        </nhs-form-group>
+
+        <div style="display: flex">
+            <button id="confirm-transfer-button" nhs-button-type="Standard" asp-page-handler="Confirm">
+                Confirm transfer
+            </button>
+
+            <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">Cancel & go back</nhs-back-link>
+        </div>
+    </form>
+</nhs-width-container>
