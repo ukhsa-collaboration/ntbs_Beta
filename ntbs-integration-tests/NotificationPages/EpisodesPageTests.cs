@@ -248,7 +248,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Episode.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                 ["Episode.Consultant"] = "Consultant",
-                ["Episode.CaseManagerEmail"] = Utilities.CASEMANAGER_ABINGDON_EMAIL2,
+                ["Episode.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL2,
                 ["FormattedNotificationDate.Day"] = "1",
                 ["FormattedNotificationDate.Month"] = "1",
                 ["FormattedNotificationDate.Year"] = "2012",

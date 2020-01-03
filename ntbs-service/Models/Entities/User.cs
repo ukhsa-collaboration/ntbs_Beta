@@ -17,6 +17,6 @@ namespace ntbs_service.Models.Entities
 
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
 
-        [NotMapped] public string FullName => GivenName + " " + FamilyName;
+        public string FullName => GivenName + " " + FamilyName;
     }
 }
