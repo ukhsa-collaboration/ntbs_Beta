@@ -85,13 +85,12 @@ namespace ntbs_service.Services
         private IEnumerable<string> GetRoles(ClaimsPrincipal user)
         {
             return user.FindAll(claim => claim.Type == ClaimsIdentity.DefaultRoleClaimType)
-                    .Select(claim => claim.Value)
-                    .Select(role => role.StartsWith(_config.AdGroupsPrefix) ? role.Substring(_config.AdGroupsPrefix.Length) : role);
+                .Select(claim => claim.Value);
         }
 
         private UserType GetUserType(ClaimsPrincipal user)
         {
-            if (user.IsInRole(_config.AdGroupsPrefix + _config.NationalTeamAdGroup))
+            if (user.IsInRole(_config.NationalTeamAdGroup))
             {
                 return UserType.NationalTeam;
             }

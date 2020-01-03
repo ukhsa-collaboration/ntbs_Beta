@@ -25,7 +25,6 @@ namespace ntbs_service_unit_tests.Services
         {
             NationalTeamAdGroup = NationalTeam,
             ServiceGroupAdPrefix = ServicePrefix,
-            AdGroupsPrefix = string.Empty
         };
 
         private readonly Mock<IOptionsMonitor<AdfsOptions>> _mockOptionsMonitor;

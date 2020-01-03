@@ -3,23 +3,27 @@ using ntbs_service.Properties;
 
 namespace ntbs_service.Services
 {
-    public interface IAdDirectoryFactory
+    public interface IAdDirectoryServiceFactory
     {
         IAdDirectoryService Create();
     }
     
-    public class AdDirectoryServiceFactory : IAdDirectoryFactory
+    public class AdDirectoryServiceServiceFactory : IAdDirectoryServiceFactory
     {
-        private readonly AdConnectionSettings adConnectionSettings;
+        private readonly LdapConnectionSettings LdapConnectionSettings;
+        private readonly AdfsOptions _adfsOptions;
 
-        public AdDirectoryServiceFactory(IOptions<AdConnectionSettings> options)
+        public AdDirectoryServiceServiceFactory(
+            IOptions<LdapConnectionSettings> ldapConnectionSettings,
+            IOptions<AdfsOptions> adfsOptions)
         {
-            adConnectionSettings = options.Value;
+            this.LdapConnectionSettings = ldapConnectionSettings.Value;
+            this._adfsOptions = adfsOptions.Value;
         }
 
         public IAdDirectoryService Create()
         {
-            return new AdDirectoryService(adConnectionSettings);
+            return new AdDirectoryService(LdapConnectionSettings, _adfsOptions);
         }
     }
 }

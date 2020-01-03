@@ -17,16 +17,6 @@ namespace ntbs_service.Models.Entities
 
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
 
-        [NotMapped] 
-        public string FullName => GivenName + " " + FamilyName;
-
-        [NotMapped]
-        public List<string> AdGroupNames { get; set; } = new List<string>();
-
-        internal void SetAdGroups(List<string> groups)
-        {
-            AdGroupNames = groups;
-            AdGroups = string.Join(",", groups);
-        }
+        [NotMapped] public string FullName => GivenName + " " + FamilyName;
     }
 }

@@ -48,7 +48,7 @@ spec:
 #                   key: migration
             - name: AdfsOptions__UseDummyAuth
               value: "true"
-#            - name: AdConnectionSettings__Password
+#            - name: LdapConnectionSettings__Password
 #              valueFrom:
 #                secretKeyRef:
 #                  name: development-ad-sync-credentials
