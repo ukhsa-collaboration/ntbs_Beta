@@ -9,12 +9,16 @@ namespace ntbs_service_unit_tests.Models
 {
     public class NhsNumberValidatingTest
     {
+        public ValidNhsNumberAttribute validationAttribute;
+        public NhsNumberValidatingTest()
+        {
+            validationAttribute = new ValidNhsNumberAttribute();
+        }
 
         [Fact]
         public void CheckNhsNumberValidationAttributeReturnsInvalid_ForIncorrectStringWithLetters() {
             var nhsNumber = "123ab";
-            var attribute = new ValidNhsNumberAttribute();
-            var result = attribute.IsValid(nhsNumber);
+            var result = validationAttribute.IsValid(nhsNumber);
 
             Assert.False(result);
         }
@@ -22,8 +26,7 @@ namespace ntbs_service_unit_tests.Models
         [Fact]
         public void CheckNhsNumberValidationAttributeReturnsInvalid_ForIncorrectLength() {
             var nhsNumber = "123";
-            var attribute = new ValidNhsNumberAttribute();
-            var result = attribute.IsValid(nhsNumber);
+            var result = validationAttribute.IsValid(nhsNumber);
 
             Assert.False(result);
         }
@@ -31,8 +34,7 @@ namespace ntbs_service_unit_tests.Models
         [Fact]
         public void CheckNhsNumberValidationAttributeReturnsValid_ForTestFirstDigit() {
             var nhsNumber = "9123456780";
-            var attribute = new ValidNhsNumberAttribute();
-            var result = attribute.IsValid(nhsNumber);
+            var result = validationAttribute.IsValid(nhsNumber);
 
             Assert.True(result);
         }
@@ -50,8 +52,7 @@ namespace ntbs_service_unit_tests.Models
 
         [Theory, MemberData(nameof(ScottishNhsNumbers))]
         public void CheckNhsNumberValidationAttributeReturnsValid_ForScottishFirstDigits(string nhsNumber) {
-            var attribute = new ValidNhsNumberAttribute();
-            var result = attribute.IsValid(nhsNumber);
+            var result = validationAttribute.IsValid(nhsNumber);
 
             Assert.True(result);
         }
@@ -69,8 +70,7 @@ namespace ntbs_service_unit_tests.Models
         
         [Theory, MemberData(nameof(GetInvalidNhsNumbers))]
         public void CheckNhsNumberValidationAttributeReturnsInvalid_ForInvalidCheckDigits(string nhsNumber) {
-            var attribute = new ValidNhsNumberAttribute();
-            var result = attribute.IsValid(nhsNumber);
+            var result = validationAttribute.IsValid(nhsNumber);
 
             Assert.False(result);
         }
@@ -88,8 +88,7 @@ namespace ntbs_service_unit_tests.Models
 
         [Theory, MemberData(nameof(GetValidNhsNumbers))]
         public void CheckNhsNumberValidationAttributeReturnsValid_ForValidCheckDigits(string nhsNumber) {
-            var attribute = new ValidNhsNumberAttribute();
-            var result = attribute.IsValid(nhsNumber);
+            var result = validationAttribute.IsValid(nhsNumber);
 
             Assert.True(result);
         }
