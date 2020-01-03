@@ -73,7 +73,7 @@ namespace ntbs_service
             }
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
-            var adConnectionSettings = Configuration.GetSection("AdConnectionSettings");
+            var ldapConnectionSettings = Configuration.GetSection("LdapConnectionSettings");
             var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
             var authSetup = services.AddAuthentication(sharedOptions =>
                 {
@@ -100,7 +100,7 @@ namespace ntbs_service
                 {
                     var policy = new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
-                        .RequireRole(adfsConfig["AdGroupsPrefix"] + adfsConfig["BaseUserGroup"])
+                        .RequireRole(adfsConfig["BaseUserGroup"])
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 }).AddRazorPagesOptions(options =>
@@ -158,12 +158,12 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
             services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAdDirectoryFactory, AdDirectoryServiceFactory>();
+            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
-            services.Configure<AdConnectionSettings>(adConnectionSettings);
+            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -238,7 +238,7 @@ namespace ntbs_service
         private string GetAdminRoleName()
         {
             var adfsConfig = Configuration.GetSection("AdfsOptions");
-            return adfsConfig["AdGroupsPrefix"] + adfsConfig["AdminUserGroup"];
+            return adfsConfig["AdminUserGroup"];
         }
     }
 }
