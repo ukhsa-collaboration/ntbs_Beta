@@ -9,7 +9,8 @@ Make sure you have the following tools installed locally:
 - SQL Server 2016 (developer mode)
   - During installation make sure you install DB Engine.
   - Once installed, use your preferred connection method to create a `ntbsDev` database in the default instance.
-- [.NET cli tools](https://dotnet.microsoft.com/download)
+- [.NET cli tools](https://dotnet.microsoft.com/download) - the codebase should be compatible with the newest SDK tools
+  - once `dotnet` is installed, run `dotnet tool install --global dotnet-ef` to install the `dotnet ef` tools package
 - IDE of choice (eg [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
 
