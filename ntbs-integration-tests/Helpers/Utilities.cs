@@ -37,8 +37,8 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFICATION_WITH_ADDRESSES = 61;
 
         public const int NOTIFICATION_WITH_TREATMENT_EVENTS = 70;
-        public const int NOTIFICATION_WITH_TREATMENT_EVENTS_FOR_EDIT = 71;
-        public const int NOTIFICATION_WITH_TREATMENT_EVENTS_FOR_DELETE = 72;
+        public const int NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME = 71;
+        public const int NOTIFICATION_FOR_ADD_TREATMENT_RESTART = 72;
 
         public const int CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID = 80;
 
