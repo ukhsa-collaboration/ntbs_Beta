@@ -74,7 +74,10 @@ namespace EFAuditer_tests.UnitTests.Services
             Assert.Equal("123", audit.OriginalId);
             Assert.Equal("Entity", audit.EntityType);
             Assert.Equal("Update", audit.EventType);
-            Assert.Equal(entry.Changes.ToJson(), audit.AuditData);
+            const string expectedInsertChangesJson = @"{""ColumnName"":""Test1"",""NewValue"":""Value1""}";
+            const string expectedUpdateChangesJson = @"{""ColumnName"":""Test2"",""OriginalValue"":""Value2"",""NewValue"":""Value3""}";
+            Assert.Contains(expectedInsertChangesJson, audit.AuditData);
+            Assert.Contains(expectedUpdateChangesJson, audit.AuditData);
             // Close enough when not injecting time services into the class
             Assert.InRange(audit.AuditDateTime, DateTime.Now.AddMinutes(-1), DateTime.Now);
             Assert.Equal("Env user", audit.AuditUser);
@@ -82,7 +85,7 @@ namespace EFAuditer_tests.UnitTests.Services
         }
 
         [Fact]
-        public void AuditAction_SetsUpdateValuesWithAuditUserAndAuditDetailsCorrectly()
+        public void AuditAction_SetsAuditUserAndAuditDetailsCorrectlyWhenProvided()
         {
             // Arrange
             var ev = new AuditEvent()
@@ -102,18 +105,7 @@ namespace EFAuditer_tests.UnitTests.Services
                 PrimaryKey = new Dictionary<string, object> { { "EntityId", "123" } },
                 EntityType = typeof(Entity),
                 Action = "Update",
-                Table = "EntityTable",
-                Changes = new List<EventEntryChange>
-                {
-                    new EventEntryChange
-                    {
-                        ColumnName = "Test1", NewValue = "Value1"
-                    },
-                    new EventEntryChange
-                    {
-                        ColumnName = "Test2", NewValue = "Value3", OriginalValue = "Value2"
-                    }
-                },
+                Table = "EntityTable"
             };
             AuditLog audit = new AuditLog();
 
@@ -121,12 +113,6 @@ namespace EFAuditer_tests.UnitTests.Services
             EFAuditServiceExtensions.AuditAction(ev, entry, audit);
 
             // Assert
-            Assert.Equal("123", audit.OriginalId);
-            Assert.Equal("Entity", audit.EntityType);
-            Assert.Equal("Update", audit.EventType);
-            Assert.Equal(entry.Changes.ToJson(), audit.AuditData);
-            // Close enough when not injecting time services into the class
-            Assert.InRange(audit.AuditDateTime, DateTime.Now.AddMinutes(-1), DateTime.Now);
             Assert.Equal("User 1", audit.AuditUser);
             Assert.Equal("Notified", audit.AuditDetails);
         }
