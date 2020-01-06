@@ -50,6 +50,12 @@
                     </nhs-fieldset>
                 </nhs-form-group>
             </validate-input>
+            
+            <div>
+                <partial name="_LabResults" for="@Model" />
+                <partial name="_SpecimenDetails" for="@Model.Specimens" />
+
+            </div>
             <div ref="manual-test-results">
                 <h3>Manually-entered test results</h3>
 

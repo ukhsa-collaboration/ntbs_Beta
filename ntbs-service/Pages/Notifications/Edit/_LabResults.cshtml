@@ -1,0 +1,66 @@
+@model ntbs_service.Pages.Notifications.Edit.TestResultsModel
+@using ntbs_service.Models.ReferenceEntities
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+<h2>Lab Results</h2>
+
+<div>
+
+    <dl class="notification-overview-details-container" id="venue-body.SocialContextVenueId">
+        <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-column grid-column-width="OneHalf">
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> Culture Positive </dt>
+                    <dd class="cell-min-height"> @Model.CultureAndResistance.CulturePositive </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> Species </dt>
+                    <dd class="cell-min-height"> @Model.CultureAndResistance.Species </dd>
+                </nhs-grid-column>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneHalf">
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> Drug Resistance </dt>
+                    <dd class="cell-min-height"> @Model.CultureAndResistance.DrugResistanceProfile </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    <dt class="notification-details-label"> Earliest Date </dt>
+                    <dd class="cell-min-height"> @Model.CultureAndResistance.FormattedEarliestSpecimenDate </dd>
+                </nhs-grid-column>
+        </nhs-grid-row>
+    </dl>
+    <nhs-summary-list is-without-border="true">
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>Isonized</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.Isoniazid</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>Rifampicin</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.Rifampicin</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>Pyrazinamide</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.Pyrazinamide</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>Ethambutol</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.Ethambutol</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>Aminoglycocide</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.Aminoglycocide</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>Quinolone</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.Quinolone</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>MDR</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.MDR</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+        <nhs-summary-list-row>
+            <nhs-summary-list-row-key>XDR</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.CultureAndResistance.XDR</nhs-summary-list-row-value>
+        </nhs-summary-list-row>
+    </nhs-summary-list>
+</div>

@@ -1,0 +1,88 @@
+@model IEnumerable<ntbs_service.Models.Entities.Specimen>
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+<h2>Summary by specimen</h2>
+
+
+<div>
+    @foreach (var specimen in @Model)
+    {
+        <h3>Specimen #@specimen.ReferenceLaboratoryNumber</h3>
+        <dl class="notification-overview-details-container" id="venue-body.SocialContextVenueId">
+            <nhs-grid-row classes="notification-overview-details">
+                <nhs-grid-column grid-column-width="OneThird">
+                    <dt class="notification-details-label"> Specimen date </dt>
+                    <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneThird">
+                    <dt class="notification-details-label"> Specimen type </dt>
+                    <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneThird">
+                    <dt class="notification-details-label"> Species </dt>
+                    <dd class="cell-min-height"> @specimen.Species </dd>
+                </nhs-grid-column>
+            </nhs-grid-row>
+        </dl>
+        <nhs-summary-list is-without-border="true">
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Isonized</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.Isoniazid</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Rifampicin</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.Rifampicin</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Pyrazinamide</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.Pyrazinamide</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Ethambutol</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.Ethambutol</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Aminoglycocide</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.Aminoglycocide</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Quinolone</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.Quinolone</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>MDR</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.MDR</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>XDR</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.XDR</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+        </nhs-summary-list>
+        <br>
+        <h4>Patient Details</h4>
+            <nhs-summary-list is-without-border="true">
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>NHS number</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.PatientNhsNumber</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Full name</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.PatientName</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Date of birth</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.FormattedPatientDob</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Address line</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.PatientAddress</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+            <nhs-summary-list-row>
+                <nhs-summary-list-row-key>Postcode</nhs-summary-list-row-key>
+                <nhs-summary-list-row-value>@specimen.PatientPostcode</nhs-summary-list-row-value>
+            </nhs-summary-list-row>
+        </nhs-summary-list>
+    }
+
+
+</div>
