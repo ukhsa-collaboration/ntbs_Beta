@@ -31,12 +31,17 @@
                     </nhs-checkboxes-item>
                 </nhs-checkboxes>
             </nhs-details>
-            
+
             @{
                 var hasValidationErrors = hasNotificationSitesError || !Model.IsValid("OtherSite.SiteDescription");
+
+                var pulmonarySites = new[] { SiteId.PULMONARY, SiteId.LARYNGEAL };
+                var hasExtraPulmonarySites = Model.NotificationSiteMap.Any(site => !pulmonarySites.Contains(site.Key) && site.Value);
+
+                var isExtraPulmonaryExpanded = hasValidationErrors || hasExtraPulmonarySites;
             }
 
-            <nhs-details display-text="Extra-Pulmonary" nhs-details-type="Standard" classes="disease-sites" is-open="@hasValidationErrors">
+            <nhs-details display-text="Extra-Pulmonary" nhs-details-type="Standard" classes="disease-sites" is-open="@isExtraPulmonaryExpanded">
                 <h3 class="nhsuk-label nhsuk-label--s">Bone/joint</h3>
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
