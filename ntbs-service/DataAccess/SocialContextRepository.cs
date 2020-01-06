@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 
@@ -8,9 +7,6 @@ namespace ntbs_service.DataAccess
     public class SocialContextVenueRepository : ItemRepository<SocialContextVenue>
     {
         public SocialContextVenueRepository(NtbsContext context) : base(context) { }
-
-        protected override int? ItemRootId(SocialContextVenue item) => item.NotificationId;
-        protected override string ItemRootEntity => RootEntities.Notification;
 
         protected override DbSet<SocialContextVenue> GetDbSet()
         {
@@ -27,9 +23,6 @@ namespace ntbs_service.DataAccess
     public class SocialContextAddressRepository : ItemRepository<SocialContextAddress>
     {
         public SocialContextAddressRepository(NtbsContext context) : base(context) { }
-
-        protected override int? ItemRootId(SocialContextAddress item) => item.NotificationId;
-        protected override string ItemRootEntity => RootEntities.Notification;
 
         protected override DbSet<SocialContextAddress> GetDbSet()
         {

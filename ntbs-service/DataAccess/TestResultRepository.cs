@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 
@@ -7,10 +6,7 @@ namespace ntbs_service.DataAccess
 {
     public class TestResultRepository : ItemRepository<ManualTestResult>
     {
-        public TestResultRepository(NtbsContext context) : base(context) {}
-
-        protected override int? ItemRootId(ManualTestResult item) => item.NotificationId;
-        protected override string ItemRootEntity => RootEntities.Notification;
+        public TestResultRepository(NtbsContext context) : base(context) { }
 
         protected override DbSet<ManualTestResult> GetDbSet()
         {

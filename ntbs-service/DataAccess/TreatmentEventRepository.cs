@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 
@@ -8,9 +7,6 @@ namespace ntbs_service.DataAccess
     public class TreatmentEventRepository : ItemRepository<TreatmentEvent>
     {
         public TreatmentEventRepository(NtbsContext context) : base(context) { }
-
-        protected override int? ItemRootId(TreatmentEvent item) => item.NotificationId;
-        protected override string ItemRootEntity => RootEntities.Notification;
 
         protected override DbSet<TreatmentEvent> GetDbSet()
         {
