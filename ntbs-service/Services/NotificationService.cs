@@ -13,6 +13,7 @@ namespace ntbs_service.Services
 {
     public interface INotificationService
     {
+        Task AddNotificationAsync(Notification notification);
         Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
         Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
@@ -51,6 +52,12 @@ namespace ntbs_service.Services
             _referenceDataRepository = referenceDataRepository;
             _userService = userService;
             _context = context;
+        }
+
+        public async Task AddNotificationAsync(Notification notification)
+        {
+            _context.Notification.Add(notification);
+            await UpdateDatabaseAsync(NotificationAuditType.Added);
         }
 
         public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)
@@ -301,21 +308,25 @@ namespace ntbs_service.Services
             var linkedNotification = await CreateNewNotificationForUser(user);
             _context.Attach(linkedNotification);
             _context.SetValues(linkedNotification.PatientDetails, notification.PatientDetails);
+            await UpdateDatabaseAsync();
 
             if (notification.GroupId != null)
             {
                 linkedNotification.GroupId = notification.GroupId;
+                await UpdateDatabaseAsync();
             }
             else
             {
                 var group = new NotificationGroup();
                 _context.NotificationGroup.Add(group);
+                await UpdateDatabaseAsync(NotificationAuditType.Added);
 
                 linkedNotification.GroupId = group.NotificationGroupId;
-                notification.GroupId = group.NotificationGroupId;
-            }
+                await UpdateDatabaseAsync();
 
-            await _context.SaveChangesAsync();
+                notification.GroupId = group.NotificationGroupId;
+                await UpdateDatabaseAsync();
+            }
 
             return linkedNotification;
         }
@@ -335,7 +346,7 @@ namespace ntbs_service.Services
                 }
             };
 
-            await _notificationRepository.AddNotificationAsync(notification);
+            await AddNotificationAsync(notification);
             return notification;
         }
 
@@ -352,12 +363,14 @@ namespace ntbs_service.Services
         private async Task UpdateDatabaseAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)
         {
             _context.SetValues(notification.ComorbidityDetails, comorbidityDetails);
+
             await UpdateDatabaseAsync();
         }
 
@@ -374,6 +387,7 @@ namespace ntbs_service.Services
             }
 
             notification.NotificationStatus = NotificationStatus.Denotified;
+
             await UpdateDatabaseAsync(NotificationAuditType.Denotified);
         }
 
@@ -383,6 +397,7 @@ namespace ntbs_service.Services
             notification.DeletionReason = deletionReason;
             notification.GroupId = null;
             notification.NotificationStatus = NotificationStatus.Deleted;
+
             await UpdateDatabaseAsync(NotificationAuditType.Deleted);
         }
     }

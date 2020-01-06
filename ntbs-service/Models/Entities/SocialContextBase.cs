@@ -1,14 +1,14 @@
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public abstract class SocialContextBase : ModelBase
+    public abstract class SocialContextBase : ModelBase, IHasRootEntity
     {
         public int NotificationId { get; set; }
         // We are not including a navigation property to Notification, otherwise it gets validated
@@ -57,5 +57,8 @@ namespace ntbs_service.Models.Entities
         public abstract bool DateToIsRequired { get; }
 
         public abstract int Id { set; }
+
+        string IHasRootEntity.RootEntityType => RootEntities.Notification;
+        string IHasRootEntity.RootId => NotificationId.ToString();
     }
 }

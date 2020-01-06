@@ -6,21 +6,36 @@ namespace EFAuditer
 {
     public class AuditDatabaseContext : DbContext
     {
-        public AuditDatabaseContext() {}
-        public AuditDatabaseContext(DbContextOptions<AuditDatabaseContext> options) : base(options) {}
+        public AuditDatabaseContext(DbContextOptions<AuditDatabaseContext> options) : base(options) { }
 
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
-        public async Task AuditOperationAsync(int primaryKeyId, string entity, string details, string eventType, string userName)
+        public async Task AuditOperationAsync(
+            int primaryKeyId,
+            string entity,
+            string details,
+            string eventType,
+            string userName)
         {
-            var log = CreateAuditLog(primaryKeyId, entity, details, eventType, userName);
+            var log = CreateAuditLog(
+                primaryKeyId,
+                entity,
+                details,
+                eventType,
+                userName);
             AuditLogs.Add(log);
             await SaveChangesAsync();
         }
 
-        private AuditLog CreateAuditLog(int primaryKeyId, string entity, string details, string eventType, string userName)
+        private static AuditLog CreateAuditLog(
+            int primaryKeyId,
+            string entity,
+            string details,
+            string eventType,
+            string userName)
         {
-            return new AuditLog() {
+            return new AuditLog()
+            {
                 OriginalId = primaryKeyId.ToString(),
                 EntityType = entity,
                 EventType = eventType,
