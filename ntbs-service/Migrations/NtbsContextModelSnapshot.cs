@@ -13103,8 +13103,7 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("LocalPatientId")
                                 .HasMaxLength(50);
 
-                            b1.Property<string>("NhsNumber")
-                                .HasMaxLength(10);
+                            b1.Property<string>("NhsNumber");
 
                             b1.Property<bool>("NhsNumberNotKnown");
 
