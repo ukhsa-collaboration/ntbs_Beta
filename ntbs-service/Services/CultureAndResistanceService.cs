@@ -18,7 +18,7 @@ namespace ntbs_service.Services
 
         public CultureAndResistanceService(IConfiguration _configuration)
         {
-            connectionString = "";
+            connectionString = _configuration.GetConnectionString("reporting");
         }
 
         public async Task<CultureAndResistance> GetCultureAndResistanceDetailsAsync(int notificationId)

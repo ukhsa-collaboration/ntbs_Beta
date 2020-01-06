@@ -1,0 +1,21 @@
+@import "./breakpoints";
+@import "./colors.scss";
+
+
+.notification-lab-results-summary {
+    padding: 10px 5px 10px 5px;
+    border: 1px;
+    border-style: solid;
+    margin-bottom: 20px;
+}
+
+.notification-specimen-summary {
+    padding: 10px 5px 10px 5px;
+    border: 1px;
+    border-style: solid;
+    margin-bottom: 20px;
+}
+
+.notification-test-results-label {
+    font-weight: 600;
+}

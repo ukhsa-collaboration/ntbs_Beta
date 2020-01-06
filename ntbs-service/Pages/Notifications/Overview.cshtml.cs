@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
@@ -9,14 +9,20 @@ namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
-        protected IAlertRepository AlertRepository;
+        protected IAlertRepository _alertRepository;
+        private readonly ICultureAndResistanceService _cultureAndResistanceService;
+
+        public CultureAndResistance CultureAndResistance { get; set; }
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             IAlertRepository alertRepository,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            ICultureAndResistanceService cultureAndResistanceService)
+            : base(service, authorizationService, notificationRepository)
         {
-            this.AlertRepository = alertRepository;
+            _alertRepository = alertRepository;
+            _cultureAndResistanceService = cultureAndResistanceService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -27,6 +33,8 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
             NotificationId = Notification.NotificationId;
+            CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
+
             await GetLinkedNotifications();
             await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
@@ -54,7 +62,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task GetAlertsAsync()
         {
-            Alerts = await AlertRepository.GetAlertsForNotificationAsync(NotificationId);
+            Alerts = await _alertRepository.GetAlertsForNotificationAsync(NotificationId);
         }
     }
 }

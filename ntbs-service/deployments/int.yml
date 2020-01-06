@@ -26,6 +26,11 @@ spec:
               secretKeyRef:
                 name: int-audit-db-connection-string
                 key: connectionString
+          - name: ConnectionStrings__reporting
+            valueFrom:
+              secretKeyRef:
+                name: int-reporting-db-connection-string
+                key: connectionString
           - name: ConnectionStrings__ltbr
             valueFrom:
               secretKeyRef:

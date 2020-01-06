@@ -19,7 +19,7 @@ namespace ntbs_service.Services
 
         public SpecimenService(IConfiguration _configuration)
         {
-            connectionString = "";
+            connectionString = _configuration.GetConnectionString("reporting");
         }
 
         public async Task<IEnumerable<Specimen>> GetSpecimenDetailsAsync(int notificationId)
