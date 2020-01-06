@@ -82,12 +82,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             ModelState.Remove("TreatmentEvent.EventDate");
             ValidationService.TrySetFormattedDate(TreatmentEvent, nameof(TreatmentEvent), nameof(TreatmentEvent.EventDate), FormattedEventDate);
 
+            // TreatmentOutcomeId will be marked as missing on the model, since setting manually
+            ModelState.Remove("TreatmentEvent.TreatmentOutcomeId");
+
             // Add additional fields required for date validation
             TreatmentEvent.Dob = Notification.PatientDetails.Dob;
             TreatmentEvent.DateOfNotification = Notification.NotificationDate;
-
-            // Manual handling of TreatmentOutcomeId in switch statement below will cover all validation for property
-            ModelState.Remove("TreatmentEvent.TreatmentOutcomeId");
 
             switch (TreatmentEvent.TreatmentEventType)
             {
@@ -110,6 +110,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     TreatmentEvent.TreatmentEventId = RowId.Value;
                     await _treatmentEventRepository.UpdateAsync(Notification, TreatmentEvent);
                 }
+            }
+            else
+            {
+                // Manual handling of TreatmentOutcomeId in switch statement below will cover all validation for property
+                ModelState.Remove("TreatmentEvent.TreatmentOutcomeId");
             }
         }
 
