@@ -94,7 +94,7 @@
                         <label nhs-label-type="Standard" asp-for="Venue.Frequency">
                             @Html.DisplayNameFor(m => m.Venue.Frequency)
                         </label>
-                        <select nhs-select-type="Standard" asp-for="Venue.Frequency" asp-items="@Html.GetEnumSelectList<Frequency>()">
+                        <select nhs-select-type="Standard" asp-for="Venue.Frequency" asp-items="@(Html.GetEnumSelectList<Frequency>())">
                             <option value="" selected> Choose an option </option>
                         </select>
                     </nhs-form-group>
