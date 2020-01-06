@@ -1,6 +1,6 @@
 ﻿namespace EFAuditer
 {
-    public interface IIsOwnedEntity
+    public interface IOwnedEntity
     {
         string RootEntityType { get; }
     }

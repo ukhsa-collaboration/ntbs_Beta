@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ClinicalDetails : ModelBase, IIsOwnedEntity
+    public class ClinicalDetails : ModelBase, IOwnedEntity
     {
         public bool? IsSymptomatic { get; set; }
 
@@ -60,6 +60,6 @@ namespace ntbs_service.Models.Entities
         public Status? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class DenotificationDetails : IIsOwnedEntity
+    public class DenotificationDetails : IOwnedEntity
     {
         [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
         [AssertThat("DenotificationNotAfterToday == true", ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
@@ -44,6 +44,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Description")]
         public string OtherDescription { get; set; }
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

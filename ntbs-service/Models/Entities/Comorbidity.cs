@@ -5,7 +5,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ComorbidityDetails : ModelBase, IIsOwnedEntity
+    public class ComorbidityDetails : ModelBase, IOwnedEntity
     {
         public Status? DiabetesStatus { get; set; }
         public Status? HepatitisBStatus { get; set; }
@@ -13,6 +13,6 @@ namespace ntbs_service.Models.Entities
         public Status? LiverDiseaseStatus { get; set; }
         public Status? RenalDiseaseStatus { get; set; }
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

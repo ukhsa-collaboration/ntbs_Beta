@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ImmunosuppressionDetails : ModelBase, IIsOwnedEntity
+    public class ImmunosuppressionDetails : ModelBase, IOwnedEntity
     {
         [AssertThat(@"Status != Enums.Status.Yes
             || (HasBioTherapy || HasTransplantation || HasOther)",
@@ -49,6 +49,6 @@ namespace ntbs_service.Models.Entities
             return sb.ToString();
         }
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

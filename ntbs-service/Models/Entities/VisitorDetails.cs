@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [NotMapped]
-    public class VisitorDetails : ModelBase, ITravelOrVisitorDetails, IIsOwnedEntity
+    public class VisitorDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntity
     {
         private const int MaxTotalLengthOfStay = 24;
 
@@ -82,6 +82,6 @@ namespace ntbs_service.Models.Entities
             Convert.ToInt32(StayLengthInMonths2) +
             Convert.ToInt32(StayLengthInMonths3);
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

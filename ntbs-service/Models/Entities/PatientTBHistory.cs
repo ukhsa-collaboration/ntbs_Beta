@@ -7,7 +7,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientTBHistory : ModelBase, IIsOwnedEntity
+    public class PatientTBHistory : ModelBase, IOwnedEntity
     {
         public bool? NotPreviouslyHadTB { get; set; }
         
@@ -16,6 +16,6 @@ namespace ntbs_service.Models.Entities
         [Range(1900, 2000, ErrorMessage = ValidationMessages.PreviousTBDiagnosisYear)]
         public int? PreviousTBDiagnosisYear { get; set; }
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

@@ -62,7 +62,7 @@ namespace EFAuditer
                     audit.RootEntity = entityWithParent.RootEntityType;
                     audit.RootId = entityWithParent.RootId;
                     break;
-                case IIsOwnedEntity ownedEntity:
+                case IOwnedEntity ownedEntity:
                     audit.RootEntity = ownedEntity.RootEntityType;
                     audit.RootId = audit.OriginalId;
                     break;

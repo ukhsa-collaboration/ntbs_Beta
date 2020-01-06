@@ -5,7 +5,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class RiskFactorDetails : IIsOwnedEntity
+    public class RiskFactorDetails : IOwnedEntity
     {
         public RiskFactorDetails() { }
         public RiskFactorDetails(RiskFactorType type)
@@ -20,6 +20,6 @@ namespace ntbs_service.Models.Entities
         public bool InPastFiveYears { get; set; }
         public bool MoreThanFiveYearsAgo { get; set; }
 
-        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }
