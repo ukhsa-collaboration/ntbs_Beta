@@ -113,6 +113,7 @@ namespace ntbs_service.DataAccess
             return await _context.TbService
                 .Where(t => tbServiceCodes.Contains(t.Code))
                 .SelectMany(t => t.CaseManagerTbServices.Select(join => join.CaseManager))
+                .Where(user => user.IsCaseManager)
                 .Distinct()
                 .OrderBy(c => c.FamilyName)
                 .ToListAsync();
