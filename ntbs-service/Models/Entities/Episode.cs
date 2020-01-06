@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.ReferenceEntities;
@@ -10,7 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class Episode : ModelBase
+    public class Episode : ModelBase, IIsOwnedEntity
     {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
@@ -60,5 +61,7 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         [Display(Name = "Case Manager")]
         public string CaseManagerName => CaseManager?.FullName;
+
+        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
@@ -8,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ClinicalDetails : ModelBase
+    public class ClinicalDetails : ModelBase, IIsOwnedEntity
     {
         public bool? IsSymptomatic { get; set; }
 
@@ -58,5 +59,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? MDRTreatmentStartDate { get; set; }
         public Status? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }
+
+        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

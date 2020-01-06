@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Interfaces;
@@ -9,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientDetails : ModelBase, IHasPostcode
+    public class PatientDetails : ModelBase, IHasPostcode, IIsOwnedEntity
     {
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [StringLength(35)]
@@ -102,5 +103,7 @@ namespace ntbs_service.Models.Entities
 
             return Occupation.Sector == "Other" ? Occupation.Role : $"{Occupation.Sector} - {Occupation.Role}";
         }
+
+        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

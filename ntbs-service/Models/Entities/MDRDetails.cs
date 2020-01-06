@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
@@ -8,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class MDRDetails : ModelBase
+    public class MDRDetails : ModelBase, IIsOwnedEntity
     {
         [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR-TB Case?")]
         public Status? ExposureToKnownCaseStatus { get; set; }
@@ -37,5 +38,7 @@ namespace ntbs_service.Models.Entities
             CaseInUKStatus != null ||
             RelatedNotificationId != null ||
             CountryId != null;
+
+        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

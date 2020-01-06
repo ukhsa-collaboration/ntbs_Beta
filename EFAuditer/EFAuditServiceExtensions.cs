@@ -6,6 +6,7 @@ using Audit.EntityFramework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace EFAuditer
 {
@@ -47,15 +48,25 @@ namespace EFAuditer
 
         public static void AuditAction(AuditEvent ev, Audit.EntityFramework.EventEntry entry, AuditLog audit)
         {
-            audit.AuditData = entry.ToJson();
+            audit.AuditData = JsonConvert.SerializeObject(entry.Changes, Audit.Core.Configuration.JsonSettings);
             audit.OriginalId = entry.PrimaryKey.First().Value.ToString();
             audit.EntityType = entry.EntityType.Name;
             audit.EventType = entry.Action;
             audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);
             audit.AuditDateTime = DateTime.Now;
             audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
-            audit.RootEntity = GetCustomKey(ev, CustomFields.RootEntity);
-            audit.RootId = GetCustomKey(ev, CustomFields.RootId);
+
+            switch (entry.Entity)
+            {
+                case IHasRootEntity entityWithParent:
+                    audit.RootEntity = entityWithParent.RootEntityType;
+                    audit.RootId = entityWithParent.RootId;
+                    break;
+                case IIsOwnedEntity ownedEntity:
+                    audit.RootEntity = ownedEntity.RootEntityType;
+                    audit.RootId = audit.OriginalId;
+                    break;
+            }
         }
 
         private static string GetCustomKey(AuditEvent ev, string key)
@@ -68,4 +79,5 @@ namespace EFAuditer
             return null;
         }
     }
+
 }

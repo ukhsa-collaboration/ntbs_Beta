@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
@@ -9,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class DenotificationDetails
+    public class DenotificationDetails : IIsOwnedEntity
     {
         [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
         [AssertThat("DenotificationNotAfterToday == true", ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
@@ -42,5 +43,7 @@ namespace ntbs_service.Models.Entities
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         [Display(Name = "Description")]
         public string OtherDescription { get; set; }
+
+        string IIsOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

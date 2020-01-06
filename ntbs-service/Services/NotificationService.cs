@@ -57,7 +57,7 @@ namespace ntbs_service.Services
         public async Task AddNotificationAsync(Notification notification)
         {
             _context.Notification.Add(notification);
-            await UpdateDatabaseAsync(null, NotificationAuditType.Added, null);
+            await UpdateDatabaseAsync(NotificationAuditType.Added);
         }
 
         public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)
@@ -65,7 +65,7 @@ namespace ntbs_service.Services
             await UpdatePatientFlagsAsync(patient);
             _context.SetValues(notification.PatientDetails, patient);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdatePatientFlagsAsync(PatientDetails patientDetails)
@@ -144,28 +144,28 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
         {
             _context.SetValues(notification.TestData, testData);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
         {
             _context.SetValues(notification.Episode, episode);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing)
         {
             _context.SetValues(notification.ContactTracing, contactTracing);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails)
@@ -173,7 +173,7 @@ namespace ntbs_service.Services
             UpdateTravelDetails(notification, travelDetails);
             UpdateVisitorDetails(notification, visitorDetails);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         private void UpdateTravelDetails(Notification notification, TravelDetails travelDetails)
@@ -212,7 +212,7 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.PatientTBHistory, tBHistory);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
@@ -226,7 +226,7 @@ namespace ntbs_service.Services
 
             _context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment, socialRiskFactors.RiskFactorImprisonment);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         private static void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors)
@@ -262,13 +262,13 @@ namespace ntbs_service.Services
             }
 
             _context.SetValues(notification.ImmunosuppressionDetails, immunosuppressionDetails);
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateMDRDetailsAsync(Notification notification, MDRDetails details)
         {
             _context.SetValues(notification.MDRDetails, details);
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites)
@@ -291,7 +291,7 @@ namespace ntbs_service.Services
             var sitesToRemove = currentSites.Where(s => !notificationSites.Select(ns => ns.SiteId).Contains(s.SiteId));
             _context.NotificationSite.RemoveRange(sitesToRemove);
 
-            await UpdateDatabaseAsync(notificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task SubmitNotificationAsync(Notification notification)
@@ -300,7 +300,7 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.SubmissionDate = DateTime.UtcNow;
 
-            await UpdateDatabaseAsync(notification.NotificationId, NotificationAuditType.Notified);
+            await UpdateDatabaseAsync(NotificationAuditType.Notified);
         }
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
@@ -308,24 +308,24 @@ namespace ntbs_service.Services
             var linkedNotification = await CreateNewNotificationForUser(user);
             _context.Attach(linkedNotification);
             _context.SetValues(linkedNotification.PatientDetails, notification.PatientDetails);
-            await UpdateDatabaseAsync(linkedNotification.NotificationId);
+            await UpdateDatabaseAsync();
 
             if (notification.GroupId != null)
             {
                 linkedNotification.GroupId = notification.GroupId;
-                await UpdateDatabaseAsync(linkedNotification.NotificationId);
+                await UpdateDatabaseAsync();
             }
             else
             {
                 var group = new NotificationGroup();
                 _context.NotificationGroup.Add(group);
-                await UpdateDatabaseAsync(null, auditType: NotificationAuditType.Added, rootEntity: null);
+                await UpdateDatabaseAsync(NotificationAuditType.Added);
 
                 linkedNotification.GroupId = group.NotificationGroupId;
-                await UpdateDatabaseAsync(linkedNotification.NotificationId);
+                await UpdateDatabaseAsync();
 
                 notification.GroupId = group.NotificationGroupId;
-                await UpdateDatabaseAsync(notification.NotificationId);
+                await UpdateDatabaseAsync();
             }
 
             return linkedNotification;
@@ -360,14 +360,9 @@ namespace ntbs_service.Services
             return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
         }
 
-        private async Task UpdateDatabaseAsync(
-            int? notificationId,
-            NotificationAuditType auditType = NotificationAuditType.Edited,
-            string rootEntity = RootEntities.Notification)
+        private async Task UpdateDatabaseAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
-            _context.AddAuditCustomField(CustomFields.RootId, notificationId);
-            _context.AddAuditCustomField(CustomFields.RootEntity, rootEntity);
 
             await _context.SaveChangesAsync();
         }
@@ -376,7 +371,7 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.ComorbidityDetails, comorbidityDetails);
 
-            await UpdateDatabaseAsync(notification.NotificationId);
+            await UpdateDatabaseAsync();
         }
 
         public async Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails)
@@ -393,7 +388,7 @@ namespace ntbs_service.Services
 
             notification.NotificationStatus = NotificationStatus.Denotified;
 
-            await UpdateDatabaseAsync(notificationId, NotificationAuditType.Denotified);
+            await UpdateDatabaseAsync(NotificationAuditType.Denotified);
         }
 
         public async Task DeleteNotificationAsync(int notificationId, string deletionReason)
@@ -403,7 +398,7 @@ namespace ntbs_service.Services
             notification.GroupId = null;
             notification.NotificationStatus = NotificationStatus.Deleted;
 
-            await UpdateDatabaseAsync(notificationId, NotificationAuditType.Deleted);
+            await UpdateDatabaseAsync(NotificationAuditType.Deleted);
         }
     }
 }
