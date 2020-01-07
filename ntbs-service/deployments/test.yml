@@ -26,6 +26,11 @@ spec:
               secretKeyRef:
                 name: test-audit-db-connection-string
                 key: connectionString
+          - name: ConnectionStrings__reporting
+          valueFrom:
+            secretKeyRef:
+              name: test-reporting-db-connection-string
+              key: connectionString
           - name: ConnectionStrings__ltbr
             valueFrom:
               secretKeyRef:

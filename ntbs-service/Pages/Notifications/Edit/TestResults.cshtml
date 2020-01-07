@@ -51,10 +51,9 @@
                 </nhs-form-group>
             </validate-input>
             
-            <div>
-                <partial name="_LabResults" for="@Model.CultureAndResistance" />
-                <partial name="_SpecimenDetails" for="@Model.Specimens" />
-            </div>
+            <partial name="_LabResults" for="@Model.CultureAndResistance" />
+            <partial name="_SpecimenDetails" for="@Model.Specimens" />
+            
             <div ref="manual-test-results">
                 <h3>Manually-entered test results</h3>
 
