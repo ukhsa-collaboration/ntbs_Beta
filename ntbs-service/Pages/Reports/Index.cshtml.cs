@@ -4,6 +4,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace ntbs_service
 {
+    /// <summary>
+    /// Route intended to be both a dummy location that's navigable for
+    /// when ExternalLinks__ReportingUri env variable is not set, and additional
+    /// a centralised location for logic when routing out to external reporting.
+    ///
+    /// Intended for all external links to reporting to route through here, to then be
+    /// redirected.
+    /// </summary>
     public class IndexModel : PageModel
     {
         [BindProperty(SupportsGet = true)]
