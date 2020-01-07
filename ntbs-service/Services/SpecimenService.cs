@@ -29,37 +29,9 @@ namespace ntbs_service.Services
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var rawResult = await connection.QueryAsync(query, new { notificationId });
-                return rawResult.Select(AsSpecimen);
+                var rawResult = await connection.QueryAsync<Specimen>(query, new { notificationId });
+                return rawResult;
             }
-        }
-
-        private static Specimen AsSpecimen(dynamic rawResult)
-        {
-            return new Specimen
-            {
-                NotificationId = rawResult.NotificationID,
-                ReferenceLaboratoryNumber = rawResult.ReferenceLaboratoryNumber,
-                SpecimenDate = rawResult.SpecimenDate,
-                SpecimenTypeCode = rawResult.SpecimenTypeCode,
-                LaboratoryName = rawResult.LaboratoryName,
-                ReferenceLaboratory = rawResult.ReferenceLaboratory,
-                Species = rawResult.Species,
-                Isoniazid = rawResult.Isoniazid,
-                Rifampicin = rawResult.Rifampicin,
-                Pyrazinamide = rawResult.Pyrazinamide,
-                Ethambutol = rawResult.Ethambutol,
-                Aminoglycocide = rawResult.Aminoglycocide,
-                Quinolone = rawResult.Quinolone,
-                MDR = rawResult.MDR,
-                XDR = rawResult.XDR,
-                PatientNhsNumber = rawResult.PatientNhsNumber,
-                PatientBirthDate = rawResult.PatientBirthDate,
-                PatientName = rawResult.PatientName,
-                PatientSex = rawResult.PatientSex,
-                PatientAddress = rawResult.PatientAddress,
-                PatientPostcode = rawResult.PatientPostcode,
-            };
         }
     }
 }

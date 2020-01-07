@@ -28,29 +28,9 @@ namespace ntbs_service.Services
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var rawResult = await connection.QueryAsync(query, new { notificationId });
-                return rawResult.Select(AsCultureAndResistance).FirstOrDefault();
+                var rawResult = await connection.QueryAsync<CultureAndResistance>(query, new { notificationId });
+                return rawResult.FirstOrDefault();
             }
-        }
-
-        private static CultureAndResistance AsCultureAndResistance(dynamic rawResult)
-        {
-            return new CultureAndResistance
-            {
-                NotificationId = rawResult.NotificationId,
-                CulturePositive = rawResult.CulturePositive,
-                Species = rawResult.Species,
-                DrugResistanceProfile = rawResult.DrugResistanceProfile,
-                EarliestSpecimenDate = rawResult.EarliestSpecimenDate,
-                Isoniazid = rawResult.Isoniazid,
-                Rifampicin = rawResult.Rifampicin,
-                Pyrazinamide = rawResult.Pyrazinamide,
-                Ethambutol = rawResult.Ethambutol,
-                Aminoglycocide = rawResult.Aminoglycocide,
-                Quinolone = rawResult.Quinolone,
-                MDR = rawResult.MDR,
-                XDR = rawResult.XDR,
-            };
         }
     }
 }

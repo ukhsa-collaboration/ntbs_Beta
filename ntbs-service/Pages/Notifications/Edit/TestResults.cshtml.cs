@@ -29,12 +29,9 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         [BindProperty]
         public TestData TestData { get; set; }
-
-        [BindProperty]
         public CultureAndResistance CultureAndResistance { get; set; }
-
-        [BindProperty]
         public IEnumerable<Specimen> Specimens { get; set; }
+
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             TestData = Notification.TestData;
