@@ -24,28 +24,19 @@ spec:
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
-                  name: live-db-connection-string
-                  key: connectionString
+                  name: live-connection-strings
+                  key: db
             - name: ConnectionStrings__auditContext
               valueFrom:
                 secretKeyRef:
-                  name: live-audit-db-connection-string
-                  key: connectionString
-#             - name: ConnectionStrings__ltbr
-#               valueFrom:
-#                 secretKeyRef:
-#                   name: lgeacy-and-migration-connection-strings
-#                   key: ltbr
-#             - name: ConnectionStrings__ets
-#               valueFrom:
-#                 secretKeyRef:
-#                   name: lgeacy-and-migration-connection-strings
-#                   key: ets
-#             - name: ConnectionStrings__migration
-#               valueFrom:
-#                 secretKeyRef:
-#                   name: lgeacy-and-migration-connection-strings
-#                   key: migration
+                  name: live-connection-strings
+                  key: audit-db
+            - name: ConnectionStrings__migration
+              value: Server=sqlntbsdevcol01.phe.gov.uk;Database=migration;User Id=<username>;Password=<password>;
+#              valueFrom:
+#                secretKeyRef:
+#                  name: live-connection-strings
+#                  key: migration
             - name: AdfsOptions__UseDummyAuth
               value: "true"
 #            - name: LdapConnectionSettings__Password
@@ -55,6 +46,10 @@ spec:
 #                  key: password
             - name: ExternalLinks__ReportingUri
               value: ""
+            - name: ReferenceLabResultsConfig__MockOutSpecimenMatching
+              value: true
+            - name: ReferenceLabResultsConfig__MockedNotificationId
+              value: 1
       imagePullSecrets:
         - name: registery-password
 ---
