@@ -109,14 +109,14 @@ namespace ntbs_service.DataMigration
 
         private static NotificationSite AsNotificationSite(dynamic result)
         {
-            if (result.DiseaseSiteId == null)
+            if (result.SiteId == null)
             {
                 return null;
             }
             return new NotificationSite
             {
-                SiteId = result.DiseaseSiteId,
-                SiteDescription = result.DiseaseSiteText
+                SiteId = result.SiteId,
+                SiteDescription = result.SiteDescription
             };
         }
 

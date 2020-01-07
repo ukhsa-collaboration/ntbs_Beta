@@ -59,7 +59,7 @@ namespace ntbs_service.DataMigration
 
         const string NotificationSitesQuery = @"
             SELECT *
-            FROM DiseaseSites
+            FROM NotificationSite
             WHERE OldNotificationId IN @Ids
         ";
         private readonly string connectionString;
