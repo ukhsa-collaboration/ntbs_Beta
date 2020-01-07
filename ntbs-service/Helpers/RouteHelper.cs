@@ -69,5 +69,6 @@ namespace ntbs_service.Helpers
     public static class AlertSubPaths
     {
         public static string Dismiss => "Dismiss";
+        public static string TransferRequest => "Transfer";
     }
 }

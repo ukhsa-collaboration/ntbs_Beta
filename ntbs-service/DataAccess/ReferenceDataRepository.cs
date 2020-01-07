@@ -17,10 +17,13 @@ namespace ntbs_service.DataAccess
         Task<IList<Country>> GetAllCountriesApartFromUKAsync();
         Task<Country> GetCountryByIdAsync(int id);
         Task<IList<TBService>> GetAllTbServicesAsync();
+        Task<IList<PHEC>> GetAllPhecs();
         Task<TBService> GetTbServiceByCodeAsync(string code);
+        Task<IList<CaseManager>> GetAllCaseManagers();
         Task<CaseManager> GetCaseManagerByEmailAsync(string email);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<CaseManager>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
+        Task<IEnumerable<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
         Task<IList<Sex>> GetAllSexesAsync();
@@ -79,9 +82,21 @@ namespace ntbs_service.DataAccess
             return await _context.TbService.ToListAsync();
         }
 
+        public async Task<IList<PHEC>> GetAllPhecs()
+        {
+            return await _context.PHEC.ToListAsync();
+        }
+
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
         {
             return await _context.TbService.SingleOrDefaultAsync(t => t.Code == code);
+        }
+
+        public async Task<IEnumerable<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
+        {
+            return await _context.TbService
+                .Where(s => s.PHECCode == phecCode)
+                .ToListAsync();
         }
 
         public async Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId)
@@ -90,6 +105,11 @@ namespace ntbs_service.DataAccess
                 .Where(h => h.HospitalId == hospitalId)
                 .Select(h => h.TBService)
                 .SingleOrDefaultAsync();
+        }
+        
+        public async Task<IList<CaseManager>> GetAllCaseManagers()
+        {
+            return await _context.CaseManager.ToListAsync();
         }
 
         public async Task<CaseManager> GetCaseManagerByEmailAsync(string email)

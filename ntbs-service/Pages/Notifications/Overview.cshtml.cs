@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -29,6 +30,10 @@ namespace ntbs_service.Pages.Notifications
             NotificationId = Notification.NotificationId;
             await GetLinkedNotifications();
             await GetAlertsAsync();
+            if(Alerts.Select(x => x.AlertType == AlertType.TransferRequest) != null)
+            {
+                TransferRequestPending = true;
+            }
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {

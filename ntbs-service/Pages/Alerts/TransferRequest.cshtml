@@ -4,6 +4,7 @@
 @using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @model ntbs_service.Pages.Alerts.TransferRequestModel
+@using NHSUK.FrontEndLibrary.TagHelpers
 
 @{
     Layout = "../Shared/_NotificationLayout.cshtml";
@@ -12,12 +13,70 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        <input type="hidden" asp-for="AlertId" />
+        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
         <h2> You are about to transfer this notification </h2>
-        @* do some dropdown filtering *@
-        <div>
-            dropdowns for TB service stuff
-        </div>
+
+        @* <filtered-dropdown filter-handler-path="GetFilteredListsByPhecAndTbService" :filtering-refs="['phecs', 'tbServices', 'caseManagers']" inline-template> *@
+
+            @* <validate-input model="TransferAlert" property="PhecCode"
+                                ref="phecs" v-on:mounted="filteringMounted" v-on:valid="filteringChanged" inline-template> *@
+                @{
+                    var hasPhecCodeError = false;
+                    var phecCodeGroupState = hasPhecCodeError ? Error : Standard;
+                    var phecCodeSelectErrorState = hasPhecCodeError ? SelectType.Error : SelectType.Standard;
+                }
+                <nhs-form-group nhs-form-group-type="@phecCodeGroupState" id="PhecCodeFilter">
+                    <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
+                        PHEC
+                    </label>
+                    <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasPhecCodeError"
+                            ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
+                    <select ref="selectField" nhs-select-type="@phecCodeSelectErrorState"
+                            asp-items="Model.Phecs" v-on:change="validate">
+                    </select>
+                </nhs-form-group>
+            @* </validate-input> *@
+
+            @* <validate-input model="TransferAlert" property="TBServiceCode"
+                                ref="tbServices" v-on:mounted="filteringMounted" v-on:valid="filteringChanged" inline-template> *@
+                @{
+                    var hasTbServiceCodeError = false;
+                    var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
+                    var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
+                }
+                <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferAlert-TbServiceCode">
+                    <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
+                        TB SERVICE
+                    </label>
+                    <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
+                            ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
+                    <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferAlert.TbServiceCode"
+                            asp-items="Model.TbServices" v-on:change="validate">
+                    </select>
+                </nhs-form-group>
+            @* </validate-input> *@
+@* 
+            <validate-input model="TransferAlert" property="CaseManagerEmail"
+                            ref="caseManagers" inline-template> *@
+                @{
+                    var hasCaseManagerError = false;
+                    var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
+                    var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
+                }
+                <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerEmail">
+                    <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerEmail">
+                        CASE MANAGER
+                    </label>
+                    <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
+                          ref="errorField" asp-validation-for="TransferAlert.CaseManagerEmail"></span>
+                    <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferAlert.CaseManagerEmail"
+                            asp-items="Model.CaseManagers" v-on:change="validate">
+                        <option value="" selected>Please select</option>
+                    </select>
+                </nhs-form-group>
+            @* </validate-input> *@
+        @* </filtered-dropdown> *@
+
         @{
             var hasReasonError = !Model.ValidationService.IsValid("TransferAlert.TransferReason");
             var reasonFormGroupType = hasReasonError ? Error : Standard;

@@ -1,4 +1,5 @@
 ﻿using ntbs_service.Helpers;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities
 {
@@ -6,5 +7,10 @@ namespace ntbs_service.Models.Entities
     {
         public override string Action => "RR/MDR/XDR-TB identified. Please complete enhanced surveillance questionnaire";
         public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.EditMDRDetails);
+
+        public MdrAlert()
+        {
+            AlertType = AlertType.EnhancedSurveillanceMDR;
+        }
     }
 }

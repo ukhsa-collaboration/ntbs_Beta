@@ -1,5 +1,6 @@
 ﻿@page
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -69,12 +70,15 @@
                                 @item.TbServiceName
                             </nhs-table-item>
                             <nhs-table-item>
-                                <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
-                                    @Html.AntiForgeryToken()
-                                    <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link" aria-label="Dismiss alert">
-                                        X
-                                    </button>
-                                </form>
+                                @if(item.AlertType != AlertType.TransferRequest)
+                                {
+                                    <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
+                                        @Html.AntiForgeryToken()
+                                        <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link" aria-label="Dismiss alert">
+                                            X
+                                        </button>
+                                    </form>
+                                }
                             </nhs-table-item>
                         </nhs-table-body-row>
                     }
