@@ -46,7 +46,7 @@
                 }
                 <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferAlert-TbServiceCode">
                     <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
-                        TB SERVICE
+                        TB service
                     </label>
                     <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
                             ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
@@ -65,7 +65,7 @@
                 }
                 <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerEmail">
                     <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerEmail">
-                        CASE MANAGER
+                        Case manager
                     </label>
                     <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
                           ref="errorField" asp-validation-for="TransferAlert.CaseManagerEmail"></span>
@@ -149,7 +149,7 @@
         </nhs-form-group>
 
         <div style="display: flex">
-            <button id="confirm-transfer-button" nhs-button-type="Standard" asp-page-handler="Confirm">
+            <button id="confirm-transfer-button" nhs-button-type="Standard" asp-page-handler="Confirm" style="margin-right: 25px">
                 Confirm transfer
             </button>
 

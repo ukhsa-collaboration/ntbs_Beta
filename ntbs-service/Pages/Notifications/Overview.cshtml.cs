@@ -10,14 +10,14 @@ namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
-        protected IAlertRepository AlertRepository;
+        protected IAlertService _alertService;
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IAlertService alertService) : base(service, authorizationService, notificationRepository)
         {
-            this.AlertRepository = alertRepository;
+            this._alertService = alertService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -30,7 +30,7 @@ namespace ntbs_service.Pages.Notifications
             NotificationId = Notification.NotificationId;
             await GetLinkedNotifications();
             await GetAlertsAsync();
-            if(Alerts.Select(x => x.AlertType == AlertType.TransferRequest) != null)
+            if(Alerts.Any(x => x.AlertType == AlertType.TransferRequest) == true)
             {
                 TransferRequestPending = true;
             }
@@ -59,7 +59,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task GetAlertsAsync()
         {
-            Alerts = await AlertRepository.GetAlertsForNotificationAsync(NotificationId);
+            Alerts = await _alertService.GetAlertsForNotificationAsync(NotificationId, User);
         }
     }
 }

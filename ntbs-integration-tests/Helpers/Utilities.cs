@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ntbs_integration_tests.NotificationPages;
+using ntbs_integration_tests.TransferPage;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -11,6 +12,7 @@ namespace ntbs_integration_tests.Helpers
     public static class Utilities
     {
         public const int ALERT_ID = 1;
+        public const int TRANSFER_ALERT_ID = 2;
         public const int DRAFT_ID = 1;
         public const int NOTIFIED_ID = 2;
         public const int DENOTIFIED_ID = 3;
@@ -82,6 +84,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(TreatmentEventEditPageTests.GetSeedingNotifications());
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
+            context.Alert.AddRange(TransferPageTests.GetSeedingAlerts());
 
             context.SaveChanges();
         }

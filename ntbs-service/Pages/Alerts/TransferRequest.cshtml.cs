@@ -52,12 +52,15 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnGetAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            // TODO authorise for TB service on alert and notification
             await AuthorizeAndSetBannerAsync();
             // Get alert if it exists
-            var alert = await alertRepository.GetAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
+            var alert = await alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
             if (alert != null)
             {
                 TransferAlert = (TransferAlert)alert;
+                // if user has access to tb service on alert
+                // return Partial("_TransferAccept", this)
                 return Partial("_TransferPendingPartial", this);
             }
             else
@@ -89,7 +92,18 @@ namespace ntbs_service.Pages.Alerts
             {
                 return ForbiddenResult();
             }
-            await alertService.AddUniqueAlertAsync(TransferAlert);
+            if(!ModelState.IsValid)
+            {
+                NotificationBannerModel = new NotificationBannerModel(Notification);
+                var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
+                TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
+                var caseManagers = await _referenceDataRepository.GetAllCaseManagers();
+                CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
+                var phecs = await _referenceDataRepository.GetAllPhecs();
+                Phecs = new SelectList(phecs, nameof(PHEC.Code), nameof(PHEC.Name));
+                return Page();
+            }
+            await alertService.AddUniqueOpenAlertAsync(TransferAlert);
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
@@ -97,11 +111,37 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostCancelAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (!(await AuthorizationService.CanEditNotificationAsync(User, Notification)))
+            if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
             {
                 return ForbiddenResult();
             }
+            TransferAlert = (TransferAlert)(await alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest));
             await alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+
+            NotificationBannerModel = new NotificationBannerModel(Notification);
+            return Partial("_CancelTransferConfirmation", this);
+        }
+
+        public async Task<IActionResult> OnPostAcceptAsync()
+        {
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
+            {
+                return ForbiddenResult();
+            }
+            Notification.Episode.CaseManagerEmail = TransferAlert.CaseManagerEmail;
+            Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
+
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
+        }
+
+         public async Task<IActionResult> OnPostDeclineAsync()
+        {
+            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
+            {
+                return ForbiddenResult();
+            }
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
