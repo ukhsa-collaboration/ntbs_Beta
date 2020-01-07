@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -20,7 +20,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         {
         }
 
+        #pragma warning disable 1998
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
+        #pragma warning restore 1998
         {
             if (RowId != null)
             {

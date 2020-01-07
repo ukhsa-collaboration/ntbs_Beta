@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 
@@ -6,7 +6,8 @@ namespace ntbs_service.DataAccess
 {
     public class TestResultRepository : ItemRepository<ManualTestResult>
     {
-        public TestResultRepository(NtbsContext context) : base(context) {}
+        public TestResultRepository(NtbsContext context) : base(context) { }
+
         protected override DbSet<ManualTestResult> GetDbSet()
         {
             return _context.ManualTestResult;

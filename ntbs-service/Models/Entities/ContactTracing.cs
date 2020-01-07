@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ContactTracing : ModelBase
+    public class ContactTracing : ModelBase, IOwnedEntity
     {
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
         public int? AdultsIdentified { get; set; }
@@ -62,5 +63,7 @@ namespace ntbs_service.Models.Entities
             }
             return (x ?? 0) + (y ?? 0);
         }
+
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

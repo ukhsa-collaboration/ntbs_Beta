@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.ReferenceEntities;
@@ -9,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class TravelDetails : ModelBase, ITravelOrVisitorDetails
+    public class TravelDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntity
     {
         private const int MaxTotalLengthOfStay = 24;
 
@@ -82,5 +83,7 @@ namespace ntbs_service.Models.Entities
             Convert.ToInt32(StayLengthInMonths1) +
             Convert.ToInt32(StayLengthInMonths2) +
             Convert.ToInt32(StayLengthInMonths3);
+
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }
