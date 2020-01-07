@@ -1,22 +1,11 @@
-@page "/Notifications/{NotificationId:int}/Edit/Immunosuppression/{handler?}"
-@model ntbs_service.Pages.Notifications.Edit.ImmunosuppressionModel
+﻿@model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
 @using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
-@{
-    Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Immunosuppression";
-    ViewData["CurrentPage"] = NotificationSubPaths.EditImmunosuppression;
-}
-
-<partial name="_SinglePageErrorSummaryPartial" model="@Model"/>
-
 <h2>Immunosuppression</h2>
 
 <div>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
     <validate-immunosuppression inline-template>
         <nhs-fieldset tab-index="" aria-describedby="status-error">
             <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -40,7 +29,7 @@
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
 
                             <nhs-form-group ref="statusFormGroup" nhs-form-group-type="@statusFormGroupType" aria-describedby="status-error" id="ImmunosuppressionDetails-OtherDescription">
-                                <nhs-fieldset aria-describedby="status-error">
+                                <nhs-fieldset aria-describedby="status-error" id="ImmunosuppressionDetails-Status">
                                     <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
                                         Type of immunosuppression
                                     </nhs-fieldset-legend>
@@ -99,5 +88,5 @@
         </nhs-fieldset>
     </validate-immunosuppression>
 
-    
+
 </div>

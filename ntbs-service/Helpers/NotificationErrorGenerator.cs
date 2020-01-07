@@ -54,8 +54,8 @@ namespace ntbs_service.Helpers
                         displayName = "Previous History";
                         break;
                     case "ImmunosuppressionDetails":
-                        subPath = NotificationSubPaths.EditImmunosuppression;
-                        displayName = "Immunosuppression Details";
+                        subPath = NotificationSubPaths.EditComorbidities;
+                        displayName = "Co-morbidities and immunosuppression";
                         break;
                     // Travel Details and Visitor Details are editable on the Travel/visitor history screen
                     // Fall-through is intentional

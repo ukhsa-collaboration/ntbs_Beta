@@ -97,8 +97,8 @@
         #endregion
 
         #region Immunosuppression
-        public const string ImmunosuppressionDetailRequired = "Please supply immunosuppression other details";
-        public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
+        public const string ImmunosuppressionDetailRequired = "Please supply other immunosuppression details";
+        public const string ImmunosuppressionTypeRequired = "At least one immunosuppression type must be selected";
         #endregion
 
         #region Social Context
