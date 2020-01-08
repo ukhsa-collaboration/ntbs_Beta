@@ -17,6 +17,27 @@ namespace ntbs_service.Services
     {
         private readonly string connectionString;
 
+        private readonly string getMatchedSpecimenSqlFunction = @"
+            SELECT NotificationId,
+                ReferenceLaboratoryNumber,
+                SpecimenTypeCode,
+                SpecimenDate,
+                Isoniazid,
+                Rifampicin,
+                Pyrazinamide,
+                Ethambutol,
+                Aminoglycocide,
+                Quinolone,
+                MDR,
+                XDR,
+                Species,
+                PatientNhsNumber,
+                PatientBirthDate,
+                PatientName,
+                PatientSex,
+                PatientAddress
+            FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)";
+
         public SpecimenService(IConfiguration _configuration)
         {
             connectionString = _configuration.GetConnectionString("reporting");
@@ -24,13 +45,10 @@ namespace ntbs_service.Services
 
         public async Task<IEnumerable<Specimen>> GetSpecimenDetailsAsync(int notificationId)
         {
-            string query = "SELECT * FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)";
-
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var rawResult = await connection.QueryAsync<Specimen>(query, new { notificationId });
-                return rawResult;
+                return await connection.QueryAsync<Specimen>(getMatchedSpecimenSqlFunction, new { notificationId });
             }
         }
     }

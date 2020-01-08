@@ -18,7 +18,6 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Specimen Date")]
         public DateTime? SpecimenDate { get; set; }
-        public string LaboratoryName { get; set; }
 
         [Display(Name = "Isoniazid")]
         public string Isoniazid { get; set; }
@@ -44,8 +43,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "XDR")]
         public string XDR { get; set; }
 
-        public string ReferenceLaboratory { get; set; }
-
         [Display(Name = "Species")]
         public string Species { get; set; }
 
@@ -66,6 +63,7 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Postcode")]
         public string PatientPostcode { get; set; }
+
         public string FormattedSpecimenDate => SpecimenDate.ConvertToString();
         public string FormattedPatientDob => PatientBirthDate.ConvertToString();
 

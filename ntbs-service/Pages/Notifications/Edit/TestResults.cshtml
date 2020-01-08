@@ -14,6 +14,10 @@
 
 <h2>Test Results</h2>
 
+            
+<partial name="_LabResults" for="@Model.CultureAndResistance" />
+<partial name="_SpecimenDetails" for="@Model.Specimens" />
+
 <div>
     <input type="hidden" asp-for="TestData.NotificationId">
 
@@ -50,9 +54,6 @@
                     </nhs-fieldset>
                 </nhs-form-group>
             </validate-input>
-            
-            <partial name="_LabResults" for="@Model.CultureAndResistance" />
-            <partial name="_SpecimenDetails" for="@Model.Specimens" />
             
             <div ref="manual-test-results">
                 <h3>Manually-entered test results</h3>

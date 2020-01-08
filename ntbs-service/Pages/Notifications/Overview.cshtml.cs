@@ -18,8 +18,7 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IAlertRepository alertRepository,
             INotificationRepository notificationRepository,
-            ICultureAndResistanceService cultureAndResistanceService)
-            : base(service, authorizationService, notificationRepository)
+            ICultureAndResistanceService cultureAndResistanceService) : base(service, authorizationService, notificationRepository)
         {
             _alertRepository = alertRepository;
             _cultureAndResistanceService = cultureAndResistanceService;
