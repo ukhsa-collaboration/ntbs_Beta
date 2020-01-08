@@ -21,13 +21,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Frequency")]
         public Frequency? Frequency { get; set; }
 
-        [MaxLength(100)]
-        [RegularExpression(
-            ValidationRegexes.CharacterValidation,
-            ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [Display(Name = "Comments")]
-        public string Details { get; set; }
-
         public override bool PostcodeIsRequired => false;
         public override bool DateToIsRequired => false;
 

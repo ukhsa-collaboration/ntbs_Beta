@@ -40,6 +40,12 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "To")]
         public DateTime? DateTo { get ; set; }
 
+        [MaxLength(100)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidation,
+            ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [Display(Name = "Comments")]
+        public string Details { get; set; }
 
         /// <summary>
         /// Used for validation purposes only, requires consumer to populate it.

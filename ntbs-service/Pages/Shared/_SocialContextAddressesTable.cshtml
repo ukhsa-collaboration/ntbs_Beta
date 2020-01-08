@@ -30,6 +30,15 @@
                     <dd class="cell-min-height"> @result.Postcode </dd>
                 </nhs-grid-column>
             </nhs-grid-row>
+            @if (!string.IsNullOrEmpty(result.Details)) 
+            {
+                <nhs-grid-row classes="notification-overview-details">
+                    <nhs-grid-column grid-column-width="Full">
+                        <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
+                        <dd class="cell-min-height"> @result.Details </dd>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+            }
         </dl>
     }
 </div>
