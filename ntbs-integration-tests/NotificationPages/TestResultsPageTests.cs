@@ -32,10 +32,10 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task IfMatchingSpecimenExist_DisplaysSpecimenDetails()
+        public async Task IfMatchingLabResultsDoNotExist_DoNotDisplaysLabResults()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFIED_ID;
+            const int notificationId = Utilities.DRAFT_ID;
 
             // Act
             var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
@@ -43,8 +43,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(document.QuerySelector("div[id='lab-results-summary']"));
-            Assert.NotNull(document.QuerySelector("div[id='specimens-details']"));
+            Assert.Null(document.QuerySelector("div[id='lab-results-summary']"));
+            Assert.Null(document.QuerySelector("div[id='specimens-details']"));
         }
     }
 }
