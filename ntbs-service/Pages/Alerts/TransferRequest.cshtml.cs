@@ -146,18 +146,9 @@ namespace ntbs_service.Pages.Alerts
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
-        public async Task<JsonResult> OnGetGetFilteredListsByPhecAndTbService(string phecCode, string tbServiceCode)
+        public async Task<JsonResult> OnGetGetFilteredTbServiceListsByPhecCode(string value)
         {
-            var filteredTbServices = await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(phecCode);
-            IList<CaseManager> filteredCaseManagers;
-            if(tbServiceCode != null)
-            {
-                filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string>() {tbServiceCode});
-            }
-            else
-            {
-                filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(filteredTbServices.Select(x => x.Code));
-            }
+            var filteredTbServices = await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(value);
 
             return new JsonResult(
                 new FilteredTransferPageSelectLists
@@ -166,10 +157,20 @@ namespace ntbs_service.Pages.Alerts
                     {
                         Value = n.Code.ToString(),
                         Text = n.Name
-                    }),
+                    })
+                });
+        }
+
+        public async Task<JsonResult> OnGetGetFilteredCaseManagersListByTbServiceCode(string value)
+        {
+            var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> {value});
+
+            return new JsonResult(
+                new FilteredTransferPageSelectLists
+                {
                     CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
-                        Value = n.Email,
+                        Value = n.Email.ToString(),
                         Text = n.FullName
                     })
                 });

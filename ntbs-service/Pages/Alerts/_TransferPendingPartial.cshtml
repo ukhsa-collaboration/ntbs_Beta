@@ -22,39 +22,39 @@
 
         <h3> Transfer summary </h3>
 
-        <div style="font-weight: bold"> Transfer sent to: </div>
-        <div style="display: flex">
-            <div style="padding-right: 30px">
-                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" style="font-weight: bold">
+        <div class="bold-text"> Transfer sent to: </div>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
                     PHEC
                 </label>
                 <div>
                     @Model.TransferAlert.TbServiceName
                 </div>
-            </div>
+            </nhs-grid-column>
 
-            <div style="padding-right: 30px">
-                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" style="font-weight: bold">
+            <nhs-grid-column grid-column-width="OneThird">
+                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
                     TB Service
                 </label>
                 <div>
                     @Model.TransferAlert.TbServiceName
                 </div>
-            </div>
+            </nhs-grid-column>
 
-            <div>
-                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" style="font-weight: bold">
+            <nhs-grid-column grid-column-width="OneThird">
+                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
                     Case manager
                 </label>
                 <div>
                     @Model.TransferAlert.CaseManagerFullName
                 </div>
-            </div>
-        </div>
+            </nhs-grid-column>
+        </nhs-grid-row>
 
         <br>
 
-        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" style="font-weight: bold">
+        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
             Reason for transfer
         </label>
         <div>
@@ -63,7 +63,7 @@
 
         <br>
 
-        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" style="font-weight: bold">
+        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
             Additional information sent with transfer
         </label>
         <div>
@@ -72,12 +72,12 @@
 
         <br>
 
-        <div style="display: flex">
+        <div class="flex-container">
             <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)"
-                class="nhsuk-button" style="margin: auto 25px auto 0">
+                class="nhsuk-button pending-transfer-return-link">
                 Return to notification
             </a>
-            <button id="cancel-transfer-button" asp-page-handler="Cancel" class="button-link" style="margin-bottom: 0">
+            <button id="cancel-transfer-button" asp-page-handler="Cancel" class="button-link pending-transfer-cancel-button">
                 Cancel transfer
             </button>
         </div>
