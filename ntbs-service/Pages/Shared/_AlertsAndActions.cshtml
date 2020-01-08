@@ -63,7 +63,7 @@
                 </form>
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
                 {
-                    var transferRequestHref = @RouteHelper.GetAlertPath(Model.NotificationId, AlertSubPaths.TransferRequest);
+                    var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
                     <a id='transfer-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="@transferRequestHref">
                         @if(@Model.TransferRequestPending)
                         {

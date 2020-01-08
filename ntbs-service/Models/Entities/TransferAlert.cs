@@ -24,7 +24,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Optional note")]
         public string TransferRequestNote { get; set; }
         public override string Action => "Transfer request to your TB service";
-        public override string ActionLink => RouteHelper.GetAlertPath(NotificationId.GetValueOrDefault(), AlertSubPaths.TransferRequest);
+        public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.TransferRequest);
 
         public TransferAlert()
         {

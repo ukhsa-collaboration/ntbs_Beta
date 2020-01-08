@@ -1,4 +1,4 @@
-@page "/Alerts/{NotificationId:int}/Transfer/{handler?}"
+@page "/Notifications/{NotificationId:int}/Transfer/{handler?}"
 
 @using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
@@ -29,7 +29,7 @@
                     <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
                         PHEC
                     </label>
-                    <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasPhecCodeError"
+                    <span nhs-span-type="ErrorMessage" id="phec-error" has-error="@hasPhecCodeError"
                             ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
                     <select ref="selectField" nhs-select-type="@phecCodeSelectErrorState"
                             asp-items="Model.Phecs" v-on:change="validate">
@@ -144,7 +144,7 @@
             <label asp-for="TransferAlert.TransferRequestNote" nhs-label-type="Standard">
                 Add optional note to display to receiving case manager
             </label>
-            <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferRequestNote" has-error="@hasRequestNoteError"></span>
+            <span id="optional-note-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferRequestNote" has-error="@hasRequestNoteError"></span>
             <input asp-for="TransferAlert.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="note-error" />
         </nhs-form-group>
 
