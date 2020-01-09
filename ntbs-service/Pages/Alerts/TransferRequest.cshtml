@@ -20,24 +20,18 @@
                 filter-second-handler-path="GetFilteredCaseManagersListByTbServiceCode"
                 :filtering-refs="['tbServices', 'caseManagers']" inline-template>
                 <div>
-                    @{
-                        var hasPhecCodeError = false;
-                        var phecCodeGroupState = hasPhecCodeError ? Error : Standard;
-                        var phecCodeSelectErrorState = hasPhecCodeError ? SelectType.Error : SelectType.Standard;
-                    }
-                    <nhs-form-group nhs-form-group-type="@phecCodeGroupState" id="PhecCodeFilter" ref="firstFilterContainer">
+                    <nhs-form-group nhs-form-group-type="Standard" id="PhecCodeFilter" ref="firstFilterContainer" classes="hidden">
                         <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
                             PHEC
                         </label>
-                        <span nhs-span-type="ErrorMessage" id="phec-error" has-error="@hasPhecCodeError"
-                                ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
-                        <select ref="selectField" nhs-select-type="@phecCodeSelectErrorState"
+                        <select ref="selectField" nhs-select-type="SelectType.Standard"
                                 asp-items="Model.Phecs" v-on:change="firstFilteringChanged">
+                            <option value="" selected>Please select</option>
                         </select>
                     </nhs-form-group>
 
                     @{
-                        var hasTbServiceCodeError = false;
+                        var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferAlert.TbServiceCode");
                         var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
                         var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
                     }
@@ -49,24 +43,25 @@
                                 ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
                         <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferAlert.TbServiceCode"
                                 asp-items="Model.TbServices" v-on:change="secondFilteringChanged">
+                            <option value="" selected>Please select</option>
                         </select>
                     </nhs-form-group>
-                        @{
-                            var hasCaseManagerError = false;
-                            var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
-                            var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
-                        }
-                        <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerEmail" ref="caseManagers">
-                            <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerEmail">
-                                Case manager
-                            </label>
-                            <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
-                                ref="errorField" asp-validation-for="TransferAlert.CaseManagerEmail"></span>
-                            <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferAlert.CaseManagerEmail"
-                                    asp-items="Model.CaseManagers">
-                                <option value="" selected>Please select</option>
-                            </select>
-                        </nhs-form-group>
+                    @{
+                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.TransferReason");
+                        var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
+                        var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerEmail" ref="caseManagers">
+                        <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerEmail">
+                            Case manager
+                        </label>
+                        <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
+                            ref="errorField" asp-validation-for="TransferAlert.CaseManagerEmail"></span>
+                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferAlert.CaseManagerEmail"
+                                asp-items="Model.CaseManagers">
+                            <option value="" selected>Please select</option>
+                        </select>
+                    </nhs-form-group>
                 </div>
             </cascading-dropdown-dropdown>
         </div>
@@ -149,7 +144,7 @@
 
             <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" classes="transfer-request-back-link">
                 Cancel & go back
-                </nhs-back-link>
+            </nhs-back-link>
         </div>
     </form>
 </nhs-width-container>
