@@ -115,10 +115,6 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostCancelAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
-            {
-                return ForbiddenResult();
-            }
             TransferAlert = (TransferAlert)(await alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest));
             await alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
 
@@ -126,29 +122,29 @@ namespace ntbs_service.Pages.Alerts
             return Partial("_CancelTransferConfirmation", this);
         }
 
-        public async Task<IActionResult> OnPostAcceptAsync()
-        {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
-            {
-                return ForbiddenResult();
-            }
-            Notification.Episode.CaseManagerEmail = TransferAlert.CaseManagerEmail;
-            Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
+        // public async Task<IActionResult> OnPostAcceptAsync()
+        // {
+        //     Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+        //     if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
+        //     {
+        //         return ForbiddenResult();
+        //     }
+        //     Notification.Episode.CaseManagerEmail = TransferAlert.CaseManagerEmail;
+        //     Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
 
-            return RedirectToPage("/Notifications/Overview", new { NotificationId });
-        }
+        //     return RedirectToPage("/Notifications/Overview", new { NotificationId });
+        // }
 
-         public async Task<IActionResult> OnPostDeclineAsync()
-        {
-            Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
-            {
-                return ForbiddenResult();
-            }
+        //  public async Task<IActionResult> OnPostDeclineAsync()
+        // {
+        //     Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+        //     if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
+        //     {
+        //         return ForbiddenResult();
+        //     }
 
-            return RedirectToPage("/Notifications/Overview", new { NotificationId });
-        }
+        //     return RedirectToPage("/Notifications/Overview", new { NotificationId });
+        // }
 
         public async Task<JsonResult> OnGetGetFilteredTbServiceListsByPhecCode(string value)
         {
