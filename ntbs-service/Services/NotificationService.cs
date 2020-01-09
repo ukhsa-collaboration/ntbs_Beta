@@ -250,9 +250,9 @@ namespace ntbs_service.Services
         {
             if (immunosuppressionDetails.Status != Status.Yes)
             {
-                immunosuppressionDetails.HasBioTherapy = false;
-                immunosuppressionDetails.HasTransplantation = false;
-                immunosuppressionDetails.HasOther = false;
+                immunosuppressionDetails.HasBioTherapy = null;
+                immunosuppressionDetails.HasTransplantation = null;
+                immunosuppressionDetails.HasOther = null;
                 immunosuppressionDetails.OtherDescription = null;
             }
 

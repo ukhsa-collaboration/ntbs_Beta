@@ -15,7 +15,7 @@
                 <nhs-form-group nhs-form-group-type="Standard">
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input ref="statusYes" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
+                            <input ref="statusYes" asp-for="Status" id="immunosuppression-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
                             <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-yes">
                                 @Status.Yes
                             </label>
@@ -34,19 +34,19 @@
                                         Type of immunosuppression
                                     </nhs-fieldset-legend>
                                     <span ref="statusError" id="status-error" nhs-span-type="ErrorMessage"
-                                          asp-validation-for="@Model.ImmunosuppressionDetails.Status" has-error="@hasStatusError"></span>
+                                          asp-validation-for="ImmunosuppressionDetails.Status" has-error="@hasStatusError"></span>
                                     <div class="nhsuk-checkboxes" data-module="govuk-checkboxes">
                                         <div class="nhsuk-checkboxes__item">
-                                            <input ref="hasBioTherapy" nhs-input-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasBioTherapy" />
-                                            <label nhs-label-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasBioTherapy">Biological Therapy</label>
+                                            <input ref="hasBioTherapy" nhs-input-type="Checkboxes" asp-for="HasBioTherapy" />
+                                            <label nhs-label-type="Checkboxes" asp-for="HasBioTherapy">Biological Therapy</label>
                                         </div>
                                         <div class="nhsuk-checkboxes__item">
-                                            <input ref="hasTransplantation" nhs-input-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasTransplantation" />
-                                            <label nhs-label-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasTransplantation">Transplantation</label>
+                                            <input ref="hasTransplantation" nhs-input-type="Checkboxes" asp-for="HasTransplantation" />
+                                            <label nhs-label-type="Checkboxes" asp-for="HasTransplantation">Transplantation</label>
                                         </div>
                                         <div class="nhsuk-checkboxes__item">
-                                            <input ref="hasOther" nhs-input-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasOther" data-aria-controls="conditional-other-description" />
-                                            <label nhs-label-type="Checkboxes" asp-for="ImmunosuppressionDetails.HasOther">Other</label>
+                                            <input ref="hasOther" nhs-input-type="Checkboxes" asp-for="HasOther" data-aria-controls="conditional-other-description" />
+                                            <label nhs-label-type="Checkboxes" asp-for="HasOther">Other</label>
                                         </div>
 
                                         @{
@@ -55,12 +55,12 @@
                                         }
                                         <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-other-description">
                                             <nhs-form-group ref="descriptionFormGroup" nhs-form-group-type="@descriptionFormGroupType" aria-describedby="description-error">
-                                                <label nhs-label-type="Standard" asp-for="ImmunosuppressionDetails.OtherDescription">
+                                                <label nhs-label-type="Standard" asp-for="OtherDescription">
                                                     Specify Details
                                                 </label>
                                                 <span ref="descriptionError" id="description-error" nhs-span-type="ErrorMessage"
                                                       asp-validation-for="ImmunosuppressionDetails.OtherDescription" has-error="@hasDescriptionError"></span>
-                                                <input ref="otherDescription" asp-for="ImmunosuppressionDetails.OtherDescription"
+                                                <input ref="otherDescription" asp-for="OtherDescription"
                                                        nhs-input-type="Standard" is-error-input="@hasDescriptionError" aria-describedby="description-error" />
                                             </nhs-form-group>
                                         </div>
@@ -70,14 +70,14 @@
                         </div>
 
                         <div class="nhsuk-radios__item">
-                            <input ref="statusNo" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-no" class="nhsuk-radios__input" value="No" type="radio">
+                            <input ref="statusNo" asp-for="Status" id="immunosuppression-no" class="nhsuk-radios__input" value="No" type="radio">
                             <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-no">
                                 @Status.No
                             </label>
                         </div>
 
                         <div class="nhsuk-radios__item">
-                            <input ref="statusUnknown" asp-for="ImmunosuppressionDetails.Status" id="immunosuppression-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
+                            <input ref="statusUnknown" asp-for="Status" id="immunosuppression-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
                             <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-unknown">
                                 @Status.Unknown
                             </label>

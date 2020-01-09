@@ -189,11 +189,11 @@ namespace ntbs_service_unit_tests.Services
 
             Assert.Equal(reference.Status, input.Status);
             Assert.NotEqual(reference.HasBioTherapy, input.HasBioTherapy);
-            Assert.False(input.HasBioTherapy);
+            Assert.Null(input.HasBioTherapy);
             Assert.NotEqual(reference.HasTransplantation, input.HasTransplantation);
-            Assert.False(input.HasTransplantation);
+            Assert.Null(input.HasTransplantation);
             Assert.NotEqual(reference.HasOther, input.HasOther);
-            Assert.False(input.HasOther);
+            Assert.Null(input.HasOther);
             Assert.NotEqual(reference.OtherDescription, input.OtherDescription);
             Assert.Null(input.OtherDescription);
 
