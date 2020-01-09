@@ -1,0 +1,96 @@
+﻿@model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+
+@{
+    var statuses = EnumHelper.GetEnumList<Status>();
+}
+
+<h2>Comorbidities</h2>
+
+<div>
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Diabetes
+            </nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in statuses)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="ComorbidityDetails.DiabetesStatus" id="diabetes-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="diabetes-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Hepatitis B
+            </nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in statuses)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="ComorbidityDetails.HepatitisBStatus" id="hepatitis-b-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="hepatitis-b-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Hepatitis C
+            </nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in statuses)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="ComorbidityDetails.HepatitisCStatus" id="hepatitis-c-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="hepatitis-c-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Chronic Liver Disease
+            </nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in statuses)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="ComorbidityDetails.LiverDiseaseStatus" id="liver-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="liver-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Chronic Renal Disease
+            </nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                @foreach (var status in statuses)
+                {
+                    <nhs-radios-item>
+                        <input nhs-input-type="Radios" asp-for="ComorbidityDetails.RenalDiseaseStatus" id="renal-radio-button-@status" type="radio" value="@status" />
+                        <label nhs-label-type="Radios" for="renal-radio-button-@status">@status</label>
+                    </nhs-radios-item>
+                }
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
+</div>

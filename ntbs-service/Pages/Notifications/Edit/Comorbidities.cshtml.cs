@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -10,6 +12,10 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         [BindProperty]
         public ComorbidityDetails ComorbidityDetails { get; set; }
+
+        [BindProperty]
+        public ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
+
         public ComorbiditiesModel(
             INotificationService service,
             IAuthorizationService authorizationService,
@@ -18,11 +24,19 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             ComorbidityDetails = Notification.ComorbidityDetails;
+            ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
 
             await SetNotificationProperties(isBeingSubmitted, ComorbidityDetails);
+            await SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
+
             if (ComorbidityDetails.ShouldValidateFull)
             {
-                TryValidateModel(ComorbidityDetails, ComorbidityDetails.GetType().Name);
+                TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails));
+            }
+
+            if (ImmunosuppressionDetails.ShouldValidateFull)
+            {
+                TryValidateModel(ImmunosuppressionDetails, nameof(ImmunosuppressionDetails));
             }
 
             return Page();
@@ -30,16 +44,40 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./Immunosuppression", new { NotificationId, isBeingSubmitted });
+            return RedirectToPage("./SocialContextAddresses", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()
         {
             ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
-            if (TryValidateModel(ComorbidityDetails, ComorbidityDetails.GetType().Name))
+            ImmunosuppressionDetails.SetFullValidation(Notification.NotificationStatus);
+
+            if (TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails))
+                && TryValidateModel(ImmunosuppressionDetails, nameof(ImmunosuppressionDetails)))
             {
                 await Service.UpdateComorbidityAsync(Notification, ComorbidityDetails);
+                await Service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
             }
+        }
+
+        public IActionResult OnGetValidateImmunosuppression(
+            string status,
+            bool hasBioTherapy,
+            bool hasTransplantation,
+            bool hasOther,
+            string otherDescription)
+        {
+            var parsedStatus = string.IsNullOrEmpty(status) ? null : (Status?)Enum.Parse(typeof(Status), status);
+            var model = new ImmunosuppressionDetails
+            {
+                Status = parsedStatus,
+                HasBioTherapy = hasBioTherapy,
+                HasTransplantation = hasTransplantation,
+                HasOther = hasOther,
+                OtherDescription = string.IsNullOrEmpty(otherDescription) ? null : otherDescription
+            };
+
+            return ValidationService.GetFullModelValidationResult(model);
         }
     }
 }

@@ -158,7 +158,6 @@ namespace ntbs_integration_tests.NotificationPages
             NotificationSubPaths.EditSocialRiskFactors,
             NotificationSubPaths.EditTravel,
             NotificationSubPaths.EditComorbidities,
-            NotificationSubPaths.EditImmunosuppression,
             NotificationSubPaths.EditPreviousHistory,
             NotificationSubPaths.EditMDRDetails,
             NotificationSubPaths.EditSocialContextVenues,
