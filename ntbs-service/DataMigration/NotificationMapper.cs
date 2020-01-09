@@ -181,7 +181,7 @@ namespace ntbs_service.DataMigration
             NhsNumber = notification.NhsNumber,
             Dob = notification.DateOfBirth,
             YearOfUkEntry = notification.UkEntryYear,
-            UkBorn = StringToValueConverter.GetNullableBoolValue(notification.UkBorn),
+            UkBorn = notification.UkBorn,
             CountryId = notification.BirthCountryId,
             LocalPatientId = notification.LocalPatientId,
             Postcode = notification.Postcode,
