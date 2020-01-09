@@ -1,10 +1,13 @@
 ﻿using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.MockService;
 using ntbs_service.DataAccess;
+using ntbs_service.Services;
 
 namespace ntbs_integration_tests
 {
@@ -20,13 +23,13 @@ namespace ntbs_integration_tests
                     .AddEntityFrameworkInMemoryDatabase()
                     .BuildServiceProvider();
 
-                services.AddDbContext<NtbsContext>(options => 
+                services.AddDbContext<NtbsContext>(options =>
                 {
                     options.UseInMemoryDatabase("Ntbs_Test_Db");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
-                 services.AddDbContext<AuditDatabaseContext>(options => 
+                services.AddDbContext<AuditDatabaseContext>(options =>
                 {
                     options.UseInMemoryDatabase("Ntbs_Audit_Test_Db");
                     options.UseInternalServiceProvider(serviceProvider);
@@ -42,6 +45,12 @@ namespace ntbs_integration_tests
                     db.Database.EnsureCreated();
                     Utilities.SeedDatabase(db);
                 }
+            });
+
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddScoped<ICultureAndResistanceService, MockCultureAndResistanceService>();
+                services.AddScoped<ISpecimenService, MockSpecimenService>();
             });
         }
     }

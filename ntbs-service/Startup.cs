@@ -161,6 +161,8 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
+            services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
+            services.AddScoped<ISpecimenService, SpecimenService>();
 
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
