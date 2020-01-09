@@ -161,6 +161,12 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
+            services.Configure<AdfsOptions>(adfsConfig);
+            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
+            services.Configure<AdfsOptions>(adfsConfig);
+            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
+            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
+
             var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
             if (referenceLabResultsConfig.GetValue<bool>("MockOutSpecimenMatching"))
             {
@@ -175,9 +181,6 @@ namespace ntbs_service
                 services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
                 services.AddScoped<ISpecimenService, SpecimenService>();
             }
-            services.Configure<AdfsOptions>(adfsConfig);
-            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
-            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -188,7 +191,8 @@ namespace ntbs_service
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                    HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
+                    HotModuleReplacement = true,
+                    ConfigFile = "webpack.dev.js"
                 });
             }
             else
@@ -241,11 +245,11 @@ namespace ntbs_service
 
             var dashboardOptions = new DashboardOptions
             {
-                Authorization = new[] {new HangfireAuthorisationFilter(GetAdminRoleName())}
+                Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
             };
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
-            app.UseHangfireServer(new BackgroundJobServerOptions {WorkerCount = 1});
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
+            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
             HangfireJobScheduler.ScheduleRecurringJobs();
         }
 

@@ -10,6 +10,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.DataMigration;
 
 namespace ntbs_service.Services
 {
@@ -27,10 +28,10 @@ namespace ntbs_service.Services
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             WHERE NOT EXISTS (SELECT *
-              FROM ImportedNotifications impNtfc
+              FROM {0} impNtfc
               WHERE impNtfc.LegacyId = n.OldNotificationId)
             ";
-            
+
         const string SelectQueryEnd = @"
             ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
@@ -41,20 +42,24 @@ namespace ntbs_service.Services
             FROM Notifications n
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             WHERE NOT EXISTS (SELECT *
-              FROM ImportedNotifications impNtfc
+              FROM {0} impNtfc
               WHERE impNtfc.LegacyId = n.OldNotificationId)
             ";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly INotificationImportHelper _notificationImportHelper;
         private readonly bool LegacySearchEnabled;
         public IList<Sex> Sexes;
 
-        public LegacySearchService(IConfiguration configuration, IReferenceDataRepository referenceDataRepository)
+        public LegacySearchService(IConfiguration configuration,
+                                    IReferenceDataRepository referenceDataRepository,
+                                    INotificationImportHelper notificationImportHelper)
         {
             LegacySearchEnabled = configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE);
             connectionString = configuration.GetConnectionString("migration");
             _referenceDataRepository = referenceDataRepository;
+            _notificationImportHelper = notificationImportHelper;
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
         }
 
@@ -62,7 +67,7 @@ namespace ntbs_service.Services
         {
             if (!LegacySearchEnabled)
             {
-                return (new List<NotificationBannerModel> {}, 0);
+                return (new List<NotificationBannerModel> { }, 0);
             }
 
             IEnumerable<dynamic> results;
@@ -70,10 +75,10 @@ namespace ntbs_service.Services
             var (sqlQuery, parameters) = builder.GetResult();
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
-            
-            string fullSelectQuery = SelectQueryStart + sqlQuery + SelectQueryEnd;
-            string fullCountQuery = CountQuery + sqlQuery;
-            
+
+            string fullSelectQuery = string.Format(SelectQueryStart, _notificationImportHelper.GetImportedNotificationsTableName()) + sqlQuery + SelectQueryEnd;
+            string fullCountQuery = string.Format(CountQuery, _notificationImportHelper.GetImportedNotificationsTableName()) + sqlQuery;
+
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -81,7 +86,7 @@ namespace ntbs_service.Services
                 results = await connection.QueryAsync(fullSelectQuery, (object)parameters);
                 count = (await connection.QueryAsync<int>(fullCountQuery, (object)parameters)).Single();
             }
-            
+
             var notificationBannerModels = results.Select(r => (NotificationBannerModel)AsNotificationBannerAsync(r).Result);
             return (notificationBannerModels, count);
         }
@@ -89,9 +94,9 @@ namespace ntbs_service.Services
         private async Task<NotificationBannerModel> AsNotificationBannerAsync(dynamic result)
         {
             TBService tbService = null;
-            if(result.NtbsHospitalId is Guid guid)
+            if (result.NtbsHospitalId is Guid guid)
             {
-                tbService = await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid); 
+                tbService = await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid);
             }
             var notificationBannerModel = new NotificationBannerModel
             {
@@ -111,7 +116,7 @@ namespace ntbs_service.Services
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
                 FullAccess = true
             };
-            
+
             return notificationBannerModel;
         }
     }

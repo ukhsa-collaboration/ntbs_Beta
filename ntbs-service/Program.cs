@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration;
 using Serilog;
 using Serilog.Events;
 
@@ -12,7 +14,7 @@ namespace ntbs_service
 {
     public class Program
     {
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             SetUpLogger();
             try
@@ -25,6 +27,7 @@ namespace ntbs_service
                     var services = scope.ServiceProvider;
                     MigrateAppDb(services);
                     MigrateAuditDb(services);
+                    await CreateMigrationDbTablesAsync(services);
                 }
 
                 Log.Information("Starting web host");
@@ -40,6 +43,12 @@ namespace ntbs_service
             {
                 Log.CloseAndFlush();
             }
+        }
+
+        private static async Task CreateMigrationDbTablesAsync(IServiceProvider services)
+        {
+            var _notificationImportHelper = services.GetRequiredService<INotificationImportHelper>();
+            await _notificationImportHelper.CreateTableIfNotExists();
         }
 
         private static void SetUpLogger()
