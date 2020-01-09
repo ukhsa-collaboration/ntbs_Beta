@@ -24,7 +24,7 @@
                         <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
                             PHEC
                         </label>
-                        <select ref="selectField" nhs-select-type="SelectType.Standard"
+                        <select ref="selectField" nhs-select-type="@SelectType.Standard"
                                 asp-items="Model.Phecs" v-on:change="firstFilteringChanged">
                             <option value="" selected>Please select</option>
                         </select>
