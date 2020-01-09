@@ -50,14 +50,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
-            if (TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails)))
+            ImmunosuppressionDetails.SetFullValidation(Notification.NotificationStatus);
+
+            if (TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails))
+                && TryValidateModel(ImmunosuppressionDetails, nameof(ImmunosuppressionDetails)))
             {
                 await Service.UpdateComorbidityAsync(Notification, ComorbidityDetails);
-            }
-
-            ImmunosuppressionDetails.SetFullValidation(Notification.NotificationStatus);
-            if (TryValidateModel(ImmunosuppressionDetails, nameof(ImmunosuppressionDetails)))
-            {
                 await Service.UpdateImmunosuppresionDetailsAsync(Notification, ImmunosuppressionDetails);
             }
         }
