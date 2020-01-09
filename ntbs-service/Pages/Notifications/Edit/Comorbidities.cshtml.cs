@@ -14,7 +14,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ComorbidityDetails ComorbidityDetails { get; set; }
 
         [BindProperty]
-        public Status? Status { get; set; }
+        public Status? ImmunosuppressionStatus { get; set; }
 
         [BindProperty]
         public bool HasBioTherapy { get; set; }
@@ -39,7 +39,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             ComorbidityDetails = Notification.ComorbidityDetails;
             ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
 
-            Status = ImmunosuppressionDetails.Status;
+            ImmunosuppressionStatus = ImmunosuppressionDetails.Status;
             HasBioTherapy = ImmunosuppressionDetails.HasBioTherapy == true;
             HasTransplantation = ImmunosuppressionDetails.HasTransplantation == true;
             HasOther = ImmunosuppressionDetails.HasOther == true;
@@ -71,7 +71,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
 
             ImmunosuppressionDetails = new ImmunosuppressionDetails {
-                Status = Status,
+                Status = ImmunosuppressionStatus,
                 HasBioTherapy = HasBioTherapy,
                 HasTransplantation = HasTransplantation,
                 HasOther = HasOther,
@@ -89,13 +89,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         }
 
         public IActionResult OnGetValidateImmunosuppression(
-            string status,
+            string immunosuppressionStatus,
             bool hasBioTherapy,
             bool hasTransplantation,
             bool hasOther,
             string otherDescription)
         {
-            var parsedStatus = string.IsNullOrEmpty(status) ? null : (Status?)Enum.Parse(typeof(Status), status);
+            var parsedStatus = string.IsNullOrEmpty(immunosuppressionStatus) ? null : (Status?)Enum.Parse(typeof(Status), immunosuppressionStatus);
             var model = new ImmunosuppressionDetails
             {
                 Status = parsedStatus,

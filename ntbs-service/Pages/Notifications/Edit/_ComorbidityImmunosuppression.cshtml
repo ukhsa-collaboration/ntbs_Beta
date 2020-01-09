@@ -15,7 +15,7 @@
                 <nhs-form-group nhs-form-group-type="Standard">
                     <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input ref="statusYes" asp-for="Status" id="immunosuppression-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
+                            <input ref="statusYes" asp-for="ImmunosuppressionStatus" id="immunosuppression-yes" class="nhsuk-radios__input" value="Yes" type="radio" data-aria-controls="conditional-radio">
                             <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-yes">
                                 @Status.Yes
                             </label>
@@ -70,14 +70,14 @@
                         </div>
 
                         <div class="nhsuk-radios__item">
-                            <input ref="statusNo" asp-for="Status" id="immunosuppression-no" class="nhsuk-radios__input" value="No" type="radio">
+                            <input ref="statusNo" asp-for="ImmunosuppressionStatus" id="immunosuppression-no" class="nhsuk-radios__input" value="No" type="radio">
                             <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-no">
                                 @Status.No
                             </label>
                         </div>
 
                         <div class="nhsuk-radios__item">
-                            <input ref="statusUnknown" asp-for="Status" id="immunosuppression-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
+                            <input ref="statusUnknown" asp-for="ImmunosuppressionStatus" id="immunosuppression-unknown" class="nhsuk-radios__input" value="Unknown" type="radio">
                             <label class="nhsuk-label nhsuk-radios__label" for="immunosuppression-unknown">
                                 @Status.Unknown
                             </label>

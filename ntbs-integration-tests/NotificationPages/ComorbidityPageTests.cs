@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["Status"] = "Yes",
+                ["ImmunosuppressionStatus"] = "Yes",
             };
 
             // Act
@@ -88,7 +88,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["Status"] = "Yes",
+                ["ImmunosuppressionStatus"] = "Yes",
                 ["HasOther"] = "True",
             };
 
@@ -117,7 +117,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["Status"] = "Yes",
+                ["ImmunosuppressionStatus"] = "Yes",
                 ["HasOther"] = "True",
                 ["OtherDescription"] = description,
             };
@@ -147,7 +147,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var formData = new Dictionary<string, string>
             {
-                ["status"] = status,
+                ["immunosuppressionStatus"] = status,
                 ["hasOther"] = isOther,
                 ["otherDescription"] = description
             };
