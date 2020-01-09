@@ -28,7 +28,7 @@ namespace EFAuditer
 
                 if (user != null)
                 {
-                    var userName = user?.FindFirstValue(ClaimTypes.Email);
+                    var userName = user.FindFirstValue(ClaimTypes.Email);
                     // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
                     if (string.IsNullOrEmpty(userName)) userName = user.Identity.Name;
                     scope.SetCustomField(CustomFields.AppUser, userName);
@@ -41,20 +41,31 @@ namespace EFAuditer
                 .UseEntityFramework(ef => ef
                     .UseDbContext<AuditDatabaseContext>(contextOptions)
                     .AuditTypeMapper(t => typeof(AuditLog))
-                    .AuditEntityAction<AuditLog>(auditAction)
-                    .IgnoreMatchedProperties(true)
+                    .AuditEntityAction(auditAction)
+                    .IgnoreMatchedProperties()
                 );
         }
 
-        public static void AuditAction(AuditEvent ev, Audit.EntityFramework.EventEntry entry, AuditLog audit)
+        public static void AuditAction(AuditEvent ev, EventEntry entry, AuditLog audit)
         {
-            audit.AuditData = JsonConvert.SerializeObject(entry.Changes, Audit.Core.Configuration.JsonSettings);
             audit.OriginalId = entry.PrimaryKey.First().Value.ToString();
             audit.EntityType = entry.EntityType.Name;
             audit.EventType = entry.Action;
             audit.AuditDetails = GetCustomKey(ev, CustomFields.AuditDetails);
             audit.AuditDateTime = DateTime.Now;
             audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
+
+            switch (audit.EventType)
+            {
+                case "Insert":
+                    audit.AuditData =
+                        JsonConvert.SerializeObject(entry.ColumnValues, Audit.Core.Configuration.JsonSettings);
+                    break;
+                case "Update":
+                    audit.AuditData =
+                        JsonConvert.SerializeObject(entry.Changes, Audit.Core.Configuration.JsonSettings);
+                    break;
+            }
 
             switch (entry.Entity)
             {
@@ -75,7 +86,7 @@ namespace EFAuditer
             {
                 return ev.CustomFields[key]?.ToString();
             }
-            
+
             return null;
         }
     }

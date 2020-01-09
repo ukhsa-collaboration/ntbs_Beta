@@ -11,37 +11,45 @@ namespace EFAuditer
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
         public async Task AuditOperationAsync(
-            int primaryKeyId,
+            string key,
             string entity,
             string details,
             string eventType,
-            string userName)
+            string userName,
+            string rootEntity = null,
+            string rootId = null)
         {
             var log = CreateAuditLog(
-                primaryKeyId,
+                key,
                 entity,
                 details,
                 eventType,
-                userName);
+                userName,
+                rootEntity,
+                rootId);
             AuditLogs.Add(log);
             await SaveChangesAsync();
         }
 
         private static AuditLog CreateAuditLog(
-            int primaryKeyId,
+            string key,
             string entity,
             string details,
             string eventType,
-            string userName)
+            string userName,
+            string rootEntity,
+            string rootId)
         {
-            return new AuditLog()
+            return new AuditLog
             {
-                OriginalId = primaryKeyId.ToString(),
+                OriginalId = key,
                 EntityType = entity,
                 EventType = eventType,
                 AuditDateTime = DateTime.Now,
                 AuditUser = userName,
-                AuditDetails = details
+                AuditDetails = details,
+                RootEntity = rootEntity,
+                RootId = rootId
             };
         }
     }
