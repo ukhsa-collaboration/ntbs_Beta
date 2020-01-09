@@ -56,7 +56,7 @@ namespace ntbs_service.DataMigration
             var notifications = notificationsRaw.Join(notificationSiteGroups,
                 n => n.OldNotificationId,
                 nsGroup => nsGroup.Key,
-                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.DiseaseSiteId != null)));
+                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.SiteId != null)));
 
             var notificationGroups = notifications.GroupBy(x => x.rawNotification.GroupId);
 
