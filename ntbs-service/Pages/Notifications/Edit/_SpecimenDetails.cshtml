@@ -98,6 +98,12 @@
                         </nhs-grid-column>
                     </nhs-grid-row>                
                 </div>
+                <button nhs-button-type="Standard"
+                    classes="ntbsuk-button--secondary unmatch-button" 
+                    asp-page-handler="Unmatch" 
+                    asp-route-labReferenceNumber="@specimen.ReferenceLaboratoryNumber">
+                        Unmatch
+                </button>
             </div>
         }
     </div>
