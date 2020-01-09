@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.Models.Enums;
 
@@ -6,23 +6,31 @@ namespace ntbs_service.Services
 {
     public interface IAuditService
     {
-        Task OnGetAuditAsync(int notificationId, string model, NotificationAuditType auditDetails, string userName);
+        Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails, string userName);
     }
 
     public class AuditService : IAuditService
     {
-        private readonly AuditDatabaseContext auditContext;
+        private readonly AuditDatabaseContext _auditContext;
 
         private const string READ_EVENT = "Read";
 
         public AuditService(AuditDatabaseContext auditContext)
         {
-            this.auditContext = auditContext;
+            _auditContext = auditContext;
         }
-        
-        public async Task OnGetAuditAsync(int notificationId, string model, NotificationAuditType auditDetails, string userName)
+
+        public async Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails, string userName)
         {
-            await auditContext.AuditOperationAsync(notificationId, model, auditDetails.ToString(), READ_EVENT, userName);
+            var notificationIdString = notificationId.ToString();
+            await _auditContext.AuditOperationAsync(
+                notificationIdString,
+                RootEntities.Notification,
+                auditDetails.ToString(),
+                READ_EVENT,
+                userName,
+                RootEntities.Notification,
+                notificationIdString);
         }
     }
 }

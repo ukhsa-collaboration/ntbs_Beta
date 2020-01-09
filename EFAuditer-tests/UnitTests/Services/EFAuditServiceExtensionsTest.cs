@@ -63,6 +63,11 @@ namespace EFAuditer_tests.UnitTests.Services
                     {
                         ColumnName = "Test2", NewValue = "Value3", OriginalValue = "Value2"
                     }
+                },
+                ColumnValues = new Dictionary<string, object>
+                {
+                    { "Column1", "Value1" },
+                    { "Column2", "Value2" }
                 }
             };
             AuditLog audit = new AuditLog();
@@ -74,10 +79,72 @@ namespace EFAuditer_tests.UnitTests.Services
             Assert.Equal("123", audit.OriginalId);
             Assert.Equal("Entity", audit.EntityType);
             Assert.Equal("Update", audit.EventType);
-            const string expectedInsertChangesJson = @"{""ColumnName"":""Test1"",""NewValue"":""Value1""}";
+
+            const string expectedFromNullChangesJson = @"{""ColumnName"":""Test1"",""NewValue"":""Value1""}";
             const string expectedUpdateChangesJson = @"{""ColumnName"":""Test2"",""OriginalValue"":""Value2"",""NewValue"":""Value3""}";
-            Assert.Contains(expectedInsertChangesJson, audit.AuditData);
+            Assert.Contains(expectedFromNullChangesJson, audit.AuditData);
             Assert.Contains(expectedUpdateChangesJson, audit.AuditData);
+            const string notExpectedColumnValuesJson = @"{""Column1"":""Value1"",""Column2"":""Value2""}";
+            Assert.DoesNotContain(notExpectedColumnValuesJson, audit.AuditData);
+
+            // Close enough when not injecting time services into the class
+            Assert.InRange(audit.AuditDateTime, DateTime.Now.AddMinutes(-1), DateTime.Now);
+            Assert.Equal("Env user", audit.AuditUser);
+            Assert.Null(audit.AuditDetails);
+        }
+
+        [Fact]
+        public void AuditAction_SetsInsertValuesCorrectly()
+        {
+            // Arrange
+            var ev = new AuditEvent
+            {
+                Environment = new AuditEventEnvironment()
+                {
+                    UserName = "Env user"
+                },
+                CustomFields = new Dictionary<string, object> { }
+            };
+            var entry = new EventEntry
+            {
+                PrimaryKey = new Dictionary<string, object> { { "EntityId", "123" } },
+                EntityType = typeof(Entity),
+                Action = "Insert",
+                Table = "EntityTable",
+                Changes = new List<EventEntryChange>
+                {
+                    new EventEntryChange
+                    {
+                        ColumnName = "Test1", NewValue = "Value1"
+                    },
+                    new EventEntryChange
+                    {
+                        ColumnName = "Test2", NewValue = "Value3", OriginalValue = "Value2"
+                    }
+                },
+                ColumnValues = new Dictionary<string, object>
+                {
+                    { "Column1", "Value1" },
+                    { "Column2", "Value2" }
+                }
+            };
+            AuditLog audit = new AuditLog();
+
+            // Act
+            EFAuditServiceExtensions.AuditAction(ev, entry, audit);
+
+            // Assert
+            Assert.Equal("123", audit.OriginalId);
+            Assert.Equal("Entity", audit.EntityType);
+            Assert.Equal("Insert", audit.EventType);
+
+            const string notExpectedFromNullChangesJson = @"{""ColumnName"":""Test1"",""NewValue"":""Value1""}";
+            const string notExpectedUpdateChangesJson = @"{""ColumnName"":""Test2"",""OriginalValue"":""Value2"",""NewValue"":""Value3""}";
+            Assert.DoesNotContain(notExpectedFromNullChangesJson, audit.AuditData);
+            Assert.DoesNotContain(notExpectedUpdateChangesJson, audit.AuditData);
+            const string expectedColumnValuesJson = @"{""Column1"":""Value1"",""Column2"":""Value2""}";
+            Assert.Contains(expectedColumnValuesJson, audit.AuditData);
+
             // Close enough when not injecting time services into the class
             Assert.InRange(audit.AuditDateTime, DateTime.Now.AddMinutes(-1), DateTime.Now);
             Assert.Equal("Env user", audit.AuditUser);

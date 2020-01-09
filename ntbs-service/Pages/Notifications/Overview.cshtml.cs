@@ -32,7 +32,6 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
             NotificationId = Notification.NotificationId;
-            CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
 
             await GetLinkedNotifications();
             await GetAlertsAsync();
@@ -48,6 +47,7 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectToPage("./Edit/PatientDetails", new { NotificationId });
             }
 
+            CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
             return Page();
         }
 
