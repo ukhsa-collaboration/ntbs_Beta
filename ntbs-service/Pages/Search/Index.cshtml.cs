@@ -21,6 +21,7 @@ namespace ntbs_service.Pages.Search
         private readonly ISearchService _searchService;
         private readonly IAuthorizationService _authorizationService;
         private readonly ILegacySearchService _legacySearchService;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
         public ValidationService ValidationService;
 
@@ -48,6 +49,7 @@ namespace ntbs_service.Pages.Search
             _searchService = searchService;
             _notificationRepository = notificationRepository;
             _legacySearchService = legacySearchService;
+            _referenceDataRepository = referenceDataRepository;
 
             ValidationService = new ValidationService(this);
 
@@ -85,7 +87,7 @@ namespace ntbs_service.Pages.Search
 
             var ntbsFilteredDraftsBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(draftsQueryable));
             var ntbsFilteredNonDraftsBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(nonDraftsQueryable));
-            var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder());
+            var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder(_referenceDataRepository));
 
             var (notificationsToDisplay, count) = await SearchAsync(ntbsFilteredDraftsBuilder, ntbsFilteredNonDraftsBuilder, legacyFilteredSearchBuilder);
             var authorisedNotificationsToDisplay = _authorizationService.SetFullAccessOnNotificationBanners(notificationsToDisplay, User);
