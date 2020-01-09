@@ -51,7 +51,7 @@ const CascadingDropdown = Vue.extend({
         },
         fetchFilteredList: function (value: string, path: string) {
             const requestConfig = {
-                url: `${window.location.pathname}${path}`,
+                url: `${window.location.pathname}/${path}`,
                 headers: getHeaders(),
                 params: {
                     "value": value

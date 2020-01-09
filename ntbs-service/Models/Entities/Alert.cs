@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "TB Service")]
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
-        // [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
+        [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
         public string CaseManagerEmail { get; set; }
         public virtual CaseManager CaseManager { get; set; }

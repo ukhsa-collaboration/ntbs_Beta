@@ -47,7 +47,7 @@
                         </select>
                     </nhs-form-group>
                     @{
-                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.TransferReason");
+                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.CaseManagerEmail");
                         var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                         var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                     }

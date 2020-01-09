@@ -40,9 +40,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             IUserService userService,
             NtbsContext context) : base(notificationService, authorizationService, notificationRepository)
         {
-            this._context = context;
-            this._userService = userService;
-            this._referenceDataRepository = referenceDataRepository;
+            _context = context;
+            _userService = userService;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         protected override Task<Notification> GetNotificationAsync(int notificationId)

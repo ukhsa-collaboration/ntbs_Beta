@@ -76,8 +76,6 @@ namespace ntbs_integration_tests.TransferPage
 
             // Assert
             result.AssertRedirectTo("/Notifications/4");
-            // var overviewPage = await GetDocumentForUrl(GetRedirectLocation(result));
-            // Assert.Single(overviewPage.QuerySelectorAll(".overview-alert"));
         }
 
         [Fact]

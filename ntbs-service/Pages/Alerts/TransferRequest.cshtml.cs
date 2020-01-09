@@ -76,10 +76,9 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (!(await AuthorizationService.CanEditNotificationAsync(User, Notification)))
-            {
-                return ForbiddenResult();
-            }
+            await GetRelatedEntities();
+            ModelState.Clear();
+            TryValidateModel(TransferAlert, nameof(TransferAlert));
             if(!ModelState.IsValid)
             {
                 await SetDropdownsAsync();
@@ -91,7 +90,19 @@ namespace ntbs_service.Pages.Alerts
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
-        public async Task SetDropdownsAsync()
+        private async Task GetRelatedEntities()
+        {
+            if (TransferAlert.TbServiceCode != null)
+            {
+                TransferAlert.TbService = await _referenceDataRepository.GetTbServiceByCodeAsync(TransferAlert.TbServiceCode);
+            }
+            if (TransferAlert.CaseManagerEmail != null)
+            {
+                TransferAlert.CaseManager = await _referenceDataRepository.GetCaseManagerByEmailAsync(TransferAlert.CaseManagerEmail);
+            }
+        }
+
+        private async Task SetDropdownsAsync()
         {
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
