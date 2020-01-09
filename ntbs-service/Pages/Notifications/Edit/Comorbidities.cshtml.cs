@@ -14,6 +14,19 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ComorbidityDetails ComorbidityDetails { get; set; }
 
         [BindProperty]
+        public Status? Status { get; set; }
+
+        [BindProperty]
+        public bool HasBioTherapy { get; set; }
+        [BindProperty]
+        public bool HasTransplantation { get; set; }
+        [BindProperty]
+        public bool HasOther { get; set; }
+
+        [BindProperty]
+        public string OtherDescription { get; set; }
+
+        
         public ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }
 
         public ComorbiditiesModel(
@@ -25,6 +38,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             ComorbidityDetails = Notification.ComorbidityDetails;
             ImmunosuppressionDetails = Notification.ImmunosuppressionDetails;
+
+            Status = ImmunosuppressionDetails.Status;
+            HasBioTherapy = ImmunosuppressionDetails.HasBioTherapy == true;
+            HasTransplantation = ImmunosuppressionDetails.HasTransplantation == true;
+            HasOther = ImmunosuppressionDetails.HasOther == true;
+            OtherDescription = ImmunosuppressionDetails.OtherDescription;
 
             await SetNotificationProperties(isBeingSubmitted, ComorbidityDetails);
             await SetNotificationProperties(isBeingSubmitted, ImmunosuppressionDetails);
@@ -50,6 +69,15 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
+
+            ImmunosuppressionDetails = new ImmunosuppressionDetails {
+                Status = Status,
+                HasBioTherapy = HasBioTherapy,
+                HasTransplantation = HasTransplantation,
+                HasOther = HasOther,
+                OtherDescription = OtherDescription,
+            };
+
             ImmunosuppressionDetails.SetFullValidation(Notification.NotificationStatus);
 
             if (TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails))

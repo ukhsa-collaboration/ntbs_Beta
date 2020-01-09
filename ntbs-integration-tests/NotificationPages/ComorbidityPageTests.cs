@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["ImmunosuppressionDetails.Status"] = "Yes",
+                ["Status"] = "Yes",
             };
 
             // Act
@@ -88,8 +88,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["ImmunosuppressionDetails.Status"] = "Yes",
-                ["ImmunosuppressionDetails.HasOther"] = "True",
+                ["Status"] = "Yes",
+                ["HasOther"] = "True",
             };
 
             // Act
@@ -117,9 +117,9 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["ImmunosuppressionDetails.Status"] = "Yes",
-                ["ImmunosuppressionDetails.HasOther"] = "True",
-                ["ImmunosuppressionDetails.OtherDescription"] = description,
+                ["Status"] = "Yes",
+                ["HasOther"] = "True",
+                ["OtherDescription"] = description,
             };
 
             // Act
@@ -132,8 +132,8 @@ namespace ntbs_integration_tests.NotificationPages
             var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("immunosuppression-yes")).IsChecked);
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_HasOther")).IsChecked);
-            Assert.Equal(description, ((IHtmlInputElement)reloadedDocument.GetElementById("ImmunosuppressionDetails_OtherDescription")).Value);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("HasOther")).IsChecked);
+            Assert.Equal(description, ((IHtmlInputElement)reloadedDocument.GetElementById("OtherDescription")).Value);
         }
 
         [Theory]
