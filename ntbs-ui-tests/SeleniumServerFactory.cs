@@ -50,10 +50,10 @@ namespace ntbs_ui_tests
                 });
 
                 services.AddDbContext<AuditDatabaseContext>(options =>
-               {
-                   options.UseInMemoryDatabase("Ntbs_UI_Audit_Test_Db");
-                   options.UseInternalServiceProvider(serviceProvider);
-               });
+                {
+                    options.UseInMemoryDatabase("Ntbs_UI_Audit_Test_Db");
+                    options.UseInternalServiceProvider(serviceProvider);
+                });
 
                 var sp = services.BuildServiceProvider();
 
@@ -73,7 +73,9 @@ namespace ntbs_ui_tests
                 services.AddScoped<ICultureAndResistanceService>(
                     sp => new MockCultureAndResistanceService(Utilities.NOTIFIED_ID));
                 services.AddScoped<ISpecimenService>(
-                    sp => new MockSpecimenService(Utilities.NOTIFIED_ID));
+                    sp => new MockSpecimenService(
+                        Utilities.NOTIFIED_ID,
+                        Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID));
             });
         }
 

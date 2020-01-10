@@ -49,6 +49,8 @@ spec:
               value: "true"
             - name: ReferenceLabResultsConfig__MockedNotificationId
               value: "1"
+            - name: ReferenceLabResultsConfig__MockedTbServiceCode
+              value: "TBS0001"
       imagePullSecrets:
         - name: registery-password
 ---

@@ -51,7 +51,9 @@ namespace ntbs_integration_tests
                 services.AddScoped<ICultureAndResistanceService>(
                     sp => new MockCultureAndResistanceService(Utilities.NOTIFIED_ID));
                 services.AddScoped<ISpecimenService>(
-                    sp => new MockSpecimenService(Utilities.NOTIFIED_ID));
+                    sp => new MockSpecimenService(
+                        Utilities.NOTIFIED_ID,
+                        Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID));
             });
         }
     }
