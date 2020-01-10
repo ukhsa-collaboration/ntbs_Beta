@@ -18,6 +18,9 @@ namespace ntbs_service.DataMigration
     {
         private readonly string connectionString;
         private readonly string importedNotificationsTableName;
+
+        // Dapper does not support dynamic table names as parameters therefore we are using string format
+        // This is relatively safe as the parameter is passed from environment variable rather that user input
         private readonly string createImportedNotificationsTableQuery = @"
             IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}'))
             CREATE TABLE {0} (
