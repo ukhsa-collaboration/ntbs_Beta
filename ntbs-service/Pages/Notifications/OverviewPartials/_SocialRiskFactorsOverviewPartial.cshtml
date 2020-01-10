@@ -72,4 +72,20 @@
             <div> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
         </nhs-grid-column>
     </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Asylum Seeker </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.AsylumSeekerStatus </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Immigration Detainee </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div> @Model.Notification.SocialRiskFactors.ImmigrationDetaineeStatus </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
 </div>
