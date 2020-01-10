@@ -20,11 +20,11 @@ namespace ntbs_service.Pages.Migration
     [Authorize(Policy = "AdminOnly")]
     public class IndexModel : PageModel
     {
-        private readonly MigrationConfig Config;
+        private readonly MigrationConfig _config;
 
         public IndexModel(IOptions<MigrationConfig> config)
         {
-            Config = config.Value;
+            _config = config.Value;
             ValidationService = new ValidationService(this);
         }
 
@@ -79,10 +79,10 @@ namespace ntbs_service.Pages.Migration
 
                 for (var dateRangeStart = (DateTime)notificationDateRangeStart;
                     dateRangeStart <= rangeEnd;
-                    dateRangeStart = dateRangeStart.AddMonths(Config.DateRangeJobIntervalInMonths))
+                    dateRangeStart = dateRangeStart.AddMonths(_config.DateRangeJobIntervalInMonths))
                 {
                     var start = dateRangeStart;
-                    var end = dateRangeStart.AddMonths(Config.DateRangeJobIntervalInMonths);
+                    var end = dateRangeStart.AddMonths(_config.DateRangeJobIntervalInMonths);
                     if (end > rangeEnd)
                     {
                         end = rangeEnd;
