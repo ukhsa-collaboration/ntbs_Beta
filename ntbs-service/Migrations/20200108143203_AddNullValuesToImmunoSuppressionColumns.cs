@@ -34,15 +34,30 @@ namespace ntbs_service.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(
+                @"UPDATE ImmunosuppressionDetails
+                  SET HasBioTherapy = 0
+                  WHERE HasBioTherapy IS NULL"
+            );
             migrationBuilder.AlterColumn<bool>(
                 name: "HasBioTherapy",
                 table: "ImmunosuppressionDetails",
                 nullable: false
             );
+            migrationBuilder.Sql(
+                @"UPDATE ImmunosuppressionDetails
+                  SET HasTransplantation = 0
+                  WHERE HasTransplantation IS NULL"
+            );
             migrationBuilder.AlterColumn<bool>(
                 name: "HasTransplantation",
                 table: "ImmunosuppressionDetails",
                 nullable: false
+            );
+            migrationBuilder.Sql(
+                @"UPDATE ImmunosuppressionDetails
+                  SET HasOther = 0
+                  WHERE HasOther IS NULL"
             );
             migrationBuilder.AlterColumn<bool>(
                 name: "HasOther",
