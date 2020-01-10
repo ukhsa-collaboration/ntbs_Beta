@@ -32,11 +32,10 @@ spec:
                   name: live-connection-strings
                   key: audit-db
             - name: ConnectionStrings__migration
-              value: Server=sqlntbsdevcol01.phe.gov.uk;Database=migration;User Id=<username>;Password=<password>;
-#              valueFrom:
-#                secretKeyRef:
-#                  name: live-connection-strings
-#                  key: migration
+              valueFrom:
+                secretKeyRef:
+                  name: live-connection-strings
+                  key: migration
             - name: AdfsOptions__UseDummyAuth
               value: "true"
 #            - name: LdapConnectionSettings__Password
@@ -47,9 +46,9 @@ spec:
             - name: ExternalLinks__ReportingUri
               value: ""
             - name: ReferenceLabResultsConfig__MockOutSpecimenMatching
-              value: true
+              value: "true"
             - name: ReferenceLabResultsConfig__MockedNotificationId
-              value: 1
+              value: "1"
       imagePullSecrets:
         - name: registery-password
 ---

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataMigration;
@@ -13,14 +12,19 @@ using ntbs_service.Services;
 using System.ComponentModel.DataAnnotations;
 using System;
 using Hangfire;
+using Microsoft.Extensions.Options;
+using ntbs_service.Properties;
 
 namespace ntbs_service.Pages.Migration
 {
     [Authorize(Policy = "AdminOnly")]
     public class IndexModel : PageModel
     {
-        public IndexModel()
+        private readonly MigrationConfig _config;
+
+        public IndexModel(IOptions<MigrationConfig> config)
         {
+            _config = config.Value;
             ValidationService = new ValidationService(this);
         }
 
@@ -68,19 +72,24 @@ namespace ntbs_service.Pages.Migration
             }
             else if (NotificationDateRangeStart != null)
             {
-                NotificationDateRangeStart.TryConvertToDateTimeRange(out DateTime? notificationDateRangeStart, out DateTime? endDate);
-                NotificationDateRangeEnd.TryConvertToDateTimeRange(out DateTime? notificationDateRangeEnd, out DateTime? endDate2);
+                NotificationDateRangeStart.TryConvertToDateTimeRange(out DateTime? notificationDateRangeStart, out _);
+                NotificationDateRangeEnd.TryConvertToDateTimeRange(out DateTime? notificationDateRangeEnd, out _);
 
                 var rangeEnd = notificationDateRangeEnd ?? DateTime.Now;
 
-                for (var dateRangeStart = (DateTime)notificationDateRangeStart; dateRangeStart <= rangeEnd; dateRangeStart = dateRangeStart.AddMonths(6))
+                for (var dateRangeStart = (DateTime)notificationDateRangeStart;
+                    dateRangeStart <= rangeEnd;
+                    dateRangeStart = dateRangeStart.AddMonths(_config.DateRangeJobIntervalInMonths))
                 {
-                    var dateRangeEnd = dateRangeStart.AddMonths(6);
-                    if (dateRangeEnd > rangeEnd)
+                    var start = dateRangeStart;
+                    var end = dateRangeStart.AddMonths(_config.DateRangeJobIntervalInMonths);
+                    if (end > rangeEnd)
                     {
-                        dateRangeEnd = rangeEnd;
+                        end = rangeEnd;
                     }
-                    BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByDateAsync(null, requestId, dateRangeStart, dateRangeEnd));
+
+                    BackgroundJob.Enqueue<INotificationImportService>(x =>
+                        x.ImportByDateAsync(null, requestId, start, end));
                 }
             }
 
