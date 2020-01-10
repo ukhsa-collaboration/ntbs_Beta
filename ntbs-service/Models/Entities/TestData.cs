@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Validations;
 
@@ -9,8 +10,8 @@ namespace ntbs_service.Models.Entities
 {
     // Unlike most of these classes, TestData is not owned - this is purely due to ef limitations around
     // owned entities being principal sides of non-ownership relationships
-    // We use the latter to simplify modelling the validation for ManualTestReults' presence
-    public class TestData : ModelBase
+    // We use the latter to simplify modeling the validation for ''ManualTestResults' presence
+    public class TestData : ModelBase, IHasRootEntity
     {
         public int NotificationId { get; set; }
 
@@ -39,5 +40,8 @@ namespace ntbs_service.Models.Entities
         // Only used to inform validation, much like the `ShouldValidateFull` property
         [NotMapped]
         public bool ProceedingToAdd { get; set; }
+
+        string IHasRootEntity.RootEntityType => RootEntities.Notification;
+        string IHasRootEntity.RootId => NotificationId.ToString();
     }
 }

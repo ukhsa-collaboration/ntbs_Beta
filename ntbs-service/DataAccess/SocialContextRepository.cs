@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 
@@ -6,7 +6,7 @@ namespace ntbs_service.DataAccess
 {
     public class SocialContextVenueRepository : ItemRepository<SocialContextVenue>
     {
-        public SocialContextVenueRepository(NtbsContext context) : base(context) {}
+        public SocialContextVenueRepository(NtbsContext context) : base(context) { }
 
         protected override DbSet<SocialContextVenue> GetDbSet()
         {
@@ -22,7 +22,7 @@ namespace ntbs_service.DataAccess
 
     public class SocialContextAddressRepository : ItemRepository<SocialContextAddress>
     {
-        public SocialContextAddressRepository(NtbsContext context) : base(context) {}
+        public SocialContextAddressRepository(NtbsContext context) : base(context) { }
 
         protected override DbSet<SocialContextAddress> GetDbSet()
         {

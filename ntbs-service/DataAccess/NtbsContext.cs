@@ -9,6 +9,7 @@ using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.DataAccess
 {
+    [AuditDbContext(IncludeEntityObjects = true)]
     public class NtbsContext : AuditDbContext
     {
         // Max Length for fields with enum -> string conversion configured.

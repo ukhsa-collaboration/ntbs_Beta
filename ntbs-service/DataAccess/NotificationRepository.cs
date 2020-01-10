@@ -22,7 +22,6 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
-        Task AddNotificationAsync(Notification notification);
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         bool NotificationExists(int notificationId);
@@ -52,13 +51,6 @@ namespace ntbs_service.DataAccess
             return GetBaseNotificationsIQueryable()
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
                 .OrderByDescending(n => n.SubmissionDate);
-        }
-
-        public async Task AddNotificationAsync(Notification notification)
-        {
-            _context.Notification.Add(notification);
-            _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Added);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<Notification> GetNotificationAsync(int notificationId)

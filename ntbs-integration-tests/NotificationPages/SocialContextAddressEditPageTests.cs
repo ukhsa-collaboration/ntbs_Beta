@@ -36,14 +36,16 @@ namespace ntbs_integration_tests.NotificationPages
                             DateFrom = new DateTime(2012, 1, 1),
                             DateTo = new DateTime(2013, 1, 1),
                             Address = "Softwire London",
-                            Postcode = "NW5 1TL"
+                            Postcode = "NW5 1TL",
+                            Details = "Head Office"
                         },
                         new SocialContextAddress {
                             SocialContextAddressId = ADDRESS_TO_DELETE_ID,
                             DateFrom = new DateTime(2012, 1, 1),
                             DateTo = new DateTime(2013, 1, 1),
                             Address = "Softwire Manchester",
-                            Postcode = "M4 4BF"
+                            Postcode = "M4 4BF",
+                            Details = "Regional Office"
                         },
                     }
                 }
@@ -68,7 +70,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateTo.Month"] = "1",
                 ["FormattedDateTo.Year"] = "2000",
                 ["Address.Address"] = "123 Fake Street",
-                ["Address.Postcode"] = "M4 4BF"
+                ["Address.Postcode"] = "M4 4BF",
+                ["Address.Details"] = "Fake Office"
             };
             var result = await SendPostFormWithData(initialDocument, formData, url);
 
@@ -82,6 +85,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Contains("123 Fake Street", addressTextContent);
             Assert.Contains("M4 4BF", addressTextContent);
+            Assert.Contains("Fake Office", addressTextContent);
         }
 
         [Fact]
@@ -96,6 +100,7 @@ namespace ntbs_integration_tests.NotificationPages
             var addressBodyBeforeChanges = editDocument.GetElementById($"address-body-{ADDRESS_ID}").TextContent;
             Assert.Contains("Softwire London", addressBodyBeforeChanges);
             Assert.Contains("NW5 1TL", addressBodyBeforeChanges);
+            Assert.Contains("Head Office", addressBodyBeforeChanges);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -107,7 +112,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDateTo.Month"] = "1",
                 ["FormattedDateTo.Year"] = "2000",
                 ["Address.Address"] = "New address",
-                ["Address.Postcode"] = "M4 4BF"
+                ["Address.Postcode"] = "M4 4BF",
+                ["Address.Details"] = "New Head Office"
             };
             var result = await SendPostFormWithData(editDocument, formData, editUrl);
 
@@ -119,6 +125,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             Assert.Contains("New address", addressBodyTextContent);
             Assert.Contains("M4 4BF", addressBodyTextContent);
+            Assert.Contains("New Head Office", addressBodyTextContent);
         }
 
         [Fact]

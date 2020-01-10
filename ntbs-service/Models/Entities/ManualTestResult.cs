@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -9,7 +10,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class ManualTestResult
+    public class ManualTestResult : IHasRootEntity
     {
         // Even for values which are non-nullable in db, we make them a nullable runtime type so 
         // the Required attribute can be applied properly, producing correct error messages
@@ -62,5 +63,8 @@ namespace ntbs_service.Models.Entities
         public bool TestHasSampleTypes =>
             ManualTestType != null
             && ManualTestType.ManualTestTypeSampleTypes.Any();
+
+        string IHasRootEntity.RootEntityType => RootEntities.Notification;
+        string IHasRootEntity.RootId => NotificationId.ToString();
     }
 }

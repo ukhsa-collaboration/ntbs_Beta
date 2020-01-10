@@ -40,7 +40,6 @@ namespace ntbs_service.Helpers
         public static string EditSocialRiskFactors => "Edit/SocialRiskFactors";
         public static string EditTravel => "Edit/Travel";
         public static string EditComorbidities => "Edit/Comorbidities";
-        public static string EditImmunosuppression => "Edit/Immunosuppression";
         public static string EditSocialContextAddresses => "Edit/SocialContextAddresses";
         public static string EditSocialContextVenues => "Edit/SocialContextVenues";
         public static string EditPreviousHistory => "Edit/PreviousHistory";

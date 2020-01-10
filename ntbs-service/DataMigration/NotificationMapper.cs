@@ -56,7 +56,7 @@ namespace ntbs_service.DataMigration
             var notifications = notificationsRaw.Join(notificationSiteGroups,
                 n => n.OldNotificationId,
                 nsGroup => nsGroup.Key,
-                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.DiseaseSiteId != null)));
+                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.SiteId != null)));
 
             var notificationGroups = notifications.GroupBy(x => x.rawNotification.GroupId);
 
@@ -109,14 +109,14 @@ namespace ntbs_service.DataMigration
 
         private static NotificationSite AsNotificationSite(dynamic result)
         {
-            if (result.DiseaseSiteId == null)
+            if (result.SiteId == null)
             {
                 return null;
             }
             return new NotificationSite
             {
-                SiteId = result.DiseaseSiteId,
-                SiteDescription = result.DiseaseSiteText
+                SiteId = result.SiteId,
+                SiteDescription = result.SiteDescription
             };
         }
 
@@ -181,7 +181,7 @@ namespace ntbs_service.DataMigration
             NhsNumber = notification.NhsNumber,
             Dob = notification.DateOfBirth,
             YearOfUkEntry = notification.UkEntryYear,
-            UkBorn = StringToValueConverter.GetNullableBoolValue(notification.UkBorn),
+            UkBorn = notification.UkBorn,
             CountryId = notification.BirthCountryId,
             LocalPatientId = notification.LocalPatientId,
             Postcode = notification.Postcode,

@@ -70,9 +70,19 @@ namespace ntbs_integration_tests.NotificationPages
                             TreatmentEventId = DELETE_TREATMENT_EVENT_ID,
                             EventDate = RESTART_TREATMENT_EVENT_DATE,
                             TreatmentEventType = TreatmentEventType.TreatmentRestart
-                    }
+                        }
                     }
                 },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_RESTART,
+                    NotificationStatus = NotificationStatus.Notified
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME,
+                    NotificationStatus = NotificationStatus.Notified
+                }
             };
         }
 
@@ -138,13 +148,13 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostNewTreatmentEvent_ReturnsSuccessAndAddsResultToTable()
+        public async Task PostNewTreatmentRestart_ReturnsSuccessAndAddsResultToTable()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFIED_ID;
+            const int notificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_RESTART;
             var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
             var document = await GetDocumentForUrl(url);
-            var noteText = "Hello is it me you're looking for";
+            const string noteText = "Hello is it me you're looking for";
 
             // Act
             var formData = new Dictionary<string, string>
@@ -161,13 +171,49 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
             var treatmentEventsDocument = await GetDocumentForUrl(GetRedirectLocation(result));
             var treatmentEventRows = treatmentEventsDocument.QuerySelectorAll("#treatment-events tbody tr");
-            Assert.Single(treatmentEventRows);
             var row = treatmentEventRows.First();
 
             var textContent = row.TextContent;
             Assert.Contains(new DateTime(2019, 1, 1).ConvertToString(), textContent);
             Assert.Contains(TreatmentEventType.TreatmentRestart.GetDisplayName(), textContent);
             Assert.Contains(noteText, textContent);
+        }
+
+        [Fact]
+        public async Task PostNewTreatmentOutcome_ReturnsSuccessAndAddsResultToTable()
+        {
+            // Arrange
+            const int notificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
+            var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
+            var document = await GetDocumentForUrl(url);
+            const string noteText = "I can see it in your smile";
+
+            // Act
+            var formData = new Dictionary<string, string>
+            {
+                ["FormattedEventDate.Day"] = "01",
+                ["FormattedEventDate.Month"] = "01",
+                ["FormattedEventDate.Year"] = "2020",
+                ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentOutcome).ToString(),
+                ["SelectedTreatmentOutcomeType"] = ((int)TREATMENT_OUTCOME_TYPE).ToString(),
+                ["SelectedTreatmentOutcomeSubType"] = ((int)TREATMENT_OUTCOME_SUBTYPE).ToString(),
+                ["TreatmentEvent.Note"] = noteText
+            };
+            var result = await SendPostFormWithData(document, formData, url);
+
+            // Assert
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
+            var treatmentEventsDocument = await GetDocumentForUrl(GetRedirectLocation(result));
+            var treatmentEventRows = treatmentEventsDocument.QuerySelectorAll("#treatment-events tbody tr");
+            Assert.Single(treatmentEventRows);
+            var row = treatmentEventRows.First();
+
+            var textContent = row.TextContent;
+            Assert.Contains(new DateTime(2020, 1, 1).ConvertToString(), textContent);
+            Assert.Contains(TreatmentEventType.TreatmentOutcome.GetDisplayName(), textContent);
+            Assert.Contains(noteText, textContent);
+            Assert.Contains(TREATMENT_OUTCOME_TYPE.GetDisplayName(), textContent);
+            Assert.Contains(TREATMENT_OUTCOME_SUBTYPE.GetDisplayName(), textContent);
         }
 
         [Fact]
@@ -258,7 +304,7 @@ namespace ntbs_integration_tests.NotificationPages
                 string.Format(ValidationMessages.RequiredEnter, "Event Date"));
             resultDocument.AssertErrorSummaryMessage(
                 "TreatmentEvent-TreatmentEventType",
-                "treatmentevent-type", 
+                "treatmentevent-type",
                 string.Format(ValidationMessages.RequiredSelect, "Event"));
         }
 
@@ -283,7 +329,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             resultDocument.AssertErrorSummaryMessage(
                 "SelectedTreatmentOutcomeType",
-                "treatmentoutcome-type", 
+                "treatmentoutcome-type",
                 string.Format(ValidationMessages.RequiredSelect, "Outcome value"));
         }
 

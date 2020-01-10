@@ -1,5 +1,4 @@
-using System;
-using System.Linq;
+﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,10 +7,10 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Middleware
 {
-/*
-    This class is used to audit all page reads of the system.
-    It hooks into the middleware pipeline, and audits all successful (status 200) GET requests of particular records (no search pages/lists of records).
- */
+    /*
+        This class is used to audit all page reads of the system.
+        It hooks into the middleware pipeline, and audits all successful (status 200) GET requests of particular records (no search pages/lists of records).
+     */
     public class AuditGetRequestMiddleWare
     {
         private readonly RequestDelegate _next;
@@ -41,10 +40,14 @@ namespace ntbs_service.Middleware
                 if (shouldAudit && int.TryParse(pathArray[notificationIndex + 1], out var id))
                 {
                     var userName = context.User.FindFirstValue(ClaimTypes.Email);
-                    // Fallbacks if user doesn't have an email associated with them - as is the case with our test users
-                    if (string.IsNullOrEmpty(userName)) userName = context.User.Identity.Name;
+                    // Fallback if user doesn't have an email associated with them - as is the case with our test users
+                    if (string.IsNullOrEmpty(userName))
+                    {
+                        userName = context.User.Identity.Name;
+                    }
+
                     // TODO: Differentiate between Cluster and Full view.
-                    await auditService.OnGetAuditAsync(id, model: "Notification", auditDetails: NotificationAuditType.Full, userName: userName);
+                    await auditService.AuditNotificationReadAsync(id, NotificationAuditType.Full, userName);
                 };
             }
         }

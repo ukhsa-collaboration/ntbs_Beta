@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -8,7 +9,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class TreatmentEvent : ModelBase
+    public class TreatmentEvent : ModelBase, IHasRootEntity
     {
         public int TreatmentEventId { get; set; }
 
@@ -48,5 +49,8 @@ namespace ntbs_service.Models.Entities
 
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
         public bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
+
+        string IHasRootEntity.RootEntityType => RootEntities.Notification;
+        string IHasRootEntity.RootId => NotificationId.ToString();
     }
 }

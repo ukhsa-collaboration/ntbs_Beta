@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Linq;
 using ntbs_service.DataAccess;
+using ntbs_service.Services;
+using ntbs_ui_tests.MockService;
 
 namespace ntbs_ui_tests
 {
@@ -65,6 +67,12 @@ namespace ntbs_ui_tests
                     // TODO NTBS-725: Fix bug so we can seed database
                     // Utilities.SeedDatabase(db);
                 }
+            });
+
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddScoped<ICultureAndResistanceService, MockCultureAndResistanceService>();
+                services.AddScoped<ISpecimenService, MockSpecimenService>();
             });
         }
 

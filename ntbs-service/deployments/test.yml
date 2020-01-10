@@ -58,6 +58,8 @@ spec:
               secretKeyRef:
                 name: development-ad-sync-credentials
                 key: password
+          - name: ExternalLinks__ReportingUri
+            value: ""
       imagePullSecrets:
       - name: registery-password
 ---

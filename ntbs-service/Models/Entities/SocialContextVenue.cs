@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 
@@ -21,19 +21,13 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Frequency")]
         public Frequency? Frequency { get; set; }
 
-        [MaxLength(100)]
-        [RegularExpression(
-            ValidationRegexes.CharacterValidation,
-            ErrorMessage = ValidationMessages.StandardStringFormat)]
-        [Display(Name = "Comments")]
-        public string Details { get; set; }
-
         public override bool PostcodeIsRequired => false;
         public override bool DateToIsRequired => false;
 
         public override int Id
         {
-            set {
+            set
+            {
                 SocialContextVenueId = value;
             }
         }

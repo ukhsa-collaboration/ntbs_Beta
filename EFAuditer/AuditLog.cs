@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace EFAuditer
 {
@@ -12,5 +12,7 @@ namespace EFAuditer
         public string AuditData { get; set; }
         public DateTime AuditDateTime { get; set; }
         public string AuditUser { get; set; }
+        public string RootEntity { get; set; }
+        public string RootId { get; set; }
     }
 }
