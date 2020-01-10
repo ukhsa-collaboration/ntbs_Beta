@@ -1,9 +1,8 @@
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
-using System.Collections.Generic;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
@@ -15,7 +14,7 @@ namespace ntbs_service.Services
 
     public class SpecimenService : ISpecimenService
     {
-        private readonly string connectionString;
+        private readonly string _connectionString;
 
         private readonly string getMatchedSpecimenSqlFunction = @"
             SELECT NotificationId,
@@ -31,21 +30,21 @@ namespace ntbs_service.Services
                 MDR,
                 XDR,
                 Species,
-                PatientNhsNumber,
-                PatientBirthDate,
-                PatientName,
-                PatientSex,
-                PatientAddress
+                LabNhsNumber,
+                LabBirthDate,
+                LabName,
+                LabSex,
+                LabAddress
             FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)";
 
-        public SpecimenService(IConfiguration _configuration)
+        public SpecimenService(IConfiguration configuration)
         {
-            connectionString = _configuration.GetConnectionString("reporting");
+            _connectionString = configuration.GetConnectionString("reporting");
         }
 
         public async Task<IEnumerable<Specimen>> GetSpecimenDetailsAsync(int notificationId)
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<Specimen>(getMatchedSpecimenSqlFunction, new { notificationId });
