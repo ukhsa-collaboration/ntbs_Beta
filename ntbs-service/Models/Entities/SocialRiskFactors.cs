@@ -17,6 +17,8 @@ namespace ntbs_service.Models.Entities
         public Status? AlcoholMisuseStatus { get; set; }
         public Status? SmokingStatus { get; set; }
         public Status? MentalHealthStatus { get; set; }
+        public Status? AsylumSeekerStatus { get; set; }
+        public Status? ImmigrationDetaineeStatus { get; set; }
         public virtual RiskFactorDetails RiskFactorDrugs { get; set; }
         public virtual RiskFactorDetails RiskFactorHomelessness { get; set; }
         public virtual RiskFactorDetails RiskFactorImprisonment { get; set; }

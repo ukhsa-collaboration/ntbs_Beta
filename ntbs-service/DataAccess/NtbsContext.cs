@@ -265,6 +265,12 @@ namespace ntbs_service.DataAccess
                     x.Property(e => e.MentalHealthStatus)
                         .HasConversion(statusEnumConverter)
                         .HasMaxLength(EnumMaxLength);
+                    x.Property(e => e.AsylumSeekerStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    x.Property(e => e.ImmigrationDetaineeStatus)
+                        .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
 
                     x.ToTable("SocialRiskFactors");
                 });
