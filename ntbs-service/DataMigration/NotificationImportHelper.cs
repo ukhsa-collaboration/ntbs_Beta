@@ -10,6 +10,8 @@ namespace ntbs_service.DataMigration
     {
         Task CreateTableIfNotExists();
         string GetImportedNotificationsTableName();
+        string GetInsertImportedNotificationQuery();
+        string GetSelectImportedNotificationByIdQuery();
     }
 
     public class NotificationImportHelper : INotificationImportHelper
@@ -23,10 +25,21 @@ namespace ntbs_service.DataMigration
                 ImportedAt datetime NOT NULL
             )";
 
+        private const string InsertImportedNotificationsQuery = @"
+            INSERT INTO {0} (LegacyId, ImportedAt)
+            VALUES (@LegacyId, @ImportedAt);
+        ";
+
+        private const string SelectImportedNotificationByIdQuery = @"
+            SELECT *
+            FROM {0} impNtfc
+            WHERE impNtfc.LegacyId = n.OldNotificationId";
+
         public NotificationImportHelper(IConfiguration configuration)
         {
             connectionString = configuration.GetConnectionString("migration");
-            importedNotificationsTableName = $"{configuration.GetSection("Environment")?["Name"]}ImportedNotifications";
+            var tablePrefix = configuration.GetSection("Migration")?["TablePrefix"];
+            importedNotificationsTableName = $"{tablePrefix}ImportedNotifications";
         }
 
         public async Task CreateTableIfNotExists()
@@ -39,6 +52,10 @@ namespace ntbs_service.DataMigration
             }
         }
 
+        public string GetInsertImportedNotificationQuery() => string.Format(InsertImportedNotificationsQuery, importedNotificationsTableName);
+
         public string GetImportedNotificationsTableName() => importedNotificationsTableName;
+
+        public string GetSelectImportedNotificationByIdQuery() => string.Format(SelectImportedNotificationByIdQuery, importedNotificationsTableName);
     }
 }

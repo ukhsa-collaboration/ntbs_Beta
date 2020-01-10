@@ -19,11 +19,6 @@ namespace ntbs_service.DataMigration
 
     public class MigrationRepository : IMigrationRepository
     {
-        const string InsertImportedNotificationsQuery = @"
-            INSERT INTO {0} (LegacyId, ImportedAt)
-            VALUES (@LegacyId, @ImportedAt);
-        ";
-
         const string NotificationsQuery = @"
             SELECT *,
             	trvl.Country1 AS travel_Country1,
@@ -63,12 +58,12 @@ namespace ntbs_service.DataMigration
             WHERE OldNotificationId IN @Ids
         ";
         private readonly string connectionString;
-        private readonly INotificationImportHelper _notificationHelper;
+        private readonly INotificationImportHelper _importHelper;
 
-        public MigrationRepository(IConfiguration _configuration, INotificationImportHelper notificationHelper)
+        public MigrationRepository(IConfiguration _configuration, INotificationImportHelper importHelper)
         {
             connectionString = _configuration.GetConnectionString("migration");
-            _notificationHelper = notificationHelper;
+            _importHelper = importHelper;
         }
 
         public async Task MarkNotificiationsAsImportedAsync(IEnumerable<Notification> notifications)
@@ -79,7 +74,7 @@ namespace ntbs_service.DataMigration
 
                 var importedAt = DateTime.Now.ToString("s");
 
-                var query = string.Format(InsertImportedNotificationsQuery, _notificationHelper.GetImportedNotificationsTableName());
+                var query = _importHelper.GetInsertImportedNotificationQuery();
                 foreach (var notification in notifications)
                 {
                     await connection.QueryAsync(query, new { notification.LegacyId, ImportedAt = importedAt });

@@ -45,12 +45,6 @@ namespace ntbs_service
             }
         }
 
-        private static async Task CreateMigrationDbTablesAsync(IServiceProvider services)
-        {
-            var _notificationImportHelper = services.GetRequiredService<INotificationImportHelper>();
-            await _notificationImportHelper.CreateTableIfNotExists();
-        }
-
         private static void SetUpLogger()
         {
             Log.Logger = new LoggerConfiguration()
@@ -92,6 +86,12 @@ namespace ntbs_service
                 Log.Error(ex, "An error occurred migrating the Audit DB.");
                 throw ex;
             }
+        }
+
+        private static async Task CreateMigrationDbTablesAsync(IServiceProvider services)
+        {
+            var _notificationImportHelper = services.GetRequiredService<INotificationImportHelper>();
+            await _notificationImportHelper.CreateTableIfNotExists();
         }
     }
 }

@@ -146,6 +146,7 @@ namespace ntbs_service
             services.AddScoped<IImportLogger, ImportLogger>();
             services.AddScoped<INotificationImportService, NotificationImportService>();
             services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
+            services.AddScoped<INotificationImportHelper, NotificationImportHelper>();
             services.AddScoped<IMigrationRepository, MigrationRepository>();
             services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();

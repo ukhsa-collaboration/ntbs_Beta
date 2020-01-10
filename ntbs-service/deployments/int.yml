@@ -60,7 +60,7 @@ spec:
                 key: password
           - name: ExternalLinks__ReportingUri
             value: ""
-          - name: Environment_Name
+          - name: Migration_TablePrefix
             value: "Int"
       imagePullSecrets:
       - name: registery-password

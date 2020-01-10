@@ -27,9 +27,7 @@ namespace ntbs_service.Services
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            WHERE NOT EXISTS (SELECT *
-              FROM {0} impNtfc
-              WHERE impNtfc.LegacyId = n.OldNotificationId)
+            WHERE NOT EXISTS ({0})
             ";
 
         const string SelectQueryEnd = @"
@@ -41,9 +39,7 @@ namespace ntbs_service.Services
             SELECT COUNT(*)
             FROM Notifications n
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            WHERE NOT EXISTS (SELECT *
-              FROM {0} impNtfc
-              WHERE impNtfc.LegacyId = n.OldNotificationId)
+            WHERE NOT EXISTS ({0})
             ";
 
         private readonly string connectionString;
@@ -76,8 +72,8 @@ namespace ntbs_service.Services
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
 
-            string fullSelectQuery = string.Format(SelectQueryStart, _notificationImportHelper.GetImportedNotificationsTableName()) + sqlQuery + SelectQueryEnd;
-            string fullCountQuery = string.Format(CountQuery, _notificationImportHelper.GetImportedNotificationsTableName()) + sqlQuery;
+            string fullSelectQuery = string.Format(SelectQueryStart, _notificationImportHelper.GetSelectImportedNotificationByIdQuery()) + sqlQuery + SelectQueryEnd;
+            string fullCountQuery = string.Format(CountQuery, _notificationImportHelper.GetSelectImportedNotificationByIdQuery()) + sqlQuery;
 
             using (var connection = new SqlConnection(connectionString))
             {
