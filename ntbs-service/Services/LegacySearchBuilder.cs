@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
@@ -16,10 +16,12 @@ namespace ntbs_service.Services
     {
         string sqlQuery;
         dynamic parameters;
+        private readonly IReferenceDataRepository _referenceDataRepository;
         
-        public LegacySearchBuilder()
+        public LegacySearchBuilder(IReferenceDataRepository referenceDataRepository)
         {
-            this.parameters = new ExpandoObject();
+            parameters = new ExpandoObject();
+            _referenceDataRepository = referenceDataRepository;
         }
 
         public ISearchBuilder FilterById(string id)
@@ -110,6 +112,14 @@ namespace ntbs_service.Services
 
         public ISearchBuilder FilterByTBService(string TBService) 
         {
+            if (!string.IsNullOrEmpty(TBService))
+            {
+                var hospitalGuids = _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string> {TBService})
+                    .Result
+                    .Select(x => x.HospitalId);
+                parameters.hospitals = hospitalGuids;
+                AppendCondition("n.NtbsHospitalId IN @hospitals");
+            }
             return this;
         }
 
@@ -120,7 +130,8 @@ namespace ntbs_service.Services
 
         private void AppendCondition(string condition) 
         {
-            sqlQuery += $@"AND {condition}";
+            sqlQuery += $@"
+                AND {condition}";
         }
     }
 }

@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Moq;
+using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 using Xunit;
 
@@ -8,10 +13,12 @@ namespace ntbs_service_unit_tests.Services
     public class LegacySearchBuilderTest
     {
         readonly LegacySearchBuilder builder;
+        private readonly Mock<IReferenceDataRepository> mockReferenceDataRepository;
 
         public LegacySearchBuilderTest()
         {
-            builder = new LegacySearchBuilder();
+            mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
+            builder = new LegacySearchBuilder(mockReferenceDataRepository.Object);
         }
 
         [Fact]
@@ -80,7 +87,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public void SearchByPartialNotificationDate_ReturnsMatchOnNotificationDate()
+        public void SearchByPartialNotificationDate_ReturnsCorrectSqlQueryAndParameters()
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPartialNotificationDate(new PartialDate() {Day = "1", Month = "1", Year = "2000"})).GetResult();
 
@@ -90,13 +97,31 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public void SearchByPartialDob_ReturnsMatchOnDob()
+        public void SearchByPartialDob_ReturnsCorrectSqlQueryAndParameters()
         {
             var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByPartialDob(new PartialDate() {Day = "1", Month = "1", Year = "1990"})).GetResult();
 
             Assert.Contains("AND dmg.DateOfBirth >= @dobDateRangeStart AND dmg.DateOfBirth < @dobDateRangeEnd", sqlQuery);
             Assert.Equal(new DateTime(1990, 1, 1), parameters.dobDateRangeStart);
             Assert.Equal(new DateTime(1990, 1, 2), parameters.dobDateRangeEnd);
+        }
+
+        [Fact]
+        public void SearchByTbService_ReturnsCorrectSqlQueryAndParameters()
+        {
+            var firstTestGuid = new Guid("2671e495-0aa3-4303-8a91-83993e220677");
+            var secondTestGuid = new Guid("83281ffa-2bba-4376-850c-46974cc89be4");
+            var hospitals = new List<Hospital> 
+            {
+                new Hospital {HospitalId = firstTestGuid},
+                new Hospital {HospitalId = secondTestGuid}
+            };
+            var hospitalList = Task.FromResult((IList<Hospital>)hospitals);
+            mockReferenceDataRepository.Setup(s => s.GetHospitalsByTbServiceCodesAsync(new List<string> {"TBS0001"})).Returns(hospitalList);
+            var (sqlQuery, parameters) = ((ILegacySearchBuilder)builder.FilterByTBService("TBS0001")).GetResult();
+
+            Assert.Contains("n.NtbsHospitalId IN @hospitals", sqlQuery);
+            Assert.Equal(new List<Guid> {firstTestGuid, secondTestGuid}, parameters.hospitals);
         }
     }
 }
