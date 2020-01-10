@@ -34,8 +34,8 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Ethambutol")]
         public string Ethambutol { get; set; }
 
-        [Display(Name = "Aminoglycocide")]
-        public string Aminoglycocide { get; set; }
+        [Display(Name = "Aminoglycoside")]
+        public string Aminoglycoside { get; set; }
 
         [Display(Name = "Quinolone")]
         public string Quinolone { get; set; }
