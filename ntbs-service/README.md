@@ -110,6 +110,11 @@ For `test` and `uat` environments, pick the docker image <TAG> of the build from
 For `live` environment, the process is the same once
 [you've connected to Openshift successfully](https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/163446793/Deployments+on+PHE+infrastructure)
 
+Note - when using two kubectl pods 
+[these commands](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-context-and-configuration)
+will help to keep track of the kubectl contexts
+
+
 ## Running the app in Docker (builds in production mode)
 ```
 docker build -t ntbs .
