@@ -25,7 +25,7 @@ namespace ntbs_service.Services
                 Rifampicin,
                 Pyrazinamide,
                 Ethambutol,
-                Aminoglycocide,
+                Aminoglycoside,
                 Quinolone,
                 MDR,
                 XDR 
