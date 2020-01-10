@@ -150,29 +150,41 @@ namespace ntbs_service.DataMigration
             DeathDate = notification.DeathDate
         };
 
-        private static TravelDetails ExtractTravelDetails(dynamic notification) => new TravelDetails
+        private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
-            HasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel),
-            TotalNumberOfCountries = StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries),
-            Country1Id = notification.travel_Country1,
-            Country2Id = notification.travel_Country2,
-            Country3Id = notification.travel_Country3,
-            StayLengthInMonths1 = notification.StayLengthInMonths1,
-            StayLengthInMonths2 = notification.StayLengthInMonths2,
-            StayLengthInMonths3 = notification.StayLengthInMonths3
-        };
+            bool? hasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel);
+            var totalNumberOfCountries = hasTravel ?? false ? StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
 
-        private static VisitorDetails ExtractVisitorDetails(dynamic notification) => new VisitorDetails
+            return new TravelDetails
+            {
+                HasTravel = hasTravel,
+                TotalNumberOfCountries = totalNumberOfCountries,
+                Country1Id = notification.travel_Country1,
+                Country2Id = notification.travel_Country2,
+                Country3Id = notification.travel_Country3,
+                StayLengthInMonths1 = notification.StayLengthInMonths1,
+                StayLengthInMonths2 = notification.StayLengthInMonths2,
+                StayLengthInMonths3 = notification.StayLengthInMonths3
+            };
+        }
+
+        private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
-            HasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor),
-            TotalNumberOfCountries = StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries),
-            Country1Id = notification.visitor_Country1,
-            Country2Id = notification.visitor_Country2,
-            Country3Id = notification.visitor_Country3,
-            StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
-            StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
-            StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
-        };
+            bool? hasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor);
+            var totalNumberOfCountries = hasVisitor ?? false ? StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
+
+            return new VisitorDetails
+            {
+                HasVisitor = hasVisitor,
+                TotalNumberOfCountries = totalNumberOfCountries,
+                Country1Id = notification.visitor_Country1,
+                Country2Id = notification.visitor_Country2,
+                Country3Id = notification.visitor_Country3,
+                StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
+                StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
+                StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
+            };
+        }
 
         private static PatientDetails ExtractPatientDetails(dynamic notification) => new PatientDetails
         {
