@@ -13,14 +13,14 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
+        @* <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" /> *@
         <h2> You are about to transfer this notification </h2>
         <div>
             <cascading-dropdown filter-first-handler-path="GetFilteredTbServiceListsByPhecCode" 
                 filter-second-handler-path="GetFilteredCaseManagersListByTbServiceCode"
                 :filtering-refs="['tbServices', 'caseManagers']" inline-template>
                 <div>
-                    <nhs-form-group nhs-form-group-type="Standard" id="PhecCodeFilter" ref="firstFilterContainer" classes="hidden">
+                    <nhs-form-group nhs-form-group-type="Standard" ref="firstFilterContainer" classes="hidden">
                         <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
                             PHEC
                         </label>
@@ -37,7 +37,7 @@
                     }
                     <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferAlert-TbServiceCode" ref="tbServices">
                         <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
-                            TB service
+                            @Html.DisplayNameFor(model => model.TransferAlert.TbServiceCode)
                         </label>
                         <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
                                 ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
@@ -53,7 +53,7 @@
                     }
                     <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerEmail" ref="caseManagers">
                         <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerEmail">
-                            Case manager
+                            @Html.DisplayNameFor(model => model.TransferAlert.CaseManagerEmail)
                         </label>
                         <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
                             ref="errorField" asp-validation-for="TransferAlert.CaseManagerEmail"></span>

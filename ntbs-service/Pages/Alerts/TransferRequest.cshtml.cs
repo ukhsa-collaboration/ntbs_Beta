@@ -19,10 +19,10 @@ namespace ntbs_service.Pages.Alerts
 {
     public class TransferRequestModel : NotificationModelBase
     {
-        private readonly IAlertRepository alertRepository;
-        private readonly IAlertService alertService;
+        private readonly IAlertRepository _alertRepository;
+        private readonly IAlertService _alertService;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        public ValidationService ValidationService { get; set; }
+        public ValidationService ValidationService;
 
         [BindProperty]
         public TransferAlert TransferAlert { get; set; }
@@ -41,31 +41,31 @@ namespace ntbs_service.Pages.Alerts
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository) : base(notificationService, authorizationService, notificationRepository)
         {
-            this.alertService = alertService;
-            this.alertRepository = alertRepository;
-            this._referenceDataRepository = referenceDataRepository;
+            _alertService = alertService;
+            _alertRepository = alertRepository;
+            _referenceDataRepository = referenceDataRepository;
             ValidationService = new ValidationService(this);
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            await AuthorizeAndSetBannerAsync();
-            var alert = await alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
-            if (alert != null)
+            // Check edit permission and redirect if not allowed
+            if (!HasEditPermission)
             {
-                TransferAlert = (TransferAlert)alert;
+                return RedirectToPage("/Notifications/Overview", new { NotificationId });
+            }
+
+            await AuthorizeAndSetBannerAsync();
+            var pendingTransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
+            if (pendingTransferAlert != null)
+            {
+                TransferAlert = pendingTransferAlert;
                 return Partial("_TransferPendingPartial", this);
             }
             else
             {
                 TransferAlert = new TransferAlert();
-            }
-
-            // Check edit permission and redirect if not allowed
-            if (!HasEditPermission)
-            {
-                return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
             await SetDropdownsAsync();
@@ -85,7 +85,7 @@ namespace ntbs_service.Pages.Alerts
                 await AuthorizeAndSetBannerAsync();
                 return Page();
             }
-            await alertService.AddUniqueOpenAlertAsync(TransferAlert);
+            await _alertService.AddUniqueOpenAlertAsync(TransferAlert);
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
@@ -115,8 +115,8 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostCancelAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = (TransferAlert)(await alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest));
-            await alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            TransferAlert = (TransferAlert)(await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             return Partial("_CancelTransferConfirmation", this);

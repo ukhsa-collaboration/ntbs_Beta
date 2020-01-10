@@ -48,25 +48,11 @@ namespace ntbs_service.Services
         public async Task<bool> AddUniqueAlertAsync(Alert alert)
         {
             var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if ((matchingAlert != null && (matchingAlert != null ? matchingAlert?.AlertType != AlertType.TransferRequest : true)) 
-                || (matchingAlert.AlertType == AlertType.TransferRequest && matchingAlert.AlertStatus == AlertStatus.Open))
+            if (matchingAlert != null)
             {
                 return false;
             }
-            if (alert.NotificationId != null)
-            {
-                var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
-                alert.CreationDate = DateTime.Now;
-                if (alert.CaseManagerEmail == null)
-                {
-                    alert.CaseManagerEmail = notification?.Episode?.CaseManagerEmail;
-                }
-                if (alert.TbServiceCode == null)
-                {
-                    alert.TbServiceCode = notification?.Episode?.TBServiceCode;
-                }
-            }
-            await _alertRepository.AddAlertAsync(alert);
+            await PopulateAndAddAlertAsync(alert);
             return true;
         }
 
@@ -77,6 +63,12 @@ namespace ntbs_service.Services
             {
                 return false;
             }
+            await PopulateAndAddAlertAsync(alert);
+            return true;
+        }
+
+        public async Task PopulateAndAddAlertAsync(Alert alert)
+        {
             if (alert.NotificationId != null)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
@@ -91,7 +83,6 @@ namespace ntbs_service.Services
                 }
             }
             await _alertRepository.AddAlertAsync(alert);
-            return true;
         }
 
         public async Task DismissMatchingAlertAsync(int notificationId, AlertType alertType)

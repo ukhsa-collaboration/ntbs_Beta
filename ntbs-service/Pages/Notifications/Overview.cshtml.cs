@@ -17,7 +17,7 @@ namespace ntbs_service.Pages.Notifications
             INotificationRepository notificationRepository,
             IAlertService alertService) : base(service, authorizationService, notificationRepository)
         {
-            this._alertService = alertService;
+            _alertService = alertService;
         }
 
         public async Task<IActionResult> OnGetAsync()
