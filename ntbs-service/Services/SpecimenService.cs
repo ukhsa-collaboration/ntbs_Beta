@@ -17,7 +17,7 @@ namespace ntbs_service.Services
     public class SpecimenService : ISpecimenService
     {
         private readonly string reportingDbConnectionString;
-        private readonly string matchSpecimenDbConnectionString;
+        private readonly string specimenMatchingDbConnectionString;
 
         private readonly string getMatchedSpecimenSqlFunction = @"
             SELECT NotificationId,
@@ -45,7 +45,7 @@ namespace ntbs_service.Services
         public SpecimenService(IConfiguration _configuration)
         {
             reportingDbConnectionString = _configuration.GetConnectionString("reporting");
-            matchSpecimenDbConnectionString = _configuration.GetConnectionString("specimenMatching");
+            specimenMatchingDbConnectionString = _configuration.GetConnectionString("specimenMatching");
         }
 
         public async Task<IEnumerable<Specimen>> GetSpecimenDetailsAsync(int notificationId)
@@ -60,11 +60,12 @@ namespace ntbs_service.Services
         public async Task UnmatchSpecimen(int notificationId, string labReferenceNumber)
         {
             {
-                using (var connection = new SqlConnection(matchSpecimenDbConnectionString))
+                using (var connection = new SqlConnection(specimenMatchingDbConnectionString))
                 {
                     connection.Open();
-                    // Add parameters when procedure is implemented properly
-                    await connection.QueryAsync(unmatchSpecimentSqlProcedure, commandType: CommandType.StoredProcedure);
+                    await connection.QueryAsync(unmatchSpecimentSqlProcedure,
+                                                new { labReferenceNumber, notificationId },
+                                                commandType: CommandType.StoredProcedure);
                 }
             }
         }
