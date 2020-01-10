@@ -177,6 +177,7 @@ namespace ntbs_service
             }
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
+            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
