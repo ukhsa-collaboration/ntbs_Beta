@@ -161,9 +161,20 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
-            services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
-            services.AddScoped<ISpecimenService, SpecimenService>();
-
+            var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
+            if (referenceLabResultsConfig.GetValue<bool>("MockOutSpecimenMatching"))
+            {
+                var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
+                services.AddScoped<ICultureAndResistanceService>(
+                    sp => new MockCultureAndResistanceService(notificationId));
+                services.AddScoped<ISpecimenService>(
+                    sp => new MockSpecimenService(notificationId));
+            }
+            else
+            {
+                services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
+                services.AddScoped<ISpecimenService, SpecimenService>();
+            }
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
         }

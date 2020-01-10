@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ntbs_service.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
@@ -47,25 +47,25 @@ namespace ntbs_service.Models.Entities
         public string Species { get; set; }
 
         [Display(Name = "Nhs number")]
-        public string PatientNhsNumber { get; set; }
+        public string LabNhsNumber { get; set; }
 
         [Display(Name = "Date of birth")]
-        public DateTime? PatientBirthDate { get; set; }
+        public DateTime? LabBirthDate { get; set; }
 
         [Display(Name = "Fullname")]
-        public string PatientName { get; set; }
+        public string LabName { get; set; }
 
         [Display(Name = "Sex")]
-        public string PatientSex { get; set; }
+        public string LabSex { get; set; }
 
         [Display(Name = "Address")]
-        public string PatientAddress { get; set; }
+        public string LabAddress { get; set; }
 
         [Display(Name = "Postcode")]
-        public string PatientPostcode { get; set; }
+        public string LabPostcode { get; set; }
 
         public string FormattedSpecimenDate => SpecimenDate.ConvertToString();
-        public string FormattedPatientDob => PatientBirthDate.ConvertToString();
+        public string FormattedPatientDob => LabBirthDate.ConvertToString();
 
     }
 }
