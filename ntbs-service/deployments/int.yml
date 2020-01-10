@@ -31,6 +31,11 @@ spec:
               secretKeyRef:
                 name: int-reporting-db-connection-string
                 key: connectionString
+          - name: ConnectionStrings__specimenMatching
+            valueFrom:
+              secretKeyRef:
+                name: int-specimen-matching-connection-string
+                key: connectionString
           - name: ConnectionStrings__ltbr
             valueFrom:
               secretKeyRef:

@@ -4,17 +4,20 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Entities;
+using System.Data;
 
 namespace ntbs_service.Services
 {
     public interface ISpecimenService
     {
         Task<IEnumerable<Specimen>> GetSpecimenDetailsAsync(int notificationId);
+        Task UnmatchSpecimen(int notificationId, string labReferenceNumber);
     }
 
     public class SpecimenService : ISpecimenService
     {
-        private readonly string _connectionString;
+        private readonly string _reportingDbConnectionString;
+        private readonly string _specimenMatchingDbConnectionString;
 
         private readonly string getMatchedSpecimenSqlFunction = @"
             SELECT NotificationId,
@@ -37,17 +40,31 @@ namespace ntbs_service.Services
                 LabAddress
             FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)";
 
-        public SpecimenService(IConfiguration configuration)
+        private readonly string unmatchSpecimentSqlProcedure = @"uspUnmatchSpecimen";
+
+        public SpecimenService(IConfiguration _configuration)
         {
-            _connectionString = configuration.GetConnectionString("reporting");
+            _reportingDbConnectionString = _configuration.GetConnectionString("reporting");
+            _specimenMatchingDbConnectionString = _configuration.GetConnectionString("specimenMatching");
         }
 
         public async Task<IEnumerable<Specimen>> GetSpecimenDetailsAsync(int notificationId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_reportingDbConnectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync<Specimen>(getMatchedSpecimenSqlFunction, new { notificationId });
+            }
+        }
+
+        public async Task UnmatchSpecimen(int notificationId, string labReferenceNumber)
+        {
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
+            {
+                connection.Open();
+                await connection.QueryAsync(unmatchSpecimentSqlProcedure,
+                                            new { labReferenceNumber, notificationId },
+                                            commandType: CommandType.StoredProcedure);
             }
         }
     }

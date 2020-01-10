@@ -31,7 +31,12 @@ spec:
               secretKeyRef:
                 name: uat-reporting-db-connection-string
                 key: connectionString
-          - name: ConnectionStrings__ltbr
+          - name: ConnectionStrings__specimenMatching
+            valueFrom:
+              secretKeyRef:
+                name: test-specimen-matching-connection-string
+                key: connectionString
+          - name: ConnectionStrings__ltbr   
             valueFrom:
               secretKeyRef:
                 name: lgeacy-and-migration-connection-strings

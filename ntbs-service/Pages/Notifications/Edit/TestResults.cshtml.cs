@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -65,6 +64,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateTestDataAsync(Notification, TestData);
             }
+        }
+
+        public async Task<IActionResult> OnPostUnmatch(string labReferenceNumber)
+        {
+            await _specimenService.UnmatchSpecimen(NotificationId, labReferenceNumber);
+            return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }
 
         public ContentResult OnGetValidateTestDataProperty(string key, string value, bool shouldValidateFull)
