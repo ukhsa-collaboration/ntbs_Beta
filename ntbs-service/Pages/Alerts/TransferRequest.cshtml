@@ -13,11 +13,11 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        @* <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" /> *@
+        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
         <h2> You are about to transfer this notification </h2>
         <div>
-            <cascading-dropdown filter-first-handler-path="GetFilteredTbServiceListsByPhecCode" 
-                filter-second-handler-path="GetFilteredCaseManagersListByTbServiceCode"
+            <cascading-dropdown filter-first-handler-path="FilteredTbServiceListsByPhecCode" 
+                filter-second-handler-path="FilteredCaseManagersListByTbServiceCode"
                 :filtering-refs="['tbServices', 'caseManagers']" inline-template>
                 <div>
                     <nhs-form-group nhs-form-group-type="Standard" ref="firstFilterContainer" classes="hidden">

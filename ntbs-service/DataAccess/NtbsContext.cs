@@ -485,7 +485,8 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<TransferAlert>(entity =>
             {
                 entity.Property(e => e.TransferReason)
-                    .HasConversion(transferReasonEnumConverter);
+                    .HasConversion(transferReasonEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
             });
 
             modelBuilder.Entity<VenueType>().HasData(

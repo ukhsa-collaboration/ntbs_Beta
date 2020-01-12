@@ -50,13 +50,14 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnGetAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            await AuthorizeAndSetBannerAsync();
             // Check edit permission and redirect if not allowed
             if (!HasEditPermission)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
-            await AuthorizeAndSetBannerAsync();
+            
             var pendingTransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
             if (pendingTransferAlert != null)
             {
@@ -146,7 +147,7 @@ namespace ntbs_service.Pages.Alerts
         //     return RedirectToPage("/Notifications/Overview", new { NotificationId });
         // }
 
-        public async Task<JsonResult> OnGetGetFilteredTbServiceListsByPhecCode(string value)
+        public async Task<JsonResult> OnGetFilteredTbServiceListsByPhecCode(string value)
         {
             var filteredTbServices = await _referenceDataRepository.GetTbServicesFromPhecCodeAsync(value);
 
@@ -162,7 +163,7 @@ namespace ntbs_service.Pages.Alerts
                 });
         }
 
-        public async Task<JsonResult> OnGetGetFilteredCaseManagersListByTbServiceCode(string value)
+        public async Task<JsonResult> OnGetFilteredCaseManagersListByTbServiceCode(string value)
         {
             var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> {value});
 

@@ -46,6 +46,7 @@ namespace ntbs_service.Migrations
                     b.Property<int?>("NotificationId");
 
                     b.Property<string>("TbServiceCode")
+                        .IsRequired()
                         .HasMaxLength(16);
 
                     b.HasKey("AlertId");
@@ -12783,12 +12784,15 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
-                    b.Property<string>("OtherReasonDescription");
+                    b.Property<string>("OtherReasonDescription")
+                        .HasMaxLength(200);
 
                     b.Property<string>("TransferReason")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(30);
 
-                    b.Property<string>("TransferRequestNote");
+                    b.Property<string>("TransferRequestNote")
+                        .HasMaxLength(200);
 
                     b.HasDiscriminator().HasValue("TransferRequest");
                 });
@@ -12805,7 +12809,8 @@ namespace ntbs_service.Migrations
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()
-                        .HasForeignKey("TbServiceCode");
+                        .HasForeignKey("TbServiceCode")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
