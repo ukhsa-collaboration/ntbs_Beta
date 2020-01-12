@@ -58,6 +58,9 @@ namespace ntbs_service.Models.Entities
                 return CaseManager.CaseManagerTbServices.Any(c => c.TbServiceCode == TbServiceCode);
             }
         }
+
+        [NotMapped]
+        public bool Dismissable => AlertStatus == AlertStatus.Open;
     }
 
 }

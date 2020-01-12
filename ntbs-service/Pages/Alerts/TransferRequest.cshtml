@@ -18,6 +18,7 @@
         <div>
             <cascading-dropdown filter-first-handler-path="FilteredTbServiceListsByPhecCode" 
                 filter-second-handler-path="FilteredCaseManagersListByTbServiceCode"
+                v-bind:hidden-first-dropdown-with-no-js="true"
                 :filtering-refs="['tbServices', 'caseManagers']" inline-template>
                 <div>
                     <nhs-form-group nhs-form-group-type="Standard" ref="firstFilterContainer" classes="hidden">
@@ -94,7 +95,7 @@
                                 </label>
                             </div>
                         }
-                        else if (reason == TransferReason.Other)
+                        else
                         {
                             <div class="nhsuk-radios__item">
                                 <input asp-for="TransferAlert.TransferReason" nhs-input-type="Radios" type="radio"

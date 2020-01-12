@@ -30,10 +30,6 @@ namespace ntbs_service.Pages.Notifications
             NotificationId = Notification.NotificationId;
             await GetLinkedNotifications();
             await GetAlertsAsync();
-            if(Alerts.Any(x => x.AlertType == AlertType.TransferRequest) == true)
-            {
-                TransferRequestPending = true;
-            }
             await AuthorizeAndSetBannerAsync();
             if (!HasEditPermission)
             {

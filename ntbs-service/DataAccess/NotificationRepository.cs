@@ -160,6 +160,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.MDRDetails.Country)
                 .Include(n => n.SocialContextAddresses)
                 .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
+                .Include(n => n.Alerts)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

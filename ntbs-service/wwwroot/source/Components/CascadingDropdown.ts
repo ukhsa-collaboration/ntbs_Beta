@@ -27,6 +27,9 @@ const CascadingDropdown = Vue.extend({
         },
         filteringRefs: {
             type: Array
+        },
+        hiddenFirstDropdownWithNoJs: {
+            type: Boolean
         }
     },
     mounted: function () {
@@ -35,7 +38,10 @@ const CascadingDropdown = Vue.extend({
     methods: {
         filteringMounted: function () {
             this.fetchFilteredList("", this.filterSecondHandlerPath);
-            this.$refs["firstFilterContainer"].classList.remove("hidden");
+            if(this.hiddenFirstDropdownWithNoJs)
+            {
+                this.$refs["firstFilterContainer"].classList.remove("hidden");
+            }
         },
         firstFilteringChanged: function () {
             this.fetchFilteredList(this.getFirstFilteringValue(), this.filterFirstHandlerPath);
