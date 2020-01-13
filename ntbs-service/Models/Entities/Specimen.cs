@@ -13,10 +13,10 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Lab number")]
         public string ReferenceLaboratoryNumber { get; set; }
 
-        [Display(Name = "Speciment Type")]
+        [Display(Name = "Specimen type")]
         public string SpecimenTypeCode { get; set; }
 
-        [Display(Name = "Specimen Date")]
+        [Display(Name = "Specimen date")]
         public DateTime? SpecimenDate { get; set; }
 
         [Display(Name = "Isoniazid")]
@@ -46,13 +46,13 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Species")]
         public string Species { get; set; }
 
-        [Display(Name = "Nhs number")]
+        [Display(Name = "NHS number")]
         public string LabNhsNumber { get; set; }
 
         [Display(Name = "Date of birth")]
         public DateTime? LabBirthDate { get; set; }
 
-        [Display(Name = "Fullname")]
+        [Display(Name = "Name")]
         public string LabName { get; set; }
 
         [Display(Name = "Sex")]
@@ -66,6 +66,6 @@ namespace ntbs_service.Models.Entities
 
         public string FormattedSpecimenDate => SpecimenDate.ConvertToString();
         public string FormattedPatientDob => LabBirthDate.ConvertToString();
-
+        public string FormattedNhsNumber => NotificationFieldFormattingHelper.FormatNHSNumber(LabNhsNumber);
     }
 }

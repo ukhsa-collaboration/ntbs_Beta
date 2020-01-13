@@ -19,7 +19,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Earliest specimen date")]
         public DateTime? EarliestSpecimenDate { get; set; }
 
-        [Display(Name = "Drug Resitance")]
+        [Display(Name = "Drug resistance profile")]
         public string DrugResistanceProfile { get; set; }
 
         [Display(Name = "Isoniazid")]

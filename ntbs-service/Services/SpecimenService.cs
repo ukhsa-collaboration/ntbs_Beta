@@ -38,7 +38,8 @@ namespace ntbs_service.Services
                 LabName,
                 LabSex,
                 LabAddress
-            FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)";
+            FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)
+            ORDER BY SpecimenDate DESC";
 
         private readonly string unmatchSpecimentSqlProcedure = @"uspUnmatchSpecimen";
 
@@ -57,13 +58,13 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task UnmatchSpecimen(int notificationId, string labReferenceNumber)
+        public async Task UnmatchSpecimen(int notificationId, string referenceLaboratoryNumber)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 await connection.QueryAsync(unmatchSpecimentSqlProcedure,
-                                            new { labReferenceNumber, notificationId },
+                                            new { referenceLaboratoryNumber, notificationId },
                                             commandType: CommandType.StoredProcedure);
             }
         }
