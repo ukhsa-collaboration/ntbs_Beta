@@ -25,27 +25,27 @@
         <div class="bold-text"> Transfer sent to: </div>
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneThird">
-                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
+                <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     PHEC
-                </label>
+                </span>
                 <div>
                     @Model.TransferAlert.TbService.PHEC.Name
                 </div>
             </nhs-grid-column>
 
             <nhs-grid-column grid-column-width="OneThird">
-                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
+                <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     TB Service
-                </label>
+                </span>
                 <div>
                     @Model.TransferAlert.TbServiceName
                 </div>
             </nhs-grid-column>
 
             <nhs-grid-column grid-column-width="OneThird">
-                <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
+                <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
                     Case manager
-                </label>
+                </span>
                 <div>
                     @Model.TransferAlert.CaseManagerFullName
                 </div>
@@ -54,18 +54,18 @@
 
         <br>
 
-        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
+        <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
             Reason for transfer
-        </label>
+        </span>
         <div>
             @Model.TransferAlert.TransferReason
         </div>
 
         <br>
 
-        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode" classes="bold-text">
+        <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
             Additional information sent with transfer
-        </label>
+        </span>
         <div>
             @Model.TransferAlert.TransferRequestNote
         </div>

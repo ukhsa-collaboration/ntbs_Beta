@@ -31,7 +31,7 @@
                             <div class="flex-container overview-alert" id="alert-@alert.AlertId">
                                 <div class="alert-description--overview-view">@alert.Action</div>
                                 <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
-                                @if(!alert.Dismissable)
+                                @if(alert.Dismissable)
                                 {
                                     <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
                                         class="dismiss-alert-button--overview-view">
