@@ -12,6 +12,7 @@ namespace ntbs_service.DataAccess
     {
         Task<Alert> GetAlertByIdAsync(int? alertId);
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
+        Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType);
         Task AddAlertAsync(Alert alert);
         Task UpdateAlertAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
@@ -24,7 +25,7 @@ namespace ntbs_service.DataAccess
 
         public AlertRepository(NtbsContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task AddAlertAsync(Alert alert)
@@ -43,6 +44,15 @@ namespace ntbs_service.DataAccess
         {
             return await _context.Alert
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
+        }
+
+        public async Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
+        {
+            return await _context.Alert
+                .Where(a => a.NotificationId == notificationId)
+                .Where(a => a.AlertType == alertType)
+                .Where(a => a.AlertStatus == AlertStatus.Open)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
@@ -72,6 +82,7 @@ namespace ntbs_service.DataAccess
             return _context.Alert
                 .Where(n => n.AlertStatus != AlertStatus.Closed)
                 .Include(n => n.TbService)
+                    .ThenInclude(s => s.PHEC)
                 .Include(n => n.CaseManager);
         }
     }

@@ -1,0 +1,85 @@
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@model ntbs_service.Pages.Alerts.TransferRequestModel
+@using NHSUK.FrontEndLibrary.TagHelpers
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"Transfer Request - {Model.TransferAlert.AlertId}";
+}
+
+<nhs-width-container container-width="Standard">
+    <form method="post" autocomplete="off">
+        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
+        <h3> Notification #@Model.NotificationId is pending transfer acceptance </h3>
+
+        <div>
+            It will continue to appear in your Notifications and you can continue to edit until it is accepted.
+        </div>
+
+        <br>
+
+        <h3> Transfer summary </h3>
+
+        <div class="bold-text"> Transfer sent to: </div>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
+                    PHEC
+                </span>
+                <div>
+                    @Model.TransferAlert.TbService.PHEC.Name
+                </div>
+            </nhs-grid-column>
+
+            <nhs-grid-column grid-column-width="OneThird">
+                <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
+                    TB Service
+                </span>
+                <div>
+                    @Model.TransferAlert.TbServiceName
+                </div>
+            </nhs-grid-column>
+
+            <nhs-grid-column grid-column-width="OneThird">
+                <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
+                    Case manager
+                </span>
+                <div>
+                    @Model.TransferAlert.CaseManagerFullName
+                </div>
+            </nhs-grid-column>
+        </nhs-grid-row>
+
+        <br>
+
+        <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
+            Reason for transfer
+        </span>
+        <div>
+            @Model.TransferAlert.TransferReason
+        </div>
+
+        <br>
+
+        <span asp-for="TransferAlert.TbServiceCode" class="nhsuk-label bold-text">
+            Additional information sent with transfer
+        </span>
+        <div>
+            @Model.TransferAlert.TransferRequestNote
+        </div>
+
+        <br>
+
+        <div class="flex-container">
+            <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)"
+                class="nhsuk-button pending-transfer-return-link">
+                Return to notification
+            </a>
+            <button id="cancel-transfer-button" asp-page-handler="Cancel" class="button-link pending-transfer-cancel-button">
+                Cancel transfer
+            </button>
+        </div>
+    </form>
+</nhs-width-container>

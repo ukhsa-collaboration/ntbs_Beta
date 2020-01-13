@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200110160249_AddTransferAlert")]
+    partial class AddTransferAlert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +35,7 @@ namespace ntbs_service.Migrations
                     b.Property<string>("AlertType")
                         .IsRequired();
 
-                    b.Property<string>("CaseManagerUsername")
+                    b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
 
                     b.Property<string>("ClosingUserId")
@@ -51,7 +53,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("AlertId");
 
-                    b.HasIndex("CaseManagerUsername");
+                    b.HasIndex("CaseManagerEmail");
 
                     b.HasIndex("TbServiceCode");
 
@@ -64,15 +66,32 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator<string>("AlertType");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.CaseManager", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64);
+
+                    b.Property<string>("FamilyName")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("GivenName")
+                        .HasMaxLength(64);
+
+                    b.HasKey("Email");
+
+                    b.ToTable("CaseManager");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
-                    b.Property<string>("CaseManagerUsername")
+                    b.Property<string>("CaseManagerEmail")
                         .HasMaxLength(64);
 
                     b.Property<string>("TbServiceCode")
                         .HasMaxLength(16);
 
-                    b.HasKey("CaseManagerUsername", "TbServiceCode");
+                    b.HasKey("CaseManagerEmail", "TbServiceCode");
 
                     b.HasIndex("TbServiceCode");
 
@@ -290,32 +309,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("TreatmentOutcomeId");
 
                     b.ToTable("TreatmentEvent");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.User", b =>
-                {
-                    b.Property<string>("Username")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(64);
-
-                    b.Property<string>("AdGroups");
-
-                    b.Property<string>("DisplayName")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("FamilyName")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("GivenName")
-                        .HasMaxLength(64);
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool>("IsCaseManager");
-
-                    b.HasKey("Username");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.VenueType", b =>
@@ -12808,9 +12801,9 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
+                    b.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                         .WithMany()
-                        .HasForeignKey("CaseManagerUsername");
+                        .HasForeignKey("CaseManagerEmail");
 
                     b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("Alerts")
@@ -12824,9 +12817,9 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>
                 {
-                    b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
+                    b.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                         .WithMany("CaseManagerTbServices")
-                        .HasForeignKey("CaseManagerUsername")
+                        .HasForeignKey("CaseManagerEmail")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
@@ -13003,7 +12996,7 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<string>("CaseManagerUsername")
+                            b1.Property<string>("CaseManagerEmail")
                                 .HasMaxLength(64);
 
                             b1.Property<string>("Consultant")
@@ -13015,7 +13008,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasKey("NotificationId");
 
-                            b1.HasIndex("CaseManagerUsername");
+                            b1.HasIndex("CaseManagerEmail");
 
                             b1.HasIndex("HospitalId");
 
@@ -13023,9 +13016,9 @@ namespace ntbs_service.Migrations
 
                             b1.ToTable("Episode");
 
-                            b1.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
+                            b1.HasOne("ntbs_service.Models.Entities.CaseManager", "CaseManager")
                                 .WithMany()
-                                .HasForeignKey("CaseManagerUsername");
+                                .HasForeignKey("CaseManagerEmail");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.Hospital", "Hospital")
                                 .WithMany()
@@ -13122,7 +13115,8 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("LocalPatientId")
                                 .HasMaxLength(50);
 
-                            b1.Property<string>("NhsNumber");
+                            b1.Property<string>("NhsNumber")
+                                .HasMaxLength(10);
 
                             b1.Property<bool>("NhsNumberNotKnown");
 

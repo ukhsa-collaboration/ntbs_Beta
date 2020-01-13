@@ -21,9 +21,9 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository = null)
         {
-            this.Service = service;
-            this.AuthorizationService = authorizationService;
-            this.NotificationRepository = notificationRepository;
+            Service = service;
+            AuthorizationService = authorizationService;
+            NotificationRepository = notificationRepository;
         }
 
         protected NotificationGroup Group;

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
@@ -9,18 +10,18 @@ namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
-        protected IAlertRepository _alertRepository;
+        protected IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
 
         public CultureAndResistance CultureAndResistance { get; set; }
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IAlertRepository alertRepository,
+            IAlertService alertService,
             INotificationRepository notificationRepository,
             ICultureAndResistanceService cultureAndResistanceService) : base(service, authorizationService, notificationRepository)
         {
-            _alertRepository = alertRepository;
+            _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
         }
 
@@ -61,7 +62,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task GetAlertsAsync()
         {
-            Alerts = await _alertRepository.GetAlertsForNotificationAsync(NotificationId);
+            Alerts = await _alertService.GetAlertsForNotificationAsync(NotificationId, User);
         }
     }
 }

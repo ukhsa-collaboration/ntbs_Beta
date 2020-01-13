@@ -138,6 +138,7 @@ namespace ntbs_service.DataAccess
             var treatmentEventTypeEnumConverter = new EnumToStringConverter<TreatmentEventType>();
             var treatmentOutcomeTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeType>();
             var treatmentOutcomeSubTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeSubType>();
+            var transferReasonEnumConverter = new EnumToStringConverter<TransferReason>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -476,12 +477,19 @@ namespace ntbs_service.DataAccess
                     .HasConversion(alertTypeEnumConverter);
                 entity.HasDiscriminator<AlertType>("AlertType")
                     .HasValue<TestAlert>(AlertType.Test)
-                    .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR);
+                    .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
+                    .HasValue<TransferAlert>(AlertType.TransferRequest);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();
+            modelBuilder.Entity<TransferAlert>(entity =>
+            {
+                entity.Property(e => e.TransferReason)
+                    .HasConversion(transferReasonEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
 
             modelBuilder.Entity<VenueType>().HasData(
                 Models.SeedData.Venues.GetTypes()
