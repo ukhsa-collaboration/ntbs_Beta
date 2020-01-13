@@ -60,7 +60,7 @@ namespace ntbs_service.Models.Entities
         }
 
         [NotMapped]
-        public bool Dismissable => AlertStatus == AlertStatus.Open;
+        public bool Dismissable => AlertType != AlertType.TransferRequest;
     }
 
 }

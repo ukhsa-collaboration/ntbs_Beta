@@ -24,7 +24,7 @@ namespace ntbs_integration_tests.TransferPage
                     AlertId = Utilities.TRANSFER_ALERT_ID,
                     NotificationId = Utilities.NOTIFIED_ID,
                     TbServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerEmail = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                    CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL,
                     AlertStatus = AlertStatus.Open
                 }
             };

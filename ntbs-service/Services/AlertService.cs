@@ -73,7 +73,7 @@ namespace ntbs_service.Services
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
                 alert.CreationDate = DateTime.Now;
-                if (alert.CaseManagerUsername == null)
+                if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
                 {
                     alert.CaseManagerUsername = notification?.Episode?.CaseManagerUsername;
                 }

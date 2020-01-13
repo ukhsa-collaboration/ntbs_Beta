@@ -48,17 +48,17 @@
                         </select>
                     </nhs-form-group>
                     @{
-                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.CaseManagerEmail");
+                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.CaseManagerUsername");
                         var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                         var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerEmail" ref="caseManagers">
-                        <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerEmail">
-                            @Html.DisplayNameFor(model => model.TransferAlert.CaseManagerEmail)
+                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerUsername" ref="caseManagers">
+                        <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerUsername">
+                            @Html.DisplayNameFor(model => model.TransferAlert.CaseManagerUsername)
                         </label>
                         <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
-                            ref="errorField" asp-validation-for="TransferAlert.CaseManagerEmail"></span>
-                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferAlert.CaseManagerEmail"
+                            ref="errorField" asp-validation-for="TransferAlert.CaseManagerUsername"></span>
+                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferAlert.CaseManagerUsername"
                                 asp-items="Model.CaseManagers">
                             <option value="" selected>Please select</option>
                         </select>

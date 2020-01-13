@@ -13,12 +13,15 @@ namespace ntbs_service_unit_tests.Services
         private readonly IAlertService mockAlertService;
         private readonly Mock<IAlertRepository> mockAlertRepository;
         private readonly Mock<INotificationRepository> mockNotificationRepository;
+        private readonly Mock<AuthorizationService> mockAuthorizationService;
 
         public AlertServiceTest()
         {
             mockAlertRepository = new Mock<IAlertRepository>();
             mockNotificationRepository = new Mock<INotificationRepository>();
-            mockAlertService = new AlertService(mockAlertRepository.Object, mockNotificationRepository.Object);
+            mockAlertService = new AlertService(mockAlertRepository.Object,
+                                                mockNotificationRepository.Object,
+                                                mockAuthorizationService.Object);
         }
 
         [Fact]
