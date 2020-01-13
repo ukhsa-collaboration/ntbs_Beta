@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using MoreLinq.Extensions;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.DataMigration
@@ -103,15 +103,18 @@ namespace ntbs_service.DataMigration
 
         public async Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds)
         {
-            if (legacyIds.Count() == 0)
+            var sites = new List<dynamic>();
+
+            foreach (var idsBatch in legacyIds.Batch(1000))
             {
-                return new List<dynamic>();
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    var batchSites = await connection.QueryAsync(NotificationSitesQuery, new {Ids = idsBatch});
+                    sites.AddRange(batchSites);
+                }
             }
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(NotificationSitesQuery, new { Ids = legacyIds });
-            }
+            return sites;
         }
     }
 }
