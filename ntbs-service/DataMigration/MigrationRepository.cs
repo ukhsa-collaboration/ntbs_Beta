@@ -34,7 +34,19 @@ namespace ntbs_service.DataMigration
                 vstr.TotalNumberOfCountries AS visitor_TotalNumberOfCountries,
                 vstr.StayLengthInMonths1 AS visitor_StayLengthInMonths1,
                 vstr.StayLengthInMonths2 AS visitor_StayLengthInMonths2,
-                vstr.StayLengthInMonths3 AS visitor_StayLengthInMonths3
+                vstr.StayLengthInMonths3 AS visitor_StayLengthInMonths3,
+                rfd.Status AS riskFactorDrugs_Status,
+                rfd.IsCurrent AS riskFactorDrugs_IsCurrent,
+                rfd.InPastFiveYears AS riskFactorDrugs_InPastFiveYears,
+                rfd.MoreThanFiveYearsAgo AS riskFactorDrugs_MoreThanFiveYearsAgo,
+                rfh.Status AS riskFactorHomelessNess_Status,
+                rfh.IsCurrent AS riskFactorHomelessNess_IsCurrent,
+                rfh.InPastFiveYears AS riskFactorHomelessNess_InPastFiveYears,
+                rfh.MoreThanFiveYearsAgo AS riskFactorHomelessNess_MoreThanFiveYearsAgo,
+                rfi.Status AS riskFactorImprisonment_Status,
+                rfi.IsCurrent AS riskFactorImprisonment_IsCurrent,
+                rfi.InPastFiveYears AS riskFactorImprisonment_InPastFiveYears,
+                rfi.MoreThanFiveYearsAgo AS riskFactorImprisonment_MoreThanFiveYearsAgo
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
@@ -44,6 +56,10 @@ namespace ntbs_service.DataMigration
             LEFT JOIN ClinicalDetails clncl ON clncl.OldNotificationId = n.OldNotificationId
             LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
             LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
+            LEFT JOIN SocialRiskFactors srf ON srf.OldNotificationId = n.OldNotificationId
+            LEFT JOIN RiskFactorDrugs rfd on n.OldNotificationId = rfd.OldNotificationId
+            LEFT JOIN RiskFactorHomelessness rfh on n.OldNotificationId = rfh.OldNotificationId
+            LEFT JOIN RiskFactorImprisonment rfi on n.OldNotificationId = rfi.OldNotificationId
             WHERE GroupId IN (
                 SELECT GroupId
                 FROM Notifications n 
