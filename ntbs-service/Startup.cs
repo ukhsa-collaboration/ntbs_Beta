@@ -164,8 +164,6 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
-            services.Configure<AdfsOptions>(adfsConfig);
-            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
             var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
