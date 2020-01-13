@@ -200,6 +200,9 @@ namespace ntbs_service.Migrations
 
                     b.Property<DateTime?>("DateTo");
 
+                    b.Property<string>("Details")
+                        .HasMaxLength(100);
+
                     b.Property<int>("NotificationId");
 
                     b.Property<string>("Postcode");
@@ -13045,11 +13048,11 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<bool>("HasBioTherapy");
+                            b1.Property<bool?>("HasBioTherapy");
 
-                            b1.Property<bool>("HasOther");
+                            b1.Property<bool?>("HasOther");
 
-                            b1.Property<bool>("HasTransplantation");
+                            b1.Property<bool?>("HasTransplantation");
 
                             b1.Property<string>("OtherDescription")
                                 .HasMaxLength(100);
