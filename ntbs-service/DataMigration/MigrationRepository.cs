@@ -41,7 +41,7 @@ namespace ntbs_service.DataMigration
             LEFT JOIN DeathDates dd ON dd.OldNotificationId = n.OldNotificationId
             LEFT JOIN VisitorHistory vstr ON vstr.OldNotificationId = n.OldNotificationId
             LEFT JOIN TravelHistory trvl ON trvl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ClinicalDates clncl ON clncl.OldNotificationId = n.OldNotificationId
+            LEFT JOIN ClinicalDetails clncl ON clncl.OldNotificationId = n.OldNotificationId
             LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
             LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
             WHERE GroupId IN (
@@ -50,7 +50,7 @@ namespace ntbs_service.DataMigration
                 {0}
             )";
         readonly string NotificationsByIdQuery = string.Format(NotificationsQuery, "WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids");
-        readonly string NotificationsByDateQuery = string.Format(NotificationsQuery, @"WHERE n.NotificationDate > @StartDate AND n.NotificationDate < @EndDate");
+        readonly string NotificationsByDateQuery = string.Format(NotificationsQuery, @"WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate");
 
         const string NotificationSitesQuery = @"
             SELECT *

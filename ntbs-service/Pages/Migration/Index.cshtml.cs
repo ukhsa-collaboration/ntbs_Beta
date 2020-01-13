@@ -89,7 +89,7 @@ namespace ntbs_service.Pages.Migration
                     }
 
                     BackgroundJob.Enqueue<INotificationImportService>(x =>
-                        x.ImportByDateAsync(null, requestId, start, end));
+                        x.ImportByDateAsync(null, requestId, start, end.AddDays(1)));
                 }
             }
 
