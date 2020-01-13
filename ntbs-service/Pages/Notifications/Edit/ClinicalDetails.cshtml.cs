@@ -134,7 +134,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var notificationSites = CreateNotificationSitesFromModel(Notification);
 
-            // Add additional fields required for date validation
+            // Add additional field required for date validation
             ClinicalDetails.Dob = Notification.PatientDetails.Dob;
 
             ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
