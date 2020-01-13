@@ -12,6 +12,69 @@
        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
 </div>
 <div class="notification-overview-details-container">
+    @if (Model.CultureAndResistance != null)
+    {
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.CulturePositive) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.CulturePositive </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Species) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Species </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.DrugResistanceProfile)</dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.DrugResistanceProfile </dd>
+            </nhs-grid-column>            
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.EarliestSpecimenDate) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.FormattedEarliestSpecimenDate </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Isoniazid) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Isoniazid </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Rifampicin) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Rifampicin </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Pyrazinamide) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Pyrazinamide </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Ethambutol) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Ethambutol </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Aminoglycoside) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Aminoglycoside </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Quinolone) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.Quinolone </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.MDR) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.MDR </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneThird">
+                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.XDR) </dt>
+                <dd class="cell-min-height"> @Model.CultureAndResistance.XDR </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+    }
+
+    <br/>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.TestData.HasTestCarriedOut) </div>
@@ -24,65 +87,5 @@
         ViewData["RenderReducedSizeManualResultsTable"] = true;
         
         <partial name="Shared/_ManualTestResultTable" for="Notification.TestData.ManualTestResults" />
-    }
-
-    @if (Model.CultureAndResistance != null)
-    {
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.CulturePositive) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.CulturePositive </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Species) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Species </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.DrugResistanceProfile)</dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.DrugResistanceProfile </dd>
-            </nhs-grid-column>            
-        </nhs-grid-row>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.EarliestSpecimenDate) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.FormattedEarliestSpecimenDate </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Isoniazid) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Isoniazid </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Rifampicin) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Rifampicin </dd>
-            </nhs-grid-column>
-        </nhs-grid-row>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Pyrazinamide) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Pyrazinamide </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Ethambutol) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Ethambutol </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Aminoglycoside) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Aminoglycoside </dd>
-            </nhs-grid-column>
-        </nhs-grid-row>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Quinolone) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.Quinolone </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.MDR) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.MDR </dd>
-            </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
-                <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.XDR) </dt>
-                <dd class="cell-min-height"> @Model.CultureAndResistance.XDR </dd>
-            </nhs-grid-column>
-        </nhs-grid-row>
     }
 </div>

@@ -2,18 +2,14 @@
 
 @if (Model.Count() > 0)
 {
-    <h2>Summary by specimen</h2>
+    <h4>Summary by specimen</h4>
     <div id="specimens-details">
         @foreach (var specimen in Model)
         {
             <div class="notification-specimen-summary">
-                <h3>Specimen #@specimen.ReferenceLaboratoryNumber</h3>
+                <h5 class="section-header-with-background">Specimen #@specimen.ReferenceLaboratoryNumber</h5>
                 <div>
                     <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneQuarter">
-                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.ReferenceLaboratoryNumber) </dt>
-                            <dd class="cell-min-height"> @specimen.ReferenceLaboratoryNumber </dd>
-                        </nhs-grid-column>
                         <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenDate) </dt>
                             <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
@@ -22,7 +18,7 @@
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenTypeCode) </dt>
                             <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneQuarter">
+                        <nhs-grid-column grid-column-width="OneHalf">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Species) </dt>
                             <dd class="cell-min-height"> @specimen.Species </dd>
                         </nhs-grid-column>
@@ -66,33 +62,33 @@
                 </div>
                 
                 <br>
-                <h3>Patient Details</h3>
+                <h6 class="section-header-with-background">Patient Details</h6>
 
                 <div>
                     <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneThird">
+                        <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabNhsNumber) </dt>
-                            <dd class="cell-min-height"> @specimen.LabNhsNumber </dd>
+                            <dd class="cell-min-height"> @specimen.FormattedNhsNumber </dd>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneThird">
+                        <nhs-grid-column grid-column-width="OneHalf">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabName) </dt>
                             <dd class="cell-min-height"> @specimen.LabName </dd>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneThird">
+                        <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabSex) </dt>
                             <dd class="cell-min-height"> @specimen.LabSex </dd>
                         </nhs-grid-column>
                     </nhs-grid-row>
                     <nhs-grid-row>
-                        <nhs-grid-column grid-column-width="OneThird">
+                        <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabBirthDate) </dt>
                             <dd class="cell-min-height"> @specimen.FormattedPatientDob </dd>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneThird">
+                        <nhs-grid-column grid-column-width="OneHalf">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabAddress) </dt>
                             <dd class="cell-min-height"> @specimen.LabAddress </dd>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneThird">
+                        <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabPostcode) </dt>
                             <dd class="cell-min-height"> @specimen.LabPostcode </dd>
                         </nhs-grid-column>
