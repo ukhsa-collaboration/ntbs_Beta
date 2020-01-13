@@ -22,25 +22,27 @@ namespace ntbs_service.Services
 
     public class LegacySearchService : ILegacySearchService
     {
-        const string SelectQueryStart = @"
+        const string SelectQueryStartTemplate = @"
             SELECT * 
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             WHERE NOT EXISTS ({0})
             ";
+        private string SelectQueryStart => string.Format(SelectQueryStartTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
 
-        const string SelectQueryEnd = @"
-            ORDER BY n.NotificationDate DESC, n.OldNotificationId
-            OFFSET @Offset ROWS
-            FETCH NEXT @Fetch ROWS ONLY";
-
-        const string CountQuery = @"
+        const string CountQueryTemplate = @"
             SELECT COUNT(*)
             FROM Notifications n
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             WHERE NOT EXISTS ({0})
             ";
+        private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
+
+        const string SelectQueryEnd = @"
+            ORDER BY n.NotificationDate DESC, n.OldNotificationId
+            OFFSET @Offset ROWS
+            FETCH NEXT @Fetch ROWS ONLY";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -68,12 +70,12 @@ namespace ntbs_service.Services
 
             IEnumerable<dynamic> results;
             int count;
-            var (sqlQuery, parameters) = builder.GetResult();
+            var (queryConditions, parameters) = builder.GetResult();
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
 
-            string fullSelectQuery = string.Format(SelectQueryStart, _notificationImportHelper.GetSelectImportedNotificationByIdQuery()) + sqlQuery + SelectQueryEnd;
-            string fullCountQuery = string.Format(CountQuery, _notificationImportHelper.GetSelectImportedNotificationByIdQuery()) + sqlQuery;
+            string fullSelectQuery = SelectQueryStart + queryConditions + SelectQueryEnd;
+            string fullCountQuery = CountQuery + queryConditions;
 
             using (var connection = new SqlConnection(connectionString))
             {

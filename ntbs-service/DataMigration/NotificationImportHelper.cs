@@ -9,7 +9,6 @@ namespace ntbs_service.DataMigration
     public interface INotificationImportHelper
     {
         Task CreateTableIfNotExists();
-        string GetImportedNotificationsTableName();
         string GetInsertImportedNotificationQuery();
         string GetSelectImportedNotificationByIdQuery();
     }
@@ -56,9 +55,6 @@ namespace ntbs_service.DataMigration
         }
 
         public string GetInsertImportedNotificationQuery() => string.Format(InsertImportedNotificationsQuery, importedNotificationsTableName);
-
-        public string GetImportedNotificationsTableName() => importedNotificationsTableName;
-
         public string GetSelectImportedNotificationByIdQuery() => string.Format(SelectImportedNotificationByIdQuery, importedNotificationsTableName);
     }
 }

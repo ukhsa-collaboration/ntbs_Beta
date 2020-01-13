@@ -61,7 +61,7 @@ spec:
           - name: ExternalLinks__ReportingUri
             value: ""
           - name: Migration_TablePrefix
-            value: "Int"
+            value: "Uat"
       imagePullSecrets:
       - name: registery-password
 ---
