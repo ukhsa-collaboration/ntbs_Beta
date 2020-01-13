@@ -42,13 +42,13 @@ namespace ntbs_service.DataAccess
 
         public async Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
         {
-            return await _context.Alert
+            return await GetBaseAlertIQueryable()
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
 
         public async Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
         {
-            return await _context.Alert
+            return await GetBaseAlertIQueryable()
                 .Where(a => a.NotificationId == notificationId)
                 .Where(a => a.AlertType == alertType)
                 .Where(a => a.AlertStatus == AlertStatus.Open)
@@ -63,7 +63,7 @@ namespace ntbs_service.DataAccess
                 .OrderByDescending(a => a.CreationDate)
                 .ToListAsync();
         }
-        
+
         public async Task UpdateAlertAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
