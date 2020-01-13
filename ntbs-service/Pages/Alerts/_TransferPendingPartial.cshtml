@@ -1,8 +1,5 @@
 @using ntbs_service.Helpers
-@using ntbs_service.Models.Enums
-@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @model ntbs_service.Pages.Alerts.TransferRequestModel
-@using NHSUK.FrontEndLibrary.TagHelpers
 
 @{
     Layout = "../Shared/_NotificationLayout.cshtml";
@@ -29,7 +26,7 @@
                     PHEC
                 </span>
                 <div>
-                    @Model.TransferAlert.TbService.PHEC.Name
+                    @Model.TransferAlert.TbService?.PHEC?.Name
                 </div>
             </nhs-grid-column>
 
