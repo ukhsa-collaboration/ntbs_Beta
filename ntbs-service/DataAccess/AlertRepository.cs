@@ -49,10 +49,10 @@ namespace ntbs_service.DataAccess
         public async Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
         {
             return await _context.Alert
-                .SingleOrDefaultAsync(m =>
-                    m.NotificationId == notificationId
-                    && m.AlertType == alertType
-                    && m.AlertStatus == AlertStatus.Open);
+                .Where(a => a.NotificationId == notificationId)
+                .Where(a => a.AlertType == alertType)
+                .Where(a => a.AlertStatus == AlertStatus.Open)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices)
