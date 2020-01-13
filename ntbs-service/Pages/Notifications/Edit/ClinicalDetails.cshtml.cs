@@ -162,12 +162,12 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState()
         {
-            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) // TODO NTBS-384 drug resistance profile check
+            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) // TODO NTBS-368 drug resistance profile check
             {
                 var mdrAlert = new MdrAlert() {NotificationId = NotificationId};
                 await _alertService.AddUniqueAlertAsync(mdrAlert);
             }
-            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  // TODO NTBS-384 drug resistance profile check
+            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  // TODO NTBS-368 drug resistance profile check
             {
                 if (Notification.MDRDetails.MDRDetailsEntered)
                 {
