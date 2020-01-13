@@ -32,6 +32,7 @@ namespace ntbs_service.Models.Entities
         public AlertType AlertType { get; set; }
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
+        public virtual bool NotDismissable  { get; }
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "Case manager")]
@@ -58,9 +59,6 @@ namespace ntbs_service.Models.Entities
                 return CaseManager.CaseManagerTbServices.Any(c => c.TbServiceCode == TbServiceCode);
             }
         }
-
-        [NotMapped]
-        public bool Dismissable => AlertType != AlertType.TransferRequest;
     }
 
 }

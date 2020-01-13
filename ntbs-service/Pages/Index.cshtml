@@ -70,7 +70,7 @@
                                 @item.TbServiceName
                             </nhs-table-item>
                             <nhs-table-item>
-                                @if(item.Dismissable)
+                                @if(!item.NotDismissable)
                                 {
                                     <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
                                         @Html.AntiForgeryToken()
