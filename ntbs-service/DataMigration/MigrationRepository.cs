@@ -59,7 +59,7 @@ namespace ntbs_service.DataMigration
 
         const string NotificationSitesQuery = @"
             SELECT *
-            FROM DiseaseSites
+            FROM NotificationSite
             WHERE OldNotificationId IN @Ids
         ";
         private readonly string connectionString;
@@ -76,12 +76,11 @@ namespace ntbs_service.DataMigration
                 connection.Open();
 
                 var importedAt = DateTime.Now.ToString("s");
-                var markNotificationTasks = notifications.Select(n =>
-                {
-                    return connection.QueryAsync(InsertImportedNotificationsQuery, new { n.LegacyId, ImportedAt = importedAt });
-                });
 
-                await Task.WhenAll(markNotificationTasks);
+                foreach (var notification in notifications)
+                {
+                    await connection.QueryAsync(InsertImportedNotificationsQuery, new { notification.LegacyId, ImportedAt = importedAt });
+                }
             }
         }
 

@@ -37,7 +37,11 @@ namespace EFAuditer.Migrations
 
                     b.Property<string>("EventType");
 
-                    b.Property<int>("OriginalId");
+                    b.Property<string>("OriginalId");
+
+                    b.Property<string>("RootEntity");
+
+                    b.Property<string>("RootId");
 
                     b.HasKey("Id");
 

@@ -9,6 +9,7 @@ using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.DataAccess
 {
+    [AuditDbContext(IncludeEntityObjects = true)]
     public class NtbsContext : AuditDbContext
     {
         // Max Length for fields with enum -> string conversion configured.
@@ -37,7 +38,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<PHEC> PHEC { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
         public virtual DbSet<Occupation> Occupation { get; set; }
-        public virtual DbSet<CaseManager> CaseManager { get; set; }
+        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<CaseManagerTbService> CaseManagerTbService { get; set; }
         public virtual DbSet<SampleType> SampleType { get; set; }
         public virtual DbSet<ManualTestType> ManualTestType { get; set; }
@@ -182,7 +183,7 @@ namespace ntbs_service.DataAccess
 
                 entity.OwnsOne(e => e.Episode, episode =>
                 {
-                    episode.Property(e => e.CaseManagerEmail)
+                    episode.Property(e => e.CaseManagerUsername)
                         .HasMaxLength(64);
 
                     episode.HasOne(e => e.CaseManager);
@@ -386,25 +387,26 @@ namespace ntbs_service.DataAccess
                 Models.SeedData.Occupations.GetOccupations()
             );
 
-            modelBuilder.Entity<CaseManager>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Email).HasMaxLength(64);
+                entity.Property(e => e.Username).HasMaxLength(64);
                 entity.Property(e => e.FamilyName).HasMaxLength(64);
                 entity.Property(e => e.GivenName).HasMaxLength(64);
+                entity.Property(e => e.DisplayName).HasMaxLength(64);
 
-                entity.HasKey(e => e.Email);
+                entity.HasKey(e => e.Username);
             });
 
             modelBuilder.Entity<CaseManagerTbService>(entity =>
             {
-                entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
+                entity.Property(e => e.CaseManagerUsername).HasMaxLength(64);
                 entity.Property(e => e.TbServiceCode).HasMaxLength(16);
 
-                entity.HasKey(e => new { e.CaseManagerEmail, e.TbServiceCode });
+                entity.HasKey(e => new { e.CaseManagerUsername, e.TbServiceCode });
 
                 entity.HasOne(e => e.CaseManager)
                     .WithMany(caseManager => caseManager.CaseManagerTbServices)
-                    .HasForeignKey(e => e.CaseManagerEmail);
+                    .HasForeignKey(e => e.CaseManagerUsername);
 
                 entity.HasOne(e => e.TbService)
                     .WithMany(tbService => tbService.CaseManagerTbServices)
@@ -467,7 +469,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.AlertStatus)
                     .HasConversion(alertStatusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
-                entity.Property(e => e.CaseManagerEmail).HasMaxLength(64);
+                entity.Property(e => e.CaseManagerUsername).HasMaxLength(64);
                 entity.Property(e => e.TbServiceCode).HasMaxLength(16);
                 entity.Property(e => e.ClosingUserId).HasMaxLength(64);
                 entity.HasIndex(p => new { p.NotificationId, p.AlertType });

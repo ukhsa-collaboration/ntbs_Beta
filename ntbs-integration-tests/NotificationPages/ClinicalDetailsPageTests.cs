@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -17,6 +17,22 @@ namespace ntbs_integration_tests.NotificationPages
         protected override string NotificationSubPath => NotificationSubPaths.EditClinicalDetails;
 
         public ClinicalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+
+        public static IList<Notification> GetSeedingNotifications()
+        {
+            return new List<Notification>
+            {
+                new Notification
+                {
+                    NotificationId = Utilities.CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID,
+                    NotificationStatus = NotificationStatus.Draft,
+                    NotificationSites = new List<NotificationSite>
+                    {
+                        new NotificationSite { SiteId = (int)SiteId.BONE_OTHER }
+                    }
+                }
+            };
+        }
 
         [Fact]
         public async Task PostDraft_ReturnsPageWithAllModelErrors_IfModelNotValid()
@@ -113,6 +129,22 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
+        public async Task ExpandableDiseaseSites_BothOpen_IfExtraPulmonary()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var siteExpanders = document.QuerySelectorAll(".disease-sites");
+            Assert.Equal(2, siteExpanders.Length);
+            var openSiteExpanders = document.QuerySelectorAll(".disease-sites[open]");
+            Assert.Equal(2, openSiteExpanders.Length);
+        }
+
+        [Fact]
         public async Task ExpandableDiseaseSites_BothOpen_IfSitesValidationError()
         {
             // Arrange
@@ -128,7 +160,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url, submitType:"Save");
+            var result = await SendPostFormWithData(initialDocument, formData, url, submitType: "Save");
 
             // Assert
             result.EnsureSuccessStatusCode();
@@ -421,7 +453,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task ValidateClinicalDetailsProperties_ReturnsErrorIfBothTreatmentsSetToTrue()
         {
             // Arrange
-            var keyValuePairs = new string[]
+            var keyValuePairs = new []
             {
                 "keyValuePairs[0][key]=IsShortCourseTreatment",
                 "keyValuePairs[0][value]=true",
@@ -459,7 +491,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr", 
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr",
                 "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk");
         }
     }

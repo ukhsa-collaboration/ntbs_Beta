@@ -4,10 +4,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
+using ntbs_service.DataAccess;
 
 namespace ntbs_service.DataMigration
 {
@@ -21,11 +23,13 @@ namespace ntbs_service.DataMigration
     {
         private readonly string connectionString;
         private readonly IMigrationRepository _migrationRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
-        public NotificationMapper(IConfiguration configuration, IMigrationRepository migrationRepository)
+        public NotificationMapper(IConfiguration configuration, IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository)
         {
             connectionString = configuration.GetConnectionString("migration");
             _migrationRepository = migrationRepository;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
@@ -52,13 +56,18 @@ namespace ntbs_service.DataMigration
             var notifications = notificationsRaw.Join(notificationSiteGroups,
                 n => n.OldNotificationId,
                 nsGroup => nsGroup.Key,
-                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.DiseaseSiteId != null)));
+                (n, nsGroup) => (rawNotification: n, rawSites: nsGroup.Where(x => x != null && x.SiteId != null)));
 
-            return notifications.GroupBy(x => x.rawNotification.GroupId)
-                .Select(group => group.Select(AsNotification));
+            var notificationGroups = notifications.GroupBy(x => x.rawNotification.GroupId);
+
+            return Task.WhenAll(notificationGroups
+                .Select(group =>
+                {
+                    return Task.WhenAll(group.Select(AsNotificationAsync));
+                })).Result;
         }
 
-        private static Notification AsNotification((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
+        private async Task<Notification> AsNotificationAsync((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
         {
             var rawNotification = rawResult.rawNotification;
             var sites = rawResult.rawSites.Select(AsNotificationSite).ToList();
@@ -75,23 +84,39 @@ namespace ntbs_service.DataMigration
                 VisitorDetails = ExtractVisitorDetails(rawNotification),
                 ComorbidityDetails = ExtractComorbidityDetails(rawNotification),
                 ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification),
+                Episode = ExtractEpisodeDetails(rawNotification),
                 NotificationStatus = NotificationStatus.Notified,
                 NotificationSites = sites
             };
 
+            if (notification.Episode.HospitalId is Guid guid)
+            {
+                var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
+                notification.Episode.TBServiceCode = tbService.Code;
+            }
+
             return notification;
+        }
+
+        private static Episode ExtractEpisodeDetails(dynamic rawNotification)
+        {
+            return new Episode
+            {
+                HospitalId = rawNotification.NtbsHospitalId,
+                Consultant = rawNotification.Consultant
+            };
         }
 
         private static NotificationSite AsNotificationSite(dynamic result)
         {
-            if (result.DiseaseSiteId == null)
+            if (result.SiteId == null)
             {
                 return null;
             }
             return new NotificationSite
             {
-                SiteId = result.DiseaseSiteId,
-                SiteDescription = result.DiseaseSiteText
+                SiteId = result.SiteId,
+                SiteDescription = result.SiteDescription
             };
         }
 
@@ -125,29 +150,41 @@ namespace ntbs_service.DataMigration
             DeathDate = notification.DeathDate
         };
 
-        private static TravelDetails ExtractTravelDetails(dynamic notification) => new TravelDetails
+        private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
-            HasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel),
-            TotalNumberOfCountries = StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries),
-            Country1Id = notification.travel_Country1,
-            Country2Id = notification.travel_Country2,
-            Country3Id = notification.travel_Country3,
-            StayLengthInMonths1 = notification.StayLengthInMonths1,
-            StayLengthInMonths2 = notification.StayLengthInMonths2,
-            StayLengthInMonths3 = notification.StayLengthInMonths3
-        };
+            bool? hasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel);
+            var totalNumberOfCountries = hasTravel ?? false ? StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
 
-        private static VisitorDetails ExtractVisitorDetails(dynamic notification) => new VisitorDetails
+            return new TravelDetails
+            {
+                HasTravel = hasTravel,
+                TotalNumberOfCountries = totalNumberOfCountries,
+                Country1Id = notification.travel_Country1,
+                Country2Id = notification.travel_Country2,
+                Country3Id = notification.travel_Country3,
+                StayLengthInMonths1 = notification.StayLengthInMonths1,
+                StayLengthInMonths2 = notification.StayLengthInMonths2,
+                StayLengthInMonths3 = notification.StayLengthInMonths3
+            };
+        }
+
+        private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
-            HasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor),
-            TotalNumberOfCountries = StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries),
-            Country1Id = notification.visitor_Country1,
-            Country2Id = notification.visitor_Country2,
-            Country3Id = notification.visitor_Country3,
-            StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
-            StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
-            StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
-        };
+            bool? hasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor);
+            var totalNumberOfCountries = hasVisitor ?? false ? StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
+
+            return new VisitorDetails
+            {
+                HasVisitor = hasVisitor,
+                TotalNumberOfCountries = totalNumberOfCountries,
+                Country1Id = notification.visitor_Country1,
+                Country2Id = notification.visitor_Country2,
+                Country3Id = notification.visitor_Country3,
+                StayLengthInMonths1 = notification.visitor_StayLengthInMonths1,
+                StayLengthInMonths2 = notification.visitor_StayLengthInMonths2,
+                StayLengthInMonths3 = notification.visitor_StayLengthInMonths3
+            };
+        }
 
         private static PatientDetails ExtractPatientDetails(dynamic notification) => new PatientDetails
         {
@@ -156,7 +193,7 @@ namespace ntbs_service.DataMigration
             NhsNumber = notification.NhsNumber,
             Dob = notification.DateOfBirth,
             YearOfUkEntry = notification.UkEntryYear,
-            UkBorn = StringToValueConverter.GetNullableBoolValue(notification.UkBorn),
+            UkBorn = notification.UkBorn,
             CountryId = notification.BirthCountryId,
             LocalPatientId = notification.LocalPatientId,
             Postcode = notification.Postcode,

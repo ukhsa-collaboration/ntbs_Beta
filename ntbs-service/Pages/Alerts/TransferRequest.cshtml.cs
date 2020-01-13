@@ -97,9 +97,9 @@ namespace ntbs_service.Pages.Alerts
             {
                 TransferAlert.TbService = await _referenceDataRepository.GetTbServiceByCodeAsync(TransferAlert.TbServiceCode);
             }
-            if (TransferAlert.CaseManagerEmail != null)
+            if (TransferAlert.CaseManagerUsername != null)
             {
-                TransferAlert.CaseManager = await _referenceDataRepository.GetCaseManagerByEmailAsync(TransferAlert.CaseManagerEmail);
+                TransferAlert.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferAlert.CaseManagerUsername);
             }
         }
 
@@ -108,7 +108,7 @@ namespace ntbs_service.Pages.Alerts
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
             var caseManagers = await _referenceDataRepository.GetAllCaseManagers();
-            CaseManagers = new SelectList(caseManagers, nameof(CaseManager.Email), nameof(CaseManager.FullName));
+            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.FullName));
             var phecs = await _referenceDataRepository.GetAllPhecs();
             Phecs = new SelectList(phecs, nameof(PHEC.Code), nameof(PHEC.Name));
         }
@@ -172,7 +172,7 @@ namespace ntbs_service.Pages.Alerts
                 {
                     CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
-                        Value = n.Email.ToString(),
+                        Value = n.Username.ToString(),
                         Text = n.FullName
                     })
                 });

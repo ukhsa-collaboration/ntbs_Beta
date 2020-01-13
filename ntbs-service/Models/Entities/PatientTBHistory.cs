@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Validations;
@@ -6,7 +7,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientTBHistory : ModelBase
+    public class PatientTBHistory : ModelBase, IOwnedEntity
     {
         public bool? NotPreviouslyHadTB { get; set; }
         
@@ -14,5 +15,7 @@ namespace ntbs_service.Models.Entities
         [RequiredIf("ShouldValidateFull && NotPreviouslyHadTB == false", ErrorMessage = ValidationMessages.FieldRequired)]
         [Range(1900, 2000, ErrorMessage = ValidationMessages.PreviousTBDiagnosisYear)]
         public int? PreviousTBDiagnosisYear { get; set; }
+
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

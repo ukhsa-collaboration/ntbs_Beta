@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.ReferenceEntities;
@@ -10,7 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class Episode : ModelBase
+    public class Episode : ModelBase, IOwnedEntity
     {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
@@ -19,8 +20,8 @@ namespace ntbs_service.Models.Entities
 
         [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
-        public string CaseManagerEmail { get; set; }
-        public virtual CaseManager CaseManager { get; set; }
+        public string CaseManagerUsername { get; set; }
+        public virtual User CaseManager { get; set; }
 
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [Display(Name = "TB Service")]
@@ -42,7 +43,7 @@ namespace ntbs_service.Models.Entities
             get
             {
                 // If email not set, or TBService missing (ergo navigation properties not yet retrieved) pass validation
-                if (string.IsNullOrEmpty(CaseManagerEmail) || TBService == null)
+                if (string.IsNullOrEmpty(CaseManagerUsername) || TBService == null)
                 {
                     return true;
                 }
@@ -60,5 +61,7 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         [Display(Name = "Case Manager")]
         public string CaseManagerName => CaseManager?.FullName;
+
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

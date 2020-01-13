@@ -1,0 +1,21 @@
+﻿@page "/Reports/{ReportType?}"
+@model ntbs_service.IndexModel
+@{
+    ViewData["Title"] = "Reports";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<nhs-width-container container-width="Standard">
+    <h1>Reports</h1>
+
+    <span>
+        @if (!string.IsNullOrEmpty(Model.ReportType))
+        {
+            @: Attempted to navigate to report type: <strong>@Model.ReportType </strong>
+        }
+        else
+        {
+            @: Attempted to navigate to reports home page.
+        }
+    </span>
+</nhs-width-container>

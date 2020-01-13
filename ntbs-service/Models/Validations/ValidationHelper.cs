@@ -37,6 +37,7 @@
 
         #region Patient Details
         public const string NhsNumberLength = "{0} needs to be 10 digits long";
+        public const string InvalidNhsNumber = "This {0} is not valid. Confirm you have entered it correctly";
         public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeIsNotValid = "Postcode is not valid";
         public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
@@ -96,8 +97,8 @@
         #endregion
 
         #region Immunosuppression
-        public const string ImmunosuppressionDetailRequired = "Please supply immunosuppression other details";
-        public const string ImmunosuppressionTypeRequired = "At least one field must be selected";
+        public const string ImmunosuppressionDetailRequired = "Please supply other immunosuppression details";
+        public const string ImmunosuppressionTypeRequired = "At least one immunosuppression type must be selected";
         #endregion
 
         #region Social Context

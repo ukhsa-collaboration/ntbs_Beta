@@ -45,6 +45,7 @@ namespace ntbs_service.DataAccess
         private async Task UpdateDatabaseAsync()
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, NotificationAuditType.Edited);
+
             await _context.SaveChangesAsync();
         }
 

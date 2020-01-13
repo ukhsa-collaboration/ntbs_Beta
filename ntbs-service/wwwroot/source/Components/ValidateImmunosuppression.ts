@@ -13,7 +13,7 @@ const ValidateImmunosuppression = Vue.extend({
             const inputValues = this.getInputValues();
 
             const requestConfig = {
-                url: "Immunosuppression/Validate",
+                url: "Comorbidities/ValidateImmunosuppression",
                 headers: getHeaders(),
                 params: inputValues
             };

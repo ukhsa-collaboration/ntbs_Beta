@@ -54,7 +54,7 @@
 
 <nhs-form-group nhs-form-group-type="Standard">
     <label nhs-label-type="Standard" asp-for="ClinicalDetails.HIVTestState">HIV test offered</label>
-    <select nhs-select-type="Standard" asp-for="ClinicalDetails.HIVTestState" asp-items="@Html.GetEnumSelectList<HIVTestStatus>()">
+    <select nhs-select-type="Standard" asp-for="ClinicalDetails.HIVTestState" asp-items="@(Html.GetEnumSelectList<HIVTestStatus>())">
         <option value="" selected> Choose an option </option>
     </select>
 </nhs-form-group>

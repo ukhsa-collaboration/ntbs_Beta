@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFAuditer;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class RiskFactorDetails
+    public class RiskFactorDetails : IOwnedEntity
     {
-        public RiskFactorDetails() {}
+        public RiskFactorDetails() { }
         public RiskFactorDetails(RiskFactorType type)
         {
             Type = type;
@@ -18,5 +19,7 @@ namespace ntbs_service.Models.Entities
         public bool IsCurrent { get; set; }
         public bool InPastFiveYears { get; set; }
         public bool MoreThanFiveYearsAgo { get; set; }
+
+        string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

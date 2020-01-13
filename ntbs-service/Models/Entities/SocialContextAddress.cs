@@ -1,4 +1,4 @@
-namespace ntbs_service.Models.Entities
+﻿namespace ntbs_service.Models.Entities
 {
     public class SocialContextAddress : SocialContextBase
     {
@@ -9,7 +9,8 @@ namespace ntbs_service.Models.Entities
 
         public override int Id
         {
-            set {
+            set
+            {
                 SocialContextAddressId = value;
             }
         }

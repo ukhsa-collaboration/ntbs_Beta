@@ -160,7 +160,25 @@
                     </div>
                 </validate-multiple>    
             </nhs-grid-row>
-
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasDetailsError = !Model.IsValid("Address.Details");
+                        var detailsFormState = hasDetailsError ? Error : Standard;
+                        var detailsTextAreaType = hasDetailsError ? TextAreaType.Error : TextAreaType.Standard;
+                    }
+                    <validate-input model="SocialContext" property="Details" inline-template>
+                        <nhs-form-group nhs-form-group-type="@detailsFormState">
+                            <label asp-for="Address.Details" nhs-label-type="Standard">
+                                @Html.DisplayNameFor(m => m.Address.Details)
+                            </label>
+                            <span nhs-span-type="ErrorMessage" id="details-error" ref="errorField" asp-validation-for="Address.Details" has-error="@hasDetailsError"></span>
+                            <textarea asp-for="Address.Details" nhs-textarea-type="@detailsTextAreaType" rows="2" aria-describedby="details-error"
+                                    autocomplete="on" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+            </nhs-grid-row>
             <button id="save-address-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
                 Save
             </button>

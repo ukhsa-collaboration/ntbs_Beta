@@ -1,0 +1,62 @@
+@model ntbs_service.Models.Entities.CultureAndResistance
+
+@if (Model != null)
+{
+    <h2>Lab Results</h2>
+    <div class="notification-lab-results-summary" id="lab-results-summary">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.CulturePositive) </dt>
+                <dd class="cell-min-height"> @Model.CulturePositive </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Species) </dt>
+                <dd class="cell-min-height"> @Model.Species </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.DrugResistanceProfile) </dt>
+                <dd class="cell-min-height"> @Model.DrugResistanceProfile </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.EarliestSpecimenDate) </dt>
+                <dd class="cell-min-height"> @Model.FormattedEarliestSpecimenDate </dd>
+            </nhs-grid-column>            
+        </nhs-grid-row>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Isoniazid) </dt>
+                <dd class="cell-min-height"> @Model.Isoniazid </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Rifampicin) </dt>
+                <dd class="cell-min-height"> @Model.Rifampicin </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Pyrazinamide) </dt>
+                <dd class="cell-min-height"> @Model.Pyrazinamide </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Ethambutol) </dt>
+                <dd class="cell-min-height"> @Model.Ethambutol </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Aminoglycoside) </dt>
+                <dd class="cell-min-height"> @Model.Aminoglycoside </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Quinolone) </dt>
+                <dd class="cell-min-height"> @Model.Quinolone </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.MDR) </dt>
+                <dd class="cell-min-height"> @Model.MDR </dd>
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.XDR) </dt>
+                <dd class="cell-min-height"> @Model.XDR </dd>
+            </nhs-grid-column>
+        </nhs-grid-row>
+    </div>
+}

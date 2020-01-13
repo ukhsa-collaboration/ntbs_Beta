@@ -2,8 +2,6 @@
 {
     public class AdfsOptions
     {
-        /** This allows us to use group names agnostic of any naming convention prefixes that exist in the setup */
-        public string AdGroupsPrefix { get; set; }
         public string NationalTeamAdGroup { get; set; }
     
         /** TB service groups are of the format Global.NIS.NTBS.Service_<service-specifc-postfix> */
@@ -23,5 +21,10 @@
         public string AdfsUrl { get; set; }
         /** The ntbs url, used as identifier of the app to adfs */
         public string Wtrealm { get; set; }
+        
+        /// <summary>
+        /// Base domain in the fully qualified domain names, e.g. "DC=ntbs,DC=phe,DC=com"
+        /// </summary>
+        public string BaseDomain { get; set; }
     }
 }

@@ -57,8 +57,36 @@ Feature: Notification creation
         And I click on the 'save-test-result-button' button
         And I click on the 'save-button' button
         
-        # Contact tracing page + submission
+        # Contact tracing page 
         Then I should be on the ContactTracing page
+        When I click on the 'save-button' button
+
+        # Social risk factors page
+        Then I should be on the SocialRiskFactors page
+        When I click on the 'save-button' button
+
+        # Travel/visitor history page
+        Then I should be on the Travel page
+        When I click on the 'save-button' button
+
+        # Co-morbidities and immunosuppression page
+        Then I should be on the Comorbidities page
+        When I click on the 'save-button' button
+
+        # Social context addresses page
+        Then I should be on the SocialContextAddresses page
+        When I click on the 'save-button' button
+        
+        # Social context venues page
+        Then I should be on the SocialContextVenues page
+        When I click on the 'save-button' button
+
+        # Previous History page
+        Then I should be on the PreviousHistory page
+        When I click on the 'save-button' button
+
+        # Previous History again + submission
+        Then I should be on the PreviousHistory page
         When I click on the 'submit-button' button
         Then I should see the Notification
 

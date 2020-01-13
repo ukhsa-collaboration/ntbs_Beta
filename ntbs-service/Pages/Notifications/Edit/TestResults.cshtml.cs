@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
@@ -8,22 +9,31 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class TestResultsModel : NotificationEditModelBase
     {
+        private readonly ICultureAndResistanceService _cultureAndResistanceService;
+        private readonly ISpecimenService _specimenService;
+
         public TestResultsModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository)
-            : base(notificationService,
-                   authorizationService,
-                   notificationRepository)
+            INotificationRepository notificationRepository,
+            ICultureAndResistanceService cultureAndResistanceService,
+            ISpecimenService specimenService) : base(notificationService, authorizationService, notificationRepository)
         {
+            _cultureAndResistanceService = cultureAndResistanceService;
+            _specimenService = specimenService;
         }
 
         [BindProperty]
         public TestData TestData { get; set; }
+        public CultureAndResistance CultureAndResistance { get; set; }
+        public IEnumerable<Specimen> Specimens { get; set; }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             TestData = Notification.TestData;
+            CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
+            Specimens = await _specimenService.GetSpecimenDetailsAsync(NotificationId);
+
             await SetNotificationProperties(isBeingSubmitted, TestData);
 
             if (TestData.ShouldValidateFull)
@@ -56,11 +66,17 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
+        public async Task<IActionResult> OnPostUnmatch(string labReferenceNumber)
+        {
+            await _specimenService.UnmatchSpecimen(NotificationId, labReferenceNumber);
+            return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
+        }
+
         public ContentResult OnGetValidateTestDataProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<TestData>(key, value, shouldValidateFull);
         }
-        
+
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);

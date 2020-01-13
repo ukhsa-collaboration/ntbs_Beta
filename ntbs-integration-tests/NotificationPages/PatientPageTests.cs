@@ -172,7 +172,7 @@ namespace ntbs_integration_tests.NotificationPages
             const string birthDay = "5";
             const string birthMonth = "5";
             const string birthYear = "1992";
-            const string nhsNumber = "1234567891";
+            const string nhsNumber = "5864552852";
             const string address = "123 Fake Street, London";
             const string ethnicityId = "1";
             const string sexId = "2";
@@ -302,7 +302,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            const string nonDuplicateNhsNumber = "7112516471";
+            const string nonDuplicateNhsNumber = "5864552852";
             var formData = new Dictionary<string, string>
             {
                 ["notificationId"] = id.ToString(),
@@ -362,6 +362,7 @@ namespace ntbs_integration_tests.NotificationPages
         [Theory]
         [InlineData("ABC", "NHS number can only contain digits 0-9")]
         [InlineData("123", "NHS number needs to be 10 digits long")]
+        [InlineData("5647382911", "This NHS number is not valid. Confirm you have entered it correctly")]
         public async Task WhenNhsNumberInvalid_ValidatePatientProperty_ReturnsExpectedResult(string nhsNumber, string validationResult)
         {
             // Arrange
