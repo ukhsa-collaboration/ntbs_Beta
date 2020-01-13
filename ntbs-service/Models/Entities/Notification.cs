@@ -191,15 +191,8 @@ namespace ntbs_service.Models.Entities
             {
                 return "Not known";
             }
-            if (string.IsNullOrEmpty(PatientDetails.NhsNumber))
-            {
-                return string.Empty;
-            }
-            return string.Join(" ",
-                PatientDetails.NhsNumber.Substring(0, 3),
-                PatientDetails.NhsNumber.Substring(3, 3),
-                PatientDetails.NhsNumber.Substring(6, 4)
-            );
+
+            return NotificationFieldFormattingHelper.FormatNHSNumber(PatientDetails.NhsNumber);
         }
 
         private static string CreateTimePeriodsString(RiskFactorDetails riskFactor)
