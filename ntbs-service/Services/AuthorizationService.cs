@@ -119,7 +119,13 @@ namespace ntbs_service.Services
         public async Task<IList<Alert>> FilterTransferAlertsFromListOfAlertsByUserAsync(ClaimsPrincipal user, IList<Alert> alerts)
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
-            alerts.Remove(alerts.SingleOrDefault(x => x.AlertType == AlertType.TransferRequest && !userTbServiceCodes.Contains(x.TbServiceCode)));
+            foreach(var alert in alerts)
+            {
+                if(alert.AlertType == AlertType.TransferRequest && !userTbServiceCodes.Contains(alert.TbServiceCode))
+                {
+                    alerts.Remove(alert);
+                }
+            }
             return alerts;
         }
 

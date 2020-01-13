@@ -73,6 +73,7 @@
                                 @if(item.Dismissable)
                                 {
                                     <form method="post" action="@RouteHelper.GetAlertPath(@item.AlertId, AlertSubPaths.Dismiss)">
+                                        @Html.AntiForgeryToken()
                                         <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link" aria-label="Dismiss alert">
                                             X
                                         </button>
