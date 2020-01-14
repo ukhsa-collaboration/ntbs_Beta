@@ -18,7 +18,6 @@ namespace ntbs_service.Services
             SpecimenDate = new DateTime(2011, 1, 1),
             LabSex = "F",
             Species = "M. tuberculosis",
-            ReferenceLaboratory = "Northwick Park & St Marks",
             LabName = "KONNIK Agnieska",
             LabBirthDate = new DateTime(2011, 1, 1),
             SpecimenTypeCode = "Bronchoscopy Sample",

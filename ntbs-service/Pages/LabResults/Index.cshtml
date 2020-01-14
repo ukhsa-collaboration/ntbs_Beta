@@ -98,7 +98,7 @@
 
                         <nhs-table classes="nhsuk-table--reduced-font nhsuk-table--no-scroll-x">
                             <nhs-table-body>
-                                @foreach (var potentialMatch in specimen.PotentialMatches.OrderByDescending(p => p.ConfidenceLevel))
+                                @foreach (var potentialMatch in specimen.PotentialMatches)
                                 {
                                     var radioInputId = $"radio-{potentialMatch.NotificationId}-{specimen.ReferenceLaboratoryNumber}";
                                     var radioGroupName = $"radiogroup-{specimen.ReferenceLaboratoryNumber}";

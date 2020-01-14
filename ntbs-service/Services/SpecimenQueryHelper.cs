@@ -10,8 +10,6 @@ namespace ntbs_service.Services
                 [{nameof(UnmatchedSpecimen.ReferenceLaboratoryNumber)}]
                 ,[{nameof(UnmatchedSpecimen.SpecimenDate)}]
                 ,[{nameof(UnmatchedSpecimen.SpecimenTypeCode)}]
-                ,[{nameof(UnmatchedSpecimen.LaboratoryName)}]
-                ,[{nameof(UnmatchedSpecimen.ReferenceLaboratory)}]
                 ,[{nameof(UnmatchedSpecimen.Species)}]
                 ,[{nameof(UnmatchedSpecimen.LabNhsNumber)}]
                 ,[{nameof(UnmatchedSpecimen.LabBirthDate)}]
@@ -29,6 +27,9 @@ namespace ntbs_service.Services
                 ,[{nameof(SpecimenPotentialMatch.NtbsAddress)}]
                 ,[{nameof(SpecimenPotentialMatch.NtbsPostcode)}]
                 ,[{nameof(SpecimenPotentialMatch.ConfidenceLevel)}]";
+
+        private static readonly string _orderByUnmatchedStatement =
+            $"ORDER BY [{nameof(UnmatchedSpecimen.SpecimenDate)}] DESC, [{nameof(SpecimenPotentialMatch.ConfidenceLevel)}] DESC";
 
         public static readonly string GetMatchedSpecimensForNotificationQuery = $@"
             SELECT 
@@ -50,25 +51,29 @@ namespace ntbs_service.Services
                 ,[{nameof(MatchedSpecimen.LabName)}]
                 ,[{nameof(MatchedSpecimen.LabSex)}]
                 ,[{nameof(MatchedSpecimen.LabAddress)}]
-            FROM [dbo].[ufnGetMatchedSpecimen] (@param)";
+            FROM [dbo].[ufnGetMatchedSpecimen] (@param)
+            ORDER BY [{nameof(MatchedSpecimen.SpecimenDate)}] DESC";
 
         public static string GetAllUnmatchedSpecimensQuery =>
             string.Join(
                 ' ',
                 _selectUnmatchedSpecimensQuery,
-                "FROM [dbo].[ufnGetAllUnmatchedSpecimens] ()");
+                "FROM [dbo].[ufnGetAllUnmatchedSpecimens] ()",
+                _orderByUnmatchedStatement);
 
         public static string GetUnmatchedSpecimensForTbServicesQuery =>
             string.Join(
                 ' ',
                 _selectUnmatchedSpecimensQuery,
-                "FROM [dbo].[ufnGetUnmatchedSpecimensByService] (@param)");
+                "FROM [dbo].[ufnGetUnmatchedSpecimensByService] (@param)",
+                _orderByUnmatchedStatement);
 
         public static string GetUnmatchedSpecimensForPhecsQuery =>
             string.Join(
                 ' ',
                 _selectUnmatchedSpecimensQuery,
-                "FROM [dbo].[ufnGetUnmatchedSpecimensByPhec] (@param)");
+                "FROM [dbo].[ufnGetUnmatchedSpecimensByPhec] (@param)",
+                _orderByUnmatchedStatement);
 
         public static string FormatEnumerableParams(IEnumerable<string> enumerable) =>
             string.Join(',', enumerable);

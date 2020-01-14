@@ -105,8 +105,6 @@ namespace ntbs_service.Services
                         ReferenceLaboratoryNumber = specimenData.ReferenceLaboratoryNumber,
                         SpecimenDate = specimenData.SpecimenDate,
                         SpecimenTypeCode = specimenData.SpecimenTypeCode,
-                        LaboratoryName = specimenData.LaboratoryName,
-                        ReferenceLaboratory = specimenData.ReferenceLaboratory,
                         Species = specimenData.Species,
                         LabNhsNumber = specimenData.LabNhsNumber,
                         LabBirthDate = specimenData.LabBirthDate,
@@ -125,13 +123,13 @@ namespace ntbs_service.Services
             {
                 connection.Open();
                 await connection.QueryAsync(
-                    _unmatchSpecimenSqlProcedure,
+                    "uspUnmatchSpecimen",
                     new {referenceLaboratoryNumber, notificationId},
                     commandType: CommandType.StoredProcedure);
             }
         }
         
-        private class UnmatchedResultRow
+        private class UnmatchedQueryResultRow
         {
             internal SpecimenBase SpecimenBase { get; set; }
 

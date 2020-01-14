@@ -40,8 +40,6 @@ namespace ntbs_service.Pages.LabResults
                 UnmatchedSpecimens = await _specimenService.GetUnmatchedSpecimensDetailsForPhecsAsync(
                     permissionsFilter.IncludedPHECCodes);
             }
-
-            UnmatchedSpecimens = UnmatchedSpecimens.OrderByDescending(specimen => specimen.SpecimenDate);
         }
     }
 }

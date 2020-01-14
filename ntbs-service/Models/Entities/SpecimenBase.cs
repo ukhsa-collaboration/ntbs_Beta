@@ -11,38 +11,11 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Lab number")]
         public string ReferenceLaboratoryNumber { get; set; }
 
-        [Display(Name = "Laboratory Name")]
-        public string LaboratoryName { get; set; }
-        
         [Display(Name = "Specimen type")]
         public string SpecimenTypeCode { get; set; }
 
         [Display(Name = "Specimen date")]
         public DateTime? SpecimenDate { get; set; }
-
-        [Display(Name = "Isoniazid")]
-        public string Isoniazid { get; set; }
-
-        [Display(Name = "Rifampicin")]
-        public string Rifampicin { get; set; }
-
-        [Display(Name = "Pyrazinamide")]
-        public string Pyrazinamide { get; set; }
-
-        [Display(Name = "Ethambutol")]
-        public string Ethambutol { get; set; }
-
-        [Display(Name = "Aminoglycoside")]
-        public string Aminoglycoside { get; set; }
-
-        [Display(Name = "Quinolone")]
-        public string Quinolone { get; set; }
-
-        [Display(Name = "MDR")]
-        public string MDR { get; set; }
-
-        [Display(Name = "XDR")]
-        public string XDR { get; set; }
 
         [Display(Name = "Species")]
         public string Species { get; set; }
