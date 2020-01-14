@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
@@ -29,6 +30,19 @@ namespace ntbs_integration_tests.NotificationPages
                     NotificationSites = new List<NotificationSite>
                     {
                         new NotificationSite { SiteId = (int)SiteId.BONE_OTHER }
+                    },
+                    PatientDetails = new PatientDetails
+                    {
+                        Dob = new DateTime(2012, 1, 1)
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.LATE_DOB_ID,
+                    NotificationStatus = NotificationStatus.Draft,
+                    PatientDetails = new PatientDetails
+                    {
+                        Dob = new DateTime(2012, 1, 1)
                     }
                 }
             };
@@ -110,6 +124,41 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DeathDate", "postmortem", "Date of death is a mandatory field");
+        }
+
+        [Fact]
+        public async Task Post_ReturnsPageWithModelErrors_IfDatesBeforeDob()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.LATE_DOB_ID);
+            var initialDocument = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = Utilities.LATE_DOB_ID.ToString(),
+                ["NotificationSiteMap[OTHER]"] = "true",
+                ["OtherSite.SiteDescription"] = "123",
+                ["FormattedFirstPresentationDate.Day"] = "1",
+                ["FormattedFirstPresentationDate.Month"] = "1",
+                ["FormattedFirstPresentationDate.Year"] = "2011",
+                ["FormattedTbServicePresentationDate.Day"] = "1",
+                ["FormattedTbServicePresentationDate.Month"] = "1",
+                ["FormattedTbServicePresentationDate.Year"] = "2011",
+                ["FormattedDiagnosisDate.Day"] = "1",
+                ["FormattedDiagnosisDate.Month"] = "1",
+                ["FormattedDiagnosisDate.Year"] = "2011",
+            };
+
+            // Act
+            var result = await SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            var resultDocument = await GetDocumentAsync(result);
+
+            result.EnsureSuccessStatusCode();
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-FirstPresentationDate", "first-presentation", "Presentation to any health service must be later than date of birth");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TBServicePresentationDate", "tb-service-presentation", "Presentation to TB service must be later than date of birth");
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DiagnosisDate", "diagnosis", "Diagnosis date must be later than date of birth");
         }
 
         [Fact]
