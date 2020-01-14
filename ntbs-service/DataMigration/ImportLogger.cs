@@ -1,3 +1,4 @@
+using System;
 using Hangfire.Server;
 using Hangfire.Console;
 using Serilog;
@@ -9,7 +10,7 @@ namespace ntbs_service.DataMigration
         void LogInformation(PerformContext context, string requestId, string message);
         void LogWarning(PerformContext context, string requestId, string message);
         void LogSuccess(PerformContext context, string requestId, string message);
-        void LogFailure(PerformContext context, string requestId, string message);
+        void LogFailure(PerformContext context, string requestId, string message, Exception exception = null);
     }
 
     public class ImportLogger : IImportLogger
@@ -29,12 +30,16 @@ namespace ntbs_service.DataMigration
             context.ResetTextColor();
         }
 
-        public void LogFailure(PerformContext context, string requestId, string message)
+        public void LogFailure(PerformContext context, string requestId, string message, Exception exception = null)
         {
-            Log.Information($"NOTIFICATION IMPORT - {requestId} - {message}");
+            Log.Information(exception, $"NOTIFICATION IMPORT - {requestId} - {message}");
 
             context.SetTextColor(ConsoleTextColor.Red);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
+            if (exception != null)
+            {
+                context.WriteLine(exception.Message);
+            }
             context.ResetTextColor();
         }
 

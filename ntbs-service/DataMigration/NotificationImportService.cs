@@ -143,14 +143,22 @@ namespace ntbs_service.DataMigration
             }
 
             _logger.LogSuccess(context, requestId, $"Importing {notifications.Count()} valid notifications");
-            var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-            await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
+            try
+            {
+                var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
+                await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
 
 
-            var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
-            _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
+                var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
+                _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
 
-            _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+                _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+            }
+            catch (Exception e)
+            {
+                _logger.LogFailure(context, requestId, message: $"Failed to save the imported notifications for {patientName}", e);
+                importResult.AddSavingErrorsMessage(e.StackTrace);
+            }
             return importResult;
         }
 
