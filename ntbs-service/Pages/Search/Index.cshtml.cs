@@ -90,9 +90,7 @@ namespace ntbs_service.Pages.Search
             var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder(_referenceDataRepository));
 
             var (notificationsToDisplay, count) = await SearchAsync(ntbsFilteredDraftsBuilder, ntbsFilteredNonDraftsBuilder, legacyFilteredSearchBuilder);
-            // notificationsToDisplay is ToList() to enumerate it so that the dynamic/notificationBannerModels from the migration database are mapped correctly
-            // and we can successfully update properties on the models
-            var authorisedNotificationsToDisplay = _authorizationService.SetFullAccessOnNotificationBanners(notificationsToDisplay.ToList(), User);
+            var authorisedNotificationsToDisplay = _authorizationService.SetFullAccessOnNotificationBanners(notificationsToDisplay, User);
             SearchResults = new PaginatedList<NotificationBannerModel>(authorisedNotificationsToDisplay, count, PaginationParameters);
             var (nextNtbsOffset, nextLegacyOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
             SetPaginationDetails(nextNtbsOffset, nextLegacyOffset, previousNtbsOffset, previousLegacyOffset, ntbsOffset, legacyOffset);
@@ -119,19 +117,24 @@ namespace ntbs_service.Pages.Search
                 .FilterByTBService(SearchParameters.TBServiceCode);
         }
         
-        private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchAsync(
+        private async Task<(IList<NotificationBannerModel> results, int count)> SearchAsync(
             INtbsSearchBuilder filteredDrafts,
             INtbsSearchBuilder filteredNonDrafts,
             ILegacySearchBuilder legacySqlQuery)
         {
+            IEnumerable<NotificationBannerModel> notificationsBannerModels;
+            int count;
             if (PaginationParameters.LegacyOffset == null && PaginationParameters.NtbsOffset == null)
             {
-                return await SearchWithoutOffsetsAsync(filteredDrafts, filteredNonDrafts, legacySqlQuery);
+                (notificationsBannerModels, count) = await SearchWithoutOffsetsAsync(filteredDrafts, filteredNonDrafts, legacySqlQuery);
             }
             else
             {
-                return await SearchWithOffsetsAsync(filteredDrafts, filteredNonDrafts, legacySqlQuery);
+                (notificationsBannerModels, count) = await SearchWithOffsetsAsync(filteredDrafts, filteredNonDrafts, legacySqlQuery);
             }
+            // notificationsToDisplay is ToList() to enumerate it so that the dynamic/notificationBannerModels from the migration database are mapped correctly
+            // and we can successfully update properties on the models
+            return (notificationsBannerModels.ToList(), count);
         }
 
         // Given no offsets from the previous page perform a search without using skip and take in SQL queries
