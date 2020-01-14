@@ -27,6 +27,8 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Postcode")]
         public string NtbsPostcode { get; set; }
+        
+        public string ConfidenceLevel { get; set; }
 
         public string FormattedDob => NtbsBirthDate.ConvertToString();
     }

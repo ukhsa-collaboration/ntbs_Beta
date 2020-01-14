@@ -44,7 +44,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOverviewPage_ForUserWithPermission()
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<NhsUserService>()
+            using (var client = Factory.WithMockUserService<TestNhsUserService>()
                                         .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -63,7 +63,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ShowsWarning_ForUserWithoutPermission()
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<NhsUserService>()
+            using (var client = Factory.WithMockUserService<TestNhsUserService>()
                                         .WithNotificationAndTbServiceConnected(Utilities.NOTIFIED_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {

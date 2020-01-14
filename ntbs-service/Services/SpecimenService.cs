@@ -13,8 +13,13 @@ namespace ntbs_service.Services
     {
         Task<IEnumerable<MatchedSpecimen>> GetMatchedSpecimenDetailsForNotificationAsync(int notificationId);
 
-        Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimenDetailsForTbServicesAsync(
-            IEnumerable<string> tbServiceCode);
+        Task<IEnumerable<UnmatchedSpecimen>> GetAllUnmatchedSpecimensAsync();
+
+        Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForTbServicesAsync(
+            IEnumerable<string> tbServiceCodes);
+
+        Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForPhecsAsync(
+            IEnumerable<string> phecCodes);
 
         Task UnmatchSpecimen(int notificationId, string labReferenceNumber);
     }
@@ -23,56 +28,6 @@ namespace ntbs_service.Services
     {
         private readonly string _reportingDbConnectionString;
         private readonly string _specimenMatchingDbConnectionString;
-        private const string _unmatchSpecimenSqlProcedure = "uspUnmatchSpecimen";
-
-        private const string _getMatchedSpecimenSqlFunction = @"
-            SELECT NotificationId,
-                ReferenceLaboratoryNumber,
-                SpecimenTypeCode,
-                SpecimenDate,
-                Isoniazid,
-                Rifampicin,
-                Pyrazinamide,
-                Ethambutol,
-                Aminoglycoside,
-                Quinolone,
-                MDR,
-                XDR,
-                Species,
-                LabNhsNumber,
-                LabBirthDate,
-                LabName,
-                LabSex,
-                LabAddress
-            FROM [dbo].[ufnGetMatchedSpecimen] (@notificationId)
-            ORDER BY SpecimenDate DESC";
-
-        private static string _getUnmatchedSpecimenSqlFunction = $@"
-            SELECT
-                [{nameof(SpecimenBase.ReferenceLaboratoryNumber)}]
-                ,[SpecimenDate]
-                ,[SpecimenTypeCode]
-                ,[LaboratoryName]
-                ,[ReferenceLaboratory]
-                ,[Species]
-                ,[LabPatientNHSNumber]
-                ,[LabPatientBirthDate]
-                ,[LabPatientName]
-                ,[LabPatientSex]
-                ,[LabPatientAddress]
-                ,[LabPatientPostcode]
-                ,[TbServiceName]
-                ,[NotificationID]
-                ,[NotificationDate]
-                ,[NtbsNHSNumber]
-                ,[NtbsName]
-                ,[NtbsSex]
-                ,[NtbsBirthDate]
-                ,[NtbsAddress]
-                ,[NtbsPostcode]
-                ,[ConfidenceLevel]
-            FROM [dbo].[ufnGetUnmatchedSpecimensByService]
-            (@tbService)";
 
         public SpecimenService(IConfiguration configuration)
         {
@@ -87,30 +42,57 @@ namespace ntbs_service.Services
             {
                 connection.Open();
                 return await connection.QueryAsync<MatchedSpecimen>(
-                    _getMatchedSpecimenSqlFunction,
-                    new {notificationId});
+                    SpecimenQueryHelper.GetMatchedSpecimensForNotificationQuery,
+                    new {param = notificationId});
             }
         }
 
-        public async Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimenDetailsForTbServicesAsync(
-            IEnumerable<string> tbServiceCode)
+        public async Task<IEnumerable<UnmatchedSpecimen>> GetAllUnmatchedSpecimensAsync()
         {
-            IEnumerable<UnmatchedResultRow> unmatchedResultRows;
+            var query = SpecimenQueryHelper.GetAllUnmatchedSpecimensQuery;
+            var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query);
+            return GroupUnmatchedSpecimenRowsByReferenceNumber(unmatchedQueryResultRows);
+        }
+
+        public async Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForTbServicesAsync(
+            IEnumerable<string> tbServiceCodes)
+        {
+            var query = SpecimenQueryHelper.GetUnmatchedSpecimensForTbServicesQuery;
+            var formattedTbServiceCodes = SpecimenQueryHelper.FormatEnumerableParams(tbServiceCodes);
+            var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query, formattedTbServiceCodes);
+            return GroupUnmatchedSpecimenRowsByReferenceNumber(unmatchedQueryResultRows);
+        }
+
+        public async Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForPhecsAsync(
+            IEnumerable<string> phecCodes)
+        {
+            var query = SpecimenQueryHelper.GetUnmatchedSpecimensForPhecsQuery;
+            var formattedPhecCodes = SpecimenQueryHelper.FormatEnumerableParams(phecCodes);
+            var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query, formattedPhecCodes);
+            return GroupUnmatchedSpecimenRowsByReferenceNumber(unmatchedQueryResultRows);
+        }
+
+        private async Task<IEnumerable<UnmatchedQueryResultRow>> ExecuteUnmatchedSpecimenQuery(
+            string query,
+            string param = null)
+        {
             using (var connection = new SqlConnection(_reportingDbConnectionString))
             {
                 connection.Open();
-                // TODO: Actually feed in the tbServices, figure out what format nancy wants them
-                // at present it seems like a comma delimited list (but spaces/not spaces etc.)?
-                unmatchedResultRows =
-                    await connection.QueryAsync<SpecimenBase, SpecimenPotentialMatch, UnmatchedResultRow>(
-                        _getUnmatchedSpecimenSqlFunction,
-                        (specimen, potentialMatch) => new UnmatchedResultRow
-                        {
-                            SpecimenBase = specimen, SpecimenPotentialMatch = potentialMatch
-                        },
-                        new {tbServiceCode});
+                return await connection.QueryAsync<SpecimenBase, SpecimenPotentialMatch, UnmatchedQueryResultRow>(
+                    query,
+                    (specimen, potentialMatch) => new UnmatchedQueryResultRow
+                    {
+                        SpecimenBase = specimen, SpecimenPotentialMatch = potentialMatch
+                    },
+                    splitOn: nameof(SpecimenPotentialMatch.NotificationId),
+                    param: new {param});
             }
+        }
 
+        private static IEnumerable<UnmatchedSpecimen> GroupUnmatchedSpecimenRowsByReferenceNumber(
+            IEnumerable<UnmatchedQueryResultRow> unmatchedResultRows)
+        {
             return unmatchedResultRows.GroupBy(
                 row => row.SpecimenBase.ReferenceLaboratoryNumber,
                 row => row,
@@ -136,7 +118,7 @@ namespace ntbs_service.Services
                     };
                 });
         }
-
+        
         public async Task UnmatchSpecimen(int notificationId, string referenceLaboratoryNumber)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
@@ -148,8 +130,7 @@ namespace ntbs_service.Services
                     commandType: CommandType.StoredProcedure);
             }
         }
-
-
+        
         private class UnmatchedResultRow
         {
             internal SpecimenBase SpecimenBase { get; set; }

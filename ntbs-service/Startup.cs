@@ -171,10 +171,11 @@ namespace ntbs_service
             {
                 var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
                 var tbServiceCode = referenceLabResultsConfig.GetValue<string>("MockedTbServiceCode");
+                var phecCode = referenceLabResultsConfig.GetValue<string>("MockedPhecCode");
                 services.AddScoped<ICultureAndResistanceService>(
                     sp => new MockCultureAndResistanceService(notificationId));
                 services.AddScoped<ISpecimenService>(
-                    sp => new MockSpecimenService(notificationId, tbServiceCode));
+                    sp => new MockSpecimenService(notificationId, tbServiceCode, phecCode));
             }
             else
             {

@@ -51,6 +51,8 @@ spec:
               value: "1"
             - name: ReferenceLabResultsConfig__MockedTbServiceCode
               value: "TBS0001"
+            - name: ReferenceLabResultsConfig__MockedPhecCode
+              value: "E45000019"              
       imagePullSecrets:
         - name: registery-password
 ---

@@ -1,0 +1,174 @@
+﻿@page "/LabResults"
+@model ntbs_service.Pages.LabResults.IndexModel
+
+@{
+    ViewData["Title"] = "Lab results";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<nhs-width-container container-width="Standard">
+    <h1>Lab results</h1>
+
+    <nhs-details nhs-details-type="Standard" display-text="More information about this page">
+        <p>
+            The reference laboratory results shown below cannot be automatically matched to a notification.
+            Please review these to determine if a new notification needs to be created, or if the results belong to an existing notification in your service.
+            Where there are possible matches to existing notifications, these are indicated.
+            You may choose to match the results to any notification in your service.
+        </p>
+        <p>
+            If you believe the results do not belong to any notification in your service, please contact
+            <a href="mailto:ntbs@phe.gov.uk">ntbs@phe.gov.uk</a> quoting the Reference Laboratory Number.
+        </p>
+    </nhs-details>
+</nhs-width-container>
+
+<div class="search-results-section" id="search-results-section">
+    <nhs-width-container container-width="Standard">
+
+        @if (!Model.UnmatchedSpecimens.Any())
+        {
+            <p>
+                There are currently no unlinked specimens.
+            </p>
+        }
+        else
+        {
+            @foreach (var specimen in Model.UnmatchedSpecimens)
+            {
+                <nhs-panel nhs-panel-type="WithLabel" label="Laboratory reference number @specimen.ReferenceLaboratoryNumber">
+                    <div>
+                        <div>
+                            <nhs-grid-row>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.SpecimenDate) </dt>
+                                    <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.SpecimenTypeCode) </dt>
+                                    <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.ReferenceLaboratoryNumber) </dt>
+                                    <dd class="cell-min-height"> @specimen.ReferenceLaboratoryNumber </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.Species) </dt>
+                                    <dd class="cell-min-height"> @specimen.Species </dd>
+                                </nhs-grid-column>
+                            </nhs-grid-row>
+                        </div>
+                        <br/>
+
+                        <h4>Lab-supplied patient details</h4>
+
+                        <div>
+                            <nhs-grid-row>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabNhsNumber) </dt>
+                                    <dd class="cell-min-height"> @specimen.LabNhsNumber </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneHalf">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabName) </dt>
+                                    <dd class="cell-min-height"> @specimen.LabName </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabSex) </dt>
+                                    <dd class="cell-min-height"> @specimen.LabSex </dd>
+                                </nhs-grid-column>
+                            </nhs-grid-row>
+                            <nhs-grid-row>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabBirthDate) </dt>
+                                    <dd class="cell-min-height"> @specimen.FormattedLabDob </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneHalf">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabAddress) </dt>
+                                    <dd class="cell-min-height"> @specimen.LabAddress </dd>
+                                </nhs-grid-column>
+                                <nhs-grid-column grid-column-width="OneQuarter">
+                                    <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabPostcode) </dt>
+                                    <dd class="cell-min-height"> @specimen.LabPostcode </dd>
+                                </nhs-grid-column>
+                            </nhs-grid-row>
+                        </div>
+
+                        <br/>
+                        <h4>Possible matches (@specimen.PotentialMatches.Count())</h4>
+
+                        <nhs-table classes="nhsuk-table--reduced-font nhsuk-table--no-scroll-x">
+                            <nhs-table-body>
+                                @foreach (var potentialMatch in specimen.PotentialMatches.OrderByDescending(p => p.ConfidenceLevel))
+                                {
+                                    var radioInputId = $"radio-{potentialMatch.NotificationId}-{specimen.ReferenceLaboratoryNumber}";
+                                    var radioGroupName = $"radiogroup-{specimen.ReferenceLaboratoryNumber}";
+
+                                    <nhs-table-body-row>
+                                        <nhs-table-item style="vertical-align: middle">
+                                            <nhs-radios classes="nhs-radios--reduced-width" nhs-radios-type="Standard">
+                                                <nhs-radios-item>
+                                                    <input id="@radioInputId" nhs-input-type="Radios" type="radio" name="@radioGroupName"/>
+                                                    <label
+                                                        for="@radioInputId" 
+                                                        nhs-label-type="Radios"
+                                                        aria-label="Select NotificationId @potentialMatch.NotificationId for matching to specimen @specimen.ReferenceLaboratoryNumber">
+                                                        &nbsp;
+                                                    </label>
+                                                </nhs-radios-item>
+                                            </nhs-radios>
+                                        </nhs-table-item>
+                                        <nhs-table-item>
+                                            <label for="@radioInputId">
+                                                <nhs-grid-row classes="nhsuk-grid-row--reduced-margin">
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NotificationId) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NotificationId </dd>
+                                                    </nhs-grid-column>
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NotificationDate) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NtbsNhsNumber </dd>
+                                                    </nhs-grid-column>
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NtbsNhsNumber) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NtbsNhsNumber </dd>
+                                                    </nhs-grid-column>
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NtbsName) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NtbsName </dd>
+                                                    </nhs-grid-column>
+                                                </nhs-grid-row>
+                                                <nhs-grid-row classes="nhsuk-grid-row--reduced-margin">
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.FormattedDob) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.FormattedDob </dd>
+                                                    </nhs-grid-column>
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NtbsSex) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NtbsSex </dd>
+                                                    </nhs-grid-column>
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NtbsPostcode) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NtbsPostcode </dd>
+                                                    </nhs-grid-column>
+                                                    <nhs-grid-column grid-column-width="OneQuarter">
+                                                        <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NtbsAddress) </dt>
+                                                        <dd class="cell-min-height"> @potentialMatch.NtbsAddress </dd>
+                                                    </nhs-grid-column>
+                                                </nhs-grid-row>
+                                            </label>
+                                        </nhs-table-item>
+                                    </nhs-table-body-row>
+                                }
+                            </nhs-table-body>
+                        </nhs-table>
+                    </div>
+                    <div class="flex-container">
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary create-notification-button--right" asp-page-handler="CreateLink">
+                            Match selected specimen
+                        </button>
+                    </div>
+                </nhs-panel>
+            }
+        }
+    </nhs-width-container>
+</div>

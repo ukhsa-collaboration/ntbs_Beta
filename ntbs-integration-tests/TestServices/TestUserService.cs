@@ -12,7 +12,7 @@ using ntbs_service.Services;
 
 namespace ntbs_integration_tests.TestServices
 {
-    public class NhsUserService : IUserService
+    public class TestNhsUserService : IUserService
     {
         public Task<TBService> GetDefaultTbService(ClaimsPrincipal user)
         {
@@ -34,7 +34,7 @@ namespace ntbs_integration_tests.TestServices
         }
     }
 
-    public class PheUserService : IUserService
+    public class TestPheUserService : IUserService
     {
         public Task<TBService> GetDefaultTbService(ClaimsPrincipal user)
         {

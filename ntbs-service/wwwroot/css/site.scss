@@ -194,3 +194,18 @@ body {
         }
     }
 }
+
+.nhsuk-panel-with-label__label {
+  background-color: #002776;
+}
+
+.nhs-radios--reduced-width {
+  width: 40px;
+}
+
+// Override negative margins for nhsuk-grid-row at small widths which was causing
+// scroll-bar issues
+.nhsuk-grid-row--reduced-margin {
+  margin-left: 0;
+  margin-right: 0;
+}
