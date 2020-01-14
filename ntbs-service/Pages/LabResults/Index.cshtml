@@ -66,7 +66,7 @@
                             <nhs-grid-row>
                                 <nhs-grid-column grid-column-width="OneQuarter">
                                     <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabNhsNumber) </dt>
-                                    <dd class="cell-min-height"> @specimen.LabNhsNumber </dd>
+                                    <dd class="cell-min-height"> @specimen.FormattedNhsNumber </dd>
                                 </nhs-grid-column>
                                 <nhs-grid-column grid-column-width="OneHalf">
                                     <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabName) </dt>
@@ -126,7 +126,7 @@
                                                     </nhs-grid-column>
                                                     <nhs-grid-column grid-column-width="OneQuarter">
                                                         <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NotificationDate) </dt>
-                                                        <dd class="cell-min-height"> @potentialMatch.NtbsNhsNumber </dd>
+                                                        <dd class="cell-min-height"> @potentialMatch.FormattedNhsNumber </dd>
                                                     </nhs-grid-column>
                                                     <nhs-grid-column grid-column-width="OneQuarter">
                                                         <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => potentialMatch.NtbsNhsNumber) </dt>

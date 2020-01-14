@@ -10,13 +10,13 @@ namespace ntbs_service.Models.Entities
 
         public DateTime? NotificationDate { get; set; }
 
-        [Display(Name = "Nhs number")]
+        [Display(Name = "NHS Number")]
         public string NtbsNhsNumber { get; set; }
 
         [Display(Name = "Date of birth")]
         public DateTime? NtbsBirthDate { get; set; }
 
-        [Display(Name = "Fullname")]
+        [Display(Name = "Name")]
         public string NtbsName { get; set; }
 
         [Display(Name = "Sex")]
@@ -31,5 +31,6 @@ namespace ntbs_service.Models.Entities
         public string ConfidenceLevel { get; set; }
 
         public string FormattedDob => NtbsBirthDate.ConvertToString();
+        public string FormattedNhsNumber => NtbsNhsNumber.FormatStringToNhsNumberFormat();
     }
 }
