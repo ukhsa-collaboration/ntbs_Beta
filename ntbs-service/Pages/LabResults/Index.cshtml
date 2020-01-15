@@ -36,7 +36,10 @@
         {
             @foreach (var specimen in Model.UnmatchedSpecimens)
             {
-                <nhs-panel nhs-panel-type="WithLabel" label="Laboratory reference number @specimen.ReferenceLaboratoryNumber">
+                <nhs-panel
+                    id="@($"specimen-{specimen.ReferenceLaboratoryNumber}")"
+                    nhs-panel-type="WithLabel"
+                    label="Laboratory reference number @specimen.ReferenceLaboratoryNumber">
                     <div>
                         <div>
                             <nhs-grid-row>
@@ -109,7 +112,7 @@
                                                 <nhs-radios-item>
                                                     <input id="@radioInputId" nhs-input-type="Radios" type="radio" name="@radioGroupName"/>
                                                     <label
-                                                        for="@radioInputId" 
+                                                        for="@radioInputId"
                                                         nhs-label-type="Radios"
                                                         aria-label="Select NotificationId @potentialMatch.NotificationId for matching to specimen @specimen.ReferenceLaboratoryNumber">
                                                         &nbsp;

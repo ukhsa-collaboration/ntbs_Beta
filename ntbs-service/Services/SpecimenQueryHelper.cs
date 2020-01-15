@@ -76,6 +76,6 @@ namespace ntbs_service.Services
                 _orderByUnmatchedStatement);
 
         public static string FormatEnumerableParams(IEnumerable<string> enumerable) =>
-            string.Join(',', enumerable);
+            enumerable != null ? string.Join(',', enumerable) : string.Empty;
     }
 }

@@ -4,7 +4,7 @@ namespace ntbs_service.Helpers
     {
         public static string FormatNHSNumber(string nhsNumber)
         {
-            if (string.IsNullOrEmpty(nhsNumber))
+            if (string.IsNullOrEmpty(nhsNumber) || nhsNumber.Length != 10)
             {
                 return string.Empty;
             }

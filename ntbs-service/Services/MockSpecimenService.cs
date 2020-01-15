@@ -12,7 +12,7 @@ namespace ntbs_service.Services
         private readonly string _tbServiceWithResults;
         private readonly string _phecWithResults;
 
-        private readonly UnmatchedSpecimen _mockUnmatchedSpecimen = new UnmatchedSpecimen
+        public static readonly UnmatchedSpecimen MockUnmatchedSpecimenForTbService = new UnmatchedSpecimen
         {
             ReferenceLaboratoryNumber = "A55B90955",
             SpecimenDate = new DateTime(2011, 1, 1),
@@ -21,7 +21,7 @@ namespace ntbs_service.Services
             LabName = "KONNIK Agnieska",
             LabBirthDate = new DateTime(2011, 1, 1),
             SpecimenTypeCode = "Bronchoscopy Sample",
-            LabNhsNumber = "123456789",
+            LabNhsNumber = "1234567890",
             LabAddress = "1 Angel Court London",
             LabPostcode = "N1 1AA",
             PotentialMatches = new List<SpecimenPotentialMatch>
@@ -29,7 +29,7 @@ namespace ntbs_service.Services
                 new SpecimenPotentialMatch
                 {
                     NotificationId = 1,
-                    NtbsNhsNumber = "123456789",
+                    NtbsNhsNumber = "1234567890",
                     NotificationDate = new DateTime(2011, 10, 1),
                     NtbsName = "KONNIK Agnieska",
                     NtbsBirthDate = new DateTime(2011, 1, 1),
@@ -40,7 +40,7 @@ namespace ntbs_service.Services
                 new SpecimenPotentialMatch
                 {
                     NotificationId = 2,
-                    NtbsNhsNumber = "123456789",
+                    NtbsNhsNumber = "1234567890",
                     NotificationDate = new DateTime(2011, 10, 1),
                     NtbsName = "KONNIK Agnieska",
                     NtbsBirthDate = new DateTime(2011, 1, 1),
@@ -51,9 +51,48 @@ namespace ntbs_service.Services
             }
         };
 
+        public static readonly UnmatchedSpecimen MockUnmatchedSpecimenForPhec = new UnmatchedSpecimen
+        {
+            ReferenceLaboratoryNumber = "B55B90955",
+            SpecimenDate = new DateTime(2011, 1, 1),
+            LabSex = "F",
+            Species = "M. tuberculosis",
+            LabName = "KONNIK Agnieska",
+            LabBirthDate = new DateTime(2011, 1, 1),
+            SpecimenTypeCode = "Bronchoscopy Sample",
+            LabNhsNumber = "1234567890",
+            LabAddress = "1 Angel Court London",
+            LabPostcode = "N1 1AA",
+            PotentialMatches = new List<SpecimenPotentialMatch>
+            {
+                new SpecimenPotentialMatch
+                {
+                    NotificationId = 3,
+                    NtbsNhsNumber = "1234567890",
+                    NotificationDate = new DateTime(2011, 10, 1),
+                    NtbsName = "KONNIK Agnieska",
+                    NtbsBirthDate = new DateTime(2011, 1, 1),
+                    NtbsSex = "Female",
+                    NtbsPostcode = "N1 1AC",
+                    NtbsAddress = "1 Angel Court London"
+                },
+                new SpecimenPotentialMatch
+                {
+                    NotificationId = 4,
+                    NtbsNhsNumber = "1234567890",
+                    NotificationDate = new DateTime(2011, 10, 1),
+                    NtbsName = "KONNIK Agnieska",
+                    NtbsBirthDate = new DateTime(2011, 1, 1),
+                    NtbsSex = "Male",
+                    NtbsPostcode = "N1 1AD",
+                    NtbsAddress = "2 Angel Court London"
+                }
+            }
+        };
+
         public MockSpecimenService(
-            int notificationIdWithResults, 
-            string tbServiceWithResults, 
+            int notificationIdWithResults,
+            string tbServiceWithResults,
             string phecWithResults)
         {
             _notificationIdWithResults = notificationIdWithResults;
@@ -75,7 +114,10 @@ namespace ntbs_service.Services
 
         public async Task<IEnumerable<UnmatchedSpecimen>> GetAllUnmatchedSpecimensAsync()
         {
-            var specimens = new List<UnmatchedSpecimen> {_mockUnmatchedSpecimen};
+            var specimens = new List<UnmatchedSpecimen>
+            {
+                MockUnmatchedSpecimenForTbService, MockUnmatchedSpecimenForPhec
+            };
             return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
         }
 
@@ -85,8 +127,9 @@ namespace ntbs_service.Services
             var specimens = new List<UnmatchedSpecimen>();
             if (tbServiceCodes.Contains(_tbServiceWithResults))
             {
-                specimens.Add(_mockUnmatchedSpecimen);
+                specimens.Add(MockUnmatchedSpecimenForTbService);
             }
+
             return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
         }
 
@@ -96,10 +139,10 @@ namespace ntbs_service.Services
             var specimens = new List<UnmatchedSpecimen>();
             if (phecCodes.Contains(_phecWithResults))
             {
-                specimens.Add(_mockUnmatchedSpecimen);
+                specimens.Add(MockUnmatchedSpecimenForPhec);
             }
-            return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
 
+            return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
         }
 
         public Task UnmatchSpecimen(int notificationId, string labReferenceNumber)
