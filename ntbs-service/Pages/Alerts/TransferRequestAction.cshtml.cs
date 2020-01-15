@@ -70,6 +70,10 @@ namespace ntbs_service.Pages.Alerts
                 return Page();
             }
 
+            Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
+            Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+            
+
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
     }
