@@ -56,7 +56,6 @@ namespace ntbs_service.Pages.Alerts
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
-
             
             var pendingTransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
             if (pendingTransferAlert != null)

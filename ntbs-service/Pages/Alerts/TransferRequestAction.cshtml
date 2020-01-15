@@ -1,0 +1,45 @@
+@page "/Notifications/{NotificationId:int}/ActionTransfer/{handler?}"
+
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.Alerts.TransferRequestActionModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"Transfer Request - {Model.TransferAlert.AlertId}";
+}
+
+<nhs-width-container container-width="Standard">
+    <form method="post" autocomplete="off">
+        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
+        <h3> Action transfer request </h3>
+
+        <div>
+            This action will be recorded in the change log.
+        </div>
+
+        <br>
+
+        <div> Sending TB service:  @Model.TransferAlert.TbServiceName</div>
+
+        <div> Sending case manager:  @Model.Notification?.Episode.CaseManagerName </div>
+
+        <div> Reason for transfer:  @Model.TransferAlert.TransferReason </div>
+
+        <div>
+            <div> Note accompanying transfer: </div>
+            <div> @Model.TransferAlert.TransferRequestNote </div>
+        </div>
+
+        <br>
+
+        <div class="flex-container">
+            <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)"
+                class="nhsuk-button pending-transfer-return-link">
+                Return to notification
+            </a>
+            <button id="cancel-transfer-button" asp-page-handler="Cancel" class="button-link pending-transfer-cancel-button">
+                Cancel transfer
+            </button>
+        </div>
+    </form>
+</nhs-width-container>
