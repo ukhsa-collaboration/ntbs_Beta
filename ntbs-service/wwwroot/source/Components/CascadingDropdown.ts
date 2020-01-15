@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { getHeaders } from "../helpers";
+import { getHeaders, buildPath } from "../helpers";
 import axios from "axios";
 
 type OptionValue = {
@@ -57,7 +57,7 @@ const CascadingDropdown = Vue.extend({
         },
         fetchFilteredList: function (value: string, path: string) {
             const requestConfig = {
-                url: `${window.location.pathname}/${path}`,
+                url: buildPath(path),
                 headers: getHeaders(),
                 params: {
                     "value": value

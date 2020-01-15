@@ -74,7 +74,7 @@ namespace ntbs_service.Pages.Alerts
             return Page();
         }
 
-        public async Task<IActionResult> OnPostConfirmAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             await GetRelatedEntities();

@@ -5,7 +5,13 @@ var getHeaders = function() {
 }
 
 var getValidationPath = function(modelName: string) {
-    return `${window.location.pathname}/Validate${modelName}`;
+    return buildPath(`Validate${modelName}`);
+}
+
+var buildPath = function(actionPath: string) {
+    var currentPath = window.location.pathname;
+    var pathWithNoTrailingSlash = currentPath.charAt(currentPath.length-1) === "/" ? currentPath.slice(0, -1) : currentPath;
+    return `${pathWithNoTrailingSlash}/${actionPath}`;
 }
 
 type FormattedDate = { day: any, month: any, year: any };
@@ -15,5 +21,5 @@ var convertFormattedDateToDate = function(date: FormattedDate) {
 }
 
 export { 
-    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate
+    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath
 };
