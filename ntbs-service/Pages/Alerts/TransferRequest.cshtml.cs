@@ -101,6 +101,7 @@ namespace ntbs_service.Pages.Alerts
             {
                 TransferAlert.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferAlert.CaseManagerUsername);
             }
+            TransferAlert.NotificationTbServiceCode = Notification.Episode.TBServiceCode;
         }
 
         private async Task SetDropdownsAsync()
@@ -122,30 +123,6 @@ namespace ntbs_service.Pages.Alerts
             NotificationBannerModel = new NotificationBannerModel(Notification);
             return Partial("_CancelTransferConfirmation", this);
         }
-
-        // public async Task<IActionResult> OnPostAcceptAsync()
-        // {
-        //     Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-        //     if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
-        //     {
-        //         return ForbiddenResult();
-        //     }
-        //     Notification.Episode.CaseManagerEmail = TransferAlert.CaseManagerEmail;
-        //     Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
-
-        //     return RedirectToPage("/Notifications/Overview", new { NotificationId });
-        // }
-
-        //  public async Task<IActionResult> OnPostDeclineAsync()
-        // {
-        //     Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-        //     if (!await AuthorizationService.CanEditNotificationAsync(User, Notification))
-        //     {
-        //         return ForbiddenResult();
-        //     }
-
-        //     return RedirectToPage("/Notifications/Overview", new { NotificationId });
-        // }
 
         public async Task<JsonResult> OnGetFilteredTbServiceListsByPhecCode(string value)
         {

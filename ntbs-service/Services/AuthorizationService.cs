@@ -14,7 +14,7 @@ namespace ntbs_service.Services
         Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
-        Task<IList<Alert>> FilterTransferAlertsFromListOfAlertsByUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
+        Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
         IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
@@ -116,12 +116,12 @@ namespace ntbs_service.Services
             return notifications;
         }
 
-        public async Task<IList<Alert>> FilterTransferAlertsFromListOfAlertsByUserAsync(ClaimsPrincipal user, IList<Alert> alerts)
+        public async Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts)
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
             for (int i = alerts.Count - 1; i >= 0; i--)
             {
-                if (alerts[i].AlertType == AlertType.TransferRequest && !userTbServiceCodes.Contains(alerts[i].TbServiceCode)  )
+                if (alerts[i].TbServiceCode != null && !userTbServiceCodes.Contains(alerts[i].TbServiceCode))
                     alerts.RemoveAt(i);
             }
             return alerts;
