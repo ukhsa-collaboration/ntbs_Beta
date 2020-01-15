@@ -24,9 +24,9 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public void AddSavingErrorsMessage(string error)
+        public void AddGroupError(string error)
         {
-            ValidationErrors.Add("saving error", new List<string> {error});
+            ValidationErrors.Add("groupFailedToImport", new List<string> {error});
         }
 
         public void AddValidNotification(string legacyId)

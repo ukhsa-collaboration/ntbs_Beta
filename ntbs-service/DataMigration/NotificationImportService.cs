@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using EFAuditer;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
-using Serilog;
 
 namespace ntbs_service.DataMigration
 {
@@ -111,6 +108,16 @@ namespace ntbs_service.DataMigration
             LookupAndAssignPostcode(notifications);
 
             _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import for {patientName}");
+            
+            // Verify that no repeated NotificationIds have returned
+            var ids = notifications.Select(n => n.LegacyId).ToList();
+            if (ids.Distinct().Count() != ids.Count())
+            {
+                var errorMessage = $"Duplicate records found ({String.Join(',', ids)}) - aborting import for {patientName}";
+                importResult.AddGroupError(errorMessage);
+                _logger.LogFailure(context, requestId, errorMessage);
+                return importResult;
+            }
 
             bool isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
@@ -157,7 +164,7 @@ namespace ntbs_service.DataMigration
             catch (Exception e)
             {
                 _logger.LogFailure(context, requestId, message: $"Failed to save the imported notifications for {patientName}", e);
-                importResult.AddSavingErrorsMessage(e.StackTrace);
+                importResult.AddGroupError(e.StackTrace);
             }
             return importResult;
         }
