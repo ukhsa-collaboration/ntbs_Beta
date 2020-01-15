@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
 
@@ -22,6 +24,12 @@ namespace ntbs_service.Pages.Alerts
         private readonly IAlertRepository _alertRepository;
         private readonly IAlertService _alertService;
         public ValidationService ValidationService;
+        [BindProperty]
+        [Required]
+        public bool? AcceptTransfer { get; set; }
+        [BindProperty]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended)]
+        public string DeclineTransferReason { get; set; }
 
         [BindProperty]
         public TransferAlert TransferAlert { get; set; }
@@ -60,7 +68,7 @@ namespace ntbs_service.Pages.Alerts
             return Page();
         }
 
-        public async Task<IActionResult> OnPostConfirmAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             // TryValidateModel(TransferAlert, nameof(TransferAlert));
@@ -70,11 +78,18 @@ namespace ntbs_service.Pages.Alerts
                 return Page();
             }
 
-            Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
-            Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+            if(AcceptTransfer == true)
+            {
+                Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
+                Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+                await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+                await AuthorizeAndSetBannerAsync();
+                return Partial("_AcceptedTransferConfirmation", this);
+            }
             
-
-            return RedirectToPage("/Notifications/Overview", new { NotificationId });
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            await AuthorizeAndSetBannerAsync();
+            return Partial("_RejectedTransferConfirmation", this);
         }
     }
 }

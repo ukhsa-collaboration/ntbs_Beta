@@ -1,6 +1,7 @@
 @page "/Notifications/{NotificationId:int}/ActionTransfer/{handler?}"
 
 @using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @model ntbs_service.Pages.Alerts.TransferRequestActionModel
 
 @{
@@ -11,7 +12,7 @@
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
         <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
-        <h3> Action transfer request </h3>
+        <h2> Action transfer request </h2>
 
         <div>
             This action will be recorded in the change log.
@@ -30,16 +31,60 @@
             <div> @Model.TransferAlert.TransferRequestNote </div>
         </div>
 
-        <br>
+        @{
+            var hasReasonError = !Model.ValidationService.IsValid("AcceptTransfer");
+            var reasonFormGroupType = hasReasonError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
+            <nhs-fieldset aria-describedby="reason-error">
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Reason for transfer (required)
+                </nhs-fieldset-legend>
+
+                <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferReason" has-error="@hasReasonError"></span>
+
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
+                            value="true" id="accept-transfer-input" aria-describedby="reason-error">
+                        <label nhs-label-type="Radios" for="accept-transfer-input">
+                            Accept transfer
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
+                            value="false" id="decline-transfer-input" data-aria-controls="conditional-radio" aria-describedby="reason-error">
+                        <label nhs-label-type="Radios" for="decline-transfer-input">
+                            Decline transfer
+                        </label>
+                    </div>
+
+                    @{
+                        var hasReasonDescriptionError = !Model.ValidationService.IsValid("DeclineTransferReason");
+                        var reasonDescriptionFormGroupType = hasReasonDescriptionError ? Error : Standard;
+                    }
+
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
+                        <nhs-form-group nhs-form-group-type="@reasonDescriptionFormGroupType">
+                            <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                                Provide explanatory comment
+                            </label>
+                            <span id="comment-error" nhs-span-type="ErrorMessage" asp-validation-for="DeclineTransferReason" has-error="@hasReasonDescriptionError"></span>
+                            <input asp-for="DeclineTransferReason" nhs-input-type="Standard" is-error-input="@hasReasonDescriptionError" aria-describedby="description-error" />
+                        </nhs-form-group>
+                    </div>
+                </div>
+            </nhs-fieldset>
+        </nhs-form-group>
 
         <div class="flex-container">
+            <button id="cancel-transfer-button" class="button-link pending-transfer-cancel-button">
+                Submit
+            </button>
             <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)"
                 class="nhsuk-button pending-transfer-return-link">
-                Return to notification
+                Go back
             </a>
-            <button id="cancel-transfer-button" asp-page-handler="Cancel" class="button-link pending-transfer-cancel-button">
-                Cancel transfer
-            </button>
         </div>
     </form>
 </nhs-width-container>

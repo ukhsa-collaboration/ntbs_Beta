@@ -1,17 +1,16 @@
-@using ntbs_service.Helpers
+@* @using ntbs_service.Helpers
 @model ntbs_service.Pages.Alerts.TransferRequestActionModel
 
 @{
     Layout = "../Shared/_NotificationLayout.cshtml";
-    ViewData["Title"] = $"Transfer Request Accepted - {Model.NotificationId}";
+    ViewData["Title"] = $"Transfer Request Rejected - {Model.NotificationId}";
 }
 
 <nhs-width-container container-width="Standard">
-    <h2> Notification #@Model.NotificationId has been accepted </h2>
-    <div> You can now edit this notification </div>
+    <h2> Notification #@Model.NotificationId has been rejected </h2>
     <br>
     <a id="return-to-homepage" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" 
         class="nhsuk-button return-to-homepage-link">
         Return to the notification
     </a>
-</nhs-width-container>
+</nhs-width-container> *@
