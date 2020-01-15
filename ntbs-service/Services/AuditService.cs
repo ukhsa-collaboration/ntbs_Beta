@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EFAuditer;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
@@ -39,8 +40,8 @@ namespace ntbs_service.Services
         {
             await _auditContext.AuditOperationAsync(
                 labReferenceNumber,
-                RootEntities.Specimen,
-                UNMATCH_EVENT,
+                typeof(Specimen).Name,
+                null,
                 UNMATCH_EVENT,
                 userName,
                 RootEntities.Notification,
