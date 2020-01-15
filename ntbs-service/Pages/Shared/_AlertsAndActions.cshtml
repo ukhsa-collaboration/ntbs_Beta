@@ -10,45 +10,36 @@
     @if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview)
     {
         <nhs-grid-column grid-column-width="TwoThirds">
-            @if(!Model.HasEditPermission)
-            {  
-                <!-- provide non breaking space so that nhs-grid-column is rendered and pushes manage notification
-                    to the right when alerts are hidden -->
-                @:&nbsp;
-            }
-            else
-            {
-                <div class="@manageNotificationClass">
-                    <h2>
-                        Alerts
-                    </h2>
-                    @if(Model.Alerts.Count > 0)
+            <div class="@manageNotificationClass">
+                <h2>
+                    Alerts
+                </h2>
+                @if(Model.Alerts.Count > 0)
+                {
+                    <div class="overview-alerts-container">
+                    @foreach (var alert in Model.Alerts)
                     {
-                        <div class="overview-alerts-container">
-                        @foreach (var alert in Model.Alerts)
-                        {
-                        
-                            <div class="flex-container overview-alert" id="alert-@alert.AlertId">
-                                <div class="alert-description--overview-view">@alert.Action</div>
-                                <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
-                                @if(!alert.NotDismissable)
-                                {
-                                    <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
-                                        class="dismiss-alert-button--overview-view">
-                                        @Html.AntiForgeryToken()
-                                        <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
-                                            aria-label="Dismiss alert">
-                                            X
-                                        </button>
-                                    </form>
-                                }
-                            </div>
-                            
-                        }
+                    
+                        <div class="flex-container overview-alert" id="alert-@alert.AlertId">
+                            <div class="alert-description--overview-view">@alert.Action</div>
+                            <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
+                            @if(!alert.NotDismissable)
+                            {
+                                <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
+                                    class="dismiss-alert-button--overview-view">
+                                    @Html.AntiForgeryToken()
+                                    <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
+                                        aria-label="Dismiss alert">
+                                        X
+                                    </button>
+                                </form>
+                            }
                         </div>
+                        
                     }
-                </div>
-            }
+                    </div>
+                }
+            </div>
         </nhs-grid-column>
     }
 

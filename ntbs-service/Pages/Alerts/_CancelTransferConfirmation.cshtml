@@ -1,3 +1,4 @@
+@using ntbs_service.Helpers
 @model ntbs_service.Pages.Alerts.TransferRequestModel
 
 @{
@@ -8,7 +9,8 @@
 <nhs-width-container container-width="Standard">
     <h2> Transfer of Notification #@Model.NotificationId has been cancelled </h2>
     <br>
-    <a id="return-to-homepage" href="/" class="nhsuk-button return-to-homepage-link">
-        Return to the homepage
+    <a id="return-to-homepage" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" 
+        class="nhsuk-button return-to-homepage-link">
+        Return to the notification
     </a>
 </nhs-width-container>

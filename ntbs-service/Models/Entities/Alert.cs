@@ -18,6 +18,7 @@ namespace ntbs_service.Models.Entities
         public virtual Notification Notification { get; set; }
         public DateTime CreationDate { get; set; }
         [Required(ErrorMessage = ValidationMessages.FieldRequired)]
+        [AssertThat("TransferDestinationNotCurrentTbService", ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
         [Display(Name = "TB Service")]
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
@@ -33,10 +34,10 @@ namespace ntbs_service.Models.Entities
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
         public virtual bool NotDismissable  { get; }
+        [Display(Name = "Case manager")]
+        public virtual string CaseManagerFullName => CaseManager?.FullName ?? "System";
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
-        [Display(Name = "Case manager")]
-        public string CaseManagerFullName => CaseManager?.FullName ?? "System";
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
 
@@ -59,6 +60,10 @@ namespace ntbs_service.Models.Entities
                 return CaseManager.CaseManagerTbServices.Any(c => c.TbServiceCode == TbServiceCode);
             }
         }
+
+        [NotMapped]
+        public string NotificationTbServiceCode { get; set; }
+        public bool TransferDestinationNotCurrentTbService => AlertType != AlertType.TransferRequest || TbServiceCode != NotificationTbServiceCode;
     }
 
 }

@@ -3,6 +3,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 using ntbs_service.Helpers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ntbs_service.Models.Entities
 {
@@ -28,8 +29,11 @@ namespace ntbs_service.Models.Entities
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         [Display(Name = "Optional note")]
         public string TransferRequestNote { get; set; }
+        public override string CaseManagerFullName => CaseManager?.FullName ?? "";
         public override string Action => "Transfer request to your TB service";
         public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.TransferRequest);
         public override bool NotDismissable => true;
+        public string TransferReasonString => TransferReason.GetDisplayName() + 
+            (TransferReason == TransferReason.Other ? $" - {OtherReasonDescription}" : "");
     }
 }

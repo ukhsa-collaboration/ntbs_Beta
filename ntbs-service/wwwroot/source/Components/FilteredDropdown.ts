@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { getHeaders } from "../helpers";
+import { getHeaders, buildPath } from "../helpers";
 import axios from "axios";
 
 type OptionValue = {
@@ -62,7 +62,7 @@ const FilteredDropdown = Vue.extend({
         },
         fetchFilteredLists: function (value: string) {
             const requestConfig = {
-                url: `${window.location.pathname}/${this.filterHandlerPath}`,
+                url: buildPath(this.filterHandlerPath),
                 headers: getHeaders(),
                 params: {
                     "value": value
