@@ -145,7 +145,7 @@ namespace ntbs_service.Services
             return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
         }
 
-        public Task UnmatchSpecimen(int notificationId, string labReferenceNumber)
+        public Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
         {
             return Task.CompletedTask;
         }

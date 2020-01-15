@@ -20,19 +20,21 @@ namespace ntbs_service.Services
 
         Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForPhecsAsync(
             IEnumerable<string> phecCodes);
-
-        Task UnmatchSpecimen(int notificationId, string labReferenceNumber);
+        
+        Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
     }
 
     public class SpecimenService : ISpecimenService
     {
         private readonly string _reportingDbConnectionString;
         private readonly string _specimenMatchingDbConnectionString;
+        private readonly IAuditService _auditService;
 
-        public SpecimenService(IConfiguration configuration)
+        public SpecimenService(IConfiguration configuration, IAuditService auditService)
         {
             _reportingDbConnectionString = configuration.GetConnectionString("reporting");
             _specimenMatchingDbConnectionString = configuration.GetConnectionString("specimenMatching");
+            _auditService = auditService;
         }
 
         public async Task<IEnumerable<MatchedSpecimen>> GetMatchedSpecimenDetailsForNotificationAsync(
@@ -117,7 +119,7 @@ namespace ntbs_service.Services
                 });
         }
         
-        public async Task UnmatchSpecimen(int notificationId, string referenceLaboratoryNumber)
+        public async Task UnmatchSpecimen(int notificationId, string referenceLaboratoryNumber, string userName)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
@@ -127,6 +129,8 @@ namespace ntbs_service.Services
                     new {referenceLaboratoryNumber, notificationId},
                     commandType: CommandType.StoredProcedure);
             }
+
+            await _auditService.AuditUnmatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
         }
         
         private class UnmatchedQueryResultRow

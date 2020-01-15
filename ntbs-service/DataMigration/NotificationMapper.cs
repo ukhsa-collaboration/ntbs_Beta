@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.ReferenceEntities;
-using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
@@ -84,6 +81,7 @@ namespace ntbs_service.DataMigration
                 VisitorDetails = ExtractVisitorDetails(rawNotification),
                 ComorbidityDetails = ExtractComorbidityDetails(rawNotification),
                 ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification),
+                SocialRiskFactors = ExtractSocialRiskFactors(rawNotification),
                 Episode = ExtractEpisodeDetails(rawNotification),
                 NotificationStatus = NotificationStatus.Notified,
                 NotificationSites = sites
@@ -204,6 +202,36 @@ namespace ntbs_service.DataMigration
             NoFixedAbode = notification.NoFixedAbode == 1,
             OccupationId = notification.NtbsOccupationId,
             OccupationOther = notification.NtbsOccupationFreeText
+        };
+
+        private static SocialRiskFactors ExtractSocialRiskFactors(dynamic notification) => new SocialRiskFactors
+        {
+            AlcoholMisuseStatus = StringToValueConverter.GetStatusFromString(notification.AlcoholMisuseStatus),
+            SmokingStatus = StringToValueConverter.GetStatusFromString(notification.SmokingStatus),
+            MentalHealthStatus = StringToValueConverter.GetStatusFromString(notification.MentalHealthStatus),
+            AsylumSeekerStatus = StringToValueConverter.GetStatusFromString(notification.AsylumSeekerStatus),
+            ImmigrationDetaineeStatus = StringToValueConverter.GetStatusFromString(notification.ImmigrationDetaineeStatus),
+            RiskFactorDrugs =
+            {
+                Status = StringToValueConverter.GetStatusFromString(notification.riskFactorDrugs_Status),
+                IsCurrent = StringToValueConverter.GetBoolValue(notification.riskFactorDrugs_IsCurrent),
+                InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorDrugs_InPastFiveYears),
+                MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorDrugs_MoreThanFiveYearsAgo)
+            },
+            RiskFactorHomelessness =
+            {
+                Status = StringToValueConverter.GetStatusFromString(notification.riskFactorHomelessness_Status),
+                IsCurrent = StringToValueConverter.GetBoolValue(notification.riskFactorHomelessness_IsCurrent),
+                InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorHomelessness_InPastFiveYears),
+                MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorHomelessness_MoreThanFiveYearsAgo)
+            },
+            RiskFactorImprisonment =
+            {
+                Status = StringToValueConverter.GetStatusFromString(notification.riskFactorImprisonment_Status),
+                IsCurrent = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_IsCurrent),
+                InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_InPastFiveYears),
+                MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo)
+            },
         };
     }
 }

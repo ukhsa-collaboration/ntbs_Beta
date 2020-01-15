@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -68,7 +69,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<IActionResult> OnPostUnmatch(string labReferenceNumber)
         {
-            await _specimenService.UnmatchSpecimen(NotificationId, labReferenceNumber);
+            var userName = User.FindFirstValue(ClaimTypes.Email);
+            await _specimenService.UnmatchSpecimen(NotificationId, labReferenceNumber, userName);
             return RedirectToPage("/Notifications/Edit/TestResults", new { NotificationId });
         }
 
