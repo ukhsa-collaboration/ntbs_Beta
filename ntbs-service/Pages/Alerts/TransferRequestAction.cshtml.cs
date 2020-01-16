@@ -92,6 +92,15 @@ namespace ntbs_service.Pages.Alerts
                 return Partial("_AcceptedTransferConfirmation", this);
             }
             
+            // Create rejection alert here
+            var transferRejectedAlert = new TransferRejectedAlert()
+            {
+                CaseManagerUsername = User.FindFirstValue(ClaimTypes.Email),
+                NotificationId = NotificationId,
+                RejectionReason = DeclineTransferReason,
+                TbServiceCode = Notification.Episode.TBServiceCode
+            };
+            await _alertService.AddUniqueOpenAlertAsync(transferRejectedAlert);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
             await AuthorizeAndSetBannerAsync();
             return Partial("_RejectedTransferConfirmation", this);
