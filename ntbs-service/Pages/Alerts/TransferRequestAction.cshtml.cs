@@ -25,17 +25,19 @@ namespace ntbs_service.Pages.Alerts
         private readonly IAlertService _alertService;
         public ValidationService ValidationService;
         [BindProperty]
-        [Required]
+        [Required(ErrorMessage = "Please accept or decline the transfer")]
         public bool? AcceptTransfer { get; set; }
         [BindProperty]
-        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended)]
+        [MaxLength(200)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, 
+            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+        [Display(Name = "Explanatory comment")]
         public string DeclineTransferReason { get; set; }
 
         [BindProperty]
+        public int AlertId { get; set; }
         public TransferAlert TransferAlert { get; set; }
 
-        [BindProperty]
-        public int AlertId { get; set; }
 
         public TransferRequestActionModel(
             INotificationService notificationService,
@@ -54,11 +56,12 @@ namespace ntbs_service.Pages.Alerts
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
             await AuthorizeAndSetBannerAsync();
-            // Check edit permission OF ALERT and redirect if not allowed
-            // if (!HasEditPermission)
-            // {
-            //     return RedirectToPage("/Notifications/Overview", new { NotificationId });
-            // }
+            
+            // Check edit permission of user and redirect if not allowed
+            if (!await AuthorizationService.IsUserAuthorizedToManageAlert(User, TransferAlert))
+            {
+                return RedirectToPage("/Notifications/Overview", new { NotificationId });
+            }
             
             if (TransferAlert == null)
             {
@@ -71,7 +74,8 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            // TryValidateModel(TransferAlert, nameof(TransferAlert));
+            TransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
+            
             if(!ModelState.IsValid)
             {
                 await AuthorizeAndSetBannerAsync();
@@ -82,6 +86,7 @@ namespace ntbs_service.Pages.Alerts
             {
                 Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
                 Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+                await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
                 await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
                 await AuthorizeAndSetBannerAsync();
                 return Partial("_AcceptedTransferConfirmation", this);
