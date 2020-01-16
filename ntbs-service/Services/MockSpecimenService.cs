@@ -26,7 +26,7 @@ namespace ntbs_service.Services
             return Task.FromResult((IEnumerable<Specimen>)specimens);
         }
 
-        public Task UnmatchSpecimen(int notificationId, string labReferenceNumber)
+        public Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
         {
             return Task.CompletedTask;
         }

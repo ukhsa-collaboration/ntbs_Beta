@@ -200,6 +200,9 @@ namespace ntbs_service.Migrations
 
                     b.Property<DateTime?>("DateTo");
 
+                    b.Property<string>("Details")
+                        .HasMaxLength(100);
+
                     b.Property<int>("NotificationId");
 
                     b.Property<string>("Postcode");
@@ -12881,7 +12884,8 @@ namespace ntbs_service.Migrations
 
                             b1.Property<DateTime?>("FirstPresentationDate");
 
-                            b1.Property<int?>("HIVTestState");
+                            b1.Property<string>("HIVTestState")
+                                .HasMaxLength(30);
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -13045,11 +13049,11 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<bool>("HasBioTherapy");
+                            b1.Property<bool?>("HasBioTherapy");
 
-                            b1.Property<bool>("HasOther");
+                            b1.Property<bool?>("HasOther");
 
-                            b1.Property<bool>("HasTransplantation");
+                            b1.Property<bool?>("HasTransplantation");
 
                             b1.Property<string>("OtherDescription")
                                 .HasMaxLength(100);
@@ -13208,6 +13212,12 @@ namespace ntbs_service.Migrations
                             b1.Property<int>("NotificationId");
 
                             b1.Property<string>("AlcoholMisuseStatus")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("AsylumSeekerStatus")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("ImmigrationDetaineeStatus")
                                 .HasMaxLength(30);
 
                             b1.Property<string>("MentalHealthStatus")
