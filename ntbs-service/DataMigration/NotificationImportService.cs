@@ -163,7 +163,7 @@ namespace ntbs_service.DataMigration
             }
             catch (Exception e)
             {
-                _logger.LogFailure(context, requestId, message: $"Failed to save the imported notifications for {patientName}", e);
+                _logger.LogFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
                 importResult.AddGroupError(e.StackTrace);
             }
             return importResult;
