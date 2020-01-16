@@ -2,8 +2,10 @@
 
 @if(Model.ClusterId != null)
 {
+    var casesString = Model.ClusterCount > 1 ? "cases" : "case";
     <h3>Cluster Information</h3>
     <div>
-        <p><strong>Cluster ID: </strong>@Model.ClusterId</p>
+        <p><strong>Cluster ID: </strong> <a href="/Reports"> @Model.ClusterId </a> </p>
+        <p>There are @Model.ClusterCount @casesString in the cluster</p>
     </div>
 }

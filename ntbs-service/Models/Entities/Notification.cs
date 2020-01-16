@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
@@ -45,7 +46,11 @@ namespace ntbs_service.Models.Entities
         [MaxLength(150)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
-        public int? ClusterId { get; set; }
+        public string ClusterId { get; set; }
+        
+        // This value is set by triggering a function from NotificationModelBase
+        [NotMapped]
+        public int ClusterCount { get; set; }
 
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
