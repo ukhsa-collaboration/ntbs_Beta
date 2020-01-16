@@ -63,18 +63,7 @@ namespace ntbs_service.Models.Entities
 
         [NotMapped]
         public string NotificationTbServiceCode { get; set; }
-        public bool TransferDestinationNotCurrentTbService
-        {
-            get
-            {
-                if (TbServiceCode == NotificationTbServiceCode && AlertType == AlertType.TransferRequest)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
+        public bool TransferDestinationNotCurrentTbService => AlertType != AlertType.TransferRequest || TbServiceCode != NotificationTbServiceCode;
     }
 
 }

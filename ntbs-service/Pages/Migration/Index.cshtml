@@ -12,7 +12,9 @@
     <h1>Import Legacy Notifications</h1>
 
     <form method="post" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly"></div>
+        <input nhs-input-type="Standard" asp-for="NotificationIds">
+        <br/>
+
         <div>
             <nhs-form-group>
                 <label asp-for="UploadedFile">Upload File</label>
