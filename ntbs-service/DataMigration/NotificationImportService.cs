@@ -3,21 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using EFAuditer;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
-using Serilog;
 
 namespace ntbs_service.DataMigration
 {
 
     public interface INotificationImportService
     {
-        Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> notificationId);
+        Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds);
         Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
     }
 
@@ -111,6 +108,16 @@ namespace ntbs_service.DataMigration
             LookupAndAssignPostcode(notifications);
 
             _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import for {patientName}");
+            
+            // Verify that no repeated NotificationIds have returned
+            var ids = notifications.Select(n => n.LegacyId).ToList();
+            if (ids.Distinct().Count() != ids.Count())
+            {
+                var errorMessage = $"Duplicate records found ({String.Join(',', ids)}) - aborting import for {patientName}";
+                importResult.AddGroupError(errorMessage);
+                _logger.LogFailure(context, requestId, errorMessage);
+                return importResult;
+            }
 
             bool isAnyNotificationInvalid = false;
             foreach (var notification in notifications)
@@ -143,14 +150,22 @@ namespace ntbs_service.DataMigration
             }
 
             _logger.LogSuccess(context, requestId, $"Importing {notifications.Count()} valid notifications");
-            var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-            await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
+            try
+            {
+                var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
+                await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
 
 
-            var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
-            _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
+                var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
+                _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
 
-            _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+                _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+            }
+            catch (Exception e)
+            {
+                _logger.LogFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
+                importResult.AddGroupError(e.StackTrace);
+            }
             return importResult;
         }
 
