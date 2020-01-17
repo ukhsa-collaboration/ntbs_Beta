@@ -92,7 +92,6 @@ namespace ntbs_service.Pages.Alerts
                 return Partial("_AcceptedTransferConfirmation", this);
             }
             
-            // Create rejection alert here
             var transferRejectedAlert = new TransferRejectedAlert()
             {
                 CaseManagerUsername = User.FindFirstValue(ClaimTypes.Email),
@@ -100,6 +99,14 @@ namespace ntbs_service.Pages.Alerts
                 RejectionReason = DeclineTransferReason,
                 TbServiceCode = Notification.Episode.TBServiceCode
             };
+
+            // Dismiss any existing transfer rejected alert so that the new one can be created
+            var pendingTransferRejectedAlert = (TransferRejectedAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId,
+                                                                                                                                      AlertType.TransferRejected);
+            if (pendingTransferRejectedAlert != null)
+            {
+                await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            }
             await _alertService.AddUniqueOpenAlertAsync(transferRejectedAlert);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
             await AuthorizeAndSetBannerAsync();
