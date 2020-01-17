@@ -164,7 +164,7 @@ namespace ntbs_service.DataMigration
             catch (Exception e)
             {
                 _logger.LogFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
-                importResult.AddGroupError(e.StackTrace);
+                importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             return importResult;
         }
