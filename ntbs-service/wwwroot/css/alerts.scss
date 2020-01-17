@@ -25,8 +25,12 @@
     padding-bottom: 10px;
 }
 
-.action-transfer-request-label {
-    padding-right: 5px;
+.transfer-request-information-label {
+    padding-right: 12px;
+}
+
+.transfer-request-information-label--no-wrap {
+    padding-right: 10px;
     white-space: normal;
 
     @media(min-width: $tablet_breakpoint) {
