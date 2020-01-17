@@ -36,8 +36,8 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 
-                // var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
-                // Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
+                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
                 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
                 {
