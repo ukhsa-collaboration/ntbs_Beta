@@ -49,6 +49,12 @@ spec:
               value: "true"
             - name: ReferenceLabResultsConfig__MockedNotificationId
               value: "1"
+            - name: MigrationConfig__DateRangeJobIntervalInMonths
+              value: "2"
+            - name: MigrationConfig__TablePrefix
+              value: ""
+            - name: AppConfig__AuditingEnabled
+              value: "false"
       imagePullSecrets:
         - name: registery-password
 ---
