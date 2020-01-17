@@ -26,7 +26,6 @@ namespace ntbs_service.Pages
             this.userService = userService;
         }
 
-        public int AlertId { get; set; }
         public IList<Alert> Alerts { get; set; }
         public IList<Notification> DraftNotifications { get;set; }
         public IList<Notification> RecentNotifications { get;set; }

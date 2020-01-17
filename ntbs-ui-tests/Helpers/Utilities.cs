@@ -11,7 +11,11 @@ namespace ntbs_ui_tests.Helpers
     {
         public const int DRAFT_ID = 1;
         public const int NOTIFIED_ID = 2;
-
+        
+        public const string TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID = "TBS0001";
+        
+        public const string PHEC_CONTAINING_ABINGDON_CODE = "E45000019";
+        
         public static void SeedDatabase(NtbsContext context)
         {
             // General purpose entities shared between tests
