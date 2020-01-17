@@ -18,6 +18,7 @@
 @import "accessible-autocomplete";
 @import "./autocomplete.scss";
 @import "./testResults.scss";
+@import "./labResults.scss";
 
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
@@ -138,7 +139,7 @@ body {
     }
 
     p:last-child {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
 }
@@ -197,15 +198,4 @@ body {
 
 .nhsuk-panel-with-label__label {
   background-color: #002776;
-}
-
-.nhs-radios--reduced-width {
-  width: 40px;
-}
-
-// Override negative margins for nhsuk-grid-row at small widths which was causing
-// scroll-bar issues
-.nhsuk-grid-row--reduced-margin {
-  margin-left: 0;
-  margin-right: 0;
 }

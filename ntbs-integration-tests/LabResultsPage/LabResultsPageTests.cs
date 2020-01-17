@@ -16,7 +16,6 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NhsUser_CanViewSpecimensAccordingToPermissions()
         {
-            // Arrange
             using (var client = Factory.WithMockUserService<TestNhsUserService>()
                 .CreateClientWithoutRedirects())
             {
@@ -37,6 +36,9 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 
+                // var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                // Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
+                
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
                 {
                     var header = document.QuerySelector($"#specimen-{expectedLabReferenceNumber}");
@@ -52,9 +54,26 @@ namespace ntbs_integration_tests.LabResultsPage
         }
 
         [Fact]
+        public async Task NhsUser_ShowsNoSpecimensIfNoPermissionForTbServices()
+        {
+            using (var client = Factory.WithMockUserService<TestWithoutTbServicesNhsUserService>()
+                .CreateClientWithoutRedirects())
+            {
+                //Act
+                var response = await client.GetAsync("/LabResults");
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                Assert.Equal(0, specimenDetailsSections.Length);
+            }   
+        }
+
+        [Fact]
         public async Task PheUser_CanViewSpecimensAccordingToPermissions()
         {
-            // Arrange
             using (var client = Factory.WithMockUserService<TestPheUserService>()
                 .CreateClientWithoutRedirects())
             {
@@ -75,6 +94,9 @@ namespace ntbs_integration_tests.LabResultsPage
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 
+                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
+                
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
                 {
                     var header = document.QuerySelector($"#specimen-{expectedLabReferenceNumber}");
@@ -92,7 +114,6 @@ namespace ntbs_integration_tests.LabResultsPage
         [Fact]
         public async Task NationalTeam_CanViewSpecimensAccordingToPermissions()
         {
-            // Arrange
             using (var client = Factory.WithMockUserService<TestNationalTeamUserService>()
                 .CreateClientWithoutRedirects())
             {
@@ -109,6 +130,9 @@ namespace ntbs_integration_tests.LabResultsPage
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                
+                var specimenDetailsSections = document.QuerySelectorAll(".specimen-details");
+                Assert.Equal(expectedLabReferenceNumbers.Count, specimenDetailsSections.Length);
                 
                 foreach (var expectedLabReferenceNumber in expectedLabReferenceNumbers)
                 {

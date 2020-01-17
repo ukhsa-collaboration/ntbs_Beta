@@ -6,8 +6,10 @@ namespace ntbs_service.Models.Entities
 {
     public class SpecimenPotentialMatch
     {
+        [Display(Name = "Notification Id")]
         public int NotificationId { get; set; }
 
+        [Display(Name = "Date of notification")]
         public DateTime? NotificationDate { get; set; }
 
         [Display(Name = "NHS Number")]
@@ -31,6 +33,7 @@ namespace ntbs_service.Models.Entities
         public string ConfidenceLevel { get; set; }
 
         public string FormattedDob => NtbsBirthDate.ConvertToString();
+        public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string FormattedNhsNumber => NtbsNhsNumber.FormatStringToNhsNumberFormat();
     }
 }

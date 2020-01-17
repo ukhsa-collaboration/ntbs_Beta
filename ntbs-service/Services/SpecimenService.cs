@@ -53,7 +53,7 @@ namespace ntbs_service.Services
         {
             var query = SpecimenQueryHelper.GetAllUnmatchedSpecimensQuery;
             var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query);
-            return GroupUnmatchedSpecimenRowsByReferenceNumber(unmatchedQueryResultRows);
+            return GroupPotentialMatchesByUnmatchedSpecimen(unmatchedQueryResultRows);
         }
 
         public async Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForTbServicesAsync(
@@ -62,7 +62,7 @@ namespace ntbs_service.Services
             var query = SpecimenQueryHelper.GetUnmatchedSpecimensForTbServicesQuery;
             var formattedTbServiceCodes = SpecimenQueryHelper.FormatEnumerableParams(tbServiceCodes);
             var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query, formattedTbServiceCodes);
-            return GroupUnmatchedSpecimenRowsByReferenceNumber(unmatchedQueryResultRows);
+            return GroupPotentialMatchesByUnmatchedSpecimen(unmatchedQueryResultRows);
         }
 
         public async Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForPhecsAsync(
@@ -71,7 +71,7 @@ namespace ntbs_service.Services
             var query = SpecimenQueryHelper.GetUnmatchedSpecimensForPhecsQuery;
             var formattedPhecCodes = SpecimenQueryHelper.FormatEnumerableParams(phecCodes);
             var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query, formattedPhecCodes);
-            return GroupUnmatchedSpecimenRowsByReferenceNumber(unmatchedQueryResultRows);
+            return GroupPotentialMatchesByUnmatchedSpecimen(unmatchedQueryResultRows);
         }
 
         private async Task<IEnumerable<UnmatchedQueryResultRow>> ExecuteUnmatchedSpecimenQuery(
@@ -92,7 +92,7 @@ namespace ntbs_service.Services
             }
         }
 
-        private static IEnumerable<UnmatchedSpecimen> GroupUnmatchedSpecimenRowsByReferenceNumber(
+        private static IEnumerable<UnmatchedSpecimen> GroupPotentialMatchesByUnmatchedSpecimen(
             IEnumerable<UnmatchedQueryResultRow> unmatchedResultRows)
         {
             return unmatchedResultRows.GroupBy(
@@ -114,6 +114,7 @@ namespace ntbs_service.Services
                         LabSex = specimenData.LabSex,
                         LabAddress = specimenData.LabAddress,
                         LabPostcode = specimenData.LabPostcode,
+                        
                         PotentialMatches = groupedRows.Select(r => r.SpecimenPotentialMatch)
                     };
                 });
