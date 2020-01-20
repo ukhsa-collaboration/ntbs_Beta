@@ -78,7 +78,7 @@ namespace ntbs_service.DataMigration
             notification.LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null;
             notification.LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null;
             notification.NotificationDate = rawNotification.NotificationDate;
-            notification.CreationDate = rawNotification.CreationDate;
+            notification.CreationDate = DateTime.Now;
             notification.PatientDetails = ExtractPatientDetails(rawNotification);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
