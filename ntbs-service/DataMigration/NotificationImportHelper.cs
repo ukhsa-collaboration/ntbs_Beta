@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using Dapper;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using ntbs_service.Properties;
 
 namespace ntbs_service.DataMigration
 {
@@ -37,10 +39,10 @@ namespace ntbs_service.DataMigration
             FROM {0} impNtfc
             WHERE impNtfc.LegacyId = n.OldNotificationId";
 
-        public NotificationImportHelper(IConfiguration configuration)
+        public NotificationImportHelper(IConfiguration configuration, IOptions<MigrationConfig> migrationConfig)
         {
             connectionString = configuration.GetConnectionString("migration");
-            var tablePrefix = configuration.GetSection("Migration")?["TablePrefix"];
+            var tablePrefix = migrationConfig.Value.TablePrefix;
             importedNotificationsTableName = $"{tablePrefix}ImportedNotifications";
         }
 

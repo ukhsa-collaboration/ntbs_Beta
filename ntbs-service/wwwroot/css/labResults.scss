@@ -1,0 +1,20 @@
+.lab-results-radio-container {
+  width: 60px;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  @media (min-width: 40.0625em) {
+    width: 80px;
+  }
+}
+
+.lab-results-demographics {
+  flex: 1;
+}
+
+// Override negative margins for nhsuk-grid-row at small widths which was causing
+// scroll-bar issues
+.lab-results-demographics-row {
+  margin-left: 0;
+  margin-right: 0;
+}

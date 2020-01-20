@@ -133,7 +133,8 @@ namespace ntbs_service.Models.Entities
         public string MDRCaseCountryName => MDRDetails.Country?.Name;
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
         public string LegacyId => LTBRID ?? ETSID;
-        public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true; 
+        public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
+        public bool OverOneYearOld => NotificationDate != null ? DateTime.Now > NotificationDate.Value.AddYears(1) : false;
 
         private string GetNotificationStatusString()
         {
