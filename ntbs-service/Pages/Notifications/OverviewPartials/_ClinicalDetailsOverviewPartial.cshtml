@@ -72,6 +72,16 @@
             <div class="notification-details-label"> Diagnosis to treatment start </div>
             <div class="cell-min-height"> @Model.Notification.DaysFromDiagnosisToTreatment days </div>
         </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Healthcare setting </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.HealthcareSetting?.GetDisplayName() </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> Home visit day </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedHomeVisitDate </div>
+        </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
@@ -94,7 +104,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> DOT/VOT </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails?.DotStatus </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails?.DotStatus.GetDisplayName() </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Enhanced Case Management </div>
@@ -112,3 +122,14 @@
         </nhs-grid-column>
     </nhs-grid-row>
 </div>
+<br />
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Notes </h3>
+    <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditClinicalDetails)"
+       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+</div>
+<div class="notification-overview-details-container">
+    @Model.Notification.ClinicalDetails?.Notes
+</div>
+<br />
