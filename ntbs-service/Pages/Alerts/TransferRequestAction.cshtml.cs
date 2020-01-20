@@ -75,24 +75,33 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
-            
+            await AuthorizeAndSetBannerAsync();
             if(!ModelState.IsValid)
             {
-                await AuthorizeAndSetBannerAsync();
                 return Page();
             }
 
             if(AcceptTransfer == true)
             {
-                Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
-                Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
-                await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
-                await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
-                await AuthorizeAndSetBannerAsync();
+                await AcceptTransferAndDismissAlertAsync();
                 return Partial("_AcceptedTransferConfirmation", this);
             }
             
-            var transferRejectedAlert = new TransferRejectedAlert()
+            await RejectTransferAndDismissAlertAsync();
+            return Partial("_RejectedTransferConfirmation", this);
+        }
+
+        public async Task AcceptTransferAndDismissAlertAsync()
+        {
+            Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
+            Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+            await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+        }
+
+        public async Task RejectTransferAndDismissAlertAsync()
+        {
+             var transferRejectedAlert = new TransferRejectedAlert()
             {
                 CaseManagerUsername = User.FindFirstValue(ClaimTypes.Email),
                 NotificationId = NotificationId,
@@ -109,8 +118,6 @@ namespace ntbs_service.Pages.Alerts
             }
             await _alertService.AddUniqueOpenAlertAsync(transferRejectedAlert);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
-            await AuthorizeAndSetBannerAsync();
-            return Partial("_RejectedTransferConfirmation", this);
         }
     }
 }
