@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </nhs-grid-column>
-            @if (!isLinkedNotificationPage && Model.HasEditPermission)
+            @if (!isLinkedNotificationPage && Model.PermissionLevel == PermissionLevel.Edit)
             {
                 <partial name="./_SideMenu" model="@Model" />
             }

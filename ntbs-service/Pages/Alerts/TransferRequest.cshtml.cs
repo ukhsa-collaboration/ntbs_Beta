@@ -52,7 +52,7 @@ namespace ntbs_service.Pages.Alerts
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             await AuthorizeAndSetBannerAsync();
             // Check edit permission and redirect if not allowed
-            if (!HasEditPermission)
+            if (PermissionLevel != PermissionLevel.Edit)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }

@@ -1,5 +1,6 @@
 @using ntbs_service.Helpers
-@model ntbs_service.Models.Entities.Notification
+@using ntbs_service.Models.Enums
+@model OverviewModel
 
 @{
     var notificationId = (int)ViewData["NotificationId"];
@@ -7,12 +8,15 @@
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Social Context - Addresses </h3>
-    <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditSocialContextAddresses)"
-       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    {
+        <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditSocialContextAddresses)"
+        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    }
 </div>
-@if(Model.SocialContextAddresses.Count > 0)
+@if(Model.Notification.SocialContextAddresses.Count > 0)
 {
     <div class="notification-overview-details-container">
-        <partial name="_SocialContextAddressesTable" for="SocialContextAddresses" view-data=@ViewData />
+        <partial name="_SocialContextAddressesTable" for="Notification.SocialContextAddresses" view-data=@ViewData />
     </div>
 }

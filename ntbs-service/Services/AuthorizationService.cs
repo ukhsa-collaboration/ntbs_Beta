@@ -10,6 +10,7 @@ namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
+        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification, NotificationGroup group);
         Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification);
         Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
@@ -56,6 +57,19 @@ namespace ntbs_service.Services
             var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
             var locationPhecCode = notificationBannerModel.LocationPHECCode;
             return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+        }
+
+        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification, NotificationGroup group)
+        {
+            if(await CanEditNotificationAsync(user, notification))
+            {
+                return PermissionLevel.Edit;
+            }
+            else if(group != null ? group.Notifications.Select(n => CanEditNotificationAsync(user, n).Result).Any(x => x == true) : false)
+            {
+                return PermissionLevel.ReadOnly;
+            }
+            return PermissionLevel.None;
         }
 
         public async Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification)

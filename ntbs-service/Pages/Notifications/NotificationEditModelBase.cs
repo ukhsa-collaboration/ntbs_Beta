@@ -47,7 +47,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             await AuthorizeAndSetBannerAsync();
-            if (!HasEditPermission)
+            if (PermissionLevel != PermissionLevel.Edit)
             {
                 return RedirectAfterSaveForNotified();
             }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
@@ -34,7 +35,7 @@ namespace ntbs_service.Pages.Notifications
         public IList<Alert> Alerts { get; set; }
 
         [BindProperty]
-        public bool HasEditPermission { get; set; }
+        public PermissionLevel PermissionLevel { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
@@ -46,8 +47,8 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            HasEditPermission = await AuthorizationService.CanEditNotificationAsync(User, Notification);
-            NotificationBannerModel = new NotificationBannerModel(Notification, HasEditPermission);
+            PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification, Group);
+            NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel == PermissionLevel.Edit);
         }
 
         protected async Task<bool> TryGetLinkedNotifications()
