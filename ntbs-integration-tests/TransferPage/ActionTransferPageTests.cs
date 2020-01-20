@@ -67,9 +67,11 @@ namespace ntbs_integration_tests.TransferPage
             };
 
             // Act
-            await SendPostFormWithData(initialDocument, formData, url);
+            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var resultDocument = await GetDocumentAsync(result);
 
             // Assert
+            Assert.NotNull(resultDocument.QuerySelector("#return-to-notification"));
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
             var overviewPage = await GetDocumentForUrl(overviewUrl);
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
