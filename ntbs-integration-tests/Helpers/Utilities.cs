@@ -13,6 +13,7 @@ namespace ntbs_integration_tests.Helpers
     {
         public const int ALERT_ID = 1;
         public const int TRANSFER_ALERT_ID = 2;
+        public const int TRANSFER_ALERT_ID_TO_DISMISS = 3;
         public const int DRAFT_ID = 1;
         public const int NOTIFIED_ID = 2;
         public const int DENOTIFIED_ID = 3;
@@ -93,7 +94,6 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(ClinicalDetailsPageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
-            context.Alert.AddRange(TransferPageTests.GetSeedingAlerts());
 
             context.SaveChanges();
         }
@@ -195,6 +195,23 @@ namespace ntbs_integration_tests.Helpers
                     CreationDate = DateTime.Now,
                     NotificationId = NOTIFIED_ID,
                     AlertType = AlertType.Test
+                },
+                new TransferAlert 
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_ID,
+                    NotificationId = NOTIFIED_ID,
+                    TbServiceCode = PERMITTED_SERVICE_CODE,
+                    AlertStatus = AlertStatus.Open
+                },
+                new TransferAlert
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_ID_TO_DISMISS,
+                    NotificationId = NOTIFIED_ID_WITH_NOTIFICATION_DATE,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    AlertStatus = AlertStatus.Open
                 }
             };
         }
