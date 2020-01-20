@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Pages;
 using Xunit;
 
@@ -16,6 +19,25 @@ namespace ntbs_integration_tests.NotificationPages
         protected override string NotificationSubPath => NotificationSubPaths.Overview;
 
         public OverviewPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+
+        public static IList<Notification> GetSeedingNotifications()
+        {
+            return new List<Notification>
+            {
+                new Notification
+                { 
+                    NotificationId = Utilities.NOTIFICATION_DATE_TODAY,
+                    NotificationStatus = NotificationStatus.Notified,
+                    NotificationDate = DateTime.Now
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO,
+                    NotificationStatus = NotificationStatus.Notified,
+                    NotificationDate = new DateTime(2015, 1, 1)
+                }
+            };
+        }
 
         public static IEnumerable<object[]> OverviewRoutes()
         {
@@ -95,6 +117,24 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Contains(GetRedirectLocation(result), url);
             var reloadedDocument = await GetDocumentForUrl(GetRedirectLocation(result));
             Assert.Null(reloadedDocument.QuerySelector("#alert-1"));
+        }
+
+        [Fact]
+        public async Task OverviewPageHidesCreateNewNotificationForThisPatientButton_IfNotificationNotOverOneYearOld()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_TODAY);
+            var document = await GetDocumentForUrl(url);
+            Assert.Null(document.QuerySelector("#new-linked-notification-button"));
+        }
+
+        [Fact]
+        public async Task OverviewPageShowsCreateNewNotificationForThisPatientButton_IfNotificationOverOneYearOld()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO);
+            var document = await GetDocumentForUrl(url);
+            Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
         }
     }
 }
