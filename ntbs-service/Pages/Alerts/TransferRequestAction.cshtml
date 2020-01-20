@@ -18,17 +18,23 @@
 
         <br>
 
-        <div class="transfer-request-information"> Sending TB service:  @Model.TransferAlert.TbServiceName</div>
+        <div class="transfer-request-information flex-container"> 
+            <div class="transfer-request-information-label"> Sending TB service: </div>
+            <div> @Model.TransferAlert.TbServiceName </div>
+        </div>
+
+        <div class="transfer-request-information flex-container"> 
+            <div class="transfer-request-information-label"> Sending case manager: </div>
+            <div> @Model.Notification?.Episode.CaseManagerName </div>
+        </div>
         
-        <div class="transfer-request-information"> Sending case manager:  @Model.Notification?.Episode.CaseManagerName </div>
-        
-        <div class="flex-container transfer-request-information">
-            <div class="action-transfer-request-label bold-text"> Reason for transfer: </div>
+        <div class="transfer-request-information flex-container">
+            <div class="transfer-request-information-label--no-wrap bold-text"> Reason for transfer: </div>
             <div> @Model.TransferAlert.TransferReasonString </div>
         </div>
         
-        <div class="flex-container">
-            <div class="action-transfer-request-label"> Note accompanying transfer: </div>
+        <div class="transfer-request-information flex-container">
+            <div class="transfer-request-information-label--no-wrap"> Note accompanying transfer: </div>
             <div> @Model.TransferAlert.TransferRequestNote </div>
         </div>
 
