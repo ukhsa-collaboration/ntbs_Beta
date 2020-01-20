@@ -165,21 +165,23 @@ namespace ntbs_service
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
-
+            
             var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
             if (referenceLabResultsConfig.GetValue<bool>("MockOutSpecimenMatching"))
             {
                 var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
+                var tbServiceCode = referenceLabResultsConfig.GetValue<string>("MockedTbServiceCode");
+                var phecCode = referenceLabResultsConfig.GetValue<string>("MockedPhecCode");
                 services.AddScoped<ICultureAndResistanceService>(
                     sp => new MockCultureAndResistanceService(notificationId));
                 services.AddScoped<ISpecimenService>(
-                    sp => new MockSpecimenService(notificationId));
+                    sp => new MockSpecimenService(notificationId, tbServiceCode, phecCode));
             }
             else
             {
                 services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
                 services.AddScoped<ISpecimenService, SpecimenService>();
-            }
+            } 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -43,6 +43,8 @@ namespace ntbs_integration_tests.Helpers
         public const int CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID = 80;
 
         public const int LATE_DOB_ID = 90;
+        public const int NOTIFICATION_DATE_TODAY = 95;
+        public const int NOTIFICATION_DATE_OVER_YEAR_AGO = 96;
 
         public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 91;
 
@@ -86,6 +88,7 @@ namespace ntbs_integration_tests.Helpers
             context.Alert.AddRange(GetSeedingAlerts());
 
             // Entities required for specific test suites
+            context.Notification.AddRange(OverviewPageTests.GetSeedingNotifications());
             context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());

@@ -1,4 +1,4 @@
-@model IEnumerable<ntbs_service.Models.Entities.Specimen>
+@model IEnumerable<ntbs_service.Models.Entities.MatchedSpecimen>
 
 @if (Model.Count() > 0)
 {
@@ -82,7 +82,7 @@
                     <nhs-grid-row>
                         <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabBirthDate) </dt>
-                            <dd class="cell-min-height"> @specimen.FormattedPatientDob </dd>
+                            <dd class="cell-min-height"> @specimen.FormattedLabDob </dd>
                         </nhs-grid-column>
                         <nhs-grid-column grid-column-width="OneHalf">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LabAddress) </dt>
