@@ -24,6 +24,16 @@ namespace ntbs_integration_tests.TestServices
             return Task.FromResult(Enumerable.Empty<TBService>());
         }
 
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            return UserType.NhsUser;
+        }
+
+        public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return Task.FromResult(new UserPermissionsFilter()
@@ -44,6 +54,17 @@ namespace ntbs_integration_tests.TestServices
         public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
         {
             return Task.FromResult(Enumerable.Empty<TBService>());
+        }
+
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            return UserType.PheUser;
+        }
+
+        public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
+        {
+            var phecCodes = new List<string> {Utilities.PERMITTED_PHEC_CODE};
+            return Task.FromResult((IEnumerable<string>) phecCodes);
         }
 
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)

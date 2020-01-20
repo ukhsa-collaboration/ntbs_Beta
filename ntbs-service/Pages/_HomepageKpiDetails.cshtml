@@ -1,0 +1,48 @@
+﻿@model ntbs_service.Pages.IndexModel
+
+<div>
+    <filtered-homepage-kpi inline-template>
+        <div id="homepage-kpi-details">
+            <div class="flex-container">
+                <label nhs-label-type="Standard" for="code-filter-dropdown" classes="homepage-kpi-filter-label" >
+                    Filter by code
+                </label>
+                <select id="code-filter-dropdown" nhs-select-type="Standard" ref="filterByCode" asp-items="Model.Codes"
+                    v-on:change="updateKpiDetails" classes="homepage-kpi-filter-dropdown">
+                </select>
+            </div>
+            <br/>
+            @foreach (var item in Model.HomepageKpiDetails)
+            {
+                <div id="kpi-@item.Code" v-if="CodeFilter == '@item.Code'">
+                    <nhs-grid-row>
+                        <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+                            <div>
+                                <h1>@item.PercentPositive</h1>
+                                <p>% culture positive</p>
+                            </div>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+                            <div>
+                                <h1>@item.PercentHivOffered</h1>
+                                <p>% HIV offered</p>
+                            </div>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+                            <div>
+                                <h1>@item.PercentResistant</h1>
+                                <p>% with resistance</p>
+                            </div>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+                            <div>
+                                <h1>@item.PercentTreatmentDelay</h1>
+                                <p>% with treatment delay</p>
+                            </div>
+                        </nhs-grid-column>
+                    </nhs-grid-row>
+                </div>
+            }
+        </div>
+    </filtered-homepage-kpi>
+</div>

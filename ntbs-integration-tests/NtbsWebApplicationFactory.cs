@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
+using ntbs_integration_tests.TestServices;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
 
@@ -52,6 +53,7 @@ namespace ntbs_integration_tests
                     sp => new MockCultureAndResistanceService(Utilities.NOTIFIED_ID));
                 services.AddScoped<ISpecimenService>(
                     sp => new MockSpecimenService(Utilities.NOTIFIED_ID));
+                services.AddScoped<IHomepageKpiService>(sp => new MockHomepageKpiService());
             });
         }
     }

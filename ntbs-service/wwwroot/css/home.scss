@@ -12,3 +12,33 @@
     max-width: 200px;
     margin: 5px 0 auto 15px
 }
+
+.homepage-kpi-card {
+    background-color: $phe-red;
+    background-clip: content-box;
+    padding: 20px
+}
+
+.homepage-kpi-filter-label {
+  height: 100%;
+  margin: auto 0px auto 5px;
+}
+
+.homepage-kpi-filter-dropdown {
+  max-width: 200px;
+  margin: 5px auto auto 15px
+}
+
+.homepage-kpi-card {
+    > div {
+      padding: 10px;
+      align-self: center;
+      > h1 {
+          color: white;
+      }
+      > p {
+          color: white;
+          font-size: 14px;
+      }
+    }
+}
