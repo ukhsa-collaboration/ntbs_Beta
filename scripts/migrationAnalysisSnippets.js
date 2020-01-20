@@ -1,4 +1,7 @@
-﻿// Returns concatenated $values from recursively found json files
+// This file isn't meant to be run directly - instead it's a collection of semi-connected snippets that helped
+// with the analysis of the trial migrations that can be run by hand in a node REPL
+
+// Returns concatenated $values from recursively found json files
 function readAllJson(dir) {
     const files = fs.readdirSync(dir);
     return files.flatMap(function (file, index) {
