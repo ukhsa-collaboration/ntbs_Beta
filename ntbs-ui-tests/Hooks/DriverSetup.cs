@@ -18,6 +18,7 @@ namespace ntbs_ui_tests.Hooks
         {
             this.objectContainer = objectContainer;
             this.settings = settings;
+            server.ConfigureLogger(this.GetType().Name);
             server.CreateClient(); // Not sure why needed, see hanselman link referenced in SeleniumServerFactory
         }
 
