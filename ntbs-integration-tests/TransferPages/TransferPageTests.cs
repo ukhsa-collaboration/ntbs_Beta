@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using Xunit;
 
@@ -14,27 +13,11 @@ namespace ntbs_integration_tests.TransferPage
         protected override string NotificationSubPath => NotificationSubPaths.TransferRequest;
         public TransferPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
-        public static IList<Alert> GetSeedingAlerts()
-        {
-            return new List<Alert>
-            {
-                new TransferAlert 
-                {
-                    AlertType = AlertType.TransferRequest,
-                    AlertId = Utilities.TRANSFER_ALERT_ID,
-                    NotificationId = Utilities.NOTIFIED_ID,
-                    TbServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                    CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL,
-                    AlertStatus = AlertStatus.Open
-                }
-            };
-        }
-
         [Fact]
         public async Task CreateTransferAlert_ReturnsPageWithModelErrors_IfAlertNotValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrl(url);
 
@@ -60,7 +43,7 @@ namespace ntbs_integration_tests.TransferPage
         public async Task CreateTransferAlert_RedirectsToOverviewPage_IfAlertValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
+            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrl(url);
 

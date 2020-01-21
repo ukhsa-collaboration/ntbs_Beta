@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { getHeaders } from "../helpers";
+import { getHeaders, buildPath } from "../helpers";
 import axios from "axios";
 
 const ValidatePostcode = Vue.extend({
@@ -11,7 +11,7 @@ const ValidatePostcode = Vue.extend({
             const newValue = inputField.value;
 
             let requestConfig = {
-                url: `${window.location.pathname}/ValidatePostcode`,
+                url: buildPath("ValidatePostcode"),
                 headers: getHeaders(),
                 params: {
                     "shouldValidateFull": this.$props.shouldvalidatefull || false,

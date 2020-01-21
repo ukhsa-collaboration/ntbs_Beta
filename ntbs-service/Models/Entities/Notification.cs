@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
@@ -45,7 +46,12 @@ namespace ntbs_service.Models.Entities
         [MaxLength(150)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
-        public int? ClusterId { get; set; }
+        [Display(Name = "Cluster Id")]
+        public string ClusterId { get; set; }
+        
+        // This value is set by triggering a function from NotificationModelBase
+        [NotMapped]
+        public int ClusterCount { get; set; }
 
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
@@ -133,7 +139,8 @@ namespace ntbs_service.Models.Entities
         public string MDRCaseCountryName => MDRDetails.Country?.Name;
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
         public string LegacyId => LTBRID ?? ETSID;
-        public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true; 
+        public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
+        public bool OverOneYearOld => NotificationDate != null ? DateTime.Now > NotificationDate.Value.AddYears(1) : false;
 
         private string GetNotificationStatusString()
         {

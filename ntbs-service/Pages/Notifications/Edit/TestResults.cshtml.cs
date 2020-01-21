@@ -27,13 +27,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         [BindProperty]
         public TestData TestData { get; set; }
         public CultureAndResistance CultureAndResistance { get; set; }
-        public IEnumerable<Specimen> Specimens { get; set; }
+        public IEnumerable<MatchedSpecimen> Specimens { get; set; }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
             TestData = Notification.TestData;
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
-            Specimens = await _specimenService.GetSpecimenDetailsAsync(NotificationId);
+            Specimens = await _specimenService.GetMatchedSpecimenDetailsForNotificationAsync(NotificationId);
 
             await SetNotificationProperties(isBeingSubmitted, TestData);
 

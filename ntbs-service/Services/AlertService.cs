@@ -97,7 +97,7 @@ namespace ntbs_service.Services
         public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user)
         {
             var alerts = await _alertRepository.GetAlertsForNotificationAsync(notificationId);
-            var filteredAlerts = await _authorizationService.FilterTransferAlertsFromListOfAlertsByUserAsync(user, alerts);
+            var filteredAlerts = await _authorizationService.FilterAlertsForUserAsync(user, alerts);
 
             return filteredAlerts;
         }

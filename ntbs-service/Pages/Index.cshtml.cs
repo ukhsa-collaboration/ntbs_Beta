@@ -32,7 +32,7 @@ namespace ntbs_service.Pages
             _userService = userService;
             _homepageKpiService = homepageKpiService;
         }
-        public int AlertId { get; set; }
+
         public IList<Alert> Alerts { get; set; }
         public IList<Notification> DraftNotifications { get;set; }
         public IList<Notification> RecentNotifications { get;set; }

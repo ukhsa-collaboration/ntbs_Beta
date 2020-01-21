@@ -11,6 +11,7 @@ using System.IO;
 using ntbs_service.Services;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Linq;
 using Hangfire;
 using Microsoft.Extensions.Options;
 using ntbs_service.Properties;
@@ -29,7 +30,7 @@ namespace ntbs_service.Pages.Migration
         }
 
         [BindProperty]
-        public string NotificationId { get; set; }
+        public string NotificationIds { get; set; }
 
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
@@ -60,7 +61,13 @@ namespace ntbs_service.Pages.Migration
 
             var requestId = HttpContext.TraceIdentifier;
 
-            if (UploadedFile != null)
+            if (NotificationIds != null)
+            {
+                var legacyIds = NotificationIds.Split(',').Select(id => id.Trim()).ToList();
+                BackgroundJob.Enqueue<INotificationImportService>(x => 
+                    x.ImportByLegacyIdsAsync(null, requestId, legacyIds));
+            }
+            else if (UploadedFile != null)
             {
                 var notificationIds = await GetIdListFromFile(UploadedFile);
                 var IdBatches = splitList(notificationIds);

@@ -11,8 +11,6 @@ namespace ntbs_integration_tests.Helpers
 {
     public static class Utilities
     {
-        public const int ALERT_ID = 1;
-        public const int TRANSFER_ALERT_ID = 2;
         public const int DRAFT_ID = 1;
         public const int NOTIFIED_ID = 2;
         public const int DENOTIFIED_ID = 3;
@@ -45,6 +43,17 @@ namespace ntbs_integration_tests.Helpers
         public const int CLINICAL_NOTIFICATION_EXTRA_PULMONARY_ID = 80;
 
         public const int LATE_DOB_ID = 90;
+        public const int NOTIFICATION_DATE_TODAY = 95;
+        public const int NOTIFICATION_DATE_OVER_YEAR_AGO = 96;
+
+        public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 91;
+
+        public const int ALERT_ID = 1;
+        public const int TRANSFER_ALERT_ID = 2;
+        public const int TRANSFER_ALERT_ID_TO_ACCEPT = 3;
+
+        public const int TRANSFER_ALERT_ID_TO_REJECT = 4;
+        public const int TRANSFER_REJECTED_ID = 5;
 
         public const int NOTIFICATION_GROUP_ID = 1;
 
@@ -79,6 +88,7 @@ namespace ntbs_integration_tests.Helpers
             context.Alert.AddRange(GetSeedingAlerts());
 
             // Entities required for specific test suites
+            context.Notification.AddRange(OverviewPageTests.GetSeedingNotifications());
             context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());
@@ -88,9 +98,9 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(TreatmentEventEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ClinicalDetailsPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(ActionTransferPageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
-            context.Alert.AddRange(TransferPageTests.GetSeedingAlerts());
 
             context.SaveChanges();
         }
@@ -192,6 +202,40 @@ namespace ntbs_integration_tests.Helpers
                     CreationDate = DateTime.Now,
                     NotificationId = NOTIFIED_ID,
                     AlertType = AlertType.Test
+                },
+                new TransferAlert 
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_ID,
+                    NotificationId = NOTIFIED_ID,
+                    TbServiceCode = PERMITTED_SERVICE_CODE,
+                    AlertStatus = AlertStatus.Open
+                },
+                new TransferAlert
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_ID_TO_ACCEPT,
+                    NotificationId = NOTIFIED_ID_WITH_NOTIFICATION_DATE,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    AlertStatus = AlertStatus.Open
+                },
+                new TransferAlert
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_ID_TO_REJECT,
+                    NotificationId = NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    AlertStatus = AlertStatus.Open
+                },
+                new TransferRejectedAlert
+                {
+                    AlertType = AlertType.TransferRejected,
+                    AlertId = TRANSFER_REJECTED_ID,
+                    NotificationId = NOTIFIED_ID,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    AlertStatus = AlertStatus.Open
                 }
             };
         }

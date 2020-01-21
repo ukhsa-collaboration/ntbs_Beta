@@ -131,6 +131,10 @@
         public const string TreatmentOutcomeInvalidForRestart = "Treatment outcome type is not allowed for a treatment restart";
 
         #endregion
+
+        #region TransferAlert
+        public const string TransferDestinationCannotBeCurrentTbService = "{0} can not be transferred to the notification's current TB service";
+        #endregion
     }
 
     public static class ValidDates

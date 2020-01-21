@@ -116,7 +116,7 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClusterId");
+                    b.Property<string>("ClusterId");
 
                     b.Property<DateTime>("CreationDate");
 
@@ -199,6 +199,9 @@ namespace ntbs_service.Migrations
                         .IsRequired();
 
                     b.Property<DateTime?>("DateTo");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(100);
 
                     b.Property<int>("NotificationId");
 
@@ -12806,6 +12809,16 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("TransferRequest");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.TransferRejectedAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(200);
+
+                    b.HasDiscriminator().HasValue("TransferRejected");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
@@ -12881,7 +12894,8 @@ namespace ntbs_service.Migrations
 
                             b1.Property<DateTime?>("FirstPresentationDate");
 
-                            b1.Property<int?>("HIVTestState");
+                            b1.Property<string>("HIVTestState")
+                                .HasMaxLength(30);
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -13045,11 +13059,11 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<bool>("HasBioTherapy");
+                            b1.Property<bool?>("HasBioTherapy");
 
-                            b1.Property<bool>("HasOther");
+                            b1.Property<bool?>("HasOther");
 
-                            b1.Property<bool>("HasTransplantation");
+                            b1.Property<bool?>("HasTransplantation");
 
                             b1.Property<string>("OtherDescription")
                                 .HasMaxLength(100);
@@ -13208,6 +13222,12 @@ namespace ntbs_service.Migrations
                             b1.Property<int>("NotificationId");
 
                             b1.Property<string>("AlcoholMisuseStatus")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("AsylumSeekerStatus")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("ImmigrationDetaineeStatus")
                                 .HasMaxLength(30);
 
                             b1.Property<string>("MentalHealthStatus")

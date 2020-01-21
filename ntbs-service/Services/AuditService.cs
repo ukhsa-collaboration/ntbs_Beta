@@ -40,7 +40,7 @@ namespace ntbs_service.Services
         {
             await _auditContext.AuditOperationAsync(
                 labReferenceNumber,
-                typeof(Specimen).Name,
+                typeof(MatchedSpecimen).Name,
                 null,
                 UNMATCH_EVENT,
                 userName,

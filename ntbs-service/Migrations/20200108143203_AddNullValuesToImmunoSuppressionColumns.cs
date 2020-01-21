@@ -27,7 +27,7 @@ namespace ntbs_service.Migrations
                         , HasTransplantation = NULL
                         , HasOther = NULL
                         , OtherDescription = NULL
-                    WHERE Status NOT LIKE 'Yes'
+                    WHERE Status NOT LIKE 'Yes' OR Status IS NULL
                 "
             );
         }

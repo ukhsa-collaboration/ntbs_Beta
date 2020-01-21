@@ -18,6 +18,8 @@
 @import "accessible-autocomplete";
 @import "./autocomplete.scss";
 @import "./testResults.scss";
+@import "./alerts.scss";
+@import "./labResults.scss";
 
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
@@ -138,7 +140,7 @@ body {
     }
 
     p:last-child {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
 }
@@ -193,4 +195,8 @@ body {
             font-size: 16px;
         }
     }
+}
+
+.nhsuk-panel-with-label__label {
+  background-color: #002776;
 }
