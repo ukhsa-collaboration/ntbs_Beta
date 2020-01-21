@@ -3,7 +3,7 @@ import Vue from "vue";
 const FilteredHomepageKpiDetails = Vue.extend({
     data() {
         return {
-            CodeFilter: ""
+            CodeFilter: null
         }
     },
     mounted : function () {

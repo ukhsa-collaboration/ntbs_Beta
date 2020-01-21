@@ -1,0 +1,28 @@
+﻿@model ntbs_service.Models.Entities.HomepageKpi
+
+<nhs-grid-row>
+    <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+        <div>
+            <h1>@Model.PercentPositive.ToString(".0")%</h1>
+            <p>culture positive</p>
+        </div>
+    </nhs-grid-column>
+    <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+        <div>
+            <h1>@Model.PercentHivOffered.ToString(".0")%</h1>
+            <p>HIV offered</p>
+        </div>
+    </nhs-grid-column>
+    <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+        <div>
+            <h1>@Model.PercentResistant.ToString(".0")%</h1>
+            <p>with resistance</p>
+        </div>
+    </nhs-grid-column>
+    <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
+        <div>
+            <h1>@Model.PercentTreatmentDelay.ToString(".0")%</h1>
+            <p>with treatment delay</p>
+        </div>
+    </nhs-grid-column>
+</nhs-grid-row>
