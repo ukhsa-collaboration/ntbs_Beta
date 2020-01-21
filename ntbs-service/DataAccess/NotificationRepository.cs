@@ -74,7 +74,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<int> GetNumberOfNotificationsInCluster(string clusterId)
         {
-            return await Task.Run(() => _context.Notification.Count(n => n.ClusterId == clusterId));
+            return await _context.Notification.CountAsync(n => n.ClusterId == clusterId);
         }
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
