@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200116005147_ConvertClusterIdToVarchar")]
+    partial class ConvertClusterIdToVarchar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -12809,16 +12811,6 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("TransferRequest");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.TransferRejectedAlert", b =>
-                {
-                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
-
-                    b.Property<string>("RejectionReason")
-                        .HasMaxLength(200);
-
-                    b.HasDiscriminator().HasValue("TransferRejected");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
@@ -12894,8 +12886,7 @@ namespace ntbs_service.Migrations
 
                             b1.Property<DateTime?>("FirstPresentationDate");
 
-                            b1.Property<string>("HIVTestState")
-                                .HasMaxLength(30);
+                            b1.Property<int?>("HIVTestState");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
