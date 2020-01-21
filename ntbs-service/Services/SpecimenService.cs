@@ -22,6 +22,8 @@ namespace ntbs_service.Services
             IEnumerable<string> phecCodes);
         
         Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
+
+        Task MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
     }
 
     public class SpecimenService : ISpecimenService
@@ -29,7 +31,7 @@ namespace ntbs_service.Services
         private readonly string _reportingDbConnectionString;
         private readonly string _specimenMatchingDbConnectionString;
         private readonly IAuditService _auditService;
-
+       
         public SpecimenService(IConfiguration configuration, IAuditService auditService)
         {
             _reportingDbConnectionString = configuration.GetConnectionString("reporting");
@@ -120,20 +122,34 @@ namespace ntbs_service.Services
                 });
         }
         
-        public async Task UnmatchSpecimen(int notificationId, string referenceLaboratoryNumber, string userName)
+        public async Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 await connection.QueryAsync(
                     "uspUnmatchSpecimen",
+                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId},
+                    commandType: CommandType.StoredProcedure);
+            }
+
+            await _auditService.AuditUnmatchSpecimen(notificationId, labReferenceNumber, userName);
+        }
+
+        public async Task MatchSpecimenAsync(int notificationId, string referenceLaboratoryNumber, string userName)
+        {
+            using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
+            {
+                connection.Open();
+                await connection.QueryAsync(
+                    "uspMatchSpecimen",
                     new {referenceLaboratoryNumber, notificationId},
                     commandType: CommandType.StoredProcedure);
             }
 
             await _auditService.AuditUnmatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
         }
-        
+
         private class UnmatchedQueryResultRow
         {
             internal SpecimenBase SpecimenBase { get; set; }

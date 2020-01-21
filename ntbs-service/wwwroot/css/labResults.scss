@@ -1,7 +1,9 @@
 .lab-results-radio-container {
   width: 60px;
-  margin-top: auto;
-  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   @media (min-width: 40.0625em) {
     width: 80px;
@@ -12,9 +14,41 @@
   flex: 1;
 }
 
+.lab-results-manual-match-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+  
+  & * {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  & .lab-results-demographics {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-top: 20px;
+  }
+}
+
 // Override negative margins for nhsuk-grid-row at small widths which was causing
 // scroll-bar issues
 .lab-results-demographics-row {
   margin-left: 0;
   margin-right: 0;
+}
+
+
+.nhs-form-group--manual-lab-result {
+  display: flex;
+  flex-wrap: wrap;
+  
+  > .nhsuk-label {
+    margin-right: 20px;
+  }
+  
+  > .nhsuk-error-message {
+    flex-basis: 100%;
+  }
 }

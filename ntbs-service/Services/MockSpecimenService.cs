@@ -149,5 +149,10 @@ namespace ntbs_service.Services
         {
             return Task.CompletedTask;
         }
+
+        public Task MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
