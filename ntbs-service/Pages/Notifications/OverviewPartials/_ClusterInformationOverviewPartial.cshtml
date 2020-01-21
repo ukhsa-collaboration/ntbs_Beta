@@ -3,6 +3,6 @@
 @if (Model.ClusterId != null)
 {
     <div class="notification-overview-type-and-edit-container">
-        <h3 class="notification-details-type"> Cluster ID: <a href="/Reports"> @Model.ClusterId </a> </h3>
+        <h3 class="notification-details-type">@Html.DisplayNameFor(m => m.ClusterId): <a href="/Reports/Cluster/@Model.ClusterId"> @Model.ClusterId </a> </h3>
     </div>
 }

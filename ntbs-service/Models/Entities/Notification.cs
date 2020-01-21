@@ -46,6 +46,7 @@ namespace ntbs_service.Models.Entities
         [MaxLength(150)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
+        [Display(Name = "Cluster Id")]
         public string ClusterId { get; set; }
         
         // This value is set by triggering a function from NotificationModelBase
