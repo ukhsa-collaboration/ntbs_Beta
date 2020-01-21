@@ -1,16 +1,19 @@
-@model NotificationModelBase
-
 @{
-    Dictionary<string, string> EditPageErrorDictionary = (Dictionary<string, string>) ViewData["EditPageErrorDictionary"];
+    var pageErrors = (Dictionary<string, string>) ViewData["EditPageErrorDictionary"];
 }
-@if(EditPageErrorDictionary != null)
+
+@if (pageErrors != null && pageErrors.Count > 0)
 {
-    <nhs-error-summary title-text="Errors on page - changes not saved" title-id="error-summary-title"
-    role="alert" tabindex="-1" data-module="error-summary">
-        @foreach (var notifyError in EditPageErrorDictionary) 
+    <nhs-error-summary
+        title-text="Errors on page - changes not saved"
+        title-id="error-summary-title"
+        role="alert"
+        tabindex="-1"
+        data-module="error-summary">
+        @foreach (var (errorKey, errorMessage) in pageErrors)
         {
             <li>
-                <a href="#@notifyError.Key" id="error-summary-@notifyError.Key">@notifyError.Value</a>
+                <a href="#@errorKey" id="error-summary-@errorKey">@errorMessage</a>
             </li>
         }
     </nhs-error-summary>
