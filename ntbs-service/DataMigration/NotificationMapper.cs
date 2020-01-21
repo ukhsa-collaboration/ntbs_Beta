@@ -168,7 +168,7 @@ namespace ntbs_service.DataMigration
 
         private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
-            bool? hasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel);
+            bool? hasTravel = notification.HasTravel;
             var totalNumberOfCountries = hasTravel ?? false ? StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
 
             var details = new TravelDetails();
@@ -185,7 +185,7 @@ namespace ntbs_service.DataMigration
 
         private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
-            bool? hasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor);
+            bool? hasVisitor = notification.HasVisitor;
             var totalNumberOfCountries = hasVisitor ?? false ? StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
 
             var details = new VisitorDetails();
