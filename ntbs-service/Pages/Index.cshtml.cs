@@ -55,15 +55,14 @@ namespace ntbs_service.Pages
                 var tbServiceCodes = (await _userService.GetTbServicesAsync(User))
                     .Select(x => x.Code)
                     .ToList();
-                Codes = new SelectList(tbServiceCodes);
                 HomepageKpiDetails = await _homepageKpiService.GetKpiForTbService(tbServiceCodes);
             }
             else
             {
                 var phecCodes = (await _userService.GetPhecCodesAsync(User)).ToList();
-                Codes = new SelectList(phecCodes);
                 HomepageKpiDetails = await _homepageKpiService.GetKpiForPhec(phecCodes);
             }
+            Codes = new SelectList(HomepageKpiDetails, nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
         }
 
         private async Task SetUserNotificationsAsync()
@@ -76,7 +75,7 @@ namespace ntbs_service.Pages
 
         private async Task SetUserAlertsAsync()
         {
-            var services = await _userService.GetTbServicesAsync(User);
+            var services = (await _userService.GetTbServicesAsync(User)).ToList();
             var tbServiceCodes = services.Select(s => s.Code);
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             Alerts = await _alertRepository.GetAlertsByTbServiceCodesAsync(tbServiceCodes);

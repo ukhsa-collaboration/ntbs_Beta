@@ -11,5 +11,6 @@ namespace ntbs_service.Models.Entities
         public float PercentHivOffered { get; set; }
         public float PercentTreatmentDelay { get; set; }
         public string Code { get; set; }
+        public string Name { get; set; }
     }
 }

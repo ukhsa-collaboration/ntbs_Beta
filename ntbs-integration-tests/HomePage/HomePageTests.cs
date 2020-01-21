@@ -47,10 +47,11 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task ShowingHomepageKpis_WhenUserIsNhsUser()
         {
-            using (var client = Factory.WithMockUserService<NhsUserService>())
+            using (var client = Factory.WithMockUserService<TestNhsUserService>()
+                                        .CreateClientWithoutRedirects())
             {
                 // Arrange
-                var initialPage = await Client.GetAsync(PageRoute);
+                var initialPage = await client.GetAsync(PageRoute);
                 var pageContent = await GetDocumentAsync(initialPage);
 
                 // Assert
@@ -61,10 +62,11 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task ShowingHomepageKpis_WhenUserIsPheUser()
         {
-            using (var client = Factory.WithMockUserService<PheUserService>())
+            using (var client = Factory.WithMockUserService<TestPheUserService>()
+                                        .CreateClientWithoutRedirects())
             {
                 // Arrange
-                var initialPage = await Client.GetAsync(PageRoute);
+                var initialPage = await client.GetAsync(PageRoute);
                 var pageContent = await GetDocumentAsync(initialPage);
             
                 // Assert

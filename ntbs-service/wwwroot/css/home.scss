@@ -25,7 +25,7 @@
 }
 
 .homepage-kpi-filter-dropdown {
-  max-width: 200px;
+  max-width: 300px;
   margin: 5px auto auto 15px
 }
 
@@ -47,23 +47,19 @@
     }
 }
 
-[v-cloak] .v-clock-homepage-kpi {
+[v-cloak] .v-cloak-homepage-kpi {
     display: none;
 }
 
-.js-disp {
+.homepage-kpi-container-with-js {
     display: none;
-}
-
-.non-js-disp {
-    display: inline;
 }
 
 .js-enabled {
-    .non-js-disp {
+    .homepage-kpi-container-without-js {
       display: none;
     }
-    .js-disp {
+    .homepage-kpi-container-with-js {
       display: inline;
     }
 }

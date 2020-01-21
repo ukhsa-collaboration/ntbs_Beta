@@ -13,15 +13,17 @@ namespace ntbs_integration_tests.TestServices
 {
     public class TestNhsUserService : IUserService
     {
+        private readonly List<string> tbServiceCode = new List<string>
+        {
+            Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, Utilities.PERMITTED_SERVICE_CODE
+        };
+        
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return Task.FromResult(new UserPermissionsFilter()
             {
                 Type = UserType.NhsUser,
-                IncludedTBServiceCodes = new List<string>
-                {
-                    Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, Utilities.PERMITTED_SERVICE_CODE
-                }
+                IncludedTBServiceCodes = tbServiceCode
             });
         }
 
@@ -32,7 +34,7 @@ namespace ntbs_integration_tests.TestServices
 
         public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
         {
-            return Task.FromResult(Enumerable.Empty<TBService>());
+            return Task.FromResult(tbServiceCode.Select(x => new TBService { Code = x }));
         }
 
         public UserType GetUserType(ClaimsPrincipal user)

@@ -54,7 +54,7 @@
                 <nhs-table-body>
                     @foreach (var item in Model.Alerts) 
                     {
-                        <nhs-table-body-row id="alert-@item.AlertId" v-if="TbServiceCode == '@item.TbServiceCode' || TbServiceCode == 'Show all'">
+                        <nhs-table-body-row id="alert-@item.AlertId" v-if="TbServiceCode === '@item.TbServiceCode' || TbServiceCode === 'Show all'">
                             <nhs-table-item>
                                 @if(item.NotificationId != null) 
                                 {
