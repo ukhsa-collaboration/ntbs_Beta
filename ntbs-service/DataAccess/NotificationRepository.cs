@@ -101,10 +101,10 @@ namespace ntbs_service.DataAccess
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.TestData.ManualTestResults)
-                    .ThenInclude(t => t.ManualTestType.ManualTestTypeSampleTypes)
-                        .ThenInclude(t => t.SampleType)
+                .ThenInclude(t => t.ManualTestType.ManualTestTypeSampleTypes)
+                .ThenInclude(t => t.SampleType)
                 .Include(n => n.TestData.ManualTestResults)
-                    .ThenInclude(t => t.SampleType)
+                .ThenInclude(t => t.SampleType)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -119,7 +119,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.SocialContextVenues)
-                    .ThenInclude(s => s.VenueType)
+                .ThenInclude(s => s.VenueType)
                 .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -127,7 +127,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.TreatmentEvents)
-                    .ThenInclude(n => n.TreatmentOutcome)
+                .ThenInclude(n => n.TreatmentOutcome)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -143,8 +143,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
                 .Include(n => n.TestData.ManualTestResults)
-                    .ThenInclude(r => r.ManualTestType.ManualTestTypeSampleTypes)
-                        .ThenInclude(t => t.SampleType)
+                .ThenInclude(r => r.ManualTestType.ManualTestTypeSampleTypes)
+                .ThenInclude(t => t.SampleType)
                 .Include(n => n.TestData.ManualTestResults).ThenInclude(r => r.SampleType)
                 .Include(n => n.TravelDetails.Country1)
                 .Include(n => n.TravelDetails.Country2)
@@ -200,10 +200,10 @@ namespace ntbs_service.DataAccess
             return _context.Notification
                 .Where(n => n.NotificationStatus != NotificationStatus.Deleted)
                 .Include(n => n.PatientDetails)
-                    .ThenInclude(p => p.PostcodeLookup)
-                        .ThenInclude(pc => pc.LocalAuthority)
-                            .ThenInclude(la => la.LocalAuthorityToPHEC)
-                                .ThenInclude(pl => pl.PHEC)
+                .ThenInclude(p => p.PostcodeLookup)
+                .ThenInclude(pc => pc.LocalAuthority)
+                .ThenInclude(la => la.LocalAuthorityToPHEC)
+                .ThenInclude(pl => pl.PHEC)
                 .Include(n => n.Episode.TBService.PHEC)
                 .Include(n => n.Episode.CaseManager);
         }
