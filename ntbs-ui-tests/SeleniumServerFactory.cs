@@ -10,6 +10,8 @@ using System.Linq;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using ntbs_ui_tests.Helpers;
+using Serilog;
+using Serilog.Events;
 
 namespace ntbs_ui_tests
 {
@@ -63,8 +65,7 @@ namespace ntbs_ui_tests
                     var db = scopedServices.GetRequiredService<NtbsContext>();
 
                     db.Database.EnsureCreated();
-                    // TODO NTBS-725: Fix bug so we can seed database
-                    // Utilities.SeedDatabase(db);
+                    Utilities.SeedDatabase(db);
                 }
             });
 
@@ -94,6 +95,19 @@ namespace ntbs_ui_tests
 
             // This is a 'fake' server, needed to be returned by the method but will not actually be used.
             return new TestServer(new WebHostBuilder().UseEnvironment("Test").UseStartup<TStartup>());
+        }
+        
+        public void ConfigureLogger(string testName)
+        {
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Debug();
+            // // Uncomment to have SUT app log into files
+            // var logFilePath = $"../../../{DateTime.Now:yyyy-M-d}-{testName}-logs.txt";
+            // logger = logger.WriteTo.File(logFilePath); 
+            Log.Logger = logger.CreateLogger();
         }
 
         protected override void Dispose(bool disposing)

@@ -23,7 +23,8 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 new Notification(){ NotificationId = Utilities.DENOTIFY_WITH_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
                 new Notification(){ NotificationId = Utilities.DENOTIFY_NO_DESCRIPTION, NotificationStatus = NotificationStatus.Notified },
-                new Notification(){
+                new Notification()
+                {
                     NotificationId = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE,
                     NotificationStatus = NotificationStatus.Notified,
                     NotificationDate = new DateTime(2011, 1, 1)

@@ -22,6 +22,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             SocialContextVenues = Notification.SocialContextVenues;
             await SetNotificationProperties(isBeingSubmitted);
+            await AssignClusterCountToNotification();
 
             return Page();
         }

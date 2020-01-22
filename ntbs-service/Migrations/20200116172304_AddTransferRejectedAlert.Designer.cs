@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200116172304_AddTransferRejectedAlert")]
+    partial class AddTransferRejectedAlert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +118,7 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClusterId");
+                    b.Property<int?>("ClusterId");
 
                     b.Property<DateTime>("CreationDate");
 
@@ -12892,23 +12894,10 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("EnhancedCaseManagementStatus")
                                 .HasMaxLength(30);
 
-                            b1.Property<DateTime?>("FirstHomeVisitDate");
-
                             b1.Property<DateTime?>("FirstPresentationDate");
 
                             b1.Property<string>("HIVTestState")
                                 .HasMaxLength(30);
-
-                            b1.Property<string>("HealthcareDescription")
-                                .HasMaxLength(100);
-
-                            b1.Property<string>("HealthcareSetting")
-                                .HasMaxLength(30);
-
-                            b1.Property<string>("HomeVisitCarriedOut")
-                                .HasMaxLength(30);
-
-                            b1.Property<bool?>("IsDotOffered");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -12919,9 +12908,6 @@ namespace ntbs_service.Migrations
                             b1.Property<bool?>("IsSymptomatic");
 
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
-
-                            b1.Property<string>("Notes")
-                                .HasMaxLength(500);
 
                             b1.Property<DateTime?>("SymptomStartDate");
 

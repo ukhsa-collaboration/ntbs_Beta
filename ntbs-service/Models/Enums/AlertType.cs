@@ -11,6 +11,7 @@ namespace ntbs_service.Models.Enums
         UnmatchedLabResult,
         [Display(Name = "Transfer Request")]
         TransferRequest,
+        [Display(Name = "Transfer rejected")]
         TransferRejected,
         DataQualityIssue,
         SocialContext,

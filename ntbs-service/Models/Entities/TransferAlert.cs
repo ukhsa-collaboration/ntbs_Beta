@@ -31,7 +31,7 @@ namespace ntbs_service.Models.Entities
         public string TransferRequestNote { get; set; }
         public override string CaseManagerFullName => CaseManager?.FullName ?? "";
         public override string Action => "Transfer request to your TB service";
-        public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.TransferRequest);
+        public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.ActionTransferRequest);
         public override bool NotDismissable => true;
         public string TransferReasonString => TransferReason.GetDisplayName() + 
             (TransferReason == TransferReason.Other ? $" - {OtherReasonDescription}" : "");

@@ -1,0 +1,8 @@
+@model ntbs_service.Models.Entities.Notification
+
+@if (Model.ClusterId != null)
+{
+    <div class="notification-overview-type-and-edit-container">
+        <h3 class="notification-details-type">@Html.DisplayNameFor(m => m.ClusterId): <a href="/Reports/Cluster/@Model.ClusterId"> @Model.ClusterId </a> </h3>
+    </div>
+}

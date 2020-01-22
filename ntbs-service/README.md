@@ -68,6 +68,12 @@ Before first running ui tests locally (the below steps are powershell specific, 
 To run ui tests, run the script `.\test.ps1` - If you don't have bash configured to be able to run powershell, `./test.sh` is a good alternative.
 To see the browser window when running them change the setting in Hooks\TestSettings.cs
 
+### Accessing app logs whilst under integration tests
+The integration tests by default don't collect logs from the system under test (ie the whole app).
+However, when Debugging, it will add the logs to the Debug console.
+You can also make the tests log to a file by un-commenting the appropriate lines in #
+[NtbsWebApplicationFactory](/ntbs-integration-tests/NtbsWebApplicationFactory.cs).
+
 ## Database migrations
 
 To minimize friction in development and deployments, the app uses Entity Framework migrations.

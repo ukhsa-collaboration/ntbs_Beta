@@ -28,6 +28,7 @@ namespace ntbs_service.DataAccess
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         bool NotificationWithLegacyIdExists(string id);
+        Task<int> GetNumberOfNotificationsInCluster(string clusterId);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -69,6 +70,11 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Any(e => e.LTBRID == id || e.ETSID == id);
+        }
+
+        public async Task<int> GetNumberOfNotificationsInCluster(string clusterId)
+        {
+            return await _context.Notification.CountAsync(n => n.ClusterId == clusterId);
         }
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)

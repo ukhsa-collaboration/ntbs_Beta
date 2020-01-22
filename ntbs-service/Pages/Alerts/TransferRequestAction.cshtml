@@ -1,0 +1,95 @@
+@page "/Notifications/{NotificationId:int}/ActionTransfer/{handler?}"
+
+@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@model ntbs_service.Pages.Alerts.TransferRequestActionModel
+
+@{
+    Layout = "../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = $"Transfer Request - {Model.NotificationId}";
+}
+
+<nhs-width-container container-width="Standard">
+    <form method="post" autocomplete="off">
+        <input type="hidden" asp-for="TransferAlert.NotificationId" />
+        <h2> Action transfer request </h2>
+
+        <div> This action will be recorded in the change log. </div>
+
+        <br>
+
+        <div class="transfer-request-information flex-container"> 
+            <div class="transfer-request-information-label"> Sending TB service: </div>
+            <div> @Model.TransferAlert.TbServiceName </div>
+        </div>
+
+        <div class="transfer-request-information flex-container"> 
+            <div class="transfer-request-information-label"> Sending case manager: </div>
+            <div> @Model.Notification?.Episode.CaseManagerName </div>
+        </div>
+        
+        <div class="transfer-request-information flex-container">
+            <div class="transfer-request-information-label--no-wrap bold-text"> Reason for transfer: </div>
+            <div> @Model.TransferAlert.TransferReasonString </div>
+        </div>
+        
+        <div class="transfer-request-information flex-container">
+            <div class="transfer-request-information-label--no-wrap"> Note accompanying transfer: </div>
+            <div> @Model.TransferAlert.TransferRequestNote </div>
+        </div>
+
+        <br>
+
+        @{
+            var hasActionError = !Model.ValidationService.IsValid("AcceptTransfer");
+            var actionFormGroupType = hasActionError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type="@actionFormGroupType">
+            <nhs-fieldset aria-describedby="action-error">
+                <span id="action-error" nhs-span-type="ErrorMessage" asp-validation-for="AcceptTransfer" has-error="@hasActionError"></span>
+
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
+                            value="true" id="accept-transfer-input" aria-describedby="action-error">
+                        <label nhs-label-type="Radios" for="accept-transfer-input">
+                            Accept transfer
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
+                            value="false" id="decline-transfer-input" data-aria-controls="conditional-radio" aria-describedby="action-error">
+                        <label nhs-label-type="Radios" for="decline-transfer-input">
+                            Decline transfer
+                        </label>
+                    </div>
+
+                    @{
+                        var hasCommentError = !Model.ValidationService.IsValid("DeclineTransferReason");
+                        var commentFormGroupType = hasCommentError ? Error : Standard;
+                    }
+
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
+                        <nhs-form-group nhs-form-group-type="@commentFormGroupType">
+                            <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                                Provide explanatory comment
+                            </label>
+                            <span id="comment-error" nhs-span-type="ErrorMessage" asp-validation-for="DeclineTransferReason" has-error="@hasCommentError"></span>
+                            <input asp-for="DeclineTransferReason" nhs-input-type="Standard" is-error-input="@hasCommentError" aria-describedby="comment-error" />
+                        </nhs-form-group>
+                    </div>
+                </div>
+            </nhs-fieldset>
+        </nhs-form-group>
+
+        <div class="flex-container">
+            <button nhs-button-type="Standard" id="cancel-transfer-button" classes="confirm-transfer-button">
+                Submit
+            </button>
+            <nhs-back-link href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)" 
+                classes="transfer-request-back-link">
+                Go back
+            </nhs-back-link>
+        </div>
+    </form>
+</nhs-width-container>

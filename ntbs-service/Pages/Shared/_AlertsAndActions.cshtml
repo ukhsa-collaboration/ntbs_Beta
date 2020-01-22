@@ -46,12 +46,15 @@
     <nhs-grid-column grid-column-width="OneThird">
         <div class="@manageNotificationClass">
             <nhs-details display-text="Manage notification" nhs-details-type="Expander" id="manage-notification">
-                <form method="post">
-                    <input hidden value="@Model.NotificationId" name="NotificationId" />
-                    <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink">
-                        New notification for this patient
-                    </button>
-                </form>
+                @if(Model.Notification.OverOneYearOld)
+                {
+                    <form method="post">
+                        <input hidden value="@Model.NotificationId" name="NotificationId" />
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink" id="new-linked-notification-button">
+                            New notification for this patient
+                        </button>
+                    </form>
+                }
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.HasEditPermission)
                 {
                     var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
