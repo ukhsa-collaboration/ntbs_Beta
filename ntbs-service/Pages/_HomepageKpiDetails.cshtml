@@ -1,0 +1,37 @@
+﻿@model ntbs_service.Pages.IndexModel
+
+<div>
+    @if (@Model.HomepageKpiDetails.Any())
+    {
+        <h1 class="govuk-visually-hidden"> Homepage KPI Details </h1>
+        <filtered-homepage-kpi inline-template>
+            <div>
+                <!-- Kpi details for non-JS browsers -->
+                <div class="homepage-kpi-container-without-js" id="kpi-details">
+                    <partial name="Shared/_HomepageKpiRow" model="@Model.HomepageKpiDetails.FirstOrDefault()"/>
+                </div>
+                
+                 <!-- Kpi details for browsers with JS-->
+                <div class="homepage-kpi-container-with-js" id="homepage-kpi-details">
+                    <div class="flex-container">
+                        <label nhs-label-type="Standard" for="code-filter-dropdown" classes="homepage-kpi-filter-label" >
+                            Filter by:
+                        </label>
+                        <select id="code-filter-dropdown" nhs-select-type="Standard" ref="filterByCode" asp-items="Model.KpiFilter"
+                                v-on:change="updateKpiDetails" classes="homepage-kpi-filter-dropdown">
+                        </select>
+                    </div>
+                    <br/>
+                    <div v-cloak>
+                        @foreach (var item in Model.HomepageKpiDetails)
+                        {
+                            <div id="kpi-@item.Code" class="v-cloak-homepage-kpi" v-if="CodeFilter === '@item.Code'">
+                                <partial name="Shared/_HomepageKpiRow" model="@item"/>
+                            </div>
+                        }
+                    </div>
+                </div>      
+            </div>
+        </filtered-homepage-kpi>   
+    }
+</div>
