@@ -35,6 +35,26 @@ namespace ntbs_integration_tests.NotificationPages
                     NotificationId = Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO,
                     NotificationStatus = NotificationStatus.Notified,
                     NotificationDate = new DateTime(2015, 1, 1)
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE,
+                    NotificationStatus = NotificationStatus.Notified,
+                    GroupId = Utilities.OVERVIEW_NOTIFICATION_GROUP_ID,
+                    Episode = new Episode
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+                    }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE,
+                    NotificationStatus = NotificationStatus.Notified,
+                    GroupId = Utilities.OVERVIEW_NOTIFICATION_GROUP_ID,
+                    Episode = new Episode
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID
+                    }
                 }
             };
         }
@@ -125,6 +145,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_TODAY);
             var document = await GetDocumentForUrl(url);
+            
+            // Assert
             Assert.Null(document.QuerySelector("#new-linked-notification-button"));
         }
 
@@ -134,7 +156,26 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO);
             var document = await GetDocumentForUrl(url);
+            
+            // Assert
             Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
+        }
+        
+        [Fact]
+        public async Task OverviewPageShowsReadOnlyVersion_IfReadOnlyPermission()
+        {
+            using (var client = Factory.WithMockUserService<TestNhsUserService>()
+                .CreateClientWithoutRedirects())
+            {
+                // Arrange
+                var url = GetCurrentPathForId(Utilities.LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE);
+                var response = await client.GetAsync(url);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
+                Assert.Null(document.QuerySelector("#navigation-side-menu"));
+            }
         }
     }
 }

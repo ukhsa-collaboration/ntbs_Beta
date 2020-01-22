@@ -10,7 +10,7 @@ namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification, NotificationGroup group);
+        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification, NotificationGroup group = null);
         Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification);
         Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
@@ -56,20 +56,29 @@ namespace ntbs_service.Services
             var tbServiceCode = notificationBannerModel.TbServiceCode;
             var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
             var locationPhecCode = notificationBannerModel.LocationPHECCode;
-            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            return await AuthorizeUserAccessForTbServiceAndPhecCodes(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
         }
 
-        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification, NotificationGroup group)
+        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
+            Notification notification, NotificationGroup group = null)
         {
-            if(await CanEditNotificationAsync(user, notification))
+            if (await CanEditNotificationAsync(user, notification))
             {
                 return PermissionLevel.Edit;
             }
-            else if(group != null ? group.Notifications.Select(n => CanEditNotificationAsync(user, n).Result).Any(x => x == true) : false)
+
+            if (await CanEditLinkedNotificationAsync(user, group))
             {
                 return PermissionLevel.ReadOnly;
             }
+
             return PermissionLevel.None;
+        }
+
+        public async Task<bool> CanEditLinkedNotificationAsync(ClaimsPrincipal user, NotificationGroup group)
+        {
+            return group?.Notifications.Select(n => CanEditNotificationAsync(user, n).Result).Any(x => x == true) ??
+                   false;
         }
 
         public async Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification)
@@ -77,10 +86,11 @@ namespace ntbs_service.Services
             var tbServiceCode = notification.Episode.TBServiceCode;
             var tbServicePhecCode = notification.Episode.TBService?.PHECCode;
             var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            return await AuthorizeUserAccessForTbServiceAndPhecCodes(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
         }
 
-        private async Task<bool> AuthorizeUserAccess(ClaimsPrincipal user, string tbServiceCode, string locationPhecCode, string tbServicePhecCode)
+        private async Task<bool> AuthorizeUserAccessForTbServiceAndPhecCodes(ClaimsPrincipal user, string tbServiceCode,
+            string locationPhecCode, string tbServicePhecCode)
         {
             if (_filter == null)
             {

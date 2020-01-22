@@ -31,6 +31,9 @@ namespace ntbs_service.Models
         public bool FullAccess;
         public string RedirectPath;
 
+        // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
+        // implemented across the codebase due to there being no visual difference between no permission level and readonly
+        // permission on notification banner models
         public NotificationBannerModel(Notification notification, bool fullAccess = true, bool showLink = false) {
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
