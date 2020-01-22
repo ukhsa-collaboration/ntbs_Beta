@@ -37,11 +37,9 @@
             var notesGroupState = notesError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type="@notesGroupState">
-            <label asp-for="ClinicalDetails.Notes" nhs-label-type="Standard">
-                Enter note
-            </label>
             <span id="notes-error" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.Notes" has-error="@notesError"></span>
-            <input asp-for="ClinicalDetails.Notes" nhs-input-type="Standard" is-error-input="@notesError" aria-describedby="notes-error" />
+            <textarea classes="nhsuk-input--width-20" asp-for="ClinicalDetails.Notes" nhs-textarea-type="Standard" 
+                    rows="2" is-error-input="@notesError" aria-describedby="notes-error"></textarea>
         </nhs-form-group>
     </div>
 </div>
