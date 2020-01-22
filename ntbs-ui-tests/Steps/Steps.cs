@@ -49,7 +49,7 @@ namespace ntbs_ui_tests.StepDefinitions
             Browser.Navigate().GoToUrl($"{Server.RootUri}/{pageName}");
         }
 
-        [Given(@"I am on the (.*) notification overview page")]
+        [Given(@"I am on seeded '(.*)' notification overview page")]
         public void GivenIAmOnANotificationPage(string notificationIdName)
         {
             var notificationId = notificationIdName == "TO_BE_DENOTIFIED" ? Utilities.TO_BE_DENOTIFIED_ID
