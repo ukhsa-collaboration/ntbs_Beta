@@ -209,13 +209,14 @@
                                                                         has-error="@hasManualNotificationIdError"
                                                                         ref="errorField">
                                                                     </span>
-                                                                    <label nhs-label-type="Standard">
+                                                                    <label nhs-label-type="Standard" asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId">
                                                                         Manual Notification Id
                                                                     </label>
                                                                     <input nhs-input-type="Standard"
                                                                            fixed-width="Five"
                                                                            asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId"
                                                                            v-on:input="update($event.target.value)"
+                                                                           aria-describedby="@($"{manualNotificationIdString}-error")"
                                                                            ref="inputField"/>
                                                                 </nhs-form-group>
                                                             </div>
