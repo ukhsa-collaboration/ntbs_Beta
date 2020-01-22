@@ -60,7 +60,7 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) == PermissionLevel.Edit)
+            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }

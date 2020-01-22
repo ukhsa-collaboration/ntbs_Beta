@@ -121,7 +121,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             Notification = await GetNotificationAsync(NotificationId);
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) == PermissionLevel.Edit)
+            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }
