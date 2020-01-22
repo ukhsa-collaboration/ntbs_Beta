@@ -203,6 +203,7 @@
                                                                     id="@manualNotificationIdString"
                                                                     ref="formGroup">
                                                                     <span
+                                                                        id="@($"{manualNotificationIdString}-error")"
                                                                         nhs-span-type="ErrorMessage"
                                                                         asp-validation-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId"
                                                                         has-error="@hasManualNotificationIdError"

@@ -168,9 +168,10 @@ namespace ntbs_service.Pages.LabResults
 
         private async Task<int> ValidateCandidateMatch(SpecimenPotentialMatchSelection value)
         {
+            // Prefix ModelState endsWith substring with '.' to avoid catching x.ManualNotificationId
             var candidateMatchModelStateKey =
                 ModelState.Keys.SingleOrDefault(key =>
-                    key.EndsWith(nameof(SpecimenPotentialMatchSelection.NotificationId)));
+                    key.EndsWith("." + nameof(SpecimenPotentialMatchSelection.NotificationId)));
 
             var notificationId = value.NotificationId.GetValueOrDefault();
             var notification = await _notificationRepository.GetNotifiedNotificationAsync(notificationId);
