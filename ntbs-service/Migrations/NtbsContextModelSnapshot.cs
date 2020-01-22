@@ -12892,10 +12892,23 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("EnhancedCaseManagementStatus")
                                 .HasMaxLength(30);
 
+                            b1.Property<DateTime?>("FirstHomeVisitDate");
+
                             b1.Property<DateTime?>("FirstPresentationDate");
 
                             b1.Property<string>("HIVTestState")
                                 .HasMaxLength(30);
+
+                            b1.Property<string>("HealthcareDescription")
+                                .HasMaxLength(100);
+
+                            b1.Property<string>("HealthcareSetting")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("HomeVisitCarriedOut")
+                                .HasMaxLength(30);
+
+                            b1.Property<bool?>("IsDotOffered");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -12906,6 +12919,9 @@ namespace ntbs_service.Migrations
                             b1.Property<bool?>("IsSymptomatic");
 
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
+
+                            b1.Property<string>("Notes")
+                                .HasMaxLength(500);
 
                             b1.Property<DateTime?>("SymptomStartDate");
 

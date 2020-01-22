@@ -28,4 +28,18 @@
     <br />
     
     <partial name="_ClinicalDetailsTreatmentOptions"/>
+    <br />
+    
+    <h2>Notes</h2>
+    <div>
+        @{
+            var notesError = !Model.IsValid("ClinicalDetails.Notes");
+            var notesGroupState = notesError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type="@notesGroupState">
+            <span id="notes-error" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.Notes" has-error="@notesError"></span>
+            <textarea classes="nhsuk-input--width-20" asp-for="ClinicalDetails.Notes" nhs-textarea-type="Standard" 
+                    rows="2" is-error-input="@notesError" aria-describedby="notes-error"></textarea>
+        </nhs-form-group>
+    </div>
 </div>
