@@ -3,26 +3,34 @@
 <nhs-grid-row>
     <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
         <div>
-            <h1>@Model.PercentPositive.ToString(".0")%</h1>
-            <p>culture positive</p>
+            <div class="kpi-percentage">@Model.PercentPositive.ToString(".0")%</div>
+            <div class="kpi-label-container">
+                <span>culture positive</span>
+            </div>
         </div>
     </nhs-grid-column>
     <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
         <div>
-            <h1>@Model.PercentHivOffered.ToString(".0")%</h1>
-            <p>HIV offered</p>
+            <div class="kpi-percentage">@Model.PercentHivOffered.ToString(".0")%</div>
+            <div class="kpi-label-container">
+                <span>HIV offered</span>
+            </div>
         </div>
     </nhs-grid-column>
     <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
         <div>
-            <h1>@Model.PercentResistant.ToString(".0")%</h1>
-            <p>with resistance</p>
+            <div class="kpi-percentage">@Model.PercentResistant.ToString(".0")%</div>
+            <div class="kpi-label-container">
+                <span>with resistance</span>
+            </div>
         </div>
     </nhs-grid-column>
     <nhs-grid-column grid-column-width="OneQuarter" classes="homepage-kpi-card">
         <div>
-            <h1>@Model.PercentTreatmentDelay.ToString(".0")%</h1>
-            <p>with treatment delay</p>
+            <div class="kpi-percentage">@Model.PercentTreatmentDelay.ToString(".0")%</div>
+            <div class="kpi-label-container">
+                <span>with treatment delay</span>
+            </div>
         </div>
     </nhs-grid-column>
 </nhs-grid-row>

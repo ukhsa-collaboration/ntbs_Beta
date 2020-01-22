@@ -13,12 +13,6 @@
     margin: 5px 0 auto 15px
 }
 
-.homepage-kpi-card {
-    background-color: $phe-red;
-    background-clip: content-box;
-    padding: 20px
-}
-
 .homepage-kpi-filter-label {
   height: 100%;
   margin: auto 0px auto 5px;
@@ -30,21 +24,31 @@
 }
 
 .homepage-kpi-card {
-    > div {
-      padding: 10px;
-      align-self: center;
-      > h1 {
-          color: white;
-          text-align: center;
-          margin-bottom: 36px;
-          margin-top: 8px;
-      }
-      > p {
-          color: white;
-          font-size: 18px;
-          text-align: center; 
-      }
+  background-color: $phe-red;
+  background-clip: content-box;
+  padding: 20px;
+}
+
+.kpi-percentage {
+  color: white;
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 8px;
+  font-size: 2em;
+
+  @media (min-width: 768px) {
+    & {
+      margin-bottom: 36px;
     }
+  }
+}
+
+.kpi-label-container {
+  height: 2em;
+  margin-bottom: 24px;
+  color: white;
+  font-size: 18px;
+  text-align: center;
 }
 
 [v-cloak] .v-cloak-homepage-kpi {
