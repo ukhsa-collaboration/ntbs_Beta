@@ -7,7 +7,7 @@
     Layout = "./Shared/_Layout.cshtml";
 }
 
-@if (Model.Codes.Any())
+@if (Model.KpiFilter.Any())
 {
     <nhs-width-container container-width="Standard">
         <partial name="_HomepageKpiDetails" model="@Model"/>

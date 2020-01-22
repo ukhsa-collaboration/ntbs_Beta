@@ -107,7 +107,7 @@ namespace ntbs_service_unit_tests.Pages
 
             // Act
             await pageModel.OnGetAsync();
-            var phecCodes = Assert.IsAssignableFrom<SelectList>(pageModel.Codes);
+            var phecCodes = Assert.IsAssignableFrom<SelectList>(pageModel.KpiFilter);
             var homepageKpiDetails = Assert.IsAssignableFrom<List<HomepageKpi>>(pageModel.HomepageKpiDetails);
             
             Assert.True(phecCodes.Count() == 1);
@@ -132,7 +132,7 @@ namespace ntbs_service_unit_tests.Pages
 
             // Act
             await pageModel.OnGetAsync();
-            var phecCodes = Assert.IsAssignableFrom<SelectList>(pageModel.Codes);
+            var phecCodes = Assert.IsAssignableFrom<SelectList>(pageModel.KpiFilter);
             var homepageKpiDetails = Assert.IsAssignableFrom<List<HomepageKpi>>(pageModel.HomepageKpiDetails);
             
             Assert.True(phecCodes.Count() == 1);

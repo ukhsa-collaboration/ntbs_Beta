@@ -37,9 +37,9 @@ namespace ntbs_service.Pages
         public IList<Notification> DraftNotifications { get;set; }
         public IList<Notification> RecentNotifications { get;set; }
         public SelectList TbServices { get; set; }
-        public SelectList Codes { get; set; }
+        public SelectList KpiFilter { get; set; }
         public IEnumerable<HomepageKpi> HomepageKpiDetails { get; set; }
-
+        
         public async Task OnGetAsync()
         {
             await SetUserNotificationsAsync();
@@ -62,7 +62,7 @@ namespace ntbs_service.Pages
                 var phecCodes = (await _userService.GetPhecCodesAsync(User)).ToList();
                 HomepageKpiDetails = await _homepageKpiService.GetKpiForPhec(phecCodes);
             }
-            Codes = new SelectList(HomepageKpiDetails, nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
+            KpiFilter = new SelectList(HomepageKpiDetails, nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
         }
 
         private async Task SetUserNotificationsAsync()

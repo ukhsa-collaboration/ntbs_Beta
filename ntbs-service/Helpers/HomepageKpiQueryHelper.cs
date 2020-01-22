@@ -7,21 +7,21 @@ namespace ntbs_service.Helpers
     {
         public static string GetKpiForPhecQuery { get; } = $@"
             SELECT [{nameof(HomepageKpi.Code)}],
-                    [{nameof(HomepageKpi.Name)}],
-		            [{nameof(HomepageKpi.PercentPositive)}],
-		            [{nameof(HomepageKpi.PercentResistant)}],
-		            [{nameof(HomepageKpi.PercentHivOffered)}],
-		            [{nameof(HomepageKpi.PercentTreatmentDelay)}]
+                   [{nameof(HomepageKpi.Name)}],
+		           [{nameof(HomepageKpi.PercentPositive)}],
+		           [{nameof(HomepageKpi.PercentResistant)}],
+		           [{nameof(HomepageKpi.PercentHivOffered)}],
+		           [{nameof(HomepageKpi.PercentTreatmentDelay)}]
             FROM [dbo].[ufnGetKPIforPhec] (@param)
         ";
 
         public static string GetKpiForServiceQuery { get; } = $@"
             SELECT [{nameof(HomepageKpi.Code)}],
-                    [{nameof(HomepageKpi.Name)}],
-		            [{nameof(HomepageKpi.PercentPositive)}],
-		            [{nameof(HomepageKpi.PercentResistant)}],
-		            [{nameof(HomepageKpi.PercentHivOffered)}],
-		            [{nameof(HomepageKpi.PercentTreatmentDelay)}]
+                   [{nameof(HomepageKpi.Name)}],
+		           [{nameof(HomepageKpi.PercentPositive)}],
+		           [{nameof(HomepageKpi.PercentResistant)}],
+		           [{nameof(HomepageKpi.PercentHivOffered)}],
+		           [{nameof(HomepageKpi.PercentTreatmentDelay)}]
             FROM [dbo].[ufnGetKPIforService] (@param)
         ";
 
