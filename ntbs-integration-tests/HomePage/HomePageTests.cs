@@ -12,7 +12,7 @@ namespace ntbs_integration_tests.HomePage
         public HomePageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         public const string PageRoute = "/Index";
-        public const string DismissPageRoute = "/Alerts/1/Dismiss";
+        public const string DismissPageRoute = "/Alerts/20001/Dismiss";
 
 
         [Fact]
@@ -21,7 +21,7 @@ namespace ntbs_integration_tests.HomePage
             // Arrange
             var initialPage = await Client.GetAsync(PageRoute);
             var pageContent = await GetDocumentAsync(initialPage);
-            Assert.NotNull(pageContent.QuerySelector("#alert-1"));
+            Assert.NotNull(pageContent.QuerySelector("#alert-20001"));
 
             // Act
             var result = await SendPostFormWithData(pageContent, null, DismissPageRoute);
@@ -30,7 +30,7 @@ namespace ntbs_integration_tests.HomePage
             var reloadedPage = await Client.GetAsync(PageRoute);
             var reloadedPageContent = await GetDocumentAsync(reloadedPage);
 
-            Assert.Null(reloadedPageContent.QuerySelector("#alert-1"));
+            Assert.Null(reloadedPageContent.QuerySelector("#alert-20001"));
         }
     }
 }

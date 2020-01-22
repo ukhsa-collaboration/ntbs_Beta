@@ -1,4 +1,5 @@
-﻿using EFAuditer;
+﻿using System;
+using EFAuditer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
+using Serilog;
+using Serilog.Events;
 
 namespace ntbs_integration_tests
 {
@@ -14,6 +17,7 @@ namespace ntbs_integration_tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseSerilog();
             builder.UseEnvironment("Test");
 
             builder.ConfigureServices(services =>
@@ -56,6 +60,19 @@ namespace ntbs_integration_tests
                         Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         Utilities.PERMITTED_PHEC_CODE));
             });
+        }
+
+        public void ConfigureLogger(string testName)
+        {
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Debug();
+            // // Uncomment to have SUT app log into files
+            // var logFilePath = $"../../../{DateTime.Now:yyyy-M-d}-{testName}-logs.txt";
+            // logger = logger.WriteTo.File(logFilePath); 
+            Log.Logger = logger.CreateLogger();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace ntbs_integration_tests.TransferPage
             var result = await SendPostFormWithData(initialDocument, formData, url, "Confirm");
 
             // Assert
-            result.AssertRedirectTo("/Notifications/4");
+            result.AssertRedirectTo($"/Notifications/{id}");
         }
 
         [Fact]

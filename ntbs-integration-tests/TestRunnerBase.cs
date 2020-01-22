@@ -17,6 +17,7 @@ namespace ntbs_integration_tests
         protected TestRunnerBase(NtbsWebApplicationFactory<Startup> factory)
         {
             Factory = factory;
+            Factory.ConfigureLogger(this.GetType().Name);
             Client = Factory.CreateClientWithoutRedirects();
         }
 

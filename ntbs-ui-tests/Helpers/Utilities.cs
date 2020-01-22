@@ -6,11 +6,12 @@ using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_ui_tests.Helpers
 {
-    // Currently not actually used by anything, need to fix bug in NTBS-725
     public static class Utilities
     {
-        public const int DRAFT_ID = 1;
-        public const int NOTIFIED_ID = 2;
+        // We're using high IDs here, as the in-memory db doesn't correctly handle id growth state
+        // (see https://github.com/dotnet/efcore/issues/6872 - potentially fixed in .NET Core 3 ?)
+        // This makes the id unlikely to clash with the ids created in tests
+        public const int TO_BE_DENOTIFIED_ID = 10001;
         
         public const string TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID = "TBS0001";
         
@@ -25,19 +26,17 @@ namespace ntbs_ui_tests.Helpers
         }
 
 
-        public static List<Notification> GetSeedingNotifications()
+        private static List<Notification> GetSeedingNotifications()
         {
             return new List<Notification>
             {
-                new Notification{ NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft },
                 new Notification
                 {
-                    NotificationId = NOTIFIED_ID,
+                    NotificationId = TO_BE_DENOTIFIED_ID,
                     NotificationStatus = NotificationStatus.Notified,
-                    // Requires a notification site to pass full validation
                     NotificationSites = new List<NotificationSite>
                     {
-                        new NotificationSite { NotificationId = NOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
+                        new NotificationSite { NotificationId = TO_BE_DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
                     }
                 },
             };
