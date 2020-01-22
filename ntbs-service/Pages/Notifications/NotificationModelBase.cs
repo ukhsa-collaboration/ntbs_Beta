@@ -44,12 +44,6 @@ namespace ntbs_service.Pages.Notifications
             return await NotificationRepository.GetNotificationAsync(notificationId);
         }
 
-        protected async Task AssignClusterCountToNotification()
-        {
-            Notification.ClusterCount = await NotificationRepository
-                .GetNumberOfNotificationsInCluster(Notification.ClusterId);
-        }
-
         protected async Task AuthorizeAndSetBannerAsync()
         {
             HasEditPermission = await AuthorizationService.CanEditNotificationAsync(User, Notification);

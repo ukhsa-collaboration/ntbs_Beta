@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -48,10 +48,6 @@ namespace ntbs_service.Models.Entities
         public int? GroupId { get; set; }
         [Display(Name = "Cluster Id")]
         public string ClusterId { get; set; }
-        
-        // This value is set by triggering a function from NotificationModelBase
-        [NotMapped]
-        public int ClusterCount { get; set; }
 
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
