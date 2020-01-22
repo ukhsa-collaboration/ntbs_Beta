@@ -12,10 +12,10 @@ namespace ntbs_service.Services
         private readonly string _tbServiceWithResults;
         private readonly string _phecWithResults;
 
-        public static readonly int MockSpecimenNotificationId1 = 2000;
-        public static readonly int MockSpecimenNotificationId2 = 2001;
-        public static readonly int MockSpecimenNotificationId3 = 2002;
-        public static readonly int MockSpecimenNotificationId4 = 2003;
+        public static readonly int MockSpecimenNotificationId1 = 10100;
+        public static readonly int MockSpecimenNotificationId2 = 10101;
+        public static readonly int MockSpecimenNotificationId3 = 10102;
+        public static readonly int MockSpecimenNotificationId4 = 10103;
 
         public static readonly UnmatchedSpecimen MockUnmatchedSpecimenForTbService = new UnmatchedSpecimen
         {

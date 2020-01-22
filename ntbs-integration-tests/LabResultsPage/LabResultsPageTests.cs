@@ -190,7 +190,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 var specimenNumber = expectedUnmatchedSpecimen.ReferenceLaboratoryNumber;
                 var candidateMatchNotificationId = expectedUnmatchedSpecimen.PotentialMatches.First().NotificationId;
 
-                const string url = "/LabResults/";
+                const string url = "/LabResults";
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
 
@@ -226,7 +226,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 var specimenNumber = expectedUnmatchedSpecimen.ReferenceLaboratoryNumber;
                 const int manualMatchNotificationId = Utilities.SPECIMEN_MATCHING_MANUAL_MATCH_NOTIFICATION_ID;
 
-                const string url = "/LabResults/";
+                const string url = "/LabResults";
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
 
