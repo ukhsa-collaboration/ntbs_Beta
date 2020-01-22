@@ -305,7 +305,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "false",
-                ["ClinicalDetails.DotStatus"] = "Yes",
+                ["ClinicalDetails.IsDotOffered"] = "true",
                 ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
             };
 
@@ -338,7 +338,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("short-course-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("mdr-no")).IsChecked);
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("dot-yes")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("dot-offered-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("enhanced-case-management-no")).IsChecked);
         }
 

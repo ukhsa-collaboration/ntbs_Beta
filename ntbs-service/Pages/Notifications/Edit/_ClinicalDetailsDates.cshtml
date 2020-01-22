@@ -152,15 +152,17 @@
                                     var hasHealthcareDescriptionError = !Model.IsValid("ClinicalDetails.HealthcareDescription");
                                     var healthcareDescriptionGroupState = hasHealthcareDescriptionError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type=@healthcareDescriptionGroupState aria-describedby="healthcare-other-error" id="Healthcare-Description">
-                                    <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasHealthcareDescriptionError"
-                                          asp-validation-for="ClinicalDetails.HealthcareDescription" id="healthcare-other-error"></span>
-                                    <label nhs-label-type="Standard" asp-for="ClinicalDetails.HealthcareDescription">
-                                        Enter details
-                                    </label>
-                                    <input ref="inputField" v-on:blur="validate" is-error-input=@hasHealthcareDescriptionError nhs-input-type="Standard"
-                                           fixed-width="Ten" asp-for="ClinicalDetails.HealthcareDescription" type="text">
-                                </nhs-form-group>                   
+                                <validate-input model="ClinicalDetails" property="HealthcareDescription" inline-template>
+                                    <nhs-form-group nhs-form-group-type=@healthcareDescriptionGroupState aria-describedby="healthcare-other-error" id="Healthcare-Description">
+                                        <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasHealthcareDescriptionError"
+                                              asp-validation-for="ClinicalDetails.HealthcareDescription" id="healthcare-other-error"></span>
+                                        <label nhs-label-type="Standard" asp-for="ClinicalDetails.HealthcareDescription">
+                                            Enter details
+                                        </label>
+                                        <input ref="inputField" v-on:blur="validate" is-error-input=@hasHealthcareDescriptionError nhs-input-type="Standard"
+                                               fixed-width="Ten" asp-for="ClinicalDetails.HealthcareDescription" type="text">
+                                    </nhs-form-group>                   
+                                </validate-input>
                             </div>
                         }
                     }

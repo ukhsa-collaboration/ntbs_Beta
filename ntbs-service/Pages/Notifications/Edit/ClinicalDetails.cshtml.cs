@@ -307,5 +307,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             return ValidationService.GetMultiplePropertiesValidationResult<ClinicalDetails>(propertyValueTuples);
         }
+        
+        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
+        {
+            return ValidationService.GetPropertyValidationResult<ClinicalDetails>(key, value, shouldValidateFull);
+        }
+
     }
 }

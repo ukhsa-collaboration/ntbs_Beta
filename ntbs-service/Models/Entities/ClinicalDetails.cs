@@ -91,6 +91,7 @@ namespace ntbs_service.Models.Entities
         public HealthcareSetting? HealthcareSetting { get; set; }
         
         [MaxLength(100)]
+        [Display(Name = "Other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
         
