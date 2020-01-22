@@ -19,7 +19,7 @@ namespace ntbs_integration_tests.TransferPage
             const int id = Utilities.NOTIFIED_ID;
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
             var initialOverviewPage = await GetDocumentForUrl(overviewUrl);
-            Assert.NotNull(initialOverviewPage.QuerySelector("#alert-5"));
+            Assert.NotNull(initialOverviewPage.QuerySelector("#alert-20005"));
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrl(url);
 
@@ -28,7 +28,7 @@ namespace ntbs_integration_tests.TransferPage
 
             // Assert
             var resultOverviewPage = await GetDocumentForUrl(overviewUrl);
-            Assert.Null(resultOverviewPage.QuerySelector("#alert-5"));
+            Assert.Null(resultOverviewPage.QuerySelector("#alert-20005"));
         }
     }
 }
