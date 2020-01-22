@@ -106,7 +106,7 @@ namespace ntbs_service.Pages.Alerts
                 CaseManagerUsername = User.FindFirstValue(ClaimTypes.Email),
                 NotificationId = NotificationId,
                 RejectionReason = DeclineTransferReason,
-                TbServiceCode = Notification.Episode.TBServiceCode
+                TbServiceCode = TransferAlert.TbServiceCode
             };
 
             // Dismiss any existing transfer rejected alert so that the new one can be created

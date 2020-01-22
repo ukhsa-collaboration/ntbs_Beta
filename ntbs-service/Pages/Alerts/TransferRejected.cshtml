@@ -10,14 +10,14 @@
 
 <nhs-width-container container-width="Standard">
     <h2> Transfer for Notification #@Model.NotificationId has been declined </h2>
-
+    
     <div class="transfer-request-information flex-container"> 
-        <div class="transfer-request-information-label"> Declined by: </div>
+        <div class="transfer-request-information-label--no-wrap"> Declined by: </div>
         <div> @Model.TransferRejectedAlert.CaseManagerFullName </div>
     </div>
 
     <div class="transfer-request-information flex-container"> 
-        <div class="transfer-request-information-label"> Note accompanying decline: </div>
+        <div class="transfer-request-information-label--no-wrap"> Note accompanying decline: </div>
         <div> @Model.TransferRejectedAlert.RejectionReason </div>
     </div>
 
