@@ -72,7 +72,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.Blood).ToString(),
                 ["TestResultForEdit.Result"] = ((int)Result.Negative).ToString(),
             };
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var testsListPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
@@ -113,7 +113,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.BronchialWashings).ToString(),
                 ["TestResultForEdit.Result"] = ((int)Result.Negative).ToString(),
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
             var testsListPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditTestResults, notificationId));
@@ -144,7 +144,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TestResultForEdit.SampleTypeId"] = "",
                 ["TestResultForEdit.Result"] = "",
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -182,7 +182,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TestResultForEdit.SampleTypeId"] = "",
                 ["TestResultForEdit.Result"] = "",
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -209,7 +209,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TestResultForEdit.SampleTypeId"] = "",
                 ["TestResultForEdit.Result"] = "",
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -239,7 +239,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TestResultForEdit.SampleTypeId"] = ((int)SampleTypeId.BronchialWashings).ToString(),
                 ["TestResultForEdit.Result"] = "",
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -274,7 +274,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Act
             var formData = new Dictionary<string, string> { };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
             // Assert
             var testsListPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditTestResults, notificationId));

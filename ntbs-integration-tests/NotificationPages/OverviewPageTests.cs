@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.NotNull(document.QuerySelector("#alert-20001"));
 
             // Act
-            var result = await SendPostFormWithData(document, null, dismissPageRoute);
+            var result = await Client.SendPostFormWithData(document, null, dismissPageRoute);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);

@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.TransferPage
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -70,7 +70,7 @@ namespace ntbs_integration_tests.TransferPage
             var initialDocument = await GetDocumentForUrl(url);
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, null, url);
+            var result = await Client.SendPostFormWithData(initialDocument, null, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -94,7 +94,7 @@ namespace ntbs_integration_tests.TransferPage
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -126,7 +126,7 @@ namespace ntbs_integration_tests.TransferPage
         //     };
 
         //     // Act
-        //     var result = await SendPostFormWithData(initialDocument, formData, url);
+        //     var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
         //     // Assert
         //     var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
