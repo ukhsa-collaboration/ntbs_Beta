@@ -11,7 +11,8 @@ namespace ntbs_ui_tests.Helpers
         // We're using high IDs here, as the in-memory db doesn't correctly handle id growth state
         // (see https://github.com/dotnet/efcore/issues/6872 - potentially fixed in .NET Core 3 ?)
         // This makes the id unlikely to clash with the ids created in tests
-        public const int TO_BE_DENOTIFIED_ID = 10001;
+        public const int NOTIFIED_ID = 10001;
+        public const int TO_BE_DENOTIFIED_ID = 10002;
         
         public const string TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID = "TBS0001";
         
