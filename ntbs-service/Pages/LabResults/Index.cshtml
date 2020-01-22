@@ -58,7 +58,7 @@
                 id="@($"specimen-{specimen.ReferenceLaboratoryNumber}")"
                 classes="specimen-details"
                 nhs-panel-type="WithLabel"
-                label="Laboratory reference number @specimen.ReferenceLaboratoryNumber">
+                label="Reference laboratory number @specimen.ReferenceLaboratoryNumber">
                 <form method="post" autocomplete="off">
                     <div>
                         <nhs-grid-row>
@@ -71,8 +71,8 @@
                                 <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
                             </nhs-grid-column>
                             <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.ReferenceLaboratoryNumber) </dt>
-                                <dd class="cell-min-height"> @specimen.ReferenceLaboratoryNumber </dd>
+                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LaboratoryName) </dt>
+                                <dd class="cell-min-height"> @specimen.LaboratoryName </dd>
                             </nhs-grid-column>
                             <nhs-grid-column grid-column-width="OneQuarter">
                                 <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.Species) </dt>

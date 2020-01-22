@@ -109,6 +109,7 @@ namespace ntbs_service.Services
                         ReferenceLaboratoryNumber = specimenData.ReferenceLaboratoryNumber,
                         SpecimenDate = specimenData.SpecimenDate,
                         SpecimenTypeCode = specimenData.SpecimenTypeCode,
+                        LaboratoryName = specimenData.LaboratoryName,
                         Species = specimenData.Species,
                         LabNhsNumber = specimenData.LabNhsNumber,
                         LabBirthDate = specimenData.LabBirthDate,
