@@ -10,8 +10,7 @@ namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification, NotificationGroup group = null);
-        Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification);
+        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification);
         Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
@@ -45,48 +44,20 @@ namespace ntbs_service.Services
             {
                 if(n.NotificationStatus != NotificationStatus.Legacy)
                 {
-                    n.FullAccess = await CanEditBannerModelAsync(user, n);
+                    n.ShowPadlock = await CanEditBannerModelAsync(user, n);
                 }
             });
             return notificationBanners;
         }
 
-        public async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel)
+        public async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user,
+            NotificationBannerModel notificationBannerModel)
         {
             var tbServiceCode = notificationBannerModel.TbServiceCode;
             var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
             var locationPhecCode = notificationBannerModel.LocationPHECCode;
-            return await AuthorizeUserAccessForTbServiceAndPhecCodes(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
-        }
-
-        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
-            Notification notification, NotificationGroup group = null)
-        {
-            if (await CanEditNotificationAsync(user, notification))
-            {
-                return PermissionLevel.Edit;
-            }
-
-            if (await CanEditLinkedNotificationAsync(user, group))
-            {
-                return PermissionLevel.ReadOnly;
-            }
-
-            return PermissionLevel.None;
-        }
-
-        public async Task<bool> CanEditLinkedNotificationAsync(ClaimsPrincipal user, NotificationGroup group)
-        {
-            return group?.Notifications.Select(n => CanEditNotificationAsync(user, n).Result).Any(x => x == true) ??
-                   false;
-        }
-
-        public async Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification)
-        {
-            var tbServiceCode = notification.Episode.TBServiceCode;
-            var tbServicePhecCode = notification.Episode.TBService?.PHECCode;
-            var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return await AuthorizeUserAccessForTbServiceAndPhecCodes(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            return await AuthorizeUserAccessForTbServiceAndPhecCodes(user, tbServiceCode, locationPhecCode,
+                tbServicePhecCode);
         }
 
         private async Task<bool> AuthorizeUserAccessForTbServiceAndPhecCodes(ClaimsPrincipal user, string tbServiceCode,
@@ -111,33 +82,73 @@ namespace ntbs_service.Services
             return true;
         }
 
+        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
+            Notification notification)
+        {
+            if (_filter == null)
+            {
+                _filter = await GetUserPermissionsFilterAsync(user);
+            }
+            
+            if (UserHasDirectRelationToNotification(notification))
+            {
+                return PermissionLevel.Edit;
+            }
+
+            if (UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
+            {
+                return PermissionLevel.ReadOnly;
+            }
+
+            return PermissionLevel.None;
+        }
+        
+        private bool UserHasDirectRelationToLinkedNotification(IEnumerable<Notification> linkedNotifications)
+        {
+            return linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x == true);
+        }
+
+        private bool UserHasDirectRelationToNotification(Notification notification)
+        {
+            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification) ||
+                UserBelongsToResidencePhecOfNotification(notification);
+        }
+
+        private bool UserBelongsToTbServiceOfNotification(Notification notification)
+        {
+            if (_filter.FilterByTBService)
+            {
+                return _filter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
+            }
+            return false;
+        }
+        
+        private bool UserBelongsToTreatmentPhecOfNotification(Notification notification)
+        {
+            if (_filter.FilterByPHEC)
+            {
+                return _filter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode);
+            }
+            return false;
+        }
+        
+        private bool UserBelongsToResidencePhecOfNotification(Notification notification)
+        {
+            if (_filter.FilterByPHEC)
+            {
+                return _filter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
+            }
+            return false;
+        }
+
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)
         {
             if (_filter == null)
             {
                 _filter = await GetUserPermissionsFilterAsync(user);
             }
-    
-            if (_filter.FilterByTBService)
-            {
-                notifications = notifications.Where(n => _filter.IncludedTBServiceCodes.Contains(n.Episode.TBServiceCode));
-            }
-            else if (_filter.FilterByPHEC)
-            {
-                // Having a method in LINQ clause breaks IQuaryable abstraction. We have to use inline expression over methods
-                notifications = notifications.Where(n => 
-                    (
-                        n.Episode.TBService != null && 
-                        _filter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode)
-                    ) || (
-                        n.PatientDetails.PostcodeLookup != null && 
-                        n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
-                        n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
-                        _filter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
-                    )
-                );
-            }
-            return notifications;
+
+            return notifications.Where(n => UserHasDirectRelationToNotification(n));
         }
 
         public async Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts)

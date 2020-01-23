@@ -34,7 +34,6 @@ namespace ntbs_service.Pages.Notifications
         public NotificationBannerModel NotificationBannerModel { get; set; }
         public IList<Alert> Alerts { get; set; }
 
-        [BindProperty]
         public PermissionLevel PermissionLevel { get; set; }
 
         [BindProperty(SupportsGet = true)]
@@ -47,7 +46,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification, Group);
+            PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification);
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel == PermissionLevel.Edit);
         }
 

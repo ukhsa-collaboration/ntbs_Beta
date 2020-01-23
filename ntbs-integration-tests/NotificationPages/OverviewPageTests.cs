@@ -164,10 +164,13 @@ namespace ntbs_integration_tests.NotificationPages
         [Fact]
         public async Task OverviewPageShowsReadOnlyVersion_IfReadOnlyPermission()
         {
+            // Arrange
+            // TestNhsUserService has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+            // which belong to the same Notification group as LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE
             using (var client = Factory.WithMockUserService<TestNhsUserService>()
                 .CreateClientWithoutRedirects())
             {
-                // Arrange
+                // Act
                 var url = GetCurrentPathForId(Utilities.LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE);
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
