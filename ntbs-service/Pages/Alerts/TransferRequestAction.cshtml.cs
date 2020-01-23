@@ -23,6 +23,7 @@ namespace ntbs_service.Pages.Alerts
     {
         private readonly IAlertRepository _alertRepository;
         private readonly IAlertService _alertService;
+        private readonly IReferenceDataRepository _referenceDataRepository;
         public ValidationService ValidationService;
         [BindProperty]
         [Required(ErrorMessage = "Please accept or decline the transfer")]
@@ -44,10 +45,12 @@ namespace ntbs_service.Pages.Alerts
             IAlertService alertService, 
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(notificationService, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IReferenceDataRepository referenceDataRepository) : base(notificationService, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _alertRepository = alertRepository;
+            _referenceDataRepository = referenceDataRepository;
             ValidationService = new ValidationService(this);
         }
 
@@ -95,18 +98,21 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+            Notification.Episode.HospitalId = null;
             await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
         }
 
         public async Task RejectTransferAndDismissAlertAsync()
         {
-             var transferRejectedAlert = new TransferRejectedAlert()
+            // get case manager display name
+            var user = await _referenceDataRepository.GetCaseManagerByUsernameAsync(User.FindFirstValue(ClaimTypes.Email));
+            var transferRejectedAlert = new TransferRejectedAlert()
             {
-                CaseManagerUsername = User.FindFirstValue(ClaimTypes.Email),
+                CaseManagerUsername = Notification.Episode.CaseManagerUsername,
                 NotificationId = NotificationId,
-                RejectionReason = DeclineTransferReason,
-                TbServiceCode = TransferAlert.TbServiceCode
+                RejectionReason = $"{user.DisplayName} has rejected this request - " + DeclineTransferReason,
+                TbServiceCode = Notification.Episode.TBServiceCode
             };
 
             // Dismiss any existing transfer rejected alert so that the new one can be created

@@ -18,6 +18,7 @@ namespace ntbs_service.Services
         Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user);
         Task<TBService> GetDefaultTbService(ClaimsPrincipal user);
         Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
+        UserType GetUserType(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
@@ -65,6 +66,19 @@ namespace ntbs_service.Services
         {
             return await GetTbServicesQuery(user).ToListAsync();
         }
+        
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            if (user.IsInRole(_config.NationalTeamAdGroup))
+            {
+                return UserType.NationalTeam;
+            }
+            if (GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)))
+            {
+                return UserType.NhsUser;
+            }
+            return UserType.PheUser;
+        }
 
         private IQueryable<TBService> GetTbServicesQuery(ClaimsPrincipal user)
         {
@@ -86,19 +100,6 @@ namespace ntbs_service.Services
         {
             return user.FindAll(claim => claim.Type == ClaimsIdentity.DefaultRoleClaimType)
                 .Select(claim => claim.Value);
-        }
-
-        private UserType GetUserType(ClaimsPrincipal user)
-        {
-            if (user.IsInRole(_config.NationalTeamAdGroup))
-            {
-                return UserType.NationalTeam;
-            }
-            if (GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)))
-            {
-                return UserType.NhsUser;
-            }
-            return UserType.PheUser;
         }
     }
 }
