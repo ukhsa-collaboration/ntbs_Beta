@@ -137,7 +137,10 @@ namespace ntbs_service.Models.Entities
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
         public string LegacyId => LTBRID ?? ETSID;
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
-        public bool OverOneYearOld => NotificationDate != null ? DateTime.Now > NotificationDate.Value.AddYears(1) : false;
+        public bool OverOneYearOld => NotificationDate != null && DateTime.Now > NotificationDate.Value.AddYears(1);
+        public string FormattedDenotificationDate => DenotificationDetails?.DateOfDenotification.ConvertToString();
+        public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
+                                                    (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
 
         private string GetNotificationStatusString()
         {
