@@ -37,7 +37,7 @@ namespace ntbs_service.Services
         
         public async Task<IEnumerable<HomepageKpi>> GetKpiForTbService(IEnumerable<string> tbServiceCodes)
         {
-            var query = HomepageKpiQueryHelper.GetKpiForPhecQuery;
+            var query = HomepageKpiQueryHelper.GetKpiForServiceQuery;
             var formattedServiceCodes = HomepageKpiQueryHelper.FormatEnumerableParams(tbServiceCodes);
 
             var homepageKpiResults = await ExecuteGetKpiQuery(query, formattedServiceCodes);

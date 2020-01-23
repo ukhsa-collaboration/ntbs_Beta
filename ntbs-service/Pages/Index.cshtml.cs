@@ -62,7 +62,7 @@ namespace ntbs_service.Pages
                 var phecCodes = (await _userService.GetPhecCodesAsync(User)).ToList();
                 HomepageKpiDetails = await _homepageKpiService.GetKpiForPhec(phecCodes);
             }
-            KpiFilter = new SelectList(HomepageKpiDetails, nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
+            KpiFilter = new SelectList(HomepageKpiDetails.OrderBy(x => x.Name), nameof(HomepageKpi.Code), nameof(HomepageKpi.Name));
         }
 
         private async Task SetUserNotificationsAsync()
