@@ -70,10 +70,10 @@ namespace ntbs_service.Models.Entities
         
         [Display(Name="Notes")]
         [MaxLength(500)]
-        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string Notes { get; set; }
 
-        [Display(Name = "Dot Offered")] 
+        [Display(Name = "DOT offered")] 
         public bool? IsDotOffered { get; set; }
         
         public DotStatus? DotStatus { get; set; }

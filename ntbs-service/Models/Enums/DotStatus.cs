@@ -4,9 +4,9 @@ namespace ntbs_service.Models.Enums
 {
     public enum DotStatus
     {
-        [Display(Name = "Dot received")]
+        [Display(Name = "DOT received")]
         DotReceived,
-        [Display(Name = "Dot refused")]
+        [Display(Name = "DOT refused")]
         DotRefused,
         [Display(Name = "Unknown")]
         Unknown
