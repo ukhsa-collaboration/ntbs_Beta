@@ -143,7 +143,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.DENOTIFIED_ID);
             var document = await GetDocumentForUrl(url);
-            Assert.NotNull(document.QuerySelector("#overview-denotification-details"));
+            Assert.Contains("Other - a great reason", document.QuerySelector("#overview-denotification-reason").TextContent);
         }
         
         [Fact]
@@ -152,7 +152,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             var document = await GetDocumentForUrl(url);
-            Assert.Null(document.QuerySelector("#overview-denotification-details"));
+            Assert.Null(document.QuerySelector("#overview-denotification-reason"));
         }
     }
 }

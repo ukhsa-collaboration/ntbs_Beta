@@ -30,14 +30,14 @@
     </nhs-grid-row>
     @if(Model.Notification.NotificationStatus == NotificationStatus.Denotified)
     {
-        <nhs-grid-row classes="notification-overview-details" id="overview-denotification-details">
+        <nhs-grid-row classes="notification-overview-details">
             <nhs-grid-column grid-column-width="OneThird">
                 <div class="notification-details-label"> Denotification Date </div>
                 <div class="cell-min-height"> @Model.Notification.FormattedDenotificationDate </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneThird">
                 <div class="notification-details-label"> Denotification Reason </div>
-                <div class="cell-min-height"> @Model.Notification.DenotificationReasonString </div>
+                <div class="cell-min-height" id="overview-denotification-reason"> @Model.Notification.DenotificationReasonString </div>
             </nhs-grid-column>
         </nhs-grid-row>
     }
