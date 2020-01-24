@@ -1,0 +1,40 @@
+﻿@model ntbs_service.Models.Entities.SpecimenPotentialMatch
+
+<div class="lab-results-demographics">
+    <nhs-grid-row classes="lab-results-demographics-row">
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NotificationId) </dt>
+            <dd class="cell-min-height"> @Model.NotificationId </dd>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NotificationDate) </dt>
+            <dd class="cell-min-height"> @Model.FormattedNotificationDate </dd>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NtbsNhsNumber) </dt>
+            <dd class="cell-min-height"> @Model.FormattedNhsNumber </dd>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NtbsName) </dt>
+            <dd class="cell-min-height"> @Model.NtbsName </dd>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="lab-results-demographics-row">
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NtbsBirthDate) </dt>
+            <dd class="cell-min-height"> @Model.FormattedDob </dd>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NtbsSex) </dt>
+            <dd class="cell-min-height"> @Model.NtbsSex </dd>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NtbsPostcode) </dt>
+            <dd class="cell-min-height"> @Model.NtbsPostcode </dd>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.NtbsAddress) </dt>
+            <dd class="cell-min-height"> @Model.NtbsAddress </dd>
+        </nhs-grid-column>
+    </nhs-grid-row>
+</div>

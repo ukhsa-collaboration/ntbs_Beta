@@ -32,6 +32,26 @@ namespace ntbs_integration_tests.Helpers
         {
             return SendAsync(client, form, formValues, path, HttpMethod.Post, submitType);
         }
+        
+        public static async Task<HttpResponseMessage> SendPostFormWithData(
+            this HttpClient client,
+            IHtmlDocument document,
+            Dictionary<string, string> formData,
+            string pageRoute,
+            string postRoute = null,
+            string submitType = null)
+        {
+            var data = formData ?? new Dictionary<string, string>();
+            var form = (IHtmlFormElement)document.QuerySelector("form");
+
+            var submissionRoute = pageRoute;
+            if (!string.IsNullOrEmpty(postRoute))
+            {
+                submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
+            }
+
+            return await client.SendPostAsync(form, data, submissionRoute, submitType);
+        }
 
         private static Task<HttpResponseMessage> SendAsync(
             this HttpClient client,

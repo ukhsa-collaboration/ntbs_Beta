@@ -11,7 +11,6 @@
         {
             return $"{name} should be later than birth year ({birthYear})";
         }
-        
 
         #region Shared
         public const string InvalidYearForAttribute = "{0} has an invalid year";
@@ -135,6 +134,16 @@
         #region TransferAlert
         public const string TransferDestinationCannotBeCurrentTbService = "{0} can not be transferred to the notification's current TB service";
         #endregion
+
+        #region LabResults
+
+        public const string LabResultNotificationDoesNotExist =
+            "The notification ID does not exist, verify you have entered the correct ID before moving forward";
+        public const string LabResultNotificationMatchNoPermission =
+            "The notification does not belong to one of your services. If you believe this is the correct notification, please contact ntbs@phe.gov.uk";
+
+
+        #endregion
     }
 
     public static class ValidDates
@@ -151,6 +160,7 @@
         public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
         public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?]+";
+        public const string NumbersValidation = @"[0-9]+";
         public const string NumbersAndHyphenValidation = @"[0-9\-]+";
         // Taken from https://stackoverflow.com/a/164994/2363767
         public const string PostcodeValidation = @"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})";
