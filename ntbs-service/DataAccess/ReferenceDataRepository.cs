@@ -79,7 +79,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<TBService>> GetAllTbServicesAsync()
         {
-            return await _context.TbService.ToListAsync();
+            return await _context.TbService.OrderBy(s => s.Name).ToListAsync();
         }
 
         public async Task<IList<PHEC>> GetAllPhecs()
@@ -89,7 +89,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
         {
-            return await _context.TbService.SingleOrDefaultAsync(t => t.Code == code);
+            return await _context.TbService.OrderBy(s => s.Name).SingleOrDefaultAsync(t => t.Code == code);
         }
 
         public async Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
@@ -183,17 +183,22 @@ namespace ntbs_service.DataAccess
 
         public IQueryable<TBService> GetTbServicesQueryable()
         {
-            return _context.TbService;
+            return _context.TbService.OrderBy(s => s.Name);
         }
 
         public IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles)
         {
-            return _context.TbService.Where(tb => roles.Contains(tb.ServiceAdGroup));
+            return _context.TbService
+                .Where(tb => roles.Contains(tb.ServiceAdGroup))
+                .OrderBy(s => s.Name);
         }
 
         public IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles)
         {
-            return _context.TbService.Include(tb => tb.PHEC).Where(tb => roles.Contains(tb.PHEC.AdGroup));
+            return _context.TbService
+                .Include(tb => tb.PHEC)
+                .Where(tb => roles.Contains(tb.PHEC.AdGroup))
+                .OrderBy(s => s.Name);
         }
 
         public async Task<ManualTestType> GetManualTestTypeAsync(int id)
