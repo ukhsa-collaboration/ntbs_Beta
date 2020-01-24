@@ -67,7 +67,22 @@ namespace ntbs_service.Services
         {
             return await GetTbServicesQuery(user).ToListAsync();
         }
-        
+
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            if (user.IsInRole(_config.NationalTeamAdGroup))
+            {
+                return UserType.NationalTeam;
+            }
+
+            if (GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)))
+            {
+                return UserType.NhsUser;
+            }
+
+            return UserType.PheUser;
+        }
+
         public async Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
         {
             if (GetUserType(user) == UserType.NationalTeam)
@@ -97,18 +112,6 @@ namespace ntbs_service.Services
         {
             return user.FindAll(claim => claim.Type == ClaimsIdentity.DefaultRoleClaimType)
                 .Select(claim => claim.Value);
-        }
-
-        public UserType GetUserType(ClaimsPrincipal user)
-        {
-            if (user.IsInRole(_config.NationalTeamAdGroup))
-            {
-                return UserType.NationalTeam;
-            }
-            
-            return GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)) 
-                ? UserType.NhsUser 
-                : UserType.PheUser;
         }
     }
 }

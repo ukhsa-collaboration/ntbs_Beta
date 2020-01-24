@@ -119,9 +119,17 @@ namespace ntbs_service.Services
         public async Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts)
         {
             var userTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
+            var userType = _userService.GetUserType(user);
             for (int i = alerts.Count - 1; i >= 0; i--)
             {
-                if (alerts[i].TbServiceCode != null && !userTbServiceCodes.Contains(alerts[i].TbServiceCode))
+                // For transfer alerts PHE users belonging to a PHEC cannot see and action transfer alerts as they are
+                // aimed to be actioned on a TB service level
+                if (userType == UserType.PheUser && (alerts[i].AlertType == AlertType.TransferRequest ||
+                                                     alerts[i].AlertType == AlertType.TransferRejected))
+                {
+                    alerts.RemoveAt(i);
+                }
+                else if (alerts[i].TbServiceCode != null && !userTbServiceCodes.Contains(alerts[i].TbServiceCode))
                     alerts.RemoveAt(i);
             }
             return alerts;

@@ -11,6 +11,7 @@
 
 .transfer-request-back-link {
     margin: auto 0;
+    height: 100%;
 }
 
 .pending-transfer-return-link {
@@ -26,14 +27,17 @@
 }
 
 .transfer-request-information-label {
-    padding-right: 12px;
-}
-
-.transfer-request-information-label--no-wrap {
     padding-right: 10px;
     white-space: normal;
+    width: 180px;
+    min-width: 180px;
 
     @media(min-width: $tablet_breakpoint) {
         white-space: nowrap;
+        min-width: 235px;
     }
+}
+
+.rejection-note {
+  padding-bottom: 30px;
 }
