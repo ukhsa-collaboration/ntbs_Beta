@@ -17,7 +17,11 @@ namespace ntbs_service
         [BindProperty(SupportsGet = true)]
         public string ReportType { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string Id { get; set; }
+        
         public string ReportingUri { get; }
+
 
         public IndexModel(IConfiguration configuration)
         {

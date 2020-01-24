@@ -70,7 +70,7 @@ namespace ntbs_service.DataAccess
             return _context.Notification
                 .Any(e => e.LTBRID == id || e.ETSID == id);
         }
-
+        
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
         {
             return await _context.Notification

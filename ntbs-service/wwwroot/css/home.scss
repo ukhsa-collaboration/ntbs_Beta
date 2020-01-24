@@ -12,3 +12,58 @@
     max-width: 200px;
     margin: 5px 0 auto 15px
 }
+
+.homepage-kpi-filter-label {
+  height: 100%;
+  margin: auto 0px auto 5px;
+}
+
+.homepage-kpi-filter-dropdown {
+  max-width: 300px;
+  margin: 5px auto auto 15px
+}
+
+.homepage-kpi-card {
+  background-color: $phe-red;
+  background-clip: content-box;
+  padding: 20px;
+}
+
+.kpi-percentage {
+  color: white;
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 8px;
+  font-size: 2em;
+
+  @media (min-width: 768px) {
+    & {
+      margin-bottom: 36px;
+    }
+  }
+}
+
+.kpi-label-container {
+  height: 2em;
+  margin-bottom: 24px;
+  color: white;
+  font-size: 18px;
+  text-align: center;
+}
+
+[v-cloak] .v-cloak-homepage-kpi {
+    display: none;
+}
+
+.homepage-kpi-container-with-js {
+    display: none;
+}
+
+.js-enabled {
+    .homepage-kpi-container-without-js {
+      display: none;
+    }
+    .homepage-kpi-container-with-js {
+      display: inline;
+    }
+}

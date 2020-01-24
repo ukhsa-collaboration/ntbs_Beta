@@ -1,6 +1,12 @@
 ﻿@model ntbs_service.Pages.Notifications.Edit.ClinicalDetailsModel
+@using ntbs_service.Helpers
 @using ntbs_service.Models.ReferenceEntities
+@using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    var dotStatuses = EnumHelper.GetEnumList<DotStatus>();    
+}
 
 <h2>Treatment Options</h2>
 
@@ -29,23 +35,40 @@
             </nhs-fieldset>
         </nhs-form-group>
 
-        <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DotOffered">
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Directly observed treatment? (including VOT)</nhs-fieldset-legend>
-                <nhs-radios nhs-radios-type="Standard">
-                    <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-yes" type="radio" value="Yes" />
-                        <label nhs-label-type="Radios" for="dot-yes">Yes</label>
-                    </nhs-radios-item>
-                    <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-no" type="radio" value="No" />
-                        <label nhs-label-type="Radios" for="dot-no">No</label>
-                    </nhs-radios-item>
-                    <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-unknown" type="radio" value="Unknown">
-                        <label nhs-label-type="Radios" for="dot-unknown"> Unknown </label>
-                    </nhs-radios-item>
-                </nhs-radios>
+                <nhs-fieldset-legend nhs-legend-size="Standard">DOT offered?</nhs-fieldset-legend>
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="true" 
+                            data-aria-controls="conditional-dot-offered-conditional">
+                        <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-dot-offered-conditional">
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <nhs-fieldset>
+                                <nhs-fieldset-legend classes="govuk-visually-hidden" nhs-legend-size="Standard">DOT Status</nhs-fieldset-legend>
+                                <nhs-radios nhs-radios-type="Standard">
+                                    @foreach (var status in dotStatuses)
+                                    {
+                                        <nhs-radios-item>
+                                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-status-@status" type="radio" value="@status" />
+                                            <label nhs-label-type="Radios" for="dot-status-@status">@status.GetDisplayName()</label>
+                                        </nhs-radios-item> 
+                                    }
+                                </nhs-radios>
+                            </nhs-fieldset>
+                        </nhs-form-group>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-no" class="nhsuk-radios__input" type="radio" value="false">
+                        <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-no">
+                            No
+                        </label>
+                    </div>
+                </div>
             </nhs-fieldset>
         </nhs-form-group>
 

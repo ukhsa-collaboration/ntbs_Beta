@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
@@ -45,7 +46,8 @@ namespace ntbs_service.Models.Entities
         [MaxLength(150)]
         public string DeletionReason { get; set; }
         public int? GroupId { get; set; }
-        public int? ClusterId { get; set; }
+        [Display(Name = "Cluster Id")]
+        public string ClusterId { get; set; }
 
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
@@ -119,6 +121,10 @@ namespace ntbs_service.Models.Entities
         public string FormattedPresentationToAnyHealthServiceDate => ClinicalDetails.FirstPresentationDate.ConvertToString();
         public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
         public string FormattedDiagnosisDate => ClinicalDetails.DiagnosisDate.ConvertToString();
+        public string FormattedHomeVisitDate => ClinicalDetails.FirstHomeVisitDate.ConvertToString();
+        public string FormattedDotOfferedState => GetFormattedDotOfferedState();
+        public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
+        public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
         public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
@@ -231,6 +237,41 @@ namespace ntbs_service.Models.Entities
             }
             return yearDiff;
         }
+
+        private string GetFormattedDotOfferedState()
+        {
+            if (ClinicalDetails.IsDotOffered == null)
+            {
+                return null;
+            }
+
+            var prefix = (bool)ClinicalDetails.IsDotOffered ? "Yes" : "No";
+            return ClinicalDetails.DotStatus != null
+                ? $"{prefix} - {ClinicalDetails.DotStatus.GetDisplayName()}"
+                : prefix;
+        }
+        
+        private string GetFormattedHomeVisitState()
+        {
+            if (ClinicalDetails.HomeVisitCarriedOut == null)
+            {
+                return null;
+            }
+
+            var prefix = ClinicalDetails.HomeVisitCarriedOut.GetDisplayName();
+            return ClinicalDetails.FirstHomeVisitDate != null
+                ? $"{prefix} - {FormattedHomeVisitDate}"
+                : prefix;
+        }
+
+        private string GetFormattedHealthcareSettingState()
+        {
+            var healthcareState = ClinicalDetails.HealthcareSetting?.GetDisplayName();
+            return ClinicalDetails.HealthcareDescription != null
+                ? $"{healthcareState} - {ClinicalDetails.HealthcareDescription}"
+                : healthcareState;
+        }
+        
 
         #endregion
 

@@ -116,7 +116,7 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClusterId");
+                    b.Property<string>("ClusterId");
 
                     b.Property<DateTime>("CreationDate");
 
@@ -12809,6 +12809,16 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("TransferRequest");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.TransferRejectedAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(200);
+
+                    b.HasDiscriminator().HasValue("TransferRejected");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
@@ -12882,10 +12892,23 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("EnhancedCaseManagementStatus")
                                 .HasMaxLength(30);
 
+                            b1.Property<DateTime?>("FirstHomeVisitDate");
+
                             b1.Property<DateTime?>("FirstPresentationDate");
 
                             b1.Property<string>("HIVTestState")
                                 .HasMaxLength(30);
+
+                            b1.Property<string>("HealthcareDescription")
+                                .HasMaxLength(100);
+
+                            b1.Property<string>("HealthcareSetting")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("HomeVisitCarriedOut")
+                                .HasMaxLength(30);
+
+                            b1.Property<bool?>("IsDotOffered");
 
                             b1.Property<bool?>("IsMDRTreatment");
 
@@ -12896,6 +12919,9 @@ namespace ntbs_service.Migrations
                             b1.Property<bool?>("IsSymptomatic");
 
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
+
+                            b1.Property<string>("Notes")
+                                .HasMaxLength(500);
 
                             b1.Property<DateTime?>("SymptomStartDate");
 

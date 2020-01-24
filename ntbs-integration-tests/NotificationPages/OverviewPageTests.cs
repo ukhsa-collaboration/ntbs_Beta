@@ -148,8 +148,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             var document = await GetDocumentForUrl(url);
-            var dismissPageRoute = "/Alerts/1/Dismiss?Page=Overview";
-            Assert.NotNull(document.QuerySelector("#alert-1"));
+            var dismissPageRoute = "/Alerts/20001/Dismiss?Page=Overview";
+            Assert.NotNull(document.QuerySelector("#alert-20001"));
 
             // Act
             var result = await SendPostFormWithData(document, null, dismissPageRoute);
@@ -158,7 +158,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetRedirectLocation(result), url);
             var reloadedDocument = await GetDocumentForUrl(GetRedirectLocation(result));
-            Assert.Null(reloadedDocument.QuerySelector("#alert-1"));
+            Assert.Null(reloadedDocument.QuerySelector("#alert-20001"));
         }
 
         [Fact]

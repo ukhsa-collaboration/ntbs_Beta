@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFAuditer;
@@ -12,6 +13,7 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public class ClinicalDetails : ModelBase, IOwnedEntity
     {
+        #region DB Mapped Fields
         public bool? IsSymptomatic { get; set; }
 
         [Display(Name = "Symptom onset date")]
@@ -65,9 +67,36 @@ namespace ntbs_service.Models.Entities
         [ValidDateRange(ValidDates.EarliestClinicalDate)]
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? MDRTreatmentStartDate { get; set; }
-        public Status? DotStatus { get; set; }
-        public Status? EnhancedCaseManagementStatus { get; set; }
+        
+        [Display(Name="Notes")]
+        [MaxLength(500)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        public string Notes { get; set; }
 
+        [Display(Name = "DOT offered")] 
+        public bool? IsDotOffered { get; set; }
+        
+        public DotStatus? DotStatus { get; set; }
+        public Status? EnhancedCaseManagementStatus { get; set; }
+        
+        [Display(Name = "Home visit carried out?")]
+        public Status? HomeVisitCarriedOut { get; set; }
+        
+        [Display(Name = "First home visit date")]
+        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [AssertThat(@"AfterDob(FirstHomeVisitDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
+        public DateTime? FirstHomeVisitDate { get; set; } 
+        
+        [Display(Name = "Healthcare setting")]
+        public HealthcareSetting? HealthcareSetting { get; set; }
+        
+        [MaxLength(100)]
+        [Display(Name = "Other description")]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        public string HealthcareDescription { get; set; }
+        
+        #endregion
+        
         [NotMapped]
         public DateTime? Dob { get; set; }
         public bool AfterDob(DateTime date) => Dob == null || date >= Dob;

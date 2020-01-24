@@ -33,16 +33,17 @@ namespace ntbs_integration_tests.TestServices
 
     public class NhsUserForAbingdonAndPermitted : IUserService
     {
+        private readonly List<string> tbServiceCode = new List<string>
+        {
+            Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, Utilities.PERMITTED_SERVICE_CODE
+        };
+        
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
             return Task.FromResult(new UserPermissionsFilter()
             {
                 Type = UserType.NhsUser,
-                IncludedTBServiceCodes = new List<string>
-                {
-                    Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, 
-                    Utilities.PERMITTED_SERVICE_CODE
-                }
+                IncludedTBServiceCodes = tbServiceCode
             });
         }
 
@@ -53,10 +54,20 @@ namespace ntbs_integration_tests.TestServices
 
         public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
         {
-            return Task.FromResult(Enumerable.Empty<TBService>());
+            return Task.FromResult(tbServiceCode.Select(x => new TBService { Code = x }));
+        }
+
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            return UserType.NhsUser;
+        }
+
+        public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
+        {
+            throw new NotImplementedException();
         }
     }
-
+    
     public class NhsUserWithNoTbServices : IUserService
     {
         public async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
@@ -75,6 +86,16 @@ namespace ntbs_integration_tests.TestServices
 
         public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
         {
+            return Task.FromResult(new List<TBService>() as IEnumerable<TBService>);
+        }
+
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            return UserType.NhsUser;
+        }
+
+        public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
+        {
             throw new NotImplementedException();
         }
     }
@@ -85,8 +106,7 @@ namespace ntbs_integration_tests.TestServices
         {
             return Task.FromResult(new UserPermissionsFilter
             {
-                Type = UserType.PheUser, 
-                IncludedPHECCodes = new List<string> {Utilities.PERMITTED_PHEC_CODE}
+                Type = UserType.PheUser, IncludedPHECCodes = new List<string> {Utilities.PERMITTED_PHEC_CODE}
             });
         }
 
@@ -99,8 +119,19 @@ namespace ntbs_integration_tests.TestServices
         {
             return Task.FromResult(Enumerable.Empty<TBService>());
         }
-    }
 
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            return UserType.PheUser;
+        }
+
+        public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
+        {
+            var phecCodes = new List<string> {Utilities.PERMITTED_PHEC_CODE};
+            return Task.FromResult((IEnumerable<string>)phecCodes);
+        }
+    }
+    
     public class NationalTeamUser : IUserService
     {
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
@@ -114,6 +145,16 @@ namespace ntbs_integration_tests.TestServices
         }
 
         public Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserType GetUserType(ClaimsPrincipal user)
+        {
+            return UserType.NationalTeam;
+        }
+
+        public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
         {
             throw new NotImplementedException();
         }

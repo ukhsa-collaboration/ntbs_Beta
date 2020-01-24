@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using ntbs_service;
 using ntbs_service.Models.Validations;
+using ntbs_ui_tests.Helpers;
 using ntbs_ui_tests.Hooks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -45,6 +47,19 @@ namespace ntbs_ui_tests.StepDefinitions
         public void GivenIAmOnPage(string pageName)
         {
             Browser.Navigate().GoToUrl($"{Server.RootUri}/{pageName}");
+        }
+
+        [Given(@"I am on seeded '(.*)' notification overview page")]
+        public void GivenIAmOnANotificationPage(string notificationIdName)
+        {
+            var notificationId = notificationIdName == "TO_BE_DENOTIFIED" ? Utilities.TO_BE_DENOTIFIED_ID
+                : throw new ArgumentException($"Unexpected notification name {notificationIdName} given");
+            Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{notificationId}");
+            
+            if (!Settings.IsHeadless)
+            {
+                Thread.Sleep(4000);
+            }
         }
 
         [When(@"I enter (.*) into '(.*)'")]

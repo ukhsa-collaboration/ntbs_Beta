@@ -1,4 +1,4 @@
-﻿@page "/Reports/{ReportType?}"
+﻿@page "/Reports/{ReportType?}/{Id?}"
 @model ntbs_service.IndexModel
 @{
     ViewData["Title"] = "Reports";
@@ -12,6 +12,10 @@
         @if (!string.IsNullOrEmpty(Model.ReportType))
         {
             @: Attempted to navigate to report type: <strong>@Model.ReportType </strong>
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                @: with Id <strong> @Model.Id </strong>
+            } 
         }
         else
         {

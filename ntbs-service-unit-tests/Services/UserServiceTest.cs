@@ -104,6 +104,35 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal(UserType.PheUser, result.Type);
         }
 
+        [Fact]
+        public async Task GetPhecCodesAsync_RetrievesAllPhecCodes_ForNationalUser()
+        {
+            // Arrange
+            var claim = new Claim("User", NationalTeam);
+            SetupClaimMocking(claim);
+            _mockUser.Setup(u => u.IsInRole(NationalTeam)).Returns(true);
+            
+            // Act
+            await _service.GetPhecCodesAsync(_mockUser.Object);
+            
+            // Assert
+            _mockReferenceDataRepository.Verify(x => x.GetAllPhecs(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetPhecCodesAsync_RetrievesPhecCodesForRoles_ForPhecUser()
+        {
+            // Arrange
+            var claim = new Claim(ClaimsIdentity.DefaultRoleClaimType, "PHE");
+            SetupClaimMocking(claim);
+            
+            // Act
+            await _service.GetPhecCodesAsync(_mockUser.Object);
+            
+            // Asser
+            _mockReferenceDataRepository.Verify(x => x.GetPhecCodesMatchingRolesAsync(new List<string> {"PHE"}), Times.Once);
+        }
+
         // TODO: The following tests currently fail with "The provider for the source IQueryable doesn't implement IAsyncQueryProvider".
         // This isn't trivial to fix; this issue arose when merging as UserService had been refactored, so leaving as is for now.
 

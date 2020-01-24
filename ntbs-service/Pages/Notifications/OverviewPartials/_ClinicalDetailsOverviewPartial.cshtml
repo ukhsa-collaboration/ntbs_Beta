@@ -46,6 +46,10 @@
             <div class="notification-details-label"> Symptom onset to health service presentation </div>
             <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToFirstPresentation days </div>
         </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneThird">
+            <div class="notification-details-label"> Healthcare setting </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedHealthcareSettingState </div>
+        </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
@@ -78,6 +82,12 @@
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row classes="notification-overview-details">
+        <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> Home visit </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedHomeVisitState </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    <nhs-grid-row classes="notification-overview-details">
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Postmortem diagnosis </div>
             <div class="cell-min-height"> @Model.Notification.IsPostMortemYesNo </div>
@@ -97,8 +107,8 @@
             <div class="cell-min-height"> @Model.Notification.IsShortCourseYesNo </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> DOT/VOT </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails?.DotStatus </div>
+            <div class="notification-details-label"> DOT offered </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedDotOfferedState </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneThird">
             <div class="notification-details-label"> Enhanced Case Management </div>
@@ -116,3 +126,12 @@
         </nhs-grid-column>
     </nhs-grid-row>
 </div>
+<br />
+
+<div class="notification-overview-type-and-edit-container">
+    <h3 class="notification-details-type"> Notes </h3>
+</div>
+<div class="notification-overview-details-container">
+    @Model.Notification.ClinicalDetails?.Notes
+</div>
+<br />
