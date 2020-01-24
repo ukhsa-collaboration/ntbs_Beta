@@ -116,7 +116,8 @@ namespace ntbs_service.Pages.Alerts
             {
                 CaseManagerUsername = Notification.Episode.CaseManagerUsername,
                 NotificationId = NotificationId,
-                RejectionReason = $"{user.DisplayName}, {TransferAlert.TbServiceName}:" + "\r\n\r\n" + DeclineTransferReason,
+                RejectionReason = DeclineTransferReason,
+                CaseManagerTbServiceString = $"{user.DisplayName}, {TransferAlert.TbServiceName}",
                 TbServiceCode = Notification.Episode.TBServiceCode
             };
 
