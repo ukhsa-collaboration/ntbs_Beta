@@ -205,6 +205,11 @@ namespace ntbs_integration_tests.Helpers
                 {
                     NotificationId = DENOTIFIED_ID,
                     NotificationStatus = NotificationStatus.Denotified,
+                    DenotificationDetails = new DenotificationDetails
+                    {
+                        Reason = DenotificationReason.Other,
+                        OtherDescription = "a great reason"
+                    },
                     // Requires a notification site to pass full validation
                     NotificationSites = new List<NotificationSite>
                     {
