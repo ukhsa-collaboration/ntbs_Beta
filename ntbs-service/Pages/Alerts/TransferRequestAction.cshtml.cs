@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -98,20 +99,24 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
-            Notification.Episode.HospitalId = null;
+            // Set hospital to the first available hospital in the new TB service where it can be updated by the user after the transfer
+            Notification.Episode.HospitalId =
+                (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string>
+                {
+                    TransferAlert.TbServiceCode
+                })).FirstOrDefault()?.HospitalId;
             await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
         }
 
         public async Task RejectTransferAndDismissAlertAsync()
         {
-            // get case manager display name
             var user = await _referenceDataRepository.GetCaseManagerByUsernameAsync(User.FindFirstValue(ClaimTypes.Email));
             var transferRejectedAlert = new TransferRejectedAlert()
             {
                 CaseManagerUsername = Notification.Episode.CaseManagerUsername,
                 NotificationId = NotificationId,
-                RejectionReason = $"{user.DisplayName} has rejected this request - " + DeclineTransferReason,
+                RejectionReason = $"{user.DisplayName}, {TransferAlert.TbServiceName}:" + "\r\n\r\n" + DeclineTransferReason,
                 TbServiceCode = Notification.Episode.TBServiceCode
             };
 

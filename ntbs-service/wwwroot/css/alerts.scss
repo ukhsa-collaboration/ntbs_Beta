@@ -33,6 +33,10 @@
 
     @media(min-width: $tablet_breakpoint) {
         white-space: nowrap;
-        min-width: 230px;
+        min-width: 235px;
     }
+}
+
+.rejection-note {
+  padding-bottom: 30px;
 }
