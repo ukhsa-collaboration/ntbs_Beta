@@ -122,6 +122,9 @@ namespace ntbs_service.Models.Entities
         public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
         public string FormattedDiagnosisDate => ClinicalDetails.DiagnosisDate.ConvertToString();
         public string FormattedHomeVisitDate => ClinicalDetails.FirstHomeVisitDate.ConvertToString();
+        public string FormattedDotOfferedState => GetFormattedDotOfferedState();
+        public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
+        public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
         public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
@@ -237,6 +240,41 @@ namespace ntbs_service.Models.Entities
             }
             return yearDiff;
         }
+
+        private string GetFormattedDotOfferedState()
+        {
+            if (ClinicalDetails.IsDotOffered == null)
+            {
+                return null;
+            }
+
+            var prefix = (bool)ClinicalDetails.IsDotOffered ? "Yes" : "No";
+            return ClinicalDetails.DotStatus != null
+                ? $"{prefix} - {ClinicalDetails.DotStatus.GetDisplayName()}"
+                : prefix;
+        }
+        
+        private string GetFormattedHomeVisitState()
+        {
+            if (ClinicalDetails.HomeVisitCarriedOut == null)
+            {
+                return null;
+            }
+
+            var prefix = ClinicalDetails.HomeVisitCarriedOut.GetDisplayName();
+            return ClinicalDetails.FirstHomeVisitDate != null
+                ? $"{prefix} - {FormattedHomeVisitDate}"
+                : prefix;
+        }
+
+        private string GetFormattedHealthcareSettingState()
+        {
+            var healthcareState = ClinicalDetails.HealthcareSetting?.GetDisplayName();
+            return ClinicalDetails.HealthcareDescription != null
+                ? $"{healthcareState} - {ClinicalDetails.HealthcareDescription}"
+                : healthcareState;
+        }
+        
 
         #endregion
 

@@ -10,6 +10,7 @@ namespace ntbs_service.Services
                 [{nameof(UnmatchedSpecimen.ReferenceLaboratoryNumber)}]
                 ,[{nameof(UnmatchedSpecimen.SpecimenDate)}]
                 ,[{nameof(UnmatchedSpecimen.SpecimenTypeCode)}]
+                ,[{nameof(UnmatchedSpecimen.LaboratoryName)}]
                 ,[{nameof(UnmatchedSpecimen.Species)}]
                 ,[{nameof(UnmatchedSpecimen.LabNhsNumber)}]
                 ,[{nameof(UnmatchedSpecimen.LabBirthDate)}]

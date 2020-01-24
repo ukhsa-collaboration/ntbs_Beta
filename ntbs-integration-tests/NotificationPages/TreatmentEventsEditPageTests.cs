@@ -165,7 +165,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentRestart).ToString(),
                 ["TreatmentEvent.Note"] = noteText
             };
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
@@ -199,7 +199,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["SelectedTreatmentOutcomeSubType"] = ((int)TREATMENT_OUTCOME_SUBTYPE).ToString(),
                 ["TreatmentEvent.Note"] = noteText
             };
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
@@ -241,7 +241,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentRestart).ToString(),
                 ["TreatmentEvent.Note"] = noteTargetValue
             };
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
@@ -266,7 +266,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Act
             var formData = new Dictionary<string, string> { };
-            var result = await SendPostFormWithData(document, formData, url, "Delete");
+            var result = await Client.SendPostFormWithData(document, formData, url, "Delete");
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
@@ -292,7 +292,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TreatmentEvent.TreatmentEventType"] = "",
                 ["TreatmentEvent.Note"] = ""
             };
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertValidationErrorResponse();
@@ -321,7 +321,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["TreatmentEvent.TreatmentEventType"] = ((int)TreatmentEventType.TreatmentOutcome).ToString(),
             };
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertValidationErrorResponse();

@@ -12,6 +12,11 @@ namespace ntbs_service.Services
         private readonly string _tbServiceWithResults;
         private readonly string _phecWithResults;
 
+        public static readonly int MockSpecimenNotificationId1 = 10100;
+        public static readonly int MockSpecimenNotificationId2 = 10101;
+        public static readonly int MockSpecimenNotificationId3 = 10102;
+        public static readonly int MockSpecimenNotificationId4 = 10103;
+
         public static readonly UnmatchedSpecimen MockUnmatchedSpecimenForTbService = new UnmatchedSpecimen
         {
             ReferenceLaboratoryNumber = "A55B90955",
@@ -28,7 +33,7 @@ namespace ntbs_service.Services
             {
                 new SpecimenPotentialMatch
                 {
-                    NotificationId = 1,
+                    NotificationId = MockSpecimenNotificationId1,
                     NtbsNhsNumber = "1234567890",
                     NotificationDate = new DateTime(2011, 10, 1),
                     NtbsName = "KONNIK Agnieska",
@@ -39,7 +44,7 @@ namespace ntbs_service.Services
                 },
                 new SpecimenPotentialMatch
                 {
-                    NotificationId = 2,
+                    NotificationId = MockSpecimenNotificationId2,
                     NtbsNhsNumber = "1234567890",
                     NotificationDate = new DateTime(2011, 10, 1),
                     NtbsName = "KONNIK Agnieska",
@@ -67,7 +72,7 @@ namespace ntbs_service.Services
             {
                 new SpecimenPotentialMatch
                 {
-                    NotificationId = 3,
+                    NotificationId = MockSpecimenNotificationId3,
                     NtbsNhsNumber = "1234567890",
                     NotificationDate = new DateTime(2011, 10, 1),
                     NtbsName = "KONNIK Agnieska",
@@ -78,7 +83,7 @@ namespace ntbs_service.Services
                 },
                 new SpecimenPotentialMatch
                 {
-                    NotificationId = 4,
+                    NotificationId = MockSpecimenNotificationId4,
                     NtbsNhsNumber = "1234567890",
                     NotificationDate = new DateTime(2011, 10, 1),
                     NtbsName = "KONNIK Agnieska",
@@ -146,6 +151,11 @@ namespace ntbs_service.Services
         }
 
         public Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
         {
             return Task.CompletedTask;
         }

@@ -74,7 +74,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Venue.Frequency"] = ((int)Frequency.Weekly).ToString(),
                 ["Venue.VenueTypeId"] = "1"
             };
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
@@ -116,7 +116,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Venue.Address"] = "New address",
                 ["Venue.VenueTypeId"] = "1"
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
             var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
@@ -147,7 +147,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Venue.Address"] = "",
                 ["Venue.VenueTypeId"] = ""
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -192,7 +192,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Venue.Address"] = "New address",
                 ["Venue.VenueTypeId"] = "1"
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -227,7 +227,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Act
             var formData = new Dictionary<string, string> { };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
             // Assert;
             var socialContextVenuesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextVenues, notificationId));
