@@ -3,17 +3,19 @@
 <div>
     @if (@Model.HomepageKpiDetails.Any())
     {
-        <h1 class="govuk-visually-hidden"> Homepage KPI Details </h1>
+        
         <filtered-homepage-kpi inline-template>
             <div>
                 <!-- Kpi details for non-JS browsers -->
                 <div class="homepage-kpi-container-without-js" id="kpi-details">
+                    <h1 class="kpi-heading"> KPIs </h1>
                     <partial name="Shared/_HomepageKpiRow" model="@Model.HomepageKpiDetails.FirstOrDefault()"/>
                 </div>
                 
                  <!-- Kpi details for browsers with JS-->
                 <div class="homepage-kpi-container-with-js" id="homepage-kpi-details">
                     <div class="flex-container">
+                        <h1 class="kpi-heading"> KPIs </h1>
                         <label nhs-label-type="Standard" for="code-filter-dropdown" classes="homepage-kpi-filter-label" >
                             Filter by:
                         </label>

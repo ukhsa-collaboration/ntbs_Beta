@@ -1,32 +1,26 @@
-.alerts-heading {
+.alerts-heading, .kpi-heading {
     height: 100%;
     margin: auto 0;
 }
 
-.tb-service-alerts-filter-label {
+.tb-service-alerts-filter-label, .homepage-kpi-filter-label {
     height: 100%;
     margin: auto 0 auto auto;
 }
 
-.tb-service-alerts-filter-dropdown {
+.tb-service-alerts-filter-dropdown, .homepage-kpi-filter-dropdown {
     max-width: 200px;
     margin: 5px 0 auto 15px
-}
-
-.homepage-kpi-filter-label {
-  height: 100%;
-  margin: auto 0px auto 5px;
-}
-
-.homepage-kpi-filter-dropdown {
-  max-width: 300px;
-  margin: 5px auto auto 15px
 }
 
 .homepage-kpi-card {
   background-color: $phe-red;
   background-clip: content-box;
-  padding: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.kpi-details-row {
+  margin-bottom: 24px;
 }
 
 .kpi-percentage {
@@ -44,8 +38,7 @@
 }
 
 .kpi-label-container {
-  height: 2em;
-  margin-bottom: 24px;
+  height: 3em;
   color: white;
   font-size: 18px;
   text-align: center;
