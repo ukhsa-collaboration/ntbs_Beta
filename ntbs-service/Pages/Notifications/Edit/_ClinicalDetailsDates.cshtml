@@ -327,7 +327,7 @@
                             var hasHomeVisitDateError = !Model.IsValid("ClinicalDetails.FirstHomeVisitDate");
                             var homeVisitDateGroupState = hasHomeVisitDateError ? Error : Standard;
                         }
-                        <validate-date ref="homeVisitDate" name="@Html.DisplayNameFor(m => m.ClinicalDetails.FirstHomeVisitDate)" model="ClinicalDetails" property="FirstHomeVisitDate" inline-template>
+                        <validate-date ref="date5" name="@Html.DisplayNameFor(m => m.ClinicalDetails.FirstHomeVisitDate)" model="ClinicalDetails" property="FirstHomeVisitDate" rank="5" v-model="dates[5]"  inline-template>
                             <nhs-form-group nhs-form-group-type=@homeVisitDateGroupState>
                                 <nhs-fieldset aria-describedby="home-visit-error" role="group">
                                     <nhs-fieldset-legend nhs-legend-size="Standard">
@@ -393,7 +393,7 @@
                             var hasDeathDateError = !Model.IsValid("ClinicalDetails.DeathDate");
                             var deathDateGroupState = hasDeathDateError ? Error : Standard;
                         }
-                        <validate-date ref="date5" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" rank="5" v-model="dates[5]" inline-template>
+                        <validate-date ref="date6" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" rank="6" v-model="dates[6]" inline-template>
                             <nhs-form-group nhs-form-group-type=@deathDateGroupState>
                                 <nhs-fieldset aria-describedby="postmortem-error" role="group">
                                     <nhs-fieldset-legend nhs-legend-size="Standard">
