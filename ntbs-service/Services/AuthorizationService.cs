@@ -80,7 +80,7 @@ namespace ntbs_service.Services
                 _filter = await GetUserPermissionsFilterAsync(user);
             }
             
-            if (UserHasDirectRelationToNotification(notification))
+            if (UserHasDirectRelationToNotification(notification) || _filter.Type == UserType.NationalTeam)
             {
                 return PermissionLevel.Edit;
             }
@@ -95,7 +95,7 @@ namespace ntbs_service.Services
         
         private bool UserHasDirectRelationToLinkedNotification(IEnumerable<Notification> linkedNotifications)
         {
-            return linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x == true);
+            return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x == true);
         }
 
         private bool UserHasDirectRelationToNotification(Notification notification)
