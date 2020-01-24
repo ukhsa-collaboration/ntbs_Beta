@@ -18,6 +18,7 @@ namespace ntbs_service.Models
             ErrorMessage = ValidationMessages.NumberFormat)]
         public string ManualNotificationId { get; set; }
 
-        [NotMapped] public bool NotificationIdIsManual => NotificationId == Pages.LabResults.IndexModel.ManualNotificationIdValue;
+        [NotMapped] 
+        public bool NotificationIdIsManual => NotificationId == Pages.LabResults.IndexModel.ManualNotificationIdValue;
     }
 }
