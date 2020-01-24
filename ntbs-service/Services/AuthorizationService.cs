@@ -15,7 +15,7 @@ namespace ntbs_service.Services
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
-        IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
+        void SetFullAccessOnNotificationBanners(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
     }
@@ -36,7 +36,7 @@ namespace ntbs_service.Services
             return userTbServiceCodes.Contains(alert.TbServiceCode);
         }
 
-        public IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
+        public void SetFullAccessOnNotificationBanners(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user)
         {
@@ -47,21 +47,10 @@ namespace ntbs_service.Services
                     n.ShowPadlock = await CanEditBannerModelAsync(user, n);
                 }
             });
-            return notificationBanners;
         }
 
         public async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
-        {
-            var tbServiceCode = notificationBannerModel.TbServiceCode;
-            var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
-            var locationPhecCode = notificationBannerModel.LocationPHECCode;
-            return await AuthorizeUserAccessForTbServiceAndPhecCodes(user, tbServiceCode, locationPhecCode,
-                tbServicePhecCode);
-        }
-
-        private async Task<bool> AuthorizeUserAccessForTbServiceAndPhecCodes(ClaimsPrincipal user, string tbServiceCode,
-            string locationPhecCode, string tbServicePhecCode)
         {
             if (_filter == null)
             {
@@ -70,16 +59,17 @@ namespace ntbs_service.Services
 
             if (_filter.FilterByTBService)
             {
-                return _filter.IncludedTBServiceCodes.Contains(tbServiceCode);
+                return _filter.IncludedTBServiceCodes.Contains(notificationBannerModel.TbServiceCode);
             }
 
-            else if (_filter.FilterByPHEC)
+            if (_filter.FilterByPHEC)
             {
                 var allowedCodes = _filter.IncludedPHECCodes;
-                return allowedCodes.Contains(tbServicePhecCode) || allowedCodes.Contains(locationPhecCode);
+                return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
+                       allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
             }
-
             return true;
+            
         }
 
         public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
