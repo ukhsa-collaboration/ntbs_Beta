@@ -129,7 +129,7 @@ namespace ntbs_service.Services
                 {
                     alerts.RemoveAt(i);
                 }
-                if (alerts[i].TbServiceCode != null && !userTbServiceCodes.Contains(alerts[i].TbServiceCode))
+                else if (alerts[i].TbServiceCode != null && !userTbServiceCodes.Contains(alerts[i].TbServiceCode))
                     alerts.RemoveAt(i);
             }
             return alerts;
