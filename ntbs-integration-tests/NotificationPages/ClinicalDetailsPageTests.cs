@@ -80,7 +80,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -115,7 +115,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -150,7 +150,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -209,7 +209,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url, submitType: "Save");
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url, submitType: "Save");
 
             // Assert
             result.EnsureSuccessStatusCode();
@@ -238,7 +238,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -265,7 +265,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -305,12 +305,12 @@ namespace ntbs_integration_tests.NotificationPages
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["ClinicalDetails.IsShortCourseTreatment"] = "true",
                 ["ClinicalDetails.IsMDRTreatment"] = "false",
-                ["ClinicalDetails.DotStatus"] = "Yes",
+                ["ClinicalDetails.IsDotOffered"] = "true",
                 ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -338,7 +338,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("short-course-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("mdr-no")).IsChecked);
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("dot-yes")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("dot-offered-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("enhanced-case-management-no")).IsChecked);
         }
 
@@ -371,7 +371,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -534,7 +534,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await SendPostFormWithData(document, formData, url);
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);

@@ -162,6 +162,8 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
+            services.AddScoped<IHomepageKpiService, HomepageKpiService>();
+
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));

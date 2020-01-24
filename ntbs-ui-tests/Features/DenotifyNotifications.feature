@@ -1,7 +1,7 @@
 Feature: Denotify notifications
 
     Scenario: Denotify a notification
-        Given I am on the TO_BE_DENOTIFIED notification overview page
+        Given I am on seeded 'TO_BE_DENOTIFIED' notification overview page
         When I expand manage notification section
         And I click on the 'denotify-button' button
         Then I should be on the Denotify page

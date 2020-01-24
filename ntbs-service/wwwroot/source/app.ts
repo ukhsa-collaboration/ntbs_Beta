@@ -28,6 +28,8 @@ import TbServiceFilteredAlerts from "./Components/TbServiceFilteredAlerts";
 import { ValidateRelatedNotification } from "./Components/ValidateRelatedNotification";
 import { NotificationInfo } from "./Components/NotificationInfo";
 import HideManualTestResults from "./Components/HideManualTestResults";
+import FetchSpecimenPotentialMatch from "./Components/FetchSpecimenPotentialMatch";
+import FilteredHomepageKpiDetails from "./Components/FilteredHomepageKpiDetails";
 
 // For compatibility with IE11
 require("es6-promise").polyfill();
@@ -55,6 +57,8 @@ Vue.component("tb-service-filtered-alerts", TbServiceFilteredAlerts);
 Vue.component("validate-related-notification", ValidateRelatedNotification);
 Vue.component("notification-info", NotificationInfo);
 Vue.component("hide-manual-test-results", HideManualTestResults);
+Vue.component("fetch-specimen-potential-match", FetchSpecimenPotentialMatch);
+Vue.component("filtered-homepage-kpi", FilteredHomepageKpiDetails);
 
 new Vue({
     el: "#app",

@@ -73,7 +73,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Address.Postcode"] = "M4 4BF",
                 ["Address.Details"] = "Fake Office"
             };
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var socialContextAddressesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextAddresses, notificationId));
@@ -115,7 +115,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Address.Postcode"] = "M4 4BF",
                 ["Address.Details"] = "New Head Office"
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
 
             // Assert
             var socialContextAddressesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextAddresses, notificationId));
@@ -148,7 +148,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Address.Address"] = "",
                 ["Address.Postcode"] = ""
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -180,7 +180,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["Address.Address"] = "New address",
                 ["Address.Postcode"] = "M4 4BF"
             };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl);
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -212,7 +212,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Act
             var formData = new Dictionary<string, string> { };
-            var result = await SendPostFormWithData(editDocument, formData, editUrl, "Delete");
+            var result = await Client.SendPostFormWithData(editDocument, formData, editUrl, "Delete");
 
             // Assert
             var socialContextAddressesPage = await AssertAndFollowRedirect(result, GetPathForId(NotificationSubPaths.EditSocialContextAddresses, notificationId));

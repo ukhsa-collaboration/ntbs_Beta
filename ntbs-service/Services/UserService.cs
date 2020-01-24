@@ -19,6 +19,7 @@ namespace ntbs_service.Services
         Task<TBService> GetDefaultTbService(ClaimsPrincipal user);
         Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
         UserType GetUserType(ClaimsPrincipal user);
+        Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
@@ -66,18 +67,29 @@ namespace ntbs_service.Services
         {
             return await GetTbServicesQuery(user).ToListAsync();
         }
-        
+
         public UserType GetUserType(ClaimsPrincipal user)
         {
             if (user.IsInRole(_config.NationalTeamAdGroup))
             {
                 return UserType.NationalTeam;
             }
+
             if (GetRoles(user).Any(role => role.Contains(_config.ServiceGroupAdPrefix)))
             {
                 return UserType.NhsUser;
             }
+
             return UserType.PheUser;
+        }
+
+        public async Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
+        {
+            if (GetUserType(user) == UserType.NationalTeam)
+            {
+                return (await _referenceDataRepository.GetAllPhecs())?.Select(x => x.Code);
+            }
+            return await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(GetRoles(user));
         }
 
         private IQueryable<TBService> GetTbServicesQuery(ClaimsPrincipal user)
@@ -96,7 +108,7 @@ namespace ntbs_service.Services
             }
         }
 
-        private IEnumerable<string> GetRoles(ClaimsPrincipal user)
+        private static IEnumerable<string> GetRoles(ClaimsPrincipal user)
         {
             return user.FindAll(claim => claim.Type == ClaimsIdentity.DefaultRoleClaimType)
                 .Select(claim => claim.Value);

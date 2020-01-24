@@ -6,6 +6,14 @@
     ViewData["Title"] = "Home page";
     Layout = "./Shared/_Layout.cshtml";
 }
+
+@if (Model.KpiFilter.Any())
+{
+    <nhs-width-container container-width="Standard">
+        <partial name="_HomepageKpiDetails" model="@Model"/>
+    </nhs-width-container>
+}
+
 <nhs-width-container container-width="Standard">
     <a href="/Search" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
         Search notifications
@@ -46,7 +54,7 @@
                 <nhs-table-body>
                     @foreach (var item in Model.Alerts) 
                     {
-                        <nhs-table-body-row id="alert-@item.AlertId" v-if="TbServiceCode == '@item.TbServiceCode' || TbServiceCode == 'Show all'">
+                        <nhs-table-body-row id="alert-@item.AlertId" v-if="TbServiceCode === '@item.TbServiceCode' || TbServiceCode === 'Show all'">
                             <nhs-table-item>
                                 @if(item.NotificationId != null) 
                                 {

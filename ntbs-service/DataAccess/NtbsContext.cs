@@ -128,6 +128,8 @@ namespace ntbs_service.DataAccess
              * This isn't a major issue though, as the mapping in application is accurate.
              */
             var statusEnumConverter = new EnumToStringConverter<Status>();
+            var dotStatusEnumConverter = new EnumToStringConverter<DotStatus>();
+            var healthcareSettingEnumConverter = new EnumToStringConverter<HealthcareSetting>();
             var hivStatusEnumConverter = new EnumToStringConverter<HIVTestStatus>();
             var riskFactorEnumConverter = new EnumToStringConverter<RiskFactorType>();
             var notificationStatusEnumConverter = new EnumToStringConverter<NotificationStatus>();
@@ -207,7 +209,13 @@ namespace ntbs_service.DataAccess
                        .HasConversion(statusEnumConverter)
                        .HasMaxLength(EnumMaxLength);
                     e.Property(c => c.DotStatus)
+                        .HasConversion(dotStatusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    e.Property(c => c.HomeVisitCarriedOut)
                         .HasConversion(statusEnumConverter)
+                        .HasMaxLength(EnumMaxLength);
+                    e.Property(c => c.HealthcareSetting)
+                        .HasConversion(healthcareSettingEnumConverter)
                         .HasMaxLength(EnumMaxLength);
                     e.Property(c => c.EnhancedCaseManagementStatus)
                         .HasConversion(statusEnumConverter)
@@ -215,6 +223,8 @@ namespace ntbs_service.DataAccess
                     e.Property(c => c.HIVTestState)
                         .HasConversion(hivStatusEnumConverter)
                         .HasMaxLength(EnumMaxLength);
+                    e.Property(c => c.Notes)
+                        .HasMaxLength(500);
                     e.ToTable("ClinicalDetails");
                 });
 

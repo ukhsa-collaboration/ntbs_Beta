@@ -24,7 +24,7 @@ namespace ntbs_integration_tests.TransferPage
             var initialDocument = await GetDocumentForUrl(url);
 
             // Act
-            await SendPostFormWithData(initialDocument, null, url);
+            await Client.SendPostFormWithData(initialDocument, null, url);
 
             // Assert
             var resultOverviewPage = await GetDocumentForUrl(overviewUrl);

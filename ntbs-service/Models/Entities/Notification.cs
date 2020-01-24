@@ -48,10 +48,6 @@ namespace ntbs_service.Models.Entities
         public int? GroupId { get; set; }
         [Display(Name = "Cluster Id")]
         public string ClusterId { get; set; }
-        
-        // This value is set by triggering a function from NotificationModelBase
-        [NotMapped]
-        public int ClusterCount { get; set; }
 
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
@@ -125,6 +121,10 @@ namespace ntbs_service.Models.Entities
         public string FormattedPresentationToAnyHealthServiceDate => ClinicalDetails.FirstPresentationDate.ConvertToString();
         public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
         public string FormattedDiagnosisDate => ClinicalDetails.DiagnosisDate.ConvertToString();
+        public string FormattedHomeVisitDate => ClinicalDetails.FirstHomeVisitDate.ConvertToString();
+        public string FormattedDotOfferedState => GetFormattedDotOfferedState();
+        public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
+        public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
         public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
@@ -140,7 +140,10 @@ namespace ntbs_service.Models.Entities
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
         public string LegacyId => LTBRID ?? ETSID;
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
-        public bool OverOneYearOld => NotificationDate != null ? DateTime.Now > NotificationDate.Value.AddYears(1) : false;
+        public bool OverOneYearOld => NotificationDate != null && DateTime.Now > NotificationDate.Value.AddYears(1);
+        public string FormattedDenotificationDate => DenotificationDetails?.DateOfDenotification.ConvertToString();
+        public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
+                                                    (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
 
         private string GetNotificationStatusString()
         {
@@ -237,6 +240,41 @@ namespace ntbs_service.Models.Entities
             }
             return yearDiff;
         }
+
+        private string GetFormattedDotOfferedState()
+        {
+            if (ClinicalDetails.IsDotOffered == null)
+            {
+                return null;
+            }
+
+            var prefix = (bool)ClinicalDetails.IsDotOffered ? "Yes" : "No";
+            return ClinicalDetails.DotStatus != null
+                ? $"{prefix} - {ClinicalDetails.DotStatus.GetDisplayName()}"
+                : prefix;
+        }
+        
+        private string GetFormattedHomeVisitState()
+        {
+            if (ClinicalDetails.HomeVisitCarriedOut == null)
+            {
+                return null;
+            }
+
+            var prefix = ClinicalDetails.HomeVisitCarriedOut.GetDisplayName();
+            return ClinicalDetails.FirstHomeVisitDate != null
+                ? $"{prefix} - {FormattedHomeVisitDate}"
+                : prefix;
+        }
+
+        private string GetFormattedHealthcareSettingState()
+        {
+            var healthcareState = ClinicalDetails.HealthcareSetting?.GetDisplayName();
+            return ClinicalDetails.HealthcareDescription != null
+                ? $"{healthcareState} - {ClinicalDetails.HealthcareDescription}"
+                : healthcareState;
+        }
+        
 
         #endregion
 

@@ -1,6 +1,11 @@
 ﻿@model ntbs_service.Pages.Notifications.Edit.ClinicalDetailsModel
-@using ntbs_service.Models.ReferenceEntities
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    var healthcareSettings = EnumHelper.GetEnumList<HealthcareSetting>();
+}
 
 <h2>Clinical Dates</h2>
 
@@ -117,6 +122,53 @@
                 </nhs-fieldset>
             </nhs-form-group>
         </validate-date>
+        <br />
+        
+        <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HealthcareSetting">
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.HealthcareSetting)</nhs-fieldset-legend>
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    @foreach (var healthcareSetting in healthcareSettings)
+                    {
+                        if (healthcareSetting != HealthcareSetting.Other)
+                        {
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="ClinicalDetails.HealthcareSetting" id="healtcare-setting-@healthcareSetting" class="nhsuk-radios__input" type="radio" value="@healthcareSetting">
+                                <label class="nhsuk-label nhsuk-radios__label" for="healtcare-setting-@healthcareSetting">
+                                    @healthcareSetting.GetDisplayName()
+                                </label>
+                            </div>
+                        } 
+                        else
+                        {
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="ClinicalDetails.HealthcareSetting" id="healtcare-setting-other" class="nhsuk-radios__input" type="radio" value="@HealthcareSetting.Other" data-aria-controls="conditional-healthcare-other-conditional">
+                                <label class="nhsuk-label nhsuk-radios__label" for="healtcare-setting-other">
+                                    @HealthcareSetting.Other.GetDisplayName()
+                                </label>
+                            </div>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-healthcare-other-conditional">
+                                @{
+                                    var hasHealthcareDescriptionError = !Model.IsValid("ClinicalDetails.HealthcareDescription");
+                                    var healthcareDescriptionGroupState = hasHealthcareDescriptionError ? Error : Standard;
+                                }
+                                <validate-input model="ClinicalDetails" property="HealthcareDescription" inline-template>
+                                    <nhs-form-group nhs-form-group-type=@healthcareDescriptionGroupState aria-describedby="healthcare-other-error" id="Healthcare-Description">
+                                        <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasHealthcareDescriptionError"
+                                              asp-validation-for="ClinicalDetails.HealthcareDescription" id="healthcare-other-error"></span>
+                                        <label nhs-label-type="Standard" asp-for="ClinicalDetails.HealthcareDescription">
+                                            Enter details
+                                        </label>
+                                        <input ref="inputField" v-on:blur="validate" is-error-input=@hasHealthcareDescriptionError nhs-input-type="Standard"
+                                               fixed-width="Ten" asp-for="ClinicalDetails.HealthcareDescription" type="text">
+                                    </nhs-form-group>                   
+                                </validate-input>
+                            </div>
+                        }
+                    }
+                </div>
+             </nhs-fieldset>
+        </nhs-form-group>
         <br />
 
         <validate-date ref="date2" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)" model="ClinicalDetails" property="TBServicePresentationDate" rank="2" v-model="dates[2]" inline-template>
@@ -260,6 +312,72 @@
         </nhs-form-group>
         <br />
 
+        <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HomeVisitDate">
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.HomeVisitCarriedOut)</nhs-fieldset-legend>
+                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="ClinicalDetails.HomeVisitCarriedOut" id="home-visit-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-home-visit-conditional">
+                        <label class="nhsuk-label nhsuk-radios__label" for="home-visit-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-home-visit-conditional">
+                        @{
+                            var hasHomeVisitDateError = !Model.IsValid("ClinicalDetails.FirstHomeVisitDate");
+                            var homeVisitDateGroupState = hasHomeVisitDateError ? Error : Standard;
+                        }
+                        <validate-date ref="homeVisitDate" name="@Html.DisplayNameFor(m => m.ClinicalDetails.FirstHomeVisitDate)" model="ClinicalDetails" property="FirstHomeVisitDate" inline-template>
+                            <nhs-form-group nhs-form-group-type=@homeVisitDateGroupState>
+                                <nhs-fieldset aria-describedby="home-visit-error" role="group">
+                                    <nhs-fieldset-legend nhs-legend-size="Standard">
+                                        @Html.DisplayNameFor(m => m.ClinicalDetails.FirstHomeVisitDate)
+                                    </nhs-fieldset-legend>
+                                    <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.FirstHomeVisitDate"
+                                          has-error="@hasHomeVisitDateError" id="home-visit-error"></span>
+                                    <nhs-date-input id="home-visit">
+                                        <nhs-date-input-item>
+                                            <nhs-form-group nhs-form-group-type="Standard">
+                                                <label nhs-label-type="Date" asp-for="FormattedHomeVisitDate.Day">Day</label>
+                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                                       is-error-input=@hasHomeVisitDateError asp-for="FormattedHomeVisitDate.Day" />
+                                            </nhs-form-group>
+                                        </nhs-date-input-item>
+                                        <nhs-date-input-item>
+                                            <nhs-form-group nhs-form-group-type="Standard">
+                                                <label nhs-label-type="Date" asp-for="FormattedHomeVisitDate.Month">Month</label>
+                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                                       is-error-input=@hasHomeVisitDateError asp-for="FormattedHomeVisitDate.Month" />
+                                            </nhs-form-group>
+                                        </nhs-date-input-item>
+                                        <nhs-date-input-item>
+                                            <nhs-form-group nhs-form-group-type="Standard">
+                                                <label nhs-label-type="Date" asp-for="FormattedHomeVisitDate.Year">Year</label>
+                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                                       is-error-input=@hasHomeVisitDateError asp-for="FormattedHomeVisitDate.Year" />
+                                            </nhs-form-group>
+                                        </nhs-date-input-item>
+                                    </nhs-date-input>
+                                </nhs-fieldset>
+                            </nhs-form-group>
+                        </validate-date>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="ClinicalDetails.HomeVisitCarriedOut" id="home-visit-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                        <label class="nhsuk-label nhsuk-radios__label" for="home-visit-no">
+                            No
+                        </label>
+                    </div>
+                    <div class="nhsuk-radios__item">
+                        <input asp-for="ClinicalDetails.HomeVisitCarriedOut" id="home-visit-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                        <label class="nhsuk-label nhsuk-radios__label" for="home-visit-unknown">
+                            Unknown
+                        </label>
+                    </div>
+                </div>
+            </nhs-fieldset>
+        </nhs-form-group>
+    
         <h2>Post Mortem Diagnosis</h2>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DeathDate">
             <nhs-fieldset>

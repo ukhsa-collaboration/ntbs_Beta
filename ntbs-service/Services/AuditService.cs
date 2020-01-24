@@ -9,6 +9,7 @@ namespace ntbs_service.Services
     {
         Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails, string userName);
         Task AuditUnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
+        Task AuditMatchSpecimen(int notificationId, string labReferenceNumber, string userName);
     }
 
     public class AuditService : IAuditService
@@ -17,13 +18,15 @@ namespace ntbs_service.Services
 
         private const string READ_EVENT = "Read";
         private const string UNMATCH_EVENT = "Unmatch";
+        private const string MATCH_EVENT = "Match";
 
         public AuditService(AuditDatabaseContext auditContext)
         {
             _auditContext = auditContext;
         }
 
-        public async Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails, string userName)
+        public async Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails,
+            string userName)
         {
             var notificationIdString = notificationId.ToString();
             await _auditContext.AuditOperationAsync(
@@ -45,8 +48,19 @@ namespace ntbs_service.Services
                 UNMATCH_EVENT,
                 userName,
                 RootEntities.Notification,
-                notificationId.ToString()
-            );
+                notificationId.ToString());
+        }
+
+        public async Task AuditMatchSpecimen(int notificationId, string labReferenceNumber, string userName)
+        {
+            await _auditContext.AuditOperationAsync(
+                labReferenceNumber,
+                typeof(UnmatchedSpecimen).Name,
+                null,
+                MATCH_EVENT,
+                userName,
+                RootEntities.Notification,
+                notificationId.ToString());
         }
     }
 }

@@ -37,6 +37,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedTreatmentDate { get; set; }
         public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMdrTreatmentDate { get; set; }
+        public FormattedDate FormattedHomeVisitDate { get; set; }
 
         public ClinicalDetailsModel(
             INotificationService service,
@@ -75,6 +76,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
             FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
             FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
+            FormattedHomeVisitDate = ClinicalDetails.FirstHomeVisitDate.ConvertToFormattedDate();
 
             if (ClinicalDetails.ShouldValidateFull)
             {
@@ -121,6 +123,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
                 (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
                 (nameof(ClinicalDetails.DeathDate), FormattedDeathDate),
+                (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate),
                 (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
             }.ForEach(item => 
                 ValidationService.TrySetFormattedDate(ClinicalDetails, "ClinicalDetails", item.key, item.date)
@@ -224,6 +227,23 @@ namespace ntbs_service.Pages.Notifications.Edit
                 OtherSite = null;
                 ModelState.Remove("OtherSite.SiteDescription");
             }
+
+            if (ClinicalDetails.HomeVisitCarriedOut != Status.Yes)
+            {
+                ClinicalDetails.FirstHomeVisitDate = null;
+                FormattedHomeVisitDate = ClinicalDetails.FirstHomeVisitDate.ConvertToFormattedDate();
+                ModelState.Remove("ClinicalDetails.FirstHomeVisitDate");
+            }
+
+            if (ClinicalDetails.HealthcareSetting != HealthcareSetting.Other)
+            {
+                ClinicalDetails.HealthcareDescription = null;
+            }
+
+            if (ClinicalDetails.IsDotOffered == false)
+            {
+                ClinicalDetails.DotStatus = null;
+            }
         }
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)
@@ -287,5 +307,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             return ValidationService.GetMultiplePropertiesValidationResult<ClinicalDetails>(propertyValueTuples);
         }
+        
+        public ContentResult OnGetValidateClinicalDetailsProperty(string key, string value, bool shouldValidateFull)
+        {
+            return ValidationService.GetPropertyValidationResult<ClinicalDetails>(key, value, shouldValidateFull);
+        }
+
     }
 }

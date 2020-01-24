@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.NotNull(document.QuerySelector("#alert-20001"));
 
             // Act
-            var result = await SendPostFormWithData(document, null, dismissPageRoute);
+            var result = await Client.SendPostFormWithData(document, null, dismissPageRoute);
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
@@ -135,6 +135,24 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO);
             var document = await GetDocumentForUrl(url);
             Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
+        }
+        
+        [Fact]
+        public async Task OverviewPageShowsDenotificationDetails_ForDenotifiedRecord()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DENOTIFIED_ID);
+            var document = await GetDocumentForUrl(url);
+            Assert.Contains("Other - a great reason", document.QuerySelector("#overview-denotification-reason").TextContent);
+        }
+        
+        [Fact]
+        public async Task OverviewPageDoesNotShowDenotificationDetails_ForNotifiedRecord()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var document = await GetDocumentForUrl(url);
+            Assert.Null(document.QuerySelector("#overview-denotification-reason"));
         }
     }
 }
