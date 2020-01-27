@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -84,7 +85,8 @@ namespace ntbs_service.Pages.LabResults
                     "number was either previously matched, or unavailable to the user.");
             }
 
-            await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, User.Identity.Name);
+            var userName = User.FindFirstValue(ClaimTypes.Email);
+            await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, userName);
             AddTempDataForSuccessfulMessage(notificationId, laboratoryReferenceNumber);
 
             // Explicit path to the current page to avoid persisting any 'scroll to id' path values
@@ -226,7 +228,8 @@ namespace ntbs_service.Pages.LabResults
                 NtbsPostcode = notification.PatientDetails.Postcode,
                 NtbsBirthDate = notification.PatientDetails.Dob,
                 NtbsNhsNumber = notification.FormattedNhsNumber,
-                NtbsSex = notification.SexLabel
+                NtbsSex = notification.SexLabel,
+                TbServiceName = notification.TBServiceName
             };
         }
     }

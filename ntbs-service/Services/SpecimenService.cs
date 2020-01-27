@@ -148,7 +148,7 @@ namespace ntbs_service.Services
                     commandType: CommandType.StoredProcedure);
             }
 
-            await _auditService.AuditUnmatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
+            await _auditService.AuditMatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
         }
 
         private class UnmatchedQueryResultRow

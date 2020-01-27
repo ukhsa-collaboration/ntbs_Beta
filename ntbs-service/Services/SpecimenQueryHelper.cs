@@ -27,6 +27,7 @@ namespace ntbs_service.Services
                 ,[{nameof(SpecimenPotentialMatch.NtbsBirthDate)}]
                 ,[{nameof(SpecimenPotentialMatch.NtbsAddress)}]
                 ,[{nameof(SpecimenPotentialMatch.NtbsPostcode)}]
+                ,[{nameof(SpecimenPotentialMatch.TbServiceName)}]
                 ,[{nameof(SpecimenPotentialMatch.ConfidenceLevel)}]";
 
         private static readonly string _orderByUnmatchedStatement =
