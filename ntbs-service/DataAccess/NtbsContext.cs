@@ -503,7 +503,6 @@ namespace ntbs_service.DataAccess
                     .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
-                //TODO: Consider what indicies I want
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();

@@ -82,7 +82,7 @@ namespace ntbs_service.DataAccess
             return _context.Alert
                 .Where(n => n.AlertStatus != AlertStatus.Closed)
                 .Include(n => n.TbService)
-                .ThenInclude(s => s.PHEC)
+                    .ThenInclude(s => s.PHEC)
                 .Include(n => n.CaseManager);
         }
 
