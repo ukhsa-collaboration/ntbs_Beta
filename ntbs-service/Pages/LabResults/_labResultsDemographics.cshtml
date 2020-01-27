@@ -37,4 +37,10 @@
             <dd class="cell-min-height"> @Model.NtbsAddress </dd>
         </nhs-grid-column>
     </nhs-grid-row>
+    <nhs-grid-row classes="lab-results-demographics-row">
+        <nhs-grid-column grid-column-width="OneHalf">
+            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.TbServiceName) </dt>
+            <dd class="cell-min-height"> @Model.TbServiceName </dd>
+        </nhs-grid-column>
+    </nhs-grid-row>
 </div>
