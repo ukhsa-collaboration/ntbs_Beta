@@ -179,8 +179,12 @@ namespace ntbs_service.DataAccess
                 .Select(n => n.Group)
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.PatientDetails)
+                        .ThenInclude(p => p.PostcodeLookup)
+                            .ThenInclude(l => l.LocalAuthority)
+                                .ThenInclude(la => la.LocalAuthorityToPHEC)
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.Episode)
+                        .ThenInclude(e => e.TBService)
                 .SingleOrDefaultAsync();
         }
 
