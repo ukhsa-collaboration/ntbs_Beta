@@ -28,6 +28,7 @@ namespace ntbs_service.Models.Entities
         [ValidNhsNumber]
         [Display(Name = "NHS number")]
         public string NhsNumber { get; set; }
+        public bool NhsNumberNotKnown { get; set; }
 
         [MaxLength(50)]
         [RegularExpression(
@@ -55,6 +56,8 @@ namespace ntbs_service.Models.Entities
         public string PostcodeToLookup { get; set; }
         public virtual PostcodeLookup PostcodeLookup { get; set; }
 
+        public bool NoFixedAbode { get; set; }
+
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [Display(Name = "Birth country")]
         public int? CountryId { get; set; }
@@ -78,8 +81,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Sex")]
         public int? SexId { get; set; }
         public virtual Sex Sex { get; set; }
-        public bool NhsNumberNotKnown { get; set; }
-        public bool NoFixedAbode { get; set; }
 
         public int? OccupationId { get; set; }
         public virtual Occupation Occupation { get; set; }

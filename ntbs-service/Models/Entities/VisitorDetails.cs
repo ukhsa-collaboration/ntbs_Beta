@@ -31,7 +31,7 @@ namespace ntbs_service.Models.Entities
         [RequiredIf("ShouldValidateFull && HasVisitor == true", ErrorMessage = ValidationMessages.VisitCountryRequiresDuration)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
-        [Display(Name = "duration of travel")]
+        [Display(Name = "duration of visit")]
         public int? StayLengthInMonths1 { get; set; }
 
 
@@ -46,7 +46,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat("!ShouldValidateFull || Country2Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
-        [Display(Name = "duration of travel")]
+        [Display(Name = "duration of visit")]
         public int? StayLengthInMonths2 { get; set; }
 
 
@@ -61,7 +61,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat("!ShouldValidateFull || Country3Id != null", ErrorMessage = ValidationMessages.VisitIsChronological)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
-        [Display(Name = "duration of travel")]
+        [Display(Name = "duration of visit")]
         public int? StayLengthInMonths3 { get; set; }
 
         // Helper properties for use in expressive annotations
@@ -74,10 +74,10 @@ namespace ntbs_service.Models.Entities
 
         [NotMapped]
         public bool TotalLengthWithinLimit =>
-            MaxTotalLengthOfStay >= TotalDurationOfTravel;
+            MaxTotalLengthOfStay >= TotalDurationOfVisit;
 
         [NotMapped]
-        public int TotalDurationOfTravel =>
+        public int TotalDurationOfVisit =>
             Convert.ToInt32(StayLengthInMonths1) +
             Convert.ToInt32(StayLengthInMonths2) +
             Convert.ToInt32(StayLengthInMonths3);
