@@ -26,8 +26,6 @@ namespace ntbs_service.Pages.Notifications
             AuthorizationService = authorizationService;
             NotificationRepository = notificationRepository;
         }
-
-        protected NotificationGroup Group;
         public int NumberOfLinkedNotifications { get; set; }
 
         public Notification Notification { get; set; }

@@ -103,7 +103,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var notificationIds =
                 await NotificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
-            var idsInGroup = Group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
+            var idsInGroup = Notification.Group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
             var filteredIds = notificationIds
                 .Except(idsInGroup)
                 .Where(n => n != NotificationId)
