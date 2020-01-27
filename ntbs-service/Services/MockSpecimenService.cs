@@ -151,9 +151,9 @@ namespace ntbs_service.Services
             return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
         }
 
-        public async Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync()
+        public Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult((IEnumerable<SpecimenMatchPairing>)new List<SpecimenMatchPairing>());
         }
 
         public Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
