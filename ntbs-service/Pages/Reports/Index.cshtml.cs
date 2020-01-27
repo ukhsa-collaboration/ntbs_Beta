@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 
-namespace ntbs_service
+namespace ntbs_service.Pages.Reports
 {
     /// <summary>
     /// Route intended to be both a dummy location that's navigable for

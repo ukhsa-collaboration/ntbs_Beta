@@ -28,6 +28,11 @@ namespace ntbs_service.Helpers
         {
             return $"/Alerts/{alertId}/{subPath}";
         }
+
+        public static string GetUnmatchedSpecimenPath(string specimenId)
+        {
+            return $"/LabResults/#specimen-{specimenId}";
+        }
     }
 
     public static class NotificationSubPaths

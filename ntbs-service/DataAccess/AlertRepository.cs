@@ -13,10 +13,15 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByIdAsync(int? alertId);
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? alertId, AlertType alertType);
         Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType);
-        Task AddAlertAsync(Alert alert);
-        Task UpdateAlertAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
+        Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
+        Task AddAlertAsync(Alert alert);
+        Task AddAlertRangeAsync(IEnumerable<Alert> alerts);
+
+        Task CloseAlertsByIdsAsync(IEnumerable<int> toBeClosedAlertIds);
+        Task CloseUnmatchedLabResultAlertsForSpecimenIdAsync(string specimenId);
+        Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
     }
 
     public class AlertRepository : IAlertRepository
@@ -26,12 +31,6 @@ namespace ntbs_service.DataAccess
         public AlertRepository(NtbsContext context)
         {
             _context = context;
-        }
-
-        public async Task AddAlertAsync(Alert alert)
-        {
-            _context.Alert.Add(alert);
-            await UpdateAlertAsync();
         }
 
         public async Task<Alert> GetAlertByIdAsync(int? alertId)
@@ -64,10 +63,11 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task UpdateAlertAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
+        public async Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync()
         {
-            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
-            await _context.SaveChangesAsync();
+            return await GetBaseAlertIQueryable()
+                .OfType<UnmatchedLabResultAlert>()
+                .ToListAsync();
         }
 
         public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId)
@@ -82,8 +82,48 @@ namespace ntbs_service.DataAccess
             return _context.Alert
                 .Where(n => n.AlertStatus != AlertStatus.Closed)
                 .Include(n => n.TbService)
-                    .ThenInclude(s => s.PHEC)
+                .ThenInclude(s => s.PHEC)
                 .Include(n => n.CaseManager);
+        }
+
+
+        public async Task AddAlertAsync(Alert alert)
+        {
+            _context.Alert.Add(alert);
+            await SaveAlertChangesAsync();
+        }
+
+        public async Task AddAlertRangeAsync(IEnumerable<Alert> alerts)
+        {
+            _context.Alert.AddRange(alerts);
+            await SaveAlertChangesAsync();
+        }
+
+        public async Task CloseAlertsByIdsAsync(IEnumerable<int> toBeClosedAlertIds)
+        {
+            foreach (var alert in toBeClosedAlertIds.Select(alertId => new UnmatchedLabResultAlert {AlertId = alertId}))
+            {
+                _context.Attach(alert);
+                alert.AlertStatus = AlertStatus.Closed;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CloseUnmatchedLabResultAlertsForSpecimenIdAsync(string specimenId)
+        {
+            var alertIdsToClose = await _context.Alert.OfType<UnmatchedLabResultAlert>()
+                .Where(alert => alert.AlertStatus == AlertStatus.Open && alert.SpecimenId == specimenId)
+                .Select(alert => alert.AlertId)
+                .ToListAsync();
+
+            await CloseAlertsByIdsAsync(alertIdsToClose);
+        }
+
+        public async Task SaveAlertChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
+        {
+            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+            await _context.SaveChangesAsync();
         }
     }
 }

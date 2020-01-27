@@ -499,9 +499,11 @@ namespace ntbs_service.DataAccess
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
                     .HasValue<TransferAlert>(AlertType.TransferRequest)
-                    .HasValue<TransferRejectedAlert>(AlertType.TransferRejected);
+                    .HasValue<TransferRejectedAlert>(AlertType.TransferRejected)
+                    .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
+                //TODO: Consider what indicies I want
             });
 
             modelBuilder.Entity<TestAlert>().HasBaseType<Alert>();
@@ -510,6 +512,10 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.TransferReason)
                     .HasConversion(transferReasonEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+            });
+            modelBuilder.Entity<UnmatchedLabResultAlert>(entity =>
+            {
+                entity.Property(e => e.SpecimenId).HasMaxLength(50);
             });
 
             modelBuilder.Entity<VenueType>().HasData(
