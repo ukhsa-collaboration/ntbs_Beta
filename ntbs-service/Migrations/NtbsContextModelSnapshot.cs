@@ -12813,6 +12813,9 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
+                    b.Property<string>("CaseManagerTbServiceString")
+                        .HasMaxLength(200);
+
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(200);
 

@@ -10,6 +10,9 @@ namespace ntbs_service.Models.Entities
     {
         [Display(Name = "Lab number")]
         public string ReferenceLaboratoryNumber { get; set; }
+        
+        [Display(Name = "Requesting Lab")] 
+        public string LaboratoryName { get; set; }    
 
         [Display(Name = "Specimen type")]
         public string SpecimenTypeCode { get; set; }

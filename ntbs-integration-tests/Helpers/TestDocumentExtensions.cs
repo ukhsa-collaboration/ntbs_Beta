@@ -10,10 +10,9 @@ namespace ntbs_integration_tests.Helpers
     {
         public static string GetError(this IParentNode document, string input)
         {
-            var errorSpan = document?.QuerySelector($"span#{input}-error");
+            var errorSpan = document?.QuerySelector(EscapeQuerySelector($"span#{input}-error"));
             Assert.NotNull(errorSpan);
-            if (errorSpan.ClassList.Contains("hidden")) return null;
-            return errorSpan.TextContent;
+            return errorSpan.ClassList.Contains("hidden") ? null : errorSpan.TextContent;
         }
 
         public static void AssertErrorMessage(this IParentNode document, string inputName, string expectedMessage)
@@ -26,17 +25,22 @@ namespace ntbs_integration_tests.Helpers
         public static void AssertErrorSummaryMessage(this IHtmlDocument document, string summaryInputName, string spanInputName, string expectedMessage)
         {
             // assert the error appears in the error summary
-            var errorLink = (IHtmlAnchorElement) document?.QuerySelector($"a#error-summary-{summaryInputName}");
+            var errorLink = (IHtmlAnchorElement) document?.QuerySelector(EscapeQuerySelector($"a#error-summary-{summaryInputName}"));
             Assert.NotNull(errorLink);
             Assert.Equal(expectedMessage, errorLink.TextContent);
 
             // assert the link contained within the error in the error summary works
             var errorParentId = errorLink.Href.Split("#").Last();
-            var errorParent = document.QuerySelector($"#{errorParentId}");
+            var errorParent = document.QuerySelector(EscapeQuerySelector($"#{errorParentId}"));
             Assert.NotNull(errorParent);
 
             // assert the error is found where linked to by the error message and the correct error message is present
             errorParent.AssertErrorMessage(spanInputName, expectedMessage);
+        }
+
+        private static string EscapeQuerySelector(string query)
+        {
+            return query.Replace("[", "\\[").Replace("]", "\\]");
         }
 
         public static void AssertInputTextValue(this IHtmlDocument document, string inputId, string expectedValue)

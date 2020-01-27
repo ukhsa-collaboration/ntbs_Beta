@@ -50,25 +50,6 @@ namespace ntbs_integration_tests
             return HtmlDocumentHelpers.FullErrorMessage(validationMessage);
         }
 
-        protected async Task<HttpResponseMessage> SendPostFormWithData(
-            IHtmlDocument document,
-            Dictionary<string, string> formData,
-            string pageRoute,
-            string postRoute = null,
-            string submitType = null)
-        {
-            var data = formData ?? new Dictionary<string, string>();
-            var form = (IHtmlFormElement)document.QuerySelector("form");
-
-            var submissionRoute = pageRoute;
-            if (!string.IsNullOrEmpty(postRoute))
-            {
-                submissionRoute += postRoute.StartsWith('/') ? postRoute : $"/{postRoute}";
-            }
-
-            return await Client.SendPostAsync(form, data, submissionRoute, submitType);
-        }
-
         protected async Task<HttpResponseMessage> SendGetFormWithData(
             IHtmlDocument document, 
             Dictionary<string, string> formData,

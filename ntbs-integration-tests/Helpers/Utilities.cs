@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using ntbs_integration_tests.LabResultsPage;
 using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Services;
 
 namespace ntbs_integration_tests.Helpers
 {
@@ -49,6 +51,12 @@ namespace ntbs_integration_tests.Helpers
         public const int LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE = 10098;
 
         public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
+
+        public static int SPECIMEN_MATCHING_NOTIFICATION_ID1 = MockSpecimenService.MockSpecimenNotificationId1; // 10100
+        public static int SPECIMEN_MATCHING_NOTIFICATION_ID2 = MockSpecimenService.MockSpecimenNotificationId2; // 10101
+        public static int SPECIMEN_MATCHING_NOTIFICATION_ID3 = MockSpecimenService.MockSpecimenNotificationId3; // 10102
+        public static int SPECIMEN_MATCHING_NOTIFICATION_ID4 = MockSpecimenService.MockSpecimenNotificationId4; // 10103
+        public const int SPECIMEN_MATCHING_MANUAL_MATCH_NOTIFICATION_ID = 10104;
 
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
@@ -103,6 +111,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(TreatmentEventEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ClinicalDetailsPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ActionTransferPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(LabResultsPageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
 
@@ -124,9 +133,15 @@ namespace ntbs_integration_tests.Helpers
             return new List<PostcodeLookup>
             {
                 // Matches permitted PHEC_CODE
-                new PostcodeLookup { Postcode = PERMITTED_POSTCODE, LocalAuthorityCode = "E10000030", CountryCode = "E92000001" },
+                new PostcodeLookup
+                {
+                    Postcode = PERMITTED_POSTCODE, LocalAuthorityCode = "E10000030", CountryCode = "E92000001"
+                },
                 // Matches unpermitted PHEC_CODE
-                new PostcodeLookup { Postcode = UNPERMITTED_POSTCODE, LocalAuthorityCode = "E09000007", CountryCode = "E92000001" }
+                new PostcodeLookup
+                {
+                    Postcode = UNPERMITTED_POSTCODE, LocalAuthorityCode = "E09000007", CountryCode = "E92000001"
+                }
             };
         }
 
@@ -134,10 +149,24 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<User>
             {
-                new User { Username = CASEMANAGER_ABINGDON_EMAIL, GivenName = "TestCase", FamilyName = "TestManager",
-                           AdGroups = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true },
-                new User { Username = CASEMANAGER_ABINGDON_EMAIL2, GivenName = "TestCase2", FamilyName = "TestManager",
-                            AdGroups = "Global.NIS.NTBS.Service_Abingdon", IsActive = true, IsCaseManager = true }
+                new User
+                {
+                    Username = CASEMANAGER_ABINGDON_EMAIL,
+                    GivenName = "TestCase",
+                    FamilyName = "TestManager",
+                    AdGroups = "Global.NIS.NTBS.Service_Abingdon",
+                    IsActive = true,
+                    IsCaseManager = true
+                },
+                new User
+                {
+                    Username = CASEMANAGER_ABINGDON_EMAIL2,
+                    GivenName = "TestCase2",
+                    FamilyName = "TestManager",
+                    AdGroups = "Global.NIS.NTBS.Service_Abingdon",
+                    IsActive = true,
+                    IsCaseManager = true
+                }
             };
         }
 
@@ -145,8 +174,16 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<CaseManagerTbService>
             {
-                new CaseManagerTbService { TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL },
-                new CaseManagerTbService { TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID, CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL2 }
+                new CaseManagerTbService
+                {
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
+                },
+                new CaseManagerTbService
+                {
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL2
+                }
             };
         }
 
@@ -154,16 +191,17 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<Notification>
             {
-                new Notification { NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft },
+                new Notification {NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft},
                 new Notification
                 {
                     NotificationId = NOTIFIED_ID,
                     NotificationStatus = NotificationStatus.Notified,
                     // Requires a notification site to pass full validation
-                    NotificationSites = new List<NotificationSite>
-                    {
-                        new NotificationSite { NotificationId = NOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
-                    },
+                    NotificationSites =
+                        new List<NotificationSite>
+                        {
+                            new NotificationSite {NotificationId = NOTIFIED_ID, SiteId = (int)SiteId.PULMONARY}
+                        },
                     Episode = new Episode
                     {
                         TBServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
@@ -175,10 +213,15 @@ namespace ntbs_integration_tests.Helpers
                 {
                     NotificationId = DENOTIFIED_ID,
                     NotificationStatus = NotificationStatus.Denotified,
+                    DenotificationDetails = new DenotificationDetails
+                    {
+                        Reason = DenotificationReason.Other,
+                        OtherDescription = "a great reason"
+                    },
                     // Requires a notification site to pass full validation
                     NotificationSites = new List<NotificationSite>
                     {
-                        new NotificationSite { NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY }
+                        new NotificationSite {NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY}
                     }
                 },
                 new Notification()
@@ -186,12 +229,16 @@ namespace ntbs_integration_tests.Helpers
                     NotificationId = MDR_DETAILS_EXIST,
                     NotificationStatus = NotificationStatus.Notified,
                     // Requires a notification site to pass full validation
-                    NotificationSites = new List<NotificationSite>
-                    {
-                        new NotificationSite { NotificationId = MDR_DETAILS_EXIST, SiteId = (int)SiteId.PULMONARY }
-                    },
-                    MDRDetails = new MDRDetails { ExposureToKnownCaseStatus = Status.Yes, RelationshipToCase = "test" },
-                    ClinicalDetails = new ClinicalDetails { IsMDRTreatment = true }
+                    NotificationSites =
+                        new List<NotificationSite>
+                        {
+                            new NotificationSite
+                            {
+                                NotificationId = MDR_DETAILS_EXIST, SiteId = (int)SiteId.PULMONARY
+                            }
+                        },
+                    MDRDetails = new MDRDetails {ExposureToKnownCaseStatus = Status.Yes, RelationshipToCase = "test"},
+                    ClinicalDetails = new ClinicalDetails {IsMDRTreatment = true}
                 }
             };
         }
@@ -200,7 +247,8 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<Alert>
             {
-                new TestAlert {
+                new TestAlert
+                {
                     AlertId = ALERT_ID,
                     AlertStatus = AlertStatus.Open,
                     TbServiceCode = PERMITTED_SERVICE_CODE,
@@ -208,7 +256,7 @@ namespace ntbs_integration_tests.Helpers
                     NotificationId = NOTIFIED_ID,
                     AlertType = AlertType.Test
                 },
-                new TransferAlert 
+                new TransferAlert
                 {
                     AlertType = AlertType.TransferRequest,
                     AlertId = TRANSFER_ALERT_ID,

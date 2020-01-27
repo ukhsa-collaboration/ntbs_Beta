@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace ntbs_service.Pages.Alerts
     {
         private readonly IAlertRepository _alertRepository;
         private readonly IAlertService _alertService;
+        private readonly IReferenceDataRepository _referenceDataRepository;
         public ValidationService ValidationService;
         [BindProperty]
         [Required(ErrorMessage = "Please accept or decline the transfer")]
@@ -44,10 +46,12 @@ namespace ntbs_service.Pages.Alerts
             IAlertService alertService, 
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(notificationService, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IReferenceDataRepository referenceDataRepository) : base(notificationService, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _alertRepository = alertRepository;
+            _referenceDataRepository = referenceDataRepository;
             ValidationService = new ValidationService(this);
         }
 
@@ -95,17 +99,25 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
+            // Set hospital to the first available hospital in the new TB service where it can be updated by the user after the transfer
+            Notification.Episode.HospitalId =
+                (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string>
+                {
+                    TransferAlert.TbServiceCode
+                })).FirstOrDefault()?.HospitalId;
             await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
         }
 
         public async Task RejectTransferAndDismissAlertAsync()
         {
-             var transferRejectedAlert = new TransferRejectedAlert()
+            var user = await _referenceDataRepository.GetCaseManagerByUsernameAsync(User.FindFirstValue(ClaimTypes.Email));
+            var transferRejectedAlert = new TransferRejectedAlert()
             {
-                CaseManagerUsername = User.FindFirstValue(ClaimTypes.Email),
+                CaseManagerUsername = Notification.Episode.CaseManagerUsername,
                 NotificationId = NotificationId,
                 RejectionReason = DeclineTransferReason,
+                CaseManagerTbServiceString = $"{user.DisplayName}, {TransferAlert.TbServiceName}",
                 TbServiceCode = Notification.Episode.TBServiceCode
             };
 

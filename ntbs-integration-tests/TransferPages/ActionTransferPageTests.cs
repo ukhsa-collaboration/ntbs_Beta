@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.TransferPage
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -70,7 +70,7 @@ namespace ntbs_integration_tests.TransferPage
             var initialDocument = await GetDocumentForUrl(url);
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, null, url);
+            var result = await Client.SendPostFormWithData(initialDocument, null, url);
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
@@ -94,7 +94,7 @@ namespace ntbs_integration_tests.TransferPage
             };
 
             // Act
-            var result = await SendPostFormWithData(initialDocument, formData, url);
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
@@ -103,35 +103,30 @@ namespace ntbs_integration_tests.TransferPage
             var overviewPage = await GetDocumentForUrl(overviewUrl);
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
             Assert.Contains("TestCase TestManager", overviewPage.QuerySelector("#banner-case-manager").TextContent);
-            Assert.Null(overviewPage.QuerySelector("#alert-3"));
+            Assert.Null(overviewPage.QuerySelector("#alert-20003"));
         }
+        
+        [Fact]
+        public async Task DeclineTransferAlert_CreatesNewTransferRejectionAlert()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrl(url);
 
+            var formData = new Dictionary<string, string>
+            {
+                ["AcceptTransfer"] = "false",
+                ["DeclineTransferReason"] = "nah",
+            };
 
-        // This is untested as currently we are unable to add alerts to the in-memory database, we can only seed and remove them.
-        // Some more investigation needs to be done if we want to implement this test.
-        // in 
-        //
-        // [Fact]
-        // public async Task DeclineTransferAlert_CreatesNewTransferRejectionAlert()
-        // {
-        //     // Arrange
-        //     const int id = Utilities.NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT;
-        //     var url = GetCurrentPathForId(id);
-        //     var initialDocument = await GetDocumentForUrl(url);
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
-        //     var formData = new Dictionary<string, string>
-        //     {
-        //         ["AcceptTransfer"] = "false",
-        //         ["DeclineTransferReason"] = "nah",
-        //     };
-
-        //     // Act
-        //     var result = await SendPostFormWithData(initialDocument, formData, url);
-
-        //     // Assert
-        //     var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
-        //     var overviewPage = await GetDocumentForUrl(overviewUrl);
-        //     Assert.NotNull(overviewPage.QuerySelector(".overview-alerts-container"));
-        // }
+            // Assert
+            var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
+            var overviewPage = await GetDocumentForUrl(overviewUrl);
+            Assert.NotNull(overviewPage.QuerySelector(".overview-alerts-container"));
+        }
     }
 }

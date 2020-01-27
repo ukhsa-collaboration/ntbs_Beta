@@ -24,7 +24,7 @@ namespace ntbs_integration_tests.HomePage
             Assert.NotNull(pageContent.QuerySelector("#alert-20001"));
 
             // Act
-            var result = await SendPostFormWithData(pageContent, null, DismissPageRoute);
+            var result = await Client.SendPostFormWithData(pageContent, null, DismissPageRoute);
 
             // Assert
             var reloadedPage = await Client.GetAsync(PageRoute);

@@ -78,7 +78,7 @@ namespace ntbs_service.DataMigration
             notification.LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null;
             notification.LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null;
             notification.NotificationDate = rawNotification.NotificationDate;
-            notification.CreationDate = rawNotification.CreationDate;
+            notification.CreationDate = DateTime.Now;
             notification.PatientDetails = ExtractPatientDetails(rawNotification);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
@@ -168,7 +168,7 @@ namespace ntbs_service.DataMigration
 
         private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
-            bool? hasTravel = StringToValueConverter.GetNullableBoolValue(notification.HasTravel);
+            bool? hasTravel = notification.HasTravel;
             var totalNumberOfCountries = hasTravel ?? false ? StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
 
             var details = new TravelDetails();
@@ -185,7 +185,7 @@ namespace ntbs_service.DataMigration
 
         private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
-            bool? hasVisitor = StringToValueConverter.GetNullableBoolValue(notification.HasVisitor);
+            bool? hasVisitor = notification.HasVisitor;
             var totalNumberOfCountries = hasVisitor ?? false ? StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
 
             var details = new VisitorDetails();
