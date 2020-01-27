@@ -21,12 +21,12 @@
     <tb-service-filtered-alerts inline-template>
         <div>
             <div class="flex-container">
-                <h2 class="alerts-heading"> Alerts </h2>
-                <label nhs-label-type="Standard" for="tb-service-filter-dropdown" classes="tb-service-alerts-filter-label" >
+                <h2 class="heading"> Alerts </h2>
+                <label nhs-label-type="Standard" for="tb-service-filter-dropdown" classes="filter-label" >
                     Filter by TB Service
                 </label>
                 <select id="tb-service-filter-dropdown" nhs-select-type="Standard" ref="tbService" asp-items="Model.TbServices" 
-                    v-on:change="updateTable" classes="tb-service-alerts-filter-dropdown">
+                    v-on:change="updateTable" classes="filter-dropdown">
                     <option> Show all </option>
                 </select>
             </div>
@@ -95,7 +95,7 @@
         </div>
     </tb-service-filtered-alerts>
 
-    <h2> Draft notifications </h2>
+    <h2 class="heading"> Draft notifications </h2>
 
     <nhs-table class="notifications-table">
         <nhs-table-head>
@@ -135,7 +135,7 @@
         </nhs-table-body>
     </nhs-table>
 
-    <h2> Recent notifications </h2>
+    <h2 class="heading"> Recent notifications </h2>
     <nhs-table class="notifications-table">
         <nhs-table-head>
             <nhs-table-item>

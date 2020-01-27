@@ -3,24 +3,23 @@
 <div>
     @if (@Model.HomepageKpiDetails.Any())
     {
-        
         <filtered-homepage-kpi inline-template>
             <div>
                 <!-- Kpi details for non-JS browsers -->
                 <div class="homepage-kpi-container-without-js" id="kpi-details">
-                    <h1 class="kpi-heading"> KPIs </h1>
+                    <h2 class="heading" aria-label="Key Performance Indicators"> KPIs </h2>
                     <partial name="Shared/_HomepageKpiRow" model="@Model.HomepageKpiDetails.FirstOrDefault()"/>
                 </div>
                 
                  <!-- Kpi details for browsers with JS-->
                 <div class="homepage-kpi-container-with-js" id="homepage-kpi-details">
                     <div class="flex-container">
-                        <h1 class="kpi-heading"> KPIs </h1>
-                        <label nhs-label-type="Standard" for="code-filter-dropdown" classes="homepage-kpi-filter-label" >
+                        <h2 class="heading"> KPIs </h2>
+                        <label nhs-label-type="Standard" for="code-filter-dropdown" classes="filter-label" >
                             Filter by:
                         </label>
                         <select id="code-filter-dropdown" nhs-select-type="Standard" ref="filterByCode" asp-items="Model.KpiFilter"
-                                v-on:change="updateKpiDetails" classes="homepage-kpi-filter-dropdown">
+                                v-on:change="updateKpiDetails" classes="filter-dropdown">
                         </select>
                     </div>
                     <br/>
