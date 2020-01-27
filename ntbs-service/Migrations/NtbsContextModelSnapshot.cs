@@ -10206,6 +10206,8 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Code");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("PHECCode");
 
                     b.HasIndex("ServiceAdGroup")
