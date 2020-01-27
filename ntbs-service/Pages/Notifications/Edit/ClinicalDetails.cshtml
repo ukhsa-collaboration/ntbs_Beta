@@ -40,7 +40,7 @@
             <nhs-form-group nhs-form-group-type="@notesGroupState">
                 <span ref="errorField" id="notes-error" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.Notes" has-error="@notesError"></span>
                 <textarea ref="textAreaField" v-on:blur="validate"  classes="nhsuk-input--width-30" asp-for="ClinicalDetails.Notes" 
-                        nhs-textarea-type="Standard" rows="5" is-error-input="@notesError" aria-describedby="notes-error"></textarea>
+                        nhs-textarea-type="Standard" rows="10" is-error-input="@notesError" aria-describedby="notes-error"></textarea>
             </nhs-form-group>
         </validate-input>
     </div>
