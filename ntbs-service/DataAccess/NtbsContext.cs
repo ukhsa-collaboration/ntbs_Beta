@@ -115,6 +115,8 @@ namespace ntbs_service.DataAccess
                  */
                 entity.Property(e => e.ServiceAdGroup).HasMaxLength(64);
                 entity.HasIndex(e => e.ServiceAdGroup).IsUnique();
+                entity.HasIndex(e => e.Name);
+
                 entity.HasOne(e => e.PHEC)
                     .WithMany()
                     .HasForeignKey(tb => tb.PHECCode);

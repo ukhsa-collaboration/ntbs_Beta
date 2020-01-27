@@ -79,7 +79,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<TBService>> GetAllTbServicesAsync()
         {
-            return await _context.TbService.ToListAsync();
+            return await GetTbServicesQueryable().ToListAsync();
         }
 
         public async Task<IList<PHEC>> GetAllPhecs()
@@ -89,12 +89,12 @@ namespace ntbs_service.DataAccess
 
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
         {
-            return await _context.TbService.SingleOrDefaultAsync(t => t.Code == code);
+            return await GetTbServicesQueryable().SingleOrDefaultAsync(t => t.Code == code);
         }
 
         public async Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
         {
-            return await _context.TbService
+            return await GetTbServicesQueryable()
                 .Where(s => s.PHECCode == phecCode)
                 .ToListAsync();
         }
@@ -125,7 +125,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes)
         {
-            return await _context.TbService
+            return await GetTbServicesQueryable()
                 .Where(t => tbServiceCodes.Contains(t.Code))
                 .SelectMany(t => t.CaseManagerTbServices.Select(join => join.CaseManager))
                 .Where(user => user.IsCaseManager)
@@ -173,7 +173,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles)
         {
-            return await _context.TbService.Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
+            return await GetTbServicesQueryable().Where(tb => roles.Contains(tb.ServiceAdGroup)).Select(tb => tb.Code).ToListAsync();
         }
 
         public async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
@@ -183,17 +183,20 @@ namespace ntbs_service.DataAccess
 
         public IQueryable<TBService> GetTbServicesQueryable()
         {
-            return _context.TbService;
+            return _context.TbService.OrderBy(s => s.Name);
         }
 
         public IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles)
         {
-            return _context.TbService.Where(tb => roles.Contains(tb.ServiceAdGroup));
+            return GetTbServicesQueryable()
+                .Where(tb => roles.Contains(tb.ServiceAdGroup));
         }
 
         public IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles)
         {
-            return _context.TbService.Include(tb => tb.PHEC).Where(tb => roles.Contains(tb.PHEC.AdGroup));
+            return GetTbServicesQueryable()
+                .Include(tb => tb.PHEC)
+                .Where(tb => roles.Contains(tb.PHEC.AdGroup));
         }
 
         public async Task<ManualTestType> GetManualTestTypeAsync(int id)
