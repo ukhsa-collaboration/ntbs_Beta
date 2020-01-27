@@ -37,7 +37,7 @@ namespace ntbs_service.Pages.Notifications
             await GetLinkedNotifications();
             await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
-            if (!HasEditPermission)
+            if (PermissionLevel == PermissionLevel.None)
             {
                 return Partial("./UnauthorizedWarning", this);
             }

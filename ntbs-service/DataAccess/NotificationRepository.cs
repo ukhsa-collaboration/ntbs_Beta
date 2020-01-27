@@ -178,6 +178,9 @@ namespace ntbs_service.DataAccess
                 .Where(n => n.NotificationId == notificationId)
                 .Select(n => n.Group)
                 .Include(g => g.Notifications)
+                    .ThenInclude(n => n.PatientDetails)
+                .Include(g => g.Notifications)
+                    .ThenInclude(n => n.Episode)
                 .SingleOrDefaultAsync();
         }
 

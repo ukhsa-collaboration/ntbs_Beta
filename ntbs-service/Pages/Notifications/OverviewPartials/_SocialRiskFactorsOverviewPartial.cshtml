@@ -1,10 +1,14 @@
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @model OverviewModel
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Social risk factors </h3>
-    <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditSocialRiskFactors)"
-       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    {
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditSocialRiskFactors)"
+           class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    }
 </div>
 <div class="notification-overview-details-container">
     <nhs-grid-row classes="notification-overview-details">

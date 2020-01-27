@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
+using ntbs_service;
 using ntbs_service.Models;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -11,7 +15,23 @@ using ntbs_service.Services;
 
 namespace ntbs_integration_tests.TestServices
 {
-    public class TestNhsUserService : IUserService
+
+    public static class TestUserServiceExtensions
+    {
+        public static WebApplicationFactory<Startup> WithUser<T>(this WebApplicationFactory<Startup> factory)
+            where T : class, IUserService
+        {
+            return factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddScoped<IUserService, T>();
+                });
+            });
+        }
+    }
+
+    public class NhsUserForAbingdonAndPermitted : IUserService
     {
         private readonly List<string> tbServiceCode = new List<string>
         {
@@ -48,7 +68,7 @@ namespace ntbs_integration_tests.TestServices
         }
     }
     
-    public class TestWithoutTbServicesNhsUserService : IUserService
+    public class NhsUserWithNoTbServices : IUserService
     {
         public async Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
@@ -80,7 +100,7 @@ namespace ntbs_integration_tests.TestServices
         }
     }
 
-    public class TestPheUserService : IUserService
+    public class PheUserWithPermittedPhecCode : IUserService
     {
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {
@@ -112,7 +132,7 @@ namespace ntbs_integration_tests.TestServices
         }
     }
     
-    public class TestNationalTeamUserService : IUserService
+    public class NationalTeamUser : IUserService
     {
         public Task<UserPermissionsFilter> GetUserPermissionsFilterAsync(ClaimsPrincipal user)
         {

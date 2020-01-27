@@ -47,7 +47,7 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task ShowingHomepageKpis_WhenUserIsNhsUser()
         {
-            using (var client = Factory.WithMockUserService<TestNhsUserService>()
+            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
                                         .CreateClientWithoutRedirects())
             {
                 // Arrange
@@ -62,7 +62,7 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task ShowingHomepageKpis_WhenUserIsPheUser()
         {
-            using (var client = Factory.WithMockUserService<TestPheUserService>()
+            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .CreateClientWithoutRedirects())
             {
                 // Arrange

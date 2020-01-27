@@ -10,12 +10,11 @@ namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification);
-        Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel);
+        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
-        IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
+        void SetFullAccessOnNotificationBanners(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
     }
@@ -23,7 +22,7 @@ namespace ntbs_service.Services
     public class AuthorizationService : IAuthorizationService
     {
         private readonly IUserService _userService;
-        private UserPermissionsFilter _filter;
+        private UserPermissionsFilter _userPermissionsFilter;
 
         public AuthorizationService(IUserService userService)
         {
@@ -36,7 +35,7 @@ namespace ntbs_service.Services
             return userTbServiceCodes.Contains(alert.TbServiceCode);
         }
 
-        public IEnumerable<NotificationBannerModel> SetFullAccessOnNotificationBanners(
+        public void SetFullAccessOnNotificationBanners(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user)
         {
@@ -44,72 +43,106 @@ namespace ntbs_service.Services
             {
                 if(n.NotificationStatus != NotificationStatus.Legacy)
                 {
-                    n.FullAccess = await CanEditBannerModelAsync(user, n);
+                    n.ShowPadlock = await CanEditBannerModelAsync(user, n);
                 }
             });
-            return notificationBanners;
         }
 
-        public async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user, NotificationBannerModel notificationBannerModel)
+        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
+            Notification notification)
         {
-            var tbServiceCode = notificationBannerModel.TbServiceCode;
-            var tbServicePhecCode = notificationBannerModel.TbServicePHECCode;
-            var locationPhecCode = notificationBannerModel.LocationPHECCode;
-            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            if (_userPermissionsFilter == null)
+            {
+                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
+            }
+            
+            if (UserHasDirectRelationToNotification(notification) || _userPermissionsFilter.Type == UserType.NationalTeam)
+            {
+                return PermissionLevel.Edit;
+            }
+
+            if (UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
+            {
+                return PermissionLevel.ReadOnly;
+            }
+
+            return PermissionLevel.None;
+        }
+        
+        private async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user,
+            NotificationBannerModel notificationBannerModel)
+        {
+            if (_userPermissionsFilter == null)
+            {
+                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
+            }
+            if (_userPermissionsFilter.Type == UserType.NationalTeam)
+            {
+                return true;
+            }
+            if (_userPermissionsFilter.Type == UserType.PheUser)
+            {
+                var allowedCodes = _userPermissionsFilter.IncludedPHECCodes;
+                return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
+                       allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
+            }
+            if (_userPermissionsFilter.Type == UserType.NhsUser)
+            {
+                return _userPermissionsFilter.IncludedTBServiceCodes.Contains(notificationBannerModel.TbServiceCode);
+            }
+            return false;
+            
+        }
+        
+        private bool UserHasDirectRelationToLinkedNotification(IEnumerable<Notification> linkedNotifications)
+        {
+            return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x == true);
         }
 
-        public async Task<bool> CanEditNotificationAsync(ClaimsPrincipal user, Notification notification)
+        private bool UserHasDirectRelationToNotification(Notification notification)
         {
-            var tbServiceCode = notification.Episode.TBServiceCode;
-            var tbServicePhecCode = notification.Episode.TBService?.PHECCode;
-            var locationPhecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            return await AuthorizeUserAccess(user, tbServiceCode, locationPhecCode, tbServicePhecCode);
+            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification) ||
+                UserBelongsToResidencePhecOfNotification(notification);
         }
 
-        private async Task<bool> AuthorizeUserAccess(ClaimsPrincipal user, string tbServiceCode, string locationPhecCode, string tbServicePhecCode)
+        private bool UserBelongsToTbServiceOfNotification(Notification notification)
         {
-            if (_filter == null)
-            {
-                _filter = await GetUserPermissionsFilterAsync(user);
-            }
-
-            if (_filter.FilterByTBService)
-            {
-                return _filter.IncludedTBServiceCodes.Contains(tbServiceCode);
-            }
-
-            else if (_filter.FilterByPHEC)
-            {
-                var allowedCodes = _filter.IncludedPHECCodes;
-                return allowedCodes.Contains(tbServicePhecCode) || allowedCodes.Contains(locationPhecCode);
-            }
-
-            return true;
+            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
+        }
+        
+        private bool UserBelongsToTreatmentPhecOfNotification(Notification notification)
+        {
+            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode);
+        }
+        
+        private bool UserBelongsToResidencePhecOfNotification(Notification notification)
+        {
+            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
         }
 
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)
         {
-            if (_filter == null)
+            if (_userPermissionsFilter == null)
             {
-                _filter = await GetUserPermissionsFilterAsync(user);
+                _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
-    
-            if (_filter.FilterByTBService)
+
+            if (_userPermissionsFilter.Type == UserType.NhsUser)
             {
-                notifications = notifications.Where(n => _filter.IncludedTBServiceCodes.Contains(n.Episode.TBServiceCode));
+                notifications = notifications.Where(n => _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.Episode.TBServiceCode));
             }
-            else if (_filter.FilterByPHEC)
+            else if (_userPermissionsFilter.Type == UserType.PheUser)
             {
                 // Having a method in LINQ clause breaks IQuaryable abstraction. We have to use inline expression over methods
                 notifications = notifications.Where(n => 
                     (
                         n.Episode.TBService != null && 
-                        _filter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode)
+                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode)
                     ) || (
                         n.PatientDetails.PostcodeLookup != null && 
                         n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
                         n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC != null && 
-                        _filter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
+                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.PatientDetails.PostcodeLookup.LocalAuthority.LocalAuthorityToPHEC.PHECCode)
                     )
                 );
             }

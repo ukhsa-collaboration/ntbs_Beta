@@ -7,6 +7,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit.Items
@@ -62,7 +63,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             Notification = await GetNotificationAsync(NotificationId);
-            if (!(await AuthorizationService.CanEditNotificationAsync(User, Notification)))
+            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }

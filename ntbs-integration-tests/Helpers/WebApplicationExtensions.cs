@@ -12,16 +12,6 @@ namespace ntbs_integration_tests.Helpers
 {
     public static class WebApplicationExtensions
     {
-        public static WebApplicationFactory<Startup> WithMockUserService<T>(this WebApplicationFactory<Startup> factory) where T: class, IUserService
-        {
-            return factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddScoped<IUserService, T>();
-                });
-            });
-        }
 
         public static WebApplicationFactory<Startup> WithNotificationAndTbServiceConnected(this WebApplicationFactory<Startup> factory,
                                                                                             int notificationId,

@@ -64,7 +64,8 @@ namespace ntbs_service_unit_tests.Pages
             _mockLegacySearchService.Setup(s => s.SearchAsync(It.IsAny<ILegacySearchBuilder>(), It.IsAny<int>(), It.IsAny<int>())).Returns(legacyNotificationsAndCount);
 
             _mockAuthorizationService.Setup(s => s.SetFullAccessOnNotificationBanners(It.IsAny<IEnumerable<NotificationBannerModel>>(), It.IsAny<ClaimsPrincipal>()))
-                .Returns(GetAuthorisedBanners());
+                .Verifiable();
+            
 
             var httpContext = new DefaultHttpContext();
             var modelState = new ModelStateDictionary();

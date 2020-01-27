@@ -1,5 +1,6 @@
 @using ntbs_service.Helpers
-@model ntbs_service.Models.Entities.ContactTracing
+@using ntbs_service.Models.Enums
+@model OverviewModel
 
 @{
     var notificationId = (int)ViewData["NotificationId"];
@@ -7,8 +8,11 @@
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Contact tracing </h3>
-    <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditContactTracing)"
-       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    {
+        <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditContactTracing)"
+        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    }
 </div>
 <div class="notification-overview-details-container">
     <nhs-grid-row classes="notification-overview-details">
@@ -17,16 +21,16 @@
             <div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Adults  </span>
-                    <span class="contact-tracing-value"> @(Model.AdultsIdentified)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsIdentified)</span>
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Children  </span>
-                    <span class="contact-tracing-value"> @(Model.ChildrenIdentified)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenIdentified)</span>
 
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Total  </span>
-                    <span class="contact-tracing-value"> @(Model.TotalContactsIdentified) </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsIdentified) </span>
                 </div>
             </div>
         </nhs-grid-column>
@@ -35,16 +39,16 @@
             <div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Adults  </span>
-                    <span class="contact-tracing-value"> @(Model.AdultsScreened)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsScreened)</span>
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Children  </span>
-                    <span class="contact-tracing-value"> @(Model.ChildrenScreened)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenScreened)</span>
 
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Total  </span>
-                    <span class="contact-tracing-value"> @(Model.TotalContactsScreened) </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsScreened) </span>
                 </div>
             </div>
         </nhs-grid-column>
@@ -53,16 +57,16 @@
             <div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Adults  </span>
-                    <span class="contact-tracing-value"> @(Model.AdultsActiveTB)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsActiveTB)</span>
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Children  </span>
-                    <span class="contact-tracing-value"> @(Model.ChildrenActiveTB)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenActiveTB)</span>
 
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Total  </span>
-                    <span class="contact-tracing-value"> @(Model.TotalContactsActiveTB) </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsActiveTB) </span>
                 </div>
             </div>
         </nhs-grid-column>
@@ -73,16 +77,16 @@
             <div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Adults  </span>
-                    <span class="contact-tracing-value"> @(Model.AdultsLatentTB)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsLatentTB)</span>
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Children  </span>
-                    <span class="contact-tracing-value"> @(Model.ChildrenLatentTB)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenLatentTB)</span>
 
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Total  </span>
-                    <span class="contact-tracing-value"> @(Model.TotalContactsLatentTB) </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsLatentTB) </span>
                 </div>
             </div>
         </nhs-grid-column>
@@ -91,16 +95,16 @@
             <div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Adults  </span>
-                    <span class="contact-tracing-value"> @(Model.AdultsStartedTreatment)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsStartedTreatment)</span>
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Children  </span>
-                    <span class="contact-tracing-value"> @(Model.ChildrenStartedTreatment)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenStartedTreatment)</span>
 
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Total  </span>
-                    <span class="contact-tracing-value"> @(Model.TotalContactsStartedTreatment) </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsStartedTreatment) </span>
                 </div>
             </div>
         </nhs-grid-column>
@@ -109,16 +113,16 @@
             <div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Adults  </span>
-                    <span class="contact-tracing-value"> @(Model.AdultsFinishedTreatment)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsFinishedTreatment)</span>
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Children  </span>
-                    <span class="contact-tracing-value"> @(Model.ChildrenFinishedTreatment)</span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenFinishedTreatment)</span>
 
                 </div>
                 <div class="contact-tracing-row">
                     <span class="contact-tracing-label"> Total  </span>
-                    <span class="contact-tracing-value"> @(Model.TotalContactsFinishedTreatment) </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsFinishedTreatment) </span>
                 </div>
             </div>
         </nhs-grid-column>

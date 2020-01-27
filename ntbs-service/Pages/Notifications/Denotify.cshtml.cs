@@ -47,7 +47,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             await AuthorizeAndSetBannerAsync();
-            if (!HasEditPermission || Notification.NotificationStatus != NotificationStatus.Notified)
+            if (PermissionLevel != PermissionLevel.Edit || Notification.NotificationStatus != NotificationStatus.Notified)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
@@ -60,7 +60,7 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (!(await AuthorizationService.CanEditNotificationAsync(User, Notification)))
+            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }

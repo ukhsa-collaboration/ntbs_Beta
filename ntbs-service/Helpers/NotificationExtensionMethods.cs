@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Helpers
@@ -16,8 +17,8 @@ namespace ntbs_service.Helpers
         {
             return notifications.Select(async n =>
                 {
-                    var fullAccess = await authorizationService.CanEditNotificationAsync(user, n);
-                    return new NotificationBannerModel(n, fullAccess: fullAccess, showLink: true);
+                    var fullAccess = await authorizationService.GetPermissionLevelForNotificationAsync(user, n) == PermissionLevel.Edit;
+                    return new NotificationBannerModel(n, showPadlock: fullAccess, showLink: true);
                 })
                 .Select(n => n.Result);
         }
