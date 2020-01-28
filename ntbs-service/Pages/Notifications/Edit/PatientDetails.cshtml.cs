@@ -85,12 +85,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(PatientDetails, "PatientDetails");
             }
 
-            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(PatientDetails.NhsNumber);
+            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(PatientDetails.NhsNumber, Notification.Group);
 
             return Page();
         }
 
-        private async Task<Dictionary<string, string>> GenerateDuplicateNhsNumberNotificationUrlsAsync(string nhsNumber)
+        private async Task<Dictionary<string, string>> GenerateDuplicateNhsNumberNotificationUrlsAsync(string nhsNumber, NotificationGroup group)
         {
             // If NhsNumber is empty or does not pass validation - return null
             // Potential duplication of validation here so that both Server and Dynamic/JS routes to warnings
@@ -103,7 +103,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var notificationIds =
                 await NotificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
-            var idsInGroup = Notification.Group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
+            var idsInGroup = group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
             var filteredIds = notificationIds
                 .Except(idsInGroup)
                 .Where(n => n != NotificationId)
@@ -165,9 +165,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)
         {
-            NotificationId = notificationId;
-            await GetLinkedNotifications();
-            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber));
+            var group = await NotificationRepository.GetNotificationGroupAsync(notificationId);
+            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber, group));
         }
     }
 }
