@@ -51,7 +51,8 @@ namespace ntbs_service.Helpers
                 (CsvReader csvReader) => new TBService {
                     Code = csvReader.GetField("Code"),
                     Name = csvReader.GetField("Name"),
-                    PHECCode = string.IsNullOrEmpty(csvReader.GetField("PHEC_Code")) ? null : csvReader.GetField("PHEC_Code")
+                    PHECCode = string.IsNullOrEmpty(csvReader.GetField("PHEC_Code")) ? null : csvReader.GetField("PHEC_Code"),
+                    ServiceAdGroup = string.IsNullOrEmpty(csvReader.GetField("Service_Ad_Group")) ? null : csvReader.GetField("Service_Ad_Group")
                 }
             );
         }
