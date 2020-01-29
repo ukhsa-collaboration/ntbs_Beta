@@ -17,6 +17,18 @@ namespace ntbs_service.Migrations
                 keyColumn: "HospitalId",
                 keyValue: new Guid("fefd7cdd-bdaa-4be8-b839-780a7bb0d7ff"));
 
+            migrationBuilder.AddColumn<string>(
+                name: "CaseManagerTbServiceString",
+                table: "Alert",
+                maxLength: 200,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "SpecimenId",
+                table: "Alert",
+                maxLength: 50,
+                nullable: true);
+
             migrationBuilder.UpdateData(
                 table: "Hospital",
                 keyColumn: "HospitalId",
@@ -30,27 +42,6 @@ namespace ntbs_service.Migrations
                 keyValue: new Guid("d473c823-ec99-43f8-ae8f-23eb332b1b29"),
                 column: "Name",
                 value: "SPIRE LONGLANDS CONSULTING ROOMS");
-
-            migrationBuilder.InsertData(
-                table: "Hospital",
-                columns: new[] { "HospitalId", "CountryCode", "Name", "TBServiceCode" },
-                values: new object[,]
-                {
-                    { new Guid("2d0e397a-0e17-46fc-8fd5-16101c1cc978"), "S92000003", "NHS TAYSIDE", "TBS0422" },
-                    { new Guid("d6dd3782-f4c3-4192-a99a-bbfd351d1a66"), "S92000003", "NHS HIGHLAND", "TBS0417" },
-                    { new Guid("d4042531-c128-4b28-be30-394a487f3d2f"), "S92000003", "NHS FORTH VALLEY", "TBS0414" },
-                    { new Guid("b140f9a6-c080-4fed-a992-ac7dd71e20dc"), "S92000003", "NHS AYRSHIRE AND ARRAN", "TBS0410" },
-                    { new Guid("af410a50-e52c-4fa3-8a07-c0eb63f5272f"), "S92000003", "NHS BORDERS", "TBS0411" },
-                    { new Guid("8e0bca35-8ae9-49d3-b86b-0d5eda72037f"), "S92000003", "NHS WESTERN ISLES", "TBS0423" },
-                    { new Guid("b7e758b3-2cdd-436c-9834-24263f901b8a"), "S92000003", "NHS DUMFRIES AND GALLOWAY", "TBS0412" },
-                    { new Guid("8ae267ca-0751-4b82-b37f-2bc95ac06672"), "S92000003", "NHS FIFE", "TBS0413" },
-                    { new Guid("83ab54b0-8fd8-46d9-9007-d641d575a4ac"), "S92000003", "NHS GREATER GLASGOW AND CLYDE", "TBS0416" },
-                    { new Guid("7d77c176-c394-4f85-880e-1b76dca15c19"), "S92000003", "NHS SHETLAND", "TBS0421" },
-                    { new Guid("6414552c-64a4-4309-aec5-d6c6d55b2144"), "S92000003", "NHS LANARKSHIRE", "TBS0418" },
-                    { new Guid("55cd6665-0b69-4a2d-b8a0-26db6398248b"), "S92000003", "NHS LOTHIAN", "TBS0419" },
-                    { new Guid("44ead93f-6b3e-4873-9c4b-b590dd2287cf"), "S92000003", "NHS ORKNEY", "TBS0420" },
-                    { new Guid("8d22fbaf-33a5-4060-a61a-abec1153390d"), "S92000003", "NHS GRAMPIAN", "TBS0415" }
-                });
 
             migrationBuilder.UpdateData(
                 table: "PHEC",
@@ -2933,8 +2924,50 @@ namespace ntbs_service.Migrations
                 table: "TbService",
                 keyColumn: "Code",
                 keyValue: "TBS0409",
-                columns: new[] { "PHECCode", "ServiceAdGroup" },
-                values: new object[] { null, "Global.NIS.NTBS.Service_PrinceCharles" });
+                column: "ServiceAdGroup",
+                value: "Global.NIS.NTBS.Service_PrinceCharles");
+
+            migrationBuilder.InsertData(
+                table: "TbService",
+                columns: new[] { "Code", "Name", "PHECCode", "ServiceAdGroup" },
+                values: new object[,]
+                {
+                    { "TBS0421", "NHS Shetland", "PHECSCOT", null },
+                    { "TBS0420", "NHS Orkney", "PHECSCOT", null },
+                    { "TBS0419", "NHS Lothian", "PHECSCOT", null },
+                    { "TBS0418", "NHS Lanarkshire", "PHECSCOT", null },
+                    { "TBS0417", "NHS Highland", "PHECSCOT", null },
+                    { "TBS0416", "NHS Greater Glasgow and Clyde", "PHECSCOT", null },
+                    { "TBS0410", "NHS Ayrshire and Arran", "PHECSCOT", null },
+                    { "TBS0414", "NHS Forth Valley", "PHECSCOT", null },
+                    { "TBS0413", "NHS Fife", "PHECSCOT", null },
+                    { "TBS0412", "NHS Dumfries and Galloway", "PHECSCOT", null },
+                    { "TBS0411", "NHS Borders", "PHECSCOT", null },
+                    { "TBS0422", "NHS Tayside", "PHECSCOT", null },
+                    { "TBS0415", "NHS Grampian", "PHECSCOT", null },
+                    { "TBS0423", "NHS Western Isles", "PHECSCOT", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Hospital",
+                columns: new[] { "HospitalId", "CountryCode", "Name", "TBServiceCode" },
+                values: new object[,]
+                {
+                    { new Guid("b140f9a6-c080-4fed-a992-ac7dd71e20dc"), "S92000003", "NHS AYRSHIRE AND ARRAN", "TBS0410" },
+                    { new Guid("af410a50-e52c-4fa3-8a07-c0eb63f5272f"), "S92000003", "NHS BORDERS", "TBS0411" },
+                    { new Guid("b7e758b3-2cdd-436c-9834-24263f901b8a"), "S92000003", "NHS DUMFRIES AND GALLOWAY", "TBS0412" },
+                    { new Guid("8ae267ca-0751-4b82-b37f-2bc95ac06672"), "S92000003", "NHS FIFE", "TBS0413" },
+                    { new Guid("d4042531-c128-4b28-be30-394a487f3d2f"), "S92000003", "NHS FORTH VALLEY", "TBS0414" },
+                    { new Guid("8d22fbaf-33a5-4060-a61a-abec1153390d"), "S92000003", "NHS GRAMPIAN", "TBS0415" },
+                    { new Guid("83ab54b0-8fd8-46d9-9007-d641d575a4ac"), "S92000003", "NHS GREATER GLASGOW AND CLYDE", "TBS0416" },
+                    { new Guid("d6dd3782-f4c3-4192-a99a-bbfd351d1a66"), "S92000003", "NHS HIGHLAND", "TBS0417" },
+                    { new Guid("6414552c-64a4-4309-aec5-d6c6d55b2144"), "S92000003", "NHS LANARKSHIRE", "TBS0418" },
+                    { new Guid("55cd6665-0b69-4a2d-b8a0-26db6398248b"), "S92000003", "NHS LOTHIAN", "TBS0419" },
+                    { new Guid("44ead93f-6b3e-4873-9c4b-b590dd2287cf"), "S92000003", "NHS ORKNEY", "TBS0420" },
+                    { new Guid("7d77c176-c394-4f85-880e-1b76dca15c19"), "S92000003", "NHS SHETLAND", "TBS0421" },
+                    { new Guid("2d0e397a-0e17-46fc-8fd5-16101c1cc978"), "S92000003", "NHS TAYSIDE", "TBS0422" },
+                    { new Guid("8e0bca35-8ae9-49d3-b86b-0d5eda72037f"), "S92000003", "NHS WESTERN ISLES", "TBS0423" }
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -3008,6 +3041,84 @@ namespace ntbs_service.Migrations
                 table: "Hospital",
                 keyColumn: "HospitalId",
                 keyValue: new Guid("d6dd3782-f4c3-4192-a99a-bbfd351d1a66"));
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0410");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0411");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0412");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0413");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0414");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0415");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0416");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0417");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0418");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0419");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0420");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0421");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0422");
+
+            migrationBuilder.DeleteData(
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS0423");
+
+            migrationBuilder.DropColumn(
+                name: "CaseManagerTbServiceString",
+                table: "Alert");
+
+            migrationBuilder.DropColumn(
+                name: "SpecimenId",
+                table: "Alert");
 
             migrationBuilder.UpdateData(
                 table: "Hospital",
@@ -5913,8 +6024,8 @@ namespace ntbs_service.Migrations
                 table: "TbService",
                 keyColumn: "Code",
                 keyValue: "TBS0409",
-                columns: new[] { "PHECCode", "ServiceAdGroup" },
-                values: new object[] { "PHECWAL", null });
+                column: "ServiceAdGroup",
+                value: null);
         }
     }
 }

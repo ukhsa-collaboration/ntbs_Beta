@@ -407,4 +407,18 @@ TBS0405,Bronglais General Hospital,PHECWAL,Global.NIS.NTBS.Service_Bronglais
 TBS0406,Cardigan & District Memorial Hospital,PHECWAL,Global.NIS.NTBS.Service_Cardigan
 TBS0407,Flint Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Flint
 TBS0408,Barry Hospital,PHECWAL,Global.NIS.NTBS.Service_Barry
-TBS0409,Prince Charles Hospital,,Global.NIS.NTBS.Service_PrinceCharles
+TBS0409,Prince Charles Hospital,PHECWAL,Global.NIS.NTBS.Service_PrinceCharles
+TBS0410,NHS Ayrshire and Arran,PHECSCOT,
+TBS0411,NHS Borders,PHECSCOT,
+TBS0412,NHS Dumfries and Galloway,PHECSCOT,
+TBS0413,NHS Fife,PHECSCOT,
+TBS0414,NHS Forth Valley,PHECSCOT,
+TBS0415,NHS Grampian,PHECSCOT,
+TBS0416,NHS Greater Glasgow and Clyde,PHECSCOT,
+TBS0417,NHS Highland,PHECSCOT,
+TBS0418,NHS Lanarkshire,PHECSCOT,
+TBS0419,NHS Lothian,PHECSCOT,
+TBS0420,NHS Orkney,PHECSCOT,
+TBS0421,NHS Shetland,PHECSCOT,
+TBS0422,NHS Tayside,PHECSCOT,
+TBS0423,NHS Western Isles,PHECSCOT,

@@ -11,7 +11,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20200128161504_UpdateReferenceDataForAdGroups")]
+    [Migration("20200129094326_UpdateReferenceDataForAdGroups")]
     partial class UpdateReferenceDataForAdGroups
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -10292,6 +10292,8 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Code");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("PHECCode");
 
                     b.HasIndex("ServiceAdGroup")
@@ -13161,7 +13163,92 @@ namespace ntbs_service.Migrations
                         {
                             Code = "TBS0409",
                             Name = "Prince Charles Hospital",
+                            PHECCode = "PHECWAL",
                             ServiceAdGroup = "Global.NIS.NTBS.Service_PrinceCharles"
+                        },
+                        new
+                        {
+                            Code = "TBS0410",
+                            Name = "NHS Ayrshire and Arran",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0411",
+                            Name = "NHS Borders",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0412",
+                            Name = "NHS Dumfries and Galloway",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0413",
+                            Name = "NHS Fife",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0414",
+                            Name = "NHS Forth Valley",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0415",
+                            Name = "NHS Grampian",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0416",
+                            Name = "NHS Greater Glasgow and Clyde",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0417",
+                            Name = "NHS Highland",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0418",
+                            Name = "NHS Lanarkshire",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0419",
+                            Name = "NHS Lothian",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0420",
+                            Name = "NHS Orkney",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0421",
+                            Name = "NHS Shetland",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0422",
+                            Name = "NHS Tayside",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0423",
+                            Name = "NHS Western Isles",
+                            PHECCode = "PHECSCOT"
                         });
                 });
 
@@ -13315,6 +13402,16 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(200);
 
                     b.HasDiscriminator().HasValue("TransferRejected");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.UnmatchedLabResultAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.Property<string>("SpecimenId")
+                        .HasMaxLength(50);
+
+                    b.HasDiscriminator().HasValue("UnmatchedLabResult");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
