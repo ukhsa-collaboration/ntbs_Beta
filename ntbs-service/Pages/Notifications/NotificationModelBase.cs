@@ -26,8 +26,6 @@ namespace ntbs_service.Pages.Notifications
             AuthorizationService = authorizationService;
             NotificationRepository = notificationRepository;
         }
-
-        protected NotificationGroup Group;
         public int NumberOfLinkedNotifications { get; set; }
 
         public Notification Notification { get; set; }
@@ -53,15 +51,15 @@ namespace ntbs_service.Pages.Notifications
         protected async Task<bool> TryGetLinkedNotifications()
         {
             await GetLinkedNotifications();
-            return Group != null;
+            return Notification.Group != null;
         }
 
         protected async Task GetLinkedNotifications()
         {
-            if (Group == null)
+            if (Notification.Group == null)
             {
-                Group = await GetNotificationGroupAsync();
-                NumberOfLinkedNotifications = Group?.Notifications.Count - 1 ?? 0;
+                Notification.Group = await GetNotificationGroupAsync();
+                NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
         }
 
