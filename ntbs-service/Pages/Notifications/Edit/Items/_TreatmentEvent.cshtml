@@ -133,7 +133,7 @@
                                                     ref="selectField"
                                                     nhs-select-type="@outcomeTypeSelectErrorState"
                                                     asp-for="SelectedTreatmentOutcomeType"
-                                                    asp-items="Html.GetEnumSelectList<TreatmentOutcomeType>()"
+                                                    asp-items="Html.GetEnumSelectList<TreatmentOutcomeType>().OrderBy(t => t.Text)"
                                                     v-on:change="validate">
                                                 <option value="">Please select</option>
                                             </select>

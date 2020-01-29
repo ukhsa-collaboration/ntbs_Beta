@@ -15,6 +15,8 @@ namespace ntbs_service.Models.Enums
         [Display(Name = "Not evaluated")]
         NotEvaluated,
         [Display(Name = "Treatment stopped")]
-        TreatmentStopped
+        TreatmentStopped,
+        [Display(Name = "Failed")]
+        Failed
     }
 }
