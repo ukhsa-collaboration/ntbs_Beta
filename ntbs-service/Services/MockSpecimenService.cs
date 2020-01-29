@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
@@ -148,6 +149,11 @@ namespace ntbs_service.Services
             }
 
             return await Task.FromResult((IEnumerable<UnmatchedSpecimen>)specimens);
+        }
+
+        public Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync()
+        {
+            return Task.FromResult((IEnumerable<SpecimenMatchPairing>)new List<SpecimenMatchPairing>());
         }
 
         public Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
