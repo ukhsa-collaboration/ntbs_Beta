@@ -69,7 +69,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? MDRTreatmentStartDate { get; set; }
         
         [Display(Name="Notes")]
-        [MaxLength(500)]
+        [MaxLength(1000)]
         [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine, 
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         public string Notes { get; set; }

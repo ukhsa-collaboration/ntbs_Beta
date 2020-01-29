@@ -226,7 +226,7 @@ namespace ntbs_service.DataAccess
                         .HasConversion(hivStatusEnumConverter)
                         .HasMaxLength(EnumMaxLength);
                     e.Property(c => c.Notes)
-                        .HasMaxLength(500);
+                        .HasMaxLength(1000);
                     e.ToTable("ClinicalDetails");
                 });
 

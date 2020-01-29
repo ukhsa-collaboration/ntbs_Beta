@@ -13429,7 +13429,7 @@ namespace ntbs_service.Migrations
                             b1.Property<DateTime?>("MDRTreatmentStartDate");
 
                             b1.Property<string>("Notes")
-                                .HasMaxLength(500);
+                                .HasMaxLength(1000);
 
                             b1.Property<DateTime?>("SymptomStartDate");
 
