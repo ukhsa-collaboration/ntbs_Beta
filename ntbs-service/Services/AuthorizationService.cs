@@ -40,22 +40,15 @@ namespace ntbs_service.Services
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user)
         {
-            List<Task> tasks = new List<Task>();
-
-            async Task SetPadlockForBanner(ClaimsPrincipal u, NotificationBannerModel bannerModel)
+            async Task SetPadlockForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
                 bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
             }
 
-            notificationBanners.ForEach(n =>
-            {
-                if (n.NotificationStatus != NotificationStatus.Legacy)
-                {
-                    tasks.Add(SetPadlockForBanner(user, n));
-                }
-            });
-
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(
+                notificationBanners
+                    .Where(n => n.NotificationStatus != NotificationStatus.Legacy)
+                    .Select(n => SetPadlockForBannerAsync(user, n)));
         }
 
         public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
