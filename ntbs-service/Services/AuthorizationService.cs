@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MoreLinq;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -14,7 +15,7 @@ namespace ntbs_service.Services
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
-        void SetFullAccessOnNotificationBanners(
+        Task SetFullAccessOnNotificationBannersAsync(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user);
     }
@@ -35,17 +36,19 @@ namespace ntbs_service.Services
             return userTbServiceCodes.Contains(alert.TbServiceCode);
         }
 
-        public void SetFullAccessOnNotificationBanners(
+        public async Task SetFullAccessOnNotificationBannersAsync(
             IEnumerable<NotificationBannerModel> notificationBanners,
             ClaimsPrincipal user)
         {
-            notificationBanners.ToList().ForEach(async n =>
+            async Task SetPadlockForBannerAsync(ClaimsPrincipal u, NotificationBannerModel bannerModel)
             {
-                if(n.NotificationStatus != NotificationStatus.Legacy)
-                {
-                    n.ShowPadlock = await CanEditBannerModelAsync(user, n);
-                }
-            });
+                bannerModel.ShowPadlock = !(await CanEditBannerModelAsync(u, bannerModel));
+            }
+
+            await Task.WhenAll(
+                notificationBanners
+                    .Where(n => n.NotificationStatus != NotificationStatus.Legacy)
+                    .Select(n => SetPadlockForBannerAsync(user, n)));
         }
 
         public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
@@ -69,34 +72,35 @@ namespace ntbs_service.Services
             return PermissionLevel.None;
         }
         
-        private async Task<bool> CanEditBannerModelAsync(ClaimsPrincipal user,
+        private async Task<bool> CanEditBannerModelAsync(
+            ClaimsPrincipal user,
             NotificationBannerModel notificationBannerModel)
         {
             if (_userPermissionsFilter == null)
             {
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
-            if (_userPermissionsFilter.Type == UserType.NationalTeam)
-            {
-                return true;
-            }
-            if (_userPermissionsFilter.Type == UserType.PheUser)
-            {
-                var allowedCodes = _userPermissionsFilter.IncludedPHECCodes;
-                return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
-                       allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
-            }
-            if (_userPermissionsFilter.Type == UserType.NhsUser)
-            {
-                return _userPermissionsFilter.IncludedTBServiceCodes.Contains(notificationBannerModel.TbServiceCode);
-            }
-            return false;
             
+            switch (_userPermissionsFilter.Type)
+            {
+                case UserType.NationalTeam:
+                    return true;
+                case UserType.PheUser:
+                {
+                    var allowedCodes = _userPermissionsFilter.IncludedPHECCodes;
+                    return allowedCodes.Contains(notificationBannerModel.TbServicePHECCode) ||
+                           allowedCodes.Contains(notificationBannerModel.LocationPHECCode);
+                }
+                case UserType.NhsUser:
+                    return _userPermissionsFilter.IncludedTBServiceCodes.Contains(notificationBannerModel.TbServiceCode);
+                default:
+                    return false;
+            }
         }
         
         private bool UserHasDirectRelationToLinkedNotification(IEnumerable<Notification> linkedNotifications)
         {
-            return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x == true);
+            return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x);
         }
 
         private bool UserHasDirectRelationToNotification(Notification notification)
@@ -133,7 +137,7 @@ namespace ntbs_service.Services
             }
             else if (_userPermissionsFilter.Type == UserType.PheUser)
             {
-                // Having a method in LINQ clause breaks IQuaryable abstraction. We have to use inline expression over methods
+                // Having a method in LINQ clause breaks IQueryable abstraction. We have to use inline expression over methods
                 notifications = notifications.Where(n => 
                     (
                         n.Episode.TBService != null && 

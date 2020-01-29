@@ -90,7 +90,7 @@ namespace ntbs_service.Pages.Search
             var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder(_referenceDataRepository));
 
             var (notificationsToDisplay, count) = await SearchAsync(ntbsFilteredDraftsBuilder, ntbsFilteredNonDraftsBuilder, legacyFilteredSearchBuilder);
-            _authorizationService.SetFullAccessOnNotificationBanners(notificationsToDisplay, User);
+            await _authorizationService.SetFullAccessOnNotificationBannersAsync(notificationsToDisplay, User);
             SearchResults = new PaginatedList<NotificationBannerModel>(notificationsToDisplay, count, PaginationParameters);
             var (nextNtbsOffset, nextLegacyOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
             SetPaginationDetails(nextNtbsOffset, nextLegacyOffset, previousNtbsOffset, previousLegacyOffset, ntbsOffset, legacyOffset);

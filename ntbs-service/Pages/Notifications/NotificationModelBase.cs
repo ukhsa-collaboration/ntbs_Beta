@@ -45,7 +45,7 @@ namespace ntbs_service.Pages.Notifications
         protected async Task AuthorizeAndSetBannerAsync()
         {
             PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification);
-            NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel == PermissionLevel.Edit);
+            NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);
         }
 
         protected async Task<bool> TryGetLinkedNotifications()
