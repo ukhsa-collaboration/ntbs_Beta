@@ -10348,7 +10348,7 @@ namespace ntbs_service.Migrations
                             Code = "TBS0007",
                             Name = "Ashford & St Peter's Hospital (Chertsey)",
                             PHECCode = "E45000019",
-                            ServiceAdGroup = "Global.NIS.NTBS.Service_Ashford"
+                            ServiceAdGroup = "Global.NIS.NTBS.Service_AshfordStPeter"
                         },
                         new
                         {
@@ -13161,7 +13161,92 @@ namespace ntbs_service.Migrations
                         {
                             Code = "TBS0409",
                             Name = "Prince Charles Hospital",
+                            PHECCode = "PHECWAL",
                             ServiceAdGroup = "Global.NIS.NTBS.Service_PrinceCharles"
+                        },
+                        new
+                        {
+                            Code = "TBS0410",
+                            Name = "NHS Ayrshire and Arran",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0411",
+                            Name = "NHS Borders",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0412",
+                            Name = "NHS Dumfries and Galloway",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0413",
+                            Name = "NHS Fife",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0414",
+                            Name = "NHS Forth Valley",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0415",
+                            Name = "NHS Grampian",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0416",
+                            Name = "NHS Greater Glasgow and Clyde",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0417",
+                            Name = "NHS Highland",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0418",
+                            Name = "NHS Lanarkshire",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0419",
+                            Name = "NHS Lothian",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0420",
+                            Name = "NHS Orkney",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0421",
+                            Name = "NHS Shetland",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0422",
+                            Name = "NHS Tayside",
+                            PHECCode = "PHECSCOT"
+                        },
+                        new
+                        {
+                            Code = "TBS0423",
+                            Name = "NHS Western Isles",
+                            PHECCode = "PHECSCOT"
                         });
                 });
 
