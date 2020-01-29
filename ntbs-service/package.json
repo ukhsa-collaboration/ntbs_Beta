@@ -22,7 +22,7 @@
     "vue": "2.6.11"
   },
   "devDependencies": {
-    "@types/node": "13.5.0",
+    "@types/node": "13.5.1",
     "@types/webpack-env": "1.15.0",
     "aspnet-webpack": "3.0.0",
     "css-loader": "3.4.2",
