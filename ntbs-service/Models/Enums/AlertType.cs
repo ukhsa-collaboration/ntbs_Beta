@@ -13,7 +13,10 @@ namespace ntbs_service.Models.Enums
         TransferRequest,
         [Display(Name = "Transfer rejected")]
         TransferRejected,
-        DataQualityIssue,
+        DataQualityDraft,
+        DataQualityBirthCountry,
+        DataQualityClinicalDates,
+        DataQualityCluster,
         SocialContext,
         [Display(Name = "Test Alert")]
         Test

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 
@@ -303,7 +304,7 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 235, Name = "United Kingdom", IsoCode = Models.Countries.UkCode },
                 new Country { CountryId = 236, Name = "United States", IsoCode = "US" },
                 new Country { CountryId = 237, Name = "United States Minor Outlying Islands", IsoCode = "UM" },
-                new Country { CountryId = 238, Name = "Unknown", IsoCode = Models.Countries.UnknownCode },
+                new Country { CountryId = Models.Countries.UnknownId, Name = "Unknown", IsoCode = Models.Countries.UnknownCode },
                 new Country { CountryId = 239, Name = "Uruguay", IsoCode = "UY" },
                 new Country { CountryId = 240, Name = "Uzbekistan", IsoCode = "UZ" },
                 new Country { CountryId = 241, Name = "Vanuatu", IsoCode = "VU" },
