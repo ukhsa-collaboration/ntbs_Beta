@@ -28,10 +28,13 @@ namespace ntbs_service.Models
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
         public bool ShowLink = false;
-        public bool FullAccess;
+        public bool ShowPadlock;
         public string RedirectPath;
 
-        public NotificationBannerModel(Notification notification, bool fullAccess = true, bool showLink = false) {
+        // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
+        // implemented across the codebase due to there being no visual difference between no permission level and readonly
+        // permission on notification banner models
+        public NotificationBannerModel(Notification notification, bool showPadlock = true, bool showLink = false) {
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
@@ -50,7 +53,7 @@ namespace ntbs_service.Models
             NotificationDate = notification.FormattedNotificationDate;
             Source = "ntbs";
             ShowLink = showLink;
-            FullAccess = fullAccess;
+            ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
         }
         

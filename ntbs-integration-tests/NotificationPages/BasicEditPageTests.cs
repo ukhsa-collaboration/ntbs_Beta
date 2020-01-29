@@ -38,7 +38,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForNhsUserWithPermission(string subPath)
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<TestNhsUserService>()
+            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string subPath)
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<TestNhsUserService>()
+            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -70,7 +70,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string subPath)
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<TestPheUserService>()
+            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -86,7 +86,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string subPath)
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<TestPheUserService>()
+            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -102,7 +102,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string subPath)
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<TestPheUserService>()
+            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
@@ -118,7 +118,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string subPath)
         {
             // Arrange
-            using (var client = Factory.WithMockUserService<TestPheUserService>()
+            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {

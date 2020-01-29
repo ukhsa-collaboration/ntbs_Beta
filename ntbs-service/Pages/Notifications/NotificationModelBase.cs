@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
@@ -25,16 +26,13 @@ namespace ntbs_service.Pages.Notifications
             AuthorizationService = authorizationService;
             NotificationRepository = notificationRepository;
         }
-
-        protected NotificationGroup Group;
         public int NumberOfLinkedNotifications { get; set; }
 
         public Notification Notification { get; set; }
         public NotificationBannerModel NotificationBannerModel { get; set; }
         public IList<Alert> Alerts { get; set; }
 
-        [BindProperty]
-        public bool HasEditPermission { get; set; }
+        public PermissionLevel PermissionLevel { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
@@ -46,22 +44,22 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            HasEditPermission = await AuthorizationService.CanEditNotificationAsync(User, Notification);
-            NotificationBannerModel = new NotificationBannerModel(Notification, HasEditPermission);
+            PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification);
+            NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel == PermissionLevel.Edit);
         }
 
         protected async Task<bool> TryGetLinkedNotifications()
         {
             await GetLinkedNotifications();
-            return Group != null;
+            return Notification.Group != null;
         }
 
         protected async Task GetLinkedNotifications()
         {
-            if (Group == null)
+            if (Notification.Group == null)
             {
-                Group = await GetNotificationGroupAsync();
-                NumberOfLinkedNotifications = Group?.Notifications.Count - 1 ?? 0;
+                Notification.Group = await GetNotificationGroupAsync();
+                NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
         }
 

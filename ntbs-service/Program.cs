@@ -73,7 +73,7 @@ namespace ntbs_service
             catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred migrating the DB.");
-                throw ex;
+                throw;
             }
         }
 
@@ -87,14 +87,14 @@ namespace ntbs_service
             catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred migrating the Audit DB.");
-                throw ex;
+                throw;
             }
         }
 
         private static async Task CreateMigrationDbTablesAsync(IServiceProvider services)
         {
-            var _notificationImportHelper = services.GetRequiredService<INotificationImportHelper>();
-            await _notificationImportHelper.CreateTableIfNotExists();
+            var notificationImportHelper = services.GetRequiredService<INotificationImportHelper>();
+            await notificationImportHelper.CreateTableIfNotExists();
         }
     }
 }

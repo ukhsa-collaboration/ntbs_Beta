@@ -10290,6 +10290,8 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Code");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("PHECCode");
 
                     b.HasIndex("ServiceAdGroup")
@@ -13313,6 +13315,16 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(200);
 
                     b.HasDiscriminator().HasValue("TransferRejected");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.UnmatchedLabResultAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.Property<string>("SpecimenId")
+                        .HasMaxLength(50);
+
+                    b.HasDiscriminator().HasValue("UnmatchedLabResult");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>

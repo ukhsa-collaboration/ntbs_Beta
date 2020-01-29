@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -84,7 +85,8 @@ namespace ntbs_service.Pages.LabResults
                     "number was either previously matched, or unavailable to the user.");
             }
 
-            await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, User.Identity.Name);
+            var userName = User.FindFirstValue(ClaimTypes.Email);
+            await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, userName);
             AddTempDataForSuccessfulMessage(notificationId, laboratoryReferenceNumber);
 
             // Explicit path to the current page to avoid persisting any 'scroll to id' path values
@@ -114,7 +116,7 @@ namespace ntbs_service.Pages.LabResults
                 return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationDoesNotExist});
             }
 
-            if (!await _authorizationService.CanEditNotificationAsync(User, notification))
+            if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
             {
                 return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationMatchNoPermission});
             }
@@ -182,7 +184,7 @@ namespace ntbs_service.Pages.LabResults
                     "When performing a specimen match via `/LabResults`, a candidate match was not found in the ntbs database.");
             }
 
-            if (!await _authorizationService.CanEditNotificationAsync(User, notification))
+            if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
             {
                 ModelState.AddModelError(candidateMatchModelStateKey,
                     ValidationMessages.LabResultNotificationMatchNoPermission);
@@ -205,7 +207,7 @@ namespace ntbs_service.Pages.LabResults
                 ModelState.AddModelError(manualMatchModelStateKey,
                     ValidationMessages.LabResultNotificationDoesNotExist);
             }
-            else if (!await _authorizationService.CanEditNotificationAsync(User, notification))
+            else if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
             {
                 ModelState.AddModelError(manualMatchModelStateKey,
                     ValidationMessages.LabResultNotificationMatchNoPermission);
@@ -226,7 +228,8 @@ namespace ntbs_service.Pages.LabResults
                 NtbsPostcode = notification.PatientDetails.Postcode,
                 NtbsBirthDate = notification.PatientDetails.Dob,
                 NtbsNhsNumber = notification.FormattedNhsNumber,
-                NtbsSex = notification.SexLabel
+                NtbsSex = notification.SexLabel,
+                TbServiceName = notification.TBServiceName
             };
         }
     }

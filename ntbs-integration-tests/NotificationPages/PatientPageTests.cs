@@ -24,7 +24,7 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.PATIENT_GROUPED_NOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
                     NotificationStatus = NotificationStatus.Notified,
-                    GroupId = Utilities.NOTIFICATION_GROUP_ID,
+                    GroupId = Utilities.PATIENT_NOTIFICATION_GROUP_ID,
                     PatientDetails = new PatientDetails
                     {
                         NhsNumberNotKnown = false,
@@ -35,7 +35,7 @@ namespace ntbs_integration_tests.NotificationPages
                 {
                     NotificationId = Utilities.PATIENT_GROUPED_DENOTIFIED_NOTIFICATION_SHARED_NHS_NUMBER,
                     NotificationStatus = NotificationStatus.Denotified,
-                    GroupId = Utilities.NOTIFICATION_GROUP_ID,
+                    GroupId = Utilities.PATIENT_NOTIFICATION_GROUP_ID,
                     PatientDetails = new PatientDetails
                     {
                         NhsNumberNotKnown = false,

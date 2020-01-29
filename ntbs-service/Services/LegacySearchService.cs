@@ -112,7 +112,7 @@ namespace ntbs_service.Services
                 Postcode = (result.Postcode as string).FormatStringToPostcodeFormat(),
                 NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
-                FullAccess = true
+                ShowPadlock = true
             };
 
             return notificationBannerModel;

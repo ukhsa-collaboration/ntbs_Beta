@@ -4,8 +4,11 @@
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Hospital Details </h3>
-    <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditEpisode)"
-       class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    {
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditEpisode)"
+        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+    }
 </div>
 <div class="notification-overview-details-container">
     <nhs-grid-row classes="notification-overview-details">

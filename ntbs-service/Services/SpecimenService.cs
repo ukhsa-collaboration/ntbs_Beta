@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using ntbs_service.DataAccess;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
@@ -20,6 +22,8 @@ namespace ntbs_service.Services
 
         Task<IEnumerable<UnmatchedSpecimen>> GetUnmatchedSpecimensDetailsForPhecsAsync(
             IEnumerable<string> phecCodes);
+
+        Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync();
         
         Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
 
@@ -31,12 +35,17 @@ namespace ntbs_service.Services
         private readonly string _reportingDbConnectionString;
         private readonly string _specimenMatchingDbConnectionString;
         private readonly IAuditService _auditService;
+        private readonly IAlertRepository _alertRepository;
        
-        public SpecimenService(IConfiguration configuration, IAuditService auditService)
+        public SpecimenService(
+            IConfiguration configuration, 
+            IAuditService auditService, 
+            IAlertRepository alertRepository)
         {
             _reportingDbConnectionString = configuration.GetConnectionString("reporting");
             _specimenMatchingDbConnectionString = configuration.GetConnectionString("specimenMatching");
             _auditService = auditService;
+            _alertRepository = alertRepository;
         }
 
         public async Task<IEnumerable<MatchedSpecimen>> GetMatchedSpecimenDetailsForNotificationAsync(
@@ -74,6 +83,16 @@ namespace ntbs_service.Services
             var formattedPhecCodes = SpecimenQueryHelper.FormatEnumerableParams(phecCodes);
             var unmatchedQueryResultRows = await ExecuteUnmatchedSpecimenQuery(query, formattedPhecCodes);
             return GroupPotentialMatchesByUnmatchedSpecimen(unmatchedQueryResultRows);
+        }
+
+        public async Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync()
+        {
+            var query = SpecimenQueryHelper.GetAllSpecimenPotentialMatchesQuery;
+            using (var connection = new SqlConnection(_reportingDbConnectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync<SpecimenMatchPairing>(query);
+            }
         }
 
         private async Task<IEnumerable<UnmatchedQueryResultRow>> ExecuteUnmatchedSpecimenQuery(
@@ -147,8 +166,9 @@ namespace ntbs_service.Services
                     new {referenceLaboratoryNumber, notificationId},
                     commandType: CommandType.StoredProcedure);
             }
-
-            await _auditService.AuditUnmatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
+            
+            await _auditService.AuditMatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
+            await _alertRepository.CloseUnmatchedLabResultAlertsForSpecimenIdAsync(referenceLaboratoryNumber);
         }
 
         private class UnmatchedQueryResultRow

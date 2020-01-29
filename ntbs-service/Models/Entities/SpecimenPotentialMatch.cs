@@ -32,6 +32,9 @@ namespace ntbs_service.Models.Entities
         
         public string ConfidenceLevel { get; set; }
 
+        [Display(Name = "TB Service")]
+        public string TbServiceName { get; set; }
+
         public string FormattedDob => NtbsBirthDate.ConvertToString();
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string FormattedNhsNumber => NtbsNhsNumber.FormatStringToNhsNumberFormat();

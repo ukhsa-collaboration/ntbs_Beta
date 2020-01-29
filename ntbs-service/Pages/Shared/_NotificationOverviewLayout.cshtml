@@ -7,7 +7,7 @@
     Layout = "./_NotificationLayout.cshtml";
     var currentPage = (string)ViewData["CurrentPage"];
     var isLinkedNotificationPage = currentPage == NotificationSubPaths.LinkedNotifications;
-    var mainGridWidth = isLinkedNotificationPage ? Full : ThreeQuarters;
+    var mainGridWidth = isLinkedNotificationPage || Model.PermissionLevel == PermissionLevel.ReadOnly ? Full : ThreeQuarters;
 
     var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
 
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </nhs-grid-column>
-        @if (!isLinkedNotificationPage && Model.HasEditPermission)
+        @if (!isLinkedNotificationPage && Model.PermissionLevel == PermissionLevel.Edit)
         {
             <partial name="./_SideMenu" model="@Model" />
         }
