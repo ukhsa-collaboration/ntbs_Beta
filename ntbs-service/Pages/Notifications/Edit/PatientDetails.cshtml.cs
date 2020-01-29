@@ -168,9 +168,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.GetPropertyValidationResult<PatientDetails>(key, value, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year);
+            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year, notification.IsLegacy);
         }
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)

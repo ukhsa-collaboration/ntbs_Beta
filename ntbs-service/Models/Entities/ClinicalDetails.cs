@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFAuditer;
@@ -17,34 +16,34 @@ namespace ntbs_service.Models.Entities
         public bool? IsSymptomatic { get; set; }
 
         [Display(Name = "Symptom onset date")]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(SymptomStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? SymptomStartDate { get; set; }
 
         [Display(Name = "Presentation to any health service")]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(FirstPresentationDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? FirstPresentationDate { get; set; }
 
         [Display(Name = "Presentation to TB service")]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(TBServicePresentationDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TBServicePresentationDate { get; set; }
 
         [Display(Name = "Diagnosis date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"AfterDob(DiagnosisDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         public DateTime? DiagnosisDate { get; set; }
 
         [Display(Name = "Treatment start date")]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(TreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TreatmentStartDate { get; set; }
 
         [Display(Name = "Date of death")]
         [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.FieldRequired)]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(DeathDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? DeathDate { get; set; }
 
@@ -64,7 +63,7 @@ namespace ntbs_service.Models.Entities
         public bool? IsMDRTreatment { get; set; }
 
         [Display(Name = "RR/MDR/XDR treatment date")]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? MDRTreatmentStartDate { get; set; }
         
@@ -84,7 +83,7 @@ namespace ntbs_service.Models.Entities
         public Status? HomeVisitCarriedOut { get; set; }
         
         [Display(Name = "First home visit date")]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"AfterDob(FirstHomeVisitDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? FirstHomeVisitDate { get; set; } 
         

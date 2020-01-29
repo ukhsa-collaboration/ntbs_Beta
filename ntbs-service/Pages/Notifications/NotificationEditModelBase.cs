@@ -134,10 +134,10 @@ namespace ntbs_service.Pages.Notifications
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
 
-        protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
+        protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T subModel) where T : ModelBase
         {
             await SetNotificationProperties(isBeingSubmitted);
-            ownedModel.SetValidationContext(Notification, isBeingSubmitted);
+            subModel.SetValidationContext(Notification, isBeingSubmitted);
         }
 
         protected async Task SetNotificationProperties(bool isBeingSubmitted)

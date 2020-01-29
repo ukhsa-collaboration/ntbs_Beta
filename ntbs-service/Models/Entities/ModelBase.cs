@@ -8,7 +8,8 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         public bool ShouldValidateFull { get; set; }
 
-        [NotMapped] public bool? IsLegacy { get; set; }
+        [NotMapped]
+        public bool? IsLegacy { get; set; }
 
         /* 
         * Full Validation is done if the form is being submitted or already been submitted.
