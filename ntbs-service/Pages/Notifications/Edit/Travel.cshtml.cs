@@ -52,8 +52,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            TravelDetails.SetFullValidation(Notification.NotificationStatus);
-            VisitorDetails.SetFullValidation(Notification.NotificationStatus);
+            TravelDetails.SetValidationContext(Notification);
+            VisitorDetails.SetValidationContext(Notification);
 
             CleanModel();
 

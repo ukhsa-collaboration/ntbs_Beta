@@ -127,7 +127,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.ClearValidationState("PatientDetails.YearOfUkEntry");
             }
 
-            PatientDetails.SetFullValidation(Notification.NotificationStatus);
+            PatientDetails.SetValidationContext(Notification);
             await FindAndSetPostcodeAsync();
 
             ValidationService.TrySetFormattedDate(PatientDetails, "Patient", nameof(PatientDetails.Dob), FormattedDob);
@@ -145,7 +145,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {
-            return await OnGetValidatePostcode<PatientDetails>(_postcodeService, postcode, shouldValidateFull);
+            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var foundPostcode = await _postcodeService.FindPostcode(postcode);
+            var propertyValueTuples = new List<(string, object)>
+            {
+                ("PostcodeToLookup", foundPostcode?.Postcode),
+                ("Postcode", postcode)
+            };
+            return ValidationService.GetMultiplePropertiesValidationResult<PatientDetails>(
+                propertyValueTuples,
+                shouldValidateFull, 
+                notification.IsLegacy);
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)

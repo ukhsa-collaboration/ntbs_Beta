@@ -23,7 +23,7 @@ namespace ntbs_service.Models.Entities
         public string Address { get; set; }
 
         [RequiredIf("PostcodeIsRequired", ErrorMessage =  ValidationMessages.RequiredEnter)]
-        [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
+        [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.NotValid)]
         [Display(Name = "Postcode")]
         public string Postcode { get; set; }
 

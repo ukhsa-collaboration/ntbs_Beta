@@ -56,6 +56,9 @@ namespace ntbs_service.Models.Entities
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
 
+        [NotMapped]
+        public new bool IsLegacy => LTBRID != null || ETSID != null;
+
         #endregion
 
         #region Navigation Properties

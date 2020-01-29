@@ -44,7 +44,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             model.NotificationId = NotificationId;
             model.Dob = Notification.PatientDetails.Dob;
             SetDates(model, modelName);
-            model.SetFullValidation(Notification.NotificationStatus);
+            model.SetValidationContext(Notification);
 
             if (TryValidateModel(model, modelName))
             {

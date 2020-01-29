@@ -140,8 +140,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Add additional field required for date validation
             ClinicalDetails.Dob = Notification.PatientDetails.Dob;
 
-            ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
-            OtherSite?.SetFullValidation(Notification.NotificationStatus);
+            ClinicalDetails.SetValidationContext(Notification);
+            OtherSite?.SetValidationContext(Notification);
 
             // Since notification has other properties which are not populated by this page but have validation rules, 
             // validation of a whole Notification model will result in validation errors.

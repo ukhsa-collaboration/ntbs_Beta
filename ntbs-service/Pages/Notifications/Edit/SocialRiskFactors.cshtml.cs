@@ -28,7 +28,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);
+            SocialRiskFactors.SetValidationContext(Notification);
             if (TryValidateModel(SocialRiskFactors))
             {
                 await Service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);
