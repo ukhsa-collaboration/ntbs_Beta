@@ -34,8 +34,8 @@ namespace ntbs_service.Models.Entities
         public virtual string ActionLink { get; }
         public virtual string Action { get; }
         public virtual bool NotDismissable  { get; }
-        [Display(Name = "Case manager")]
-        public virtual string CaseManagerFullName => CaseManager?.FullName ?? "System";
+        [Display(Name = "Case manager")] 
+        public string CaseManagerFullName => CaseManager?.FullName ?? "";
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "TB Service")]
