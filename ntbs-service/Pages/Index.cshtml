@@ -73,8 +73,11 @@
                                 </a>
                             </nhs-table-item>
                             <nhs-table-item>
-                                @item.CaseManagerFullName
-                                <br />
+                                @if (!string.IsNullOrWhiteSpace(item.CaseManagerFullName))
+                                {
+                                    @item.CaseManagerFullName
+                                    <br/>
+                                }
                                 @item.TbServiceName
                             </nhs-table-item>
                             <nhs-table-item>
