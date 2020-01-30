@@ -46,8 +46,6 @@ namespace ntbs_service.Models.Entities
 
         public Country Country2 { get; set; }
 
-        [RequiredIf("ShouldValidateFull && Country2Id != null",
-            ErrorMessage = ValidationMessages.TravelCountryRequiresDuration)]
         [AssertThat("!ShouldValidateFull || Country2Id != null",
             ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [Range(1, MaxTotalLengthOfStay)]
@@ -67,8 +65,6 @@ namespace ntbs_service.Models.Entities
 
         public Country Country3 { get; set; }
 
-        [RequiredIf("ShouldValidateFull && Country3Id != null",
-            ErrorMessage = ValidationMessages.TravelCountryRequiresDuration)]
         [AssertThat("!ShouldValidateFull || Country3Id != null",
             ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [Range(1, MaxTotalLengthOfStay)]

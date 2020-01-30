@@ -58,5 +58,22 @@ namespace ntbs_service_unit_tests.Models.Entities
             // Assert
             Assert.True(isValid, "Expected details to be valid");
         }
+
+        [Theory, MemberData(nameof(BaseDetails))]
+        public void ProvidingCountriesWithoutDurations_IsValid(ITravelOrVisitorDetails details)
+        {
+            // Arrange
+            var validationResults = new List<ValidationResult>();
+            details.TotalNumberOfCountries = 3;
+            details.Country1Id = 1;
+            details.Country2Id = 2;
+            details.Country3Id = 3;
+    
+            // Act
+            var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
+
+            // Assert
+            Assert.True(isValid, "Expected details to be valid");
+        }
     }
 }
