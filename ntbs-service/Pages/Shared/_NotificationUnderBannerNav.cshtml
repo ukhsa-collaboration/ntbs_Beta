@@ -1,0 +1,34 @@
+﻿@model ntbs_service.Pages.Notifications.NotificationModelBase
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+
+@{
+    var currentPage = (string) ViewData["CurrentPage"];
+    var isLinkedNotificationPage = currentPage == NotificationSubPaths.LinkedNotifications;
+
+    var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
+}
+
+@if (!isDraft)
+{
+    <div class="@(currentPage == NotificationSubPaths.Overview ? "notification-banner-links--current" : "")">
+        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">
+            Notification details
+        </a>
+    </div>
+    <div class="notification-banner-link-separator"> </div>
+}
+@if (Model.NumberOfLinkedNotifications > 0)
+{
+    <div class="@(isLinkedNotificationPage ? "notification-banner-links--current" : "")">
+        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.LinkedNotifications)">
+            Linked Notifications (@Model.NumberOfLinkedNotifications)
+        </a>
+    </div>
+    <div class="notification-banner-link-separator"> </div>
+}
+<div>
+    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">
+        Audit
+    </a>
+</div>

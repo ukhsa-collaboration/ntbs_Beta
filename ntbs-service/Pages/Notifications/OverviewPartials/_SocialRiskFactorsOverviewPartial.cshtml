@@ -4,92 +4,69 @@
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Social risk factors </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditSocialRiskFactors)"
-           class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
 <div class="notification-overview-details-container">
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> At least one social risk factor </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Alcohol misuse </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> History of drug misuse </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Time periods </div>
             <div> @Model.Notification.DrugRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> History of homelessness </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Time periods </div>
             <div> @Model.Notification.HomelessRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> History of imprisonment </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Time periods </div>
             <div> @Model.Notification.ImprisonmentRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Mental health issues </div>
+
+    <br/>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Alcohol misuse </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.MentalHealthStatus </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Smoker </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Mental health issues </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.MentalHealthStatus </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Asylum Seeker </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.AsylumSeekerStatus </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.AsylumSeekerStatus </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Immigration Detainee </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div> @Model.Notification.SocialRiskFactors.ImmigrationDetaineeStatus </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.ImmigrationDetaineeStatus </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>

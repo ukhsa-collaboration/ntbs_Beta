@@ -4,35 +4,44 @@
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> MDR Details </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMDRDetails)"
-        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
 <div class="notification-overview-details-container">
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Exposure to known TB case </div>
             <div class="cell-min-height"> @Model.Notification.MDRDetails.ExposureToKnownCaseStatus </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Relationship to case </div>
             <div class="cell-min-height"> @Model.Notification.MDRDetails.RelationshipToCase </div>
         </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+        
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Contact case in UK </div>
             <div class="cell-min-height"> @Model.Notification.MDRDetails.CaseInUKStatus </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> NTBS ID </div>
-            <div class="cell-min-height"> @Model.Notification.MDRDetails.RelatedNotificationId </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Country of contact </div>
-            <div class="cell-min-height"> @Model.Notification.MDRCaseCountryName </div>
-        </nhs-grid-column>
+        
+        @switch (Model.Notification.MDRDetails.CaseInUKStatus)
+        {
+            case Status.Yes:
+                <nhs-grid-column grid-column-width="OneQuarter">
+                    <div class="notification-details-label"> NTBS ID </div>
+                    <div class="cell-min-height"> @Model.Notification.MDRDetails.RelatedNotificationId </div>
+                </nhs-grid-column>
+                break;
+            case Status.No:
+                <nhs-grid-column grid-column-width="OneQuarter">
+                    <div class="notification-details-label"> Country of contact </div>
+                    <div class="cell-min-height"> @Model.Notification.MDRCaseCountryName </div>
+                </nhs-grid-column>
+                break;
+        }
     </nhs-grid-row>
 </div>

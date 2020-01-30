@@ -20,7 +20,7 @@
             }
         </div>
         <dl class="notification-overview-details-container" id="venue-body-@result.SocialContextVenueId">
-            <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-row>
                 <nhs-grid-column grid-column-width="OneHalf">
                     <dt class="notification-details-label"> Venue Type </dt>
                     <dd class="cell-min-height"> @result.VenueType.FormatCategoryAndName() </dd>
@@ -30,7 +30,7 @@
                     <dd class="cell-min-height"> @result.Frequency </dd>
                 </nhs-grid-column>
             </nhs-grid-row>
-            <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-row>
                 <nhs-grid-column grid-column-width="OneHalf">
                     <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Address) </dt>
                     <dd class="cell-min-height"> @result.Address </dd>
@@ -40,7 +40,7 @@
                     <dd class="cell-min-height"> @result.Postcode </dd>
                 </nhs-grid-column>
             </nhs-grid-row>
-            <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
                     <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
                     <dd class="cell-min-height"> @result.Details </dd>
