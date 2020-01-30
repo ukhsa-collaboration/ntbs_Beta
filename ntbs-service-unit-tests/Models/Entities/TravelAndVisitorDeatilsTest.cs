@@ -44,5 +44,19 @@ namespace ntbs_service_unit_tests.Models.Entities
             Assert.False(isValid, "Expected details to be invalid");
             Assert.Equal(ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired, validationResults.First().ErrorMessage);
         }
+
+        [Theory, MemberData(nameof(BaseDetails))]
+        public void ProvidingTotalNumberOfCountriesAlon_IsValid(ITravelOrVisitorDetails details)
+        {
+            // Arrange
+            var validationResults = new List<ValidationResult>();
+            details.TotalNumberOfCountries = 3;
+    
+            // Act
+            var isValid = Validator.TryValidateObject(details, new ValidationContext(details), validationResults, true);
+
+            // Assert
+            Assert.True(isValid, "Expected details to be valid");
+        }
     }
 }
