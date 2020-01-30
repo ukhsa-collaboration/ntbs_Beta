@@ -25,7 +25,6 @@
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
-        public const string ValidYearRange = "Year must be provided between {1} and {2}";
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
@@ -44,18 +43,16 @@
         #endregion
 
         #region Clinical Details
-        public const string RiskFactorSelection = "At least one field should be selected";
+
         public const string DiseaseSiteIsRequired = "Please choose at least one site of disease";
         public const string ValidTreatmentOptions = "Short course and MDR treatment cannot both be true";
-        public const string ShortTreatmentIsRequired = "Short course treatment cannot be Yes if MDR treatment is Yes";
-        public const string MDRIsRequired = "MDR treatment cannot be Yes if Short course treatment is Yes";
         public const string MDRCantChange = "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk";
         #endregion
 
         #region Test Results
         public const string InvalidTestAndSampleTypeCombination = "{0} does not match test type selected";
         public const string NoTestResult = "Please add a test result or confirm no sample was taken";
-        public const string RemoveTestResultsBeforeSayingNoSample = "Please remove all test results or confirm sample was taken";
+
         #endregion
 
         #region Contact Tracing
@@ -82,8 +79,6 @@
         public const string TravelOrVisitTotalNumberOfCountriesRequired = "Please supply total number of countries";
         public const string TotalNumberOfCountriesVisitedFromGreaterThanInputNumber = "Number of countries entered exceeds total number of countries visited from";
         public const string TotalNumberOfCountriesTravelledToGreaterThanInputNumber = "Number of countries entered exceeds total number of countries travelled to";
-        public const string TravelMostRecentCountryRequired = "Please supply most recent country visited";
-        public const string VisitMostRecentCountryRequired = "Please supply most recent country visited from";
         public const string TravelTotalDurationWithinLimit = "Total duration of travel must not exceed 24 months";
         public const string VisitTotalDurationWithinLimit = "Total duration of visits must not exceed 24 months";
         public const string TravelUniqueCountry = "Multiple visits to same country - record as single period of travel";
@@ -91,8 +86,6 @@
         public const string TravelIsChronological = "Travel must be recorded in chronological order";
         public const string VisitIsChronological = "Visits must be recorded in chronological order";
         public const string TravelOrVisitDurationHasCountry = "Duration cannot be added without a corresponding country";
-        public const string VisitCountryRequiresDuration = "Please supply a duration for visit";
-        public const string TravelCountryRequiresDuration = "Please supply a duration for travel";
         #endregion
 
         #region Immunosuppression
@@ -105,7 +98,7 @@
         #endregion
 
         #region Denotify
-        public const string DenotificationDateAfterNotification = "Date of denotification must be after the date of notification";
+
         public const string DenotificationDateLatestToday = "Date of denotification cannot be later than today";
         public const string DenotificationReasonRequired = "Please supply a reason for denotification";
         public const string DenotificationReasonOtherRequired = "Please supply additional details for the denotification reason";
