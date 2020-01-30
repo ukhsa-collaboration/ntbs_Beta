@@ -5,8 +5,9 @@ namespace ntbs_service.Models.Entities
 {
     public class DataQualityBirthCountryAlert : Alert
     {
-        public override string Action => "Data quality issue - unknown country of birth";
-        public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.EditPatientDetails);
+        public override string Action => "Please review to see if more accurate information available.";
+        public override string ActionLink =>
+            RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.Overview);
 
         public DataQualityBirthCountryAlert()
         {

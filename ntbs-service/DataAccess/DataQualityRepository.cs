@@ -29,7 +29,7 @@ namespace ntbs_service.DataAccess
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityDraftAlerts()
         {
-            return await _context.Notification
+            return await GetBaseNotificationQueryableForAlerts()
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
                 .Where(n => n.CreationDate < DateTime.Now.AddDays(-90))
                 .ToListAsync();
@@ -37,18 +37,18 @@ namespace ntbs_service.DataAccess
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts()
         {
-            return await _context.Notification
+            return await GetBaseNotificationQueryableForAlerts()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.CreationDate < DateTime.Now.AddDays(-45))
+                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-45))
                 .Where(n => n.PatientDetails.CountryId == Countries.UnknownId)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts()
         {
-            return await _context.Notification
+            return await GetBaseNotificationQueryableForAlerts()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.CreationDate < DateTime.Now.AddDays(-45))
+                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-45))
                 .Where(n => n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
                             || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
                             || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
@@ -59,13 +59,19 @@ namespace ntbs_service.DataAccess
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts()
         {
-            return await _context.Notification
+            return await GetBaseNotificationQueryableForAlerts()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.CreationDate < DateTime.Now.AddDays(-45))
+                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-45))
                 .Where(n => n.ClusterId != null 
-                            && n.SocialContextAddresses.IsNullOrEmpty() 
-                            && n.SocialContextVenues.IsNullOrEmpty())
+                            && !n.SocialContextAddresses.Any()
+                            && !n.SocialContextVenues.Any())
                 .ToListAsync();
+        }
+
+        private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
+        {
+            return _context.Notification
+                .Include(n => n.Episode);
         }
     }
 }
