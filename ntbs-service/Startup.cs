@@ -253,7 +253,15 @@ namespace ntbs_service
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-            HangfireJobScheduler.ScheduleRecurringJobs();
+            
+            if (!Env.IsDevelopment())
+            {
+                // Most of the time we don't care about recurring jobs in dev mode.
+                // Having this exclusion is also useful when connecting to non-dev databases for debugging.
+                // as jobs scheduled from (windows) dev machines won't run on linux due to different timezone formats
+                // Comment out this check to work with jobs locally.
+                HangfireJobScheduler.ScheduleRecurringJobs();
+            }
         }
 
         private string GetAdminRoleName()
