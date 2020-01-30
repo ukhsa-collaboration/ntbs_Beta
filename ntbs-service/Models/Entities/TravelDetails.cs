@@ -16,7 +16,6 @@ namespace ntbs_service.Models.Entities
 
         public bool? HasTravel { get; set; }
 
-        [RequiredIf("ShouldValidateFull && HasTravel == true", ErrorMessage = ValidationMessages.TravelOrVisitTotalNumberOfCountriesRequired)]
         [Range(1, 50)]
         [AssertThat("TotalNumberGreaterOrEqualToInputCountries == true", ErrorMessage = ValidationMessages.TotalNumberOfCountriesTravelledToGreaterThanInputNumber)]
         [Display(Name = "total number of countries")]
@@ -24,12 +23,10 @@ namespace ntbs_service.Models.Entities
 
 
         // First country block
-        [RequiredIf("ShouldValidateFull && HasTravel == true", ErrorMessage = ValidationMessages.TravelMostRecentCountryRequired)]
         public int? Country1Id { get; set; }
 
         public virtual Country Country1 { get; set; }
 
-        [RequiredIf("ShouldValidateFull && HasTravel == true", ErrorMessage = ValidationMessages.TravelCountryRequiresDuration)]
         [Range(1, MaxTotalLengthOfStay)]
         [AssertThat("TotalLengthWithinLimit == true", ErrorMessage = ValidationMessages.TravelTotalDurationWithinLimit)]
         [Display(Name = "duration of travel")]
