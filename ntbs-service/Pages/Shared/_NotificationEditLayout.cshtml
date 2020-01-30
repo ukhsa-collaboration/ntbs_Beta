@@ -2,15 +2,14 @@
 
 @{
     Layout = "./_NotificationLayoutWithSideMenu.cshtml";
-    var HiddenPartialData = new ViewDataDictionary(ViewData);
-    HiddenPartialData["id"] = "save-button-hidden";
+    var hiddenPartialData = new ViewDataDictionary(ViewData) {["id"] = "save-button-hidden"};
 }
 
 @section MainFormButton {
     <div hidden>
-        <partial name="Notifications/Edit/_SaveButton" for="Notification" view-data="HiddenPartialData" />
+        <partial name="Notifications/Edit/_SaveButton" for="Notification" view-data="@hiddenPartialData"/>
     </div>
 }
 
 @RenderBody()
-<partial name="Notifications/Edit/_SaveButton" for="Notification" />
+<partial name="Notifications/Edit/_SaveButton" for="Notification"/>
