@@ -164,6 +164,10 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.AddScoped<IHomepageKpiService, HomepageKpiService>();
 
+            services.AddScoped<IReportingService, ReportingService>();
+            services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
+            services.AddScoped<IMdrService, MdrService>();
+
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));

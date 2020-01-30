@@ -28,6 +28,7 @@ namespace ntbs_service.Models.Entities
             ComorbidityDetails = new ComorbidityDetails();
             MDRDetails = new MDRDetails();
             TestData = new TestData();
+            DrugResistanceProfile = new DrugResistanceProfile();
         }
 
         #region DB Mapped Fields
@@ -80,6 +81,7 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
         public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
+        public virtual DrugResistanceProfile DrugResistanceProfile { get; set; }
 
         #endregion
 

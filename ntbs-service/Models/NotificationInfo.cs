@@ -20,7 +20,7 @@ namespace ntbs_service.Models
                 Name = notification.FullName,
                 Dob = notification.FormattedDob,
                 NhsNumber = notification.FormattedNhsNumber,
-                DrugResistance = null, //  TODO NTBS-368: Add reference to drug resistance profile
+                DrugResistance = notification.DrugResistanceProfile?.DrugResistanceProfileString,
                 Sex = notification.SexLabel,
                 Postcode = notification.FormattedNoAbodeOrPostcodeString
             };

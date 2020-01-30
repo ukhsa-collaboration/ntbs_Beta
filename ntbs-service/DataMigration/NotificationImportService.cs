@@ -89,7 +89,7 @@ namespace ntbs_service.DataMigration
             }
 
             var importResults = new List<ImportResult>();
-            if (notificationsGroupsToImport.Count() > 0)
+            if (notificationsGroupsToImport.Any())
             {
                 // Validate and Import valid notifications
                 importResults = notificationsGroupsToImport
@@ -125,8 +125,8 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
-                var validationErrors = GetValidationErrors(notification);
-                if (validationErrors.Count() == 0)
+                var validationErrors = GetValidationErrors(notification).ToList();
+                if (!validationErrors.Any())
                 {
                     _logger.LogInformation(context, requestId, $"No validation errors found");
                     importResult.AddValidNotification(linkedNotificationId);
@@ -134,7 +134,7 @@ namespace ntbs_service.DataMigration
                 else
                 {
                     isAnyNotificationInvalid = true;
-                    importResult.AddValidationErrorsMessages(linkedNotificationId, validationErrors.ToList());
+                    importResult.AddValidationErrorsMessages(linkedNotificationId, validationErrors);
                     _logger.LogWarning(context, requestId, $"{validationErrors.Count()} validation errors found for notification with Id={linkedNotificationId}:");
                     foreach (var validationError in validationErrors)
                     {

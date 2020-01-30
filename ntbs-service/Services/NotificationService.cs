@@ -33,6 +33,7 @@ namespace ntbs_service.Services
         Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails);
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
+        Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
     }
 
     public class NotificationService : INotificationService
@@ -348,6 +349,12 @@ namespace ntbs_service.Services
 
             await AddNotificationAsync(notification);
             return notification;
+        }
+
+        public async Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile)
+        {
+            _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
+            await UpdateDatabaseAsync();
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)

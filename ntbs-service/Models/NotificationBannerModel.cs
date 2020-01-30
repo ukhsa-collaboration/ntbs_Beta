@@ -51,6 +51,7 @@ namespace ntbs_service.Models
             NotificationStatus = notification.NotificationStatus;
             NotificationStatusString = notification.NotificationStatusString;
             NotificationDate = notification.FormattedNotificationDate;
+            DrugResistance = notification.DrugResistanceProfile?.DrugResistanceProfileString;
             Source = "ntbs";
             ShowLink = showLink;
             ShowPadlock = showPadlock;

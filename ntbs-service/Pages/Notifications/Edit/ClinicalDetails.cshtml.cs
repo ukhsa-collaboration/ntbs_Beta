@@ -19,6 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IAlertService _alertService;
+        private readonly IMdrService _mdrService;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -44,10 +45,12 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IAlertService alertService) : base(service, authorizationService, notificationRepository)
+            IAlertService alertService,
+            IMdrService mdrService) : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;
+            _mdrService = mdrService;
         }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
@@ -157,32 +160,16 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
-            await CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState();
+            bool alertCreatedOrDismissed = await _mdrService.CreateOrDismissMdrAlert(Notification, ClinicalDetails.IsMDRTreatment);
+            if (!alertCreatedOrDismissed)
+            {
+                ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
+            }
 
             if (ModelState.IsValid)
             {
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
-            }
-        }
-
-        private async Task CreateOrDismissMDRAlertDependentOnIsMDRTreatmentState()
-        {
-            if (Notification.ClinicalDetails.IsMDRTreatment != true && ClinicalDetails.IsMDRTreatment == true) // TODO NTBS-368 drug resistance profile check
-            {
-                var mdrAlert = new MdrAlert() {NotificationId = NotificationId};
-                await _alertService.AddUniqueAlertAsync(mdrAlert);
-            }
-            else if (Notification.ClinicalDetails.IsMDRTreatment == true && ClinicalDetails.IsMDRTreatment == false)  // TODO NTBS-368 drug resistance profile check
-            {
-                if (Notification.MDRDetails.MDRDetailsEntered)
-                {
-                    ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
-                }
-                else
-                {
-                    await _alertService.DismissMatchingAlertAsync(NotificationId, AlertType.EnhancedSurveillanceMDR);
-                }
             }
         }
 
