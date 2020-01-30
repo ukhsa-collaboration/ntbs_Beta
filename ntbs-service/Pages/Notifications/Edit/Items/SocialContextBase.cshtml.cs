@@ -95,8 +95,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public async Task<ContentResult> OnGetValidateSocialContextDate(string key, string day, string month, string year)
         {
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<T>(key, day, month, year, notification.IsLegacy);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<T>(key, day, month, year, isLegacy);
         }
 
         public ContentResult OnGetValidateSocialContextDates(IEnumerable<Dictionary<string, string>> keyValuePairs)

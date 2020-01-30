@@ -170,8 +170,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
         {
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year, notification.IsLegacy);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year, isLegacy);
         }
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)

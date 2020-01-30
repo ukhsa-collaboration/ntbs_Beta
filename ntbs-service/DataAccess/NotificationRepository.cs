@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -29,6 +28,7 @@ namespace ntbs_service.DataAccess
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
+        Task<bool> IsNotificationLegacyAsync(int id);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -80,7 +80,14 @@ namespace ntbs_service.DataAccess
             return await _context.Notification
                 .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
         }
-        
+
+        public async Task<bool> IsNotificationLegacyAsync(int id)
+        {
+            return await _context.Notification.Where(n => n.NotificationId == id)
+                .Select(n => n.LTBRID != null || n.ETSID != null)
+                .SingleAsync();
+        }
+
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
         {
             return await _context.Notification

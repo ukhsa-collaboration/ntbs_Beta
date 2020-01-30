@@ -154,8 +154,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         public async Task<ContentResult> OnGetValidateTestResultForEditDateAsync(string key, string day, string month, string year)
         {
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<ManualTestResult>(key, day, month, year, notification.IsLegacy);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<ManualTestResult>(key, day, month, year, isLegacy);
         }
 
         public async Task<JsonResult> OnGetFilteredSampleTypesForManualTestType(int value)

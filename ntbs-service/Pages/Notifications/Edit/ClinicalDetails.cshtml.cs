@@ -265,8 +265,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year, notification.IsLegacy);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year, isLegacy);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
