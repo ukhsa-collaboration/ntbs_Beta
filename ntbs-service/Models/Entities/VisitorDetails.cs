@@ -31,6 +31,7 @@ namespace ntbs_service.Models.Entities
         public virtual Country Country1 { get; set; }
 
         [Range(1, MaxTotalLengthOfStay)]
+        [AssertThat("Country1Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [AssertThat(nameof(TotalLengthWithinLimit), ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
         [Display(Name = "duration of visit")]
         public int? StayLengthInMonths1 { get; set; }
@@ -46,9 +47,8 @@ namespace ntbs_service.Models.Entities
 
         public Country Country2 { get; set; }
 
-        [AssertThat("!ShouldValidateFull || Country2Id != null",
-            ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [Range(1, MaxTotalLengthOfStay)]
+        [AssertThat("Country2Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [AssertThat(nameof(TotalLengthWithinLimit), ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
         [Display(Name = "duration of visit")]
         public int? StayLengthInMonths2 { get; set; }
@@ -65,9 +65,8 @@ namespace ntbs_service.Models.Entities
 
         public Country Country3 { get; set; }
 
-        [AssertThat("!ShouldValidateFull || Country3Id != null",
-            ErrorMessage = ValidationMessages.VisitIsChronological)]
         [Range(1, MaxTotalLengthOfStay)]
+        [AssertThat("Country3Id != null", ErrorMessage = ValidationMessages.TravelOrVisitDurationHasCountry)]
         [AssertThat(nameof(TotalLengthWithinLimit), ErrorMessage = ValidationMessages.VisitTotalDurationWithinLimit)]
         [Display(Name = "duration of visit")]
         public int? StayLengthInMonths3 { get; set; }
