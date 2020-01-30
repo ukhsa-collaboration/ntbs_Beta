@@ -28,7 +28,7 @@ namespace ntbs_service.DataAccess
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
-        bool NotificationWithLegacyIdExists(string id);
+        Task<bool> NotificationWithLegacyIdExistsAsync(string id);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -75,10 +75,10 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
-        public bool NotificationWithLegacyIdExists(string id)
+        public async Task<bool> NotificationWithLegacyIdExistsAsync(string id)
         {
-            return _context.Notification
-                .Any(e => e.LTBRID == id || e.ETSID == id);
+            return await _context.Notification
+                .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
         }
         
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
