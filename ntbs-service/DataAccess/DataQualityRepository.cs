@@ -21,6 +21,8 @@ namespace ntbs_service.DataAccess
     public class DataQualityRepository : IDataQualityRepository
     {
         private readonly NtbsContext _context;
+        private int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
+        private int MIN_NUMBER_DAYS_DRAFT_FOR_ALERT = 90;
         
         public DataQualityRepository(NtbsContext context)
         {
@@ -31,24 +33,20 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseNotificationQueryableForAlerts()
                 .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .Where(n => n.CreationDate < DateTime.Now.AddDays(-90))
+                .Where(n => n.CreationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_DRAFT_FOR_ALERT))
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts()
         {
-            return await GetBaseNotificationQueryableForAlerts()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-45))
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
                 .Where(n => n.PatientDetails.CountryId == Countries.UnknownId)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts()
         {
-            return await GetBaseNotificationQueryableForAlerts()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-45))
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
                 .Where(n => n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
                             || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
                             || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
@@ -59,9 +57,7 @@ namespace ntbs_service.DataAccess
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts()
         {
-            return await GetBaseNotificationQueryableForAlerts()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-45))
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
                 .Where(n => n.ClusterId != null 
                             && !n.SocialContextAddresses.Any()
                             && !n.SocialContextVenues.Any())
@@ -72,6 +68,13 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Include(n => n.Episode);
+        }
+
+        private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts()
+        {
+            return GetBaseNotificationQueryableForAlerts()
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT));
         }
     }
 }
