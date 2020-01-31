@@ -40,6 +40,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _postcodeService = postcodeService;
             GenerateReferenceData(referenceDataRepository);
+            
+            CurrentPage = NotificationSubPaths.EditPatientDetails;
         }
 
         private void GenerateReferenceData(IReferenceDataRepository referenceDataRepository)

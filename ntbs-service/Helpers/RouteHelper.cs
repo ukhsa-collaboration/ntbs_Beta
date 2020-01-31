@@ -5,7 +5,7 @@ namespace ntbs_service.Helpers
 {
     public static class RouteHelper
     {
-        public static string NotificationBasePath => "/Notifications/{0}/{1}";
+        private static string NotificationBasePath => "/Notifications/{0}/{1}";
 
         public static string GetSubmittingNotificationPath(int notificationId, string subPath)
         {
@@ -22,6 +22,13 @@ namespace ntbs_service.Helpers
             }
 
             return string.Format(NotificationBasePath, notificationId, path);
+        }
+
+        public static string GetNotificationOverviewPathWithSectionAnchor(int notificationId, string sectionSubPath)
+        {
+            var overviewPath = GetNotificationPath(notificationId, NotificationSubPaths.Overview);
+            var anchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath);
+            return string.IsNullOrEmpty(anchorId) ? overviewPath : $"{overviewPath}#{anchorId}";
         }
 
         public static string GetAlertPath(int alertId, string subPath)
@@ -71,6 +78,35 @@ namespace ntbs_service.Helpers
 
         public static string EditTreatmentEvent(int treatmentEventId) => $"Edit/TreatmentEvent/{treatmentEventId}";
         public static string AddTreatmentEvent => $"Edit/TreatmentEvent/New";
+    }
+
+    public static class OverviewSubPathToAnchorMap
+    {
+        private static readonly Dictionary<string, string> _subPathToAnchorId = new Dictionary<string, string>
+        {
+            {NotificationSubPaths.EditPatientDetails, "overview-patient-details"},
+            {NotificationSubPaths.EditEpisode, "overview-hospital-details"},
+            {NotificationSubPaths.EditClinicalDetails, "overview-clinical-details"},
+            {NotificationSubPaths.EditContactTracing, "overview-contact-tracing"},
+            {NotificationSubPaths.EditTestResults, "overview-test-results"},
+            {NotificationSubPaths.EditSocialRiskFactors, "overview-social-risks"},
+            {NotificationSubPaths.EditComorbidities, "overview-comorbidities"},
+            {NotificationSubPaths.EditTravel, "overview-travel-and-visitors"},
+            {NotificationSubPaths.EditSocialContextAddresses, "overview-social-addresses"},
+            {NotificationSubPaths.EditSocialContextVenues, "overview-social-venues"},
+            {NotificationSubPaths.EditPreviousHistory, "overview-previous-history"},
+            {NotificationSubPaths.EditMDRDetails, "overview-mdr-details"},
+        };
+
+        public static string GetOverviewAnchorId(string notificationSubPath)
+        {
+            if (string.IsNullOrEmpty(notificationSubPath))
+            {
+                return null;
+            }
+            
+            return _subPathToAnchorId.ContainsKey(notificationSubPath) ? _subPathToAnchorId[notificationSubPath] : null;
+        }
     }
 
     public static class AlertSubPaths

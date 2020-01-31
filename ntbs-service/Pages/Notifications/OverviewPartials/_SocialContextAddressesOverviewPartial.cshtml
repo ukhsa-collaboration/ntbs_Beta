@@ -3,14 +3,14 @@
 @model OverviewModel
 
 @{
-    var notificationId = (int) ViewData["NotificationId"];
+    var sectionSubPath = NotificationSubPaths.EditSocialContextAddresses;
 }
 
-<div class="notification-overview-type-and-edit-container">
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Social Context - Addresses </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditSocialContextAddresses)"
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
            class="notification-edit-link govuk-link--no-visited-state">
             Edit
         </a>

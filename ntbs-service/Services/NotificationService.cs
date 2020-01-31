@@ -149,6 +149,7 @@ namespace ntbs_service.Services
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
         {
+            testData.NotificationId = notification.NotificationId;
             _context.SetValues(notification.TestData, testData);
 
             await UpdateDatabaseAsync();

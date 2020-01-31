@@ -3,15 +3,15 @@
 @model OverviewModel
 
 @{
-    var notificationId = (int) ViewData["NotificationId"];
     var testData = Model.Notification.TestData;
+    var sectionSubPath = NotificationSubPaths.EditTestResults;
 }
 
-<div class="notification-overview-type-and-edit-container">
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Test results </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditTestResults)"
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
            class="notification-edit-link govuk-link--no-visited-state">
             Edit
         </a>

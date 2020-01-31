@@ -3,14 +3,14 @@
 @model OverviewModel
 
 @{
-    var notificationId = (int) ViewData["NotificationId"];
+    var sectionSubPath = NotificationSubPaths.EditContactTracing;
 }
 
-<div class="notification-overview-type-and-edit-container">
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Contact tracing </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditContactTracing)"
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
            class="notification-edit-link govuk-link--no-visited-state">
             Edit
         </a>
