@@ -17,7 +17,7 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFIED_ID = 10002;
         public const int DENOTIFIED_ID = 10003;
         public const int NOTIFIED_ID_WITH_NOTIFICATION_DATE = 10004;
-        public const int NEW_ID = 11000;
+        public const int NEW_ID = 10005;
 
         public const int DENOTIFY_WITH_DESCRIPTION = 10010;
         public const int DENOTIFY_NO_DESCRIPTION = 10011;
@@ -118,7 +118,7 @@ namespace ntbs_integration_tests.Helpers
             context.SaveChanges();
         }
 
-        public static IEnumerable<NotificationGroup> GetTestNotificationGroups()
+        private static IEnumerable<NotificationGroup> GetTestNotificationGroups()
         {
             return new List<NotificationGroup>
             {
@@ -187,7 +187,7 @@ namespace ntbs_integration_tests.Helpers
             };
         }
 
-        public static List<Notification> GetSeedingNotifications()
+        private static IEnumerable<Notification> GetSeedingNotifications()
         {
             return new List<Notification>
             {
@@ -243,7 +243,7 @@ namespace ntbs_integration_tests.Helpers
             };
         }
 
-        public static List<Alert> GetSeedingAlerts()
+        private static IEnumerable<Alert> GetSeedingAlerts()
         {
             return new List<Alert>
             {

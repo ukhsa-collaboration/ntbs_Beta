@@ -39,7 +39,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostNotified_RedirectsToOverview_IfModelValid()
+        public async Task PostNotified_Redirects_IfModelValid()
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
@@ -58,8 +58,6 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            // Flipped expected/actual here to accomodate trailing slash
-            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
         }
 
         [Theory]
@@ -327,6 +325,44 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Empty(result);
+        }
+        
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["TravelDetails.HasTravel"] = "false",
+                ["VisitorDetails.HasVisitor"] = "false"
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
         }
     }
 }

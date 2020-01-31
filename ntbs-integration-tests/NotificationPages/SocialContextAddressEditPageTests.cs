@@ -245,5 +245,38 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await response.Content.ReadAsStringAsync();
             Assert.Contains("To must be later than date from", result);
         }
+        
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var notificationSubPath = NotificationSubPaths.EditSocialContextAddresses;
+            var url = GetPathForId(notificationSubPath, id);
+            var document = await GetDocumentForUrl(url);
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, null, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(notificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var notificationSubPath = NotificationSubPaths.EditSocialContextAddresses;
+            var url = GetPathForId(notificationSubPath, id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, notificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
+        }
     }
 }

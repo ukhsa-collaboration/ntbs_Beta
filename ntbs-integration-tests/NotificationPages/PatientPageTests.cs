@@ -16,7 +16,7 @@ namespace ntbs_integration_tests.NotificationPages
 
         public PatientPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
-        public static IList<Notification> GetSeedingNotifications()
+        public static IEnumerable<Notification> GetSeedingNotifications()
         {
             return new List<Notification>()
             {
@@ -172,7 +172,7 @@ namespace ntbs_integration_tests.NotificationPages
             const string birthDay = "5";
             const string birthMonth = "5";
             const string birthYear = "1992";
-            const string nhsNumber = "5864552852";
+            const string nhsNumber = "9123456789";
             const string address = "123 Fake Street, London";
             const string ethnicityId = "1";
             const string sexId = "2";
@@ -302,7 +302,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             const int id = Utilities.DRAFT_ID;
-            const string nonDuplicateNhsNumber = "5864552852";
+            const string nonDuplicateNhsNumber = "9876543219";
             var formData = new Dictionary<string, string>
             {
                 ["notificationId"] = id.ToString(),
@@ -398,6 +398,52 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Equal(validationResult, result);
+        }
+
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["PatientDetails.GivenName"] = "Test",
+                ["PatientDetails.FamilyName"] = "User",
+                ["FormattedDob.Day"] = "5",
+                ["FormattedDob.Month"] = "5",
+                ["FormattedDob.Year"] = "2000",
+                ["PatientDetails.NhsNumber"] = "5864552852",
+                ["PatientDetails.Postcode"] = "NW5 1TL",
+                ["PatientDetails.EthnicityId"] = "1",
+                ["PatientDetails.SexId"] = "1",
+                ["PatientDetails.CountryId"] = "1",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
         }
     }
 }
