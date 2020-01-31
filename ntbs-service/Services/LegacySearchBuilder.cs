@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Security.Claims;
+using Castle.Core.Internal;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 
@@ -120,6 +122,17 @@ namespace ntbs_service.Services
                 parameters.hospitals = hospitalGuids;
                 AppendCondition("n.NtbsHospitalId IN @hospitals");
             }
+            return this;
+        }
+
+        public ISearchBuilder OrderByEditPermission(ClaimsPrincipal user)
+        {
+            sqlQuery += $@"
+                ORDER BY CASE 
+                    WHEN n.NtbsHospitalId IN @editPermissionHospitals THEN 1
+                    WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0
+                END DESC";
+            parameters.editPermissionHospitals = x;
             return this;
         }
 

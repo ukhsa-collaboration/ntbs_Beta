@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -107,6 +109,15 @@ namespace ntbs_service.Services
             if (TBService != null)
             {
                 notificationIQ = notificationIQ.Where(s => s.Episode.TBServiceCode.Equals(TBService));
+            }
+            return this;
+        }
+        
+        public ISearchBuilder OrderByEditPermission(List<string> TBServices)
+        {
+            if (!TBServices.IsNullOrEmpty())
+            {
+                notificationIQ = notificationIQ.OrderBy(s => TBServices.Contains(s.Episode.TBServiceCode));
             }
             return this;
         }

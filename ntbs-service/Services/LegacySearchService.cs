@@ -92,9 +92,11 @@ namespace ntbs_service.Services
         private async Task<NotificationBannerModel> AsNotificationBannerAsync(dynamic result)
         {
             TBService tbService = null;
+            string locationPhecCode = null;
             if (result.NtbsHospitalId is Guid guid)
             {
                 tbService = await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid);
+                locationPhecCode = await _referenceDataRepository.GetLocationPhecCodeForPostcodeAsync(result.Postcode);
             }
             var notificationBannerModel = new NotificationBannerModel
             {
@@ -109,6 +111,8 @@ namespace ntbs_service.Services
                 CountryOfBirth = result.BirthCountryName,
                 TbService = tbService?.Name,
                 TbServiceCode = tbService?.Code,
+                TbServicePHECCode = tbService?.PHECCode,
+                LocationPHECCode = locationPhecCode,
                 Postcode = (result.Postcode as string).FormatStringToPostcodeFormat(),
                 NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),

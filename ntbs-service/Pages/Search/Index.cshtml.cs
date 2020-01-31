@@ -114,7 +114,8 @@ namespace ntbs_service.Pages.Search
                 .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
                 .FilterByBirthCountry(SearchParameters.CountryId)
-                .FilterByTBService(SearchParameters.TBServiceCode);
+                .FilterByTBService(SearchParameters.TBServiceCode)
+                .OrderByEditPermission(new List<string>());
         }
         
         private async Task<(IList<NotificationBannerModel> results, int count)> SearchAsync(
