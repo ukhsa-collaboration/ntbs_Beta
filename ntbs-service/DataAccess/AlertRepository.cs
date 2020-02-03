@@ -58,7 +58,7 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseAlertIQueryable()
                 .Where(a => tbServices.Contains(a.TbServiceCode))
-                .Where(a => a.NotificationId == null || a.Notification.NotificationStatus != NotificationStatus.Draft)
+                .Where(a => a.NotificationId == null || a.Notification.NotificationStatus != NotificationStatus.Draft || a.AlertType == AlertType.DataQualityDraft)
                 .OrderByDescending(a => a.CreationDate)
                 .ToListAsync();
         }
