@@ -1,71 +1,79 @@
 .notification-overview-type-and-edit-container {
-    display: flex;
-    border-bottom: 1px solid #cccccc;
+  display: flex;
+  border-bottom: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  padding-top: 10px;
 }
 
 .notification-details-type {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .notification-edit-link {
-    margin: auto 0 10px auto;
+  margin: auto 5px 14px auto;
 }
 
 .notification-overview-details-container {
-    padding: 10px 0 5px 0;
-}
-
-.notification-overview-details {
-    padding-bottom: 10px;
-}
-
-.dismiss-alert-button--overview-view {
-    margin-left: auto; 
-    margin-bottom: auto;
-}
-
-.alert-description--overview-view {
-    width: 75%;
-}
-
-.overview-alerts-container {
-    border-top: 1px #cccccc solid;
-}
-
-.overview-alert {
-    border-bottom: 1px #cccccc solid;
-    padding: 10px 0;
-}
-
-.submit-delete-buttons-container {
-    margin-left: auto;
-}
-
-.contact-tracing-row {
-    display: table-row
-}
-
-.contact-tracing-value {
-    padding-left: 20px;
-    display: table-cell
-}
-
-.contact-tracing-label {
-    display: table-cell
+  padding: 0 0 10px 0;
 }
 
 .notification-details-label {
-    font-weight: 600;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.notification-details-sub-header {
+  margin-top: 10px;
+  font-size: 20px;
+  font-size: 1.25em;
+  line-height: 1.55556;
+  margin-bottom: 4px;
+}
+
+.dismiss-alert-button--overview-view {
+  margin-left: auto;
+  margin-bottom: auto;
+}
+
+.alert-description--overview-view {
+  width: 75%;
+}
+
+.overview-alerts-container {
+  border-top: 1px #cccccc solid;
+}
+
+.overview-alert {
+  border-bottom: 1px #cccccc solid;
+  padding: 10px 0;
+}
+
+.submit-delete-buttons-container {
+  margin-left: auto;
+}
+
+.contact-tracing-row {
+  display: table-row
+}
+
+.contact-tracing-value {
+  padding-left: 20px;
+  display: table-cell
+}
+
+.contact-tracing-label {
+  display: table-cell
 }
 
 /* This is used so that if a cell is missing data on the overview page the spacing is still correct */
 .cell-min-height {
-    min-height: 20px;
+  min-height: 20px;
 }
 
 .notification-info {
-    color: grey;
-    p {
-        margin: 0px;
-      }
+  color: grey;
+
+  p {
+    margin: 0;
+  }
 }

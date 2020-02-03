@@ -43,205 +43,204 @@
 <div class="search-results-section" id="search-results-section">
 <nhs-width-container container-width="Standard">
 
-    @if (!Model.UnmatchedSpecimens.Any())
+@if (!Model.UnmatchedSpecimens.Any())
+{
+    <p>
+        There are currently no unlinked specimens.
+    </p>
+}
+else
+{
+    <h2 class="govuk-visually-hidden">Unmatched specimens and potential matches</h2>
+    @foreach (var specimen in Model.UnmatchedSpecimens)
     {
-        <p>
-            There are currently no unlinked specimens.
-        </p>
-    }
-    else
-    {
-        <h2 class="govuk-visually-hidden">Unmatched specimens and potential matches</h2>
-        @foreach (var specimen in Model.UnmatchedSpecimens)
-        {
-            <nhs-panel
-                id="@($"specimen-{specimen.ReferenceLaboratoryNumber}")"
-                classes="specimen-details"
-                nhs-panel-type="WithLabel"
-                label="Reference laboratory number @specimen.ReferenceLaboratoryNumber">
-                <form method="post" autocomplete="off">
-                    <div>
-                        <nhs-grid-row>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.SpecimenDate) </dt>
-                                <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.SpecimenTypeCode) </dt>
-                                <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LaboratoryName) </dt>
-                                <dd class="cell-min-height"> @specimen.LaboratoryName </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.Species) </dt>
-                                <dd class="cell-min-height"> @specimen.Species </dd>
-                            </nhs-grid-column>
-                        </nhs-grid-row>
-                    </div>
-                    <br/>
+        <div class="nhsuk-panel-with-label specimen-details">
+            <h3 class="nhsuk-panel-with-label__label" id="@($"specimen-{specimen.ReferenceLaboratoryNumber}")">
+                Reference laboratory number @specimen.ReferenceLaboratoryNumber
+            </h3>
+            <form method="post" autocomplete="off">
+                <div>
+                    <nhs-grid-row>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.SpecimenDate) </dt>
+                            <dd class="cell-min-height"> @specimen.FormattedSpecimenDate </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.SpecimenTypeCode) </dt>
+                            <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LaboratoryName) </dt>
+                            <dd class="cell-min-height"> @specimen.LaboratoryName </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.Species) </dt>
+                            <dd class="cell-min-height"> @specimen.Species </dd>
+                        </nhs-grid-column>
+                    </nhs-grid-row>
+                </div>
+                <br/>
 
-                    <h4>Lab-supplied patient details</h4>
+                <h4>Lab-supplied patient details</h4>
 
-                    <div>
-                        <nhs-grid-row>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabNhsNumber) </dt>
-                                <dd class="cell-min-height"> @specimen.FormattedNhsNumber </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneHalf">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabName) </dt>
-                                <dd class="cell-min-height"> @specimen.LabName </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabSex) </dt>
-                                <dd class="cell-min-height"> @specimen.LabSex </dd>
-                            </nhs-grid-column>
-                        </nhs-grid-row>
-                        <nhs-grid-row>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabBirthDate) </dt>
-                                <dd class="cell-min-height"> @specimen.FormattedLabDob </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneHalf">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabAddress) </dt>
-                                <dd class="cell-min-height"> @specimen.LabAddress </dd>
-                            </nhs-grid-column>
-                            <nhs-grid-column grid-column-width="OneQuarter">
-                                <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabPostcode) </dt>
-                                <dd class="cell-min-height"> @specimen.LabPostcode </dd>
-                            </nhs-grid-column>
-                        </nhs-grid-row>
-                    </div>
+                <div>
+                    <nhs-grid-row>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabNhsNumber) </dt>
+                            <dd class="cell-min-height"> @specimen.FormattedNhsNumber </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneHalf">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabName) </dt>
+                            <dd class="cell-min-height"> @specimen.LabName </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabSex) </dt>
+                            <dd class="cell-min-height"> @specimen.LabSex </dd>
+                        </nhs-grid-column>
+                    </nhs-grid-row>
+                    <nhs-grid-row>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabBirthDate) </dt>
+                            <dd class="cell-min-height"> @specimen.FormattedLabDob </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneHalf">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabAddress) </dt>
+                            <dd class="cell-min-height"> @specimen.LabAddress </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(_ => specimen.LabPostcode) </dt>
+                            <dd class="cell-min-height"> @specimen.LabPostcode </dd>
+                        </nhs-grid-column>
+                    </nhs-grid-row>
+                </div>
 
-                    <br/>
-                    <h4>Possible matches (@specimen.PotentialMatches.Count())</h4>
+                <br/>
+                <h4>Possible matches (@specimen.PotentialMatches.Count())</h4>
 
-                    @{
-                        var specimenRootString = $"{nameof(Model.PotentialMatchSelections)}[{specimen.ReferenceLaboratoryNumber}]";
+                @{
+                    var specimenRootString = $"{nameof(Model.PotentialMatchSelections)}[{specimen.ReferenceLaboratoryNumber}]";
 
-                        var hasNotificationIdError = !Model.ValidationService.IsValid($"{specimenRootString}.{nameof(SpecimenPotentialMatchSelection.NotificationId)}");
-                        var notificationIdGroupState = hasNotificationIdError ? FormGroupType.Error : FormGroupType.Standard;
-                        var notificationIdString = $"{specimenRootString}-{nameof(SpecimenPotentialMatchSelection.NotificationId)}";
-                    }
+                    var hasNotificationIdError = !Model.ValidationService.IsValid($"{specimenRootString}.{nameof(SpecimenPotentialMatchSelection.NotificationId)}");
+                    var notificationIdGroupState = hasNotificationIdError ? FormGroupType.Error : FormGroupType.Standard;
+                    var notificationIdString = $"{specimenRootString}-{nameof(SpecimenPotentialMatchSelection.NotificationId)}";
+                }
 
-                    <nhs-form-group nhs-form-group-type="@notificationIdGroupState">
-                        <nhs-fieldset aria-describedby="@notificationIdString">
-                            <span
-                                nhs-span-type="ErrorMessage"
-                                id="@notificationIdString"
-                                asp-validation-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].NotificationId"
-                                has-error="@hasNotificationIdError">
-                            </span>
+                <nhs-form-group nhs-form-group-type="@notificationIdGroupState">
+                    <nhs-fieldset aria-describedby="@notificationIdString">
+                        <span
+                            nhs-span-type="ErrorMessage"
+                            id="@notificationIdString"
+                            asp-validation-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].NotificationId"
+                            has-error="@hasNotificationIdError">
+                        </span>
 
-                            <nhs-table classes="nhsuk-table--reduced-font">
-                                <nhs-table-body>
-                                    @foreach (var potentialMatch in specimen.PotentialMatches)
-                                    {
-                                        var radioInputId = $"radio-{potentialMatch.NotificationId}-{specimen.ReferenceLaboratoryNumber}";
-
-                                        <nhs-table-body-row>
-                                            <nhs-table-item>
-                                                <label for="@radioInputId">
-                                                    <div class="flex-container">
-                                                        <div class="lab-results-radio-container">
-                                                            <nhs-radios nhs-radios-type="Standard" classes="where is this applied">
-                                                                <nhs-radios-item>
-                                                                    <input id="@radioInputId"
-                                                                           nhs-input-type="Radios"
-                                                                           asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].NotificationId"
-                                                                           type="radio"
-                                                                           value="@potentialMatch.NotificationId"
-                                                                           aria-label="Select NotificationId @potentialMatch.NotificationId for matching to specimen @specimen.ReferenceLaboratoryNumber"/>
-                                                                    <div class="nhsuk-radios__label"></div>
-                                                                </nhs-radios-item>
-                                                            </nhs-radios>
-                                                        </div>
-                                                        <partial name="_labResultsDemographics" model="@potentialMatch"/>
-                                                    </div>
-                                                </label>
-                                            </nhs-table-item>
-                                        </nhs-table-body-row>
-                                    }
+                        <nhs-table classes="nhsuk-table--reduced-font">
+                            <nhs-table-body>
+                                @foreach (var potentialMatch in specimen.PotentialMatches)
+                                {
+                                    var radioInputId = $"radio-{potentialMatch.NotificationId}-{specimen.ReferenceLaboratoryNumber}";
 
                                     <nhs-table-body-row>
                                         <nhs-table-item>
-                                            @{
-                                                var manualRadioId = $"radio-manual-{specimen.ReferenceLaboratoryNumber}";
-                                                var manualRadioValue = IndexModel.ManualNotificationIdValue;
-                                            }
-                                            <label for="@manualRadioId">
+                                            <label for="@radioInputId">
                                                 <div class="flex-container">
                                                     <div class="lab-results-radio-container">
-                                                        <div>
-                                                            <nhs-radios nhs-radios-type="Standard">
-                                                                <nhs-radios-item>
-                                                                    <input id="@manualRadioId"
-                                                                           nhs-input-type="Radios"
-                                                                           type="radio"
-                                                                           asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].NotificationId"
-                                                                           value="@manualRadioValue"
-                                                                           aria-label="Select manually entered Notification Id for matching to specimen @specimen.ReferenceLaboratoryNumber"/>
-                                                                    <div class="nhsuk-radios__label"></div>
-                                                                </nhs-radios-item>
-                                                            </nhs-radios>
-                                                        </div>
+                                                        <nhs-radios nhs-radios-type="Standard" classes="where is this applied">
+                                                            <nhs-radios-item>
+                                                                <input id="@radioInputId"
+                                                                       nhs-input-type="Radios"
+                                                                       asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].NotificationId"
+                                                                       type="radio"
+                                                                       value="@potentialMatch.NotificationId"
+                                                                       aria-label="Select NotificationId @potentialMatch.NotificationId for matching to specimen @specimen.ReferenceLaboratoryNumber"/>
+                                                                <div class="nhsuk-radios__label"></div>
+                                                            </nhs-radios-item>
+                                                        </nhs-radios>
                                                     </div>
-                                                    <fetch-specimen-potential-match inline-template>
-                                                        <div class="lab-results-manual-match-container">
-                                                            <div>
-                                                                @{
-                                                                    var hasManualNotificationIdError = !Model.ValidationService.IsValid($"{specimenRootString}.{nameof(SpecimenPotentialMatchSelection.ManualNotificationId)}");
-                                                                    var manualNotificationIdGroupState = hasManualNotificationIdError ? FormGroupType.Error : FormGroupType.Standard;
-                                                                    var manualNotificationIdString = $"{specimenRootString}-{nameof(SpecimenPotentialMatchSelection.ManualNotificationId)}";
-                                                                }
-
-                                                                <nhs-form-group
-                                                                    nhs-form-group-type="@manualNotificationIdGroupState"
-                                                                    classes="nhs-form-group--manual-lab-result"
-                                                                    id="@manualNotificationIdString"
-                                                                    ref="formGroup">
-                                                                    <span
-                                                                        id="@($"{manualNotificationIdString}-error")"
-                                                                        nhs-span-type="ErrorMessage"
-                                                                        asp-validation-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId"
-                                                                        has-error="@hasManualNotificationIdError"
-                                                                        ref="errorField">
-                                                                    </span>
-                                                                    <label nhs-label-type="Standard" asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId">
-                                                                        Manual Notification Id
-                                                                    </label>
-                                                                    <input nhs-input-type="Standard"
-                                                                           fixed-width="Five"
-                                                                           asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId"
-                                                                           v-on:input="update($event.target.value)"
-                                                                           aria-describedby="@($"{manualNotificationIdString}-error")"
-                                                                           ref="inputField"/>
-                                                                </nhs-form-group>
-                                                            </div>
-                                                            <div ref="matchDetails" class="dynamic-match">
-
-                                                            </div>
-                                                        </div>
-                                                    </fetch-specimen-potential-match>
+                                                    <partial name="_labResultsDemographics" model="@potentialMatch"/>
                                                 </div>
                                             </label>
                                         </nhs-table-item>
                                     </nhs-table-body-row>
-                                </nhs-table-body>
-                            </nhs-table>
-                        </nhs-fieldset>
-                    </nhs-form-group>
+                                }
 
-                    <div class="flex-container">
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary create-notification-button--right">
-                            Match selected specimen
-                        </button>
-                    </div>
-                </form>
-            </nhs-panel>
-        }
+                                <nhs-table-body-row>
+                                    <nhs-table-item>
+                                        @{
+                                            var manualRadioId = $"radio-manual-{specimen.ReferenceLaboratoryNumber}";
+                                            var manualRadioValue = IndexModel.ManualNotificationIdValue;
+                                        }
+                                        <label for="@manualRadioId">
+                                            <div class="flex-container">
+                                                <div class="lab-results-radio-container">
+                                                    <div>
+                                                        <nhs-radios nhs-radios-type="Standard">
+                                                            <nhs-radios-item>
+                                                                <input id="@manualRadioId"
+                                                                       nhs-input-type="Radios"
+                                                                       type="radio"
+                                                                       asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].NotificationId"
+                                                                       value="@manualRadioValue"
+                                                                       aria-label="Select manually entered Notification Id for matching to specimen @specimen.ReferenceLaboratoryNumber"/>
+                                                                <div class="nhsuk-radios__label"></div>
+                                                            </nhs-radios-item>
+                                                        </nhs-radios>
+                                                    </div>
+                                                </div>
+                                                <fetch-specimen-potential-match inline-template>
+                                                    <div class="lab-results-manual-match-container">
+                                                        <div>
+                                                            @{
+                                                                var hasManualNotificationIdError = !Model.ValidationService.IsValid($"{specimenRootString}.{nameof(SpecimenPotentialMatchSelection.ManualNotificationId)}");
+                                                                var manualNotificationIdGroupState = hasManualNotificationIdError ? FormGroupType.Error : FormGroupType.Standard;
+                                                                var manualNotificationIdString = $"{specimenRootString}-{nameof(SpecimenPotentialMatchSelection.ManualNotificationId)}";
+                                                            }
+
+                                                            <nhs-form-group
+                                                                nhs-form-group-type="@manualNotificationIdGroupState"
+                                                                classes="nhs-form-group--manual-lab-result"
+                                                                id="@manualNotificationIdString"
+                                                                ref="formGroup">
+                                                                <span
+                                                                    id="@($"{manualNotificationIdString}-error")"
+                                                                    nhs-span-type="ErrorMessage"
+                                                                    asp-validation-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId"
+                                                                    has-error="@hasManualNotificationIdError"
+                                                                    ref="errorField">
+                                                                </span>
+                                                                <label nhs-label-type="Standard" asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId">
+                                                                    Manual Notification Id
+                                                                </label>
+                                                                <input nhs-input-type="Standard"
+                                                                       fixed-width="Five"
+                                                                       asp-for="PotentialMatchSelections[specimen.ReferenceLaboratoryNumber].ManualNotificationId"
+                                                                       v-on:input="update($event.target.value)"
+                                                                       aria-describedby="@($"{manualNotificationIdString}-error")"
+                                                                       ref="inputField"/>
+                                                            </nhs-form-group>
+                                                        </div>
+                                                        <div ref="matchDetails" class="dynamic-match">
+
+                                                        </div>
+                                                    </div>
+                                                </fetch-specimen-potential-match>
+                                            </div>
+                                        </label>
+                                    </nhs-table-item>
+                                </nhs-table-body-row>
+                            </nhs-table-body>
+                        </nhs-table>
+                    </nhs-fieldset>
+                </nhs-form-group>
+
+                <div class="flex-container">
+                    <button nhs-button-type="Standard" classes="ntbsuk-button--secondary create-notification-button--right">
+                        Match selected specimen
+                    </button>
+                </div>
+            </form>
+        </div>
     }
+}
 </nhs-width-container>
 </div>

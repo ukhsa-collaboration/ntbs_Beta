@@ -13354,7 +13354,44 @@ namespace ntbs_service.Migrations
                         new
                         {
                             TreatmentOutcomeId = 15,
+                            TreatmentOutcomeSubType = "TransferredAbroad",
                             TreatmentOutcomeType = "NotEvaluated"
+                        },
+                        new
+                        {
+                            TreatmentOutcomeId = 16,
+                            TreatmentOutcomeSubType = "StillOnTreatment",
+                            TreatmentOutcomeType = "NotEvaluated"
+                        },
+                        new
+                        {
+                            TreatmentOutcomeId = 17,
+                            TreatmentOutcomeSubType = "Other",
+                            TreatmentOutcomeType = "NotEvaluated"
+                        },
+                        new
+                        {
+                            TreatmentOutcomeId = 18,
+                            TreatmentOutcomeSubType = "CulturePositive",
+                            TreatmentOutcomeType = "Failed"
+                        },
+                        new
+                        {
+                            TreatmentOutcomeId = 19,
+                            TreatmentOutcomeSubType = "AdditionalResistance",
+                            TreatmentOutcomeType = "Failed"
+                        },
+                        new
+                        {
+                            TreatmentOutcomeId = 20,
+                            TreatmentOutcomeSubType = "AdverseReaction",
+                            TreatmentOutcomeType = "Failed"
+                        },
+                        new
+                        {
+                            TreatmentOutcomeId = 21,
+                            TreatmentOutcomeSubType = "Other",
+                            TreatmentOutcomeType = "Failed"
                         });
                 });
 

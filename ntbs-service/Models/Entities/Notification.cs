@@ -110,11 +110,11 @@ namespace ntbs_service.Models.Entities
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
         public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
-        public int? DaysFromOnsetToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
-        public int? DaysFromOnsetToFirstPresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.FirstPresentationDate, ClinicalDetails.SymptomStartDate);
-        public int? DaysFromFirstPresentationToTBServicePresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.TBServicePresentationDate, ClinicalDetails.FirstPresentationDate);
-        public int? DaysFromTBServicePresentationToDiagnosis => CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
-        public int? DaysFromDiagnosisToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
+        public string DaysFromOnsetToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
+        public string DaysFromOnsetToFirstPresentation => FormatNullableDateDifference(ClinicalDetails.FirstPresentationDate, ClinicalDetails.SymptomStartDate);
+        public string DaysFromFirstPresentationToTBServicePresentation => FormatNullableDateDifference(ClinicalDetails.TBServicePresentationDate, ClinicalDetails.FirstPresentationDate);
+        public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
+        public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
         public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
         public string FormattedSymptomStartDate => ClinicalDetails.SymptomStartDate.ConvertToString();
@@ -175,6 +175,20 @@ namespace ntbs_service.Models.Entities
         private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
             return booleanState.FormatYesNo() + (date != null ? " - " + date.ConvertToString() : string.Empty);
+        }
+
+        private string FormatNullableDateDifference(DateTime? date1, DateTime? date2)
+        {
+            var days = CalculateDaysBetweenNullableDates(date1, date2);
+            switch (days)
+            {
+                case null:
+                    return null;
+                case 1:
+                    return days + " day";
+                default:
+                    return days + " days";
+            }
         }
 
         private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)

@@ -8,8 +8,9 @@ namespace ntbs_service.Models.Enums
         EnhancedSurveillanceMDR,
         EnhancedSurveillanceMBovis,
         MissingTreatmentOutcome,
+        [Display(Name = "Unmatched lab result")]
         UnmatchedLabResult,
-        [Display(Name = "Transfer Request")]
+        [Display(Name = "Transfer request")]
         TransferRequest,
         [Display(Name = "Transfer rejected")]
         TransferRejected,

@@ -65,7 +65,7 @@ namespace ntbs_service_unit_tests.Models
             var days = TestNotification.DaysFromOnsetToFirstPresentation;
 
             // Assert
-            Assert.Equal(3, days);
+            Assert.Equal("3 days", days);
         }
 
         [Fact]

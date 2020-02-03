@@ -49,7 +49,7 @@
                 @if(Model.Notification.OverOneYearOld)
                 {
                     <form method="post">
-                        <input hidden value="@Model.NotificationId" name="NotificationId" />
+                        <input type="hidden" value="@Model.NotificationId" name="NotificationId" />
                         <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink" id="new-linked-notification-button">
                             New notification for this patient
                         </button>

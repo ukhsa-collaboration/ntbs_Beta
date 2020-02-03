@@ -3,93 +3,105 @@
 @model OverviewModel
 
 @{
-    var notificationId = (int)ViewData["NotificationId"];
+    var notificationId = (int) ViewData["NotificationId"];
     var testData = Model.Notification.TestData;
 }
 
 <div class="notification-overview-type-and-edit-container">
     <h3 class="notification-details-type"> Test results </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(notificationId, NotificationSubPaths.EditTestResults)"
-        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
+
 <div class="notification-overview-details-container">
     @if (Model.CultureAndResistance != null)
     {
         <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="Full">
+                <h4 class="notification-details-sub-header">Reference laboratory results (automatically imported results)</h4>
+            </nhs-grid-column>
+        </nhs-grid-row>
+
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.CulturePositive) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.CulturePositive </dd>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Species) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Species </dd>
             </nhs-grid-column>
-        </nhs-grid-row>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.DrugResistanceProfile)</dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.DrugResistanceProfile </dd>
-            </nhs-grid-column>            
-            <nhs-grid-column grid-column-width="OneThird">
+            </nhs-grid-column>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.EarliestSpecimenDate) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.FormattedEarliestSpecimenDate </dd>
             </nhs-grid-column>
         </nhs-grid-row>
+
         <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Isoniazid) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Isoniazid </dd>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Rifampicin) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Rifampicin </dd>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Pyrazinamide) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Pyrazinamide </dd>
             </nhs-grid-column>
-        </nhs-grid-row>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Ethambutol) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Ethambutol </dd>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-row>
+
+            </nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Aminoglycoside) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Aminoglycoside </dd>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.Quinolone) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.Quinolone </dd>
             </nhs-grid-column>
-        </nhs-grid-row>
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.MDR) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.MDR </dd>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="notification-details-label"> @Html.DisplayNameFor(m => m.CultureAndResistance.XDR) </dt>
                 <dd class="cell-min-height"> @Model.CultureAndResistance.XDR </dd>
             </nhs-grid-column>
         </nhs-grid-row>
+        <br/>
     }
 
-    <br/>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
+            <h4 class="notification-details-sub-header">Manually-entered test results</h4>
+        </nhs-grid-column>
+    </nhs-grid-row>
+
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.TestData.HasTestCarriedOut) </div>
             <div class="cell-min-height"> @testData.HasTestCarriedOut.FormatYesNo() </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    
+
     @if (testData.HasTestCarriedOut == true)
     {
-        ViewData["RenderReducedSizeManualResultsTable"] = true;
-        
-        <partial name="Shared/_ManualTestResultTable" for="Notification.TestData.ManualTestResults" />
+        var viewData = new ViewDataDictionary(ViewData) {{"RenderReducedSizeManualResultsTable", true}};
+        <partial name="Shared/_ManualTestResultTable" for="Notification.TestData.ManualTestResults" view-data="@viewData"/>
     }
 </div>
