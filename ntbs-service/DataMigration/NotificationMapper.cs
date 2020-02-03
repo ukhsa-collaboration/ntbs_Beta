@@ -160,7 +160,9 @@ namespace ntbs_service.DataMigration
             details.TBServicePresentationDate = notification.TbServicePresentationDate;
             details.DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate;
             details.DidNotStartTreatment = StringToValueConverter.GetNullableBoolValue(notification.DidNotStartTreatment);
-            details.MDRTreatmentStartDate = notification.StartOfTreatmentDay;
+            details.TreatmentStartDate = notification.StartOfTreatmentDate;
+            details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
+            details.IsMDRTreatment = notification.IsMDRTreatment;
             details.IsSymptomatic = StringToValueConverter.GetNullableBoolValue(notification.IsSymptomatic);
             details.DeathDate = notification.DeathDate;
             return details;
