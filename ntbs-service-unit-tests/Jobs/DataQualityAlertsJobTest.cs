@@ -55,5 +55,30 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClinicalDatesAlert>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()));
         }
+        
+        [Fact]
+        public async Task OnRun_WithNoEligibleNotifications_DoesNotCallAlertCreationMethod()
+        {
+            // Arrange
+            var emptyNotificationList = Task.FromResult((IList<Notification>)new List<Notification>());
+
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityDraftAlerts())
+                .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityBirthCountryAlerts())
+                .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClinicalDatesAlerts())
+                .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClusterAlerts())
+                .Returns(emptyNotificationList);
+            
+            // Act
+            await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
+
+            // Assert
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDraftAlert>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityBirthCountryAlert>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClinicalDatesAlert>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()), Times.Never);
+        }
     }
 }

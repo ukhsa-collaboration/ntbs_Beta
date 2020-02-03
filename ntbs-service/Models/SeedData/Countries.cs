@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 

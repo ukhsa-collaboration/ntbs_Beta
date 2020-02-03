@@ -57,6 +57,8 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
+            
+            Log.Information($"Finished data quality alerts job");
         }
     }
 }
