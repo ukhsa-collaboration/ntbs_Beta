@@ -40,11 +40,13 @@ namespace ntbs_service.Services
 
         public ContentResult GetMultiplePropertiesValidationResult<T>(
             IEnumerable<(string, object)> propertyValueTuples,
-            bool shouldValidateFull = false)
+            bool shouldValidateFull = false,
+            bool isLegacy = false)
             where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));
             model.ShouldValidateFull = shouldValidateFull;
+            model.IsLegacy = isLegacy;
 
             var keys = new List<string>();
             foreach (var tuple in propertyValueTuples)
@@ -85,15 +87,17 @@ namespace ntbs_service.Services
             property.SetValue(model, value);
         }
 
-        public ContentResult GetDateValidationResult<T>(string key, string day, string month, string year)
+        public ContentResult GetDateValidationResult<T>(string key, string day, string month, string year,
+            bool isLegacy) where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));
-            return GetDateValidationResult<T>(model, key, day, month, year);
+            model.IsLegacy = isLegacy;
+            return GetDateValidationResult(model, key, day, month, year);
         }
 
         public ContentResult GetDateValidationResult<T>(T model, string key, string day, string month, string year)
         {
-            var formattedDate = new FormattedDate() { Day = day, Month = month, Year = year };
+            var formattedDate = new FormattedDate { Day = day, Month = month, Year = year };
             var modelType = model.GetType();
             if (formattedDate.TryConvertToDateTime(out DateTime? convertedDob))
             {

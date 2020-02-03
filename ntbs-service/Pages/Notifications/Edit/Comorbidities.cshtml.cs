@@ -72,7 +72,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
+            ComorbidityDetails.SetValidationContext(Notification);
 
             ImmunosuppressionDetails = new ImmunosuppressionDetails {
                 Status = ImmunosuppressionStatus,
@@ -82,7 +82,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 OtherDescription = OtherDescription,
             };
 
-            ImmunosuppressionDetails.SetFullValidation(Notification.NotificationStatus);
+            ImmunosuppressionDetails.SetValidationContext(Notification);
 
             if (TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails))
                 && TryValidateModel(ImmunosuppressionDetails, nameof(ImmunosuppressionDetails)))

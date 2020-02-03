@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -29,7 +28,8 @@ namespace ntbs_service.DataAccess
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
-        bool NotificationWithLegacyIdExists(string id);
+        Task<bool> NotificationWithLegacyIdExistsAsync(string id);
+        Task<bool> IsNotificationLegacyAsync(int id);
     }
 
     public class NotificationRepository : INotificationRepository
@@ -76,12 +76,19 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
-        public bool NotificationWithLegacyIdExists(string id)
+        public async Task<bool> NotificationWithLegacyIdExistsAsync(string id)
         {
-            return _context.Notification
-                .Any(e => e.LTBRID == id || e.ETSID == id);
+            return await _context.Notification
+                .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
         }
-        
+
+        public async Task<bool> IsNotificationLegacyAsync(int id)
+        {
+            return await _context.Notification.Where(n => n.NotificationId == id)
+                .Select(n => n.LTBRID != null || n.ETSID != null)
+                .SingleAsync();
+        }
+
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
         {
             return await _context.Notification

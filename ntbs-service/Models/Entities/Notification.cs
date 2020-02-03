@@ -52,9 +52,12 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
+
+        [NotMapped]
+        public new bool IsLegacy => LTBRID != null || ETSID != null;
 
         #endregion
 

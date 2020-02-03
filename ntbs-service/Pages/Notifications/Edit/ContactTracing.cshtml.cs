@@ -35,7 +35,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            ContactTracing.SetFullValidation(Notification.NotificationStatus);
+            ContactTracing.SetValidationContext(Notification);
             if (TryValidateModel(ContactTracing, ContactTracing.GetType().Name))
             {
                 await Service.UpdateContactTracingAsync(Notification, ContactTracing);

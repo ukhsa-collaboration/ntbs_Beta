@@ -58,7 +58,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             UpdateFlags();
             await ValidateRelatedNotification();
-            MDRDetails.SetFullValidation(Notification.NotificationStatus);
+            MDRDetails.SetValidationContext(Notification);
 
             if (TryValidateModel(MDRDetails.GetType().Name))
             {

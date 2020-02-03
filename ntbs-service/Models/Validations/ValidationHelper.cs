@@ -28,6 +28,7 @@
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
+        public const string NotValid = "{0} is not valid";
         public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth"; 
         public const string DateShouldBeLaterThanNotification = "{0} must be after the date of notification";
 
@@ -37,7 +38,7 @@
         public const string NhsNumberLength = "{0} needs to be 10 digits long";
         public const string InvalidNhsNumber = "This {0} is not valid. Confirm you have entered it correctly";
         public const string FieldRequired = "{0} is a mandatory field";
-        public const string PostcodeIsNotValid = "Postcode is not valid";
+        public const string PostcodeNotFound = "{0} is not found";
         public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
         public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year";
         #endregion

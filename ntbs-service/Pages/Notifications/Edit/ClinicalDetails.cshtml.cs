@@ -143,8 +143,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Add additional field required for date validation
             ClinicalDetails.Dob = Notification.PatientDetails.Dob;
 
-            ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
-            OtherSite?.SetFullValidation(Notification.NotificationStatus);
+            ClinicalDetails.SetValidationContext(Notification);
+            OtherSite?.SetValidationContext(Notification);
 
             // Since notification has other properties which are not populated by this page but have validation rules, 
             // validation of a whole Notification model will result in validation errors.
@@ -266,9 +266,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year, isLegacy);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)
