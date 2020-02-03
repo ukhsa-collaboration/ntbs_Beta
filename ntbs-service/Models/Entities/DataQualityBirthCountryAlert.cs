@@ -6,9 +6,11 @@ namespace ntbs_service.Models.Entities
     public class DataQualityBirthCountryAlert : Alert
     {
         public override string Action => "Please review to see if more accurate information available.";
-        // TODO: NTBS-864 overview id
+
         public override string ActionLink =>
-            RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(), NotificationSubPaths.Overview);
+            RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
+                NotificationId.GetValueOrDefault(),
+                NotificationSubPaths.EditPatientDetails);
 
         public DataQualityBirthCountryAlert()
         {
