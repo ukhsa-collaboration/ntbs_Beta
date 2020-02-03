@@ -4,5 +4,6 @@ namespace ntbs_service.Models
     {
         public const string UkCode = "GB";
         public const string UnknownCode = "-";
+        public const int UnknownId = 238;
     }
 }

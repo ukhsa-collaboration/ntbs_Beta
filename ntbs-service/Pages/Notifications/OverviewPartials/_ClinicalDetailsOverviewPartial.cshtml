@@ -2,7 +2,8 @@
 @using ntbs_service.Models.Enums
 @model OverviewModel
 
-<div class="notification-overview-type-and-edit-container">
+@* TODO: NTBS-864 overview id *@
+<div class="notification-overview-type-and-edit-container" id="clinical-details-overview-details">
     <h3 class="notification-details-type"> Clinical details </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {

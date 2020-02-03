@@ -14,7 +14,14 @@ namespace ntbs_service.Models.Enums
         TransferRequest,
         [Display(Name = "Transfer rejected")]
         TransferRejected,
-        DataQualityIssue,
+        [Display(Name = "Data quality issue - draft record")]
+        DataQualityDraft,
+        [Display(Name = "Data quality issue - unknown country of birth")]
+        DataQualityBirthCountry,
+        [Display(Name = "Data quality issue - clinical dates")]
+        DataQualityClinicalDates,
+        [Display(Name = "Data quality issue - cluster")]
+        DataQualityCluster,
         SocialContext,
         [Display(Name = "Test Alert")]
         Test
