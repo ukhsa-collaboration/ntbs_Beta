@@ -26,15 +26,14 @@ namespace ntbs_service.Pages.Search
 
         public ValidationService ValidationService;
 
-        public IEnumerable<string> Codes { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
         public string PreviousPageUrl;
         public PaginationParameters PaginationParameters;
 
-        public List<Sex> Sexes { get; set; }
-        public SelectList Countries { get; set; }
-        public SelectList TbServices { get; set; }
+        public List<Sex> Sexes { get; }
+        public SelectList Countries { get; }
+        public SelectList TbServices { get; }
 
         [BindProperty(SupportsGet = true)]
         public SearchParameters SearchParameters { get; set; }
@@ -76,24 +75,15 @@ namespace ntbs_service.Pages.Search
 
             PaginationParameters = new PaginationParameters()
             {
-                PageSize = 50,
-                PageIndex = pageIndex ?? 1,
-                LegacyOffset = legacyOffset,
-                NtbsOffset = ntbsOffset
+                PageSize = 50, PageIndex = pageIndex ?? 1, LegacyOffset = legacyOffset, NtbsOffset = ntbsOffset
             };
-            Codes = (await _userService.GetTbServicesAsync(User)).Select(s => s.Code);
 
-            var draftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(new List<NotificationStatus>() {
-                NotificationStatus.Draft });
-            var nonDraftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(new List<NotificationStatus>() {
-                NotificationStatus.Notified,
-                NotificationStatus.Denotified });
+            var ntbsQueryable = _notificationRepository.GetBannerReadyNotificationsIQueryable();
 
-            var ntbsFilteredDraftsBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(draftsQueryable));
-            var ntbsFilteredNonDraftsBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(nonDraftsQueryable));
+            var ntbsFilteredSearchBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(ntbsQueryable));
             var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder(_referenceDataRepository));
 
-            var (notificationsToDisplay, count) = await SearchAsync(ntbsFilteredDraftsBuilder, ntbsFilteredNonDraftsBuilder, legacyFilteredSearchBuilder);
+            var (notificationsToDisplay, count) = await SearchAsync(ntbsFilteredSearchBuilder, legacyFilteredSearchBuilder);
             await _authorizationService.SetFullAccessOnNotificationBannersAsync(notificationsToDisplay, User);
             SearchResults = new PaginatedList<NotificationBannerModel>(notificationsToDisplay, count, PaginationParameters);
             var (nextNtbsOffset, nextLegacyOffset) = CalculateNextOffsets(PaginationParameters.PageIndex, legacyOffset, ntbsOffset, notificationsToDisplay);
@@ -118,24 +108,22 @@ namespace ntbs_service.Pages.Search
                 .FilterByPartialNotificationDate(SearchParameters.PartialNotificationDate)
                 .FilterBySex(SearchParameters.SexId)
                 .FilterByBirthCountry(SearchParameters.CountryId)
-                .FilterByTBService(SearchParameters.TBServiceCode)
-                .OrderByEditPermission(Codes.ToList());
+                .FilterByTBService(SearchParameters.TBServiceCode);
         }
         
         private async Task<(IList<NotificationBannerModel> results, int count)> SearchAsync(
-            INtbsSearchBuilder filteredDrafts,
-            INtbsSearchBuilder filteredNonDrafts,
+            INtbsSearchBuilder ntbsQueryable,
             ILegacySearchBuilder legacySqlQuery)
         {
             IEnumerable<NotificationBannerModel> notificationsBannerModels;
             int count;
             if (PaginationParameters.LegacyOffset == null && PaginationParameters.NtbsOffset == null)
             {
-                (notificationsBannerModels, count) = await SearchWithoutOffsetsAsync(filteredDrafts, filteredNonDrafts, legacySqlQuery);
+                (notificationsBannerModels, count) = await SearchWithoutOffsetsAsync(ntbsQueryable, legacySqlQuery);
             }
             else
             {
-                (notificationsBannerModels, count) = await SearchWithOffsetsAsync(filteredDrafts, filteredNonDrafts, legacySqlQuery);
+                (notificationsBannerModels, count) = await SearchWithOffsetsAsync(ntbsQueryable, legacySqlQuery);
             }
             // notificationsToDisplay is ToList() to enumerate it so that the dynamic/notificationBannerModels from the migration database are mapped correctly
             // and we can successfully update properties on the models
@@ -145,23 +133,24 @@ namespace ntbs_service.Pages.Search
         // Given no offsets from the previous page perform a search without using skip and take in SQL queries
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchWithoutOffsetsAsync(
             INtbsSearchBuilder filteredDrafts,
-            INtbsSearchBuilder filteredNonDrafts,
             ILegacySearchBuilder legacySqlQuery)
         {
             var numberOfNotificationsToFetch = PaginationParameters.PageSize * PaginationParameters.PageIndex;
-            var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryablesAsync(
+            var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryableAsync(
                 filteredDrafts,
-                filteredNonDrafts,
-                PaginationParameters);
+                PaginationParameters,
+                User);
             var ntbsNotifications = await _notificationRepository.GetNotificationBannerModelsByIdsAsync(orderedNotificationIds);
             var (legacyNotifications, legacyCount) = await _legacySearchService.SearchAsync(
                 legacySqlQuery,
                 0,
-                numberOfNotificationsToFetch);
+                numberOfNotificationsToFetch,
+                User);
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
+            var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(User)).Select(s => s.Code);
             
             var notifications = allPossibleNotifications
-                .OrderByDescending(n => Codes.Contains(n.TbServiceCode))
+                .OrderByDescending(n => permittedTbServiceCodes.Contains(n.TbServiceCode))
                 .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
                 .ThenByDescending(n => n.SortByDate)
                 .ThenByDescending(n => n.NotificationId)
@@ -172,22 +161,24 @@ namespace ntbs_service.Pages.Search
 
         // Given offsets from the previous page perform a search with the correct skip and take to be efficient
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchWithOffsetsAsync(
-            INtbsSearchBuilder filteredDrafts,
-            INtbsSearchBuilder filteredNonDrafts,
+            INtbsSearchBuilder ntbsQueryable,
             ILegacySearchBuilder legacySqlQuery)
         {
-            var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryablesAsync(
-                filteredDrafts,
-                filteredNonDrafts,
-                PaginationParameters);
+            var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryableAsync(
+                ntbsQueryable,
+                PaginationParameters,
+                User);
             var ntbsNotifications = await _notificationRepository.GetNotificationBannerModelsByIdsAsync(orderedNotificationIds);
             var (legacyNotifications, legacyCount) = await _legacySearchService.SearchAsync(
                 legacySqlQuery,
                 (int)PaginationParameters.LegacyOffset,
-                PaginationParameters.PageSize);
+                PaginationParameters.PageSize,
+                User);
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
+            var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(User)).Select(s => s.Code);
+            
             var notifications = allPossibleNotifications
-                .OrderByDescending(n => Codes.Contains(n.TbServiceCode))
+                .OrderByDescending(n => permittedTbServiceCodes.Contains(n.TbServiceCode))
                 .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
                 .ThenByDescending(n => n.SortByDate)
                 .ThenByDescending(n => n.NotificationId)

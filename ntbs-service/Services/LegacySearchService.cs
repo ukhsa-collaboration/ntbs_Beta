@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.Models;
 using Dapper;
@@ -17,7 +18,7 @@ namespace ntbs_service.Services
 
     public interface ILegacySearchService
     {
-        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize);
+        Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize, ClaimsPrincipal user);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -40,27 +41,35 @@ namespace ntbs_service.Services
         private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
 
         const string SelectQueryEnd = @"
+            ORDER BY CASE
+                 WHEN n.NtbsHospitalId IN @editPermissionHospitals THEN 1
+                 WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0
+                 END DESC, n.NotificationDate Desc, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly INotificationImportHelper _notificationImportHelper;
+        private readonly IUserService _userService;
         private readonly bool LegacySearchEnabled;
         public IList<Sex> Sexes;
 
         public LegacySearchService(IConfiguration configuration,
                                     IReferenceDataRepository referenceDataRepository,
-                                    INotificationImportHelper notificationImportHelper)
+                                    INotificationImportHelper notificationImportHelper,
+                                    IUserService userService)
         {
             LegacySearchEnabled = configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE);
             connectionString = configuration.GetConnectionString("migration");
             _referenceDataRepository = referenceDataRepository;
             _notificationImportHelper = notificationImportHelper;
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
+            _userService = userService;
         }
 
-        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int numberToFetch)
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int numberToFetch,
+            ClaimsPrincipal user)
         {
             if (!LegacySearchEnabled)
             {
@@ -72,6 +81,10 @@ namespace ntbs_service.Services
             var (queryConditions, parameters) = builder.GetResult();
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
+            var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
+            parameters.editPermissionHospitals = _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(permittedTbServiceCodes)
+                .Result
+                .Select(h => h.HospitalId);
 
             string fullSelectQuery = SelectQueryStart + queryConditions + SelectQueryEnd;
             string fullCountQuery = CountQuery + queryConditions;

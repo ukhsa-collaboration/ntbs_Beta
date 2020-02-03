@@ -112,15 +112,6 @@ namespace ntbs_service.Services
             }
             return this;
         }
-        
-        public ISearchBuilder OrderByEditPermission(List<string> TBServices)
-        {
-            if (!TBServices.IsNullOrEmpty())
-            {
-                notificationIQ = notificationIQ.OrderBy(s => TBServices.Contains(s.Episode.TBServiceCode));
-            }
-            return this;
-        }
 
         public IQueryable<Notification> GetResult()
         {

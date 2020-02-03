@@ -16,6 +16,5 @@ namespace ntbs_service.Services
         ISearchBuilder FilterByPostcode(string postcode);
         ISearchBuilder FilterByBirthCountry(int? countryId);
         ISearchBuilder FilterByTBService(string TBService);
-        ISearchBuilder OrderByEditPermission(List<string> TbServices);
     }
 }

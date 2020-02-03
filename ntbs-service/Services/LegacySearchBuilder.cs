@@ -125,19 +125,6 @@ namespace ntbs_service.Services
             return this;
         }
 
-        public ISearchBuilder OrderByEditPermission(List<string> TbServices)
-        {
-            var hospitalGuids = _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(TbServices).Result
-                .Select(h => h.HospitalId);
-            sqlQuery += $@"
-                ORDER BY CASE
-                     WHEN n.NtbsHospitalId IN @editPermissionHospitals THEN 1
-                     WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0
-                     END DESC, n.NotificationDate Desc, n.OldNotificationId";
-            parameters.editPermissionHospitals = hospitalGuids;
-            return this;
-        }
-        
         public (string, dynamic) GetResult()
         {
             return (sqlQuery, parameters);
