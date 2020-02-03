@@ -19,6 +19,12 @@ namespace ntbs_service.Jobs
                 job => job.Run(JobCancellationToken.Null),
                 Cron.Daily(4),
                 TimeZoneInfo.Local);
+            
+            RecurringJob.AddOrUpdate<DataQualityAlertsJob>(
+                "data-quality-alerts",
+                job => job.Run(JobCancellationToken.Null),
+                Cron.Daily(4),
+                TimeZoneInfo.Local);
         }
     }
 }

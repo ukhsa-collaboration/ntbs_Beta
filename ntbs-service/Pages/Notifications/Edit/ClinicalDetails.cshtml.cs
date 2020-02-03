@@ -103,10 +103,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)
         {
+            var notificationSitesList = notificationSites.ToList();
             NotificationSiteMap = new Dictionary<SiteId, bool>();
             foreach (SiteId siteId in Enum.GetValues(typeof(SiteId)))
             {
-                NotificationSiteMap.Add(siteId, notificationSites.FirstOrDefault(ns => ns.SiteId == (int)siteId) != null);
+                NotificationSiteMap.Add(siteId, notificationSitesList.FirstOrDefault(ns => ns.SiteId == (int)siteId) != null);
             }
         }
 
@@ -137,7 +138,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 (int)ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             }
 
-            var notificationSites = CreateNotificationSitesFromModel(Notification);
+            var notificationSites = CreateNotificationSitesFromModel(Notification).ToList();
 
             // Add additional field required for date validation
             ClinicalDetails.Dob = Notification.PatientDetails.Dob;

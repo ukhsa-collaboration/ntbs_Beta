@@ -502,7 +502,11 @@ namespace ntbs_service.DataAccess
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
                     .HasValue<TransferAlert>(AlertType.TransferRequest)
                     .HasValue<TransferRejectedAlert>(AlertType.TransferRejected)
-                    .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult);
+                    .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult)
+                    .HasValue<DataQualityDraftAlert>(AlertType.DataQualityDraft)
+                    .HasValue<DataQualityBirthCountryAlert>(AlertType.DataQualityBirthCountry)
+                    .HasValue<DataQualityClinicalDatesAlert>(AlertType.DataQualityClinicalDates)
+                    .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });
