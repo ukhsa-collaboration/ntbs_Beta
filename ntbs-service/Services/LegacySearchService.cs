@@ -40,7 +40,6 @@ namespace ntbs_service.Services
         private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
 
         const string SelectQueryEnd = @"
-            ORDER BY n.NotificationDate DESC, n.OldNotificationId
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
@@ -65,7 +64,7 @@ namespace ntbs_service.Services
         {
             if (!LegacySearchEnabled)
             {
-                return (new List<NotificationBannerModel> { }, 0);
+                return (new List<NotificationBannerModel>(), 0);
             }
 
             IEnumerable<dynamic> results;

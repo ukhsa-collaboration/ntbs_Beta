@@ -22,10 +22,11 @@ namespace ntbs_service.Pages.Search
         private readonly IAuthorizationService _authorizationService;
         private readonly ILegacySearchService _legacySearchService;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IUserService _userService;
 
         public ValidationService ValidationService;
 
-        public string CurrentFilter { get; set; }
+        public IEnumerable<string> Codes { get; set; }
         public PaginatedList<NotificationBannerModel> SearchResults;
         public string NextPageUrl;
         public string PreviousPageUrl;
@@ -43,13 +44,15 @@ namespace ntbs_service.Pages.Search
             ISearchService searchService,
             IAuthorizationService authorizationService,
             IReferenceDataRepository referenceDataRepository,
-            ILegacySearchService legacySearchService)
+            ILegacySearchService legacySearchService,
+            IUserService userService)
         {
             _authorizationService = authorizationService;
             _searchService = searchService;
             _notificationRepository = notificationRepository;
             _legacySearchService = legacySearchService;
             _referenceDataRepository = referenceDataRepository;
+            _userService = userService;
 
             ValidationService = new ValidationService(this);
 
@@ -78,6 +81,7 @@ namespace ntbs_service.Pages.Search
                 LegacyOffset = legacyOffset,
                 NtbsOffset = ntbsOffset
             };
+            Codes = (await _userService.GetTbServicesAsync(User)).Select(s => s.Code);
 
             var draftsQueryable = _notificationRepository.GetQueryableNotificationByStatus(new List<NotificationStatus>() {
                 NotificationStatus.Draft });
@@ -115,7 +119,7 @@ namespace ntbs_service.Pages.Search
                 .FilterBySex(SearchParameters.SexId)
                 .FilterByBirthCountry(SearchParameters.CountryId)
                 .FilterByTBService(SearchParameters.TBServiceCode)
-                .OrderByEditPermission(new List<string>());
+                .OrderByEditPermission(Codes.ToList());
         }
         
         private async Task<(IList<NotificationBannerModel> results, int count)> SearchAsync(
@@ -155,8 +159,10 @@ namespace ntbs_service.Pages.Search
                 0,
                 numberOfNotificationsToFetch);
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
+            
             var notifications = allPossibleNotifications
-                .OrderByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
+                .OrderByDescending(n => Codes.Contains(n.TbServiceCode))
+                .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
                 .ThenByDescending(n => n.SortByDate)
                 .ThenByDescending(n => n.NotificationId)
                 .Skip(numberOfNotificationsToFetch - PaginationParameters.PageSize)
@@ -181,7 +187,8 @@ namespace ntbs_service.Pages.Search
                 PaginationParameters.PageSize);
             var allPossibleNotifications = ntbsNotifications.Concat(legacyNotifications);
             var notifications = allPossibleNotifications
-                .OrderByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
+                .OrderByDescending(n => Codes.Contains(n.TbServiceCode))
+                .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
                 .ThenByDescending(n => n.SortByDate)
                 .ThenByDescending(n => n.NotificationId)
                 .Take(PaginationParameters.PageSize);
