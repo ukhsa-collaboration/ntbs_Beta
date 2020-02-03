@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: ntbs-live
-          image: "ntbscontainerregistry.azurecr.io/ntbs-service"
+          image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
           imagePullPolicy: Always
           resources:
             requests:
