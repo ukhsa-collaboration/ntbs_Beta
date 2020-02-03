@@ -1,21 +1,38 @@
+@using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
 @model ntbs_service.Models.Entities.Notification
 
 @{
+    var isDraft = Model.NotificationStatus == NotificationStatus.Draft;
+    var isEditPage = (bool?) ViewData["IsEditPage"] ?? true;
+    var currentPage = (string) ViewData["CurrentPage"];
+
     var buttonName = "";
-    if (@ViewData.ContainsKey("ShowContinueButton") && (bool)@ViewData["ShowContinueButton"])
+    if (!isEditPage)
     {
         buttonName = "Continue";
-    } else {
-        buttonName = Model?.NotificationStatus == NotificationStatus.Draft ? "Save and continue" : "Save";
     }
-    var id = @ViewData.ContainsKey("id") ? @ViewData["id"] : "save-button";
+    else
+    {
+        buttonName = isDraft ? "Save and continue" : "Save";
+    }
+
+    var id = ViewData.ContainsKey("id") ? ViewData["id"] : "save-button";
 }
-<button
-    nhs-button-type="Standard"
-    classes="ntbsuk-button--primary"
-    name="actionName"
-    value="Save"
-    id=@id >
-    @buttonName
-</button>
+
+@if (isDraft || isEditPage)
+{
+    <button
+        nhs-button-type="Standard"
+        classes="ntbsuk-button--primary"
+        name="actionName"
+        value="Save"
+        id="@id">
+        @buttonName
+    </button>
+}
+
+@if (!isDraft)
+{
+    <nhs-back-link href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">Cancel & go back</nhs-back-link>
+}

@@ -164,5 +164,44 @@ namespace ntbs_integration_tests.NotificationPages
             }
             Assert.Equal(validationResult, result);
         }
+        
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["ImmunosuppressionStatus"] = "Yes",
+                ["HasOther"] = "True",
+                ["OtherDescription"] = "test description",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
+        }
     }
 }

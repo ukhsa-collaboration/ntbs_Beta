@@ -9,7 +9,6 @@
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Clinical Details";
-    ViewData["CurrentPage"] = NotificationSubPaths.EditClinicalDetails;
     var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
     ViewData["FullValidation"] = fullValidation;
 }

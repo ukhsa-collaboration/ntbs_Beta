@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -199,6 +200,37 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             var document = await GetDocumentForUrl(url);
             Assert.Null(document.QuerySelector("#overview-denotification-reason"));
+        }
+        
+        public static IEnumerable<object[]> AnchorSubPaths() => new List<string>
+        {
+           NotificationSubPaths.EditPatientDetails,
+           NotificationSubPaths.EditEpisode,
+           NotificationSubPaths.EditClinicalDetails,
+           NotificationSubPaths.EditContactTracing,
+           NotificationSubPaths.EditTestResults,
+           NotificationSubPaths.EditSocialRiskFactors,
+           NotificationSubPaths.EditTravel,
+           NotificationSubPaths.EditComorbidities,
+           NotificationSubPaths.EditSocialContextAddresses,
+           NotificationSubPaths.EditSocialContextVenues,
+           NotificationSubPaths.EditPreviousHistory,
+           NotificationSubPaths.EditMDRDetails
+        }.Select(subPath => new object[] { subPath });
+
+        [Theory]
+        [MemberData(nameof(AnchorSubPaths))]
+        public async Task OverviewPageContainsAnchorId_ForNotificationSubPath(string subPath)
+        {
+            // Arrange
+            var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            
+            // Act
+            var document = await GetDocumentForUrl(url);
+            
+            // Assert
+            Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}"));
         }
     }
 }

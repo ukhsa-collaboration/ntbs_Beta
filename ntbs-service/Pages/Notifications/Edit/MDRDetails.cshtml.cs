@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -24,6 +25,8 @@ namespace ntbs_service.Pages.Notifications.Edit
                     nameof(Country.CountryId),
                     nameof(Country.Name)
                 );
+
+                CurrentPage = NotificationSubPaths.EditMDRDetails;
             }
 
         [BindProperty]

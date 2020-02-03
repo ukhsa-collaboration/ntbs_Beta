@@ -2,11 +2,15 @@
 @using ntbs_service.Models.Enums
 @model OverviewModel
 
-<div class="notification-overview-type-and-edit-container" id="patient-details-overview-header">
+@{
+    var sectionSubPath = NotificationSubPaths.EditPatientDetails;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Personal details of patient </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditPatientDetails)"
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
            class="notification-edit-link govuk-link--no-visited-state">
             Edit
         </a>

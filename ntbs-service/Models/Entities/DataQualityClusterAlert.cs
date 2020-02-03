@@ -6,10 +6,11 @@ namespace ntbs_service.Models.Entities
     public class DataQualityClusterAlert : Alert
     {
         public override string Action => "Notification is in a Cluster, please review social context information.";
-        // TODO: NTBS-864 overview id
+
         public override string ActionLink =>
-            RouteHelper.GetNotificationPath(NotificationId.GetValueOrDefault(),
-                NotificationSubPaths.Overview) + "#social-context-addresses-overview-details";
+            RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
+                NotificationId.GetValueOrDefault(),
+                NotificationSubPaths.EditSocialContextAddresses);
 
         public DataQualityClusterAlert()
         {

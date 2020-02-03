@@ -115,7 +115,7 @@ namespace ntbs_ui_tests.StepDefinitions
         [Then(@"I should see the Notification")]
         public void ThenIShouldSeeTheNotification()
         {
-            var urlRegex = new Regex(@".*/Notifications/(\d+)/?$");
+            var urlRegex = new Regex(@".*/Notifications/(\d+)/?(#.+)?$");
             var match = urlRegex.Match(Browser.Url);
             var idString = match.Groups[1].Value;
             Assert.True(match.Success, $"Url I am on instead: {Browser.Url}");

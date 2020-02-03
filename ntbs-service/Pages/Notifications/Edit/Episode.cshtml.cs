@@ -42,6 +42,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             _context = context;
             _userService = userService;
             _referenceDataRepository = referenceDataRepository;
+
+            CurrentPage = NotificationSubPaths.EditEpisode;
         }
 
         protected override Task<Notification> GetNotificationAsync(int notificationId)

@@ -48,6 +48,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;
+
+            CurrentPage = NotificationSubPaths.EditClinicalDetails;
         }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)

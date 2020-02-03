@@ -14,7 +14,7 @@ namespace ntbs_service.Pages.Notifications
 {
     public abstract class NotificationEditModelBase : NotificationModelBase
     {
-        protected ValidationService ValidationService;
+        protected readonly ValidationService ValidationService;
 
         protected NotificationEditModelBase(
             INotificationService service,
@@ -37,6 +37,9 @@ namespace ntbs_service.Pages.Notifications
         */
         [BindProperty]
         public string ActionName { get; set; }
+
+        [ViewData]
+        public string CurrentPage { get; set; }
 
         public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
@@ -131,7 +134,12 @@ namespace ntbs_service.Pages.Notifications
         // but this can be overriden for sub-entity pages such as TestResult
         protected virtual IActionResult RedirectAfterSaveForNotified()
         {
-            return RedirectToPage("/Notifications/Overview", new { NotificationId });
+            var overviewAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(CurrentPage);
+            return RedirectToPage(
+                pageName: "/Notifications/Overview", 
+                pageHandler: null,  
+                routeValues: new { NotificationId }, 
+                fragment: overviewAnchorId);
         }
 
         protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
