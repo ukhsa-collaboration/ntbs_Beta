@@ -1,9 +1,10 @@
 # SSL Certificates
 We use Let's Encrpyt for free certificates for the test environments
-*Note: we tried using an automated cert-manager approach as per: https://docs.microsoft.com/en-us/azure/aks/ingress-tls, but couldn't get it to work. Hence the manual appraoch*
+*Note: we tried using an automated cert-manager approach as per: https://docs.microsoft.com/en-us/azure/aks/ingress-tls, but couldn't get it to work. Hence the manual approach*
 
 ## Steps to create/renew certificate
 1. The environment will have to go down for a while - verify this being OK with its users
+1. Take note of the image tag currently deployed on the environment (`kubectl get deployments/ntbs-$env -o wide`) 
 1. Replace the application with a bare-bones nginx container, e.g. by
     1. Replacing `spec.template.spec.containers[].image` with `"nginx:1.17.5" in the deployment yaml file
     1. Remember the image uses port 80, so you might need to change the balancer's port to that, too:
@@ -25,4 +26,4 @@ We use Let's Encrpyt for free certificates for the test environments
 (This part of the process is taken from https://docs.microsoft.com/en-us/azure/aks/ingress-own-tls):
     1. `kubectl delete secret $secretName`
     1. `kubectl create secret tls $secretName --key .\privkey1.pem --cert .\fullchain1.pem`
-1. Return environment back to running app: revert changes from first step and rerun `kubectl apply ...`
+1. Return environment back to running the app, e.g. by running the release script with the image tag as noted in step 2.
