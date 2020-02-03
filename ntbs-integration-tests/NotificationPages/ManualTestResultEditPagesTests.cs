@@ -322,7 +322,7 @@ namespace ntbs_integration_tests.NotificationPages
             const string handlerPath = "ValidateTestResultForEditDate";
             var notificationSubPath = isEdit ? NotificationSubPath : NotificationSubPaths.AddManualTestResult;
             var endpointPath = $"{notificationSubPath}/{handlerPath}";
-            var endpointUrl = GetPathForId($"{endpointPath}", 0, formData);
+            var endpointUrl = GetPathForId($"{endpointPath}", Utilities.NOTIFIED_ID, formData);
 
             // Act
             var response = await Client.GetAsync(endpointUrl);
