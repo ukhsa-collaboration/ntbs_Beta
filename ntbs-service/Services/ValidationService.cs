@@ -41,7 +41,7 @@ namespace ntbs_service.Services
         public ContentResult GetMultiplePropertiesValidationResult<T>(
             IEnumerable<(string, object)> propertyValueTuples,
             bool shouldValidateFull = false,
-            bool isLegacy = false)
+            bool? isLegacy = false)
             where T : ModelBase
         {
             T model = (T)Activator.CreateInstance(typeof(T));

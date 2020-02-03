@@ -57,7 +57,7 @@ namespace ntbs_service.Models.Entities
         public NotificationStatus NotificationStatus { get; set; }
 
         [NotMapped]
-        public new bool IsLegacy => LTBRID != null || ETSID != null;
+        public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
         #endregion
 
