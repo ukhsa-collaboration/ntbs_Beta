@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Validations;
 using Serilog;
 
 // ReSharper disable UseObjectOrCollectionInitializer
@@ -206,19 +208,28 @@ namespace ntbs_service.DataMigration
 
         private static PatientDetails ExtractPatientDetails(dynamic notification)
         {
+            var address = RemoveCharactersNotIn(
+                ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
+                notification.Line1 + " " + notification.Line2);
+            var givenName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.GivenName);
+            var familyName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.FamilyName);
+            var localPatientId = RemoveCharactersNotIn(
+                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                notification.LocalPatientId);
+
             var details = new PatientDetails();
-            details.FamilyName = notification.FamilyName;
-            details.GivenName = notification.GivenName;
+            details.FamilyName = familyName;
+            details.GivenName = givenName;
             details.NhsNumber = notification.NhsNumber;
             details.NhsNumberNotKnown = notification.NhsNumberNotKnown == 1 || notification.NhsNumber == null;
             details.Dob = notification.DateOfBirth;
             details.YearOfUkEntry = notification.UkEntryYear;
             details.UkBorn = notification.UkBorn;
             details.CountryId = notification.BirthCountryId ?? Countries.UnknownId;
-            details.LocalPatientId = notification.LocalPatientId;
+            details.LocalPatientId = localPatientId;
             details.Postcode = notification.Postcode;
             details.NoFixedAbode = notification.NoFixedAbode == 1;
-            details.Address = notification.Line1 + " " + notification.Line2;
+            details.Address = address;
             details.EthnicityId = notification.NtbsEthnicGroupId ?? Ethnicities.NotStatedId;
             details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
@@ -227,6 +238,16 @@ namespace ntbs_service.DataMigration
             ForceValidNhsNumber(details);
             
             return details;
+        }
+
+        private static string RemoveCharactersNotIn(string matchingRegex, string input)
+        {
+            // We assume the matching regex to be of the format "[someLettersHere]+"
+            // and we are aiming to turn it into "[^someLettersHere]"
+            var notMatchingRegex = matchingRegex
+                .Remove(matchingRegex.Length - 1)
+                .Insert(1, "^");
+            return new Regex(notMatchingRegex).Replace(input, "");
         }
 
         private static void ForceValidNhsNumber(PatientDetails details)
