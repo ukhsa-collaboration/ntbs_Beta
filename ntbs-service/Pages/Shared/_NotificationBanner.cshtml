@@ -15,21 +15,19 @@
                     <div> @Model.NotificationStatusString </div>
 
                     <div>
+                        @if (Model.NotificationStatus == NotificationStatus.Legacy)
+                        {
+                            @Model.Source;
+                        }
+                        
                         @if (Model.ShowLink)
                         {
+                            
                             <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
                         }
                         else
                         {
-                            @if (Model.NotificationStatus == NotificationStatus.Legacy)
-                            {
-                                var legacyIdString = Model.Source + " #" + Model.NotificationId;
-                                @legacyIdString
-                            }
-                            else
-                            {
-                                @:#@(Model.NotificationId)
-                            }
+                            @:#@(Model.NotificationId)
                         }
 
                         @if (Model.ShowPadlock)

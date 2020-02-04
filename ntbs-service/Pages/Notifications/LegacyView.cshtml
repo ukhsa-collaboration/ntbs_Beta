@@ -1,0 +1,56 @@
+﻿@page "/Notifications/LegacyView/{LegacyNotificationId}"
+
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.Notifications.LegacyView
+
+@{
+    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.NotificationBanner.NotificationStatus);
+    var notificationStatusTriangleCssClass = $"notification-banner-triangle notification-banner-triangle{classSuffix}";
+}
+
+<nhs-width-container container-width="Standard">
+
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="Full">
+            <div class="notification-banner-container">
+                <partial name="../Shared/_NotificationBanner.cshtml" model="@Model.NotificationBanner" />
+                <div class="@notificationStatusTriangleCssClass"> </div>
+            </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+
+@if (Model.LegacyImportResult == null)
+{
+    <div class="ondemand-migration-description-container">
+        You must import this notification to view the full details of the record.
+        <br/>
+        Import may take a few moments.
+        <br/>
+        Do you wish to proceed?
+        <br/>
+        <form method="post">
+            <button class="nhsuk-button">Import</button>
+        </form>
+    </div>
+}
+else
+{
+    <nhs-error-summary title-text="This notification cannot be imported" title-id="error-summary-title"
+                       role="alert" tabindex="-1" data-module="error-summary">
+        @foreach (var (key, validationErrors) in Model.LegacyImportResult.ValidationErrors)
+        {
+            <li><strong>@validationErrors.Count validation errors found for notification with Id= @key</strong></li>
+            @foreach (var item in validationErrors)
+            {
+                <li>@item</li>
+            }
+        }
+    </nhs-error-summary>
+    
+    <h5>What next?</h5>
+    <span>Please contact ntbs@phe.gov.uk quoting reference ID: {@Model.RequestId} </span>
+}
+    
+    
+    
+</nhs-width-container>
