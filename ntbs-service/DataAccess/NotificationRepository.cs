@@ -58,7 +58,7 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
-                .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
+                .SingleOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotifiedNotificationAsync(int notificationId)
@@ -84,9 +84,9 @@ namespace ntbs_service.DataAccess
 
         public async Task<bool> IsNotificationLegacyAsync(int id)
         {
-            return await _context.Notification.Where(n => n.NotificationId == id)
-                .Select(n => n.LTBRID != null || n.ETSID != null)
-                .SingleAsync();
+            return await _context.Notification
+                .Where(n => n.NotificationId == id)
+                .AnyAsync(n => n.LTBRID != null || n.ETSID != null);
         }
 
         public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
@@ -103,14 +103,14 @@ namespace ntbs_service.DataAccess
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.NotificationSites)
-                .FirstOrDefaultAsync(m => m.NotificationId == notificationId);
+                .SingleOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithCaseManagerTbServices(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.Episode.CaseManager.CaseManagerTbServices)
-                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithTestsAsync(int notificationId)
@@ -121,14 +121,14 @@ namespace ntbs_service.DataAccess
                         .ThenInclude(t => t.SampleType)
                 .Include(n => n.TestData.ManualTestResults)
                     .ThenInclude(t => t.SampleType)
-                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithSocialContextAddressesAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.SocialContextAddresses)
-                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId)
@@ -136,7 +136,7 @@ namespace ntbs_service.DataAccess
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.SocialContextVenues)
                     .ThenInclude(s => s.VenueType)
-                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public async Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId)
@@ -172,7 +172,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextAddresses)
                 .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
                 .Include(n => n.Alerts)
-                .FirstOrDefaultAsync(n => n.NotificationId == notificationId);
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
         public IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses)
