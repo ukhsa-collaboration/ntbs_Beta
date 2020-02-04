@@ -45,7 +45,7 @@ namespace ntbs_service.Services
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
-        private const string SelectByIdConditionAndEnd = @"AND dmg.OldNotificationId = @id";
+        private const string SelectByIdCondition = @"AND dmg.OldNotificationId = @id";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -94,7 +94,7 @@ namespace ntbs_service.Services
 
         public async Task<NotificationBannerModel> SearchByIdAsync(string notificationId)
         {
-            string fullQuery = SelectQueryStart + SelectByIdConditionAndEnd;
+            string fullQuery = SelectQueryStart + SelectByIdCondition;
             dynamic result;
             
             using (var connection = new SqlConnection(connectionString))
@@ -106,7 +106,7 @@ namespace ntbs_service.Services
 
             if (result == null)
             {
-                return new NotificationBannerModel();
+                return null;
             }
 
             return ((NotificationBannerModel) AsNotificationBannerAsync(result).Result);

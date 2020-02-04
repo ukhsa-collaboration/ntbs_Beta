@@ -8,9 +8,9 @@ using ntbs_service.DataMigration;
 using ntbs_service.Models;
 using ntbs_service.Services;
 
-namespace ntbs_service.Pages.Notifications
+namespace ntbs_service.Pages.LegacyNotifications
 {
-    public class LegacyView : PageModel
+    public class Index : PageModel
     {
         private readonly ILegacySearchService _legacySearchService;
         private readonly INotificationImportService _notificationImportService;
@@ -24,7 +24,7 @@ namespace ntbs_service.Pages.Notifications
         public string RequestId { get; set; }
         public ImportResult LegacyImportResult { get; set; }
 
-        public LegacyView(ILegacySearchService legacySearchService, INotificationImportService notificationImportService)
+        public Index(ILegacySearchService legacySearchService, INotificationImportService notificationImportService)
         {
             _legacySearchService = legacySearchService;
             _notificationImportService = notificationImportService;
@@ -32,14 +32,7 @@ namespace ntbs_service.Pages.Notifications
         
         public async Task<IActionResult> OnGetAsync()
         {
-            await GetLegacyNotificationDetailsForBanner();
-            return Page();
-        }
-
-        private async Task GetLegacyNotificationDetailsForBanner()
-        {
-            NotificationBanner = await _legacySearchService.SearchByIdAsync(LegacyNotificationId);
-            NotificationBanner.ShowLink = false;
+            return await GetPage();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -56,8 +49,19 @@ namespace ntbs_service.Pages.Notifications
                 
             LegacyImportResult = importResult;
 
-            await GetLegacyNotificationDetailsForBanner();
-            return Page();
+            return await GetPage();
+        }
+
+        private async Task<IActionResult> GetPage()
+        {
+            NotificationBanner = await _legacySearchService.SearchByIdAsync(LegacyNotificationId);
+            if (NotificationBanner == null)
+            {
+                return NotFound();
+            }
+            
+            NotificationBanner.ShowLink = false;
+            return Page(); 
         }
     }
 }

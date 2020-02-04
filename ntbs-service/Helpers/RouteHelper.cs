@@ -6,7 +6,7 @@ namespace ntbs_service.Helpers
     public static class RouteHelper
     {
         private static string NotificationBasePath => "/Notifications/{0}/{1}";
-        public static string GetLegacyNotificationPath(string NotificationId) => $"/Notifications/LegacyView/{NotificationId}";
+        public static string GetLegacyNotificationPath(string legacyNotificationId) => $"/LegacyNotifications/{legacyNotificationId}";
 
         public static string GetSubmittingNotificationPath(int notificationId, string subPath)
         {
