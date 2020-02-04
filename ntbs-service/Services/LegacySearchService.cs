@@ -18,7 +18,7 @@ namespace ntbs_service.Services
     public interface ILegacySearchService
     {
         Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize);
-        Task<NotificationBannerModel> SearchByIdAsync(string notificationId);
+        Task<NotificationBannerModel> GetByIdAsync(string notificationId);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -92,7 +92,7 @@ namespace ntbs_service.Services
             return (notificationBannerModels, count);
         }
 
-        public async Task<NotificationBannerModel> SearchByIdAsync(string notificationId)
+        public async Task<NotificationBannerModel> GetByIdAsync(string notificationId)
         {
             string fullQuery = SelectQueryStart + SelectByIdCondition;
             dynamic result;
@@ -104,12 +104,7 @@ namespace ntbs_service.Services
                 result = (await connection.QueryAsync(fullQuery, new { id = notificationId})).FirstOrDefault();
             }
 
-            if (result == null)
-            {
-                return null;
-            }
-
-            return ((NotificationBannerModel) AsNotificationBannerAsync(result).Result);
+            return result == null ? null : await AsNotificationBannerAsync(result);
         }
 
         private async Task<NotificationBannerModel> AsNotificationBannerAsync(dynamic result)

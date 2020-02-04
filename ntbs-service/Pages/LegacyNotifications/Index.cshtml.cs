@@ -14,8 +14,7 @@ namespace ntbs_service.Pages.LegacyNotifications
     {
         private readonly ILegacySearchService _legacySearchService;
         private readonly INotificationImportService _notificationImportService;
-
-        [BindProperty] 
+        
         public NotificationBannerModel NotificationBanner { get; set; }
         
         [BindProperty(SupportsGet = true)]
@@ -39,22 +38,20 @@ namespace ntbs_service.Pages.LegacyNotifications
         {
             RequestId = HttpContext.TraceIdentifier;
             var idsList = new List<string> {LegacyNotificationId};
-            ImportResult importResult = (await _notificationImportService.ImportByLegacyIdsAsync(null, RequestId, idsList)).FirstOrDefault();
+            LegacyImportResult = (await _notificationImportService.ImportByLegacyIdsAsync(null, RequestId, idsList)).FirstOrDefault();
 
-            if (importResult != null && importResult.IsValid)
+            if (LegacyImportResult != null && LegacyImportResult.IsValid)
             {
-                var notificationId = importResult.NtbsIds[LegacyNotificationId];
+                var notificationId = LegacyImportResult.NtbsIds[LegacyNotificationId];
                 return RedirectToPage("/Notifications/Overview", new { NotificationId = notificationId });
             }
-                
-            LegacyImportResult = importResult;
 
             return await GetPage();
         }
 
         private async Task<IActionResult> GetPage()
         {
-            NotificationBanner = await _legacySearchService.SearchByIdAsync(LegacyNotificationId);
+            NotificationBanner = await _legacySearchService.GetByIdAsync(LegacyNotificationId);
             if (NotificationBanner == null)
             {
                 return NotFound();
