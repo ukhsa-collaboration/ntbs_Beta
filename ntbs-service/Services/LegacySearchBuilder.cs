@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Security.Claims;
-using Castle.Core.Internal;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 

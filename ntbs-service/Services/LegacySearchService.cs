@@ -68,7 +68,8 @@ namespace ntbs_service.Services
             _userService = userService;
         }
 
-        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int numberToFetch,
+        public async Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(
+            ILegacySearchBuilder builder, int offset, int numberToFetch,
             ClaimsPrincipal user)
         {
             if (!LegacySearchEnabled)

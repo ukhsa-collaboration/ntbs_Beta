@@ -32,7 +32,6 @@ namespace ntbs_service.Services
         {
             
             var notificationIdsQueryable = await OrderQueryableByEditPermissionThenNotificationDateAsync(firstBuilder.GetResult(), user);
-
             var notificationIds = await GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), paginationParameters);
             var count = await notificationIdsQueryable.CountAsync();
             return (notificationIds, count);
