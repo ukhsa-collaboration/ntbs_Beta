@@ -20,7 +20,7 @@ namespace ntbs_service.Models
                 Name = notification.FullName,
                 Dob = notification.FormattedDob,
                 NhsNumber = notification.FormattedNhsNumber,
-                DrugResistance = notification.DrugResistanceProfile?.DrugResistanceProfileString,
+                DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString,
                 Sex = notification.SexLabel,
                 Postcode = notification.FormattedNoAbodeOrPostcodeString
             };

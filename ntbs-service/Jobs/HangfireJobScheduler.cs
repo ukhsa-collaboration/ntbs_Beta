@@ -14,7 +14,7 @@ namespace ntbs_service.Jobs
                 TimeZoneInfo.Local);            
             
             RecurringJob.AddOrUpdate<DrugResistanceProfileUpdateJob>(
-                "drp-update",
+                "drug-resistance-profile-update",
                 job => job.Run(JobCancellationToken.Null),
                 Cron.Daily(4),
                 TimeZoneInfo.Local);

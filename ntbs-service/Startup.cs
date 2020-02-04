@@ -164,7 +164,7 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.AddScoped<IHomepageKpiService, HomepageKpiService>();
 
-            services.AddScoped<IReportingService, ReportingService>();
+            services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             services.AddScoped<IMdrService, MdrService>();
 

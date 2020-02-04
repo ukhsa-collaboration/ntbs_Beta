@@ -10,12 +10,12 @@ namespace ntbs_service_unit_tests.Services
     public class MdrServiceTest
     {
         private readonly Mock<IAlertService> mockAlertService;
-        private readonly MdrService mockMdrService;
+        private readonly MdrService mdrService;
 
         public MdrServiceTest()
         {
             mockAlertService = new Mock<IAlertService>();
-            mockMdrService = new MdrService(mockAlertService.Object);
+            mdrService = new MdrService(mockAlertService.Object);
         }
 
         [Theory]
@@ -23,7 +23,7 @@ namespace ntbs_service_unit_tests.Services
         [InlineData("RR/MDR/XDR", true)]
         [InlineData("NonMDR", false)]
         [InlineData("NonMDR", true)]
-        public void CreateOrDismissMdrAlert_CreatOrDismissAlert(string drugResistance, bool questionnaireFilled)
+        public void CreateOrDismissMdrAlert(string drugResistance, bool questionnaireFilled)
         {
             // Arrange
             var notification = new Notification
@@ -40,7 +40,7 @@ namespace ntbs_service_unit_tests.Services
             };
             
             // Act
-            mockMdrService.CreateOrDismissMdrAlert(notification);
+            mdrService.CreateOrDismissMdrAlert(notification);
             
             // Assert
             var numberOfCalls = (drugResistance == "RR/MDR/XDR" && !questionnaireFilled) ? Times.Once() : Times.Never();

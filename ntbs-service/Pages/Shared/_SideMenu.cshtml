@@ -63,7 +63,7 @@
                 Previous History
             </a>
         </li>
-        @if (Model.Notification?.ClinicalDetails?.IsMDRTreatment == true || (Model.Notification?.DrugResistanceProfile?.IsMdr ?? false))
+        @if (Model.Notification.ShouldShowMdrDetails)
         {
             <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMDRDetails ? "contents-list-item--current" : ""))">
                 <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMDRDetails)">

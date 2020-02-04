@@ -138,7 +138,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 (int)ClinicalDetails.BCGVaccinationYear, PatientBirthYear);
             }
 
-            var notificationSites = CreateNotificationSitesFromModel(Notification);
+            var notificationSites = CreateNotificationSitesFromModel(Notification).ToList();
 
             // Add additional field required for date validation
             ClinicalDetails.Dob = Notification.PatientDetails.Dob;
@@ -160,12 +160,29 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
-            bool alertCreatedOrDismissed = await _mdrService.CreateOrDismissMdrAlert(Notification, ClinicalDetails.IsMDRTreatment);
-            if (!alertCreatedOrDismissed)
+            var shouldDismissAlert = (Notification.ClinicalDetails?.IsMDRTreatment == true &&
+                                            ClinicalDetails.IsMDRTreatment == false);
+            
+            var shouldCreateAlert = (Notification.ClinicalDetails?.IsMDRTreatment != true &&
+                                            ClinicalDetails.IsMDRTreatment == true);
+
+            
+            if (shouldDismissAlert && Notification.MDRDetails.MDRDetailsEntered)
             {
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
-
+            else
+            {
+                if (shouldDismissAlert)
+                {
+                    await _mdrService.DismissMdrAlert(Notification);
+                }
+                else if (shouldCreateAlert)
+                {
+                    await _mdrService.CreateMdrAlert(Notification);
+                }
+            }
+            
             if (ModelState.IsValid)
             {
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);

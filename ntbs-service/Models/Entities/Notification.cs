@@ -146,7 +146,10 @@ namespace ntbs_service.Models.Entities
         public string FormattedDenotificationDate => DenotificationDetails?.DateOfDenotification.ConvertToString();
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
-
+        public bool ShouldCreateAlert => DrugResistanceProfile.IsMdr && !MDRDetails.MDRDetailsEntered;
+        public bool ShouldDismissAlert => !DrugResistanceProfile.IsMdr && !MDRDetails.MDRDetailsEntered;
+        public bool ShouldShowMdrDetails => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.IsMdr;
+        
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)

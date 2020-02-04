@@ -6,23 +6,23 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Models.Entities;
 
-namespace ntbs_service.Services
+namespace ntbs_service.DataAccess
 {
-    public interface IReportingService
+    public interface IDrugResistanceProfileRepository
     {
-        Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfiles();
+        Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync();
     }
     
-    public class ReportingService : IReportingService
+    public class DrugResistanceProfileRepository : IDrugResistanceProfileRepository
     {
         private readonly string _reportingDbConnectionString;
 
-        public ReportingService(IConfiguration configuration)
+        public DrugResistanceProfileRepository(IConfiguration configuration)
         {
             _reportingDbConnectionString = configuration.GetConnectionString("reporting");
         }
-
-        public async Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfiles()
+        
+        public async Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync()
         {
             var query = $@"
                 SELECT [ReusableNotificationId] AS NotificationId,
@@ -33,15 +33,13 @@ namespace ntbs_service.Services
             using (var connection = new SqlConnection(_reportingDbConnectionString))
             {
                 connection.Open();
-                var results = await connection.QueryAsync(query);
-                
-                return results.ToDictionary(
-                    t => (int) t.ReusableNotificationId, 
+                return (await connection.QueryAsync(query)).ToDictionary(
+                    t => (int) t.NotificationId,
                     t => new DrugResistanceProfile
-                        {
-                            DrugResistanceProfileString = t.DrugResistanceProfile,
-                            Species = t.Species
-                        });
+                    {
+                        DrugResistanceProfileString = t.DrugResistanceProfile,
+                        Species = t.Species
+                    });
             }
         }
     }

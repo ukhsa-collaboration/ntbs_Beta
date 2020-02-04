@@ -1,5 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Extensions.Configuration;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
@@ -12,24 +18,24 @@ namespace ntbs_service.Services
     {
         private readonly INotificationService _notificationService;
         private readonly INotificationRepository _notificationRepository;
-        private readonly IReportingService _reportingService;
         private readonly IMdrService _mdrService;
+        private readonly IDrugResistanceProfileRepository _drugResistanceProfileRepository;
 
         public DrugResistanceProfileService(
             INotificationService notificationService, 
             INotificationRepository notificationRepository,
-            IReportingService reportingService,
+            IDrugResistanceProfileRepository drugResistanceProfileRepository,
             IMdrService mdrService)
         {
-            _reportingService = reportingService;
             _notificationService = notificationService;
             _notificationRepository = notificationRepository;
+            _drugResistanceProfileRepository = drugResistanceProfileRepository;
             _mdrService = mdrService;
         }
 
         public async Task UpdateDrugResistanceProfiles()
         {
-            var drugResistanceProfiles = await _reportingService.GetDrugResistanceProfiles();
+            var drugResistanceProfiles = await _drugResistanceProfileRepository.GetDrugResistanceProfilesAsync();
             
             foreach (var (notificationId, drugResistanceProfile) in drugResistanceProfiles)
             {
@@ -48,11 +54,6 @@ namespace ntbs_service.Services
                     continue;
                 }
 
-                if (notification.DrugResistanceProfile == null)
-                {
-                    notification.DrugResistanceProfile = drugResistanceProfile;
-                }
-                
                 await _mdrService.CreateOrDismissMdrAlert(notification);
                 await _notificationService.UpdateDrugResistanceProfile(notification, drugResistanceProfile);
             }
