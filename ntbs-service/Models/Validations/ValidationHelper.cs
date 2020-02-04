@@ -106,7 +106,8 @@
         #endregion
 
         #region Previous History
-        public const string PreviousTBDiagnosisYear = "Please enter a valid year. Year of diagnosis cannot be after 2000";
+        public const string ValidYear = "Please enter a valid year";
+        public const string BeforeCurrentYear = "{0} must be equal to or before the current year";
         #endregion
 
         #region MDR Details
