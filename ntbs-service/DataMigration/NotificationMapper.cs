@@ -76,7 +76,7 @@ namespace ntbs_service.DataMigration
         private async Task<Notification> AsNotificationAsync((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
         {
             var rawNotification = rawResult.rawNotification;
-            var sites = rawResult.rawSites.Select(AsNotificationSite).ToList();
+            var sites = AsSites(rawResult.rawSites);
             var notification = new Notification();
             notification.ETSID = rawNotification.Source == "ETS" ? rawNotification.OldNotificationId.ToString() : null;
             notification.LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null;
@@ -119,6 +119,22 @@ namespace ntbs_service.DataMigration
                 HospitalId = rawNotification.NtbsHospitalId,
                 Consultant = rawNotification.Consultant
             };
+        }
+
+        private static List<NotificationSite> AsSites(IEnumerable<dynamic> rawResultRawSites)
+        {
+            return rawResultRawSites
+                .Select(AsNotificationSite)
+                // Due to many->one mapping of legacy sites to ntbs sites, there might be clashes we need to deal with..
+                .GroupBy(site => site.SiteId)
+                .Select(clashingSites =>
+                {
+                    // .. to avoid data loss, we collect the freetext entered in all the possible members of the clash
+                    var combinedDescription = String.Join(", ", clashingSites.Select(site => site.SiteDescription));
+                    var canonicalSite = clashingSites.First();
+                    canonicalSite.SiteDescription = combinedDescription;
+                    return canonicalSite;
+                }).ToList();
         }
 
         private static NotificationSite AsNotificationSite(dynamic result)
