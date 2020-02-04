@@ -27,13 +27,15 @@ namespace ntbs_service.DataMigration
         private readonly IPostcodeService _postcodeService;
         private readonly IImportLogger _logger;
         private readonly IMigrationRepository _migrationRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
         public NotificationImportService(INotificationMapper notificationMapper,
-                             INotificationRepository notificationRepository,
-                             INotificationImportRepository notificationImportRepository,
-                             IPostcodeService postcodeService,
-                             IImportLogger logger,
-                             IMigrationRepository migrationRepository)
+            INotificationRepository notificationRepository,
+            INotificationImportRepository notificationImportRepository,
+            IPostcodeService postcodeService,
+            IImportLogger logger,
+            IMigrationRepository migrationRepository,
+            IReferenceDataRepository referenceDataRepository)
         {
             _notificationMapper = notificationMapper;
             _notificationRepository = notificationRepository;
@@ -41,8 +43,8 @@ namespace ntbs_service.DataMigration
             _postcodeService = postcodeService;
             _logger = logger;
             _migrationRepository = migrationRepository;
+            _referenceDataRepository = referenceDataRepository;
         }
-
 
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
         {
@@ -125,8 +127,8 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
-                var validationErrors = GetValidationErrors(notification);
-                if (validationErrors.Count() == 0)
+                var validationErrors = await GetValidationErrorsAsync(notification);
+                if (!validationErrors.Any())
                 {
                     _logger.LogInformation(context, requestId, $"No validation errors found");
                     importResult.AddValidNotification(linkedNotificationId);
@@ -199,29 +201,53 @@ namespace ntbs_service.DataMigration
             });
         }
 
-        private IEnumerable<ValidationResult> GetValidationErrors(Notification notification)
+        private async Task<IList<ValidationResult>> GetValidationErrorsAsync(Notification notification)
         {
             var validationsResults = new List<ValidationResult>();
 
             NotificationHelper.SetShouldValidateFull(notification);
 
-            validationsResults.AddRange(ValidateObject(notification));
-            validationsResults.AddRange(ValidateObject(notification.PatientDetails));
-            validationsResults.AddRange(ValidateObject(notification.ClinicalDetails));
-            validationsResults.AddRange(ValidateObject(notification.TravelDetails));
-            validationsResults.AddRange(ValidateObject(notification.VisitorDetails));
+            ValidateObject(notification, validationsResults);
+            ValidateObject(notification.PatientDetails, validationsResults);
+            ValidateObject(notification.ClinicalDetails, validationsResults);
+            ValidateObject(notification.Episode, validationsResults);
+            ValidateObject(notification.PatientTBHistory, validationsResults);
+            ValidateObject(notification.ContactTracing, validationsResults);
+            ValidateObject(notification.SocialRiskFactors, validationsResults);
+            ValidateObject(notification.ImmunosuppressionDetails, validationsResults);
+            ValidateObject(notification.TravelDetails, validationsResults);
+            ValidateObject(notification.VisitorDetails, validationsResults);
+            ValidateObject(notification.DenotificationDetails, validationsResults);
+            ValidateObject(notification.ComorbidityDetails, validationsResults);
+            ValidateObject(notification.MDRDetails, validationsResults);
+            ValidateObject(notification.TestData, validationsResults);
+            ValidateObject(notification.SocialContextVenues, validationsResults);
+            ValidateObject(notification.SocialContextAddresses, validationsResults);
+            ValidateObject(notification.TreatmentEvents, validationsResults);
+
+            await ValidateHospitalExistsAsync(notification.Episode.HospitalId, validationsResults);
 
             return validationsResults;
         }
 
-        private IEnumerable<ValidationResult> ValidateObject<T>(T objectToValidate)
+        private static void ValidateObject<T>(T objectToValidate,
+            ICollection<ValidationResult> validationsResults)
         {
             var validationContext = new ValidationContext(objectToValidate);
-            var validationsResults = new List<ValidationResult>();
-
             Validator.TryValidateObject(objectToValidate, validationContext, validationsResults, true);
+        }
 
-            return validationsResults;
+        private async Task ValidateHospitalExistsAsync(Guid? hospitalId, ICollection<ValidationResult> validationsResults)
+        {
+            if (hospitalId == null) return;
+            
+            var hospital = await _referenceDataRepository.GetHospitalByGuidAsync(hospitalId.Value);
+            if (hospital == null)
+            {
+                validationsResults.Add(new ValidationResult(
+                    "Hospital id does not exist in reference data",
+                    new[] {nameof(Episode.HospitalId)}));
+            }
         }
     }
 }

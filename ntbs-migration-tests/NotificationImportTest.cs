@@ -38,6 +38,9 @@ namespace ntbs_migration_tests
             _mockReferenceDataRepository
                 .Setup(x => x.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns(Task.FromResult(new TBService { Code = "TBS0002", Name = "Addenbrooke's Hospital" }));
+            _mockReferenceDataRepository
+                .Setup(x => x.GetHospitalByGuidAsync(It.IsAny<Guid>()))
+                .Returns(Task.FromResult(new Hospital { HospitalId = new Guid() }));
 
             _notificationMapper = new NotificationMapper(_mockMigrationRepository.Object, _mockReferenceDataRepository.Object);
 
@@ -50,7 +53,8 @@ namespace ntbs_migration_tests
                                                                     _mockNotificationImportRepository.Object,
                                                                     _mockPostcodeService.Object,
                                                                     _mockLogger.Object,
-                                                                    _mockMigrationRepository.Object);
+                                                                    _mockMigrationRepository.Object,
+                                                                    _mockReferenceDataRepository.Object);
         }
 
         [Fact]
