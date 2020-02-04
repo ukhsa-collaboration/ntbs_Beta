@@ -6,6 +6,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
+using ntbs_service.Models;
 using Serilog;
 
 // ReSharper disable UseObjectOrCollectionInitializer
@@ -208,17 +209,17 @@ namespace ntbs_service.DataMigration
             details.FamilyName = notification.FamilyName;
             details.GivenName = notification.GivenName;
             details.NhsNumber = notification.NhsNumber;
+            details.NhsNumberNotKnown = notification.NhsNumberNotKnown == 1 || notification.NhsNumber == null;
             details.Dob = notification.DateOfBirth;
             details.YearOfUkEntry = notification.UkEntryYear;
             details.UkBorn = notification.UkBorn;
-            details.CountryId = notification.BirthCountryId;
+            details.CountryId = notification.BirthCountryId ?? Countries.UnknownId;
             details.LocalPatientId = notification.LocalPatientId;
             details.Postcode = notification.Postcode;
-            details.Address = notification.Line1 + " " + notification.Line2;
-            details.EthnicityId = notification.NtbsEthnicGroupId;
-            details.SexId = notification.NtbsSexId;
-            details.NhsNumberNotKnown = notification.NhsNumberNotKnown == 1;
             details.NoFixedAbode = notification.NoFixedAbode == 1;
+            details.Address = notification.Line1 + " " + notification.Line2;
+            details.EthnicityId = notification.NtbsEthnicGroupId ?? Ethnicities.NotStatedId;
+            details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
             details.OccupationOther = notification.NtbsOccupationFreeText;
             return details;
