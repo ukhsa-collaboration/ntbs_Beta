@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
@@ -222,9 +223,24 @@ namespace ntbs_service.DataMigration
             details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
             details.OccupationOther = notification.NtbsOccupationFreeText;
+
+            ForceValidNhsNumber(details);
+            
             return details;
         }
-        
+
+        private static void ForceValidNhsNumber(PatientDetails details)
+        {
+            var validationResults = new List<ValidationResult>();
+            var context = new ValidationContext(details) { MemberName = nameof(PatientDetails.NhsNumber)};
+            Validator.TryValidateProperty(details.NhsNumber, context, validationResults);
+            if (validationResults.Any())
+            {
+                details.NhsNumber = null;
+                details.NhsNumberNotKnown = true;
+            }
+        }
+
         private static SocialRiskFactors ExtractSocialRiskFactors(dynamic notification)
         {
             var factors = new SocialRiskFactors();
