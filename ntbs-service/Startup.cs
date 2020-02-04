@@ -271,7 +271,7 @@ namespace ntbs_service
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
             
-            if (true)
+            if (!Env.IsDevelopment())	
             {
                 // Most of the time we don't care about recurring jobs in dev mode.
                 // Having this exclusion is also useful when connecting to non-dev databases for debugging.
