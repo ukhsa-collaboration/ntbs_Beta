@@ -183,6 +183,26 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
         }
+
+        [Fact]
+        public async Task OverviewPageHidesPrintOverviewButton_IfNotificationIsDraft()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            var document = await GetDocumentForUrl(url);
+            
+            Assert.Null(document.QuerySelector("#print-notification-overview-button"));
+        }
+        
+        [Fact]
+        public async Task OverviewPageShowsPrintOverviewButton_IfNotificationIsNotified()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var document = await GetDocumentForUrl(url);
+            
+            Assert.NotNull(document.QuerySelector("#print-notification-overview-button"));
+        }
         
         [Fact]
         public async Task OverviewPageShowsDenotificationDetails_ForDenotifiedRecord()

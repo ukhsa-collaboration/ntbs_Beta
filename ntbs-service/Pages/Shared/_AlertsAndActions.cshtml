@@ -7,36 +7,34 @@
         var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
         var manageNotificationClass = $"manage-notification manage-notification{classSuffix}";
     }
-    @if ((string)ViewData["CurrentPage"] == NotificationSubPaths.Overview)
+    @if ((string) ViewData["CurrentPage"] == NotificationSubPaths.Overview)
     {
         <nhs-grid-column grid-column-width="TwoThirds">
             <div class="@manageNotificationClass">
                 <h2>
                     Alerts
                 </h2>
-                @if(Model.Alerts.Count > 0)
+                @if (Model.Alerts.Count > 0)
                 {
                     <div class="overview-alerts-container">
-                    @foreach (var alert in Model.Alerts)
-                    {
-                    
-                        <div class="flex-container overview-alert" id="alert-@alert.AlertId">
-                            <div class="alert-description--overview-view">@alert.Action</div>
-                            <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
-                            @if(!alert.NotDismissable)
-                            {
-                                <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview" 
-                                    class="dismiss-alert-button--overview-view">
-                                    @Html.AntiForgeryToken()
-                                    <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
-                                        aria-label="Dismiss alert">
-                                        X
-                                    </button>
-                                </form>
-                            }
-                        </div>
-                        
-                    }
+                        @foreach (var alert in Model.Alerts)
+                        {
+                            <div class="flex-container overview-alert" id="alert-@alert.AlertId">
+                                <div class="alert-description--overview-view">@alert.Action</div>
+                                <a href="@alert.ActionLink" class="alert-take-action-link">Take action</a>
+                                @if (!alert.NotDismissable)
+                                {
+                                    <form method="post" action="@RouteHelper.GetAlertPath(@alert.AlertId, AlertSubPaths.Dismiss)?page=Overview"
+                                          class="dismiss-alert-button--overview-view">
+                                        @Html.AntiForgeryToken()
+                                        <button class="button-link nhsuk-link govuk-link--no-visited-state govuk-link"
+                                                aria-label="Dismiss alert">
+                                            X
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        }
                     </div>
                 }
             </div>
@@ -46,20 +44,30 @@
     <nhs-grid-column grid-column-width="OneThird">
         <div class="@manageNotificationClass">
             <nhs-details display-text="Manage notification" nhs-details-type="Expander" id="manage-notification">
-                @if(Model.Notification.OverOneYearOld)
+                @if (Model.Notification.OverOneYearOld)
                 {
                     <form method="post">
-                        <input type="hidden" value="@Model.NotificationId" name="NotificationId" />
+                        <input type="hidden" value="@Model.NotificationId" name="NotificationId"/>
                         <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="CreateLink" id="new-linked-notification-button">
                             New notification for this patient
                         </button>
                     </form>
                 }
+
+                @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
+                {
+                    <print-button inline-template>
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary hidden" :click="print" id="print-notification-overview-button">
+                            Print notification overview
+                        </button>
+                    </print-button>
+                }
+
                 @if (Model.Notification.NotificationStatus == NotificationStatus.Notified && Model.PermissionLevel == PermissionLevel.Edit)
                 {
                     var transferRequestHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.TransferRequest);
                     <a id='transfer-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="@transferRequestHref">
-                        @if(@Model.Notification.TransferRequestPending)
+                        @if (@Model.Notification.TransferRequestPending)
                         {
                             @:Transfer pending
                         }

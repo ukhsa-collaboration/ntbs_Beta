@@ -4,8 +4,8 @@
 
 @{
     Layout = "../Shared/_NotificationOverviewLayout.cshtml";
-    ViewData["Title"] = "Overview";
-    ViewData["NotificationId"] = @Model.NotificationId;
+    ViewData["NotificationId"] = Model.NotificationId;
+    ViewData["Title"] = $"Notification #{Model.NotificationId} overview";
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
 
