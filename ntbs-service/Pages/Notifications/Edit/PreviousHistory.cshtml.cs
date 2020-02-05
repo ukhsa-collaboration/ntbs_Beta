@@ -37,7 +37,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             string nextPage;
-            if(Notification.ClinicalDetails?.IsMDRTreatment == true) // TODO NTBS-368 drug resistance profile check - should probably abstract check into method
+            if (Notification.IsMdr)
             {
                 nextPage = "./MDRDetails";
             }

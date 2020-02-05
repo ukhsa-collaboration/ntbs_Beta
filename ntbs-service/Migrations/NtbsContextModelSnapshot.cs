@@ -13689,6 +13689,24 @@ namespace ntbs_service.Migrations
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
+                    b.OwnsOne("ntbs_service.Models.Entities.DrugResistanceProfile", "DrugResistanceProfile", b1 =>
+                        {
+                            b1.Property<int>("NotificationId");
+
+                            b1.Property<string>("DrugResistanceProfileString");
+
+                            b1.Property<string>("Species");
+
+                            b1.HasKey("NotificationId");
+
+                            b1.ToTable("DrugResistanceProfile");
+
+                            b1.HasOne("ntbs_service.Models.Entities.Notification")
+                                .WithOne("DrugResistanceProfile")
+                                .HasForeignKey("ntbs_service.Models.Entities.DrugResistanceProfile", "NotificationId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
                     b.OwnsOne("ntbs_service.Models.Entities.Episode", "Episode", b1 =>
                         {
                             b1.Property<int>("NotificationId");

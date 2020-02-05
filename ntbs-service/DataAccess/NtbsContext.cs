@@ -345,6 +345,9 @@ namespace ntbs_service.DataAccess
                         .HasMaxLength(EnumMaxLength);
                     i.ToTable("MDRDetails");
                 });
+                
+                entity.OwnsOne(e => e.DrugResistanceProfile).ToTable("DrugResistanceProfile");
+
 
                 entity.HasIndex(e => e.NotificationStatus);
 

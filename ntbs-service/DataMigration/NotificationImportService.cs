@@ -135,7 +135,7 @@ namespace ntbs_service.DataMigration
                 else
                 {
                     isAnyNotificationInvalid = true;
-                    importResult.AddValidationErrorsMessages(linkedNotificationId, validationErrors.ToList());
+                    importResult.AddValidationErrorsMessages(linkedNotificationId, validationErrors);
                     _logger.LogWarning(context, requestId, $"{validationErrors.Count()} validation errors found for notification with Id={linkedNotificationId}:");
                     foreach (var validationError in validationErrors)
                     {

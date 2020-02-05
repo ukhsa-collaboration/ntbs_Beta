@@ -28,6 +28,7 @@ namespace ntbs_service.Models.Entities
             ComorbidityDetails = new ComorbidityDetails();
             MDRDetails = new MDRDetails();
             TestData = new TestData();
+            DrugResistanceProfile = new DrugResistanceProfile();
         }
 
         #region DB Mapped Fields
@@ -83,6 +84,7 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
         public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
+        public virtual DrugResistanceProfile DrugResistanceProfile { get; set; }
 
         #endregion
 
@@ -146,7 +148,8 @@ namespace ntbs_service.Models.Entities
         public string FormattedDenotificationDate => DenotificationDetails?.DateOfDenotification.ConvertToString();
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
-
+        public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
+        
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)

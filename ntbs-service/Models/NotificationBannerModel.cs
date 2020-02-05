@@ -38,7 +38,7 @@ namespace ntbs_service.Models
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
-            TbServiceCode = notification.Episode?.TBServiceCode;
+            TbServiceCode = notification.Episode.TBServiceCode;
             TbServicePHECCode = notification.Episode.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.Episode.CaseManagerName;
@@ -51,6 +51,7 @@ namespace ntbs_service.Models
             NotificationStatus = notification.NotificationStatus;
             NotificationStatusString = notification.NotificationStatusString;
             NotificationDate = notification.FormattedNotificationDate;
+            DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
             Source = "ntbs";
             ShowLink = showLink;
             ShowPadlock = showPadlock;

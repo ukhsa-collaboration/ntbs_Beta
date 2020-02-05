@@ -35,6 +35,7 @@ namespace ntbs_service.Services
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
         Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
+        Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
     }
 
     public class NotificationService : INotificationService
@@ -367,6 +368,12 @@ namespace ntbs_service.Services
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile)
+        {
+            _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
+            await UpdateDatabaseAsync();
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
