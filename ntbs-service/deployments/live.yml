@@ -47,16 +47,8 @@ spec:
               value: ""
             - name: ReferenceLabResultsConfig__MockOutSpecimenMatching
               value: "true"
-            - name: ReferenceLabResultsConfig__MockedNotificationId
-              value: "1"
-            - name: ReferenceLabResultsConfig__MockedTbServiceCode
-              value: "TBS0001"
-            - name: ReferenceLabResultsConfig__MockedPhecCode
-              value: "E45000019"
             - name: ClusterMatchingConfig__MockOutClusterMatching
               value: "true"
-            - name: ClusterMatchingConfig__MockedNotificationClusterValues
-              value: []
             - name: MigrationConfig__DateRangeJobIntervalInMonths
               value: "2"
             - name: MigrationConfig__TablePrefix
