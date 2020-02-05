@@ -32,6 +32,12 @@ a.navbar-brand {
 }
 
 @media print {
+  // Chrome defaults to mobile layout, this forces it wide enough to pick up desktop layout
+  @page {
+    size: 330mm 427mm;
+    margin: 14mm;
+  }
+  
   .no-print {
     display: none;
   }
