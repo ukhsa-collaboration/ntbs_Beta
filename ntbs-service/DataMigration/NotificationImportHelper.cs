@@ -11,8 +11,8 @@ namespace ntbs_service.DataMigration
     public interface INotificationImportHelper
     {
         Task CreateTableIfNotExists();
-        string GetInsertImportedNotificationQuery();
-        string GetSelectImportedNotificationByIdQuery();
+        string InsertImportedNotificationQuery { get; }
+        string SelectImportedNotificationByIdQuery { get; }
     }
 
     public class NotificationImportHelper : INotificationImportHelper
@@ -29,12 +29,12 @@ namespace ntbs_service.DataMigration
                 ImportedAt datetime NOT NULL
             )";
 
-        private const string InsertImportedNotificationsQuery = @"
+        private const string InsertImportedNotificationTemplate = @"
             INSERT INTO {0} (LegacyId, ImportedAt)
             VALUES (@LegacyId, @ImportedAt);
         ";
 
-        private const string SelectImportedNotificationByIdQuery = @"
+        private const string SelectImportedNotificationByIdTemplate = @"
             SELECT *
             FROM {0} impNtfc
             WHERE impNtfc.LegacyId = n.OldNotificationId";
@@ -56,7 +56,7 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public string GetInsertImportedNotificationQuery() => string.Format(InsertImportedNotificationsQuery, importedNotificationsTableName);
-        public string GetSelectImportedNotificationByIdQuery() => string.Format(SelectImportedNotificationByIdQuery, importedNotificationsTableName);
+        public string InsertImportedNotificationQuery => string.Format(InsertImportedNotificationTemplate, importedNotificationsTableName);
+        public string SelectImportedNotificationByIdQuery => string.Format(SelectImportedNotificationByIdTemplate, importedNotificationsTableName);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
@@ -153,13 +154,19 @@ namespace ntbs_service.DataMigration
             try
             {
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-                await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
+                await _migrationRepository.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
+
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
 
                 _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+            }
+            catch (MarkingNotificationsAsImportedFailedException e)
+            {
+                _logger.LogWarning(context, requestId, message: e.Message);
+                importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             catch (Exception e)
             {
