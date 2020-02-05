@@ -1,9 +1,9 @@
 @using ntbs_service.Helpers
-@model ntbs_service.Pages.Notifications.NotificationModelBase
+@model ntbs_service.Pages.Notifications.INotificationLayoutWithBanner
 
 @{
     Layout = "./_Layout";
-    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
+    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.NotificationBannerModel.NotificationStatus);
     var notificationStatusTriangleCssClass = $"notification-banner-triangle notification-banner-triangle{classSuffix}";
 }
 

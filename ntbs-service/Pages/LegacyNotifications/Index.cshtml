@@ -4,20 +4,11 @@
 @model ntbs_service.Pages.LegacyNotifications.Index
 
 @{
-    var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.NotificationBanner.NotificationStatus);
-    var notificationStatusTriangleCssClass = $"notification-banner-triangle notification-banner-triangle{classSuffix}";
+    Layout = "Shared/_NotificationLayout";
+    ViewData["Title"] = "Legacy notification";
 }
 
 <nhs-width-container container-width="Standard">
-
-    <nhs-grid-row>
-        <nhs-grid-column grid-column-width="Full">
-            <div class="notification-banner-container">
-                <partial name="../Shared/_NotificationBanner.cshtml" model="@Model.NotificationBanner" />
-                <div class="@notificationStatusTriangleCssClass"> </div>
-            </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
     
     @if (Model.LegacyImportResult == null)
     {

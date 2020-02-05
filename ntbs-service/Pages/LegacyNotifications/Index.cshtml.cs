@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataMigration;
 using ntbs_service.Models;
+using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.LegacyNotifications
 {
-    public class Index : PageModel
+    public class Index : PageModel, INotificationLayoutWithBanner
     {
         private readonly ILegacySearchService _legacySearchService;
         private readonly INotificationImportService _notificationImportService;
         
-        public NotificationBannerModel NotificationBanner { get; set; }
+        public NotificationBannerModel NotificationBannerModel { get; set; }
         
         [BindProperty(SupportsGet = true)]
         public string LegacyNotificationId { get; set; }
@@ -51,13 +51,13 @@ namespace ntbs_service.Pages.LegacyNotifications
 
         private async Task<IActionResult> GetPage()
         {
-            NotificationBanner = await _legacySearchService.GetByIdAsync(LegacyNotificationId);
-            if (NotificationBanner == null)
+            NotificationBannerModel = await _legacySearchService.GetByIdAsync(LegacyNotificationId);
+            if (NotificationBannerModel == null)
             {
                 return NotFound();
             }
             
-            NotificationBanner.ShowLink = false;
+            NotificationBannerModel.ShowLink = false;
             return Page(); 
         }
     }
