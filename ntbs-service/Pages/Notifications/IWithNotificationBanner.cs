@@ -2,7 +2,7 @@
 
 namespace ntbs_service.Pages.Notifications
 {
-    public interface INotificationLayoutWithBanner
+    public interface IWithNotificationBanner
     {
         NotificationBannerModel NotificationBannerModel { get; set; }
     }

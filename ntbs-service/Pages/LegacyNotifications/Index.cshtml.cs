@@ -10,7 +10,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.LegacyNotifications
 {
-    public class Index : PageModel, INotificationLayoutWithBanner
+    public class Index : PageModel, IWithNotificationBanner
     {
         private readonly ILegacySearchService _legacySearchService;
         private readonly INotificationImportService _notificationImportService;
