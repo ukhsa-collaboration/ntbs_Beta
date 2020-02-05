@@ -51,6 +51,7 @@ namespace ntbs_integration_tests.Helpers
         public const int LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE = 10098;
 
         public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
+        public const int NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT = 10092;
 
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID1 = MockSpecimenService.MockSpecimenNotificationId1; // 10100
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID2 = MockSpecimenService.MockSpecimenNotificationId2; // 10101
@@ -64,6 +65,7 @@ namespace ntbs_integration_tests.Helpers
 
         public const int TRANSFER_ALERT_ID_TO_REJECT = 20004;
         public const int TRANSFER_REJECTED_ID = 20005;
+        public const int TRANSFER_ALERT_ID_TO_ACCEPT_2 = 20006;
 
         public const int PATIENT_NOTIFICATION_GROUP_ID = 30001;
             
@@ -282,6 +284,15 @@ namespace ntbs_integration_tests.Helpers
                     AlertType = AlertType.TransferRequest,
                     AlertId = TRANSFER_ALERT_ID_TO_REJECT,
                     NotificationId = NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT,
+                    TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                    CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
+                    AlertStatus = AlertStatus.Open
+                },
+                new TransferAlert
+                {
+                    AlertType = AlertType.TransferRequest,
+                    AlertId = TRANSFER_ALERT_ID_TO_ACCEPT_2,
+                    NotificationId = NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT,
                     TbServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                     CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL,
                     AlertStatus = AlertStatus.Open

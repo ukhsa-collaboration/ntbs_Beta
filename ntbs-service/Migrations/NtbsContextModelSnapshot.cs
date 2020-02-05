@@ -274,6 +274,8 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CaseManagerUsername");
+
                     b.Property<DateTime?>("EventDate")
                         .IsRequired();
 
@@ -281,6 +283,8 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(150);
 
                     b.Property<int>("NotificationId");
+
+                    b.Property<string>("TbServiceCode");
 
                     b.Property<string>("TreatmentEventType")
                         .IsRequired()
@@ -290,7 +294,11 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("TreatmentEventId");
 
+                    b.HasIndex("CaseManagerUsername");
+
                     b.HasIndex("NotificationId");
+
+                    b.HasIndex("TbServiceCode");
 
                     b.HasIndex("TreatmentOutcomeId");
 
@@ -14150,10 +14158,18 @@ namespace ntbs_service.Migrations
 
             modelBuilder.Entity("ntbs_service.Models.Entities.TreatmentEvent", b =>
                 {
+                    b.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
+                        .WithMany()
+                        .HasForeignKey("CaseManagerUsername");
+
                     b.HasOne("ntbs_service.Models.Entities.Notification", "Notification")
                         .WithMany("TreatmentEvents")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
+                        .WithMany()
+                        .HasForeignKey("TbServiceCode");
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TreatmentOutcome", "TreatmentOutcome")
                         .WithMany()

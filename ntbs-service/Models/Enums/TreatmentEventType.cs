@@ -7,6 +7,10 @@ namespace ntbs_service.Models.Enums
         [Display(Name = "Treatment restart")]
         TreatmentRestart,
         [Display(Name = "Treatment outcome")]
-        TreatmentOutcome
+        TreatmentOutcome,
+        [Display(Name = "Transfer in")]
+        TransferIn,
+        [Display(Name = "Transfer out")]
+        TransferOut
     }
 }
