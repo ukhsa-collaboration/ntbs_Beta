@@ -126,7 +126,7 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
-                var validationErrors = GetValidationErrors(notification);
+                var validationErrors = GetValidationErrors(notification).ToList();
                 if (!validationErrors.Any())
                 {
                     _logger.LogInformation(context, requestId, $"No validation errors found");
