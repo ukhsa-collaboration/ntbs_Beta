@@ -3,9 +3,17 @@
 .notification-banner-head {
     color: white;
     padding: 10px 15px;
+  
+    @media print {
+      color: black;
+    }
 
     .notification-banner-id-link {
         color: white;
+
+        @media print {
+          color: black;
+        }
     }
 }
 
@@ -79,6 +87,11 @@
 
     .notification-banner-head {
         background: $banner-header--notified;
+      
+        @media print {
+          border-bottom: 2px solid $banner-border--notified;
+          background: none;
+        }
     }
 }
 
@@ -91,6 +104,11 @@
 
     .notification-banner-head {
         background: $banner-header--denotified;
+
+        @media print {
+          border-bottom: 2px solid $banner-border--denotified;
+          background: none;
+        }
     }
 }
 
@@ -104,6 +122,11 @@
     .notification-banner-head {
         background: $banner-header--legacy;
         color: black;
+
+        @media print {
+          border-bottom: 2px solid $banner-border--legacy;
+          background: none;
+        }
 
         .notification-banner-id-link {
             color: black;

@@ -2,7 +2,7 @@
 @using ntbs_service.Models.Enums
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 
-<nhs-grid-row>
+<nhs-grid-row classes="no-print">
     @{
         var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
         var manageNotificationClass = $"manage-notification manage-notification{classSuffix}";
