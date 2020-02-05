@@ -32,7 +32,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
             string nextPage;
-            if (Notification.ShouldShowMdrDetails)
+            if (Notification.IsMdr)
             {
                 nextPage = "./MDRDetails";
             }

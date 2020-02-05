@@ -160,33 +160,23 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
-            var shouldDismissAlert = (Notification.ClinicalDetails?.IsMDRTreatment == true &&
-                                            ClinicalDetails.IsMDRTreatment == false);
-            
-            var shouldCreateAlert = (Notification.ClinicalDetails?.IsMDRTreatment != true &&
-                                            ClinicalDetails.IsMDRTreatment == true);
+            var mdrChanged = Notification.ClinicalDetails.IsMDRTreatment != ClinicalDetails.IsMDRTreatment;
+            var nonMdrNotAllowed = ClinicalDetails.IsMDRTreatment == false && Notification.MDRDetails.MDRDetailsEntered;
 
-            
-            if (shouldDismissAlert && Notification.MDRDetails.MDRDetailsEntered)
+            if (mdrChanged && nonMdrNotAllowed)
             {
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
-            }
-            else
-            {
-                if (shouldDismissAlert)
-                {
-                    await _mdrService.DismissMdrAlert(Notification);
-                }
-                else if (shouldCreateAlert)
-                {
-                    await _mdrService.CreateMdrAlert(Notification);
-                }
             }
             
             if (ModelState.IsValid)
             {
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
+                
+                if (mdrChanged)
+                {
+                    await _mdrService.CreateOrDismissMdrAlert(Notification);
+                }
             }
         }
 

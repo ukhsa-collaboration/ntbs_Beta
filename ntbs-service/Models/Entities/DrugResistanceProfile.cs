@@ -8,7 +8,6 @@ namespace ntbs_service.Models.Entities
     {
         public string Species { get; set; }
         public string DrugResistanceProfileString { get; set; }
-        public bool IsMdr => DrugResistanceProfileString == "RR/MDR/XDR";
         string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
 }

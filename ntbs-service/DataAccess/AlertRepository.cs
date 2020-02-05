@@ -42,7 +42,7 @@ namespace ntbs_service.DataAccess
 
         public async Task<Alert> GetAlertByNotificationIdAndTypeAsync(int? notificationId, AlertType alertType)
         {
-            return await GetBaseAlertIQueryable()
+            return await _context.Alert
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
         }
 

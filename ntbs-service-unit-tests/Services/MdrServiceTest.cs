@@ -19,11 +19,14 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Theory]
-        [InlineData("RR/MDR/XDR", false)]
-        [InlineData("RR/MDR/XDR", true)]
-        [InlineData("NonMDR", false)]
-        [InlineData("NonMDR", true)]
-        public void CreateOrDismissMdrAlert(string drugResistance, bool questionnaireFilled)
+        [InlineData("RR/MDR/XDR", false, true, false)]
+        [InlineData("RR/MDR/XDR", true, true, false)]
+        [InlineData("NonMDR", false, false, true)]
+        [InlineData("NonMDR", true, true, false)]
+        public void CreateOrDismissMdrAlert(string drugResistance, 
+            bool isMdrPlanned,
+            bool shouldCreateAlert, 
+            bool shouldDismissAlert)
         {
             // Arrange
             var notification = new Notification
@@ -33,9 +36,9 @@ namespace ntbs_service_unit_tests.Services
                 {
                     Species = "Random Species", DrugResistanceProfileString = drugResistance
                 },
-                MDRDetails = new MDRDetails
+                ClinicalDetails = new ClinicalDetails
                 {
-                    ExposureToKnownCaseStatus = questionnaireFilled ? Status.Unknown : (Status?) null
+                    IsMDRTreatment = isMdrPlanned
                 }
             };
             
@@ -43,10 +46,10 @@ namespace ntbs_service_unit_tests.Services
             mdrService.CreateOrDismissMdrAlert(notification);
             
             // Assert
-            var numberOfCalls = (drugResistance == "RR/MDR/XDR" && !questionnaireFilled) ? Times.Once() : Times.Never();
+            var numberOfCalls = shouldCreateAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(x =>x.AddUniqueAlertAsync(It.IsAny<MdrAlert>()), numberOfCalls);
             
-            numberOfCalls = (drugResistance != "RR/MDR/XDR" && !questionnaireFilled) ? Times.Once() : Times.Never();
+            numberOfCalls = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(x => x.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR), numberOfCalls);
         }
     }

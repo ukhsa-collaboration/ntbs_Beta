@@ -6,8 +6,6 @@ namespace ntbs_service.Services
 {
     public interface IMdrService
     {
-        Task CreateMdrAlert(Notification notification);
-        Task DismissMdrAlert(Notification notification);
         Task CreateOrDismissMdrAlert(Notification notification);
     }
     
@@ -20,24 +18,24 @@ namespace ntbs_service.Services
             _alertService = alertService;
         }
 
-        public async Task CreateMdrAlert(Notification notification)
+        private async Task CreateMdrAlert(Notification notification)
         {
             var mdrAlert = new MdrAlert() {NotificationId = notification.NotificationId};
             await _alertService.AddUniqueAlertAsync(mdrAlert);
         }
 
-        public async Task DismissMdrAlert(Notification notification)
+        private async Task DismissMdrAlert(Notification notification)
         {
             await _alertService.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR);
         }
 
         public async Task CreateOrDismissMdrAlert(Notification notification)
         {
-            if (notification.ShouldCreateAlert)
+            if (notification.IsMdr)
             {
                 await CreateMdrAlert(notification);
             }
-            else if (notification.ShouldDismissAlert)
+            else
             {
                 await DismissMdrAlert(notification);
             }

@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
-using Dapper;
-using Microsoft.Extensions.Configuration;
 using ntbs_service.DataAccess;
-using ntbs_service.Models.Entities;
+using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -54,8 +50,16 @@ namespace ntbs_service.Services
                     continue;
                 }
 
-                await _mdrService.CreateOrDismissMdrAlert(notification);
-                await _notificationService.UpdateDrugResistanceProfile(notification, drugResistanceProfile);
+                try
+                {
+                    await _notificationService.UpdateDrugResistanceProfile(notification, drugResistanceProfile);
+                    await _mdrService.CreateOrDismissMdrAlert(notification);
+                }
+                catch (Exception e)
+                {
+                    Log.Warning("Error occured when updating drug resistance profile", e);
+                }
+                
             }
         }
     }
