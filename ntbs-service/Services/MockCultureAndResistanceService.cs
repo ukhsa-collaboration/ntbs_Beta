@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
 
@@ -19,6 +20,18 @@ namespace ntbs_service.Services
                 return Task.FromResult(new CultureAndResistance
                 {
                     NotificationId = NotificationIdWithResults,
+                    CulturePositive = "No",
+                    Species = "No result",
+                    DrugResistanceProfile = "No result",
+                    EarliestSpecimenDate = null,
+                    Isoniazid = "No result",
+                    Rifampicin = "No result",
+                    Pyrazinamide = "No result",
+                    Ethambutol = "No result",
+                    Aminoglycoside = "No result",
+                    Quinolone = "No result",
+                    MDR = "No result",
+                    XDR = "No result"
                 });
             }
             return Task.FromResult<CultureAndResistance>(null);

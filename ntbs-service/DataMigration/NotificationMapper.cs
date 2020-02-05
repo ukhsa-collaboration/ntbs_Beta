@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
+using ntbs_service.Models;
+using ntbs_service.Models.Validations;
 using Serilog;
 
 // ReSharper disable UseObjectOrCollectionInitializer
@@ -72,7 +76,7 @@ namespace ntbs_service.DataMigration
         private async Task<Notification> AsNotificationAsync((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
         {
             var rawNotification = rawResult.rawNotification;
-            var sites = rawResult.rawSites.Select(AsNotificationSite).ToList();
+            var sites = AsSites(rawResult.rawSites);
             var notification = new Notification();
             notification.ETSID = rawNotification.Source == "ETS" ? rawNotification.OldNotificationId.ToString() : null;
             notification.LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null;
@@ -117,6 +121,22 @@ namespace ntbs_service.DataMigration
             };
         }
 
+        private static List<NotificationSite> AsSites(IEnumerable<dynamic> rawResultRawSites)
+        {
+            return rawResultRawSites
+                .Select(AsNotificationSite)
+                // Due to many->one mapping of legacy sites to ntbs sites, there might be clashes we need to deal with..
+                .GroupBy(site => site.SiteId)
+                .Select(clashingSites =>
+                {
+                    // .. to avoid data loss, we collect the freetext entered in all the possible members of the clash
+                    var combinedDescription = String.Join(", ", clashingSites.Select(site => site.SiteDescription));
+                    var canonicalSite = clashingSites.First();
+                    canonicalSite.SiteDescription = combinedDescription;
+                    return canonicalSite;
+                }).ToList();
+        }
+
         private static NotificationSite AsNotificationSite(dynamic result)
         {
             if (result.SiteId == null)
@@ -158,9 +178,11 @@ namespace ntbs_service.DataMigration
             details.SymptomStartDate = notification.SymptomStartDate;
             details.FirstPresentationDate = notification.FirstPresentationDate;
             details.TBServicePresentationDate = notification.TbServicePresentationDate;
-            details.DiagnosisDate = notification.DiagnosisDate;
+            details.DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate;
             details.DidNotStartTreatment = StringToValueConverter.GetNullableBoolValue(notification.DidNotStartTreatment);
-            details.MDRTreatmentStartDate = notification.StartOfTreatmentDay;
+            details.TreatmentStartDate = notification.StartOfTreatmentDate;
+            details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
+            details.IsMDRTreatment = notification.IsMDRTreatment;
             details.IsSymptomatic = StringToValueConverter.GetNullableBoolValue(notification.IsSymptomatic);
             details.DeathDate = notification.DeathDate;
             return details;
@@ -202,26 +224,60 @@ namespace ntbs_service.DataMigration
 
         private static PatientDetails ExtractPatientDetails(dynamic notification)
         {
+            var address = RemoveCharactersNotIn(
+                ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
+                notification.Line1 + " " + notification.Line2);
+            var givenName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.GivenName);
+            var familyName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.FamilyName);
+            var localPatientId = RemoveCharactersNotIn(
+                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                notification.LocalPatientId);
+
             var details = new PatientDetails();
-            details.FamilyName = notification.FamilyName;
-            details.GivenName = notification.GivenName;
+            details.FamilyName = familyName;
+            details.GivenName = givenName;
             details.NhsNumber = notification.NhsNumber;
+            details.NhsNumberNotKnown = notification.NhsNumberNotKnown == 1 || notification.NhsNumber == null;
             details.Dob = notification.DateOfBirth;
             details.YearOfUkEntry = notification.UkEntryYear;
             details.UkBorn = notification.UkBorn;
-            details.CountryId = notification.BirthCountryId;
-            details.LocalPatientId = notification.LocalPatientId;
+            details.CountryId = notification.BirthCountryId ?? Countries.UnknownId;
+            details.LocalPatientId = localPatientId;
             details.Postcode = notification.Postcode;
-            details.Address = notification.Line1 + " " + notification.Line2;
-            details.EthnicityId = notification.NtbsEthnicGroupId;
-            details.SexId = notification.NtbsSexId;
-            details.NhsNumberNotKnown = notification.NhsNumberNotKnown == 1;
             details.NoFixedAbode = notification.NoFixedAbode == 1;
+            details.Address = address;
+            details.EthnicityId = notification.NtbsEthnicGroupId ?? Ethnicities.NotStatedId;
+            details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
             details.OccupationOther = notification.NtbsOccupationFreeText;
+
+            ForceValidNhsNumber(details);
+            
             return details;
         }
-        
+
+        private static string RemoveCharactersNotIn(string matchingRegex, string input)
+        {
+            // We assume the matching regex to be of the format "[someLettersHere]+"
+            // and we are aiming to turn it into "[^someLettersHere]"
+            var notMatchingRegex = matchingRegex
+                .Remove(matchingRegex.Length - 1)
+                .Insert(1, "^");
+            return new Regex(notMatchingRegex).Replace(input, "");
+        }
+
+        private static void ForceValidNhsNumber(PatientDetails details)
+        {
+            var validationResults = new List<ValidationResult>();
+            var context = new ValidationContext(details) { MemberName = nameof(PatientDetails.NhsNumber)};
+            Validator.TryValidateProperty(details.NhsNumber, context, validationResults);
+            if (validationResults.Any())
+            {
+                details.NhsNumber = null;
+                details.NhsNumberNotKnown = true;
+            }
+        }
+
         private static SocialRiskFactors ExtractSocialRiskFactors(dynamic notification)
         {
             var factors = new SocialRiskFactors();

@@ -2,49 +2,55 @@
 @using ntbs_service.Models.Enums
 @model OverviewModel
 
-<div class="notification-overview-type-and-edit-container">
+@{
+    var sectionSubPath = NotificationSubPaths.EditComorbidities;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Co-morbidities and immunosuppression </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditComorbidities)"
-        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
 <div class="notification-overview-details-container">
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Diabetes </div>
             <div class="cell-min-height">@Model.Notification.ComorbidityDetails.DiabetesStatus</div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Hepatitis B </div>
             <div class="cell-min-height">@Model.Notification.ComorbidityDetails.HepatitisBStatus</div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Hepatitis C </div>
             <div class="cell-min-height">@Model.Notification.ComorbidityDetails.HepatitisCStatus</div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Chronic Liver Disease </div>
             <div class="cell-min-height">@Model.Notification.ComorbidityDetails.LiverDiseaseStatus</div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Chronic Renal Disease </div>
             <div class="cell-min-height">@Model.Notification.ComorbidityDetails.RenalDiseaseStatus</div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Immunosuppression </div>
             <div class="cell-min-height">@Model.Notification.ImmunosuppressionDetails.Status</div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Type </div>
             <div class="cell-min-height">@Model.Notification.ImmunosuppressionDetails.CreateTypesOfImmunosuppressionString()</div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Other immunosuppression </div>
             <div class="cell-min-height">@Model.Notification.ImmunosuppressionDetails.OtherDescription</div>
         </nhs-grid-column>

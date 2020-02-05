@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -32,7 +33,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ComorbiditiesModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository) { }
+            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+        {
+            CurrentPage = NotificationSubPaths.EditComorbidities;
+        }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
@@ -68,7 +72,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            ComorbidityDetails.SetFullValidation(Notification.NotificationStatus);
+            ComorbidityDetails.SetValidationContext(Notification);
 
             ImmunosuppressionDetails = new ImmunosuppressionDetails {
                 Status = ImmunosuppressionStatus,
@@ -78,7 +82,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 OtherDescription = OtherDescription,
             };
 
-            ImmunosuppressionDetails.SetFullValidation(Notification.NotificationStatus);
+            ImmunosuppressionDetails.SetValidationContext(Notification);
 
             if (TryValidateModel(ComorbidityDetails, nameof(ComorbidityDetails))
                 && TryValidateModel(ImmunosuppressionDetails, nameof(ImmunosuppressionDetails)))

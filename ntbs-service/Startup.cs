@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using EFAuditer;
 using Hangfire;
@@ -23,6 +24,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.Jobs;
 using ntbs_service.Middleware;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
 using ntbs_service.Services;
@@ -163,7 +165,7 @@ namespace ntbs_service
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.AddScoped<IHomepageKpiService, HomepageKpiService>();
-
+            services.AddScoped<IDataQualityRepository, DataQualityRepository>();
             services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             services.AddScoped<IMdrService, MdrService>();
@@ -187,7 +189,21 @@ namespace ntbs_service
             {
                 services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
                 services.AddScoped<ISpecimenService, SpecimenService>();
-            } 
+            }
+
+            var clusterMatchingConfig = Configuration.GetSection("ClusterMatchingConfig");
+            if (clusterMatchingConfig.GetValue<bool>("MockOutClusterMatching"))
+            {
+                var notificationClusterValues = new List<NotificationClusterValue>();
+                clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
+
+                services.AddScoped<INotificationClusterService>(sp =>
+                    new MockNotificationClusterService(notificationClusterValues));
+            }
+            else
+            {
+                services.AddScoped<INotificationClusterService, NotificationClusterService>();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -257,7 +273,15 @@ namespace ntbs_service
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-            HangfireJobScheduler.ScheduleRecurringJobs();
+            
+            if (!Env.IsDevelopment())	
+            {
+                // Most of the time we don't care about recurring jobs in dev mode.
+                // Having this exclusion is also useful when connecting to non-dev databases for debugging.
+                // as jobs scheduled from (windows) dev machines won't run on linux due to different timezone formats
+                // Comment out this check to work with jobs locally.
+                HangfireJobScheduler.ScheduleRecurringJobs();
+            }
         }
 
         private string GetAdminRoleName()

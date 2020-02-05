@@ -44,7 +44,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             model.NotificationId = NotificationId;
             model.Dob = Notification.PatientDetails.Dob;
             SetDates(model, modelName);
-            model.SetFullValidation(Notification.NotificationStatus);
+            model.SetValidationContext(Notification);
 
             if (TryValidateModel(model, modelName))
             {
@@ -93,9 +93,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetPropertyValidationResult<SocialContextVenue>(key, value, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidateSocialContextDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidateSocialContextDate(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<T>(key, day, month, year);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<T>(key, day, month, year, isLegacy);
         }
 
         public ContentResult OnGetValidateSocialContextDates(IEnumerable<Dictionary<string, string>> keyValuePairs)

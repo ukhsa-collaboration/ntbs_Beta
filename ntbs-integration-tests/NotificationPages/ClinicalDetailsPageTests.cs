@@ -410,7 +410,8 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
+            var path = GetHandlerPath(formData, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID);
+            var response = await Client.GetAsync(path);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -430,7 +431,8 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
+            var path = GetHandlerPath(formData, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID);
+            var response = await Client.GetAsync(path);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -542,6 +544,65 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr",
                 "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk");
+        }
+        
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["NotificationSiteMap[PULMONARY]"] = "true",
+                ["NotificationSiteMap[OTHER]"] = "true",
+                ["OtherSite.SiteDescription"] = "tissue",
+                ["ClinicalDetails.BCGVaccinationState"] = "Yes",
+                ["ClinicalDetails.BCGVaccinationYear"] = "2000",
+                ["ClinicalDetails.IsSymptomatic"] = "true",
+                ["FormattedSymptomDate.Day"] = "1",
+                ["FormattedSymptomDate.Month"] = "1",
+                ["FormattedSymptomDate.Year"] = "2011",
+                ["FormattedFirstPresentationDate.Day"] = "2",
+                ["FormattedFirstPresentationDate.Month"] = "2",
+                ["FormattedFirstPresentationDate.Year"] = "2012",
+                ["FormattedTbServicePresentationDate.Day"] = "3",
+                ["FormattedTbServicePresentationDate.Month"] = "3",
+                ["FormattedTbServicePresentationDate.Year"] = "2013",
+                ["FormattedDiagnosisDate.Day"] = "4",
+                ["FormattedDiagnosisDate.Month"] = "4",
+                ["FormattedDiagnosisDate.Year"] = "2014",
+                ["ClinicalDetails.IsPostMortem"] = "false",
+                ["ClinicalDetails.IsShortCourseTreatment"] = "true",
+                ["ClinicalDetails.IsMDRTreatment"] = "false",
+                ["ClinicalDetails.IsDotOffered"] = "true",
+                ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
         }
     }
 }

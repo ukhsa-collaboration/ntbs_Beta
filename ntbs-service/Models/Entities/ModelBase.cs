@@ -8,14 +8,18 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         public bool ShouldValidateFull { get; set; }
 
+        [NotMapped]
+        public virtual bool? IsLegacy { get; set; }
+
         /* 
         * Full Validation is done if the form is being submitted or already been submitted.
         * Since the ModelBase does not have direct access to NotificationStatus, 
         * this methods is used to set Validation State from ViewModel
         */ 
-        public void SetFullValidation(NotificationStatus notificationStatus, bool isBeingSubmitted = false) 
+        public void SetValidationContext(Notification notification, bool isBeingSubmitted = false) 
         {
-            ShouldValidateFull = isBeingSubmitted || notificationStatus != NotificationStatus.Draft;
+            ShouldValidateFull = isBeingSubmitted || notification.NotificationStatus != NotificationStatus.Draft;
+            IsLegacy = notification.IsLegacy;
         }
     }
 }

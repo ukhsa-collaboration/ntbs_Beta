@@ -40,6 +40,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _postcodeService = postcodeService;
             GenerateReferenceData(referenceDataRepository);
+            
+            CurrentPage = NotificationSubPaths.EditPatientDetails;
         }
 
         private void GenerateReferenceData(IReferenceDataRepository referenceDataRepository)
@@ -85,12 +87,12 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(PatientDetails, "PatientDetails");
             }
 
-            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(PatientDetails.NhsNumber);
+            DuplicateNhsNumberNotifications = await GenerateDuplicateNhsNumberNotificationUrlsAsync(PatientDetails.NhsNumber, Notification.Group);
 
             return Page();
         }
 
-        private async Task<Dictionary<string, string>> GenerateDuplicateNhsNumberNotificationUrlsAsync(string nhsNumber)
+        private async Task<Dictionary<string, string>> GenerateDuplicateNhsNumberNotificationUrlsAsync(string nhsNumber, NotificationGroup group)
         {
             // If NhsNumber is empty or does not pass validation - return null
             // Potential duplication of validation here so that both Server and Dynamic/JS routes to warnings
@@ -103,7 +105,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             var notificationIds =
                 await NotificationRepository.GetNotificationIdsByNhsNumber(nhsNumber);
-            var idsInGroup = Group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
+            var idsInGroup = group?.Notifications?.Select(n => n.NotificationId) ?? new List<int>();
             var filteredIds = notificationIds
                 .Except(idsInGroup)
                 .Where(n => n != NotificationId)
@@ -127,7 +129,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.ClearValidationState("PatientDetails.YearOfUkEntry");
             }
 
-            PatientDetails.SetFullValidation(Notification.NotificationStatus);
+            PatientDetails.SetValidationContext(Notification);
             await FindAndSetPostcodeAsync();
 
             ValidationService.TrySetFormattedDate(PatientDetails, "Patient", nameof(PatientDetails.Dob), FormattedDob);
@@ -145,7 +147,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {
-            return await OnGetValidatePostcode<PatientDetails>(_postcodeService, postcode, shouldValidateFull);
+            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var foundPostcode = await _postcodeService.FindPostcode(postcode);
+            var propertyValueTuples = new List<(string, object)>
+            {
+                ("PostcodeToLookup", foundPostcode?.Postcode),
+                ("Postcode", postcode)
+            };
+            return ValidationService.GetMultiplePropertiesValidationResult<PatientDetails>(
+                propertyValueTuples,
+                shouldValidateFull, 
+                notification.IsLegacy);
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -158,16 +170,16 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.GetPropertyValidationResult<PatientDetails>(key, value, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year, isLegacy);
         }
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)
         {
-            NotificationId = notificationId;
-            await GetLinkedNotifications();
-            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber));
+            var group = await NotificationRepository.GetNotificationGroupAsync(notificationId);
+            return new JsonResult(await GenerateDuplicateNhsNumberNotificationUrlsAsync(nhsNumber, group));
         }
     }
 }

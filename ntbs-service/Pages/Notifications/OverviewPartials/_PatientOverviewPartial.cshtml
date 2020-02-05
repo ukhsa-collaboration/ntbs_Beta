@@ -2,100 +2,104 @@
 @using ntbs_service.Models.Enums
 @model OverviewModel
 
-<div class="notification-overview-type-and-edit-container" id="patient-details-overview-header">
+@{
+    var sectionSubPath = NotificationSubPaths.EditPatientDetails;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Personal details of patient </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditPatientDetails)"
-        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
 <div class="notification-overview-details-container">
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Name </div>
             <div class="cell-min-height"> @Model.Notification.FullName </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Sex </div>
             <div class="cell-min-height"> @Model.Notification.SexLabel </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> NHS number </div>
             <div class="cell-min-height"> @Model.Notification.FormattedNhsNumber </div>
         </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Occupation </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedOccupationString </div>
+        </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Notification Date </div>
             <div class="cell-min-height"> @Model.Notification.FormattedNotificationDate </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Date of birth </div>
             <div class="cell-min-height"> @Model.Notification.FormattedDob </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Age at notification </div>
             <div class="cell-min-height"> @Model.Notification.AgeAtNotification </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Address </div>
             <div class="cell-min-height">
                 @foreach (var line in Model.Notification.FormattedAddress)
                 {
                     @line
-                    <br />
+                    <br/>
                 }
             </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Postcode </div>
             <div class="cell-min-height"> @Model.Notification.FormattedNoAbodeOrPostcodeString </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Occupation </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedOccupationString </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Ethnic group </div>
-            <div class="cell-min-height"> @Model.Notification.EthnicityLabel </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Country of birth </div>
-            <div class="cell-min-height"> @Model.Notification.CountryName </div>
-        </nhs-grid-column>
-        @if (Model.Notification.PatientDetails.UkBorn == false)
-        {
-            <nhs-grid-column grid-column-width="OneThird">
-                <div class="notification-details-label"> UK entry year</div>
-                <div class="cell-min-height"> @Model.Notification.PatientDetails?.YearOfUkEntry </div>
-            </nhs-grid-column>
-        }
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Local Authority </div>
             <div class="cell-min-height"> @Model.Notification.LocalAuthorityName </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Residence PHEC </div>
             <div class="cell-min-height"> @Model.Notification.ResidencePHECName </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+    </nhs-grid-row>
+    <nhs-grid-row>
+
+    </nhs-grid-row>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Ethnic group </div>
+            <div class="cell-min-height"> @Model.Notification.EthnicityLabel </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Country of birth </div>
+            <div class="cell-min-height"> @Model.Notification.CountryName </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> UK entry year</div>
+            <div class="cell-min-height"> @Model.Notification.PatientDetails?.YearOfUkEntry </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Treatment PHEC </div>
             <div class="cell-min-height"> @Model.Notification.TreatmentPHECName </div>
         </nhs-grid-column>
     </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
-            <div class="notification-details-label"> Legacy IDs </div>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> Legacy ID </div>
             <div class="cell-min-height"> @Model.Notification.LegacyId </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Local Patient ID </div>
             <div class="cell-min-height"> @Model.Notification.PatientDetails?.LocalPatientId </div>
         </nhs-grid-column>

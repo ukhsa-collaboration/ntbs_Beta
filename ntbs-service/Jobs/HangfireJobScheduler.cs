@@ -18,6 +18,24 @@ namespace ntbs_service.Jobs
                 job => job.Run(JobCancellationToken.Null),
                 Cron.Daily(4),
                 TimeZoneInfo.Local);
+            
+            RecurringJob.AddOrUpdate<UnmatchedLabResultAlertsJob>(
+                "unmatched-lab-result-alerts",
+                job => job.Run(JobCancellationToken.Null),
+                Cron.Daily(4),
+                TimeZoneInfo.Local);
+            
+            RecurringJob.AddOrUpdate<DataQualityAlertsJob>(
+                "data-quality-alerts",
+                job => job.Run(JobCancellationToken.Null),
+                Cron.Daily(4),
+                TimeZoneInfo.Local);
+            
+            RecurringJob.AddOrUpdate<NotificationClusterUpdateJob>(
+                "notification-cluster-update",
+                job => job.Run(JobCancellationToken.Null),
+                Cron.Weekly(DayOfWeek.Sunday, 5),
+                TimeZoneInfo.Local);
         }
     }
 }

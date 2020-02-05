@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
@@ -51,7 +52,7 @@ namespace ntbs_service.DataMigration
 
             var notificationsGroups = await _notificationMapper.GetNotificationsGroupedByPatient(rangeStartDate, rangeEndDate);
 
-            var importResults = ImportNotificationGroups(context, requestId, notificationsGroups);
+            var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroups);
 
             _logger.LogInformation(context, requestId, $"Request to import by Date finished");
             return importResults;
@@ -64,20 +65,20 @@ namespace ntbs_service.DataMigration
 
             var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(legacyIds);
 
-            var importResults = ImportNotificationGroups(context, requestId, notificationsGroupsToImport);
+            var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroupsToImport);
 
             _logger.LogInformation(context, requestId, $"Request to import by Id finished");
             return importResults;
         }
 
-        private List<ImportResult> ImportNotificationGroups(PerformContext context, string requestId, IEnumerable<IEnumerable<Notification>> notificationsGroups)
+        private async Task<List<ImportResult>> ImportNotificationGroupsAsync(PerformContext context, string requestId, IEnumerable<IEnumerable<Notification>> notificationsGroups)
         {
             // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
             foreach (var notificationsGroup in notificationsGroups)
             {
                 var legacyIds = notificationsGroup.Select(x => x.LegacyId).ToList();
-                var legacyIdsToImport = FilterOutImportedIds(context, requestId, legacyIds);
+                var legacyIdsToImport = await FilterOutImportedIdsAsync(context, requestId, legacyIds);
                 if (legacyIdsToImport.Count() == notificationsGroup.Count())
                 {
                     notificationsGroupsToImport.Add(notificationsGroup.ToList());
@@ -153,13 +154,18 @@ namespace ntbs_service.DataMigration
             try
             {
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-                await _migrationRepository.MarkNotificiationsAsImportedAsync(savedNotifications);
+                await _migrationRepository.MarkNotificationsAsImportedAsync(savedNotifications);
 
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
 
                 _logger.LogInformation(context, requestId, $"Finished importing notification for {patientName}");
+            }
+            catch (MarkingNotificationsAsImportedFailedException e)
+            {
+                _logger.LogWarning(context, requestId, message: e.Message);
+                importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             catch (Exception e)
             {
@@ -169,12 +175,12 @@ namespace ntbs_service.DataMigration
             return importResult;
         }
 
-        private List<string> FilterOutImportedIds(PerformContext context, string requestId, List<string> legacyIds)
+        private async Task<List<string>> FilterOutImportedIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
         {
             var legacyIdsToImport = new List<string>();
             foreach (var legacyId in legacyIds)
             {
-                if (_notificationRepository.NotificationWithLegacyIdExists(legacyId))
+                if (await _notificationRepository.NotificationWithLegacyIdExistsAsync(legacyId))
                 {
                     _logger.LogWarning(context, requestId, $"Notification with Id={legacyId} already exists in NTBS database");
                 }

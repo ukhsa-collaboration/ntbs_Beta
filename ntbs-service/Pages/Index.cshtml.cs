@@ -43,7 +43,7 @@ namespace ntbs_service.Pages
         public async Task OnGetAsync()
         {
             await SetUserNotificationsAsync();
-            await SetUserAlertsAsync();
+            await SetUserAlertsAndTbServicesAsync();
             await SetHomepageKpiDetails();
         }
 
@@ -73,12 +73,13 @@ namespace ntbs_service.Pages
             RecentNotifications = (await _authorizationService.FilterNotificationsByUserAsync(User, recentNotificationsQueryable)).Take(10).ToList();
         }
 
-        private async Task SetUserAlertsAsync()
+        private async Task SetUserAlertsAndTbServicesAsync()
         {
             var services = (await _userService.GetTbServicesAsync(User)).ToList();
             var tbServiceCodes = services.Select(s => s.Code);
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
-            Alerts = await _alertRepository.GetAlertsByTbServiceCodesAsync(tbServiceCodes);
+            var nonFilteredAlerts = await _alertRepository.GetAlertsByTbServiceCodesAsync(tbServiceCodes);
+            Alerts = await _authorizationService.FilterAlertsForUserAsync(User, nonFilteredAlerts);
         }
     }
 }

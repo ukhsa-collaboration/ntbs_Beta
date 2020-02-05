@@ -21,6 +21,16 @@ namespace ntbs_service.Models.Enums
         [Display(Name = "Patient left UK")]
         PatientLeftUk,
         [Display(Name = "Patient has not left UK")]
-        PatientNotLeftUk
+        PatientNotLeftUk,
+        [Display(Name = "Transferred abroad")]
+        TransferredAbroad,
+        [Display(Name = "Still on treatment")]
+        StillOnTreatment,
+        [Display(Name = "Culture positive")]
+        CulturePositive,
+        [Display(Name = "Additional resistance")]
+        AdditionalResistance,
+        [Display(Name = "Adverse reaction")]
+        AdverseReaction
     }
 }

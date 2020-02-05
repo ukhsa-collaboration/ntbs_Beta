@@ -2,20 +2,26 @@
 @using ntbs_service.Models.Enums
 @model OverviewModel
 
-<div class="notification-overview-type-and-edit-container">
+@{
+    var sectionSubPath = NotificationSubPaths.EditTravel;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
     <h3 class="notification-details-type"> Travel/visitors </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditTravel)"
-            class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
 <div class="notification-overview-details-container">
 
     @if (Model.Notification.TravelDetails.HasTravel != true)
     {
-        <nhs-grid-row classes="notification-overview-details">
-            <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneHalf">
                 <div class="notification-details-label"> Patient has travelled to one or more high incidence countries </div>
                 <div class="cell-min-height"> @Model.Notification.HasRecentTravel </div>
             </nhs-grid-column>
@@ -23,43 +29,44 @@
     }
     else
     {
-        <nhs-grid-row classes="notification-overview-details">
-            <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Patient has travelled to one or more high incidence countries </div>
                 <div class="cell-min-height"> @Model.Notification.HasRecentTravel </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total countries travelled to </div>
                 <div class="cell-min-height"> @Model.Notification.TravelDetails.TotalNumberOfCountries </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total number of months travelled </div>
                 <div class="cell-min-height"> @Model.Notification.TravelDetails.TotalDurationOfTravel </div>
             </nhs-grid-column>
         </nhs-grid-row>
-        <nhs-grid-row classes="notification-overview-details">
-            <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Country 1 </div>
                 <div class="cell-min-height"> @Model.Notification.TravelDetails.Country1?.Name </div>
                 <div> </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Country 2 </div>
                 <div class="cell-min-height"> @Model.Notification.TravelDetails.Country2?.Name </div>
                 <div> </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Country 3 </div>
                 <div class="cell-min-height"> @Model.Notification.TravelDetails.Country3?.Name </div>
                 <div> </div>
             </nhs-grid-column>
         </nhs-grid-row>
     }
+    <br/>
 
     @if (Model.Notification.VisitorDetails.HasVisitor != true)
     {
-        <nhs-grid-row classes="notification-overview-details">
-            <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneHalf">
                 <div class="notification-details-label"> Patient has had visitors from one or more high incidence countries </div>
                 <div class="cell-min-height"> @Model.Notification.HasRecentVisitor </div>
             </nhs-grid-column>
@@ -67,32 +74,32 @@
     }
     else
     {
-        <nhs-grid-row classes="notification-overview-details">
-            <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Patient has had visitors from one or more high incidence countries </div>
                 <div class="cell-min-height"> @Model.Notification.HasRecentVisitor </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total visitor countries </div>
                 <div class="cell-min-height"> @Model.Notification.VisitorDetails.TotalNumberOfCountries </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total number of months of visits </div>
                 <div class="cell-min-height"> @Model.Notification.VisitorDetails.TotalDurationOfVisit </div>
             </nhs-grid-column>
         </nhs-grid-row>
-        <nhs-grid-row classes="notification-overview-details">
-            <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Country 1 </div>
                 <div class="cell-min-height"> @Model.Notification.VisitorDetails.Country1?.Name </div>
                 <div> </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Country 2 </div>
                 <div class="cell-min-height"> @Model.Notification.VisitorDetails.Country2?.Name </div>
                 <div> </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneThird">
+            <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Country 3 </div>
                 <div class="cell-min-height"> @Model.Notification.VisitorDetails.Country3?.Name </div>
                 <div> </div>

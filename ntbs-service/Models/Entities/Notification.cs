@@ -53,9 +53,12 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Notification date")]
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"PatientDetails.Dob == null || NotificationDate > PatientDetails.Dob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         public DateTime? NotificationDate { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
+
+        [NotMapped]
+        public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
         #endregion
 
@@ -88,8 +91,6 @@ namespace ntbs_service.Models.Entities
         #region Display and Formatting methods/fields
 
         public string NotificationStatusString => GetNotificationStatusString();
-        [Display(Name = "Date notified")]
-        public string FormattedSubmissionDate => SubmissionDate.ConvertToString();
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
@@ -112,11 +113,11 @@ namespace ntbs_service.Models.Entities
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
         public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
-        public int? DaysFromOnsetToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
-        public int? DaysFromOnsetToFirstPresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.FirstPresentationDate, ClinicalDetails.SymptomStartDate);
-        public int? DaysFromFirstPresentationToTBServicePresentation => CalculateDaysBetweenNullableDates(ClinicalDetails.TBServicePresentationDate, ClinicalDetails.FirstPresentationDate);
-        public int? DaysFromTBServicePresentationToDiagnosis => CalculateDaysBetweenNullableDates(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
-        public int? DaysFromDiagnosisToTreatment => CalculateDaysBetweenNullableDates(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
+        public string DaysFromOnsetToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
+        public string DaysFromOnsetToFirstPresentation => FormatNullableDateDifference(ClinicalDetails.FirstPresentationDate, ClinicalDetails.SymptomStartDate);
+        public string DaysFromFirstPresentationToTBServicePresentation => FormatNullableDateDifference(ClinicalDetails.TBServicePresentationDate, ClinicalDetails.FirstPresentationDate);
+        public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
+        public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
         public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
         public string FormattedSymptomStartDate => ClinicalDetails.SymptomStartDate.ConvertToString();
@@ -132,6 +133,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
         [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
+        [Display(Name = "Date notified")]
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
@@ -178,6 +180,20 @@ namespace ntbs_service.Models.Entities
         private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
         {
             return booleanState.FormatYesNo() + (date != null ? " - " + date.ConvertToString() : string.Empty);
+        }
+
+        private string FormatNullableDateDifference(DateTime? date1, DateTime? date2)
+        {
+            var days = CalculateDaysBetweenNullableDates(date1, date2);
+            switch (days)
+            {
+                case null:
+                    return null;
+                case 1:
+                    return days + " day";
+                default:
+                    return days + " days";
+            }
         }
 
         private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)

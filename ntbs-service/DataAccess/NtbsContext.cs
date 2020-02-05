@@ -3,6 +3,7 @@ using Audit.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -99,7 +100,7 @@ namespace ntbs_service.DataAccess
                 new Ethnicity { EthnicityId = 4, Code = "D", Label = "Mixed - White and Black Caribbean", Order = 12 },
                 new Ethnicity { EthnicityId = 7, Code = "G", Label = "Any other mixed background", Order = 13 },
                 new Ethnicity { EthnicityId = 15, Code = "S", Label = "Any other ethnic group", Order = 14 },
-                new Ethnicity { EthnicityId = 17, Code = "Z", Label = "Not stated", Order = 15 }
+                new Ethnicity { EthnicityId = Ethnicities.NotStatedId, Code = "Z", Label = "Not stated", Order = 15 }
             );
 
             modelBuilder.Entity<TBService>(entity =>
@@ -226,7 +227,7 @@ namespace ntbs_service.DataAccess
                         .HasConversion(hivStatusEnumConverter)
                         .HasMaxLength(EnumMaxLength);
                     e.Property(c => c.Notes)
-                        .HasMaxLength(500);
+                        .HasMaxLength(1000);
                     e.ToTable("ClinicalDetails");
                 });
 
@@ -354,6 +355,7 @@ namespace ntbs_service.DataAccess
                 entity.HasIndex(e => e.LTBRID);
                 entity.HasIndex(e => e.ETSID);
                 entity.HasIndex(e => e.LTBRPatientId);
+                entity.HasIndex(e => e.ClusterId);
             });
 
             modelBuilder.Entity<Region>(entity =>
@@ -370,7 +372,7 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<Sex>().HasData(
                 new Sex { SexId = 1, Label = "Male" },
                 new Sex { SexId = 2, Label = "Female" },
-                new Sex { SexId = 3, Label = "Unknown" }
+                new Sex { SexId = Sexes.UnknownId, Label = "Unknown" }
             );
 
             modelBuilder.Entity<NotificationSite>(entity =>
@@ -504,7 +506,12 @@ namespace ntbs_service.DataAccess
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
                     .HasValue<TransferAlert>(AlertType.TransferRequest)
-                    .HasValue<TransferRejectedAlert>(AlertType.TransferRejected);
+                    .HasValue<TransferRejectedAlert>(AlertType.TransferRejected)
+                    .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult)
+                    .HasValue<DataQualityDraftAlert>(AlertType.DataQualityDraft)
+                    .HasValue<DataQualityBirthCountryAlert>(AlertType.DataQualityBirthCountry)
+                    .HasValue<DataQualityClinicalDatesAlert>(AlertType.DataQualityClinicalDates)
+                    .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });
@@ -515,6 +522,10 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.TransferReason)
                     .HasConversion(transferReasonEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+            });
+            modelBuilder.Entity<UnmatchedLabResultAlert>(entity =>
+            {
+                entity.Property(e => e.SpecimenId).HasMaxLength(50);
             });
 
             modelBuilder.Entity<VenueType>().HasData(

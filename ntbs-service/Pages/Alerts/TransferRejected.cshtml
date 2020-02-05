@@ -13,10 +13,12 @@
     
     <br>
     
-    <div> @Model.TransferRejectedAlert.CaseManagerTbServiceString: </div>
-    
-    <br/>
-    
+    @if(Model.TransferRejectedAlert.CaseManagerTbServiceString != null)
+    {
+        <div> @Model.TransferRejectedAlert.CaseManagerTbServiceString: </div>
+        <br/>
+    }
+
     <div class="rejection-note"> @Model.TransferRejectedAlert.RejectionReason </div>
 
     <form method="post" autocomplete="off">

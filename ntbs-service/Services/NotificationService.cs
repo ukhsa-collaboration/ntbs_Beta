@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace ntbs_service.Services
         Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails);
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
+        Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
         Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
     }
 
@@ -150,6 +152,7 @@ namespace ntbs_service.Services
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
         {
+            testData.NotificationId = notification.NotificationId;
             _context.SetValues(notification.TestData, testData);
 
             await UpdateDatabaseAsync();
@@ -349,6 +352,22 @@ namespace ntbs_service.Services
 
             await AddNotificationAsync(notification);
             return notification;
+        }
+
+        public async Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues)
+        {
+            foreach (var clusterValue in clusterValues)
+            {
+                var notification = await _notificationRepository.GetNotificationAsync(clusterValue.NotificationId);
+                if (notification == null)
+                {
+                    throw new DataException("Reporting database sourced NotificationId was not found in NTBS database.");
+                }
+                
+                notification.ClusterId = clusterValue.ClusterId;
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile)

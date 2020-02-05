@@ -60,9 +60,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task ValidateAndSave()
         {
+            TestResultForEdit.SetValidationContext(Notification);
             TestResultForEdit.NotificationId = NotificationId;
             TestResultForEdit.Dob = Notification.PatientDetails.Dob;
-            await SetRelatedEntities();
+            await SetRelatedEntitiesAsync();
             SetDate();
 
             if (TryValidateModel(TestResultForEdit, "TestResultForEdit"))
@@ -128,7 +129,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return await NotificationRepository.GetNotificationWithTestsAsync(notificationId);
         }
 
-        private async Task SetRelatedEntities()
+        private async Task SetRelatedEntitiesAsync()
         {
             if (TestResultForEdit.ManualTestTypeId != null)
             {
@@ -151,9 +152,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 FormattedTestDate);
         }
 
-        public ContentResult OnGetValidateTestResultForEditDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidateTestResultForEditDateAsync(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<ManualTestResult>(key, day, month, year);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<ManualTestResult>(key, day, month, year, isLegacy);
         }
 
         public async Task<JsonResult> OnGetFilteredSampleTypesForManualTestType(int value)

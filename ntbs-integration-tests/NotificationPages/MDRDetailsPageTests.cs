@@ -5,7 +5,6 @@ using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
@@ -270,6 +269,46 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await response.Content.ReadAsStringAsync();
             Assert.Contains("Name", result);
             Assert.Contains("Dob", result);
+        }
+        
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
+                ["MDRDetails.RelationshipToCase"] = "Cousins",
+                ["MDRDetails.CaseInUKStatus"] = "Yes",
+                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NOTIFIED_ID}",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
         }
     }
 }

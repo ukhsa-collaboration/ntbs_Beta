@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
@@ -33,6 +34,11 @@ namespace ntbs_service.Services
         private static readonly string _orderByUnmatchedStatement =
             $"ORDER BY [{nameof(UnmatchedSpecimen.SpecimenDate)}] DESC, [{nameof(SpecimenPotentialMatch.ConfidenceLevel)}] DESC";
 
+        private static readonly string _getSpecimenMatchPairingsQuery = $@"
+            SELECT
+                [{nameof(SpecimenMatchPairing.ReferenceLaboratoryNumber)}]
+                ,[{nameof(SpecimenMatchPairing.NotificationId)}]";
+
         public static readonly string GetMatchedSpecimensForNotificationQuery = $@"
             SELECT 
                 [{nameof(MatchedSpecimen.NotificationId)}]
@@ -55,6 +61,12 @@ namespace ntbs_service.Services
                 ,[{nameof(MatchedSpecimen.LabAddress)}]
             FROM [dbo].[ufnGetMatchedSpecimen] (@param)
             ORDER BY [{nameof(MatchedSpecimen.SpecimenDate)}] DESC";
+
+        public static readonly string GetAllSpecimenPotentialMatchesQuery =
+            string.Join(
+                ' ',
+                _getSpecimenMatchPairingsQuery,
+                "FROM [dbo].[ufnGetAllUnmatchedSpecimens] ()");
 
         public static string GetAllUnmatchedSpecimensQuery =>
             string.Join(

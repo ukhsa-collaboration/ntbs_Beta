@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
@@ -16,6 +17,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
         {
+            CurrentPage = NotificationSubPaths.EditSocialRiskFactors;
         }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
@@ -28,7 +30,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
-            SocialRiskFactors.SetFullValidation(Notification.NotificationStatus);
+            SocialRiskFactors.SetValidationContext(Notification);
             if (TryValidateModel(SocialRiskFactors))
             {
                 await Service.UpdateSocialRiskFactorsAsync(Notification, SocialRiskFactors);

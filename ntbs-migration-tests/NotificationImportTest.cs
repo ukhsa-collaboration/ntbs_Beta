@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
-using ntbs_service.Models.Enums;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using Moq;
@@ -58,7 +57,7 @@ namespace ntbs_migration_tests
         public async Task NotificationExists()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists("1")).Returns(true);
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExistsAsync("1")).Returns(Task.FromResult(true));
             var ids = new List<string>() { "1" };
 
             //When
@@ -73,7 +72,7 @@ namespace ntbs_migration_tests
         public async Task NotificationNotFound()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>())).Returns(false);
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExistsAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
             var ids = new List<string>() { "0" };
 
             //When
@@ -88,8 +87,8 @@ namespace ntbs_migration_tests
         public async Task NotificationWithoutValidationErrors()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>()))
-                                        .Returns(false);
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExistsAsync(It.IsAny<string>()))
+                                        .Returns(Task.FromResult(false));
 
             var ids = new List<string>() { "66-1" };
             var dummyPostcodeList = new List<PostcodeLookup> {
@@ -120,8 +119,8 @@ namespace ntbs_migration_tests
         public async Task NotificationValidationErrors()
         {
             //Given
-            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExists(It.IsAny<string>()))
-                                        .Returns(false);
+            _mockNotificationRepository.Setup(x => x.NotificationWithLegacyIdExistsAsync(It.IsAny<string>()))
+                                        .Returns(Task.FromResult(false));
 
             var ids = new List<string>() { "41-1" };
             var dummyPostcodeList = new List<PostcodeLookup> {

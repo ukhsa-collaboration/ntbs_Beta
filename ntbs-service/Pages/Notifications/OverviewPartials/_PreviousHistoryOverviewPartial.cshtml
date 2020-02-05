@@ -2,33 +2,37 @@
 @using ntbs_service.Models.Enums
 @model OverviewModel
 
-<div class="notification-overview-type-and-edit-container">
-    <h3 class="notification-details-type"> Previous history of TB (pre-2000) </h3>
-    @if(Model.PermissionLevel == PermissionLevel.Edit)
+@{
+    var sectionSubPath = NotificationSubPaths.EditPreviousHistory;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+    <h3 class="notification-details-type"> Other history of TB </h3>
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
-        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditPreviousHistory)"
-        class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
     }
 </div>
 <div class="notification-overview-details-container">
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Previous notification of TB </div>
             <div class="cell-min-height"> @Model.Notification.NotPreviouslyHadTBYesNo </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Year of previous notification </div>
             <div class="cell-min-height"> @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear </div>
         </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row classes="notification-overview-details">
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Drug therapy </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height"> </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneThird">
+        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Treatment in UK </div>
-            <div class="cell-min-height">  </div>
+            <div class="cell-min-height"> </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>

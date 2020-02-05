@@ -42,6 +42,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             _context = context;
             _userService = userService;
             _referenceDataRepository = referenceDataRepository;
+
+            CurrentPage = NotificationSubPaths.EditEpisode;
         }
 
         protected override Task<Notification> GetNotificationAsync(int notificationId)
@@ -136,7 +138,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetValuesForValidation()
         {
-            Episode.SetFullValidation(Notification.NotificationStatus);
+            Episode.SetValidationContext(Notification);
             ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
             Binding only sets the entity ids, but not the actual entities.

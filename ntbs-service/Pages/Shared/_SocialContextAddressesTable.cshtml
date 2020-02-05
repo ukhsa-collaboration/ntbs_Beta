@@ -20,7 +20,7 @@
             }
         </div>
         <dl class="notification-overview-details-container" id="address-body-@result.SocialContextAddressId">
-            <nhs-grid-row classes="notification-overview-details">
+            <nhs-grid-row>
                 <nhs-grid-column grid-column-width="OneHalf">
                     <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Address) </dt>
                     <dd class="cell-min-height"> @result.Address </dd>
@@ -32,7 +32,7 @@
             </nhs-grid-row>
             @if (!string.IsNullOrEmpty(result.Details)) 
             {
-                <nhs-grid-row classes="notification-overview-details">
+                <nhs-grid-row>
                     <nhs-grid-column grid-column-width="Full">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Details) </dt>
                         <dd class="cell-min-height"> @result.Details </dd>

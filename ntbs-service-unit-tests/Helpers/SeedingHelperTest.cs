@@ -13,7 +13,8 @@ namespace ntbs_service_unit_tests.Helpers
             var firstEntryInTBServicesList = new TBService {
                 Code = "TBS0001",
                 Name = "Abingdon Community Hospital",
-                PHECCode = "E45000019"
+                PHECCode = "E45000019",
+                ServiceAdGroup = "Global.NIS.NTBS.Service_Abingdon"
             };
             const int expectedCount = 6;
 
@@ -21,6 +22,7 @@ namespace ntbs_service_unit_tests.Helpers
             Assert.Equal(firstEntryInTBServicesList.Code, ((TBService)results[0]).Code);
             Assert.Equal(firstEntryInTBServicesList.Name, ((TBService)results[0]).Name);
             Assert.Equal(firstEntryInTBServicesList.PHECCode, ((TBService)results[0]).PHECCode);
+            Assert.Equal(firstEntryInTBServicesList.ServiceAdGroup, ((TBService)results[0]).ServiceAdGroup);
         }
 
     }

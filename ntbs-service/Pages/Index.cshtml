@@ -73,8 +73,11 @@
                                 </a>
                             </nhs-table-item>
                             <nhs-table-item>
-                                @item.CaseManagerFullName
-                                <br />
+                                @if (!string.IsNullOrWhiteSpace(item.CaseManagerFullName))
+                                {
+                                    @item.CaseManagerFullName
+                                    <br/>
+                                }
                                 @item.TbServiceName
                             </nhs-table-item>
                             <nhs-table-item>
@@ -142,7 +145,7 @@
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedSubmissionDate)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedNotificationDate)
             </nhs-table-item>
             <nhs-table-item>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].TBServiceName)
@@ -160,7 +163,7 @@
                         </a>
                     </nhs-table-item>
                     <nhs-table-item>
-                        @Html.DisplayFor(modelItem => item.FormattedSubmissionDate)
+                        @Html.DisplayFor(modelItem => item.FormattedNotificationDate)
                     </nhs-table-item>
                     <nhs-table-item>
                         @Html.DisplayFor(modelItem => item.TBServiceName)

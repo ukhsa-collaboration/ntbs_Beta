@@ -8,6 +8,6 @@ E45000017,East of England,Global.NIS.NTBS.EoE
 E45000018,North West,Global.NIS.NTBS.NoW
 E45000019,South East,Global.NIS.NTBS.SoE
 E45000020,South West,Global.NIS.NTBS.SoW
-PHECNI,Northern Ireland,
-PHECSCOT,Scotland,
-PHECWAL,Wales,
+PHECNI,Northern Ireland,Global.NIS.NTBS.NI
+PHECSCOT,Scotland,Global.NIS.NTBS.SCOT
+PHECWAL,Wales,Global.NIS.NTBS.WALES

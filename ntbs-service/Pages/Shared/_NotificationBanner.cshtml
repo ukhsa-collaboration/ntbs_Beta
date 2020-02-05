@@ -15,7 +15,7 @@
                     <div> @Model.NotificationStatusString </div>
 
                     <div>
-                        @if (@Model.ShowLink)
+                        @if (Model.ShowLink)
                         {
                             <a href="@Model.RedirectPath" class="notification-banner-id-link" id="notification-banner-id">#@Model.NotificationId</a>
                         }
@@ -32,7 +32,7 @@
                             }
                         }
 
-                        @if (!Model.ShowPadlock)
+                        @if (Model.ShowPadlock)
                         {
                             <span class="govuk-visually-hidden">Limited Access</span>
                             <svg width="16" height="18" xmlns="http://www.w3.org/2000/svg">

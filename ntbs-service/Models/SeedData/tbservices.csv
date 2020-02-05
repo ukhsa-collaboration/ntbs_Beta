@@ -1,410 +1,424 @@
-﻿Code,Name,PHEC_Code
-TBS0001,Abingdon Community Hospital,E45000019
-TBS0002,Addenbrooke's Hospital,E45000017
-TBS0003,Airedale NHS Foundation Trust,E45000010
-TBS0004,Amersham Hospital,E45000019
-TBS0005,Andover War Memorial Hospital,E45000019
-TBS0006,Arrowe Park Hospital,E45000018
-TBS0007,Ashford & St Peter's Hospital (Chertsey),E45000019
-TBS0008,Ashford Hospital,E45000019
-TBS0009,Barnet Hospital,E45000001
-TBS0010,Basildon & Thurrock University Hospitals,E45000017
-TBS0011,Baskingstoke and North Hampshire Hospital,E45000019
-TBS0012,Bath,E45000020
-TBS0013,Battle Hospital,E45000019
-TBS0014,Bedford Hospital,E45000017
-TBS0015,Benenden Hospital,E45000019
-TBS0016,Berkshire Independent Hospital,E45000019
-TBS0017,Beverley Westwood Hospital,E45000010
-TBS0018,BHR University Hospitals NHS Trust,E45000001
-TBS0019,Birmingham & Solihull,E45000005
-TBS0020,Blackheath Hospital,E45000001
-TBS0021,Bognor Regis War Memorial Hospital,E45000019
-TBS0022,Bradford Royal Infirmary,E45000010
-TBS0023,Bradford Teaching Hospitals NHS Foundation Trust,E45000010
-TBS0024,Brentwood Community Hospital,E45000017
-TBS0025,Bridgewater Community Healthcare,E45000018
-TBS0026,Bridlington & District Hospital,E45000010
-TBS0027,Brighton General Hospital,E45000019
-TBS0028,Bristol,E45000020
-TBS0029,Bromley TB Service,E45000001
-TBS0030,Broomfield Hospital,E45000017
-TBS0031,Buckingham Hospital,E45000019
-TBS0032,Buckland Hospital,E45000019
-TBS0033,Burton,E45000005
-TBS0034,Calderdale & Huddersfield NHS FT,E45000010
-TBS0035,Cavell Hospital,E45000001
-TBS0036,Central & North Lancashire (LTHTR/LCFT),E45000018
-TBS0037,Charter Medical Centre,E45000019
-TBS0038,Chase Farm Hospital,E45000001
-TBS0039,Chaucer Hospital,E45000019
-TBS0040,CHCP (City Health Care Partnership),E45000010
-TBS0041,Chelsea & Westminster,E45000001
-TBS0042,Chelsfield Park Hospital,E45000019
-TBS0043,Cheshire East,E45000018
-TBS0044,Chesterfield Royal Hospital,E45000016
-TBS0045,Chiltern Hospital,E45000019
-TBS0046,Church Hill House Hospital,E45000019
-TBS0047,Clacton And District Hospital,E45000017
-TBS0048,Clementine Churchill Hospital,E45000001
-TBS0049,Colchester Hospital,E45000017
-TBS0050,Conquest Hospital,E45000019
-TBS0051,Cornwall,E45000020
-TBS0052,Countess of Chester Hospital,E45000018
-TBS0053,County Durham and Darlington NHS Foundation Trust TB Nursing Service,E45000009
-TBS0054,Coventry & Warwickshire,E45000005
-TBS0055,Crawley Hospital,E45000019
-TBS0056,Cumbria: Morecambe Bay Trust,E45000018
-TBS0057,Cumbria: North Cumbria UHT,E45000018
-TBS0058,Darent Valley Hospital,E45000019
-TBS0059,Doncaster & Bassetlaw,E45000016
-TBS0060,Dorset,E45000020
-TBS0061,Duchess of Kent Hospital,E45000010
-TBS0062,Dudley,E45000005
-TBS0063,East & North Hertfordshire Hospitals,E45000017
-TBS0064,East Dorset,E45000020
-TBS0065,East Lancashire Health Trust,E45000018
-TBS0066,East Surrey Hospital,E45000019
-TBS0067,Eastbourne District General Hospital,E45000019
-TBS0068,Epsom and St Helier NHS Trust,E45000001
-TBS0069,Erith & District Hospital,E45000001
-TBS0070,Esperance Hospital,E45000019
-TBS0071,Essex County Hospital,E45000017
-TBS0072,Fawkham Manor Hospital,E45000019
-TBS0073,Fishermead Medical Centre,E45000019
-TBS0074,Fitzwilliam Hospital,E45000017
-TBS0075,Frimley Park Hospital,E45000019
-TBS0076,"Gateshead- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead",E45000009
-TBS0077,Gloucestershire,E45000020
-TBS0078,Goole District Hospital,E45000010
-TBS0079,Gravesend and North Kent Hospital,E45000019
-TBS0080,Great Ormond Street Hospital Central London Site,E45000001
-TBS0081,Guy's Hospital,E45000001
-TBS0082,Halton Hospital,E45000018
-TBS0083,Hampshire Clinic,E45000019
-TBS0084,Harefield Hospital,E45000001
-TBS0085,Harold Wood Hospital,E45000001
-TBS0086,Harrogate and District NHS Foundation Trust,E45000010
-TBS0087,Heart Hospital,E45000001
-TBS0088,Heatherwood Hospital,E45000019
-TBS0089,Herefordshire,E45000005
-TBS0090,Hillingdon Hospital,E45000001
-TBS0091,Holly House Hospital,E45000017
-TBS0092,Homerton,E45000001
-TBS0093,Horsham Hospital,E45000019
-TBS0094,Hospital for Tropical Diseases,E45000001
-TBS0095,Imperial College Healthcare,E45000001
-TBS0096,Ipswich Hospital,E45000017
-TBS0097,James Paget Hospital,E45000017
-TBS0098,Joyce Green Hospital,E45000019
-TBS0099,Kent & Sussex Hospital,E45000019
-TBS0100,Kent Community Health NHS Foundation Trust,E45000019
-TBS0101,Kings College Hospital,E45000001
-TBS0102,King'S College Hospital (Dulwich),E45000001
-TBS0103,Kings Oak Hospital,E45000001
-TBS0104,Kings Park Hospital,E45000019
-TBS0105,Kingston Hospital,E45000001
-TBS0106,LCHC (Leeds Community Healthcare NHS Trust),E45000010
-TBS0107,"Leicester, Leicestershire & Rutland TB Service",E45000016
-TBS0108,Lincolnshire,E45000016
-TBS0109,Liverpool,E45000018
-TBS0110,Locala Community Partnerships (Greater Huddersfield),E45000010
-TBS0111,Locala Community Partnerships (North Kirklees),E45000010
-TBS0112,London Independent Hospital,E45000001
-TBS0113,London NW Healthcare Central Middlesex,E45000001
-TBS0114,London NW Healthcare Ealing,E45000001
-TBS0115,London NW Healthcare Northwick Park,E45000001
-TBS0116,Luton & Dunstable Hospital,E45000017
-TBS0117,Lymington Hospital (Peripheral Clinic),E45000019
-TBS0118,Maidstone District General Hospital,E45000019
-TBS0119,Manchester University NHS Foundation Trust (MFT),E45000018
-TBS0120,Mayday University Hospital,E45000001
-TBS0121,Medway Maritime Hospital,E45000019
-TBS0122,Memorial Hospital,E45000001
-TBS0123,Mid Notts,E45000016
-TBS0124,Mile End Hospital,E45000001
-TBS0125,Milton Keynes University Hospital,E45000017
-TBS0126,Mount Alvernia Hospital,E45000019
-TBS0127,Mount Vernon Hospital,E45000001
-TBS0128,National Hospital for Neurology & Neurosciences - Queen Square,E45000001
-TBS0129,Nelson Hospital,E45000001
-TBS0130,Newham Chest Clinic,E45000001
-TBS0131,Queen's Hospital [Croydon],E45000001
-TBS0132,Norfolk & Norwich University Hospital,E45000017
-TBS0133,North Devon,E45000020
-TBS0134,North Downs Hospital,E45000019
-TBS0135,North Hampshire Hospital,E45000019
-TBS0136,North Middlesex Hospital,E45000001
-TBS0137,North of Tyne TB Service,E45000009
-TBS0138,North Tees and Hartlepool,E45000009
-TBS0139,North West Anglia Foundation Trust,E45000017
-TBS0140,Northamptonshire,E45000016
-TBS0141,Northern Lincolnshire & Goole NHS Foundation Trust,E45000010
-TBS0142,Nottingham,E45000016
-TBS0143,Nuffield Health Brentwood Hospital,E45000017
-TBS0144,Nuffield Health Cambridge Hospital,E45000017
-TBS0145,Nuffield Health Chichester Hospital,E45000019
-TBS0146,Nuffield Health Guildford Hospital,E45000019
-TBS0147,Nuffield Health Haywards Heath Hospital,E45000019
-TBS0148,Nuffield Health Leeds Hospital,E45000010
-TBS0149,Nuffield Health Tunbridge Wells Hospital,E45000019
-TBS0150,Nuffield Health Woking Hospital,E45000019
-TBS0151,Nuffield Health York Hospital,E45000010
-TBS0152,Oldchurch Hospital,E45000001
-TBS0153,Open Door (Health),E45000010
-TBS0154,Ormskirk & District General Hospital,E45000018
-TBS0155,Orpington Hospital,E45000001
-TBS0156,Orsett Hospital,E45000017
-TBS0157,Oxford University Hospitals NHS Foundation Trust,E45000019
-TBS0158,Papworth Hospital,E45000017
-TBS0159,Parkside Hospital,E45000001
-TBS0160,Pennine Acute Hospitals NHS Trust,E45000018
-TBS0161,Pinehill Hospital,E45000017
-TBS0162,Pontefract General Infirmary,E45000010
-TBS0163,Portland Hospital,E45000019
-TBS0164,Preston Hall Hospital,E45000019
-TBS0165,Princess Alexandra Hospital,E45000017
-TBS0166,Princess Royal Hospital [West Sussex],E45000019
-TBS0167,Priory Hospital,E45000005
-TBS0168,Queen Alexandra Hospital,E45000019
-TBS0169,Queen Elizabeth Hospital,E45000001
-TBS0170,"Queen Elizabeth Hospital, King's Lynn",E45000017
-TBS0171,Queen Mary'S Hospital [London],E45000001
-TBS0172,Queen Mary'S Hospital [Sidcup],E45000001
-TBS0173,Queen Victoria Hospital [East Grinstead],E45000019
-TBS0174,Radcliffe Infirmary,E45000019
-TBS0175,Royal Devon & Exeter,E45000020
-TBS0176,RDASH NHS Foundation Trust,E45000010
-TBS0177,Royal Berkshire Hospital,E45000019
-TBS0178,Royal Bolton Hospital,E45000018
-TBS0179,Royal Brompton,E45000001
-TBS0180,Royal Buckinghamshire Hospital,E45000019
-TBS0181,Royal Derby Hospital,E45000016
-TBS0182,Royal Free London TB Service,E45000001
-TBS0183,Royal Hampshire County Hospital,E45000019
-TBS0184,Royal Hospital Haslar,E45000019
-TBS0185,Royal London Hospital,E45000001
-TBS0186,Royal Marsden Chelsea,E45000001
-TBS0187,Royal National Orthopaedic Hospital (Stanmore),E45000001
-TBS0188,Royal South Hants Hospital,E45000019
-TBS0189,Royal Surrey County Hospital,E45000019
-TBS0190,Royal Sussex County Hospital,E45000019
-TBS0191,Royal Victoria Hospital [Folkestone],E45000019
-TBS0192,Runneymede Hospital,E45000019
-TBS0193,Salford Royal,E45000018
-TBS0194,Sandwell,E45000005
-TBS0195,Sheffield Teaching Hospitals NHS Foundation Trust,E45000010
-TBS0196,Shropshire & Telford,E45000005
-TBS0197,Sloane Hospital,E45000001
-TBS0198,Somerfield Hospital,E45000019
-TBS0199,Somerset,E45000020
-TBS0200,South Tees NHS TB Trust TB Team,E45000009
-TBS0201,"South Tyneside- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead",E45000009
-TBS0202,South West Yorkshire Partnership NHS Foundation Trust (Barnsley),E45000010
-TBS0203,South West Yorkshire Partnership NHS Foundation Trust (Wakefield),E45000010
-TBS0204,Southampton General Hospital,E45000019
-TBS0205,Southend Hospital,E45000017
-TBS0206,Southport & Formby District General Hospital,E45000018
-TBS0207,Spire Alexandra Hospital,E45000019
-TBS0208,Spire Harpenden Hospital,E45000017
-TBS0209,Spire Hartswood Hospital,E45000017
-TBS0210,Spire Lea Cambridge Hospital,E45000017
-TBS0211,Spire Longlands Consulting Rooms,E45000010
-TBS0212,Spire St Saviour's Hospital,E45000019
-TBS0213,Spire Tunbridge Wells Hospital,E45000019
-TBS0214,Spire Wellesley Hospital,E45000017
-TBS0215,St Albans City Hospital,E45000017
-TBS0216,St Anns Hospital [London],E45000001
-TBS0217,St Anthonys Hospital,E45000019
-TBS0218,St Bartholomew's Hospital [London],E45000001
-TBS0219,St Bartholomews Hospital [Rochester],E45000019
-TBS0220,St George's Hospital,E45000001
-TBS0221,St George's Hospital [Stafford],E45000019
-TBS0222,St Helens Hospital [Merseyside],E45000018
-TBS0223,St James Hospital [Southsea],E45000019
-TBS0224,St John & St Elizabeth Hospital,E45000001
-TBS0225,St Mary's Hospital (Isle of Wight),E45000019
-TBS0226,St Mary's Hospital [Portsmouth],E45000019
-TBS0227,St Michael's Hospital [Braintree],E45000017
-TBS0228,St Pancras Hospital,E45000001
-TBS0229,St Richard's Hospital,E45000019
-TBS0230,St Thomas' Hospital,E45000001
-TBS0231,St. Margaret's Hospital,E45000017
-TBS0232,Staffordshire & Stoke-on-Trent,E45000005
-TBS0233,Stepping Hill Hospital,E45000018
-TBS0234,Stoke Mandeveille/Wycombe Hospitals,E45000019
-TBS0235,Sunderland,E45000009
-TBS0236,Swindon,E45000020
-TBS0237,Swindon & Wiltshire,E45000020
-TBS0238,Tameside General Hospital,E45000018
-TBS0239,TB Service NCL - South Hub,E45000001
-TBS0240,The London Clinic,
-TBS0241,The Rotherham NHS Foundation Trust,E45000010
-TBS0242,Tickhill Road Hospital,E45000010
-TBS0243,Torbay,E45000020
-TBS0244,Townlands Hospital,E45000019
-TBS0245,Tunbridge Wells Hospital [Pembury],E45000019
-TBS0246,University Hospital Lewisham,E45000001
-TBS0247,Upton Hospital [Slough],E45000019
-TBS0248,Victoria Hospital [Romford],E45000001
-TBS0249,Walsall,E45000005
-TBS0250,Warders Medical Centre,E45000019
-TBS0251,Warrington Hospital,E45000018
-TBS0252,Water Eaton Health Centre,E45000017
-TBS0253,West Hertfordshire Hospitals,E45000017
-TBS0254,West Middlesex University Hospital,E45000001
-TBS0255,West Park Hospital [Epsom],E45000019
-TBS0256,West Suffolk Hospital,E45000017
-TBS0257,Western Community Hospital,E45000019
-TBS0258,Weston,E45000020
-TBS0259,Wexham Park/King Edward VII Hospitals,E45000019
-TBS0260,Whipps Cross University Hospital,E45000001
-TBS0261,Whiston Hospital,E45000018
-TBS0262,Wolverhampton,E45000005
-TBS0263,Worcestershire,E45000005
-TBS0264,Worthing Hospital,E45000019
-TBS0265,Yeovil,E45000020
-TBS0266,Plymouth,E45000020
-TBS0267,Daisy Hill Hospital,PHECNI
-TBS0268,Musgrave Park Hospital [Northern Ireland],PHECNI
-TBS0269,Whiteabbey Hospital,PHECNI
-TBS0270,Ards Hospital,PHECNI
-TBS0271,Mater Infirmorum Hospital,PHECNI
-TBS0272,Royal Victoria Hospital [Belfast],PHECNI
-TBS0273,Craigavon Area Hospital,PHECNI
-TBS0274,Causeway Hospital,PHECNI
-TBS0275,South Tyrone Hospital,PHECNI
-TBS0276,Antrim Area Hospital,PHECNI
-TBS0277,Belfast City Hospital,PHECNI
-TBS0278,Lagan Valley Hospital,PHECNI
-TBS0279,Erne Hospital,PHECNI
-TBS0280,Coleraine Hospital,PHECNI
-TBS0281,Ulster Hospital,PHECNI
-TBS0282,Tyrone County Hospital,PHECNI
-TBS0283,Downe Hospital,PHECNI
-TBS0284,Royal Hospital For Sick Children [Belfast],PHECNI
-TBS0285,Bangor Community Hospital,PHECNI
-TBS0286,Altnagelvin Area Hospital,PHECNI
-TBS0287,Mid-Ulster Hospital,PHECNI
-TBS0288,Werndale Hospital,PHECWAL
-TBS0289,Havenway Day Hospital,PHECWAL
-TBS0290,Lluesty Hospital,PHECWAL
-TBS0291,Ystradgynlais Community Hospital,PHECWAL
-TBS0292,Tredegar General Hospital,PHECWAL
-TBS0293,Groeswen Hospital,PHECWAL
-TBS0294,Chirk Community Hospital,PHECWAL
-TBS0295,Bronllys Hospital,PHECWAL
-TBS0296,Oakdale Hospital,PHECWAL
-TBS0297,Newport Interim Day Hospital,PHECWAL
-TBS0298,Gellinudd Hospital,PHECWAL
-TBS0299,Clydach War Memorial Hospital,PHECWAL
-TBS0300,Pontypridd & District Hospital,PHECWAL
-TBS0301,Cefni Hospital,PHECWAL
-TBS0302,Caernarfon Cottage Hospital,PHECWAL
-TBS0303,Neath Port Talbot Hospital,PHECWAL
-TBS0304,Glan Clwyd General Hospital,PHECWAL
-TBS0305,H M Stanley Hospital,PHECWAL
-TBS0306,Royal Glamorgan Hospital,PHECWAL
-TBS0307,Llwyneryr Hospital,PHECWAL
-TBS0308,Nant-Y-Glyn Day Hospital,PHECWAL
-TBS0309,Morriston Hospital,PHECWAL
-TBS0310,Spire Yale Hospital,PHECWAL
-TBS0311,Llandudno General Hospital,PHECWAL
-TBS0312,Swn-Y-Gwynt Day Hospital,PHECWAL
-TBS0313,Colwyn Bay Community Hospital,PHECWAL
-TBS0314,St Tydfils Hospital,PHECWAL
-TBS0315,Dolgellau & Barmouth District Hospital,PHECWAL
-TBS0316,Aberdare General Hospital,PHECWAL
-TBS0317,Ysbyty George Thomas,PHECWAL
-TBS0318,Bron Y Garth Hospital,PHECWAL
-TBS0319,St David'S Community Hospital [Cardiff],PHECWAL
-TBS0320,Ysbyty Gwynedd,PHECWAL
-TBS0321,Llandovery Hospital,PHECWAL
-TBS0322,Builth Wells Cottage Hospital,PHECWAL
-TBS0323,Ffestiniog Memorial Hospital,PHECWAL
-TBS0324,Forglen Day Hospital,PHECWAL
-TBS0325,Princess Of Wales Hospital,PHECWAL
-TBS0326,St Woolos,PHECWAL
-TBS0327,Royal Alexandra Hospital [Rhyl],PHECWAL
-TBS0328,Blaina & District Hospital,PHECWAL
-TBS0329,Whitchurch Hospital [Cardiff],PHECWAL
-TBS0330,Spire Cardiff Hospital,PHECWAL
-TBS0331,St Cadocs Hospital,PHECWAL
-TBS0332,Llanrwst Health Centre,PHECWAL
-TBS0333,Garngoch Hospital,PHECWAL
-TBS0334,Llanrhaedr Medical Clinic,PHECWAL
-TBS0335,Redwood Memorial Hospital,PHECWAL
-TBS0336,Park Square Day Hospital,PHECWAL
-TBS0337,Wrexham Maelor Hospital,PHECWAL
-TBS0338,Tywyn & District Day Hospital,PHECWAL
-TBS0339,Victoria Memorial Hospital [Powys],PHECWAL
-TBS0340,Amy Evans Memorial Hospital,PHECWAL
-TBS0341,Prince Philip Hospital,PHECWAL
-TBS0342,St Davids Hospital [Carmarthen],PHECWAL
-TBS0343,Deeside Community Hospital,PHECWAL
-TBS0344,Cardiff Royal Infirmary,PHECWAL
-TBS0345,Brynmawr Interim Day Hospital,PHECWAL
-TBS0346,Maesgwyn Hospital,PHECWAL
-TBS0347,Mold Community Hospital,PHECWAL
-TBS0348,Mynydd Mawr Hospital,PHECWAL
-TBS0349,Monmouth General Hospital,PHECWAL
-TBS0350,Aberystwyth Health Clinic,PHECWAL
-TBS0351,Westfa Day Hospital,PHECWAL
-TBS0352,Bro Ddyfi Community Hospital,PHECWAL
-TBS0353,Pwllheli Day Hospital,PHECWAL
-TBS0354,Tenby Cottage Hospital,PHECWAL
-TBS0355,Hill House Day Hospital,PHECWAL
-TBS0356,Cefn Coed Day Hospital,PHECWAL
-TBS0357,Aberaeron Hospital,PHECWAL
-TBS0358,Tonna Day Hospital,PHECWAL
-TBS0359,Ystrad Mynach Hospital,PHECWAL
-TBS0360,Amman Valley Hospital,PHECWAL
-TBS0361,Fairwood Hospital,PHECWAL
-TBS0362,Caerphilly District Miners Hospital,PHECWAL
-TBS0363,Holywell Community Hospital,PHECWAL
-TBS0364,Llwynypia Hospital,PHECWAL
-TBS0365,Brynseiont Hospital,PHECWAL
-TBS0366,Llanfrechfa Grange Hospital,PHECWAL
-TBS0367,Hafen Coed M.I. Day Hospital,PHECWAL
-TBS0368,Aberbargoed & District Hospital,PHECWAL
-TBS0369,Tregaron Hospital,PHECWAL
-TBS0370,Rookwood Hospital,PHECWAL
-TBS0371,Llandough Hospital,PHECWAL
-TBS0372,Ysbyty Penrhos Stanley,PHECWAL
-TBS0373,Llangollen Community Hospital,PHECWAL
-TBS0374,Montgomery County Infirmary,PHECWAL
-TBS0375,Gorseinon Hospital,PHECWAL
-TBS0376,Ruthin Community Hospital,PHECWAL
-TBS0377,Chepstow Community Hospital,PHECWAL
-TBS0378,Bryn Y Neuadd Day Hospital,PHECWAL
-TBS0379,St Joseph'S Hospital,PHECWAL
-TBS0380,Dewi Sant Day Hospital,PHECWAL
-TBS0381,Ysbyty'R Tri Chwm,PHECWAL
-TBS0382,Prestatyn Community Hospital,PHECWAL
-TBS0383,South Pembrokeshire Hospital Health & Social Care Resource Centre,PHECWAL
-TBS0384,Penley Hospital,PHECWAL
-TBS0385,County Hospital [Pontypool],PHECWAL
-TBS0386,Minfordd Hospital,PHECWAL
-TBS0387,Nevill Hall Hospital,PHECWAL
-TBS0388,Cymla Day Hospital,PHECWAL
-TBS0389,Withybush General Hospital,PHECWAL
-TBS0390,Mountain Ash General Hospital,PHECWAL
-TBS0391,Maindiff Court Hospital,PHECWAL
-TBS0392,Eryri Hospital,PHECWAL
-TBS0393,Maesteg General Hospital,PHECWAL
-TBS0394,Abertillery District Hospital,PHECWAL
-TBS0395,Royal Gwent Hospital,PHECWAL
-TBS0396,Glanrhyd Hospital,PHECWAL
-TBS0397,Bryn Beryl Hospital,PHECWAL
-TBS0398,West Wales General Hospital,PHECWAL
-TBS0399,Denbigh Community Hospital,PHECWAL
-TBS0400,Velindre Hospital,PHECWAL
-TBS0401,University Hospital Of Wales,PHECWAL
-TBS0402,Overmonnow Day Hospital,PHECWAL
-TBS0403,Abergele Hospital,PHECWAL
-TBS0404,Singleton Hospital,PHECWAL
-TBS0405,Bronglais General Hospital,PHECWAL
-TBS0406,Cardigan & District Memorial Hospital,PHECWAL
-TBS0407,Flint Community Hospital,PHECWAL
-TBS0408,Barry Hospital,PHECWAL
-TBS0409,Prince Charles Hospital,PHECWAL
+﻿Code,Name,PHEC_Code,Service_Ad_Group
+TBS0001,Abingdon Community Hospital,E45000019,Global.NIS.NTBS.Service_Abingdon
+TBS0002,Addenbrooke's Hospital,E45000017,Global.NIS.NTBS.Service_Addenbrooke
+TBS0003,Airedale NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_Airedale
+TBS0004,Amersham Hospital,E45000019,Global.NIS.NTBS.Service_Amersham
+TBS0005,Andover War Memorial Hospital,E45000019,Global.NIS.NTBS.Service_Andover
+TBS0006,Arrowe Park Hospital,E45000018,Global.NIS.NTBS.Service_Arrowe
+TBS0007,Ashford & St Peter's Hospital (Chertsey),E45000019,Global.NIS.NTBS.Service_AshfordStPeter
+TBS0008,Ashford Hospital,E45000019,Global.NIS.NTBS.Service_Ashford
+TBS0009,Barnet Hospital,E45000001,Global.NIS.NTBS.Service_Barnet
+TBS0010,Basildon & Thurrock University Hospitals,E45000017,Global.NIS.NTBS.Service_Basildon
+TBS0011,Baskingstoke and North Hampshire Hospital,E45000019,Global.NIS.NTBS.Service_Baskingstoke
+TBS0012,Bath,E45000020,Global.NIS.NTBS.Service_Bath
+TBS0013,Battle Hospital,E45000019,Global.NIS.NTBS.Service_Battle
+TBS0014,Bedford Hospital,E45000017,Global.NIS.NTBS.Service_Bedford
+TBS0015,Benenden Hospital,E45000019,Global.NIS.NTBS.Service_Benenden
+TBS0016,Berkshire Independent Hospital,E45000019,Global.NIS.NTBS.Service_Berkshire
+TBS0017,Beverley Westwood Hospital,E45000010,Global.NIS.NTBS.Service_Beverley
+TBS0018,BHR University Hospitals NHS Trust,E45000001,Global.NIS.NTBS.Service_BHRUniversity
+TBS0019,Birmingham & Solihull,E45000005,Global.NIS.NTBS.Service_Birmingham
+TBS0020,Blackheath Hospital,E45000001,Global.NIS.NTBS.Service_Blackheath
+TBS0021,Bognor Regis War Memorial Hospital,E45000019,Global.NIS.NTBS.Service_Bognor
+TBS0022,Bradford Royal Infirmary,E45000010,Global.NIS.NTBS.Service_BradfordRoyal
+TBS0023,Bradford Teaching Hospitals NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_BradfordTeaching
+TBS0024,Brentwood Community Hospital,E45000017,Global.NIS.NTBS.Service_Brentwood
+TBS0025,Bridgewater Community Healthcare,E45000018,Global.NIS.NTBS.Service_Bridgewater
+TBS0026,Bridlington & District Hospital,E45000010,Global.NIS.NTBS.Service_Bridlington
+TBS0027,Brighton General Hospital,E45000019,Global.NIS.NTBS.Service_Brighton
+TBS0028,Bristol,E45000020,Global.NIS.NTBS.Service_Bristol
+TBS0029,Bromley TB Service,E45000001,Global.NIS.NTBS.Service_Bromley
+TBS0030,Broomfield Hospital,E45000017,Global.NIS.NTBS.Service_Broomfield
+TBS0031,Buckingham Hospital,E45000019,Global.NIS.NTBS.Service_Buckingham
+TBS0032,Buckland Hospital,E45000019,Global.NIS.NTBS.Service_Buckland
+TBS0033,Burton,E45000005,Global.NIS.NTBS.Service_Burton
+TBS0034,Calderdale & Huddersfield NHS FT,E45000010,Global.NIS.NTBS.Service_Calderdale
+TBS0035,Cavell Hospital,E45000001,Global.NIS.NTBS.Service_Cavell
+TBS0036,Central & North Lancashire (LTHTR/LCFT),E45000018,Global.NIS.NTBS.Service_Lancashire
+TBS0037,Charter Medical Centre,E45000019,Global.NIS.NTBS.Service_Charter
+TBS0038,Chase Farm Hospital,E45000001,Global.NIS.NTBS.Service_Chase
+TBS0039,Chaucer Hospital,E45000019,Global.NIS.NTBS.Service_Chaucer
+TBS0040,CHCP (City Health Care Partnership),E45000010,Global.NIS.NTBS.Service_Hull
+TBS0041,Chelsea & Westminster,E45000001,Global.NIS.NTBS.Service_Chelsea
+TBS0042,Chelsfield Park Hospital,E45000019,Global.NIS.NTBS.Service_Chelsfield
+TBS0043,Cheshire East,E45000018,Global.NIS.NTBS.Service_Cheshire
+TBS0044,Chesterfield Royal Hospital,E45000016,Global.NIS.NTBS.Service_Chesterfield
+TBS0045,Chiltern Hospital,E45000019,Global.NIS.NTBS.Service_Chiltern
+TBS0046,Church Hill House Hospital,E45000019,Global.NIS.NTBS.Service_ChurchHill
+TBS0047,Clacton And District Hospital,E45000017,Global.NIS.NTBS.Service_Clacton
+TBS0048,Clementine Churchill Hospital,E45000001,Global.NIS.NTBS.Service_Clementine
+TBS0049,Colchester Hospital,E45000017,Global.NIS.NTBS.Service_Colchester
+TBS0050,Conquest Hospital,E45000019,Global.NIS.NTBS.Service_Conquest
+TBS0051,Cornwall,E45000020,Global.NIS.NTBS.Service_Cornwall
+TBS0052,Countess of Chester Hospital,E45000018,Global.NIS.NTBS.Service_CountessOfChester
+TBS0053,County Durham and Darlington NHS Foundation Trust TB Nursing Service,E45000009,Global.NIS.NTBS.Service_Durham
+TBS0054,Coventry & Warwickshire,E45000005,Global.NIS.NTBS.Service_Coventry
+TBS0055,Crawley Hospital,E45000019,Global.NIS.NTBS.Service_Crawley
+TBS0056,Cumbria: Morecambe Bay Trust,E45000018,Global.NIS.NTBS.Service_MorecambeBay
+TBS0057,Cumbria: North Cumbria UHT,E45000018,Global.NIS.NTBS.Service_NorthCumbria
+TBS0058,Darent Valley Hospital,E45000019,Global.NIS.NTBS.Service_DarentValley
+TBS0059,Doncaster & Bassetlaw,E45000016,Global.NIS.NTBS.Service_Doncaster
+TBS0060,Dorset,E45000020,Global.NIS.NTBS.Service_Dorset
+TBS0061,Duchess of Kent Hospital,E45000010,Global.NIS.NTBS.Service_DuchessOfKent
+TBS0062,Dudley,E45000005,Global.NIS.NTBS.Service_Dudley
+TBS0063,East & North Hertfordshire Hospitals,E45000017,Global.NIS.NTBS.Service_ENHerts
+TBS0064,East Dorset,E45000020,Global.NIS.NTBS.Service_EastDorset
+TBS0065,East Lancashire Health Trust,E45000018,Global.NIS.NTBS.Service_EastLancs
+TBS0066,East Surrey Hospital,E45000019,Global.NIS.NTBS.Service_EastSurrey
+TBS0067,Eastbourne District General Hospital,E45000019,Global.NIS.NTBS.Service_Eastbourne
+TBS0068,Epsom and St Helier NHS Trust,E45000001,Global.NIS.NTBS.Service_Epsom
+TBS0069,Erith & District Hospital,E45000001,Global.NIS.NTBS.Service_Erith
+TBS0070,Esperance Hospital,E45000019,Global.NIS.NTBS.Service_Esperance
+TBS0071,Essex County Hospital,E45000017,Global.NIS.NTBS.Service_Essex
+TBS0072,Fawkham Manor Hospital,E45000019,Global.NIS.NTBS.Service_Fawkham
+TBS0073,Fishermead Medical Centre,E45000019,Global.NIS.NTBS.Service_Fishermead
+TBS0074,Fitzwilliam Hospital,E45000017,Global.NIS.NTBS.Service_Fitzwilliam
+TBS0075,Frimley Park Hospital,E45000019,Global.NIS.NTBS.Service_Frimley
+TBS0076,"Gateshead- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead",E45000009,Global.NIS.NTBS.Service_Gateshead
+TBS0077,Gloucestershire,E45000020,Global.NIS.NTBS.Service_Gloucestershire
+TBS0078,Goole District Hospital,E45000010,Global.NIS.NTBS.Service_Goole
+TBS0079,Gravesend and North Kent Hospital,E45000019,Global.NIS.NTBS.Service_Gravesend
+TBS0080,Great Ormond Street Hospital Central London Site,E45000001,Global.NIS.NTBS.Service_GreatOrmond
+TBS0081,Guy's Hospital,E45000001,Global.NIS.NTBS.Service_Guys
+TBS0082,Halton Hospital,E45000018,Global.NIS.NTBS.Service_Halton
+TBS0083,Hampshire Clinic,E45000019,Global.NIS.NTBS.Service_Hampshire
+TBS0084,Harefield Hospital,E45000001,Global.NIS.NTBS.Service_Harefield
+TBS0085,Harold Wood Hospital,E45000001,Global.NIS.NTBS.Service_HaroldWood
+TBS0086,Harrogate and District NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_Harrogate
+TBS0087,Heart Hospital,E45000001,Global.NIS.NTBS.Service_Heart
+TBS0088,Heatherwood Hospital,E45000019,Global.NIS.NTBS.Service_Heatherwood
+TBS0089,Herefordshire,E45000005,Global.NIS.NTBS.Service_Herefordshire
+TBS0090,Hillingdon Hospital,E45000001,Global.NIS.NTBS.Service_Hillingdon
+TBS0091,Holly House Hospital,E45000017,Global.NIS.NTBS.Service_HollyHouse
+TBS0092,Homerton,E45000001,Global.NIS.NTBS.Service_Homerton
+TBS0093,Horsham Hospital,E45000019,Global.NIS.NTBS.Service_Horsham
+TBS0094,Hospital for Tropical Diseases,E45000001,Global.NIS.NTBS.Service_Tropical
+TBS0095,Imperial College Healthcare,E45000001,Global.NIS.NTBS.Service_ImperialCollege
+TBS0096,Ipswich Hospital,E45000017,Global.NIS.NTBS.Service_Ipswich
+TBS0097,James Paget Hospital,E45000017,Global.NIS.NTBS.Service_JamesPaget
+TBS0098,Joyce Green Hospital,E45000019,Global.NIS.NTBS.Service_JoyceGreen
+TBS0099,Kent & Sussex Hospital,E45000019,Global.NIS.NTBS.Service_KentSussex
+TBS0100,Kent Community Health NHS Foundation Trust,E45000019,Global.NIS.NTBS.Service_KentCommunity
+TBS0101,Kings College Hospital,E45000001,Global.NIS.NTBS.Service_KingsCollege
+TBS0102,King'S College Hospital (Dulwich),E45000001,Global.NIS.NTBS.Service_KingsCollegeDulwich
+TBS0103,Kings Oak Hospital,E45000001,Global.NIS.NTBS.Service_KingsOak
+TBS0104,Kings Park Hospital,E45000019,Global.NIS.NTBS.Service_KingsPark
+TBS0105,Kingston Hospital,E45000001,Global.NIS.NTBS.Service_Kingston
+TBS0106,LCHC (Leeds Community Healthcare NHS Trust),E45000010,Global.NIS.NTBS.Service_Leeds
+TBS0107,Leicester Royal Infirmary,E45000016,Global.NIS.NTBS.Service_Leicester
+TBS0108,Lincolnshire,E45000016,Global.NIS.NTBS.Service_Lincolnshire
+TBS0109,Liverpool,E45000018,Global.NIS.NTBS.Service_Liverpool
+TBS0110,Locala Community Partnerships (Greater Huddersfield),E45000010,Global.NIS.NTBS.Service_Huddersfield
+TBS0111,Locala Community Partnerships (North Kirklees),E45000010,Global.NIS.NTBS.Service_Kirklees
+TBS0112,London Independent Hospital,E45000001,Global.NIS.NTBS.Service_LondonIndependent
+TBS0113,London NW Healthcare Central Middlesex,E45000001,Global.NIS.NTBS.Service_Middelsex
+TBS0114,London NW Healthcare Ealing,E45000001,Global.NIS.NTBS.Service_Ealing
+TBS0115,London NW Healthcare Northwick Park,E45000001,Global.NIS.NTBS.Service_NorthwickPark
+TBS0116,Luton & Dunstable Hospital,E45000017,Global.NIS.NTBS.Service_Luton
+TBS0117,Lymington Hospital (Peripheral Clinic),E45000019,Global.NIS.NTBS.Service_Lymington
+TBS0118,Maidstone District General Hospital,E45000019,Global.NIS.NTBS.Service_Maidstone
+TBS0119,Manchester University NHS Foundation Trust (MFT),E45000018,Global.NIS.NTBS.Service_Manchester
+TBS0120,Mayday University Hospital,E45000001,Global.NIS.NTBS.Service_Mayday
+TBS0121,Medway Maritime Hospital,E45000019,Global.NIS.NTBS.Service_Medway
+TBS0122,Memorial Hospital,E45000001,Global.NIS.NTBS.Service_MemorialHospital
+TBS0123,Mid Notts,E45000016,Global.NIS.NTBS.Service_MidNotts
+TBS0124,Mile End Hospital,E45000001,Global.NIS.NTBS.Service_MileEnd
+TBS0125,Milton Keynes University Hospital,E45000017,Global.NIS.NTBS.Service_MiltonKeynes
+TBS0126,Mount Alvernia Hospital,E45000019,Global.NIS.NTBS.Service_MountAlvernia
+TBS0127,Mount Vernon Hospital,E45000001,Global.NIS.NTBS.Service_MountVernon
+TBS0128,National Hospital for Neurology & Neurosciences - Queen Square,E45000001,Global.NIS.NTBS.Service_Neurology
+TBS0129,Nelson Hospital,E45000001,Global.NIS.NTBS.Service_Nelson
+TBS0130,Newham Chest Clinic,E45000001,Global.NIS.NTBS.Service_Newham
+TBS0131,Queen's Hospital [Croydon],E45000001,Global.NIS.NTBS.Service_Croydon
+TBS0132,Norfolk & Norwich University Hospital,E45000017,Global.NIS.NTBS.Service_Norfolk
+TBS0133,North Devon,E45000020,Global.NIS.NTBS.Service_NorthDevon
+TBS0134,North Downs Hospital,E45000019,Global.NIS.NTBS.Service_NorthDowns
+TBS0135,North Hampshire Hospital,E45000019,Global.NIS.NTBS.Service_NorthHampshire
+TBS0136,North Middlesex Hospital,E45000001,Global.NIS.NTBS.Service_NorthMiddlesex
+TBS0137,North of Tyne TB Service,E45000009,Global.NIS.NTBS.Service_NorthOfTyne
+TBS0138,North Tees and Hartlepool,E45000009,Global.NIS.NTBS.Service_NorthTees
+TBS0139,North West Anglia Foundation Trust,E45000017,Global.NIS.NTBS.Service_NorthWestAnglia
+TBS0140,Northamptonshire,E45000016,Global.NIS.NTBS.Service_Northamptonshire
+TBS0141,Northern Lincolnshire & Goole NHS Foundation Trust ,E45000010,Global.NIS.NTBS.Service_NorthLincolnshire
+TBS0142,Nottingham,E45000016,Global.NIS.NTBS.Service_Nottingham
+TBS0143,Nuffield Health Brentwood Hospital,E45000017,Global.NIS.NTBS.Service_NuffieldBrentwood
+TBS0144,Nuffield Health Cambridge Hospital,E45000017,Global.NIS.NTBS.Service_NuffieldCambridge
+TBS0145,Nuffield Health Chichester Hospital,E45000019,Global.NIS.NTBS.Service_NuffieldChichester
+TBS0146,Nuffield Health Guildford Hospital,E45000019,Global.NIS.NTBS.Service_NuffieldGuildford
+TBS0147,Nuffield Health Haywards Heath Hospital,E45000019,Global.NIS.NTBS.Service_NuffieldHaywards
+TBS0148,Nuffield Health Leeds Hospital,E45000010,Global.NIS.NTBS.Service_NuffieldLeeds
+TBS0149,Nuffield Health Tunbridge Wells Hospital,E45000019,Global.NIS.NTBS.Service_NuffieldTunbridge
+TBS0150,Nuffield Health Woking Hospital,E45000019,Global.NIS.NTBS.Service_NuffieldWoking
+TBS0151,Nuffield Health York Hospital,E45000010,Global.NIS.NTBS.Service_NuffieldYork
+TBS0152,Oldchurch Hospital,E45000001,Global.NIS.NTBS.Service_Oldchurch
+TBS0153,Open Door (Health),E45000010,Global.NIS.NTBS.Service_OpenDoor
+TBS0154,Ormskirk & District General Hospital,E45000018,Global.NIS.NTBS.Service_Ormskirk
+TBS0155,Orpington Hospital,E45000001,Global.NIS.NTBS.Service_Orpington
+TBS0156,Orsett Hospital,E45000017,Global.NIS.NTBS.Service_Orsett
+TBS0157,Oxford University Hospitals NHS Foundation Trust,E45000019,Global.NIS.NTBS.Service_Oxford
+TBS0158,Papworth Hospital,E45000017,Global.NIS.NTBS.Service_Papworth
+TBS0159,Parkside Hospital,E45000001,Global.NIS.NTBS.Service_Parkside
+TBS0160,Pennine Acute Hospitals NHS Trust,E45000018,Global.NIS.NTBS.Service_Pennine
+TBS0161,Pinehill Hospital,E45000017,Global.NIS.NTBS.Service_Pinehill
+TBS0162,Pontefract General Infirmary,E45000010,Global.NIS.NTBS.Service_Pontefract
+TBS0163,Portland Hospital,E45000019,Global.NIS.NTBS.Service_Portland
+TBS0164,Preston Hall Hospital,E45000019,Global.NIS.NTBS.Service_Preston
+TBS0165,Princess Alexandra Hospital,E45000017,Global.NIS.NTBS.Service_PrincessAlexandra
+TBS0166,Princess Royal Hospital [West Sussex],E45000019,Global.NIS.NTBS.Service_PrincessRoyalSussex
+TBS0167,Priory Hospital,E45000005,Global.NIS.NTBS.Service_Priory
+TBS0168,Queen Alexandra Hospital,E45000019,Global.NIS.NTBS.Service_QueenAlexandra
+TBS0169,Queen Elizabeth Hospital,E45000001,Global.NIS.NTBS.Service_QueenElizabeth
+TBS0170,"Queen Elizabeth Hospital, King's Lynn",E45000017,Global.NIS.NTBS.Service_QueenElizabethKingsLynn
+TBS0171,Queen Mary'S Hospital [London],E45000001,Global.NIS.NTBS.Service_QueenMaryLondon
+TBS0172,Queen Mary'S Hospital [Sidcup],E45000001,Global.NIS.NTBS.Service_QueenMarySidcup
+TBS0173,Queen Victoria Hospital [East Grinstead],E45000019,Global.NIS.NTBS.Service_QueenVictoriaGrinstead
+TBS0174,Radcliffe Infirmary,E45000019,Global.NIS.NTBS.Service_Radcliffe
+TBS0175,Royal Devon & Exeter,E45000020,Global.NIS.NTBS.Service_Devon
+TBS0176,RDASH NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_RDASH
+TBS0177,Royal Berkshire Hospital,E45000019,Global.NIS.NTBS.Service_RoyalBerkshire
+TBS0178,Royal Bolton Hospital,E45000018,Global.NIS.NTBS.Service_Bolton
+TBS0179,Royal Brompton,E45000001,Global.NIS.NTBS.Service_Brompton
+TBS0180,Royal Buckinghamshire Hospital,E45000019,Global.NIS.NTBS.Service_Buckinghamshire
+TBS0181,Royal Derby Hospital,E45000016,Global.NIS.NTBS.Service_Derby
+TBS0182,Royal Free London TB Service,E45000001,Global.NIS.NTBS.Service_RoyalFree
+TBS0183,Royal Hampshire County Hospital,E45000019,Global.NIS.NTBS.Service_RoyalHampshire
+TBS0184,Royal Hospital Haslar,E45000019,Global.NIS.NTBS.Service_RoyalHaslar
+TBS0185,Royal London Hospital,E45000001,Global.NIS.NTBS.Service_RoyalLondon
+TBS0186,Royal Marsden Chelsea,E45000001,Global.NIS.NTBS.Service_RoyalMarsden
+TBS0187,Royal National Orthopaedic Hospital (Stanmore),E45000001,Global.NIS.NTBS.Service_Orthopaedic
+TBS0188,Royal South Hants Hospital,E45000019,Global.NIS.NTBS.Service_RoyalSouthHants
+TBS0189,Royal Surrey County Hospital,E45000019,Global.NIS.NTBS.Service_RoyalSurreyCounty
+TBS0190,Royal Sussex County Hospital,E45000019,Global.NIS.NTBS.Service_RoyalSussexCounty
+TBS0191,Royal Victoria Hospital [Folkestone],E45000019,Global.NIS.NTBS.Service_RoyalVictoriaFolkestone
+TBS0192,Runneymede Hospital,E45000019,Global.NIS.NTBS.Service_Runneymede
+TBS0193,Salford Royal,E45000018,Global.NIS.NTBS.Service_Salford
+TBS0194,Sandwell,E45000005,Global.NIS.NTBS.Service_Sandwell
+TBS0195,Sheffield Teaching Hospitals NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_Sheffield
+TBS0196,Shropshire & Telford,E45000005,Global.NIS.NTBS.Service_Shropshire
+TBS0197,Sloane Hospital,E45000001,Global.NIS.NTBS.Service_Sloane
+TBS0198,Somerfield Hospital,E45000019,Global.NIS.NTBS.Service_Somerfield
+TBS0199,Somerset,E45000020,Global.NIS.NTBS.Service_Somerset
+TBS0200,South Tees NHS TB Trust TB Team,E45000009,Global.NIS.NTBS.Service_SouthTees
+TBS0201,"South Tyneside- Specialist Health Visitor TB and Migrant Health, based at Low Fell Clinic Gateshead",E45000009,Global.NIS.NTBS.Service_SouthTyneside
+TBS0202,South West Yorkshire Partnership NHS Foundation Trust (Barnsley),E45000010,Global.NIS.NTBS.Service_Barnsley
+TBS0203,South West Yorkshire Partnership NHS Foundation Trust (Wakefield),E45000010,Global.NIS.NTBS.Service_Wakefield
+TBS0204,Southampton General Hospital,E45000019,Global.NIS.NTBS.Service_Southampton
+TBS0205,Southend Hospital,E45000017,Global.NIS.NTBS.Service_Southend
+TBS0206,Southport & Formby District General Hospital,E45000018,Global.NIS.NTBS.Service_Southport
+TBS0207,Spire Alexandra Hospital,E45000019,Global.NIS.NTBS.Service_SpireAlexandra
+TBS0208,Spire Harpenden Hospital,E45000017,Global.NIS.NTBS.Service_SpireHarpenden
+TBS0209,Spire Hartswood Hospital,E45000017,Global.NIS.NTBS.Service_SpireHartswood
+TBS0210,Spire Lea Cambridge Hospital,E45000017,Global.NIS.NTBS.Service_SpireLea
+TBS0211,Spire Longlands Consulting Rooms,E45000010,Global.NIS.NTBS.Service_SpireLonglands
+TBS0212,Spire St Saviour's Hospital,E45000019,Global.NIS.NTBS.Service_SpireSaviours
+TBS0213,Spire Tunbridge Wells Hospital,E45000019,Global.NIS.NTBS.Service_SpireTunbridge
+TBS0214,Spire Wellesley Hospital,E45000017,Global.NIS.NTBS.Service_SpireWellesley
+TBS0215,St Albans City Hospital,E45000017,Global.NIS.NTBS.Service_StAlbans
+TBS0216,St Anns Hospital [London],E45000001,Global.NIS.NTBS.Service_StAnnsLondon
+TBS0217,St Anthonys Hospital,E45000019,Global.NIS.NTBS.Service_StAnthonys
+TBS0218,St Bartholomew's Hospital [London],E45000001,Global.NIS.NTBS.Service_BartsLondon
+TBS0219,St Bartholomews Hospital [Rochester],E45000019,Global.NIS.NTBS.Service_BartsRochester
+TBS0220,St George's Hospital,E45000001,Global.NIS.NTBS.Service_StGeorge
+TBS0221,St George's Hospital [Stafford],E45000019,Global.NIS.NTBS.Service_StGeorgeStafford
+TBS0222,St Helens Hospital [Merseyside],E45000018,Global.NIS.NTBS.Service_StHelenMerseyside
+TBS0223,St James Hospital [Southsea],E45000019,Global.NIS.NTBS.Service_StJamesSouthsea
+TBS0224,St John & St Elizabeth Hospital,E45000001,Global.NIS.NTBS.Service_StJohnElizabeth
+TBS0225,St Mary's Hospital (Isle of Wight),E45000019,Global.NIS.NTBS.Service_StMaryWight
+TBS0226,St Mary's Hospital [Portsmouth],E45000019,Global.NIS.NTBS.Service_StMaryPortsmouth
+TBS0227,St Michael's Hospital [Braintree],E45000017,Global.NIS.NTBS.Service_StMichael
+TBS0228,St Pancras Hospital,E45000001,Global.NIS.NTBS.Service_StPancras
+TBS0229,St Richard's Hospital,E45000019,Global.NIS.NTBS.Service_StRichard
+TBS0230,St Thomas' Hospital,E45000001,Global.NIS.NTBS.Service_StThomas
+TBS0231,St. Margaret's Hospital,E45000017,Global.NIS.NTBS.Service_StMargaret
+TBS0232,Staffordshire & Stoke-on-Trent,E45000005,Global.NIS.NTBS.Service_Staffordshire
+TBS0233,Stepping Hill Hospital,E45000018,Global.NIS.NTBS.Service_Stepping
+TBS0234,Stoke Mandeveille/Wycombe Hospitals,E45000019,Global.NIS.NTBS.Service_StokeMandeville
+TBS0235,Sunderland,E45000009,Global.NIS.NTBS.Service_Sunderland
+TBS0236,Swindon,E45000020,Global.NIS.NTBS.Service_Swindon
+TBS0237,Swindon & Wiltshire,E45000020,Global.NIS.NTBS.Service_Wiltshire
+TBS0238,Tameside General Hospital,E45000018,Global.NIS.NTBS.Service_Tameside
+TBS0239,TB Service NCL - South Hub,E45000001,Global.NIS.NTBS.Service_SouthHub
+TBS0240,The London Clinic,E45000010,Global.NIS.NTBS.Service_NULL
+TBS0241,The Rotherham NHS Foundation Trust,E45000010,Global.NIS.NTBS.Service_Rotherham
+TBS0242,Tickhill Road Hospital,E45000020,Global.NIS.NTBS.Service_TickhillRoad
+TBS0243,Torbay,E45000019,Global.NIS.NTBS.Service_Torbay
+TBS0244,Townlands Hospital,E45000019,Global.NIS.NTBS.Service_Townlands
+TBS0245,Tunbridge Wells Hospital [Pembury],E45000001,Global.NIS.NTBS.Service_TunbridgePembury
+TBS0246,University Hospital Lewisham,E45000019,Global.NIS.NTBS.Service_Lewisham
+TBS0247,Upton Hospital [Slough],E45000001,Global.NIS.NTBS.Service_Slough
+TBS0248,Victoria Hospital [Romford],E45000005,Global.NIS.NTBS.Service_Romford
+TBS0249,Walsall,E45000019,Global.NIS.NTBS.Service_Walsall
+TBS0250,Warders Medical Centre,E45000018,Global.NIS.NTBS.Service_Warders
+TBS0251,Warrington Hospital,E45000017,Global.NIS.NTBS.Service_Warrington
+TBS0252,Water Eaton Health Centre,E45000017,Global.NIS.NTBS.Service_WaterEaton
+TBS0253,West Hertfordshire Hospitals,E45000001,Global.NIS.NTBS.Service_WestHerts
+TBS0254,West Middlesex University Hospital,E45000019,Global.NIS.NTBS.Service_WestMiddlesex
+TBS0255,West Park Hospital [Epsom],E45000017,Global.NIS.NTBS.Service_WestPark
+TBS0256,West Suffolk Hospital,E45000019,Global.NIS.NTBS.Service_WestSuffolk
+TBS0257,Western Community Hospital,E45000020,Global.NIS.NTBS.Service_Western
+TBS0258,Weston,E45000019,Global.NIS.NTBS.Service_Weston
+TBS0259,Wexham Park/King Edward VII Hospitals,E45000001,Global.NIS.NTBS.Service_Wexham
+TBS0260,Whipps Cross University Hospital,E45000018,Global.NIS.NTBS.Service_WhippsCross
+TBS0261,Whiston Hospital,E45000005,Global.NIS.NTBS.Service_Whiston
+TBS0262,Wolverhampton,E45000005,Global.NIS.NTBS.Service_Wolverhampton
+TBS0263,Worcestershire,E45000019,Global.NIS.NTBS.Service_Worcestershire
+TBS0264,Worthing Hospital,E45000020,Global.NIS.NTBS.Service_Worthing
+TBS0265,Yeovil,E45000020,Global.NIS.NTBS.Service_Yeovil
+TBS0266,Plymouth,PHECNI,Global.NIS.NTBS.Service_Plymouth
+TBS0267,Daisy Hill Hospital,PHECNI,Global.NIS.NTBS.Service_DaisyHill
+TBS0268,Musgrave Park Hospital [Northern Ireland],PHECNI,Global.NIS.NTBS.Service_MusgravePark
+TBS0269,Whiteabbey Hospital,PHECNI,Global.NIS.NTBS.Service_Whiteabbey
+TBS0270,Ards Hospital,PHECNI,Global.NIS.NTBS.Service_Ards
+TBS0271,Mater Infirmorum Hospital,PHECNI,Global.NIS.NTBS.Service_MaterInfirmorum
+TBS0272,Royal Victoria Hospital [Belfast],PHECNI,Global.NIS.NTBS.Service_RoyalVictoriaBelfast
+TBS0273,Craigavon Area Hospital,PHECNI,Global.NIS.NTBS.Service_Craigavon
+TBS0274,Causeway Hospital,PHECNI,Global.NIS.NTBS.Service_Causeway
+TBS0275,South Tyrone Hospital,PHECNI,Global.NIS.NTBS.Service_SouthTyrone
+TBS0276,Antrim Area Hospital,PHECNI,Global.NIS.NTBS.Service_Antrim
+TBS0277,Belfast City Hospital,PHECNI,Global.NIS.NTBS.Service_Belfast
+TBS0278,Lagan Valley Hospital,PHECNI,Global.NIS.NTBS.Service_Lagan
+TBS0279,Erne Hospital,PHECNI,Global.NIS.NTBS.Service_Erne
+TBS0280,Coleraine Hospital,PHECNI,Global.NIS.NTBS.Service_Coleraine
+TBS0281,Ulster Hospital,PHECNI,Global.NIS.NTBS.Service_Ulster
+TBS0282,Tyrone County Hospital,PHECNI,Global.NIS.NTBS.Service_Tyrone
+TBS0283,Downe Hospital,PHECNI,Global.NIS.NTBS.Service_Downe
+TBS0284,Royal Hospital For Sick Children [Belfast],PHECNI,Global.NIS.NTBS.Service_RoyalBelfast
+TBS0285,Bangor Community Hospital,PHECNI,Global.NIS.NTBS.Service_Bangor
+TBS0286,Altnagelvin Area Hospital,PHECNI,Global.NIS.NTBS.Service_Altnagelvin
+TBS0287,Mid-Ulster Hospital,PHECWAL,Global.NIS.NTBS.Service_MidUlster
+TBS0288,Werndale Hospital,PHECWAL,Global.NIS.NTBS.Service_Werndale
+TBS0289,Havenway Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Havenway
+TBS0290,Lluesty Hospital,PHECWAL,Global.NIS.NTBS.Service_Lluesty
+TBS0291,Ystradgynlais Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Ystradgynlais
+TBS0292,Tredegar General Hospital,PHECWAL,Global.NIS.NTBS.Service_Tredegar
+TBS0293,Groeswen Hospital,PHECWAL,Global.NIS.NTBS.Service_Groeswen
+TBS0294,Chirk Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Chirk
+TBS0295,Bronllys Hospital,PHECWAL,Global.NIS.NTBS.Service_Bronllys
+TBS0296,Oakdale Hospital,PHECWAL,Global.NIS.NTBS.Service_Oakdale
+TBS0297,Newport Interim Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Newport
+TBS0298,Gellinudd Hospital,PHECWAL,Global.NIS.NTBS.Service_Gellinudd
+TBS0299,Clydach War Memorial Hospital,PHECWAL,Global.NIS.NTBS.Service_Clydach
+TBS0300,Pontypridd & District Hospital,PHECWAL,Global.NIS.NTBS.Service_Pontypridd
+TBS0301,Cefni Hospital,PHECWAL,Global.NIS.NTBS.Service_Cefni
+TBS0302,Caernarfon Cottage Hospital,PHECWAL,Global.NIS.NTBS.Service_Caernarfon
+TBS0303,Neath Port Talbot Hospital,PHECWAL,Global.NIS.NTBS.Service_PortTalbot
+TBS0304,Glan Clwyd General Hospital,PHECWAL,Global.NIS.NTBS.Service_GlanClwyd
+TBS0305,H M Stanley Hospital,PHECWAL,Global.NIS.NTBS.Service_Stanley
+TBS0306,Royal Glamorgan Hospital,PHECWAL,Global.NIS.NTBS.Service_RoyalGlamorgan
+TBS0307,Llwyneryr Hospital,PHECWAL,Global.NIS.NTBS.Service_Llwyneryr
+TBS0308,Nant-Y-Glyn Day Hospital,PHECWAL,Global.NIS.NTBS.Service_NantYGlyn
+TBS0309,Morriston Hospital,PHECWAL,Global.NIS.NTBS.Service_Morriston
+TBS0310,Spire Yale Hospital,PHECWAL,Global.NIS.NTBS.Service_SpireYale
+TBS0311,Llandudno General Hospital,PHECWAL,Global.NIS.NTBS.Service_Llandudno
+TBS0312,Swn-Y-Gwynt Day Hospital,PHECWAL,Global.NIS.NTBS.Service_SwnYGwynt
+TBS0313,Colwyn Bay Community Hospital,PHECWAL,Global.NIS.NTBS.Service_ColwynBay
+TBS0314,St Tydfils Hospital,PHECWAL,Global.NIS.NTBS.Service_StTydfils
+TBS0315,Dolgellau & Barmouth District Hospital,PHECWAL,Global.NIS.NTBS.Service_Dolgellau
+TBS0316,Aberdare General Hospital,PHECWAL,Global.NIS.NTBS.Service_Aberdare
+TBS0317,Ysbyty George Thomas,PHECWAL,Global.NIS.NTBS.Service_YsbytyGeorge
+TBS0318,Bron Y Garth Hospital,PHECWAL,Global.NIS.NTBS.Service_BronYGarth
+TBS0319,St David'S Community Hospital [Cardiff],PHECWAL,Global.NIS.NTBS.Service_StDavidCardiff
+TBS0320,Ysbyty Gwynedd,PHECWAL,Global.NIS.NTBS.Service_Gwynedd
+TBS0321,Llandovery Hospital,PHECWAL,Global.NIS.NTBS.Service_Llandovery
+TBS0322,Builth Wells Cottage Hospital,PHECWAL,Global.NIS.NTBS.Service_Builth
+TBS0323,Ffestiniog Memorial Hospital,PHECWAL,Global.NIS.NTBS.Service_Ffestiniog
+TBS0324,Forglen Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Forglen
+TBS0325,Princess Of Wales Hospital,PHECWAL,Global.NIS.NTBS.Service_PrincessWales
+TBS0326,St Woolos,PHECWAL,Global.NIS.NTBS.Service_StWoolos
+TBS0327,Royal Alexandra Hospital [Rhyl],PHECWAL,Global.NIS.NTBS.Service_RoyalAlexRhyl
+TBS0328,Blaina & District Hospital,PHECWAL,Global.NIS.NTBS.Service_Blaina
+TBS0329,Whitchurch Hospital [Cardiff],PHECWAL,Global.NIS.NTBS.Service_Whitchurch
+TBS0330,Spire Cardiff Hospital,PHECWAL,Global.NIS.NTBS.Service_SpireCardiff
+TBS0331,St Cadocs Hospital,PHECWAL,Global.NIS.NTBS.Service_StCadocs
+TBS0332,Llanrwst Health Centre,PHECWAL,Global.NIS.NTBS.Service_Llanrwst
+TBS0333,Garngoch Hospital,PHECWAL,Global.NIS.NTBS.Service_Garngoch
+TBS0334,Llanrhaedr Medical Clinic,PHECWAL,Global.NIS.NTBS.Service_Llanrhaedr
+TBS0335,Redwood Memorial Hospital,PHECWAL,Global.NIS.NTBS.Service_Redwood
+TBS0336,Park Square Day Hospital,PHECWAL,Global.NIS.NTBS.Service_ParkSquare
+TBS0337,Wrexham Maelor Hospital,PHECWAL,Global.NIS.NTBS.Service_Wrexham
+TBS0338,Tywyn & District Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Tywyn
+TBS0339,Victoria Memorial Hospital [Powys],PHECWAL,Global.NIS.NTBS.Service_VictoriaPowys
+TBS0340,Amy Evans Memorial Hospital,PHECWAL,Global.NIS.NTBS.Service_AmyEvans
+TBS0341,Prince Philip Hospital,PHECWAL,Global.NIS.NTBS.Service_PrincePhilip
+TBS0342,St Davids Hospital [Carmarthen],PHECWAL,Global.NIS.NTBS.Service_StDavidCarmarthen
+TBS0343,Deeside Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Deeside
+TBS0344,Cardiff Royal Infirmary,PHECWAL,Global.NIS.NTBS.Service_Cardiff
+TBS0345,Brynmawr Interim Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Brynmawr
+TBS0346,Maesgwyn Hospital,PHECWAL,Global.NIS.NTBS.Service_Maesgwyn
+TBS0347,Mold Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Mold
+TBS0348,Mynydd Mawr Hospital,PHECWAL,Global.NIS.NTBS.Service_Mynydd
+TBS0349,Monmouth General Hospital,PHECWAL,Global.NIS.NTBS.Service_Monmouth
+TBS0350,Aberystwyth Health Clinic,PHECWAL,Global.NIS.NTBS.Service_Aberystwyth
+TBS0351,Westfa Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Westfa
+TBS0352,Bro Ddyfi Community Hospital,PHECWAL,Global.NIS.NTBS.Service_BroDdyfi
+TBS0353,Pwllheli Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Pwllheli
+TBS0354,Tenby Cottage Hospital,PHECWAL,Global.NIS.NTBS.Service_Tenby
+TBS0355,Hill House Day Hospital,PHECWAL,Global.NIS.NTBS.Service_HillHouse
+TBS0356,Cefn Coed Day Hospital,PHECWAL,Global.NIS.NTBS.Service_CefnCoed
+TBS0357,Aberaeron Hospital,PHECWAL,Global.NIS.NTBS.Service_Aberaeron
+TBS0358,Tonna Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Tonna
+TBS0359,Ystrad Mynach Hospital,PHECWAL,Global.NIS.NTBS.Service_Ystrad
+TBS0360,Amman Valley Hospital,PHECWAL,Global.NIS.NTBS.Service_Amman
+TBS0361,Fairwood Hospital,PHECWAL,Global.NIS.NTBS.Service_Fairwood
+TBS0362,Caerphilly District Miners Hospital,PHECWAL,Global.NIS.NTBS.Service_Caerphilly
+TBS0363,Holywell Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Holywell
+TBS0364,Llwynypia Hospital,PHECWAL,Global.NIS.NTBS.Service_Llwynypia
+TBS0365,Brynseiont Hospital,PHECWAL,Global.NIS.NTBS.Service_Brynseiont
+TBS0366,Llanfrechfa Grange Hospital,PHECWAL,Global.NIS.NTBS.Service_Llanfrechfa
+TBS0367,Hafen Coed M.I. Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Hafen
+TBS0368,Aberbargoed & District Hospital,PHECWAL,Global.NIS.NTBS.Service_Aberbargoed
+TBS0369,Tregaron Hospital,PHECWAL,Global.NIS.NTBS.Service_Tregaron
+TBS0370,Rookwood Hospital,PHECWAL,Global.NIS.NTBS.Service_Rookwood
+TBS0371,Llandough Hospital,PHECWAL,Global.NIS.NTBS.Service_Llandough
+TBS0372,Ysbyty Penrhos Stanley,PHECWAL,Global.NIS.NTBS.Service_Penrhos
+TBS0373,Llangollen Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Llangollen
+TBS0374,Montgomery County Infirmary,PHECWAL,Global.NIS.NTBS.Service_Montgomery
+TBS0375,Gorseinon Hospital,PHECWAL,Global.NIS.NTBS.Service_Gorseinon
+TBS0376,Ruthin Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Ruthin
+TBS0377,Chepstow Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Chepstow
+TBS0378,Bryn Y Neuadd Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Bryn
+TBS0379,St Joseph'S Hospital,PHECWAL,Global.NIS.NTBS.Service_StJoseph
+TBS0380,Dewi Sant Day Hospital,PHECWAL,Global.NIS.NTBS.Service_DewiSant
+TBS0381,Ysbyty'R Tri Chwm,PHECWAL,Global.NIS.NTBS.Service_TriChwm
+TBS0382,Prestatyn Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Prestatyn
+TBS0383,South Pembrokeshire Hospital Health & Social Care Resource Centre,PHECWAL,Global.NIS.NTBS.Service_SouthPembroke
+TBS0384,Penley Hospital,PHECWAL,Global.NIS.NTBS.Service_Penley
+TBS0385,County Hospital [Pontypool],PHECWAL,Global.NIS.NTBS.Service_Pontypool
+TBS0386,Minfordd Hospital,PHECWAL,Global.NIS.NTBS.Service_Minfordd
+TBS0387,Nevill Hall Hospital,PHECWAL,Global.NIS.NTBS.Service_NevillHall
+TBS0388,Cymla Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Cymla
+TBS0389,Withybush General Hospital,PHECWAL,Global.NIS.NTBS.Service_Withybush
+TBS0390,Mountain Ash General Hospital,PHECWAL,Global.NIS.NTBS.Service_MountainAsh
+TBS0391,Maindiff Court Hospital,PHECWAL,Global.NIS.NTBS.Service_Maindiff
+TBS0392,Eryri Hospital,PHECWAL,Global.NIS.NTBS.Service_Eryri
+TBS0393,Maesteg General Hospital,PHECWAL,Global.NIS.NTBS.Service_Maesteg
+TBS0394,Abertillery District Hospital,PHECWAL,Global.NIS.NTBS.Service_Abertillery
+TBS0395,Royal Gwent Hospital,PHECWAL,Global.NIS.NTBS.Service_RoyalGwent
+TBS0396,Glanrhyd Hospital,PHECWAL,Global.NIS.NTBS.Service_Glanrhyd
+TBS0397,Bryn Beryl Hospital,PHECWAL,Global.NIS.NTBS.Service_BrynBeryl
+TBS0398,West Wales General Hospital,PHECWAL,Global.NIS.NTBS.Service_WestWales
+TBS0399,Denbigh Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Denbigh
+TBS0400,Velindre Hospital,PHECWAL,Global.NIS.NTBS.Service_Velindre
+TBS0401,University Hospital Of Wales,PHECWAL,Global.NIS.NTBS.Service_UniversityWales
+TBS0402,Overmonnow Day Hospital,PHECWAL,Global.NIS.NTBS.Service_Overmonnow
+TBS0403,Abergele Hospital,PHECWAL,Global.NIS.NTBS.Service_Abergele
+TBS0404,Singleton Hospital,PHECWAL,Global.NIS.NTBS.Service_Singleton
+TBS0405,Bronglais General Hospital,PHECWAL,Global.NIS.NTBS.Service_Bronglais
+TBS0406,Cardigan & District Memorial Hospital,PHECWAL,Global.NIS.NTBS.Service_Cardigan
+TBS0407,Flint Community Hospital,PHECWAL,Global.NIS.NTBS.Service_Flint
+TBS0408,Barry Hospital,PHECWAL,Global.NIS.NTBS.Service_Barry
+TBS0409,Prince Charles Hospital,PHECWAL,Global.NIS.NTBS.Service_PrinceCharles
+TBS0410,NHS Ayrshire and Arran,PHECSCOT,
+TBS0411,NHS Borders,PHECSCOT,
+TBS0412,NHS Dumfries and Galloway,PHECSCOT,
+TBS0413,NHS Fife,PHECSCOT,
+TBS0414,NHS Forth Valley,PHECSCOT,
+TBS0415,NHS Grampian,PHECSCOT,
+TBS0416,NHS Greater Glasgow and Clyde,PHECSCOT,
+TBS0417,NHS Highland,PHECSCOT,
+TBS0418,NHS Lanarkshire,PHECSCOT,
+TBS0419,NHS Lothian,PHECSCOT,
+TBS0420,NHS Orkney,PHECSCOT,
+TBS0421,NHS Shetland,PHECSCOT,
+TBS0422,NHS Tayside,PHECSCOT,
+TBS0423,NHS Western Isles,PHECSCOT,

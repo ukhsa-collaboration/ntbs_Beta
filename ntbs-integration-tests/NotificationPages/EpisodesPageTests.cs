@@ -259,8 +259,6 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            // Actual and expected flipped to accomodate trailing slash differences
-            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
         }
 
         [Fact]
@@ -350,6 +348,49 @@ namespace ntbs_integration_tests.NotificationPages
             var filteredLists = JsonConvert.DeserializeObject<FilteredEpisodePageSelectLists>(result);
             Assert.Equal(Utilities.CASEMANAGER_ABINGDON_EMAIL, filteredLists.CaseManagers.First().Value);
             Assert.Equal(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID, filteredLists.Hospitals.First().Value.ToUpperInvariant());
+        }
+        
+        [Fact]
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["Episode.HospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["Episode.TBServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["Episode.Consultant"] = "Consultant",
+                ["Episode.CaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["FormattedNotificationDate.Day"] = "1",
+                ["FormattedNotificationDate.Month"] = "1",
+                ["FormattedNotificationDate.Year"] = "2012",
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+
+            // Assert
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
         }
     }
 }

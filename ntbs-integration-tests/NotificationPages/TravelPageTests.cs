@@ -39,7 +39,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostNotified_RedirectsToOverview_IfModelValid()
+        public async Task PostNotified_Redirects_IfModelValid()
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
@@ -58,8 +58,6 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            // Flipped expected/actual here to accomodate trailing slash
-            Assert.Contains(GetRedirectLocation(result), GetPathForId(NotificationSubPaths.Overview, id));
         }
 
         [Theory]
@@ -208,49 +206,6 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostNotified_ReturnsPageWithModelErrors_RequiredFields()
-        {
-            // Arrange
-            const int id = Utilities.NOTIFIED_ID;
-            var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
-
-            var formData = new Dictionary<string, string>
-            {
-                ["NotificationId"] = id.ToString(),
-                ["TravelDetails.HasTravel"] = "true",
-                ["VisitorDetails.HasVisitor"] = "true"
-            };
-
-            // Act
-            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
-
-            // Assert
-            var resultDocument = await GetDocumentAsync(result);
-            result.EnsureSuccessStatusCode();
-
-            Assert.Equal(
-                FullErrorMessage("Please supply total number of countries"),
-                resultDocument.GetError("travel-total"));
-            Assert.Equal(
-                FullErrorMessage("Please supply most recent country visited"),
-                resultDocument.GetError("travel-country1Id"));
-            Assert.Equal(
-                FullErrorMessage("Please supply a duration for travel"),
-                resultDocument.GetError("travel-length1"));
-
-            Assert.Equal(
-                FullErrorMessage("Please supply total number of countries"),
-                resultDocument.GetError("visitor-total"));
-            Assert.Equal(
-                FullErrorMessage("Please supply most recent country visited from"),
-                resultDocument.GetError("visitor-country1Id"));
-            Assert.Equal(
-                FullErrorMessage("Please supply a duration for visit"),
-                resultDocument.GetError("visitor-length1"));
-        }
-
-        [Fact]
         public async Task PostNotified_ReturnsPageWithModelErrors_CountriesOutOfOrder()
         {
             // Arrange
@@ -333,48 +288,6 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task PostNotified_ReturnsPageWithModelErrors_CountryNoDuration()
-        {
-            // Arrange
-            const int id = Utilities.NOTIFIED_ID;
-            var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
-
-            var formData = new Dictionary<string, string>
-            {
-                ["NotificationId"] = id.ToString(),
-                ["TravelDetails.HasTravel"] = "true",
-                ["TravelDetails.TotalNumberOfCountries"] = "2",
-                ["TravelDetails.Country1Id"] = "1",
-                ["TravelDetails.StayLengthInMonths1"] = "1",
-                ["TravelDetails.Country2Id"] = "2",
-                ["TravelDetails.StayLengthInMonths2"] = "",
-
-                ["VisitorDetails.HasVisitor"] = "true",
-                ["VisitorDetails.TotalNumberOfCountries"] = "2",
-                ["VisitorDetails.Country1Id"] = "1",
-                ["VisitorDetails.StayLengthInMonths1"] = "1",
-                ["VisitorDetails.Country2Id"] = "2",
-                ["VisitorDetails.StayLengthInMonths2"] = "",
-            };
-
-            // Act
-            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
-
-            // Assert
-            var resultDocument = await GetDocumentAsync(result);
-            result.EnsureSuccessStatusCode();
-
-            Assert.Equal(
-                FullErrorMessage("Please supply a duration for travel"),
-                resultDocument.GetError("travel-length2"));
-
-            Assert.Equal(
-                FullErrorMessage("Please supply a duration for visit"),
-                resultDocument.GetError("visitor-length2"));
-        }
-
-        [Fact]
         public async Task ValidateNotFullTravel_ReturnsExpectedResult()
         {
             // Arrange
@@ -392,28 +305,6 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Empty(result);
-        }
-
-        [Fact]
-        public async Task ValidateFullTravel_ReturnsError_RequiredFields()
-        {
-            // Arrange
-            const int id = Utilities.NOTIFIED_ID;
-            var formData = new Dictionary<string, string>
-            {
-                ["NotificationId"] = id.ToString(),
-                ["TravelDetails.HasTravel"] = "true",
-                ["TravelDetails.ShouldValidateFull"] = "true"
-            };
-
-            // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateTravel"));
-
-            // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("Please supply total number of countries", result);
-            Assert.Contains("Please supply most recent country visited", result);
-            Assert.Contains("Please supply a duration for travel", result);
         }
 
         [Fact]
@@ -435,27 +326,43 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await response.Content.ReadAsStringAsync();
             Assert.Empty(result);
         }
-
+        
         [Fact]
-        public async Task ValidateFullVisit_ReturnsError_RequiredFields()
+        public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["VisitorDetails.HasVisitor"] = "true",
-                ["VisitorDetails.ShouldValidateFull"] = "true"
+                ["TravelDetails.HasTravel"] = "false",
+                ["VisitorDetails.HasVisitor"] = "false"
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateVisitor"));
+            var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("Please supply total number of countries", result);
-            Assert.Contains("Please supply most recent country visited from", result);
-            Assert.Contains("Please supply a duration for visit", result);
+            var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
+            result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
+        }
+        
+        [Fact]
+        public async Task NotifiedPageHasReturnLinkToOverview()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
+            Assert.NotNull(document.QuerySelector($"a[href='{overviewLink}']"));
         }
     }
 }

@@ -51,6 +51,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;
             _mdrService = mdrService;
+
+            CurrentPage = NotificationSubPaths.EditClinicalDetails;
         }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
@@ -104,10 +106,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void SetupNotificationSiteMap(IEnumerable<NotificationSite> notificationSites)
         {
+            var notificationSitesList = notificationSites.ToList();
             NotificationSiteMap = new Dictionary<SiteId, bool>();
             foreach (SiteId siteId in Enum.GetValues(typeof(SiteId)))
             {
-                NotificationSiteMap.Add(siteId, notificationSites.FirstOrDefault(ns => ns.SiteId == (int)siteId) != null);
+                NotificationSiteMap.Add(siteId, notificationSitesList.FirstOrDefault(ns => ns.SiteId == (int)siteId) != null);
             }
         }
 
@@ -143,8 +146,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Add additional field required for date validation
             ClinicalDetails.Dob = Notification.PatientDetails.Dob;
 
-            ClinicalDetails.SetFullValidation(Notification.NotificationStatus);
-            OtherSite?.SetFullValidation(Notification.NotificationStatus);
+            ClinicalDetails.SetValidationContext(Notification);
+            OtherSite?.SetValidationContext(Notification);
 
             // Since notification has other properties which are not populated by this page but have validation rules, 
             // validation of a whole Notification model will result in validation errors.
@@ -257,9 +260,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidateClinicalDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<ClinicalDetails>(key, day, month, year, isLegacy);
         }
 
         public ContentResult OnGetValidateNotificationSites(IEnumerable<string> valueList, bool shouldValidateFull)

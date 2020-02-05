@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
@@ -22,6 +23,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _cultureAndResistanceService = cultureAndResistanceService;
             _specimenService = specimenService;
+            
+            CurrentPage = NotificationSubPaths.EditTestResults;
         }
 
         [BindProperty]
@@ -60,7 +63,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Set the collection so it can be included in the validation
             TestData.ManualTestResults = Notification.TestData.ManualTestResults;
             TestData.ProceedingToAdd = ActionName == "Create";
-            TestData.SetFullValidation(Notification.NotificationStatus);
+            TestData.SetValidationContext(Notification);
             if (TryValidateModel(TestData, nameof(TestData)))
             {
                 await Service.UpdateTestDataAsync(Notification, TestData);
