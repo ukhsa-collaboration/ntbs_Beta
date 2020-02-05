@@ -18,17 +18,6 @@ namespace ntbs_service.Services
             _alertService = alertService;
         }
 
-        private async Task CreateMdrAlert(Notification notification)
-        {
-            var mdrAlert = new MdrAlert() {NotificationId = notification.NotificationId};
-            await _alertService.AddUniqueAlertAsync(mdrAlert);
-        }
-
-        private async Task DismissMdrAlert(Notification notification)
-        {
-            await _alertService.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR);
-        }
-
         public async Task CreateOrDismissMdrAlert(Notification notification)
         {
             if (notification.IsMdr)
@@ -39,6 +28,17 @@ namespace ntbs_service.Services
             {
                 await DismissMdrAlert(notification);
             }
+        }
+        
+        private async Task CreateMdrAlert(Notification notification)
+        {
+            var mdrAlert = new MdrAlert() {NotificationId = notification.NotificationId};
+            await _alertService.AddUniqueAlertAsync(mdrAlert);
+        }
+
+        private async Task DismissMdrAlert(Notification notification)
+        {
+            await _alertService.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR);
         }
     }
 }
