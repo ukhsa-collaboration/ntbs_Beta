@@ -31,9 +31,9 @@ namespace ntbs_service.Services
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
             WHERE NOT EXISTS ({0})
             ";
-        private string SelectQueryStart => string.Format(SelectQueryStartTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
+        private string SelectQueryStart => string.Format(SelectQueryStartTemplate, _notificationImportHelper.SelectImportedNotificationByIdQuery);
 
-        private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
+        private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.SelectImportedNotificationByIdQuery);
 
         const string SelectQueryEnd = @"
             ORDER BY CASE

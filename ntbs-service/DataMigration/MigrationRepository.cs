@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using MoreLinq.Extensions;
+using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.DataMigration
 {
     public interface IMigrationRepository
     {
-        Task MarkNotificiationsAsImportedAsync(IEnumerable<Notification> notifications);
+        Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications);
         Task<IEnumerable<dynamic>> GetNotificationsById(IEnumerable<string> legacyIds);
         Task<IEnumerable<dynamic>> GetNotificationsByDate(DateTime rangeStartDate, DateTime endStartDate);
         Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds);
@@ -82,18 +83,27 @@ namespace ntbs_service.DataMigration
             _importHelper = importHelper;
         }
 
-        public async Task MarkNotificiationsAsImportedAsync(IEnumerable<Notification> notifications)
+        public async Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                connection.Open();
-
-                var importedAt = DateTime.Now.ToString("s");
-
-                var query = _importHelper.GetInsertImportedNotificationQuery();
-                foreach (var notification in notifications)
+                try
                 {
-                    await connection.QueryAsync(query, new { notification.LegacyId, ImportedAt = importedAt });
+                    connection.Open();
+
+                    var importedAt = DateTime.Now.ToString("s");
+
+                    foreach (var notification in notifications)
+                    {
+                        await connection.ExecuteAsync(
+                            _importHelper.InsertImportedNotificationQuery, 
+                            new {notification.LegacyId, ImportedAt = importedAt}
+                        );
+                    }
+                }
+                catch (Exception exception)
+                {
+                    throw new MarkingNotificationsAsImportedFailedException(notifications, exception);
                 }
             }
         }
