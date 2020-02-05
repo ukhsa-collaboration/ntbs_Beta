@@ -23,8 +23,9 @@ namespace ntbs_service.Services
 
     public class LegacySearchService : ILegacySearchService
     {
-        const string SelectQueryStartTemplate = @"
-            SELECT * 
+        private const string SelectQueryStartTemplate = @"SELECT * " + FromString;
+        private const string CountQueryTemplate = @"SELECT COUNT(*) " + FromString;
+        const string FromString = @"
             FROM Notifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
@@ -32,12 +33,6 @@ namespace ntbs_service.Services
             ";
         private string SelectQueryStart => string.Format(SelectQueryStartTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
 
-        const string CountQueryTemplate = @"
-            SELECT COUNT(*)
-            FROM Notifications n
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            WHERE NOT EXISTS ({0})
-            ";
         private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.GetSelectImportedNotificationByIdQuery());
 
         const string SelectQueryEnd = @"
@@ -113,6 +108,10 @@ namespace ntbs_service.Services
             if (result.NtbsHospitalId is Guid guid)
             {
                 tbService = await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid);
+            }
+
+            if (result.Postcode != null)
+            {
                 locationPhecCode = await _referenceDataRepository.GetLocationPhecCodeForPostcodeAsync(result.Postcode);
             }
             var notificationBannerModel = new NotificationBannerModel
