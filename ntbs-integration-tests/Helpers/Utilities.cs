@@ -207,6 +207,10 @@ namespace ntbs_integration_tests.Helpers
                         TBServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         HospitalId = Guid.Parse(HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
                         CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
+                    },
+                    PatientDetails = new PatientDetails
+                    {
+                        Dob = new DateTime(1970, 1, 1)
                     }
                 },
                 new Notification()

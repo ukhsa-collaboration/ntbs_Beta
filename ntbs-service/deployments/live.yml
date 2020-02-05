@@ -47,18 +47,14 @@ spec:
               value: ""
             - name: ReferenceLabResultsConfig__MockOutSpecimenMatching
               value: "true"
-            - name: ReferenceLabResultsConfig__MockedNotificationId
-              value: "1"
+            - name: ClusterMatchingConfig__MockOutClusterMatching
+              value: "true"
             - name: MigrationConfig__DateRangeJobIntervalInMonths
               value: "2"
             - name: MigrationConfig__TablePrefix
               value: ""
             - name: AppConfig__AuditingEnabled
               value: "false"
-            - name: ReferenceLabResultsConfig__MockedTbServiceCode
-              value: "TBS0001"
-            - name: ReferenceLabResultsConfig__MockedPhecCode
-              value: "E45000019"              
       imagePullSecrets:
         - name: registery-password
 ---

@@ -26,6 +26,7 @@ namespace ntbs_service_unit_tests.Pages
         private readonly Mock<ISearchService> _mockSearchService;
         private readonly Mock<IAuthorizationService> _mockAuthorizationService;
         private readonly Mock<ILegacySearchService> _mockLegacySearchService;
+        private readonly Mock<IUserService> _mockUserService;
         public SearchPageTest()
         {
             _mockNotificationRepository = new Mock<INotificationRepository>();
@@ -33,6 +34,7 @@ namespace ntbs_service_unit_tests.Pages
             _mockAuthorizationService = new Mock<IAuthorizationService>();
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             _mockLegacySearchService = new Mock<ILegacySearchService>();
+            _mockUserService = new Mock<IUserService>();
         }
 
         [Fact]
@@ -51,19 +53,26 @@ namespace ntbs_service_unit_tests.Pages
             var tbServiceList = Task.FromResult(tbServices);
             _mockReferenceDataRepository.Setup(s => s.GetAllTbServicesAsync()).Returns(tbServiceList);
 
-            _mockNotificationRepository.Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>())).Returns(new List<Notification> { new Notification() { NotificationId = 1 } }.AsQueryable());
+            _mockNotificationRepository
+                .Setup(s => s.GetQueryableNotificationByStatus(It.IsAny<List<NotificationStatus>>()))
+                .Returns(new List<Notification> {new Notification() {NotificationId = 1}}.AsQueryable());
 
             var unionAndPaginateResult = Task.FromResult(GetNotificationIdsAndCount());
-            _mockSearchService.Setup(s => s.OrderAndPaginateQueryablesAsync(It.IsAny<INtbsSearchBuilder>(), It.IsAny<INtbsSearchBuilder>(),
-                It.IsAny<PaginationParameters>())).Returns(unionAndPaginateResult);
+            _mockSearchService.Setup(s => s.OrderAndPaginateQueryableAsync(It.IsAny<INtbsSearchBuilder>(),
+                It.IsAny<PaginationParameters>(), It.IsAny<ClaimsPrincipal>())).Returns(unionAndPaginateResult);
 
             var notifications = Task.FromResult(GetNotificationBanners());
             _mockNotificationRepository.Setup(s => s.GetNotificationBannerModelsByIdsAsync(It.IsAny<List<int>>())).Returns(notifications);
 
             var legacyNotificationsAndCount = Task.FromResult(GetLegacyNotificationBanner());
-            _mockLegacySearchService.Setup(s => s.SearchAsync(It.IsAny<ILegacySearchBuilder>(), It.IsAny<int>(), It.IsAny<int>())).Returns(legacyNotificationsAndCount);
+            _mockLegacySearchService
+                .Setup(s => s.SearchAsync(It.IsAny<ILegacySearchBuilder>(), It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<ClaimsPrincipal>()))
+                .Returns(legacyNotificationsAndCount);
 
-            _mockAuthorizationService.Setup(s => s.SetFullAccessOnNotificationBannersAsync(It.IsAny<IEnumerable<NotificationBannerModel>>(), It.IsAny<ClaimsPrincipal>()))
+            _mockAuthorizationService.Setup(s =>
+                    s.SetFullAccessOnNotificationBannersAsync(It.IsAny<IEnumerable<NotificationBannerModel>>(),
+                        It.IsAny<ClaimsPrincipal>()))
                 .Verifiable();
             
 
@@ -77,7 +86,8 @@ namespace ntbs_service_unit_tests.Pages
                 _mockSearchService.Object,
                 _mockAuthorizationService.Object,
                 _mockReferenceDataRepository.Object,
-                _mockLegacySearchService.Object)
+                _mockLegacySearchService.Object,
+                _mockUserService.Object)
             {
                 SearchParameters = new SearchParameters(),
                 PageContext = pageContext

@@ -89,8 +89,6 @@ namespace ntbs_service.Models.Entities
         #region Display and Formatting methods/fields
 
         public string NotificationStatusString => GetNotificationStatusString();
-        [Display(Name = "Date notified")]
-        public string FormattedSubmissionDate => SubmissionDate.ConvertToString();
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
@@ -133,6 +131,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
         [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
+        [Display(Name = "Date notified")]
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;

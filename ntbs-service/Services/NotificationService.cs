@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace ntbs_service.Services
         Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails);
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
+        Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
     }
 
     public class NotificationService : INotificationService
@@ -349,6 +351,22 @@ namespace ntbs_service.Services
 
             await AddNotificationAsync(notification);
             return notification;
+        }
+
+        public async Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues)
+        {
+            foreach (var clusterValue in clusterValues)
+            {
+                var notification = await _notificationRepository.GetNotificationAsync(clusterValue.NotificationId);
+                if (notification == null)
+                {
+                    throw new DataException("Reporting database sourced NotificationId was not found in NTBS database.");
+                }
+                
+                notification.ClusterId = clusterValue.ClusterId;
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)

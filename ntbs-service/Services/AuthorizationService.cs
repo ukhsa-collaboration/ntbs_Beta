@@ -47,7 +47,6 @@ namespace ntbs_service.Services
 
             await Task.WhenAll(
                 notificationBanners
-                    .Where(n => n.NotificationStatus != NotificationStatus.Legacy)
                     .Select(n => SetPadlockForBannerAsync(user, n)));
         }
 
