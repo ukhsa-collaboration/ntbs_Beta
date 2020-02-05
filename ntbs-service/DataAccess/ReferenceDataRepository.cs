@@ -258,7 +258,7 @@ namespace ntbs_service.DataAccess
                 .Include(p => p.LocalAuthority)
                     .ThenInclude(la => la.LocalAuthorityToPHEC)
                         .ThenInclude(pl => pl.PHEC)
-                .FirstOrDefaultAsync();
+                .SingleOrDefaultAsync();
             return Postcode?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
         }
     }

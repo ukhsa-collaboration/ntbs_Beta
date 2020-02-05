@@ -26,12 +26,12 @@ namespace ntbs_service.Services
         }
 
         public async Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryableAsync(
-            INtbsSearchBuilder firstBuilder,
+            INtbsSearchBuilder searchBuilder,
             PaginationParameters paginationParameters,
             ClaimsPrincipal user)
         {
             
-            var notificationIdsQueryable = await OrderQueryableByEditPermissionThenNotificationDateAsync(firstBuilder.GetResult(), user);
+            var notificationIdsQueryable = await OrderQueryableByEditPermissionThenNotificationDateAsync(searchBuilder.GetResult(), user);
             var notificationIds = await GetPaginatedItemsAsync(notificationIdsQueryable.Select(n => n.NotificationId), paginationParameters);
             var count = await notificationIdsQueryable.CountAsync();
             return (notificationIds, count);

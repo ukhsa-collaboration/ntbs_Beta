@@ -44,7 +44,7 @@ namespace ntbs_service.Services
             ORDER BY CASE
                  WHEN n.NtbsHospitalId IN @editPermissionHospitals THEN 1
                  WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0
-                 END DESC, n.NotificationDate Desc, n.OldNotificationId
+                 END DESC, n.NotificationDate DESC, n.OldNotificationId DESC
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
@@ -64,7 +64,10 @@ namespace ntbs_service.Services
             connectionString = configuration.GetConnectionString("migration");
             _referenceDataRepository = referenceDataRepository;
             _notificationImportHelper = notificationImportHelper;
-            Sexes = _referenceDataRepository.GetAllSexesAsync().Result;
+            if (LegacySearchEnabled)
+            {
+                Sexes = _referenceDataRepository.GetAllSexesAsync().Result;    
+            }
             _userService = userService;
         }
 
@@ -83,8 +86,7 @@ namespace ntbs_service.Services
             parameters.Offset = offset;
             parameters.Fetch = numberToFetch;
             var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
-            parameters.editPermissionHospitals = _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(permittedTbServiceCodes)
-                .Result
+            parameters.editPermissionHospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(permittedTbServiceCodes))
                 .Select(h => h.HospitalId);
 
             string fullSelectQuery = SelectQueryStart + queryConditions + SelectQueryEnd;

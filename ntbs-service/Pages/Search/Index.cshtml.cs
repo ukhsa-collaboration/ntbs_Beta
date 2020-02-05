@@ -132,12 +132,12 @@ namespace ntbs_service.Pages.Search
 
         // Given no offsets from the previous page perform a search without using skip and take in SQL queries
         private async Task<(IEnumerable<NotificationBannerModel> results, int count)> SearchWithoutOffsetsAsync(
-            INtbsSearchBuilder filteredDrafts,
+            INtbsSearchBuilder ntbsQueryable,
             ILegacySearchBuilder legacySqlQuery)
         {
             var numberOfNotificationsToFetch = PaginationParameters.PageSize * PaginationParameters.PageIndex;
             var (orderedNotificationIds, ntbsCount) = await _searchService.OrderAndPaginateQueryableAsync(
-                filteredDrafts,
+                ntbsQueryable,
                 PaginationParameters,
                 User);
             var ntbsNotifications = await _notificationRepository.GetNotificationBannerModelsByIdsAsync(orderedNotificationIds);
