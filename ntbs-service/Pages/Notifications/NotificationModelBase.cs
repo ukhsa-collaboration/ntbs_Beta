@@ -11,7 +11,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
 {
-    public abstract class NotificationModelBase : PageModel
+    public abstract class NotificationModelBase : PageModel, IWithNotificationBanner
     {
         protected INotificationService Service;
         protected IAuthorizationService AuthorizationService;

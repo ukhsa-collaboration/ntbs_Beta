@@ -19,6 +19,7 @@ namespace ntbs_service.Services
     public interface ILegacySearchService
     {
         Task<(IEnumerable<NotificationBannerModel> notifications, int count)> SearchAsync(ILegacySearchBuilder builder, int offset, int pageSize, ClaimsPrincipal user);
+        Task<NotificationBannerModel> GetByIdAsync(string notificationId);
     }
 
     public class LegacySearchService : ILegacySearchService
@@ -44,6 +45,8 @@ namespace ntbs_service.Services
                 n.OldNotificationId DESC
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
+
+        private const string SelectByIdCondition = @"AND dmg.OldNotificationId = @id";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -101,6 +104,21 @@ namespace ntbs_service.Services
             return (notificationBannerModels, count);
         }
 
+        public async Task<NotificationBannerModel> GetByIdAsync(string notificationId)
+        {
+            string fullQuery = SelectQueryStart + SelectByIdCondition;
+            dynamic result;
+            
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                result = (await connection.QueryAsync(fullQuery, new { id = notificationId})).FirstOrDefault();
+            }
+
+            return result == null ? null : await AsNotificationBannerAsync(result);
+        }
+
         private async Task<NotificationBannerModel> AsNotificationBannerAsync(dynamic result)
         {
             TBService tbService = null;
@@ -132,7 +150,9 @@ namespace ntbs_service.Services
                 Postcode = (result.Postcode as string).FormatStringToPostcodeFormat(),
                 NhsNumber = (result.NhsNumber as string).FormatStringToNhsNumberFormat(),
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
-                ShowPadlock = true
+                ShowPadlock = true,
+                ShowLink = true,
+                RedirectPath = RouteHelper.GetLegacyNotificationPath(result.OldNotificationId)
             };
 
             return notificationBannerModel;

@@ -90,7 +90,7 @@ namespace ntbs_service.DataMigration
             }
 
             var importResults = new List<ImportResult>();
-            if (notificationsGroupsToImport.Count() > 0)
+            if (notificationsGroupsToImport.Any())
             {
                 // Validate and Import valid notifications
                 importResults = notificationsGroupsToImport
@@ -103,7 +103,7 @@ namespace ntbs_service.DataMigration
         }
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
-            var patientName = notifications.FirstOrDefault().FullName;
+            var patientName = notifications.First().FullName;
             var importResult = new ImportResult(patientName);
 
             LookupAndAssignPostcode(notifications);
@@ -127,7 +127,7 @@ namespace ntbs_service.DataMigration
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
                 var validationErrors = GetValidationErrors(notification);
-                if (validationErrors.Count() == 0)
+                if (!validationErrors.Any())
                 {
                     _logger.LogInformation(context, requestId, $"No validation errors found");
                     importResult.AddValidNotification(linkedNotificationId);
@@ -155,6 +155,7 @@ namespace ntbs_service.DataMigration
             {
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
                 await _migrationRepository.MarkNotificationsAsImportedAsync(savedNotifications);
+                importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
 
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
