@@ -352,7 +352,8 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidatePatientDetailsDate"));
+            var path = GetHandlerPath(formData, "ValidatePatientDetailsDate", Utilities.NOTIFIED_ID);
+            var response = await Client.GetAsync(path);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

@@ -129,7 +129,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.ClearValidationState("PatientDetails.YearOfUkEntry");
             }
 
-            PatientDetails.SetFullValidation(Notification.NotificationStatus);
+            PatientDetails.SetValidationContext(Notification);
             await FindAndSetPostcodeAsync();
 
             ValidationService.TrySetFormattedDate(PatientDetails, "Patient", nameof(PatientDetails.Dob), FormattedDob);
@@ -147,7 +147,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {
-            return await OnGetValidatePostcode<PatientDetails>(_postcodeService, postcode, shouldValidateFull);
+            var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
+            var foundPostcode = await _postcodeService.FindPostcode(postcode);
+            var propertyValueTuples = new List<(string, object)>
+            {
+                ("PostcodeToLookup", foundPostcode?.Postcode),
+                ("Postcode", postcode)
+            };
+            return ValidationService.GetMultiplePropertiesValidationResult<PatientDetails>(
+                propertyValueTuples,
+                shouldValidateFull, 
+                notification.IsLegacy);
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -160,9 +170,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             return ValidationService.GetPropertyValidationResult<PatientDetails>(key, value, shouldValidateFull);
         }
 
-        public ContentResult OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
+        public async Task<ContentResult> OnGetValidatePatientDetailsDate(string key, string day, string month, string year)
         {
-            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year);
+            var isLegacy = await NotificationRepository.IsNotificationLegacyAsync(NotificationId);
+            return ValidationService.GetDateValidationResult<PatientDetails>(key, day, month, year, isLegacy);
         }
 
         public async Task<JsonResult> OnGetNhsNumberDuplicates(int notificationId, string nhsNumber)

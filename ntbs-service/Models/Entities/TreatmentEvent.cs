@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Event Date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"EventDateAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [AssertThat(@"EventDateAfterNotificationDate", ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
         public DateTime? EventDate { get; set; }

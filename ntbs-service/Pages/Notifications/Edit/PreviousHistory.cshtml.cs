@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -50,9 +51,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             UpdateFlags();
-            PatientTbHistory.SetFullValidation(Notification.NotificationStatus);
+            PatientTbHistory.SetValidationContext(Notification);
+            PatientTbHistory.DobYear = Notification.PatientDetails.Dob?.Year;
 
-            if (TryValidateModel(PatientTbHistory.GetType().Name))
+            TryValidateModel(PatientTbHistory, nameof(PatientTbHistory));
+            
+            if (ModelState.IsValid)
             {
                 await Service.UpdatePatientTbHistoryAsync(Notification, PatientTbHistory);
             }

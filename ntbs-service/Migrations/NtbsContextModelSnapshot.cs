@@ -144,6 +144,8 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("NotificationId");
 
+                    b.HasIndex("ClusterId");
+
                     b.HasIndex("ETSID");
 
                     b.HasIndex("GroupId");
@@ -13393,6 +13395,34 @@ namespace ntbs_service.Migrations
                             TreatmentOutcomeSubType = "Other",
                             TreatmentOutcomeType = "Failed"
                         });
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityBirthCountryAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityBirthCountry");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityClinicalDatesAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityClinicalDates");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityClusterAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityCluster");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityDraftAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityDraft");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>

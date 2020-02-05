@@ -142,21 +142,21 @@ namespace ntbs_service.Pages.Notifications
                 fragment: overviewAnchorId);
         }
 
-        protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T ownedModel) where T : ModelBase
+        protected async Task SetNotificationProperties<T>(bool isBeingSubmitted, T subModel) where T : ModelBase
         {
             await SetNotificationProperties(isBeingSubmitted);
-            ownedModel.ShouldValidateFull = Notification.ShouldValidateFull;
+            subModel.SetValidationContext(Notification, isBeingSubmitted);
         }
 
         protected async Task SetNotificationProperties(bool isBeingSubmitted)
         {
-            Notification.SetFullValidation(Notification.NotificationStatus, isBeingSubmitted);
+            Notification.SetValidationContext(Notification, isBeingSubmitted);
             await GetLinkedNotifications();
         }
 
         private async Task<bool> TryValidateAndSave()
         {
-            Notification.SetFullValidation(Notification.NotificationStatus);
+            Notification.SetValidationContext(Notification);
             await ValidateAndSave();
             return ModelState.IsValid;
         }
@@ -171,19 +171,6 @@ namespace ntbs_service.Pages.Notifications
             var foundPostcode = await postcodeService.FindPostcode(model.Postcode);
             model.PostcodeToLookup = foundPostcode?.Postcode;
         }
-
-        public async Task<ContentResult> OnGetValidatePostcode<T>(IPostcodeService postcodeService, string postcode, bool shouldValidateFull) where T : ModelBase, IHasPostcode
-        {
-            var foundPostcode = await postcodeService.FindPostcode(postcode);
-            var propertyValueTuples = new List<(string, object)>
-            {
-                ("PostcodeToLookup", foundPostcode?.Postcode),
-                ("Postcode", postcode)
-            };
-
-            return ValidationService.GetMultiplePropertiesValidationResult<T>(propertyValueTuples, shouldValidateFull);
-        }
-
 
         protected ContentResult CreateJsonResponse(object content)
         {

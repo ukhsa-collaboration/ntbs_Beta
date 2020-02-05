@@ -410,7 +410,8 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
+            var path = GetHandlerPath(formData, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID);
+            var response = await Client.GetAsync(path);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
@@ -430,7 +431,8 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateClinicalDetailsDate"));
+            var path = GetHandlerPath(formData, "ValidateClinicalDetailsDate", Utilities.NOTIFIED_ID);
+            var response = await Client.GetAsync(path);
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();

@@ -49,8 +49,10 @@ namespace ntbs_service.Models.Entities
             ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
         public string Address { get; set; }
 
+        [Display(Name = "Postcode")]
         [RequiredIf(@"ShouldValidateFull && !NoFixedAbode", ErrorMessage = ValidationMessages.FieldRequired)]
-        [AssertThat(@"PostcodeToLookup != null", ErrorMessage = ValidationMessages.PostcodeIsNotValid)]
+        [RegularExpression(ValidationRegexes.PostcodeValidation, ErrorMessage = ValidationMessages.NotValid)]
+        [AssertThat(@"PostcodeToLookup != null || IsLegacy == true", ErrorMessage = ValidationMessages.PostcodeNotFound)]
         public string Postcode { get; set; }
 
         public string PostcodeToLookup { get; set; }

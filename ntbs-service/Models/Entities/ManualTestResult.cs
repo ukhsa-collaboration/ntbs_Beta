@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class ManualTestResult : IHasRootEntity
+    public class ManualTestResult : ModelBase, IHasRootEntity
     {
         // Even for values which are non-nullable in db, we make them a nullable runtime type so 
         // the Required attribute can be applied properly, producing correct error messages
@@ -22,7 +22,7 @@ namespace ntbs_service.Models.Entities
 
         [Display(Name = "Test date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
-        [ValidDateRange(ValidDates.EarliestClinicalDate)]
+        [ValidClinicalDate]
         [AssertThat(@"TestDateAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TestDate { get; set; }
 
