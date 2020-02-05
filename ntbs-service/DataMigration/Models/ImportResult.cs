@@ -10,6 +10,7 @@ namespace ntbs_service.DataMigration
         public string PatientName { get; set; }
         public Dictionary<string, List<string>> ValidationErrors { get; set; } = new Dictionary<string, List<string>>();
         public bool IsValid => ValidationErrors.Values.All(x => x == null);
+        public Dictionary<string, int> NtbsIds { get; set; } = new Dictionary<string, int>();
 
         public ImportResult(string patientName)
         {

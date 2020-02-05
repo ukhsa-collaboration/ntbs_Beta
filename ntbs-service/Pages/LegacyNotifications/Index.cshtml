@@ -1,0 +1,45 @@
+﻿@page "/LegacyNotifications/{LegacyNotificationId}"
+
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.LegacyNotifications.Index
+
+@{
+    Layout = "Shared/_NotificationLayout";
+    ViewData["Title"] = "Legacy notification";
+}
+
+<nhs-width-container container-width="Standard">
+    
+    @if (Model.LegacyImportResult == null)
+    {
+        <div class="ondemand-migration-description-container">
+            <p>You must import this notification to view the full details of the record.</p>
+            <p>Import may take a few moments.</p>
+            <p>Do you wish to proceed?</p>
+            <form method="post">
+                <button class="nhsuk-button">Import</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <nhs-error-summary title-text="This notification cannot be imported" title-id="error-summary-title"
+                           role="alert" tabindex="0" data-module="error-summary">
+            @foreach (var (key, validationErrors) in Model.LegacyImportResult.ValidationErrors)
+            {
+                @if (validationErrors != null)
+                {
+                    <li><strong>@validationErrors.Count validation errors found for notification with Id = @key</strong></li>
+                    @foreach (var item in validationErrors)
+                    {
+                        <li>@item</li>
+                    }
+                }
+            }
+        </nhs-error-summary>
+        
+        <p class="legacy-notification-instructions">What next?</p>
+        <span>Please contact ntbs@phe.gov.uk quoting Legacy notification: {@Model.LegacyNotificationId} and reference ID: {@Model.RequestId} </span>
+    }
+        
+</nhs-width-container>
