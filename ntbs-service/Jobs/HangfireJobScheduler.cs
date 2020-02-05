@@ -1,6 +1,5 @@
 ﻿using System;
 using Hangfire;
-using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Jobs
 {
@@ -24,6 +23,12 @@ namespace ntbs_service.Jobs
                 "data-quality-alerts",
                 job => job.Run(JobCancellationToken.Null),
                 Cron.Daily(4),
+                TimeZoneInfo.Local);
+            
+            RecurringJob.AddOrUpdate<NotificationClusterUpdateJob>(
+                "notification-cluster-update",
+                job => job.Run(JobCancellationToken.Null),
+                Cron.Weekly(DayOfWeek.Sunday, 5),
                 TimeZoneInfo.Local);
         }
     }

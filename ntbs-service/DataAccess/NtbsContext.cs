@@ -351,6 +351,7 @@ namespace ntbs_service.DataAccess
                 entity.HasIndex(e => e.LTBRID);
                 entity.HasIndex(e => e.ETSID);
                 entity.HasIndex(e => e.LTBRPatientId);
+                entity.HasIndex(e => e.ClusterId);
             });
 
             modelBuilder.Entity<Region>(entity =>
