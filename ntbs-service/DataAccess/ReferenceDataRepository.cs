@@ -44,6 +44,7 @@ namespace ntbs_service.DataAccess
         Task<IList<VenueType>> GetAllVenueTypesAsync();
         Task<IList<TreatmentOutcome>> GetTreatmentOutcomesForType(TreatmentOutcomeType type);
         Task<TreatmentOutcome> GetTreatmentOutcomeForTypeAndSubType(TreatmentOutcomeType type, TreatmentOutcomeSubType? subType);
+        Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode);
     }
 
     public class ReferenceDataRepository : IReferenceDataRepository
@@ -248,6 +249,17 @@ namespace ntbs_service.DataAccess
             return await _context.TreatmentOutcome.SingleOrDefaultAsync(t => 
                 t.TreatmentOutcomeType == type
                 && t.TreatmentOutcomeSubType == subType);
+        }
+
+        public async Task<string> GetLocationPhecCodeForPostcodeAsync(string postcode)
+        {
+            var Postcode = await _context.PostcodeLookup
+                .Where(p => p.Postcode == postcode.Replace(" ", ""))
+                .Include(p => p.LocalAuthority)
+                    .ThenInclude(la => la.LocalAuthorityToPHEC)
+                        .ThenInclude(pl => pl.PHEC)
+                .SingleOrDefaultAsync();
+            return Postcode?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
         }
     }
 }

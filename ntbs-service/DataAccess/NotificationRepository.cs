@@ -11,6 +11,7 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
+        IQueryable<Notification> GetBannerReadyNotificationsIQueryable();
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
@@ -206,7 +207,7 @@ namespace ntbs_service.DataAccess
 
         // Adds enough information to display notification banner, which makes it a good
         // base for most notification queries. Can be expanded upon for further pages as needed.
-        private IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
+        public IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
                 .Include(n => n.PatientDetails.Country)
