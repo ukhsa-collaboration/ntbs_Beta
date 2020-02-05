@@ -11,14 +11,21 @@
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2>Previous History for New Patient</h2>
+<h2>Previous TB History </h2>
 
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <nhs-form-group nhs-form-group-type="Standard" id="PatientTbHistory-PreviousTBDiagnosisYear">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard"> The patient has had TB in the past </nhs-fieldset-legend>
+            <nhs-fieldset-legend nhs-legend-size="Standard"> 
+                 Please record any previous occurrence of TB for this patient which has not been notified to PHE through 
+                 ETS, LTBR or NTBS.
+            </nhs-fieldset-legend>
+            <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
+                For example: because the case was notified outside England, Wales or Northern Ireland, 
+                or before the year 2000.
+            </nhs-hint>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
                     <input asp-for="PatientTbHistory.NotPreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="false" id="previous-tb-yes" 

@@ -37,6 +37,33 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
         
+        [Theory]
+        [InlineData(1899, "Please enter a valid year")]
+        [InlineData(2040, "Previous TB diagnosis year must be equal to or before the current year")]
+        [InlineData(1950, "Previous TB diagnosis year must be later than date of birth")]
+        public async Task Post_ReturnsPageWithModelErrors_IfYearOfDiagnosisInvalid(int tbDiagnosisYear, string errorMessage)
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var document = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                ["PatientTbHistory.NotPreviouslyHadTB"] = "false",
+                ["PatientTbHistory.PreviousTBDiagnosisYear"] = tbDiagnosisYear.ToString()
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(document, formData, url);
+            var resultDocument = await GetDocumentAsync(result);
+
+            // Assert
+            resultDocument.AssertErrorSummaryMessage("PatientTbHistory-PreviousTBDiagnosisYear",
+                "previous-tb-diagnosis-year", errorMessage);
+        }
+        
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {
