@@ -6,7 +6,6 @@ const PrintButton = Vue.extend({
     },
     methods: {
         print: function () {
-            console.log("hello");
             window.print();
         }
     }

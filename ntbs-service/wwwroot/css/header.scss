@@ -19,7 +19,7 @@
 }
 
 
-.header-navgation-list {
+.header-navigation-list {
     margin-bottom: 0;
 
     .header-navigation-list-item {
@@ -65,11 +65,15 @@
     display: none;
 }
 
-@media screen and (min-width: 48.0625em) {
+@media (min-width: 48.0625em) {
     .breadcrumb-trail {
         display: block;
         height: 45px;
         background-color: #DAD7CB;
         margin-top: 10px;
+      
+        @media print {
+          display: none;
+        }
     }
 }
