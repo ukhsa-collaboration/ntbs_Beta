@@ -80,12 +80,12 @@ namespace ntbs_service.Services
                 alert.CreationDate = DateTime.Now;
                 if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
                 {
-                    alert.CaseManagerUsername = notification?.Episode?.CaseManagerUsername;
+                    alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
                 }
 
                 if (alert.TbServiceCode == null)
                 {
-                    alert.TbServiceCode = notification?.Episode?.TBServiceCode;
+                    alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
                 }
             }
 
@@ -124,8 +124,8 @@ namespace ntbs_service.Services
                         AlertStatus = AlertStatus.Open,
                         NotificationId = notification.NotificationId,
                         SpecimenId = specimenMatchPairing.ReferenceLaboratoryNumber,
-                        CaseManagerUsername = notification.Episode.CaseManagerUsername,
-                        TbServiceCode = notification.Episode.TBServiceCode,
+                        CaseManagerUsername = notification.HospitalDetails.CaseManagerUsername,
+                        TbServiceCode = notification.HospitalDetails.TBServiceCode,
                         CreationDate = DateTime.Now
                     });
                 }

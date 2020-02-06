@@ -15,7 +15,7 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class EpisodeModel : NotificationEditModelBase
+    public class HospitalDetailsModel : NotificationEditModelBase
     {
         private readonly NtbsContext _context;
         private readonly IUserService _userService;
@@ -29,9 +29,9 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedNotificationDate { get; set; }
 
         [BindProperty]
-        public Episode Episode { get; set; }
+        public HospitalDetails HospitalDetails { get; set; }
 
-        public EpisodeModel(
+        public HospitalDetailsModel(
             INotificationService notificationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             _userService = userService;
             _referenceDataRepository = referenceDataRepository;
 
-            CurrentPage = NotificationSubPaths.EditEpisode;
+            CurrentPage = NotificationSubPaths.EditHospitalDetails;
         }
 
         protected override Task<Notification> GetNotificationAsync(int notificationId)
@@ -53,19 +53,19 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            Episode = Notification.Episode;
-            await SetNotificationProperties(isBeingSubmitted, Episode);
+            HospitalDetails = Notification.HospitalDetails;
+            await SetNotificationProperties(isBeingSubmitted, HospitalDetails);
             await SetDropdownsAsync();
             FormattedNotificationDate = Notification.NotificationDate.ConvertToFormattedDate();
 
-            if (Episode.ShouldValidateFull)
+            if (HospitalDetails.ShouldValidateFull)
             {
                 ValidationService.TrySetFormattedDate(
                     Notification, 
                     nameof(Notification), 
                     nameof(Notification.NotificationDate), 
                     FormattedNotificationDate);
-                TryValidateModel(Episode, Episode.GetType().Name);
+                TryValidateModel(HospitalDetails, HospitalDetails.GetType().Name);
             }
 
             return Page();
@@ -83,7 +83,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             else
             {
-                tbServiceCodes = new List<string> { Notification.Episode.TBServiceCode };
+                tbServiceCodes = new List<string> { Notification.HospitalDetails.TBServiceCode };
             }
 
             var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes);
@@ -101,11 +101,11 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             await SetValuesForValidation();
-            if (Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.Episode.TBServiceCode != Episode.TBServiceCode)
+            if (Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.HospitalDetails.TBServiceCode != HospitalDetails.TBServiceCode)
             {
-                ModelState.AddModelError("Episode.TBServiceCode", ValidationMessages.TBServiceCantChange);
+                ModelState.AddModelError("HospitalDetails.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
-            TryValidateModel(Episode, nameof(Episode));
+            TryValidateModel(HospitalDetails, nameof(HospitalDetails));
             ValidationService.ValidateProperty(
                 Notification,
                 nameof(Notification),
@@ -113,7 +113,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 nameof(Notification.NotificationDate));
             if (ModelState.IsValid)
             {
-                await Service.UpdateEpisodeAsync(Notification, Episode);
+                await Service.UpdateHospitalDetailsAsync(Notification, HospitalDetails);
             }
             else
             {
@@ -124,9 +124,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        public ContentResult OnGetValidateEpisodeProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnGetValidateHospitalDetailsProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.GetPropertyValidationResult<Episode>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<HospitalDetails>(key, value, shouldValidateFull);
         }
 
         public async Task<ContentResult> OnGetValidateNotificationDateAsync(string key, string day, string month, string year, int notificationId)
@@ -138,7 +138,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetValuesForValidation()
         {
-            Episode.SetValidationContext(Notification);
+            HospitalDetails.SetValidationContext(Notification);
             ValidationService.TrySetFormattedDate(Notification, "Notification", nameof(Notification.NotificationDate), FormattedNotificationDate);
             /*
             Binding only sets the entity ids, but not the actual entities.
@@ -150,17 +150,17 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task GetRelatedEntities()
         {
-            if (Episode.HospitalId != null)
+            if (HospitalDetails.HospitalId != null)
             {
-                Episode.Hospital = await _referenceDataRepository.GetHospitalByGuidAsync(Episode.HospitalId.Value);
+                HospitalDetails.Hospital = await _referenceDataRepository.GetHospitalByGuidAsync(HospitalDetails.HospitalId.Value);
             }
-            if (Episode.TBServiceCode != null)
+            if (HospitalDetails.TBServiceCode != null)
             {
-                Episode.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(Episode.TBServiceCode);
+                HospitalDetails.TBService = await _referenceDataRepository.GetTbServiceByCodeAsync(HospitalDetails.TBServiceCode);
             }
-            if (Episode.CaseManagerUsername != null)
+            if (HospitalDetails.CaseManagerUsername != null)
             {
-                Episode.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(Episode.CaseManagerUsername);
+                HospitalDetails.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(HospitalDetails.CaseManagerUsername);
             }
         }
 
@@ -171,7 +171,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
 
             return new JsonResult(
-                new FilteredEpisodePageSelectLists
+                new FilteredHospitalDetailsPageSelectLists
                 {
                     Hospitals = filteredHospitals.Select(n => new OptionValue
                     {

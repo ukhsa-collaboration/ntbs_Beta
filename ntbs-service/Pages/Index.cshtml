@@ -112,7 +112,7 @@
                 @Html.DisplayNameFor(model => model.DraftNotifications[0].TBServiceName)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(model => model.DraftNotifications[0].Episode.CaseManagerName)
+                @Html.DisplayNameFor(model => model.DraftNotifications[0].HospitalDetails.CaseManagerName)
             </nhs-table-item>
         </nhs-table-head>
         <nhs-table-body>
@@ -131,7 +131,7 @@
                         @Html.DisplayFor(_ => item.TBServiceName)
                     </nhs-table-item>
                     <nhs-table-item>
-                        @Html.DisplayFor(_ => item.Episode.CaseManagerName)
+                        @Html.DisplayFor(_ => item.HospitalDetails.CaseManagerName)
                     </nhs-table-item>
                 </nhs-table-body-row>
             }
@@ -151,7 +151,7 @@
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].TBServiceName)
             </nhs-table-item>
             <nhs-table-item>
-                @Html.DisplayNameFor(model => model.RecentNotifications[0].Episode.CaseManagerName)
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].HospitalDetails.CaseManagerName)
             </nhs-table-item>
         </nhs-table-head>
         <nhs-table-body>
@@ -169,7 +169,7 @@
                         @Html.DisplayFor(modelItem => item.TBServiceName)
                     </nhs-table-item>
                     <nhs-table-item>
-                        @Html.DisplayFor(modelItem => item.Episode.CaseManagerName)
+                        @Html.DisplayFor(modelItem => item.HospitalDetails.CaseManagerName)
                     </nhs-table-item>
                 </nhs-table-body-row>
             }

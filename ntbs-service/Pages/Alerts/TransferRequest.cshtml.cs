@@ -100,7 +100,7 @@ namespace ntbs_service.Pages.Alerts
             {
                 TransferAlert.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferAlert.CaseManagerUsername);
             }
-            TransferAlert.NotificationTbServiceCode = Notification.Episode.TBServiceCode;
+            TransferAlert.NotificationTbServiceCode = Notification.HospitalDetails.TBServiceCode;
         }
 
         private async Task SetDropdownsAsync()

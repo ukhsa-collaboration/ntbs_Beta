@@ -106,7 +106,7 @@ namespace ntbs_service.Services
         {
             if (TBService != null)
             {
-                notificationIQ = notificationIQ.Where(s => s.Episode.TBServiceCode.Equals(TBService));
+                notificationIQ = notificationIQ.Where(s => s.HospitalDetails.TBServiceCode.Equals(TBService));
             }
             return this;
         }

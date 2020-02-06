@@ -106,7 +106,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(DenotifyPageTests.GetSeedingNotifications());
             context.Notification.AddRange(DeletePageTests.GetSeedingNotifications());
             context.Notification.AddRange(PatientPageTests.GetSeedingNotifications());
-            context.Notification.AddRange(EpisodesPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(HospitalDetailssPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ManualTestResultEditPagesTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextVenueEditPageTests.GetSeedingNotifications());
             context.Notification.AddRange(SocialContextAddressEditPageTests.GetSeedingNotifications());
@@ -204,7 +204,7 @@ namespace ntbs_integration_tests.Helpers
                         {
                             new NotificationSite {NotificationId = NOTIFIED_ID, SiteId = (int)SiteId.PULMONARY}
                         },
-                    Episode = new Episode
+                    HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         HospitalId = Guid.Parse(HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
@@ -311,7 +311,7 @@ namespace ntbs_integration_tests.Helpers
         public static void SetServiceCodeForNotification(NtbsContext context, int notificationId, string code)
         {
             var notification = context.Notification.Find(notificationId);
-            notification.Episode.TBServiceCode = code;
+            notification.HospitalDetails.TBServiceCode = code;
             context.SaveChanges();
         }
 

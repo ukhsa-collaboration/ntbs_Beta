@@ -90,11 +90,11 @@ namespace ntbs_service.DataMigration
             notification.ComorbidityDetails = ExtractComorbidityDetails(rawNotification);
             notification.ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification);
             notification.SocialRiskFactors = ExtractSocialRiskFactors(rawNotification);
-            notification.Episode = ExtractEpisodeDetails(rawNotification);
+            notification.HospitalDetails = ExtractEpisodeDetails(rawNotification);
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.NotificationSites = sites;
 
-            if (notification.Episode.HospitalId is Guid guid)
+            if (notification.HospitalDetails.HospitalId is Guid guid)
             {
                 var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
                 if (tbService == null)
@@ -105,16 +105,16 @@ namespace ntbs_service.DataMigration
                 {
                     // It's OK to only set this where it exists
                     // - the service missing will come up in notification validation  
-                    notification.Episode.TBServiceCode = tbService.Code;
+                    notification.HospitalDetails.TBServiceCode = tbService.Code;
                 }
             }
 
             return notification;
         }
 
-        private static Episode ExtractEpisodeDetails(dynamic rawNotification)
+        private static HospitalDetails ExtractEpisodeDetails(dynamic rawNotification)
         {
-            return new Episode
+            return new HospitalDetails
             {
                 HospitalId = rawNotification.NtbsHospitalId,
                 Consultant = rawNotification.Consultant

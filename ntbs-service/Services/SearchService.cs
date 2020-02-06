@@ -41,7 +41,7 @@ namespace ntbs_service.Services
         {
             var permittedTbServiceCodes = (await _userService.GetTbServicesAsync(user)).Select(s => s.Code);
             return query
-                .OrderByDescending(n => permittedTbServiceCodes.Contains(n.Episode.TBServiceCode))
+                .OrderByDescending(n => permittedTbServiceCodes.Contains(n.HospitalDetails.TBServiceCode))
                 .ThenByDescending(n => n.NotificationStatus == NotificationStatus.Draft)
                 .ThenByDescending(n => n.NotificationDate ?? n.CreationDate)
                 // For notifications with the same NotificationDate order by NotificationId so that each search returns the same order each time
