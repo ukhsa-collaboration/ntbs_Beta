@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public string IsoCode { get; set; }
         public bool HasHighTbOccurence { get; set; }
+        public bool LegacyCountry { get; set; }
     }
 }

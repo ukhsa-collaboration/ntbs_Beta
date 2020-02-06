@@ -896,6 +896,8 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("IsoCode");
 
+                    b.Property<bool>("LegacyCountry");
+
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
@@ -909,6 +911,7 @@ namespace ntbs_service.Migrations
                             CountryId = 1,
                             HasHighTbOccurence = true,
                             IsoCode = "AF",
+                            LegacyCountry = false,
                             Name = "Afghanistan"
                         },
                         new
@@ -916,6 +919,7 @@ namespace ntbs_service.Migrations
                             CountryId = 2,
                             HasHighTbOccurence = true,
                             IsoCode = "AX",
+                            LegacyCountry = false,
                             Name = "Åland Islands"
                         },
                         new
@@ -923,6 +927,7 @@ namespace ntbs_service.Migrations
                             CountryId = 3,
                             HasHighTbOccurence = true,
                             IsoCode = "AL",
+                            LegacyCountry = false,
                             Name = "Albania"
                         },
                         new
@@ -930,6 +935,7 @@ namespace ntbs_service.Migrations
                             CountryId = 4,
                             HasHighTbOccurence = true,
                             IsoCode = "DZ",
+                            LegacyCountry = false,
                             Name = "Algeria"
                         },
                         new
@@ -937,6 +943,7 @@ namespace ntbs_service.Migrations
                             CountryId = 5,
                             HasHighTbOccurence = true,
                             IsoCode = "AS",
+                            LegacyCountry = false,
                             Name = "American Samoa"
                         },
                         new
@@ -944,6 +951,7 @@ namespace ntbs_service.Migrations
                             CountryId = 6,
                             HasHighTbOccurence = false,
                             IsoCode = "AD",
+                            LegacyCountry = false,
                             Name = "Andorra"
                         },
                         new
@@ -951,6 +959,7 @@ namespace ntbs_service.Migrations
                             CountryId = 7,
                             HasHighTbOccurence = true,
                             IsoCode = "AO",
+                            LegacyCountry = false,
                             Name = "Angola"
                         },
                         new
@@ -958,6 +967,7 @@ namespace ntbs_service.Migrations
                             CountryId = 8,
                             HasHighTbOccurence = true,
                             IsoCode = "AI",
+                            LegacyCountry = false,
                             Name = "Anguilla"
                         },
                         new
@@ -965,6 +975,7 @@ namespace ntbs_service.Migrations
                             CountryId = 9,
                             HasHighTbOccurence = true,
                             IsoCode = "AQ",
+                            LegacyCountry = false,
                             Name = "Antarctica"
                         },
                         new
@@ -972,6 +983,7 @@ namespace ntbs_service.Migrations
                             CountryId = 10,
                             HasHighTbOccurence = true,
                             IsoCode = "AG",
+                            LegacyCountry = false,
                             Name = "Antigua and Barbuda"
                         },
                         new
@@ -979,6 +991,7 @@ namespace ntbs_service.Migrations
                             CountryId = 11,
                             HasHighTbOccurence = true,
                             IsoCode = "AR",
+                            LegacyCountry = false,
                             Name = "Argentina"
                         },
                         new
@@ -986,6 +999,7 @@ namespace ntbs_service.Migrations
                             CountryId = 12,
                             HasHighTbOccurence = true,
                             IsoCode = "AM",
+                            LegacyCountry = false,
                             Name = "Armenia"
                         },
                         new
@@ -993,6 +1007,7 @@ namespace ntbs_service.Migrations
                             CountryId = 13,
                             HasHighTbOccurence = true,
                             IsoCode = "AW",
+                            LegacyCountry = false,
                             Name = "Aruba"
                         },
                         new
@@ -1000,6 +1015,7 @@ namespace ntbs_service.Migrations
                             CountryId = 14,
                             HasHighTbOccurence = false,
                             IsoCode = "AU",
+                            LegacyCountry = false,
                             Name = "Australia"
                         },
                         new
@@ -1007,6 +1023,7 @@ namespace ntbs_service.Migrations
                             CountryId = 15,
                             HasHighTbOccurence = false,
                             IsoCode = "AT",
+                            LegacyCountry = false,
                             Name = "Austria"
                         },
                         new
@@ -1014,6 +1031,7 @@ namespace ntbs_service.Migrations
                             CountryId = 16,
                             HasHighTbOccurence = true,
                             IsoCode = "AZ",
+                            LegacyCountry = false,
                             Name = "Azerbaijan"
                         },
                         new
@@ -1021,6 +1039,7 @@ namespace ntbs_service.Migrations
                             CountryId = 17,
                             HasHighTbOccurence = true,
                             IsoCode = "BS",
+                            LegacyCountry = false,
                             Name = "Bahamas"
                         },
                         new
@@ -1028,6 +1047,7 @@ namespace ntbs_service.Migrations
                             CountryId = 18,
                             HasHighTbOccurence = true,
                             IsoCode = "BH",
+                            LegacyCountry = false,
                             Name = "Bahrain"
                         },
                         new
@@ -1035,6 +1055,7 @@ namespace ntbs_service.Migrations
                             CountryId = 19,
                             HasHighTbOccurence = true,
                             IsoCode = "BD",
+                            LegacyCountry = false,
                             Name = "Bangladesh"
                         },
                         new
@@ -1042,6 +1063,7 @@ namespace ntbs_service.Migrations
                             CountryId = 20,
                             HasHighTbOccurence = true,
                             IsoCode = "BB",
+                            LegacyCountry = false,
                             Name = "Barbados"
                         },
                         new
@@ -1049,6 +1071,7 @@ namespace ntbs_service.Migrations
                             CountryId = 21,
                             HasHighTbOccurence = true,
                             IsoCode = "BY",
+                            LegacyCountry = false,
                             Name = "Belarus"
                         },
                         new
@@ -1056,6 +1079,7 @@ namespace ntbs_service.Migrations
                             CountryId = 22,
                             HasHighTbOccurence = false,
                             IsoCode = "BE",
+                            LegacyCountry = false,
                             Name = "Belgium"
                         },
                         new
@@ -1063,6 +1087,7 @@ namespace ntbs_service.Migrations
                             CountryId = 23,
                             HasHighTbOccurence = true,
                             IsoCode = "BZ",
+                            LegacyCountry = false,
                             Name = "Belize"
                         },
                         new
@@ -1070,6 +1095,7 @@ namespace ntbs_service.Migrations
                             CountryId = 24,
                             HasHighTbOccurence = true,
                             IsoCode = "BJ",
+                            LegacyCountry = false,
                             Name = "Benin"
                         },
                         new
@@ -1077,6 +1103,7 @@ namespace ntbs_service.Migrations
                             CountryId = 25,
                             HasHighTbOccurence = true,
                             IsoCode = "BM",
+                            LegacyCountry = false,
                             Name = "Bermuda"
                         },
                         new
@@ -1084,6 +1111,7 @@ namespace ntbs_service.Migrations
                             CountryId = 26,
                             HasHighTbOccurence = true,
                             IsoCode = "BT",
+                            LegacyCountry = false,
                             Name = "Bhutan"
                         },
                         new
@@ -1091,6 +1119,7 @@ namespace ntbs_service.Migrations
                             CountryId = 27,
                             HasHighTbOccurence = true,
                             IsoCode = "BO",
+                            LegacyCountry = false,
                             Name = "Bolivia"
                         },
                         new
@@ -1098,6 +1127,7 @@ namespace ntbs_service.Migrations
                             CountryId = 28,
                             HasHighTbOccurence = true,
                             IsoCode = "BA",
+                            LegacyCountry = false,
                             Name = "Bosnia and Herzegovina"
                         },
                         new
@@ -1105,6 +1135,7 @@ namespace ntbs_service.Migrations
                             CountryId = 29,
                             HasHighTbOccurence = true,
                             IsoCode = "BW",
+                            LegacyCountry = false,
                             Name = "Botswana"
                         },
                         new
@@ -1112,6 +1143,7 @@ namespace ntbs_service.Migrations
                             CountryId = 30,
                             HasHighTbOccurence = true,
                             IsoCode = "BV",
+                            LegacyCountry = false,
                             Name = "Bouvet Island"
                         },
                         new
@@ -1119,6 +1151,7 @@ namespace ntbs_service.Migrations
                             CountryId = 31,
                             HasHighTbOccurence = true,
                             IsoCode = "BR",
+                            LegacyCountry = false,
                             Name = "Brazil"
                         },
                         new
@@ -1126,6 +1159,7 @@ namespace ntbs_service.Migrations
                             CountryId = 32,
                             HasHighTbOccurence = true,
                             IsoCode = "IO",
+                            LegacyCountry = false,
                             Name = "British Indian Ocean Territory"
                         },
                         new
@@ -1133,6 +1167,7 @@ namespace ntbs_service.Migrations
                             CountryId = 33,
                             HasHighTbOccurence = true,
                             IsoCode = "BN",
+                            LegacyCountry = false,
                             Name = "Brunei Darussalam"
                         },
                         new
@@ -1140,6 +1175,7 @@ namespace ntbs_service.Migrations
                             CountryId = 34,
                             HasHighTbOccurence = true,
                             IsoCode = "BG",
+                            LegacyCountry = false,
                             Name = "Bulgaria"
                         },
                         new
@@ -1147,6 +1183,7 @@ namespace ntbs_service.Migrations
                             CountryId = 35,
                             HasHighTbOccurence = true,
                             IsoCode = "BF",
+                            LegacyCountry = false,
                             Name = "Burkina Faso"
                         },
                         new
@@ -1154,6 +1191,7 @@ namespace ntbs_service.Migrations
                             CountryId = 36,
                             HasHighTbOccurence = true,
                             IsoCode = "BI",
+                            LegacyCountry = false,
                             Name = "Burundi"
                         },
                         new
@@ -1161,6 +1199,7 @@ namespace ntbs_service.Migrations
                             CountryId = 37,
                             HasHighTbOccurence = true,
                             IsoCode = "KH",
+                            LegacyCountry = false,
                             Name = "Cambodia"
                         },
                         new
@@ -1168,6 +1207,7 @@ namespace ntbs_service.Migrations
                             CountryId = 38,
                             HasHighTbOccurence = true,
                             IsoCode = "CM",
+                            LegacyCountry = false,
                             Name = "Cameroon"
                         },
                         new
@@ -1175,6 +1215,7 @@ namespace ntbs_service.Migrations
                             CountryId = 39,
                             HasHighTbOccurence = false,
                             IsoCode = "CA",
+                            LegacyCountry = false,
                             Name = "Canada"
                         },
                         new
@@ -1182,6 +1223,7 @@ namespace ntbs_service.Migrations
                             CountryId = 40,
                             HasHighTbOccurence = true,
                             IsoCode = "CV",
+                            LegacyCountry = false,
                             Name = "Cape Verde"
                         },
                         new
@@ -1189,6 +1231,7 @@ namespace ntbs_service.Migrations
                             CountryId = 41,
                             HasHighTbOccurence = true,
                             IsoCode = "KY",
+                            LegacyCountry = false,
                             Name = "Cayman Islands"
                         },
                         new
@@ -1196,6 +1239,7 @@ namespace ntbs_service.Migrations
                             CountryId = 42,
                             HasHighTbOccurence = true,
                             IsoCode = "CF",
+                            LegacyCountry = false,
                             Name = "Central African Republic"
                         },
                         new
@@ -1203,6 +1247,7 @@ namespace ntbs_service.Migrations
                             CountryId = 43,
                             HasHighTbOccurence = true,
                             IsoCode = "TD",
+                            LegacyCountry = false,
                             Name = "Chad"
                         },
                         new
@@ -1210,6 +1255,7 @@ namespace ntbs_service.Migrations
                             CountryId = 44,
                             HasHighTbOccurence = true,
                             IsoCode = "CL",
+                            LegacyCountry = false,
                             Name = "Chile"
                         },
                         new
@@ -1217,6 +1263,7 @@ namespace ntbs_service.Migrations
                             CountryId = 45,
                             HasHighTbOccurence = true,
                             IsoCode = "CN",
+                            LegacyCountry = false,
                             Name = "China"
                         },
                         new
@@ -1224,6 +1271,7 @@ namespace ntbs_service.Migrations
                             CountryId = 46,
                             HasHighTbOccurence = true,
                             IsoCode = "CX",
+                            LegacyCountry = false,
                             Name = "Christmas Island"
                         },
                         new
@@ -1231,6 +1279,7 @@ namespace ntbs_service.Migrations
                             CountryId = 47,
                             HasHighTbOccurence = true,
                             IsoCode = "CC",
+                            LegacyCountry = false,
                             Name = "Cocos (Keeling) Islands"
                         },
                         new
@@ -1238,6 +1287,7 @@ namespace ntbs_service.Migrations
                             CountryId = 48,
                             HasHighTbOccurence = true,
                             IsoCode = "CO",
+                            LegacyCountry = false,
                             Name = "Colombia"
                         },
                         new
@@ -1245,6 +1295,7 @@ namespace ntbs_service.Migrations
                             CountryId = 49,
                             HasHighTbOccurence = true,
                             IsoCode = "KM",
+                            LegacyCountry = false,
                             Name = "Comoros"
                         },
                         new
@@ -1252,6 +1303,7 @@ namespace ntbs_service.Migrations
                             CountryId = 50,
                             HasHighTbOccurence = true,
                             IsoCode = "CG",
+                            LegacyCountry = false,
                             Name = "Congo"
                         },
                         new
@@ -1259,13 +1311,15 @@ namespace ntbs_service.Migrations
                             CountryId = 51,
                             HasHighTbOccurence = true,
                             IsoCode = "CD",
-                            Name = "Congo, The Democratic Republic of the"
+                            LegacyCountry = false,
+                            Name = "Congo, Democratic Republic of the"
                         },
                         new
                         {
                             CountryId = 52,
                             HasHighTbOccurence = true,
                             IsoCode = "CK",
+                            LegacyCountry = false,
                             Name = "Cook Islands"
                         },
                         new
@@ -1273,6 +1327,7 @@ namespace ntbs_service.Migrations
                             CountryId = 53,
                             HasHighTbOccurence = true,
                             IsoCode = "CR",
+                            LegacyCountry = false,
                             Name = "Costa Rica"
                         },
                         new
@@ -1280,6 +1335,7 @@ namespace ntbs_service.Migrations
                             CountryId = 54,
                             HasHighTbOccurence = true,
                             IsoCode = "CI",
+                            LegacyCountry = false,
                             Name = "Côte D'ivoire"
                         },
                         new
@@ -1287,6 +1343,7 @@ namespace ntbs_service.Migrations
                             CountryId = 55,
                             HasHighTbOccurence = true,
                             IsoCode = "HR",
+                            LegacyCountry = false,
                             Name = "Croatia"
                         },
                         new
@@ -1294,6 +1351,7 @@ namespace ntbs_service.Migrations
                             CountryId = 56,
                             HasHighTbOccurence = true,
                             IsoCode = "CU",
+                            LegacyCountry = false,
                             Name = "Cuba"
                         },
                         new
@@ -1301,6 +1359,7 @@ namespace ntbs_service.Migrations
                             CountryId = 57,
                             HasHighTbOccurence = false,
                             IsoCode = "CY",
+                            LegacyCountry = false,
                             Name = "Cyprus"
                         },
                         new
@@ -1308,6 +1367,7 @@ namespace ntbs_service.Migrations
                             CountryId = 58,
                             HasHighTbOccurence = true,
                             IsoCode = "CZ",
+                            LegacyCountry = false,
                             Name = "Czech Republic"
                         },
                         new
@@ -1315,6 +1375,7 @@ namespace ntbs_service.Migrations
                             CountryId = 59,
                             HasHighTbOccurence = false,
                             IsoCode = "DK",
+                            LegacyCountry = false,
                             Name = "Denmark"
                         },
                         new
@@ -1322,6 +1383,7 @@ namespace ntbs_service.Migrations
                             CountryId = 60,
                             HasHighTbOccurence = true,
                             IsoCode = "DJ",
+                            LegacyCountry = false,
                             Name = "Djibouti"
                         },
                         new
@@ -1329,6 +1391,7 @@ namespace ntbs_service.Migrations
                             CountryId = 61,
                             HasHighTbOccurence = true,
                             IsoCode = "DM",
+                            LegacyCountry = false,
                             Name = "Dominica"
                         },
                         new
@@ -1336,6 +1399,7 @@ namespace ntbs_service.Migrations
                             CountryId = 62,
                             HasHighTbOccurence = true,
                             IsoCode = "DO",
+                            LegacyCountry = false,
                             Name = "Dominican Republic"
                         },
                         new
@@ -1343,6 +1407,7 @@ namespace ntbs_service.Migrations
                             CountryId = 63,
                             HasHighTbOccurence = true,
                             IsoCode = "EC",
+                            LegacyCountry = false,
                             Name = "Ecuador"
                         },
                         new
@@ -1350,6 +1415,7 @@ namespace ntbs_service.Migrations
                             CountryId = 64,
                             HasHighTbOccurence = true,
                             IsoCode = "EG",
+                            LegacyCountry = false,
                             Name = "Egypt"
                         },
                         new
@@ -1357,6 +1423,7 @@ namespace ntbs_service.Migrations
                             CountryId = 65,
                             HasHighTbOccurence = true,
                             IsoCode = "SV",
+                            LegacyCountry = false,
                             Name = "El Salvador"
                         },
                         new
@@ -1364,6 +1431,7 @@ namespace ntbs_service.Migrations
                             CountryId = 66,
                             HasHighTbOccurence = true,
                             IsoCode = "GQ",
+                            LegacyCountry = false,
                             Name = "Equatorial Guinea"
                         },
                         new
@@ -1371,6 +1439,7 @@ namespace ntbs_service.Migrations
                             CountryId = 67,
                             HasHighTbOccurence = true,
                             IsoCode = "ER",
+                            LegacyCountry = false,
                             Name = "Eritrea"
                         },
                         new
@@ -1378,6 +1447,7 @@ namespace ntbs_service.Migrations
                             CountryId = 68,
                             HasHighTbOccurence = true,
                             IsoCode = "EE",
+                            LegacyCountry = false,
                             Name = "Estonia"
                         },
                         new
@@ -1385,6 +1455,7 @@ namespace ntbs_service.Migrations
                             CountryId = 69,
                             HasHighTbOccurence = true,
                             IsoCode = "ET",
+                            LegacyCountry = false,
                             Name = "Ethiopia"
                         },
                         new
@@ -1392,6 +1463,7 @@ namespace ntbs_service.Migrations
                             CountryId = 70,
                             HasHighTbOccurence = true,
                             IsoCode = "FK",
+                            LegacyCountry = false,
                             Name = "Falkland Islands (Malvinas)"
                         },
                         new
@@ -1399,6 +1471,7 @@ namespace ntbs_service.Migrations
                             CountryId = 71,
                             HasHighTbOccurence = true,
                             IsoCode = "FO",
+                            LegacyCountry = false,
                             Name = "Faroe Islands"
                         },
                         new
@@ -1406,6 +1479,7 @@ namespace ntbs_service.Migrations
                             CountryId = 72,
                             HasHighTbOccurence = true,
                             IsoCode = "FJ",
+                            LegacyCountry = false,
                             Name = "Fiji"
                         },
                         new
@@ -1413,6 +1487,7 @@ namespace ntbs_service.Migrations
                             CountryId = 73,
                             HasHighTbOccurence = false,
                             IsoCode = "FI",
+                            LegacyCountry = false,
                             Name = "Finland"
                         },
                         new
@@ -1420,6 +1495,7 @@ namespace ntbs_service.Migrations
                             CountryId = 74,
                             HasHighTbOccurence = false,
                             IsoCode = "FR",
+                            LegacyCountry = false,
                             Name = "France"
                         },
                         new
@@ -1427,6 +1503,7 @@ namespace ntbs_service.Migrations
                             CountryId = 75,
                             HasHighTbOccurence = true,
                             IsoCode = "GF",
+                            LegacyCountry = false,
                             Name = "French Guiana"
                         },
                         new
@@ -1434,6 +1511,7 @@ namespace ntbs_service.Migrations
                             CountryId = 76,
                             HasHighTbOccurence = true,
                             IsoCode = "PF",
+                            LegacyCountry = false,
                             Name = "French Polynesia"
                         },
                         new
@@ -1441,6 +1519,7 @@ namespace ntbs_service.Migrations
                             CountryId = 77,
                             HasHighTbOccurence = true,
                             IsoCode = "TF",
+                            LegacyCountry = false,
                             Name = "French Southern Territories"
                         },
                         new
@@ -1448,6 +1527,7 @@ namespace ntbs_service.Migrations
                             CountryId = 78,
                             HasHighTbOccurence = true,
                             IsoCode = "GA",
+                            LegacyCountry = false,
                             Name = "Gabon"
                         },
                         new
@@ -1455,6 +1535,7 @@ namespace ntbs_service.Migrations
                             CountryId = 79,
                             HasHighTbOccurence = true,
                             IsoCode = "GM",
+                            LegacyCountry = false,
                             Name = "Gambia"
                         },
                         new
@@ -1462,6 +1543,7 @@ namespace ntbs_service.Migrations
                             CountryId = 80,
                             HasHighTbOccurence = true,
                             IsoCode = "GE",
+                            LegacyCountry = false,
                             Name = "Georgia"
                         },
                         new
@@ -1469,6 +1551,7 @@ namespace ntbs_service.Migrations
                             CountryId = 81,
                             HasHighTbOccurence = false,
                             IsoCode = "DE",
+                            LegacyCountry = false,
                             Name = "Germany"
                         },
                         new
@@ -1476,6 +1559,7 @@ namespace ntbs_service.Migrations
                             CountryId = 82,
                             HasHighTbOccurence = true,
                             IsoCode = "GH",
+                            LegacyCountry = false,
                             Name = "Ghana"
                         },
                         new
@@ -1483,6 +1567,7 @@ namespace ntbs_service.Migrations
                             CountryId = 83,
                             HasHighTbOccurence = true,
                             IsoCode = "GI",
+                            LegacyCountry = false,
                             Name = "Gibraltar"
                         },
                         new
@@ -1490,6 +1575,7 @@ namespace ntbs_service.Migrations
                             CountryId = 84,
                             HasHighTbOccurence = false,
                             IsoCode = "GR",
+                            LegacyCountry = false,
                             Name = "Greece"
                         },
                         new
@@ -1497,6 +1583,7 @@ namespace ntbs_service.Migrations
                             CountryId = 85,
                             HasHighTbOccurence = false,
                             IsoCode = "GL",
+                            LegacyCountry = false,
                             Name = "Greenland"
                         },
                         new
@@ -1504,6 +1591,7 @@ namespace ntbs_service.Migrations
                             CountryId = 86,
                             HasHighTbOccurence = true,
                             IsoCode = "GD",
+                            LegacyCountry = false,
                             Name = "Grenada"
                         },
                         new
@@ -1511,6 +1599,7 @@ namespace ntbs_service.Migrations
                             CountryId = 87,
                             HasHighTbOccurence = true,
                             IsoCode = "GP",
+                            LegacyCountry = false,
                             Name = "Guadeloupe"
                         },
                         new
@@ -1518,6 +1607,7 @@ namespace ntbs_service.Migrations
                             CountryId = 88,
                             HasHighTbOccurence = true,
                             IsoCode = "GU",
+                            LegacyCountry = false,
                             Name = "Guam"
                         },
                         new
@@ -1525,6 +1615,7 @@ namespace ntbs_service.Migrations
                             CountryId = 89,
                             HasHighTbOccurence = true,
                             IsoCode = "GT",
+                            LegacyCountry = false,
                             Name = "Guatemala"
                         },
                         new
@@ -1532,6 +1623,7 @@ namespace ntbs_service.Migrations
                             CountryId = 90,
                             HasHighTbOccurence = false,
                             IsoCode = "GG",
+                            LegacyCountry = false,
                             Name = "Guernsey"
                         },
                         new
@@ -1539,6 +1631,7 @@ namespace ntbs_service.Migrations
                             CountryId = 91,
                             HasHighTbOccurence = true,
                             IsoCode = "GN",
+                            LegacyCountry = false,
                             Name = "Guinea"
                         },
                         new
@@ -1546,6 +1639,7 @@ namespace ntbs_service.Migrations
                             CountryId = 92,
                             HasHighTbOccurence = true,
                             IsoCode = "GW",
+                            LegacyCountry = false,
                             Name = "Guinea-Bissau"
                         },
                         new
@@ -1553,6 +1647,7 @@ namespace ntbs_service.Migrations
                             CountryId = 93,
                             HasHighTbOccurence = true,
                             IsoCode = "GY",
+                            LegacyCountry = false,
                             Name = "Guyana"
                         },
                         new
@@ -1560,6 +1655,7 @@ namespace ntbs_service.Migrations
                             CountryId = 94,
                             HasHighTbOccurence = true,
                             IsoCode = "HT",
+                            LegacyCountry = false,
                             Name = "Haiti"
                         },
                         new
@@ -1567,6 +1663,7 @@ namespace ntbs_service.Migrations
                             CountryId = 95,
                             HasHighTbOccurence = true,
                             IsoCode = "HM",
+                            LegacyCountry = false,
                             Name = "Heard Island and Mcdonald Islands"
                         },
                         new
@@ -1574,6 +1671,7 @@ namespace ntbs_service.Migrations
                             CountryId = 96,
                             HasHighTbOccurence = false,
                             IsoCode = "VA",
+                            LegacyCountry = false,
                             Name = "Holy See (Vatican City State)"
                         },
                         new
@@ -1581,6 +1679,7 @@ namespace ntbs_service.Migrations
                             CountryId = 97,
                             HasHighTbOccurence = true,
                             IsoCode = "HN",
+                            LegacyCountry = false,
                             Name = "Honduras"
                         },
                         new
@@ -1588,6 +1687,7 @@ namespace ntbs_service.Migrations
                             CountryId = 98,
                             HasHighTbOccurence = true,
                             IsoCode = "HK",
+                            LegacyCountry = false,
                             Name = "Hong Kong"
                         },
                         new
@@ -1595,6 +1695,7 @@ namespace ntbs_service.Migrations
                             CountryId = 99,
                             HasHighTbOccurence = true,
                             IsoCode = "HU",
+                            LegacyCountry = false,
                             Name = "Hungary"
                         },
                         new
@@ -1602,6 +1703,7 @@ namespace ntbs_service.Migrations
                             CountryId = 100,
                             HasHighTbOccurence = false,
                             IsoCode = "IS",
+                            LegacyCountry = false,
                             Name = "Iceland"
                         },
                         new
@@ -1609,6 +1711,7 @@ namespace ntbs_service.Migrations
                             CountryId = 101,
                             HasHighTbOccurence = true,
                             IsoCode = "IN",
+                            LegacyCountry = false,
                             Name = "India"
                         },
                         new
@@ -1616,6 +1719,7 @@ namespace ntbs_service.Migrations
                             CountryId = 102,
                             HasHighTbOccurence = true,
                             IsoCode = "ID",
+                            LegacyCountry = false,
                             Name = "Indonesia"
                         },
                         new
@@ -1623,6 +1727,7 @@ namespace ntbs_service.Migrations
                             CountryId = 103,
                             HasHighTbOccurence = true,
                             IsoCode = "IR",
+                            LegacyCountry = false,
                             Name = "Iran, Islamic Republic of"
                         },
                         new
@@ -1630,6 +1735,7 @@ namespace ntbs_service.Migrations
                             CountryId = 104,
                             HasHighTbOccurence = true,
                             IsoCode = "IQ",
+                            LegacyCountry = false,
                             Name = "Iraq"
                         },
                         new
@@ -1637,6 +1743,7 @@ namespace ntbs_service.Migrations
                             CountryId = 105,
                             HasHighTbOccurence = false,
                             IsoCode = "IE",
+                            LegacyCountry = false,
                             Name = "Ireland"
                         },
                         new
@@ -1644,6 +1751,7 @@ namespace ntbs_service.Migrations
                             CountryId = 106,
                             HasHighTbOccurence = false,
                             IsoCode = "IM",
+                            LegacyCountry = false,
                             Name = "Isle Of Man"
                         },
                         new
@@ -1651,6 +1759,7 @@ namespace ntbs_service.Migrations
                             CountryId = 107,
                             HasHighTbOccurence = true,
                             IsoCode = "IL",
+                            LegacyCountry = false,
                             Name = "Israel"
                         },
                         new
@@ -1658,6 +1767,7 @@ namespace ntbs_service.Migrations
                             CountryId = 108,
                             HasHighTbOccurence = false,
                             IsoCode = "IT",
+                            LegacyCountry = false,
                             Name = "Italy"
                         },
                         new
@@ -1665,6 +1775,7 @@ namespace ntbs_service.Migrations
                             CountryId = 109,
                             HasHighTbOccurence = true,
                             IsoCode = "JM",
+                            LegacyCountry = false,
                             Name = "Jamaica"
                         },
                         new
@@ -1672,6 +1783,7 @@ namespace ntbs_service.Migrations
                             CountryId = 110,
                             HasHighTbOccurence = true,
                             IsoCode = "JP",
+                            LegacyCountry = false,
                             Name = "Japan"
                         },
                         new
@@ -1679,6 +1791,7 @@ namespace ntbs_service.Migrations
                             CountryId = 111,
                             HasHighTbOccurence = false,
                             IsoCode = "JE",
+                            LegacyCountry = false,
                             Name = "Jersey"
                         },
                         new
@@ -1686,6 +1799,7 @@ namespace ntbs_service.Migrations
                             CountryId = 112,
                             HasHighTbOccurence = true,
                             IsoCode = "JO",
+                            LegacyCountry = false,
                             Name = "Jordan"
                         },
                         new
@@ -1693,6 +1807,7 @@ namespace ntbs_service.Migrations
                             CountryId = 113,
                             HasHighTbOccurence = true,
                             IsoCode = "KZ",
+                            LegacyCountry = false,
                             Name = "Kazakhstan"
                         },
                         new
@@ -1700,6 +1815,7 @@ namespace ntbs_service.Migrations
                             CountryId = 114,
                             HasHighTbOccurence = true,
                             IsoCode = "KE",
+                            LegacyCountry = false,
                             Name = "Kenya"
                         },
                         new
@@ -1707,6 +1823,7 @@ namespace ntbs_service.Migrations
                             CountryId = 115,
                             HasHighTbOccurence = true,
                             IsoCode = "KI",
+                            LegacyCountry = false,
                             Name = "Kiribati"
                         },
                         new
@@ -1714,6 +1831,7 @@ namespace ntbs_service.Migrations
                             CountryId = 116,
                             HasHighTbOccurence = true,
                             IsoCode = "KP",
+                            LegacyCountry = false,
                             Name = "Korea, Democratic People's Republic of"
                         },
                         new
@@ -1721,6 +1839,7 @@ namespace ntbs_service.Migrations
                             CountryId = 117,
                             HasHighTbOccurence = true,
                             IsoCode = "KR",
+                            LegacyCountry = false,
                             Name = "Korea, Republic of"
                         },
                         new
@@ -1728,6 +1847,7 @@ namespace ntbs_service.Migrations
                             CountryId = 118,
                             HasHighTbOccurence = true,
                             IsoCode = "XK",
+                            LegacyCountry = false,
                             Name = "Kosovo"
                         },
                         new
@@ -1735,6 +1855,7 @@ namespace ntbs_service.Migrations
                             CountryId = 119,
                             HasHighTbOccurence = true,
                             IsoCode = "KW",
+                            LegacyCountry = false,
                             Name = "Kuwait"
                         },
                         new
@@ -1742,6 +1863,7 @@ namespace ntbs_service.Migrations
                             CountryId = 120,
                             HasHighTbOccurence = true,
                             IsoCode = "KG",
+                            LegacyCountry = false,
                             Name = "Kyrgyzstan"
                         },
                         new
@@ -1749,6 +1871,7 @@ namespace ntbs_service.Migrations
                             CountryId = 121,
                             HasHighTbOccurence = true,
                             IsoCode = "LA",
+                            LegacyCountry = false,
                             Name = "Lao People's Democratic Republic"
                         },
                         new
@@ -1756,6 +1879,7 @@ namespace ntbs_service.Migrations
                             CountryId = 122,
                             HasHighTbOccurence = true,
                             IsoCode = "LV",
+                            LegacyCountry = false,
                             Name = "Latvia"
                         },
                         new
@@ -1763,6 +1887,7 @@ namespace ntbs_service.Migrations
                             CountryId = 123,
                             HasHighTbOccurence = true,
                             IsoCode = "LB",
+                            LegacyCountry = false,
                             Name = "Lebanon"
                         },
                         new
@@ -1770,6 +1895,7 @@ namespace ntbs_service.Migrations
                             CountryId = 124,
                             HasHighTbOccurence = true,
                             IsoCode = "LS",
+                            LegacyCountry = false,
                             Name = "Lesotho"
                         },
                         new
@@ -1777,6 +1903,7 @@ namespace ntbs_service.Migrations
                             CountryId = 125,
                             HasHighTbOccurence = true,
                             IsoCode = "LR",
+                            LegacyCountry = false,
                             Name = "Liberia"
                         },
                         new
@@ -1784,6 +1911,7 @@ namespace ntbs_service.Migrations
                             CountryId = 126,
                             HasHighTbOccurence = true,
                             IsoCode = "LY",
+                            LegacyCountry = false,
                             Name = "Libyan Arab Jamahiriya"
                         },
                         new
@@ -1791,6 +1919,7 @@ namespace ntbs_service.Migrations
                             CountryId = 127,
                             HasHighTbOccurence = false,
                             IsoCode = "LI",
+                            LegacyCountry = false,
                             Name = "Liechtenstein"
                         },
                         new
@@ -1798,6 +1927,7 @@ namespace ntbs_service.Migrations
                             CountryId = 128,
                             HasHighTbOccurence = true,
                             IsoCode = "LT",
+                            LegacyCountry = false,
                             Name = "Lithuania"
                         },
                         new
@@ -1805,6 +1935,7 @@ namespace ntbs_service.Migrations
                             CountryId = 129,
                             HasHighTbOccurence = false,
                             IsoCode = "LU",
+                            LegacyCountry = false,
                             Name = "Luxembourg"
                         },
                         new
@@ -1812,6 +1943,7 @@ namespace ntbs_service.Migrations
                             CountryId = 130,
                             HasHighTbOccurence = true,
                             IsoCode = "MO",
+                            LegacyCountry = false,
                             Name = "Macao"
                         },
                         new
@@ -1819,13 +1951,15 @@ namespace ntbs_service.Migrations
                             CountryId = 131,
                             HasHighTbOccurence = true,
                             IsoCode = "MK",
-                            Name = "Macedonia, The Former Yugoslav Republic of"
+                            LegacyCountry = false,
+                            Name = "North Macedonia"
                         },
                         new
                         {
                             CountryId = 132,
                             HasHighTbOccurence = true,
                             IsoCode = "MG",
+                            LegacyCountry = false,
                             Name = "Madagascar"
                         },
                         new
@@ -1833,6 +1967,7 @@ namespace ntbs_service.Migrations
                             CountryId = 133,
                             HasHighTbOccurence = true,
                             IsoCode = "MW",
+                            LegacyCountry = false,
                             Name = "Malawi"
                         },
                         new
@@ -1840,6 +1975,7 @@ namespace ntbs_service.Migrations
                             CountryId = 134,
                             HasHighTbOccurence = true,
                             IsoCode = "MY",
+                            LegacyCountry = false,
                             Name = "Malaysia"
                         },
                         new
@@ -1847,6 +1983,7 @@ namespace ntbs_service.Migrations
                             CountryId = 135,
                             HasHighTbOccurence = true,
                             IsoCode = "MV",
+                            LegacyCountry = false,
                             Name = "Maldives"
                         },
                         new
@@ -1854,6 +1991,7 @@ namespace ntbs_service.Migrations
                             CountryId = 136,
                             HasHighTbOccurence = true,
                             IsoCode = "ML",
+                            LegacyCountry = false,
                             Name = "Mali"
                         },
                         new
@@ -1861,6 +1999,7 @@ namespace ntbs_service.Migrations
                             CountryId = 137,
                             HasHighTbOccurence = true,
                             IsoCode = "MT",
+                            LegacyCountry = false,
                             Name = "Malta"
                         },
                         new
@@ -1868,6 +2007,7 @@ namespace ntbs_service.Migrations
                             CountryId = 138,
                             HasHighTbOccurence = true,
                             IsoCode = "MH",
+                            LegacyCountry = false,
                             Name = "Marshall Islands"
                         },
                         new
@@ -1875,6 +2015,7 @@ namespace ntbs_service.Migrations
                             CountryId = 139,
                             HasHighTbOccurence = true,
                             IsoCode = "MQ",
+                            LegacyCountry = false,
                             Name = "Martinique"
                         },
                         new
@@ -1882,6 +2023,7 @@ namespace ntbs_service.Migrations
                             CountryId = 140,
                             HasHighTbOccurence = true,
                             IsoCode = "MR",
+                            LegacyCountry = false,
                             Name = "Mauritania"
                         },
                         new
@@ -1889,6 +2031,7 @@ namespace ntbs_service.Migrations
                             CountryId = 141,
                             HasHighTbOccurence = true,
                             IsoCode = "MU",
+                            LegacyCountry = false,
                             Name = "Mauritius"
                         },
                         new
@@ -1896,6 +2039,7 @@ namespace ntbs_service.Migrations
                             CountryId = 142,
                             HasHighTbOccurence = true,
                             IsoCode = "YT",
+                            LegacyCountry = false,
                             Name = "Mayotte"
                         },
                         new
@@ -1903,6 +2047,7 @@ namespace ntbs_service.Migrations
                             CountryId = 143,
                             HasHighTbOccurence = true,
                             IsoCode = "MX",
+                            LegacyCountry = false,
                             Name = "Mexico"
                         },
                         new
@@ -1910,6 +2055,7 @@ namespace ntbs_service.Migrations
                             CountryId = 144,
                             HasHighTbOccurence = true,
                             IsoCode = "FM",
+                            LegacyCountry = false,
                             Name = "Micronesia, Federated States of"
                         },
                         new
@@ -1917,6 +2063,7 @@ namespace ntbs_service.Migrations
                             CountryId = 145,
                             HasHighTbOccurence = true,
                             IsoCode = "MD",
+                            LegacyCountry = false,
                             Name = "Moldova"
                         },
                         new
@@ -1924,6 +2071,7 @@ namespace ntbs_service.Migrations
                             CountryId = 146,
                             HasHighTbOccurence = false,
                             IsoCode = "MC",
+                            LegacyCountry = false,
                             Name = "Monaco"
                         },
                         new
@@ -1931,6 +2079,7 @@ namespace ntbs_service.Migrations
                             CountryId = 147,
                             HasHighTbOccurence = true,
                             IsoCode = "MN",
+                            LegacyCountry = false,
                             Name = "Mongolia"
                         },
                         new
@@ -1938,6 +2087,7 @@ namespace ntbs_service.Migrations
                             CountryId = 148,
                             HasHighTbOccurence = true,
                             IsoCode = "ME",
+                            LegacyCountry = false,
                             Name = "Montenegro"
                         },
                         new
@@ -1945,6 +2095,7 @@ namespace ntbs_service.Migrations
                             CountryId = 149,
                             HasHighTbOccurence = true,
                             IsoCode = "MS",
+                            LegacyCountry = false,
                             Name = "Montserrat"
                         },
                         new
@@ -1952,6 +2103,7 @@ namespace ntbs_service.Migrations
                             CountryId = 150,
                             HasHighTbOccurence = true,
                             IsoCode = "MA",
+                            LegacyCountry = false,
                             Name = "Morocco"
                         },
                         new
@@ -1959,6 +2111,7 @@ namespace ntbs_service.Migrations
                             CountryId = 151,
                             HasHighTbOccurence = true,
                             IsoCode = "MZ",
+                            LegacyCountry = false,
                             Name = "Mozambique"
                         },
                         new
@@ -1966,6 +2119,7 @@ namespace ntbs_service.Migrations
                             CountryId = 152,
                             HasHighTbOccurence = true,
                             IsoCode = "MM",
+                            LegacyCountry = false,
                             Name = "Myanmar"
                         },
                         new
@@ -1973,6 +2127,7 @@ namespace ntbs_service.Migrations
                             CountryId = 153,
                             HasHighTbOccurence = true,
                             IsoCode = "NA",
+                            LegacyCountry = false,
                             Name = "Namibia"
                         },
                         new
@@ -1980,6 +2135,7 @@ namespace ntbs_service.Migrations
                             CountryId = 154,
                             HasHighTbOccurence = true,
                             IsoCode = "NR",
+                            LegacyCountry = false,
                             Name = "Nauru"
                         },
                         new
@@ -1987,6 +2143,7 @@ namespace ntbs_service.Migrations
                             CountryId = 155,
                             HasHighTbOccurence = true,
                             IsoCode = "NP",
+                            LegacyCountry = false,
                             Name = "Nepal"
                         },
                         new
@@ -1994,6 +2151,7 @@ namespace ntbs_service.Migrations
                             CountryId = 156,
                             HasHighTbOccurence = false,
                             IsoCode = "NL",
+                            LegacyCountry = false,
                             Name = "Netherlands"
                         },
                         new
@@ -2001,6 +2159,7 @@ namespace ntbs_service.Migrations
                             CountryId = 157,
                             HasHighTbOccurence = true,
                             IsoCode = "AN",
+                            LegacyCountry = false,
                             Name = "Netherlands Antilles"
                         },
                         new
@@ -2008,6 +2167,7 @@ namespace ntbs_service.Migrations
                             CountryId = 158,
                             HasHighTbOccurence = true,
                             IsoCode = "NC",
+                            LegacyCountry = false,
                             Name = "New Caledonia"
                         },
                         new
@@ -2015,6 +2175,7 @@ namespace ntbs_service.Migrations
                             CountryId = 159,
                             HasHighTbOccurence = false,
                             IsoCode = "NZ",
+                            LegacyCountry = false,
                             Name = "New Zealand"
                         },
                         new
@@ -2022,6 +2183,7 @@ namespace ntbs_service.Migrations
                             CountryId = 160,
                             HasHighTbOccurence = true,
                             IsoCode = "NI",
+                            LegacyCountry = false,
                             Name = "Nicaragua"
                         },
                         new
@@ -2029,6 +2191,7 @@ namespace ntbs_service.Migrations
                             CountryId = 161,
                             HasHighTbOccurence = true,
                             IsoCode = "NE",
+                            LegacyCountry = false,
                             Name = "Niger"
                         },
                         new
@@ -2036,6 +2199,7 @@ namespace ntbs_service.Migrations
                             CountryId = 162,
                             HasHighTbOccurence = true,
                             IsoCode = "NG",
+                            LegacyCountry = false,
                             Name = "Nigeria"
                         },
                         new
@@ -2043,6 +2207,7 @@ namespace ntbs_service.Migrations
                             CountryId = 163,
                             HasHighTbOccurence = true,
                             IsoCode = "NU",
+                            LegacyCountry = false,
                             Name = "Niue"
                         },
                         new
@@ -2050,6 +2215,7 @@ namespace ntbs_service.Migrations
                             CountryId = 164,
                             HasHighTbOccurence = true,
                             IsoCode = "NF",
+                            LegacyCountry = false,
                             Name = "Norfolk Island"
                         },
                         new
@@ -2057,6 +2223,7 @@ namespace ntbs_service.Migrations
                             CountryId = 165,
                             HasHighTbOccurence = true,
                             IsoCode = "MP",
+                            LegacyCountry = false,
                             Name = "Northern Mariana Islands"
                         },
                         new
@@ -2064,6 +2231,7 @@ namespace ntbs_service.Migrations
                             CountryId = 166,
                             HasHighTbOccurence = false,
                             IsoCode = "NO",
+                            LegacyCountry = false,
                             Name = "Norway"
                         },
                         new
@@ -2071,6 +2239,7 @@ namespace ntbs_service.Migrations
                             CountryId = 167,
                             HasHighTbOccurence = true,
                             IsoCode = "OM",
+                            LegacyCountry = false,
                             Name = "Oman"
                         },
                         new
@@ -2078,6 +2247,7 @@ namespace ntbs_service.Migrations
                             CountryId = 168,
                             HasHighTbOccurence = true,
                             IsoCode = "  ",
+                            LegacyCountry = false,
                             Name = "Other"
                         },
                         new
@@ -2085,6 +2255,7 @@ namespace ntbs_service.Migrations
                             CountryId = 169,
                             HasHighTbOccurence = true,
                             IsoCode = "PK",
+                            LegacyCountry = false,
                             Name = "Pakistan"
                         },
                         new
@@ -2092,6 +2263,7 @@ namespace ntbs_service.Migrations
                             CountryId = 170,
                             HasHighTbOccurence = true,
                             IsoCode = "PW",
+                            LegacyCountry = false,
                             Name = "Palau"
                         },
                         new
@@ -2099,13 +2271,15 @@ namespace ntbs_service.Migrations
                             CountryId = 171,
                             HasHighTbOccurence = true,
                             IsoCode = "PS",
-                            Name = "Palestinian Territory, Occupied"
+                            LegacyCountry = false,
+                            Name = "Palestine, State of"
                         },
                         new
                         {
                             CountryId = 172,
                             HasHighTbOccurence = true,
                             IsoCode = "PA",
+                            LegacyCountry = false,
                             Name = "Panama"
                         },
                         new
@@ -2113,6 +2287,7 @@ namespace ntbs_service.Migrations
                             CountryId = 173,
                             HasHighTbOccurence = true,
                             IsoCode = "PG",
+                            LegacyCountry = false,
                             Name = "Papua New Guinea"
                         },
                         new
@@ -2120,6 +2295,7 @@ namespace ntbs_service.Migrations
                             CountryId = 174,
                             HasHighTbOccurence = true,
                             IsoCode = "PY",
+                            LegacyCountry = false,
                             Name = "Paraguay"
                         },
                         new
@@ -2127,6 +2303,7 @@ namespace ntbs_service.Migrations
                             CountryId = 175,
                             HasHighTbOccurence = true,
                             IsoCode = "PE",
+                            LegacyCountry = false,
                             Name = "Peru"
                         },
                         new
@@ -2134,6 +2311,7 @@ namespace ntbs_service.Migrations
                             CountryId = 176,
                             HasHighTbOccurence = true,
                             IsoCode = "PH",
+                            LegacyCountry = false,
                             Name = "Philippines"
                         },
                         new
@@ -2141,6 +2319,7 @@ namespace ntbs_service.Migrations
                             CountryId = 177,
                             HasHighTbOccurence = true,
                             IsoCode = "PN",
+                            LegacyCountry = false,
                             Name = "Pitcairn"
                         },
                         new
@@ -2148,6 +2327,7 @@ namespace ntbs_service.Migrations
                             CountryId = 178,
                             HasHighTbOccurence = true,
                             IsoCode = "PL",
+                            LegacyCountry = false,
                             Name = "Poland"
                         },
                         new
@@ -2155,6 +2335,7 @@ namespace ntbs_service.Migrations
                             CountryId = 179,
                             HasHighTbOccurence = false,
                             IsoCode = "PT",
+                            LegacyCountry = false,
                             Name = "Portugal"
                         },
                         new
@@ -2162,6 +2343,7 @@ namespace ntbs_service.Migrations
                             CountryId = 180,
                             HasHighTbOccurence = true,
                             IsoCode = "PR",
+                            LegacyCountry = false,
                             Name = "Puerto Rico"
                         },
                         new
@@ -2169,6 +2351,7 @@ namespace ntbs_service.Migrations
                             CountryId = 181,
                             HasHighTbOccurence = true,
                             IsoCode = "QA",
+                            LegacyCountry = false,
                             Name = "Qatar"
                         },
                         new
@@ -2176,6 +2359,7 @@ namespace ntbs_service.Migrations
                             CountryId = 182,
                             HasHighTbOccurence = true,
                             IsoCode = "RE",
+                            LegacyCountry = false,
                             Name = "Reunion"
                         },
                         new
@@ -2183,6 +2367,7 @@ namespace ntbs_service.Migrations
                             CountryId = 183,
                             HasHighTbOccurence = true,
                             IsoCode = "RO",
+                            LegacyCountry = false,
                             Name = "Romania"
                         },
                         new
@@ -2190,6 +2375,7 @@ namespace ntbs_service.Migrations
                             CountryId = 184,
                             HasHighTbOccurence = true,
                             IsoCode = "RU",
+                            LegacyCountry = false,
                             Name = "Russian Federation"
                         },
                         new
@@ -2197,6 +2383,7 @@ namespace ntbs_service.Migrations
                             CountryId = 185,
                             HasHighTbOccurence = true,
                             IsoCode = "RW",
+                            LegacyCountry = false,
                             Name = "Rwanda"
                         },
                         new
@@ -2204,6 +2391,7 @@ namespace ntbs_service.Migrations
                             CountryId = 186,
                             HasHighTbOccurence = true,
                             IsoCode = "BL",
+                            LegacyCountry = false,
                             Name = "Saint Barthélemy"
                         },
                         new
@@ -2211,6 +2399,7 @@ namespace ntbs_service.Migrations
                             CountryId = 187,
                             HasHighTbOccurence = true,
                             IsoCode = "SH",
+                            LegacyCountry = false,
                             Name = "Saint Helena"
                         },
                         new
@@ -2218,6 +2407,7 @@ namespace ntbs_service.Migrations
                             CountryId = 188,
                             HasHighTbOccurence = true,
                             IsoCode = "KN",
+                            LegacyCountry = false,
                             Name = "Saint Kitts and Nevis"
                         },
                         new
@@ -2225,6 +2415,7 @@ namespace ntbs_service.Migrations
                             CountryId = 189,
                             HasHighTbOccurence = true,
                             IsoCode = "LC",
+                            LegacyCountry = false,
                             Name = "Saint Lucia"
                         },
                         new
@@ -2232,6 +2423,7 @@ namespace ntbs_service.Migrations
                             CountryId = 190,
                             HasHighTbOccurence = true,
                             IsoCode = "MF",
+                            LegacyCountry = false,
                             Name = "Saint Martin"
                         },
                         new
@@ -2239,6 +2431,7 @@ namespace ntbs_service.Migrations
                             CountryId = 191,
                             HasHighTbOccurence = true,
                             IsoCode = "PM",
+                            LegacyCountry = false,
                             Name = "Saint Pierre and Miquelon"
                         },
                         new
@@ -2246,6 +2439,7 @@ namespace ntbs_service.Migrations
                             CountryId = 192,
                             HasHighTbOccurence = true,
                             IsoCode = "VC",
+                            LegacyCountry = false,
                             Name = "Saint Vincent and The Grenadines"
                         },
                         new
@@ -2253,6 +2447,7 @@ namespace ntbs_service.Migrations
                             CountryId = 193,
                             HasHighTbOccurence = true,
                             IsoCode = "WS",
+                            LegacyCountry = false,
                             Name = "Samoa"
                         },
                         new
@@ -2260,6 +2455,7 @@ namespace ntbs_service.Migrations
                             CountryId = 194,
                             HasHighTbOccurence = true,
                             IsoCode = "SM",
+                            LegacyCountry = false,
                             Name = "San Marino"
                         },
                         new
@@ -2267,6 +2463,7 @@ namespace ntbs_service.Migrations
                             CountryId = 195,
                             HasHighTbOccurence = true,
                             IsoCode = "ST",
+                            LegacyCountry = false,
                             Name = "Sao Tome and Principe"
                         },
                         new
@@ -2274,6 +2471,7 @@ namespace ntbs_service.Migrations
                             CountryId = 196,
                             HasHighTbOccurence = true,
                             IsoCode = "SA",
+                            LegacyCountry = false,
                             Name = "Saudi Arabia"
                         },
                         new
@@ -2281,6 +2479,7 @@ namespace ntbs_service.Migrations
                             CountryId = 197,
                             HasHighTbOccurence = true,
                             IsoCode = "SN",
+                            LegacyCountry = false,
                             Name = "Senegal"
                         },
                         new
@@ -2288,6 +2487,7 @@ namespace ntbs_service.Migrations
                             CountryId = 198,
                             HasHighTbOccurence = true,
                             IsoCode = "RS",
+                            LegacyCountry = false,
                             Name = "Serbia"
                         },
                         new
@@ -2295,6 +2495,7 @@ namespace ntbs_service.Migrations
                             CountryId = 199,
                             HasHighTbOccurence = true,
                             IsoCode = "SC",
+                            LegacyCountry = false,
                             Name = "Seychelles"
                         },
                         new
@@ -2302,6 +2503,7 @@ namespace ntbs_service.Migrations
                             CountryId = 200,
                             HasHighTbOccurence = true,
                             IsoCode = "SL",
+                            LegacyCountry = false,
                             Name = "Sierra Leone"
                         },
                         new
@@ -2309,6 +2511,7 @@ namespace ntbs_service.Migrations
                             CountryId = 201,
                             HasHighTbOccurence = true,
                             IsoCode = "SG",
+                            LegacyCountry = false,
                             Name = "Singapore"
                         },
                         new
@@ -2316,6 +2519,7 @@ namespace ntbs_service.Migrations
                             CountryId = 202,
                             HasHighTbOccurence = true,
                             IsoCode = "SK",
+                            LegacyCountry = false,
                             Name = "Slovakia"
                         },
                         new
@@ -2323,6 +2527,7 @@ namespace ntbs_service.Migrations
                             CountryId = 203,
                             HasHighTbOccurence = true,
                             IsoCode = "SI",
+                            LegacyCountry = false,
                             Name = "Slovenia"
                         },
                         new
@@ -2330,6 +2535,7 @@ namespace ntbs_service.Migrations
                             CountryId = 204,
                             HasHighTbOccurence = true,
                             IsoCode = "SB",
+                            LegacyCountry = false,
                             Name = "Solomon Islands"
                         },
                         new
@@ -2337,6 +2543,7 @@ namespace ntbs_service.Migrations
                             CountryId = 205,
                             HasHighTbOccurence = true,
                             IsoCode = "SO",
+                            LegacyCountry = false,
                             Name = "Somalia"
                         },
                         new
@@ -2344,6 +2551,7 @@ namespace ntbs_service.Migrations
                             CountryId = 206,
                             HasHighTbOccurence = true,
                             IsoCode = "ZA",
+                            LegacyCountry = false,
                             Name = "South Africa"
                         },
                         new
@@ -2351,6 +2559,7 @@ namespace ntbs_service.Migrations
                             CountryId = 207,
                             HasHighTbOccurence = true,
                             IsoCode = "GS",
+                            LegacyCountry = false,
                             Name = "South Georgia and the South Sandwich Islands"
                         },
                         new
@@ -2358,6 +2567,7 @@ namespace ntbs_service.Migrations
                             CountryId = 208,
                             HasHighTbOccurence = true,
                             IsoCode = "SSD",
+                            LegacyCountry = false,
                             Name = "South Sudan"
                         },
                         new
@@ -2365,6 +2575,7 @@ namespace ntbs_service.Migrations
                             CountryId = 209,
                             HasHighTbOccurence = false,
                             IsoCode = "ES",
+                            LegacyCountry = false,
                             Name = "Spain"
                         },
                         new
@@ -2372,6 +2583,7 @@ namespace ntbs_service.Migrations
                             CountryId = 210,
                             HasHighTbOccurence = true,
                             IsoCode = "LK",
+                            LegacyCountry = false,
                             Name = "Sri Lanka"
                         },
                         new
@@ -2379,6 +2591,7 @@ namespace ntbs_service.Migrations
                             CountryId = 211,
                             HasHighTbOccurence = true,
                             IsoCode = "SD",
+                            LegacyCountry = false,
                             Name = "Sudan"
                         },
                         new
@@ -2386,6 +2599,7 @@ namespace ntbs_service.Migrations
                             CountryId = 212,
                             HasHighTbOccurence = true,
                             IsoCode = "SR",
+                            LegacyCountry = false,
                             Name = "Suriname"
                         },
                         new
@@ -2393,6 +2607,7 @@ namespace ntbs_service.Migrations
                             CountryId = 213,
                             HasHighTbOccurence = true,
                             IsoCode = "SJ",
+                            LegacyCountry = false,
                             Name = "Svalbard and Jan Mayen"
                         },
                         new
@@ -2400,6 +2615,7 @@ namespace ntbs_service.Migrations
                             CountryId = 214,
                             HasHighTbOccurence = true,
                             IsoCode = "SZ",
+                            LegacyCountry = false,
                             Name = "Swaziland"
                         },
                         new
@@ -2407,6 +2623,7 @@ namespace ntbs_service.Migrations
                             CountryId = 215,
                             HasHighTbOccurence = false,
                             IsoCode = "SE",
+                            LegacyCountry = false,
                             Name = "Sweden"
                         },
                         new
@@ -2414,6 +2631,7 @@ namespace ntbs_service.Migrations
                             CountryId = 216,
                             HasHighTbOccurence = false,
                             IsoCode = "CH",
+                            LegacyCountry = false,
                             Name = "Switzerland"
                         },
                         new
@@ -2421,6 +2639,7 @@ namespace ntbs_service.Migrations
                             CountryId = 217,
                             HasHighTbOccurence = true,
                             IsoCode = "SY",
+                            LegacyCountry = false,
                             Name = "Syrian Arab Republic"
                         },
                         new
@@ -2428,6 +2647,7 @@ namespace ntbs_service.Migrations
                             CountryId = 218,
                             HasHighTbOccurence = true,
                             IsoCode = "TW",
+                            LegacyCountry = false,
                             Name = "Taiwan, Province of China"
                         },
                         new
@@ -2435,6 +2655,7 @@ namespace ntbs_service.Migrations
                             CountryId = 219,
                             HasHighTbOccurence = true,
                             IsoCode = "TJ",
+                            LegacyCountry = false,
                             Name = "Tajikistan"
                         },
                         new
@@ -2442,6 +2663,7 @@ namespace ntbs_service.Migrations
                             CountryId = 220,
                             HasHighTbOccurence = true,
                             IsoCode = "TZ",
+                            LegacyCountry = false,
                             Name = "Tanzania, United Republic of"
                         },
                         new
@@ -2449,6 +2671,7 @@ namespace ntbs_service.Migrations
                             CountryId = 221,
                             HasHighTbOccurence = true,
                             IsoCode = "TH",
+                            LegacyCountry = false,
                             Name = "Thailand"
                         },
                         new
@@ -2456,6 +2679,7 @@ namespace ntbs_service.Migrations
                             CountryId = 222,
                             HasHighTbOccurence = true,
                             IsoCode = "TL",
+                            LegacyCountry = false,
                             Name = "Timor-Leste"
                         },
                         new
@@ -2463,6 +2687,7 @@ namespace ntbs_service.Migrations
                             CountryId = 223,
                             HasHighTbOccurence = true,
                             IsoCode = "TG",
+                            LegacyCountry = false,
                             Name = "Togo"
                         },
                         new
@@ -2470,6 +2695,7 @@ namespace ntbs_service.Migrations
                             CountryId = 224,
                             HasHighTbOccurence = true,
                             IsoCode = "TK",
+                            LegacyCountry = false,
                             Name = "Tokelau"
                         },
                         new
@@ -2477,6 +2703,7 @@ namespace ntbs_service.Migrations
                             CountryId = 225,
                             HasHighTbOccurence = true,
                             IsoCode = "TO",
+                            LegacyCountry = false,
                             Name = "Tonga"
                         },
                         new
@@ -2484,6 +2711,7 @@ namespace ntbs_service.Migrations
                             CountryId = 226,
                             HasHighTbOccurence = true,
                             IsoCode = "TT",
+                            LegacyCountry = false,
                             Name = "Trinidad and Tobago"
                         },
                         new
@@ -2491,6 +2719,7 @@ namespace ntbs_service.Migrations
                             CountryId = 227,
                             HasHighTbOccurence = true,
                             IsoCode = "TN",
+                            LegacyCountry = false,
                             Name = "Tunisia"
                         },
                         new
@@ -2498,6 +2727,7 @@ namespace ntbs_service.Migrations
                             CountryId = 228,
                             HasHighTbOccurence = true,
                             IsoCode = "TR",
+                            LegacyCountry = false,
                             Name = "Turkey"
                         },
                         new
@@ -2505,6 +2735,7 @@ namespace ntbs_service.Migrations
                             CountryId = 229,
                             HasHighTbOccurence = true,
                             IsoCode = "TM",
+                            LegacyCountry = false,
                             Name = "Turkmenistan"
                         },
                         new
@@ -2512,6 +2743,7 @@ namespace ntbs_service.Migrations
                             CountryId = 230,
                             HasHighTbOccurence = true,
                             IsoCode = "TC",
+                            LegacyCountry = false,
                             Name = "Turks and Caicos Islands"
                         },
                         new
@@ -2519,6 +2751,7 @@ namespace ntbs_service.Migrations
                             CountryId = 231,
                             HasHighTbOccurence = true,
                             IsoCode = "TV",
+                            LegacyCountry = false,
                             Name = "Tuvalu"
                         },
                         new
@@ -2526,6 +2759,7 @@ namespace ntbs_service.Migrations
                             CountryId = 232,
                             HasHighTbOccurence = true,
                             IsoCode = "UG",
+                            LegacyCountry = false,
                             Name = "Uganda"
                         },
                         new
@@ -2533,6 +2767,7 @@ namespace ntbs_service.Migrations
                             CountryId = 233,
                             HasHighTbOccurence = true,
                             IsoCode = "UA",
+                            LegacyCountry = false,
                             Name = "Ukraine"
                         },
                         new
@@ -2540,6 +2775,7 @@ namespace ntbs_service.Migrations
                             CountryId = 234,
                             HasHighTbOccurence = true,
                             IsoCode = "AE",
+                            LegacyCountry = false,
                             Name = "United Arab Emirates"
                         },
                         new
@@ -2547,6 +2783,7 @@ namespace ntbs_service.Migrations
                             CountryId = 235,
                             HasHighTbOccurence = false,
                             IsoCode = "GB",
+                            LegacyCountry = false,
                             Name = "United Kingdom"
                         },
                         new
@@ -2554,6 +2791,7 @@ namespace ntbs_service.Migrations
                             CountryId = 236,
                             HasHighTbOccurence = false,
                             IsoCode = "US",
+                            LegacyCountry = false,
                             Name = "United States"
                         },
                         new
@@ -2561,6 +2799,7 @@ namespace ntbs_service.Migrations
                             CountryId = 237,
                             HasHighTbOccurence = false,
                             IsoCode = "UM",
+                            LegacyCountry = false,
                             Name = "United States Minor Outlying Islands"
                         },
                         new
@@ -2568,6 +2807,7 @@ namespace ntbs_service.Migrations
                             CountryId = 238,
                             HasHighTbOccurence = true,
                             IsoCode = "-",
+                            LegacyCountry = false,
                             Name = "Unknown"
                         },
                         new
@@ -2575,6 +2815,7 @@ namespace ntbs_service.Migrations
                             CountryId = 239,
                             HasHighTbOccurence = true,
                             IsoCode = "UY",
+                            LegacyCountry = false,
                             Name = "Uruguay"
                         },
                         new
@@ -2582,6 +2823,7 @@ namespace ntbs_service.Migrations
                             CountryId = 240,
                             HasHighTbOccurence = true,
                             IsoCode = "UZ",
+                            LegacyCountry = false,
                             Name = "Uzbekistan"
                         },
                         new
@@ -2589,6 +2831,7 @@ namespace ntbs_service.Migrations
                             CountryId = 241,
                             HasHighTbOccurence = true,
                             IsoCode = "VU",
+                            LegacyCountry = false,
                             Name = "Vanuatu"
                         },
                         new
@@ -2596,6 +2839,7 @@ namespace ntbs_service.Migrations
                             CountryId = 242,
                             HasHighTbOccurence = true,
                             IsoCode = "VE",
+                            LegacyCountry = false,
                             Name = "Venezuela"
                         },
                         new
@@ -2603,6 +2847,7 @@ namespace ntbs_service.Migrations
                             CountryId = 243,
                             HasHighTbOccurence = true,
                             IsoCode = "VN",
+                            LegacyCountry = false,
                             Name = "Viet Nam"
                         },
                         new
@@ -2610,6 +2855,7 @@ namespace ntbs_service.Migrations
                             CountryId = 244,
                             HasHighTbOccurence = true,
                             IsoCode = "VG",
+                            LegacyCountry = false,
                             Name = "Virgin Islands, British"
                         },
                         new
@@ -2617,6 +2863,7 @@ namespace ntbs_service.Migrations
                             CountryId = 245,
                             HasHighTbOccurence = true,
                             IsoCode = "VI",
+                            LegacyCountry = false,
                             Name = "Virgin Islands, U.S."
                         },
                         new
@@ -2624,6 +2871,7 @@ namespace ntbs_service.Migrations
                             CountryId = 246,
                             HasHighTbOccurence = true,
                             IsoCode = "WF",
+                            LegacyCountry = false,
                             Name = "Wallis and Futuna"
                         },
                         new
@@ -2631,6 +2879,7 @@ namespace ntbs_service.Migrations
                             CountryId = 247,
                             HasHighTbOccurence = true,
                             IsoCode = "EH",
+                            LegacyCountry = false,
                             Name = "Western Sahara"
                         },
                         new
@@ -2638,6 +2887,7 @@ namespace ntbs_service.Migrations
                             CountryId = 248,
                             HasHighTbOccurence = true,
                             IsoCode = "YE",
+                            LegacyCountry = false,
                             Name = "Yemen"
                         },
                         new
@@ -2645,6 +2895,7 @@ namespace ntbs_service.Migrations
                             CountryId = 249,
                             HasHighTbOccurence = true,
                             IsoCode = "ZM",
+                            LegacyCountry = false,
                             Name = "Zambia"
                         },
                         new
@@ -2652,7 +2903,32 @@ namespace ntbs_service.Migrations
                             CountryId = 250,
                             HasHighTbOccurence = true,
                             IsoCode = "ZW",
+                            LegacyCountry = false,
                             Name = "Zimbabwe"
+                        },
+                        new
+                        {
+                            CountryId = 251,
+                            HasHighTbOccurence = false,
+                            IsoCode = "CS",
+                            LegacyCountry = true,
+                            Name = "Serbia & Montenegro"
+                        },
+                        new
+                        {
+                            CountryId = 252,
+                            HasHighTbOccurence = false,
+                            IsoCode = "YU",
+                            LegacyCountry = true,
+                            Name = "Yugoslavia"
+                        },
+                        new
+                        {
+                            CountryId = 253,
+                            HasHighTbOccurence = false,
+                            IsoCode = "ZR",
+                            LegacyCountry = true,
+                            Name = "Zaire"
                         });
                 });
 
