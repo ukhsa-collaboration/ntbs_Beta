@@ -25,7 +25,10 @@ namespace ntbs_service.Pages.Alerts
         private readonly IAlertRepository _alertRepository;
         private readonly IAlertService _alertService;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        
         public ValidationService ValidationService;
+        
         [BindProperty]
         [Required(ErrorMessage = "Please accept or decline the transfer")]
         public bool? AcceptTransfer { get; set; }
@@ -47,8 +50,10 @@ namespace ntbs_service.Pages.Alerts
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(notificationService, authorizationService, notificationRepository)
+            IReferenceDataRepository referenceDataRepository,
+            IItemRepository<TreatmentEvent> treatmentEventRepository) : base(notificationService, authorizationService, notificationRepository)
         {
+            _treatmentEventRepository = treatmentEventRepository;
             _alertService = alertService;
             _alertRepository = alertRepository;
             _referenceDataRepository = referenceDataRepository;
@@ -97,6 +102,23 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task AcceptTransferAndDismissAlertAsync()
         {
+            var currentTime = DateTime.Now;
+            var transferOutEvent = new TreatmentEvent
+            {
+                NotificationId = NotificationId,
+                EventDate = currentTime,
+                TreatmentEventType = TreatmentEventType.TransferOut,
+                CaseManagerUsername = Notification.Episode.CaseManagerUsername,
+                TbServiceCode = Notification.Episode.TBServiceCode
+            };
+            var transferInEvent = new TreatmentEvent
+            {
+                NotificationId = NotificationId,
+                EventDate = currentTime.AddSeconds(1),
+                TreatmentEventType = TreatmentEventType.TransferIn,
+                CaseManagerUsername = TransferAlert.CaseManagerUsername,
+                TbServiceCode = TransferAlert.TbServiceCode
+            };
             Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;
             // Set hospital to the first available hospital in the new TB service where it can be updated by the user after the transfer
@@ -106,6 +128,8 @@ namespace ntbs_service.Pages.Alerts
                     TransferAlert.TbServiceCode
                 })).FirstOrDefault()?.HospitalId;
             await Service.UpdateEpisodeAsync(Notification, Notification.Episode);
+            await _treatmentEventRepository.AddAsync(transferOutEvent);
+            await _treatmentEventRepository.AddAsync(transferInEvent);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
         }
 

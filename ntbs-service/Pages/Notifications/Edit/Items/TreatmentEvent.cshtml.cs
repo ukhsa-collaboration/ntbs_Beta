@@ -77,6 +77,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         protected override async Task ValidateAndSave()
         {
             TreatmentEvent.NotificationId = NotificationId;
+            TreatmentEvent.CaseManagerUsername = Notification.Episode.CaseManagerUsername;
+            TreatmentEvent.TbServiceCode = Notification.Episode.TBServiceCode;
 
             // The required date will be marked as missing on the model, since we are setting it manually, rather than binding it
             ModelState.Remove("TreatmentEvent.EventDate");

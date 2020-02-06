@@ -37,7 +37,12 @@ namespace ntbs_service.Models.Entities
 
         public int NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
-
+        
+        public string TbServiceCode { get; set; }
+        public virtual TBService TbService { get; set; }
+        
+        public string CaseManagerUsername { get; set; }
+        public User CaseManager { get; set; }
 
         [NotMapped]
         public DateTime? Dob { get; set; }

@@ -35,6 +35,16 @@ namespace ntbs_integration_tests.TransferPage
                         HospitalId = Guid.Parse(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
                         CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL
                     }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT,
+                    NotificationStatus = NotificationStatus.Notified,
+                    Episode = new Episode
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
+                        CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL
+                    }
                 }
             };
         }
@@ -104,6 +114,34 @@ namespace ntbs_integration_tests.TransferPage
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
             Assert.Contains("TestCase TestManager", overviewPage.QuerySelector("#banner-case-manager").TextContent);
             Assert.Null(overviewPage.QuerySelector("#alert-20003"));
+        }
+
+        [Fact]
+        public async Task AcceptTransferAlert_CreatesTransferInAndOutTreatmentEventsForNotification()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT;
+            var treatmentEventsUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
+            var initialTreatmentEventsPage = await GetDocumentForUrl(treatmentEventsUrl);
+            Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-event-1"));
+            Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-event-2"));
+            
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrl(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["AcceptTransfer"] = "true"
+            };
+
+            // Act
+            await Client.SendPostFormWithData(initialDocument, formData, url);
+            
+            var reloadedTreatmentEventsPage = await GetDocumentForUrl(treatmentEventsUrl);
+            
+            // Assert
+            Assert.NotNull(reloadedTreatmentEventsPage.QuerySelector("#treatment-event-1"));
+            Assert.NotNull(reloadedTreatmentEventsPage.QuerySelector("#treatment-event-2"));
         }
         
         [Fact]

@@ -544,6 +544,12 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.TreatmentEventType)
                     .HasConversion(treatmentEventTypeEnumConverter)
                     .HasMaxLength(EnumMaxLength);
+                entity.HasOne(e => e.CaseManager)
+                    .WithMany()
+                    .HasForeignKey(e => e.CaseManagerUsername);
+                entity.HasOne(e => e.TbService)
+                    .WithMany()
+                    .HasForeignKey(e => e.TbServiceCode);
             });
 
             modelBuilder.Entity<TreatmentOutcome>(entity =>
