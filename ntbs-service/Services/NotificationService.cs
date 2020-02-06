@@ -44,16 +44,19 @@ namespace ntbs_service.Services
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserService _userService;
         private readonly NtbsContext _context;
+        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
 
         public NotificationService(
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IUserService userService,
+            IItemRepository<TreatmentEvent> treatmentEventRepository,
             NtbsContext context)
         {
             _notificationRepository = notificationRepository;
             _referenceDataRepository = referenceDataRepository;
             _userService = userService;
+            _treatmentEventRepository = treatmentEventRepository;
             _context = context;
         }
 
@@ -305,6 +308,17 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
+            CreateTreatmentEvenNotificationStart(notification);
+        }
+
+        private void CreateTreatmentEvenNotificationStart(Notification notification)
+        {
+            _treatmentEventRepository.AddAsync(new TreatmentEvent
+            {
+                NotificationId = notification.NotificationId,
+                TreatmentEventType = TreatmentEventType.NotificationStart,
+                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate
+            });
         }
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
