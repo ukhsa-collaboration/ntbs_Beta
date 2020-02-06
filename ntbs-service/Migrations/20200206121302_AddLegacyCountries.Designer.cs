@@ -11,7 +11,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20200206111058_AddLegacyCountries")]
+    [Migration("20200206121302_AddLegacyCountries")]
     partial class AddLegacyCountries
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -904,6 +904,8 @@ namespace ntbs_service.Migrations
                         .HasMaxLength(200);
 
                     b.HasKey("CountryId");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Country");
 

@@ -903,6 +903,8 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("CountryId");
 
+                    b.HasIndex("Name");
+
                     b.ToTable("Country");
 
                     b.HasData(

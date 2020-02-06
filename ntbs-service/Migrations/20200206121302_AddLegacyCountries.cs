@@ -42,10 +42,19 @@ namespace ntbs_service.Migrations
                     { 252, false, "YU", true, "Yugoslavia" },
                     { 253, false, "ZR", true, "Zaire" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Country_Name",
+                table: "Country",
+                column: "Name");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropIndex(
+                name: "IX_Country_Name",
+                table: "Country");
+
             migrationBuilder.DeleteData(
                 table: "Country",
                 keyColumn: "CountryId",
