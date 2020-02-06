@@ -77,7 +77,7 @@ namespace ntbs_service
 
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var ldapConnectionSettings = Configuration.GetSection("LdapConnectionSettings");
-            var setupDummyAuth = false;
+            var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
             var authSetup = services
                 .AddAuthentication(sharedOptions =>
                 {
@@ -228,7 +228,7 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (false)
+            if (env.IsDevelopment())	
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
@@ -239,8 +239,8 @@ namespace ntbs_service
             }
             else
             {
-                // app.UseStatusCodePagesWithReExecute("/errors/{0}");
-                // app.UseExceptionHandler("/errors/500");
+                app.UseStatusCodePagesWithReExecute("/errors/{0}");
+                app.UseExceptionHandler("/errors/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
