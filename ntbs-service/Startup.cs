@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using EFAuditer;
 using Hangfire;
 using Hangfire.Console;
@@ -77,16 +78,34 @@ namespace ntbs_service
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             var ldapConnectionSettings = Configuration.GetSection("LdapConnectionSettings");
             var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
-            var authSetup = services.AddAuthentication(sharedOptions =>
+            var authSetup = services
+                .AddAuthentication(sharedOptions =>
                 {
                     sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                }).AddWsFederation(options =>
+                })
+                .AddWsFederation(options =>
                 {
                     options.MetadataAddress =
                         adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                     options.Wtrealm = adfsConfig["Wtrealm"];
+                    
+                    /*
+                     * Below event handler is to prevent stale logins from showing a 500 error screen, instead to force
+                     * back to the landing page - and cause a re-challenge or continue if already authenticated.
+                     * https://community.auth0.com/t/asp-net-core-2-intermittent-correlation-failed-errors/11918/14
+                     */
+                    options.Events.OnRemoteFailure += context =>
+                    {
+                        if (context.Failure.Message == "Correlation failed.")
+                        {
+                            context.HandleResponse();
+                            context.Response.Redirect("/");
+                        }
+
+                        return Task.CompletedTask;
+                    };
                 })
                 .AddCookie(options =>
                 {
@@ -209,7 +228,7 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment())	
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
