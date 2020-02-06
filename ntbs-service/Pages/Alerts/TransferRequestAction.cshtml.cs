@@ -26,7 +26,9 @@ namespace ntbs_service.Pages.Alerts
         private readonly IAlertService _alertService;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        
         public ValidationService ValidationService;
+        
         [BindProperty]
         [Required(ErrorMessage = "Please accept or decline the transfer")]
         public bool? AcceptTransfer { get; set; }
