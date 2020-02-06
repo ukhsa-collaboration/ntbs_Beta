@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public class PatientTBHistory : ModelBase, IOwnedEntity
     {
-        public bool? NotPreviouslyHadTB { get; set; }
+        public bool? PreviouslyHadTB { get; set; }
         
         [AssertThat(@"DobYear == null || PreviousTBDiagnosisYear > DobYear", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         [AssertThat(nameof(IsYearBeforeCurrentYear), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
