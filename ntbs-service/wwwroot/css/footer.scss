@@ -6,6 +6,10 @@
     bottom: 0;
     padding: 10px;
     background: $lighter-grey;
+  
+    @media print {
+      display: none;
+    }
 }
 
 .footer-copyright-message-container {

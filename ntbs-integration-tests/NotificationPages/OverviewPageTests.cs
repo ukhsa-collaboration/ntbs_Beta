@@ -185,6 +185,16 @@ namespace ntbs_integration_tests.NotificationPages
         }
         
         [Fact]
+        public async Task OverviewPageShowsPrintOverviewButton_IfNotificationIsNotified()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+            var document = await GetDocumentForUrl(url);
+            
+            Assert.NotNull(document.QuerySelector("#print-notification-overview-button"));
+        }
+        
+        [Fact]
         public async Task OverviewPageShowsDenotificationDetails_ForDenotifiedRecord()
         {
             // Arrange

@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ntbs_service</title>
+    <title>@ViewData["Title"] - NTBS</title>
     <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true">
 </head>
 <body>
     <div id="app">
         <partial name="./_Header.cshtml" />
         
-        <nhs-main-wrapper>
+        <nhs-main-wrapper classes="main-wrapper">
             @RenderBody()
         </nhs-main-wrapper>
         <partial name="./_Footer.cshtml" />

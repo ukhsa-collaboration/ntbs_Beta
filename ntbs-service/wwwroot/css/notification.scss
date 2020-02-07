@@ -114,8 +114,12 @@
     border-bottom: 1px solid $grey;
 }
 
-.notification-banner-links--current {
-    font-weight: bold;
+.notification-banner-link {
+    font-size: 18px;
+
+    &.notification-banner-link--current {
+        font-weight: bold;
+    }
 }
 
 .notification-banner-link-separator {

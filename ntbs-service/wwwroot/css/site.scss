@@ -32,6 +32,32 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+@media print {
+  // Chrome defaults to mobile layout, this forces it wide enough to pick up desktop layout
+  @page {
+    size: 330mm 427mm;
+    margin: 14mm;
+  }
+  
+  .no-print {
+    display: none;
+  }
+  
+  .main-wrapper {
+    width: 1100px;
+  }
+  
+  .nhsuk-grid-row:not(.allow-page-break) {
+    page-break-inside: avoid;
+  }
+}
+
+@media screen {
+  .no-screen {
+    display: none;
+  }
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

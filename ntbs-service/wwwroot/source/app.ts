@@ -30,6 +30,7 @@ import { NotificationInfo } from "./Components/NotificationInfo";
 import HideManualTestResults from "./Components/HideManualTestResults";
 import FetchSpecimenPotentialMatch from "./Components/FetchSpecimenPotentialMatch";
 import FilteredHomepageKpiDetails from "./Components/FilteredHomepageKpiDetails";
+import PrintButton from "./Components/PrintButton";
 
 // For compatibility with IE11
 require("es6-promise").polyfill();
@@ -59,6 +60,7 @@ Vue.component("notification-info", NotificationInfo);
 Vue.component("hide-manual-test-results", HideManualTestResults);
 Vue.component("fetch-specimen-potential-match", FetchSpecimenPotentialMatch);
 Vue.component("filtered-homepage-kpi", FilteredHomepageKpiDetails);
+Vue.component("print-button", PrintButton);
 
 new Vue({
     el: "#app",

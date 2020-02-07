@@ -3,6 +3,7 @@
   border-bottom: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
   padding-top: 10px;
+  width: 100%;
 }
 
 .notification-details-type {
@@ -11,6 +12,10 @@
 
 .notification-edit-link {
   margin: auto 5px 14px auto;
+  
+  @media print {
+    display: none;
+  }
 }
 
 .notification-overview-details-container {
