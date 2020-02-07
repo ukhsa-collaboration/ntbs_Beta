@@ -22,6 +22,7 @@ namespace ntbs_integration_tests.NotificationPages
         private static readonly string RESTART_TREATMENT_EVENT_NOTE = "This is a test string";
         private const int EDIT_TREATMENT_EVENT_ID = 12;
         private const int DELETE_TREATMENT_EVENT_ID = 13;
+        private const int TRANSFER_IN_EVENT_ID = 14;
 
         private const int TREATMENT_OUTCOME_ID = 100;
         private const TreatmentOutcomeType TREATMENT_OUTCOME_TYPE = TreatmentOutcomeType.Lost;
@@ -70,6 +71,12 @@ namespace ntbs_integration_tests.NotificationPages
                             TreatmentEventId = DELETE_TREATMENT_EVENT_ID,
                             EventDate = RESTART_TREATMENT_EVENT_DATE,
                             TreatmentEventType = TreatmentEventType.TreatmentRestart
+                        },
+                        new TreatmentEvent
+                        {
+                            TreatmentEventId = TRANSFER_IN_EVENT_ID,
+                            EventDate = RESTART_TREATMENT_EVENT_DATE,
+                            TreatmentEventType = TreatmentEventType.TransferIn
                         }
                     }
                 },
@@ -379,6 +386,28 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var result = await response.Content.ReadAsStringAsync();
             Assert.Empty(result);
+        }
+        
+        [Fact]
+        public async Task GetTreatmentEvents_DoesNotShowEditLink_ForNonEditableTreatmentEvents()
+        {
+            // Arrange
+            var url = GetCurrentPathForId(Utilities.NOTIFICATION_WITH_TREATMENT_EVENTS);
+
+            // Act
+            var document = await GetDocumentForUrl(url);
+
+            // Assert
+            var treatmentTable = document.QuerySelector("#treatment-events");
+            Assert.NotNull(treatmentTable);
+            
+            var treatmentRestartRow = treatmentTable.QuerySelector($"#treatment-event-{RESTART_TREATMENT_EVENT_ID}");
+            Assert.NotNull(treatmentRestartRow);
+            Assert.NotNull(treatmentRestartRow.QuerySelector("#edit-link"));
+
+            var treatmentTransferInRow = treatmentTable.QuerySelector($"#treatment-event-{TRANSFER_IN_EVENT_ID}");
+            Assert.NotNull(treatmentTransferInRow);
+            Assert.Null(treatmentTransferInRow.QuerySelector("#edit-link"));
         }
     }
 }

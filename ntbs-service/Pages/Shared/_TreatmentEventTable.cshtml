@@ -57,7 +57,7 @@
                             {
                                 var subPath = NotificationSubPaths.EditTreatmentEvent(result.TreatmentEventId);
                                 var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
-                                <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
+                                <a href="@path" class="govuk-link--no-visited-state" id="edit-link"> Edit </a>
                             }
                         </nhs-table-item>
                     }
