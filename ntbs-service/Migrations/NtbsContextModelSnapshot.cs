@@ -894,16 +894,16 @@ namespace ntbs_service.Migrations
 
                     b.Property<bool>("HasHighTbOccurence");
 
-                    b.Property<string>("IsoCode");
+                    b.Property<bool>("IsLegacy");
 
-                    b.Property<bool>("LegacyCountry");
+                    b.Property<string>("IsoCode");
 
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
                     b.HasKey("CountryId");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("IsLegacy", "Name");
 
                     b.ToTable("Country");
 
@@ -912,2024 +912,2024 @@ namespace ntbs_service.Migrations
                         {
                             CountryId = 1,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AF",
-                            LegacyCountry = false,
                             Name = "Afghanistan"
                         },
                         new
                         {
                             CountryId = 2,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AX",
-                            LegacyCountry = false,
                             Name = "Åland Islands"
                         },
                         new
                         {
                             CountryId = 3,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AL",
-                            LegacyCountry = false,
                             Name = "Albania"
                         },
                         new
                         {
                             CountryId = 4,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "DZ",
-                            LegacyCountry = false,
                             Name = "Algeria"
                         },
                         new
                         {
                             CountryId = 5,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AS",
-                            LegacyCountry = false,
                             Name = "American Samoa"
                         },
                         new
                         {
                             CountryId = 6,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "AD",
-                            LegacyCountry = false,
                             Name = "Andorra"
                         },
                         new
                         {
                             CountryId = 7,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AO",
-                            LegacyCountry = false,
                             Name = "Angola"
                         },
                         new
                         {
                             CountryId = 8,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AI",
-                            LegacyCountry = false,
                             Name = "Anguilla"
                         },
                         new
                         {
                             CountryId = 9,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AQ",
-                            LegacyCountry = false,
                             Name = "Antarctica"
                         },
                         new
                         {
                             CountryId = 10,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AG",
-                            LegacyCountry = false,
                             Name = "Antigua and Barbuda"
                         },
                         new
                         {
                             CountryId = 11,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AR",
-                            LegacyCountry = false,
                             Name = "Argentina"
                         },
                         new
                         {
                             CountryId = 12,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AM",
-                            LegacyCountry = false,
                             Name = "Armenia"
                         },
                         new
                         {
                             CountryId = 13,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AW",
-                            LegacyCountry = false,
                             Name = "Aruba"
                         },
                         new
                         {
                             CountryId = 14,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "AU",
-                            LegacyCountry = false,
                             Name = "Australia"
                         },
                         new
                         {
                             CountryId = 15,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "AT",
-                            LegacyCountry = false,
                             Name = "Austria"
                         },
                         new
                         {
                             CountryId = 16,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AZ",
-                            LegacyCountry = false,
                             Name = "Azerbaijan"
                         },
                         new
                         {
                             CountryId = 17,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BS",
-                            LegacyCountry = false,
                             Name = "Bahamas"
                         },
                         new
                         {
                             CountryId = 18,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BH",
-                            LegacyCountry = false,
                             Name = "Bahrain"
                         },
                         new
                         {
                             CountryId = 19,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BD",
-                            LegacyCountry = false,
                             Name = "Bangladesh"
                         },
                         new
                         {
                             CountryId = 20,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BB",
-                            LegacyCountry = false,
                             Name = "Barbados"
                         },
                         new
                         {
                             CountryId = 21,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BY",
-                            LegacyCountry = false,
                             Name = "Belarus"
                         },
                         new
                         {
                             CountryId = 22,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "BE",
-                            LegacyCountry = false,
                             Name = "Belgium"
                         },
                         new
                         {
                             CountryId = 23,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BZ",
-                            LegacyCountry = false,
                             Name = "Belize"
                         },
                         new
                         {
                             CountryId = 24,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BJ",
-                            LegacyCountry = false,
                             Name = "Benin"
                         },
                         new
                         {
                             CountryId = 25,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BM",
-                            LegacyCountry = false,
                             Name = "Bermuda"
                         },
                         new
                         {
                             CountryId = 26,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BT",
-                            LegacyCountry = false,
                             Name = "Bhutan"
                         },
                         new
                         {
                             CountryId = 27,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BO",
-                            LegacyCountry = false,
                             Name = "Bolivia"
                         },
                         new
                         {
                             CountryId = 28,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BA",
-                            LegacyCountry = false,
                             Name = "Bosnia and Herzegovina"
                         },
                         new
                         {
                             CountryId = 29,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BW",
-                            LegacyCountry = false,
                             Name = "Botswana"
                         },
                         new
                         {
                             CountryId = 30,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BV",
-                            LegacyCountry = false,
                             Name = "Bouvet Island"
                         },
                         new
                         {
                             CountryId = 31,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BR",
-                            LegacyCountry = false,
                             Name = "Brazil"
                         },
                         new
                         {
                             CountryId = 32,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "IO",
-                            LegacyCountry = false,
                             Name = "British Indian Ocean Territory"
                         },
                         new
                         {
                             CountryId = 33,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BN",
-                            LegacyCountry = false,
                             Name = "Brunei Darussalam"
                         },
                         new
                         {
                             CountryId = 34,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BG",
-                            LegacyCountry = false,
                             Name = "Bulgaria"
                         },
                         new
                         {
                             CountryId = 35,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BF",
-                            LegacyCountry = false,
                             Name = "Burkina Faso"
                         },
                         new
                         {
                             CountryId = 36,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BI",
-                            LegacyCountry = false,
                             Name = "Burundi"
                         },
                         new
                         {
                             CountryId = 37,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KH",
-                            LegacyCountry = false,
                             Name = "Cambodia"
                         },
                         new
                         {
                             CountryId = 38,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CM",
-                            LegacyCountry = false,
                             Name = "Cameroon"
                         },
                         new
                         {
                             CountryId = 39,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "CA",
-                            LegacyCountry = false,
                             Name = "Canada"
                         },
                         new
                         {
                             CountryId = 40,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CV",
-                            LegacyCountry = false,
                             Name = "Cape Verde"
                         },
                         new
                         {
                             CountryId = 41,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KY",
-                            LegacyCountry = false,
                             Name = "Cayman Islands"
                         },
                         new
                         {
                             CountryId = 42,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CF",
-                            LegacyCountry = false,
                             Name = "Central African Republic"
                         },
                         new
                         {
                             CountryId = 43,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TD",
-                            LegacyCountry = false,
                             Name = "Chad"
                         },
                         new
                         {
                             CountryId = 44,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CL",
-                            LegacyCountry = false,
                             Name = "Chile"
                         },
                         new
                         {
                             CountryId = 45,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CN",
-                            LegacyCountry = false,
                             Name = "China"
                         },
                         new
                         {
                             CountryId = 46,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CX",
-                            LegacyCountry = false,
                             Name = "Christmas Island"
                         },
                         new
                         {
                             CountryId = 47,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CC",
-                            LegacyCountry = false,
                             Name = "Cocos (Keeling) Islands"
                         },
                         new
                         {
                             CountryId = 48,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CO",
-                            LegacyCountry = false,
                             Name = "Colombia"
                         },
                         new
                         {
                             CountryId = 49,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KM",
-                            LegacyCountry = false,
                             Name = "Comoros"
                         },
                         new
                         {
                             CountryId = 50,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CG",
-                            LegacyCountry = false,
                             Name = "Congo"
                         },
                         new
                         {
                             CountryId = 51,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CD",
-                            LegacyCountry = false,
                             Name = "Congo, Democratic Republic of the"
                         },
                         new
                         {
                             CountryId = 52,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CK",
-                            LegacyCountry = false,
                             Name = "Cook Islands"
                         },
                         new
                         {
                             CountryId = 53,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CR",
-                            LegacyCountry = false,
                             Name = "Costa Rica"
                         },
                         new
                         {
                             CountryId = 54,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CI",
-                            LegacyCountry = false,
                             Name = "Côte D'ivoire"
                         },
                         new
                         {
                             CountryId = 55,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "HR",
-                            LegacyCountry = false,
                             Name = "Croatia"
                         },
                         new
                         {
                             CountryId = 56,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CU",
-                            LegacyCountry = false,
                             Name = "Cuba"
                         },
                         new
                         {
                             CountryId = 57,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "CY",
-                            LegacyCountry = false,
                             Name = "Cyprus"
                         },
                         new
                         {
                             CountryId = 58,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "CZ",
-                            LegacyCountry = false,
                             Name = "Czech Republic"
                         },
                         new
                         {
                             CountryId = 59,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "DK",
-                            LegacyCountry = false,
                             Name = "Denmark"
                         },
                         new
                         {
                             CountryId = 60,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "DJ",
-                            LegacyCountry = false,
                             Name = "Djibouti"
                         },
                         new
                         {
                             CountryId = 61,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "DM",
-                            LegacyCountry = false,
                             Name = "Dominica"
                         },
                         new
                         {
                             CountryId = 62,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "DO",
-                            LegacyCountry = false,
                             Name = "Dominican Republic"
                         },
                         new
                         {
                             CountryId = 63,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "EC",
-                            LegacyCountry = false,
                             Name = "Ecuador"
                         },
                         new
                         {
                             CountryId = 64,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "EG",
-                            LegacyCountry = false,
                             Name = "Egypt"
                         },
                         new
                         {
                             CountryId = 65,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SV",
-                            LegacyCountry = false,
                             Name = "El Salvador"
                         },
                         new
                         {
                             CountryId = 66,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GQ",
-                            LegacyCountry = false,
                             Name = "Equatorial Guinea"
                         },
                         new
                         {
                             CountryId = 67,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ER",
-                            LegacyCountry = false,
                             Name = "Eritrea"
                         },
                         new
                         {
                             CountryId = 68,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "EE",
-                            LegacyCountry = false,
                             Name = "Estonia"
                         },
                         new
                         {
                             CountryId = 69,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ET",
-                            LegacyCountry = false,
                             Name = "Ethiopia"
                         },
                         new
                         {
                             CountryId = 70,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "FK",
-                            LegacyCountry = false,
                             Name = "Falkland Islands (Malvinas)"
                         },
                         new
                         {
                             CountryId = 71,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "FO",
-                            LegacyCountry = false,
                             Name = "Faroe Islands"
                         },
                         new
                         {
                             CountryId = 72,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "FJ",
-                            LegacyCountry = false,
                             Name = "Fiji"
                         },
                         new
                         {
                             CountryId = 73,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "FI",
-                            LegacyCountry = false,
                             Name = "Finland"
                         },
                         new
                         {
                             CountryId = 74,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "FR",
-                            LegacyCountry = false,
                             Name = "France"
                         },
                         new
                         {
                             CountryId = 75,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GF",
-                            LegacyCountry = false,
                             Name = "French Guiana"
                         },
                         new
                         {
                             CountryId = 76,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PF",
-                            LegacyCountry = false,
                             Name = "French Polynesia"
                         },
                         new
                         {
                             CountryId = 77,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TF",
-                            LegacyCountry = false,
                             Name = "French Southern Territories"
                         },
                         new
                         {
                             CountryId = 78,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GA",
-                            LegacyCountry = false,
                             Name = "Gabon"
                         },
                         new
                         {
                             CountryId = 79,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GM",
-                            LegacyCountry = false,
                             Name = "Gambia"
                         },
                         new
                         {
                             CountryId = 80,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GE",
-                            LegacyCountry = false,
                             Name = "Georgia"
                         },
                         new
                         {
                             CountryId = 81,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "DE",
-                            LegacyCountry = false,
                             Name = "Germany"
                         },
                         new
                         {
                             CountryId = 82,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GH",
-                            LegacyCountry = false,
                             Name = "Ghana"
                         },
                         new
                         {
                             CountryId = 83,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GI",
-                            LegacyCountry = false,
                             Name = "Gibraltar"
                         },
                         new
                         {
                             CountryId = 84,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "GR",
-                            LegacyCountry = false,
                             Name = "Greece"
                         },
                         new
                         {
                             CountryId = 85,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "GL",
-                            LegacyCountry = false,
                             Name = "Greenland"
                         },
                         new
                         {
                             CountryId = 86,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GD",
-                            LegacyCountry = false,
                             Name = "Grenada"
                         },
                         new
                         {
                             CountryId = 87,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GP",
-                            LegacyCountry = false,
                             Name = "Guadeloupe"
                         },
                         new
                         {
                             CountryId = 88,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GU",
-                            LegacyCountry = false,
                             Name = "Guam"
                         },
                         new
                         {
                             CountryId = 89,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GT",
-                            LegacyCountry = false,
                             Name = "Guatemala"
                         },
                         new
                         {
                             CountryId = 90,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "GG",
-                            LegacyCountry = false,
                             Name = "Guernsey"
                         },
                         new
                         {
                             CountryId = 91,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GN",
-                            LegacyCountry = false,
                             Name = "Guinea"
                         },
                         new
                         {
                             CountryId = 92,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GW",
-                            LegacyCountry = false,
                             Name = "Guinea-Bissau"
                         },
                         new
                         {
                             CountryId = 93,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GY",
-                            LegacyCountry = false,
                             Name = "Guyana"
                         },
                         new
                         {
                             CountryId = 94,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "HT",
-                            LegacyCountry = false,
                             Name = "Haiti"
                         },
                         new
                         {
                             CountryId = 95,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "HM",
-                            LegacyCountry = false,
                             Name = "Heard Island and Mcdonald Islands"
                         },
                         new
                         {
                             CountryId = 96,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "VA",
-                            LegacyCountry = false,
                             Name = "Holy See (Vatican City State)"
                         },
                         new
                         {
                             CountryId = 97,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "HN",
-                            LegacyCountry = false,
                             Name = "Honduras"
                         },
                         new
                         {
                             CountryId = 98,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "HK",
-                            LegacyCountry = false,
                             Name = "Hong Kong"
                         },
                         new
                         {
                             CountryId = 99,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "HU",
-                            LegacyCountry = false,
                             Name = "Hungary"
                         },
                         new
                         {
                             CountryId = 100,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "IS",
-                            LegacyCountry = false,
                             Name = "Iceland"
                         },
                         new
                         {
                             CountryId = 101,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "IN",
-                            LegacyCountry = false,
                             Name = "India"
                         },
                         new
                         {
                             CountryId = 102,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ID",
-                            LegacyCountry = false,
                             Name = "Indonesia"
                         },
                         new
                         {
                             CountryId = 103,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "IR",
-                            LegacyCountry = false,
                             Name = "Iran, Islamic Republic of"
                         },
                         new
                         {
                             CountryId = 104,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "IQ",
-                            LegacyCountry = false,
                             Name = "Iraq"
                         },
                         new
                         {
                             CountryId = 105,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "IE",
-                            LegacyCountry = false,
                             Name = "Ireland"
                         },
                         new
                         {
                             CountryId = 106,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "IM",
-                            LegacyCountry = false,
                             Name = "Isle Of Man"
                         },
                         new
                         {
                             CountryId = 107,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "IL",
-                            LegacyCountry = false,
                             Name = "Israel"
                         },
                         new
                         {
                             CountryId = 108,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "IT",
-                            LegacyCountry = false,
                             Name = "Italy"
                         },
                         new
                         {
                             CountryId = 109,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "JM",
-                            LegacyCountry = false,
                             Name = "Jamaica"
                         },
                         new
                         {
                             CountryId = 110,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "JP",
-                            LegacyCountry = false,
                             Name = "Japan"
                         },
                         new
                         {
                             CountryId = 111,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "JE",
-                            LegacyCountry = false,
                             Name = "Jersey"
                         },
                         new
                         {
                             CountryId = 112,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "JO",
-                            LegacyCountry = false,
                             Name = "Jordan"
                         },
                         new
                         {
                             CountryId = 113,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KZ",
-                            LegacyCountry = false,
                             Name = "Kazakhstan"
                         },
                         new
                         {
                             CountryId = 114,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KE",
-                            LegacyCountry = false,
                             Name = "Kenya"
                         },
                         new
                         {
                             CountryId = 115,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KI",
-                            LegacyCountry = false,
                             Name = "Kiribati"
                         },
                         new
                         {
                             CountryId = 116,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KP",
-                            LegacyCountry = false,
                             Name = "Korea, Democratic People's Republic of"
                         },
                         new
                         {
                             CountryId = 117,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KR",
-                            LegacyCountry = false,
                             Name = "Korea, Republic of"
                         },
                         new
                         {
                             CountryId = 118,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "XK",
-                            LegacyCountry = false,
                             Name = "Kosovo"
                         },
                         new
                         {
                             CountryId = 119,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KW",
-                            LegacyCountry = false,
                             Name = "Kuwait"
                         },
                         new
                         {
                             CountryId = 120,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KG",
-                            LegacyCountry = false,
                             Name = "Kyrgyzstan"
                         },
                         new
                         {
                             CountryId = 121,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LA",
-                            LegacyCountry = false,
                             Name = "Lao People's Democratic Republic"
                         },
                         new
                         {
                             CountryId = 122,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LV",
-                            LegacyCountry = false,
                             Name = "Latvia"
                         },
                         new
                         {
                             CountryId = 123,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LB",
-                            LegacyCountry = false,
                             Name = "Lebanon"
                         },
                         new
                         {
                             CountryId = 124,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LS",
-                            LegacyCountry = false,
                             Name = "Lesotho"
                         },
                         new
                         {
                             CountryId = 125,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LR",
-                            LegacyCountry = false,
                             Name = "Liberia"
                         },
                         new
                         {
                             CountryId = 126,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LY",
-                            LegacyCountry = false,
                             Name = "Libyan Arab Jamahiriya"
                         },
                         new
                         {
                             CountryId = 127,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "LI",
-                            LegacyCountry = false,
                             Name = "Liechtenstein"
                         },
                         new
                         {
                             CountryId = 128,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LT",
-                            LegacyCountry = false,
                             Name = "Lithuania"
                         },
                         new
                         {
                             CountryId = 129,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "LU",
-                            LegacyCountry = false,
                             Name = "Luxembourg"
                         },
                         new
                         {
                             CountryId = 130,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MO",
-                            LegacyCountry = false,
                             Name = "Macao"
                         },
                         new
                         {
                             CountryId = 131,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MK",
-                            LegacyCountry = false,
                             Name = "North Macedonia"
                         },
                         new
                         {
                             CountryId = 132,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MG",
-                            LegacyCountry = false,
                             Name = "Madagascar"
                         },
                         new
                         {
                             CountryId = 133,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MW",
-                            LegacyCountry = false,
                             Name = "Malawi"
                         },
                         new
                         {
                             CountryId = 134,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MY",
-                            LegacyCountry = false,
                             Name = "Malaysia"
                         },
                         new
                         {
                             CountryId = 135,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MV",
-                            LegacyCountry = false,
                             Name = "Maldives"
                         },
                         new
                         {
                             CountryId = 136,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ML",
-                            LegacyCountry = false,
                             Name = "Mali"
                         },
                         new
                         {
                             CountryId = 137,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MT",
-                            LegacyCountry = false,
                             Name = "Malta"
                         },
                         new
                         {
                             CountryId = 138,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MH",
-                            LegacyCountry = false,
                             Name = "Marshall Islands"
                         },
                         new
                         {
                             CountryId = 139,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MQ",
-                            LegacyCountry = false,
                             Name = "Martinique"
                         },
                         new
                         {
                             CountryId = 140,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MR",
-                            LegacyCountry = false,
                             Name = "Mauritania"
                         },
                         new
                         {
                             CountryId = 141,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MU",
-                            LegacyCountry = false,
                             Name = "Mauritius"
                         },
                         new
                         {
                             CountryId = 142,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "YT",
-                            LegacyCountry = false,
                             Name = "Mayotte"
                         },
                         new
                         {
                             CountryId = 143,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MX",
-                            LegacyCountry = false,
                             Name = "Mexico"
                         },
                         new
                         {
                             CountryId = 144,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "FM",
-                            LegacyCountry = false,
                             Name = "Micronesia, Federated States of"
                         },
                         new
                         {
                             CountryId = 145,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MD",
-                            LegacyCountry = false,
                             Name = "Moldova"
                         },
                         new
                         {
                             CountryId = 146,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "MC",
-                            LegacyCountry = false,
                             Name = "Monaco"
                         },
                         new
                         {
                             CountryId = 147,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MN",
-                            LegacyCountry = false,
                             Name = "Mongolia"
                         },
                         new
                         {
                             CountryId = 148,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ME",
-                            LegacyCountry = false,
                             Name = "Montenegro"
                         },
                         new
                         {
                             CountryId = 149,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MS",
-                            LegacyCountry = false,
                             Name = "Montserrat"
                         },
                         new
                         {
                             CountryId = 150,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MA",
-                            LegacyCountry = false,
                             Name = "Morocco"
                         },
                         new
                         {
                             CountryId = 151,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MZ",
-                            LegacyCountry = false,
                             Name = "Mozambique"
                         },
                         new
                         {
                             CountryId = 152,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MM",
-                            LegacyCountry = false,
                             Name = "Myanmar"
                         },
                         new
                         {
                             CountryId = 153,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NA",
-                            LegacyCountry = false,
                             Name = "Namibia"
                         },
                         new
                         {
                             CountryId = 154,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NR",
-                            LegacyCountry = false,
                             Name = "Nauru"
                         },
                         new
                         {
                             CountryId = 155,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NP",
-                            LegacyCountry = false,
                             Name = "Nepal"
                         },
                         new
                         {
                             CountryId = 156,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "NL",
-                            LegacyCountry = false,
                             Name = "Netherlands"
                         },
                         new
                         {
                             CountryId = 157,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AN",
-                            LegacyCountry = false,
                             Name = "Netherlands Antilles"
                         },
                         new
                         {
                             CountryId = 158,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NC",
-                            LegacyCountry = false,
                             Name = "New Caledonia"
                         },
                         new
                         {
                             CountryId = 159,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "NZ",
-                            LegacyCountry = false,
                             Name = "New Zealand"
                         },
                         new
                         {
                             CountryId = 160,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NI",
-                            LegacyCountry = false,
                             Name = "Nicaragua"
                         },
                         new
                         {
                             CountryId = 161,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NE",
-                            LegacyCountry = false,
                             Name = "Niger"
                         },
                         new
                         {
                             CountryId = 162,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NG",
-                            LegacyCountry = false,
                             Name = "Nigeria"
                         },
                         new
                         {
                             CountryId = 163,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NU",
-                            LegacyCountry = false,
                             Name = "Niue"
                         },
                         new
                         {
                             CountryId = 164,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "NF",
-                            LegacyCountry = false,
                             Name = "Norfolk Island"
                         },
                         new
                         {
                             CountryId = 165,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MP",
-                            LegacyCountry = false,
                             Name = "Northern Mariana Islands"
                         },
                         new
                         {
                             CountryId = 166,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "NO",
-                            LegacyCountry = false,
                             Name = "Norway"
                         },
                         new
                         {
                             CountryId = 167,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "OM",
-                            LegacyCountry = false,
                             Name = "Oman"
                         },
                         new
                         {
                             CountryId = 168,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "  ",
-                            LegacyCountry = false,
                             Name = "Other"
                         },
                         new
                         {
                             CountryId = 169,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PK",
-                            LegacyCountry = false,
                             Name = "Pakistan"
                         },
                         new
                         {
                             CountryId = 170,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PW",
-                            LegacyCountry = false,
                             Name = "Palau"
                         },
                         new
                         {
                             CountryId = 171,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PS",
-                            LegacyCountry = false,
                             Name = "Palestine, State of"
                         },
                         new
                         {
                             CountryId = 172,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PA",
-                            LegacyCountry = false,
                             Name = "Panama"
                         },
                         new
                         {
                             CountryId = 173,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PG",
-                            LegacyCountry = false,
                             Name = "Papua New Guinea"
                         },
                         new
                         {
                             CountryId = 174,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PY",
-                            LegacyCountry = false,
                             Name = "Paraguay"
                         },
                         new
                         {
                             CountryId = 175,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PE",
-                            LegacyCountry = false,
                             Name = "Peru"
                         },
                         new
                         {
                             CountryId = 176,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PH",
-                            LegacyCountry = false,
                             Name = "Philippines"
                         },
                         new
                         {
                             CountryId = 177,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PN",
-                            LegacyCountry = false,
                             Name = "Pitcairn"
                         },
                         new
                         {
                             CountryId = 178,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PL",
-                            LegacyCountry = false,
                             Name = "Poland"
                         },
                         new
                         {
                             CountryId = 179,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "PT",
-                            LegacyCountry = false,
                             Name = "Portugal"
                         },
                         new
                         {
                             CountryId = 180,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PR",
-                            LegacyCountry = false,
                             Name = "Puerto Rico"
                         },
                         new
                         {
                             CountryId = 181,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "QA",
-                            LegacyCountry = false,
                             Name = "Qatar"
                         },
                         new
                         {
                             CountryId = 182,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "RE",
-                            LegacyCountry = false,
                             Name = "Reunion"
                         },
                         new
                         {
                             CountryId = 183,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "RO",
-                            LegacyCountry = false,
                             Name = "Romania"
                         },
                         new
                         {
                             CountryId = 184,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "RU",
-                            LegacyCountry = false,
                             Name = "Russian Federation"
                         },
                         new
                         {
                             CountryId = 185,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "RW",
-                            LegacyCountry = false,
                             Name = "Rwanda"
                         },
                         new
                         {
                             CountryId = 186,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "BL",
-                            LegacyCountry = false,
                             Name = "Saint Barthélemy"
                         },
                         new
                         {
                             CountryId = 187,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SH",
-                            LegacyCountry = false,
                             Name = "Saint Helena"
                         },
                         new
                         {
                             CountryId = 188,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "KN",
-                            LegacyCountry = false,
                             Name = "Saint Kitts and Nevis"
                         },
                         new
                         {
                             CountryId = 189,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LC",
-                            LegacyCountry = false,
                             Name = "Saint Lucia"
                         },
                         new
                         {
                             CountryId = 190,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "MF",
-                            LegacyCountry = false,
                             Name = "Saint Martin"
                         },
                         new
                         {
                             CountryId = 191,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "PM",
-                            LegacyCountry = false,
                             Name = "Saint Pierre and Miquelon"
                         },
                         new
                         {
                             CountryId = 192,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "VC",
-                            LegacyCountry = false,
                             Name = "Saint Vincent and The Grenadines"
                         },
                         new
                         {
                             CountryId = 193,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "WS",
-                            LegacyCountry = false,
                             Name = "Samoa"
                         },
                         new
                         {
                             CountryId = 194,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SM",
-                            LegacyCountry = false,
                             Name = "San Marino"
                         },
                         new
                         {
                             CountryId = 195,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ST",
-                            LegacyCountry = false,
                             Name = "Sao Tome and Principe"
                         },
                         new
                         {
                             CountryId = 196,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SA",
-                            LegacyCountry = false,
                             Name = "Saudi Arabia"
                         },
                         new
                         {
                             CountryId = 197,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SN",
-                            LegacyCountry = false,
                             Name = "Senegal"
                         },
                         new
                         {
                             CountryId = 198,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "RS",
-                            LegacyCountry = false,
                             Name = "Serbia"
                         },
                         new
                         {
                             CountryId = 199,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SC",
-                            LegacyCountry = false,
                             Name = "Seychelles"
                         },
                         new
                         {
                             CountryId = 200,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SL",
-                            LegacyCountry = false,
                             Name = "Sierra Leone"
                         },
                         new
                         {
                             CountryId = 201,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SG",
-                            LegacyCountry = false,
                             Name = "Singapore"
                         },
                         new
                         {
                             CountryId = 202,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SK",
-                            LegacyCountry = false,
                             Name = "Slovakia"
                         },
                         new
                         {
                             CountryId = 203,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SI",
-                            LegacyCountry = false,
                             Name = "Slovenia"
                         },
                         new
                         {
                             CountryId = 204,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SB",
-                            LegacyCountry = false,
                             Name = "Solomon Islands"
                         },
                         new
                         {
                             CountryId = 205,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SO",
-                            LegacyCountry = false,
                             Name = "Somalia"
                         },
                         new
                         {
                             CountryId = 206,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ZA",
-                            LegacyCountry = false,
                             Name = "South Africa"
                         },
                         new
                         {
                             CountryId = 207,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "GS",
-                            LegacyCountry = false,
                             Name = "South Georgia and the South Sandwich Islands"
                         },
                         new
                         {
                             CountryId = 208,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SSD",
-                            LegacyCountry = false,
                             Name = "South Sudan"
                         },
                         new
                         {
                             CountryId = 209,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "ES",
-                            LegacyCountry = false,
                             Name = "Spain"
                         },
                         new
                         {
                             CountryId = 210,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "LK",
-                            LegacyCountry = false,
                             Name = "Sri Lanka"
                         },
                         new
                         {
                             CountryId = 211,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SD",
-                            LegacyCountry = false,
                             Name = "Sudan"
                         },
                         new
                         {
                             CountryId = 212,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SR",
-                            LegacyCountry = false,
                             Name = "Suriname"
                         },
                         new
                         {
                             CountryId = 213,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SJ",
-                            LegacyCountry = false,
                             Name = "Svalbard and Jan Mayen"
                         },
                         new
                         {
                             CountryId = 214,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SZ",
-                            LegacyCountry = false,
                             Name = "Swaziland"
                         },
                         new
                         {
                             CountryId = 215,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "SE",
-                            LegacyCountry = false,
                             Name = "Sweden"
                         },
                         new
                         {
                             CountryId = 216,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "CH",
-                            LegacyCountry = false,
                             Name = "Switzerland"
                         },
                         new
                         {
                             CountryId = 217,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "SY",
-                            LegacyCountry = false,
                             Name = "Syrian Arab Republic"
                         },
                         new
                         {
                             CountryId = 218,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TW",
-                            LegacyCountry = false,
                             Name = "Taiwan, Province of China"
                         },
                         new
                         {
                             CountryId = 219,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TJ",
-                            LegacyCountry = false,
                             Name = "Tajikistan"
                         },
                         new
                         {
                             CountryId = 220,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TZ",
-                            LegacyCountry = false,
                             Name = "Tanzania, United Republic of"
                         },
                         new
                         {
                             CountryId = 221,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TH",
-                            LegacyCountry = false,
                             Name = "Thailand"
                         },
                         new
                         {
                             CountryId = 222,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TL",
-                            LegacyCountry = false,
                             Name = "Timor-Leste"
                         },
                         new
                         {
                             CountryId = 223,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TG",
-                            LegacyCountry = false,
                             Name = "Togo"
                         },
                         new
                         {
                             CountryId = 224,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TK",
-                            LegacyCountry = false,
                             Name = "Tokelau"
                         },
                         new
                         {
                             CountryId = 225,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TO",
-                            LegacyCountry = false,
                             Name = "Tonga"
                         },
                         new
                         {
                             CountryId = 226,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TT",
-                            LegacyCountry = false,
                             Name = "Trinidad and Tobago"
                         },
                         new
                         {
                             CountryId = 227,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TN",
-                            LegacyCountry = false,
                             Name = "Tunisia"
                         },
                         new
                         {
                             CountryId = 228,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TR",
-                            LegacyCountry = false,
                             Name = "Turkey"
                         },
                         new
                         {
                             CountryId = 229,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TM",
-                            LegacyCountry = false,
                             Name = "Turkmenistan"
                         },
                         new
                         {
                             CountryId = 230,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TC",
-                            LegacyCountry = false,
                             Name = "Turks and Caicos Islands"
                         },
                         new
                         {
                             CountryId = 231,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "TV",
-                            LegacyCountry = false,
                             Name = "Tuvalu"
                         },
                         new
                         {
                             CountryId = 232,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "UG",
-                            LegacyCountry = false,
                             Name = "Uganda"
                         },
                         new
                         {
                             CountryId = 233,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "UA",
-                            LegacyCountry = false,
                             Name = "Ukraine"
                         },
                         new
                         {
                             CountryId = 234,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "AE",
-                            LegacyCountry = false,
                             Name = "United Arab Emirates"
                         },
                         new
                         {
                             CountryId = 235,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "GB",
-                            LegacyCountry = false,
                             Name = "United Kingdom"
                         },
                         new
                         {
                             CountryId = 236,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "US",
-                            LegacyCountry = false,
                             Name = "United States"
                         },
                         new
                         {
                             CountryId = 237,
                             HasHighTbOccurence = false,
+                            IsLegacy = false,
                             IsoCode = "UM",
-                            LegacyCountry = false,
                             Name = "United States Minor Outlying Islands"
                         },
                         new
                         {
                             CountryId = 238,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "-",
-                            LegacyCountry = false,
                             Name = "Unknown"
                         },
                         new
                         {
                             CountryId = 239,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "UY",
-                            LegacyCountry = false,
                             Name = "Uruguay"
                         },
                         new
                         {
                             CountryId = 240,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "UZ",
-                            LegacyCountry = false,
                             Name = "Uzbekistan"
                         },
                         new
                         {
                             CountryId = 241,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "VU",
-                            LegacyCountry = false,
                             Name = "Vanuatu"
                         },
                         new
                         {
                             CountryId = 242,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "VE",
-                            LegacyCountry = false,
                             Name = "Venezuela"
                         },
                         new
                         {
                             CountryId = 243,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "VN",
-                            LegacyCountry = false,
                             Name = "Viet Nam"
                         },
                         new
                         {
                             CountryId = 244,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "VG",
-                            LegacyCountry = false,
                             Name = "Virgin Islands, British"
                         },
                         new
                         {
                             CountryId = 245,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "VI",
-                            LegacyCountry = false,
                             Name = "Virgin Islands, U.S."
                         },
                         new
                         {
                             CountryId = 246,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "WF",
-                            LegacyCountry = false,
                             Name = "Wallis and Futuna"
                         },
                         new
                         {
                             CountryId = 247,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "EH",
-                            LegacyCountry = false,
                             Name = "Western Sahara"
                         },
                         new
                         {
                             CountryId = 248,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "YE",
-                            LegacyCountry = false,
                             Name = "Yemen"
                         },
                         new
                         {
                             CountryId = 249,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ZM",
-                            LegacyCountry = false,
                             Name = "Zambia"
                         },
                         new
                         {
                             CountryId = 250,
                             HasHighTbOccurence = true,
+                            IsLegacy = false,
                             IsoCode = "ZW",
-                            LegacyCountry = false,
                             Name = "Zimbabwe"
                         },
                         new
                         {
                             CountryId = 251,
                             HasHighTbOccurence = false,
+                            IsLegacy = true,
                             IsoCode = "CS",
-                            LegacyCountry = true,
                             Name = "Serbia & Montenegro"
                         },
                         new
                         {
                             CountryId = 252,
                             HasHighTbOccurence = false,
+                            IsLegacy = true,
                             IsoCode = "YU",
-                            LegacyCountry = true,
                             Name = "Yugoslavia"
                         },
                         new
                         {
                             CountryId = 253,
                             HasHighTbOccurence = false,
+                            IsLegacy = true,
                             IsoCode = "ZR",
-                            LegacyCountry = true,
                             Name = "Zaire"
                         });
                 });

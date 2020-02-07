@@ -77,7 +77,7 @@ namespace ntbs_service.DataAccess
         private IQueryable<Country> GetBaseCountryQueryable()
         {
             return _context.Country
-                .Where(c => c.LegacyCountry == false)
+                .Where(c => c.IsLegacy == false)
                 .OrderBy(c => c.Name);
         }
 

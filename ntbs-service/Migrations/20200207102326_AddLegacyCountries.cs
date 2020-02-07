@@ -7,7 +7,7 @@ namespace ntbs_service.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "LegacyCountry",
+                name: "IsLegacy",
                 table: "Country",
                 nullable: false,
                 defaultValue: false);
@@ -35,24 +35,24 @@ namespace ntbs_service.Migrations
 
             migrationBuilder.InsertData(
                 table: "Country",
-                columns: new[] { "CountryId", "HasHighTbOccurence", "IsoCode", "LegacyCountry", "Name" },
+                columns: new[] { "CountryId", "HasHighTbOccurence", "IsLegacy", "IsoCode", "Name" },
                 values: new object[,]
                 {
-                    { 251, false, "CS", true, "Serbia & Montenegro" },
-                    { 252, false, "YU", true, "Yugoslavia" },
-                    { 253, false, "ZR", true, "Zaire" }
+                    { 251, false, true, "CS", "Serbia & Montenegro" },
+                    { 252, false, true, "YU", "Yugoslavia" },
+                    { 253, false, true, "ZR", "Zaire" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Country_Name",
+                name: "IX_Country_IsLegacy_Name",
                 table: "Country",
-                column: "Name");
+                columns: new[] { "IsLegacy", "Name" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropIndex(
-                name: "IX_Country_Name",
+                name: "IX_Country_IsLegacy_Name",
                 table: "Country");
 
             migrationBuilder.DeleteData(
@@ -71,7 +71,7 @@ namespace ntbs_service.Migrations
                 keyValue: 253);
 
             migrationBuilder.DropColumn(
-                name: "LegacyCountry",
+                name: "IsLegacy",
                 table: "Country");
 
             migrationBuilder.UpdateData(

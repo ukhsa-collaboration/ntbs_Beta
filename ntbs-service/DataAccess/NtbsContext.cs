@@ -71,7 +71,7 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(200);
-                entity.HasIndex(e => e.Name);
+                entity.HasIndex(e => new {e.IsLegacy, e.Name});
             });
 
 

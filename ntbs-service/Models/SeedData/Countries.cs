@@ -319,9 +319,9 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 248, Name = "Yemen", IsoCode = "YE" },
                 new Country { CountryId = 249, Name = "Zambia", IsoCode = "ZM" },
                 new Country { CountryId = 250, Name = "Zimbabwe", IsoCode = "ZW" },
-                new Country { CountryId = 251, Name = "Serbia & Montenegro", IsoCode = "CS", LegacyCountry = true},
-                new Country { CountryId = 252, Name = "Yugoslavia", IsoCode = "YU", LegacyCountry = true},
-                new Country { CountryId = 253, Name = "Zaire", IsoCode = "ZR", LegacyCountry = true}
+                new Country { CountryId = 251, Name = "Serbia & Montenegro", IsoCode = "CS", IsLegacy = true},
+                new Country { CountryId = 252, Name = "Yugoslavia", IsoCode = "YU", IsLegacy = true},
+                new Country { CountryId = 253, Name = "Zaire", IsoCode = "ZR", IsLegacy = true}
             };
         }
 
