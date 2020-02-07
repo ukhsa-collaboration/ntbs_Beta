@@ -4,8 +4,8 @@
 
 @{
     Layout = "../Shared/_NotificationOverviewLayout.cshtml";
-    ViewData["Title"] = "Overview";
-    ViewData["NotificationId"] = @Model.NotificationId;
+    ViewData["NotificationId"] = Model.NotificationId;
+    ViewData["Title"] = $"Notification #{Model.NotificationId} overview";
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
 
@@ -35,4 +35,4 @@
 
 <partial name="./OverviewPartials/_MDRDetailsOverviewPartial"/>
 
-<a href='#top' class="govuk-link--no-visited-state"> Back to top </a>
+<a href='#top' class="govuk-link--no-visited-state no-print"> Back to top </a>

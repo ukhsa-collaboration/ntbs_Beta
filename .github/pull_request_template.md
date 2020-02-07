@@ -6,6 +6,7 @@
 ## Checklist:
 - [ ] Automated tests are passing locally.
 - [ ] Sanity checked new EF-generated queries for performance.
+- [ ] If changing content for notification overview, confirmed renders okay for print in Chrome and IE
 ### Accessibility testing
 - [ ] Test functionality without javascript
 - [ ] Test in small window (imitating small screen)

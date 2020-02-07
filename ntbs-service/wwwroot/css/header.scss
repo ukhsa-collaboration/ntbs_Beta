@@ -6,9 +6,20 @@
 
 .header-navigation-background {
     background: $phe-red;
+  
+    @media print {
+      display: none;
+    }
 }
 
-.header-navgation-list {
+@media print {
+  .govuk-phase-banner {
+    display: none;
+  } 
+}
+
+
+.header-navigation-list {
     margin-bottom: 0;
 
     .header-navigation-list-item {
@@ -60,5 +71,9 @@
         height: 45px;
         background-color: #DAD7CB;
         margin-top: 10px;
+      
+        @media print {
+          display: none;
+        }
     }
 }
