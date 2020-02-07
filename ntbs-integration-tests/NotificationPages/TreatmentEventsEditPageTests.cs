@@ -403,11 +403,11 @@ namespace ntbs_integration_tests.NotificationPages
             
             var treatmentRestartRow = treatmentTable.QuerySelector($"#treatment-event-{RESTART_TREATMENT_EVENT_ID}");
             Assert.NotNull(treatmentRestartRow);
-            Assert.NotNull(treatmentRestartRow.QuerySelector("#edit-link"));
+            Assert.NotNull(treatmentRestartRow.QuerySelector($"#edit-link-{RESTART_TREATMENT_EVENT_ID}"));
 
             var treatmentTransferInRow = treatmentTable.QuerySelector($"#treatment-event-{TRANSFER_IN_EVENT_ID}");
             Assert.NotNull(treatmentTransferInRow);
-            Assert.Null(treatmentTransferInRow.QuerySelector("#edit-link"));
+            Assert.Null(treatmentTransferInRow.QuerySelector($"#edit-link-{TRANSFER_IN_EVENT_ID}"));
         }
     }
 }
