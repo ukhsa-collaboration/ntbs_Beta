@@ -40,7 +40,10 @@ namespace ntbs_service.Models.SeedData
             "Switzerland",
             "United Kingdom",
             "United States",
-            "United States Minor Outlying Islands"
+            "United States Minor Outlying Islands",
+            "Serbia & Montenegro",
+            "Yugoslavia",
+            "Zaire"
         };
 
         public static IEnumerable<Country> GetCountriesArray()
@@ -116,7 +119,7 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 48, Name = "Colombia", IsoCode = "CO" },
                 new Country { CountryId = 49, Name = "Comoros", IsoCode = "KM" },
                 new Country { CountryId = 50, Name = "Congo", IsoCode = "CG" },
-                new Country { CountryId = 51, Name = "Congo, The Democratic Republic of the", IsoCode = "CD" },
+                new Country { CountryId = 51, Name = "Congo, Democratic Republic of the", IsoCode = "CD" },
                 new Country { CountryId = 52, Name = "Cook Islands", IsoCode = "CK" },
                 new Country { CountryId = 53, Name = "Costa Rica", IsoCode = "CR" },
                 new Country { CountryId = 54, Name = "Côte D'ivoire", IsoCode = "CI" },
@@ -196,7 +199,7 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 128, Name = "Lithuania", IsoCode = "LT" },
                 new Country { CountryId = 129, Name = "Luxembourg", IsoCode = "LU" },
                 new Country { CountryId = 130, Name = "Macao", IsoCode = "MO" },
-                new Country { CountryId = 131, Name = "Macedonia, The Former Yugoslav Republic of", IsoCode = "MK" },
+                new Country { CountryId = 131, Name = "North Macedonia", IsoCode = "MK" },
                 new Country { CountryId = 132, Name = "Madagascar", IsoCode = "MG" },
                 new Country { CountryId = 133, Name = "Malawi", IsoCode = "MW" },
                 new Country { CountryId = 134, Name = "Malaysia", IsoCode = "MY" },
@@ -236,7 +239,7 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 168, Name = "Other", IsoCode = "  " },
                 new Country { CountryId = 169, Name = "Pakistan", IsoCode = "PK" },
                 new Country { CountryId = 170, Name = "Palau", IsoCode = "PW" },
-                new Country { CountryId = 171, Name = "Palestinian Territory, Occupied", IsoCode = "PS" },
+                new Country { CountryId = 171, Name = "Palestine, State of", IsoCode = "PS" },
                 new Country { CountryId = 172, Name = "Panama", IsoCode = "PA" },
                 new Country { CountryId = 173, Name = "Papua New Guinea", IsoCode = "PG" },
                 new Country { CountryId = 174, Name = "Paraguay", IsoCode = "PY" },
@@ -315,7 +318,10 @@ namespace ntbs_service.Models.SeedData
                 new Country { CountryId = 247, Name = "Western Sahara", IsoCode = "EH" },
                 new Country { CountryId = 248, Name = "Yemen", IsoCode = "YE" },
                 new Country { CountryId = 249, Name = "Zambia", IsoCode = "ZM" },
-                new Country { CountryId = 250, Name = "Zimbabwe", IsoCode = "ZW" }
+                new Country { CountryId = 250, Name = "Zimbabwe", IsoCode = "ZW" },
+                new Country { CountryId = 251, Name = "Serbia & Montenegro", IsoCode = "CS", IsLegacy = true},
+                new Country { CountryId = 252, Name = "Yugoslavia", IsoCode = "YU", IsLegacy = true},
+                new Country { CountryId = 253, Name = "Zaire", IsoCode = "ZR", IsLegacy = true}
             };
         }
 

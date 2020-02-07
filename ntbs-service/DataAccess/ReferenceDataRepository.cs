@@ -58,19 +58,27 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<Country>> GetAllCountriesAsync()
         {
-            return await _context.Country.ToListAsync();
+            return await GetBaseCountryQueryable().ToListAsync();
         }
 
         public async Task<IList<Country>> GetAllHighTbIncidenceCountriesAsync()
         {
-            return await _context.Country
+            return await GetBaseCountryQueryable()
                 .Where(c => c.HasHighTbOccurence)
                 .ToListAsync();
         }
 
         public async Task<IList<Country>> GetAllCountriesApartFromUkAsync()
         {
-            return await _context.Country.Where(c => c.IsoCode != Countries.UkCode).ToListAsync();
+            return await GetBaseCountryQueryable()
+                .Where(c => c.IsoCode != Countries.UkCode).ToListAsync();
+        }
+
+        private IQueryable<Country> GetBaseCountryQueryable()
+        {
+            return _context.Country
+                .Where(c => c.IsLegacy == false)
+                .OrderBy(c => c.Name);
         }
 
         public async Task<Country> GetCountryByIdAsync(int countryId)
