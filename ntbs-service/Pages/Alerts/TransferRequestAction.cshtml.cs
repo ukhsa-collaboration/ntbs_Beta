@@ -109,7 +109,8 @@ namespace ntbs_service.Pages.Alerts
                 EventDate = currentTime,
                 TreatmentEventType = TreatmentEventType.TransferOut,
                 CaseManagerUsername = Notification.Episode.CaseManagerUsername,
-                TbServiceCode = Notification.Episode.TBServiceCode
+                TbServiceCode = Notification.Episode.TBServiceCode,
+                Note = TransferAlert.TransferRequestNote
             };
             var transferInEvent = new TreatmentEvent
             {
@@ -117,7 +118,8 @@ namespace ntbs_service.Pages.Alerts
                 EventDate = currentTime.AddSeconds(1),
                 TreatmentEventType = TreatmentEventType.TransferIn,
                 CaseManagerUsername = TransferAlert.CaseManagerUsername,
-                TbServiceCode = TransferAlert.TbServiceCode
+                TbServiceCode = TransferAlert.TbServiceCode,
+                Note = TransferAlert.TransferRequestNote
             };
             Notification.Episode.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.Episode.CaseManagerUsername = TransferAlert.CaseManagerUsername;

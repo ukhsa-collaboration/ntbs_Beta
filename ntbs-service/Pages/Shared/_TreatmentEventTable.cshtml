@@ -52,10 +52,13 @@
                     </nhs-table-item>
                     @if (showEditLinks)
                     {
-                        var subPath = NotificationSubPaths.EditTreatmentEvent(result.TreatmentEventId);
-                        var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
                         <nhs-table-item>
-                            <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
+                            @if(result.IsEditable)
+                            {
+                                var subPath = NotificationSubPaths.EditTreatmentEvent(result.TreatmentEventId);
+                                var path = RouteHelper.GetNotificationPath(result.NotificationId, subPath);
+                                <a href="@path" class="govuk-link--no-visited-state"> Edit </a>
+                            }
                         </nhs-table-item>
                     }
                 </nhs-table-body-row>
