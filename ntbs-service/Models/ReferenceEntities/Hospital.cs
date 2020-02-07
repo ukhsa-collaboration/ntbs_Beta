@@ -18,5 +18,7 @@ namespace ntbs_service.Models.ReferenceEntities
 
         [ForeignKey("TBServiceCode")]
         public virtual TBService TBService { get; set; }
+     
+        public bool IsLegacy { get; set; }
     }
 }

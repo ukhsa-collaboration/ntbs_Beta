@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -3075,6 +3076,8 @@ namespace ntbs_service.Migrations
                     b.Property<string>("CountryCode")
                         .HasMaxLength(50);
 
+                    b.Property<bool>("IsLegacy");
+
                     b.Property<string>("Name")
                         .HasMaxLength(200);
 
@@ -3091,6 +3094,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("003ade77-4099-4aff-afc9-564757f54ecb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SCARBOROUGH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0086"
                         },
@@ -3098,6 +3102,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("00bddb9c-07f5-46d0-afb0-12f66bb85ab9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOUTHAMPTON GENERAL HOSPITAL",
                             TBServiceCode = "TBS0204"
                         },
@@ -3105,6 +3110,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("00c14073-322b-433b-aec1-f1c0698d5489"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "AILSA CRAIG MEDICAL PRACTICE",
                             TBServiceCode = "TBS0119"
                         },
@@ -3112,6 +3118,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("01c3b0dc-ff1e-4a09-a59d-647862562b9d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NATIONAL HOSPITAL FOR NEUROLOGY & NEUROSCIENCES - QUEEN SQUARE",
                             TBServiceCode = "TBS0128"
                         },
@@ -3119,6 +3126,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("025dcd69-efb7-45f4-9b02-8c260cfc77f4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FITZWILLIAM HOSPITAL",
                             TBServiceCode = "TBS0074"
                         },
@@ -3126,6 +3134,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0275af55-727a-4cac-8a96-2285ef484b50"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MONTGOMERY COUNTY INFIRMARY",
                             TBServiceCode = "TBS0374"
                         },
@@ -3133,6 +3142,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("027f7fd2-36f8-4504-8683-41dd4510d339"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN'S HOSPITAL [BURTON UPON TRENT]",
                             TBServiceCode = "TBS0033"
                         },
@@ -3140,6 +3150,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("02c4ada5-6853-448e-ae72-33e1395f7cf3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE SOUTH BANK HOSPITAL",
                             TBServiceCode = "TBS0263"
                         },
@@ -3147,6 +3158,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("02ecfb85-cdab-4a30-b29d-18277190de8f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRIGHTON GENERAL HOSPITAL",
                             TBServiceCode = "TBS0027"
                         },
@@ -3154,6 +3166,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("037bd8f1-701f-4dfc-a685-7cea2327c806"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRENTWOOD COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0024"
                         },
@@ -3161,6 +3174,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("03f4894f-0ef3-4c23-8701-245f83d9e66c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "RUTHIN COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0376"
                         },
@@ -3168,6 +3182,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("05e4acfc-593c-42b5-984e-98a54187e0d3"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "TYWYN & DISTRICT DAY HOSPITAL",
                             TBServiceCode = "TBS0338"
                         },
@@ -3175,6 +3190,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("06e43793-c2a7-45db-91f1-7a32882c7437"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FISHERMEAD MEDICAL CENTRE",
                             TBServiceCode = "TBS0073"
                         },
@@ -3182,6 +3198,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("07186db5-833f-4d9d-a0aa-e1374dd64fb8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL LEWISHAM",
                             TBServiceCode = "TBS0246"
                         },
@@ -3189,6 +3206,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("072c1d97-ac4f-459b-b27f-f5a0b9d2abb8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LONDON CHEST HOSPITAL",
                             TBServiceCode = "TBS0124"
                         },
@@ -3196,6 +3214,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("076c7e3b-c9a2-43d0-942d-558a9d6371e3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "RETFORD HOSPITAL",
                             TBServiceCode = "TBS0059"
                         },
@@ -3203,6 +3222,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0838cd26-5690-461e-bcf4-11de5e20d606"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE TUNBRIDGE WELLS HOSPITAL",
                             TBServiceCode = "TBS0213"
                         },
@@ -3210,6 +3230,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("085d3235-827e-430e-b70d-b889b042af97"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GREAT WESTERN HOSPITAL",
                             TBServiceCode = "TBS0237"
                         },
@@ -3217,6 +3238,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("086a670b-bbed-49f5-879e-6f402a43309c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DOUGLAS MACMILLAN HOSPICE",
                             TBServiceCode = "TBS0232"
                         },
@@ -3224,6 +3246,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("08b374a6-3d0d-462d-b39c-818dbbb17ec1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HOLLY HOUSE HOSPITAL",
                             TBServiceCode = "TBS0091"
                         },
@@ -3231,6 +3254,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("099481b6-ff46-4247-85ef-d04d8d0524cc"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "NANT-Y-GLYN DAY HOSPITAL",
                             TBServiceCode = "TBS0308"
                         },
@@ -3238,6 +3262,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("09deb24a-ce0d-4add-8bf9-59b831f9caa4"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "NEVILL HALL HOSPITAL",
                             TBServiceCode = "TBS0387"
                         },
@@ -3245,6 +3270,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0a5a2531-1f6c-438b-90d1-427d14b35632"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL CORNWALL HOSPITAL (TRELISKE)",
                             TBServiceCode = "TBS0051"
                         },
@@ -3252,6 +3278,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0ac033ab-9a11-4fa6-aa1a-1fca71180c2f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WESTON GENERAL HOSPITAL",
                             TBServiceCode = "TBS0258"
                         },
@@ -3259,6 +3286,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0aefd55a-7dd0-4b80-abec-3ecf44a104b9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH CAMBRIDGE HOSPITAL",
                             TBServiceCode = "TBS0144"
                         },
@@ -3266,6 +3294,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0b2bfb8d-0e9e-4138-8751-1dc1b2581ae5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NOTTINGHAM CITY HOSPITAL",
                             TBServiceCode = "TBS0142"
                         },
@@ -3273,6 +3302,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0ba53cca-6c30-4743-a21e-0664294e64d3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KING'S COLLEGE HOSPITAL (DULWICH)",
                             TBServiceCode = "TBS0102"
                         },
@@ -3280,6 +3310,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0cb0050c-6fdd-4663-862f-f8bb2d5ecbee"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HOSPITAL FOR TROPICAL DISEASES",
                             TBServiceCode = "TBS0094"
                         },
@@ -3287,6 +3318,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0cb2dff3-5ab3-46b2-ad45-e70716d8b853"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SUNDERLAND ROYAL HOSPITAL",
                             TBServiceCode = "TBS0235"
                         },
@@ -3294,6 +3326,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0d6e8617-02cc-4491-b29f-72a902139d1b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MEDWAY MARITIME HOSPITAL",
                             TBServiceCode = "TBS0121"
                         },
@@ -3301,6 +3334,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0d92e7ff-aba9-4e80-a048-a3ed4e0c44f0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SIR G B HUNTER MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -3308,6 +3342,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0e4b9e79-b47c-45de-89b9-58ffe3c3b2b4"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MINFORDD HOSPITAL",
                             TBServiceCode = "TBS0386"
                         },
@@ -3315,6 +3350,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0e757d5c-57b8-41f1-b2ae-a75ab69c4854"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "TREDEGAR GENERAL HOSPITAL",
                             TBServiceCode = "TBS0292"
                         },
@@ -3322,6 +3358,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0e7e5809-d38e-40d7-9c70-b69660c244c7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE REGENCY HOSPITAL",
                             TBServiceCode = "TBS0131"
                         },
@@ -3329,6 +3366,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0eee2ec2-1f3e-4175-be90-85aa33f0686c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "COLCHESTER GENERAL HOSPITAL",
                             TBServiceCode = "TBS0049"
                         },
@@ -3336,6 +3374,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0ef08231-4b51-4887-91cb-316408c02657"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "EALING HOSPITAL",
                             TBServiceCode = "TBS0114"
                         },
@@ -3343,6 +3382,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0f2aa7de-6615-400e-bb14-ec960d42994d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST THOMAS' HOSPITAL [LONDON]",
                             TBServiceCode = "TBS0230"
                         },
@@ -3350,6 +3390,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("0f6d1869-c347-4a32-be45-ceea4df5f537"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ULSTER HOSPITAL",
                             TBServiceCode = "TBS0281"
                         },
@@ -3357,6 +3398,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1001ba58-bb01-4745-a1d2-b15ff4070ef0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL ORTHOPAEDIC HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -3364,6 +3406,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1087f367-ce99-4bcd-b7e1-704cbfd9105d"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "DENBIGH COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0399"
                         },
@@ -3371,6 +3414,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("10ade1d8-e91f-44e1-b6fb-6fdbcf38edca"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "STAFFORDSHIRE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0232"
                         },
@@ -3378,6 +3422,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1199d23b-65f8-49a9-aee1-eafeba2ddcae"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BOOTH HALL HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -3385,6 +3430,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("126bc5ef-cde0-4747-96aa-02aa804865ff"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ESPERANCE HOSPITAL",
                             TBServiceCode = "TBS0070"
                         },
@@ -3392,6 +3438,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("12f92666-3a55-49ea-b298-a996411385cf"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "FORGLEN DAY HOSPITAL",
                             TBServiceCode = "TBS0324"
                         },
@@ -3399,6 +3446,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("13737a9f-f4aa-4831-b151-edd051eecf68"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "JOYCE GREEN HOSPITAL",
                             TBServiceCode = "TBS0098"
                         },
@@ -3406,6 +3454,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("13967c5c-8172-44f0-bdab-b206c8bdd8d2"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "WHITCHURCH HOSPITAL [CARDIFF]",
                             TBServiceCode = "TBS0329"
                         },
@@ -3413,6 +3462,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("13c912bf-3127-4dd2-908b-6bbcaa3bc984"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ELIZABETH HOSPITAL [KING'S LYNN]",
                             TBServiceCode = "TBS0170"
                         },
@@ -3420,6 +3470,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("14334461-c8de-477e-b881-04df0c0e7c32"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ALNWICK INFIRMARY",
                             TBServiceCode = "TBS0137"
                         },
@@ -3427,6 +3478,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("15e4f8fb-09bc-45e2-8d7c-d5f654465680"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ABERDARE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0316"
                         },
@@ -3434,6 +3486,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("160b52ad-9881-4c07-930c-933315dab76e"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "CAUSEWAY HOSPITAL",
                             TBServiceCode = "TBS0274"
                         },
@@ -3441,6 +3494,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("16a5bc66-9d12-4156-8db9-2b75292bfceb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL LANCASTER INFIRMARY",
                             TBServiceCode = "TBS0056"
                         },
@@ -3448,6 +3502,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("177f8d11-d5b6-48cc-bcf4-2e49519949e4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BEVERLEY WESTWOOD HOSPITAL",
                             TBServiceCode = "TBS0017"
                         },
@@ -3455,6 +3510,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("181d832c-0210-42a9-9f8a-370aa4816196"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PWLLHELI DAY HOSPITAL",
                             TBServiceCode = "TBS0353"
                         },
@@ -3462,6 +3518,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("18695d7f-b64d-4600-8f73-3c890cc3a3ce"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "MATER INFIRMORUM HOSPITAL",
                             TBServiceCode = "TBS0271"
                         },
@@ -3469,6 +3526,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("18bb0905-d268-4f33-9c94-b6a15791c7f4"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ST CADOCS HOSPITAL",
                             TBServiceCode = "TBS0331"
                         },
@@ -3476,6 +3534,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("18f24540-166d-4d59-84d7-61aa1ccb46c0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "RUNNEYMEDE HOSPITAL",
                             TBServiceCode = "TBS0192"
                         },
@@ -3483,6 +3542,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("195baaa9-0008-47f5-84f5-ac75b7127a1b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MILTON KEYNES GENERAL HOSPITAL",
                             TBServiceCode = "TBS0125"
                         },
@@ -3490,6 +3550,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1aae3804-cca4-4e8a-8e38-947c77a50230"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HEXHAM GENERAL HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -3497,6 +3558,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1acefe30-cb48-432c-9bbc-10b371aa0a59"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL OF NORTH STAFFORDSHIRE",
                             TBServiceCode = "TBS0232"
                         },
@@ -3504,6 +3566,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1b1edf62-ee5e-45ca-9ab1-1e76808c3423"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HAROLD WOOD HOSPITAL",
                             TBServiceCode = "TBS0085"
                         },
@@ -3511,6 +3574,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1b5ef984-a883-4248-9285-7e02be2db1c3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL VICTORIA HOSPITAL [FOLKESTONE]",
                             TBServiceCode = "TBS0191"
                         },
@@ -3518,6 +3582,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1d024fdf-bde9-4b5d-8e85-7682186cff14"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WITHINGTON HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -3525,6 +3590,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1e017501-e18e-471c-9a41-433367097fba"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST MARY'S HOSPITAL [ISLE OF WIGHT]",
                             TBServiceCode = "TBS0225"
                         },
@@ -3532,6 +3598,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1e1a4fb3-b8e4-4162-ab5f-913ceb70e007"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "COMPTON HOSPICE",
                             TBServiceCode = "TBS0262"
                         },
@@ -3539,6 +3606,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1e558266-7db6-445f-915d-42510a23e737"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GOOD HOPE HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -3546,6 +3614,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1ee330e7-3759-473b-93eb-a65a09dee01d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL COVENTRY",
                             TBServiceCode = "TBS0054"
                         },
@@ -3553,6 +3622,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1f801293-d20c-41c7-8f65-808f8092543b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRONGLAIS GENERAL HOSPITAL",
                             TBServiceCode = "TBS0405"
                         },
@@ -3560,6 +3630,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1fdcb443-7459-4af7-8980-007e62ef2e90"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MOUNT ALVERNIA HOSPITAL",
                             TBServiceCode = "TBS0126"
                         },
@@ -3567,6 +3638,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("1fde9ae3-9a76-406b-93d6-e3bea0cb2250"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SEDGEFIELD COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0053"
                         },
@@ -3574,6 +3646,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("200add54-aeae-4ae8-83fb-c17f4086b86f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FAWKHAM MANOR HOSPITAL",
                             TBServiceCode = "TBS0072"
                         },
@@ -3581,6 +3654,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("20120fac-8e26-49e2-83cd-0c1ec364fa9e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL HOSPITAL (WOLVERHAMPTON)",
                             TBServiceCode = "TBS0262"
                         },
@@ -3588,6 +3662,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("20494aba-dd68-401a-bef2-1b5fa0315828"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH SHREWSBURY HOSPITAL",
                             TBServiceCode = "TBS0196"
                         },
@@ -3595,6 +3670,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("20c6e25b-ca1f-46f4-a52c-27036a7858d4"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CHEPSTOW COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0377"
                         },
@@ -3602,6 +3678,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("213920fc-bf88-43e1-858f-bf29f08c4ae1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL VICTORIA INFIRMARY [NEWCASTLE]",
                             TBServiceCode = "TBS0137"
                         },
@@ -3609,6 +3686,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("21c98b1a-bce5-482d-bcdd-a66090acdd31"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DARENT VALLEY HOSPITAL",
                             TBServiceCode = "TBS0058"
                         },
@@ -3616,6 +3694,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("21f28284-c7b7-4cf3-9b55-03b80ba14477"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE ST SAVIOUR'S HOSPITAL",
                             TBServiceCode = "TBS0212"
                         },
@@ -3623,6 +3702,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("225fad12-be15-414d-8e4c-178f7c6aa763"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHILTERN HOSPITAL",
                             TBServiceCode = "TBS0045"
                         },
@@ -3630,6 +3710,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("227d2a1e-42aa-4d34-98b6-db4b489533d5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH GUILDFORD HOSPITAL",
                             TBServiceCode = "TBS0146"
                         },
@@ -3637,6 +3718,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2284b28d-6722-4d27-b30b-8ec34e413985"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "RUSSELLS HALL HOSPITAL",
                             TBServiceCode = "TBS0062"
                         },
@@ -3644,6 +3726,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("22ddd848-f889-4a26-8b48-1b70d5d77719"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CLACTON AND DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0047"
                         },
@@ -3651,6 +3734,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("23290947-b60d-4e69-b014-b77a443d4caf"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ORPINGTON HOSPITAL",
                             TBServiceCode = "TBS0155"
                         },
@@ -3658,6 +3742,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("23c0ea5a-a196-4a80-a923-055631fd6866"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BOGNOR REGIS WAR MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0021"
                         },
@@ -3665,6 +3750,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("23d82b05-d327-4aca-b01f-afc856fb21a4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHARTER MEDICAL CENTRE",
                             TBServiceCode = "TBS0037"
                         },
@@ -3672,6 +3758,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("23e2de92-787d-4962-bc63-24d37b477a26"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HEART HOSPITAL",
                             TBServiceCode = "TBS0087"
                         },
@@ -3679,6 +3766,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2529c035-1cad-4bd7-8b3a-e02227a12e05"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "GELLINUDD HOSPITAL",
                             TBServiceCode = "TBS0298"
                         },
@@ -3686,6 +3774,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("264f90dc-2c62-4e92-8f64-69f1085fe3e2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WATER EATON HEALTH CENTRE",
                             TBServiceCode = "TBS0252"
                         },
@@ -3693,6 +3782,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("266fa510-3c54-4aad-92bf-f30bda272d68"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST PANCRAS HOSPITAL",
                             TBServiceCode = "TBS0228"
                         },
@@ -3700,6 +3790,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("26b1f5b9-cfc1-46ed-9984-dfacdf41544d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ESSEX COUNTY HOSPITAL",
                             TBServiceCode = "TBS0071"
                         },
@@ -3707,6 +3798,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2773dd7b-6184-4569-8a6f-a1df9a9d23d3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ANDOVER WAR MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0005"
                         },
@@ -3714,6 +3806,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("27911115-f3ea-4f56-b343-4e9e52b0a84c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PRESTATYN COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0382"
                         },
@@ -3721,6 +3814,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("28cbee25-66f4-4a20-bf3d-f26077792ef5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PRESTON HALL HOSPITAL",
                             TBServiceCode = "TBS0164"
                         },
@@ -3728,6 +3822,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2906e828-41e8-47a6-9fd4-3da2e1ff9a06"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CARDIFF ROYAL INFIRMARY",
                             TBServiceCode = "TBS0344"
                         },
@@ -3735,6 +3830,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("293604af-6d7e-43fe-8354-37e810d3be14"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "JAMES PAGET HOSPITAL",
                             TBServiceCode = "TBS0097"
                         },
@@ -3742,6 +3838,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("29c2825c-016f-4f44-b899-eda58cf2fabf"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HEMEL HEMPSTEAD GENERAL HOSPITAL",
                             TBServiceCode = "TBS0253"
                         },
@@ -3749,6 +3846,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("29c3bf29-502c-40fa-92a0-e91455b1ed5c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WARDERS MEDICAL CENTRE",
                             TBServiceCode = "TBS0250"
                         },
@@ -3756,6 +3854,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2a3b7e0e-7e95-4090-acff-d4759996a3cd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DUCHESS OF KENT HOSPITAL",
                             TBServiceCode = "TBS0061"
                         },
@@ -3763,6 +3862,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2a474e42-4634-4990-84ab-b0ee3ae8327e"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ROYAL ALEXANDRA HOSPITAL [RHYL]",
                             TBServiceCode = "TBS0327"
                         },
@@ -3770,6 +3870,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2a4b6534-5b02-47bf-8c3d-c7fdcf8eaf61"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CITY HOSPITAL [BIRMINGHAM]",
                             TBServiceCode = "TBS0019"
                         },
@@ -3777,6 +3878,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2ae06413-a942-4c89-8de1-1fa212fcd64b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST RICHARD'S HOSPITAL",
                             TBServiceCode = "TBS0229"
                         },
@@ -3784,6 +3886,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2b1d1d3d-1ce0-4a95-9d5b-fbad03e4b75c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL OLDHAM HOSPITAL",
                             TBServiceCode = "TBS0160"
                         },
@@ -3791,6 +3894,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2b4a2cf9-2f58-4b45-8828-cb955be2161f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "RADCLIFFE INFIRMARY",
                             TBServiceCode = "TBS0174"
                         },
@@ -3798,6 +3902,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2c046e90-e7b3-41f0-bc8d-39accfc0879f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "IPSWICH HOSPITAL",
                             TBServiceCode = "TBS0096"
                         },
@@ -3805,6 +3910,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2c36399e-8aba-4be8-99d9-de1a01341f9e"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ROYAL GLAMORGAN HOSPITAL",
                             TBServiceCode = "TBS0306"
                         },
@@ -3812,6 +3918,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2c74c36c-6227-4a4b-9b9c-bcf57f70443d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTHAMPTON GENERAL HOSPITAL",
                             TBServiceCode = "TBS0140"
                         },
@@ -3819,6 +3926,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2cdcb5e9-4d13-4cb7-941c-5f6b8a45e7c2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HILLINGDON HOSPITAL",
                             TBServiceCode = "TBS0090"
                         },
@@ -3826,6 +3934,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2d0e397a-0e17-46fc-8fd5-16101c1cc978"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS TAYSIDE",
                             TBServiceCode = "TBS0422"
                         },
@@ -3833,6 +3942,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2d14f397-3474-45b5-a8ef-995666fb7563"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "VICTORIA HOSPITAL [ROMFORD]",
                             TBServiceCode = "TBS0248"
                         },
@@ -3840,6 +3950,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2d19c818-ba9d-4c38-baf4-42cf14844619"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LIVERPOOL WOMENS HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -3847,6 +3958,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2da3c93c-0df4-46d1-8370-b64c3ca8acf7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BARNET HOSPITAL",
                             TBServiceCode = "TBS0009"
                         },
@@ -3854,6 +3966,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2dd2fe7c-62a8-45d9-b787-5ad15808ecc3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ADDENBROOKE'S HOSPITAL",
                             TBServiceCode = "TBS0002"
                         },
@@ -3861,6 +3974,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2f262b76-8fef-47f8-b650-eeda51d76200"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE BRISTOL HOSPITAL",
                             TBServiceCode = "TBS0028"
                         },
@@ -3868,6 +3982,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2f7deab6-80f3-4f2a-811c-c096bacb650b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "REDWOOD MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0335"
                         },
@@ -3875,6 +3990,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2fefbf18-8fed-467a-86af-cfc54d14964d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BUCKINGHAM HOSPITAL",
                             TBServiceCode = "TBS0031"
                         },
@@ -3882,6 +3998,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("2ff75d5a-0145-4912-afa5-9d52c63bcd68"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHORLEY & SOUTH RIBBLE HOSPITAL",
                             TBServiceCode = "TBS0036"
                         },
@@ -3889,6 +4006,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("306eb541-8669-4c0a-a65a-6413efa8b96a"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ABERTILLERY DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0394"
                         },
@@ -3896,6 +4014,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("318b6d3c-4854-4ed2-871d-056e56b8d120"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH CHICHESTER HOSPITAL",
                             TBServiceCode = "TBS0145"
                         },
@@ -3903,6 +4022,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("31b2d7b3-2fb4-42a7-8251-ce84ea728fd5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PINDERFIELDS GENERAL HOSPITAL",
                             TBServiceCode = "TBS0203"
                         },
@@ -3910,6 +4030,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("334d0057-4c0a-47a0-a833-66f0184770cd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WESTMORLAND GENERAL HOSPITAL",
                             TBServiceCode = "TBS0056"
                         },
@@ -3917,6 +4038,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("337014ab-d284-4e98-8ae6-65d00232fc8b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DARLINGTON MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0053"
                         },
@@ -3924,6 +4046,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("339e7a48-b7cb-4947-99d2-e5943533f2cc"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE WELLESLEY HOSPITAL",
                             TBServiceCode = "TBS0214"
                         },
@@ -3931,6 +4054,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("33e41bc7-1a80-4fb3-a1b8-1ae4e9543f4e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOUTHEND HOSPITAL",
                             TBServiceCode = "TBS0205"
                         },
@@ -3938,6 +4062,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("344852e4-4684-4297-b44c-20de42c8234f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DONCASTER ROYAL INFIRMARY",
                             TBServiceCode = "TBS0176"
                         },
@@ -3945,6 +4070,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("348e403c-7f80-4b6b-b5f3-0b4c62134e2b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WILLIAM HARVEY HOSPITAL",
                             TBServiceCode = "TBS0100"
                         },
@@ -3952,6 +4078,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("34b5922b-b889-4135-b628-45ca2a15a8a0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NEWHAM GENERAL HOSPITAL",
                             TBServiceCode = "TBS0130"
                         },
@@ -3959,6 +4086,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3522c2e0-f45e-4716-b1c3-de9c70cafee0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL SUSSEX COUNTY HOSPITAL",
                             TBServiceCode = "TBS0190"
                         },
@@ -3966,6 +4094,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3550401a-119c-48c3-883e-46977a8c6032"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PRINCESS ALEXANDRA HOSPITAL",
                             TBServiceCode = "TBS0165"
                         },
@@ -3973,6 +4102,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("356f6b1a-ab11-44bf-8db0-1afc5d455fee"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEXHAM PARK HOSPITAL",
                             TBServiceCode = "TBS0259"
                         },
@@ -3980,6 +4110,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("35ce13f9-a65c-424f-8309-b0fbdf769557"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BLAINA & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0328"
                         },
@@ -3987,6 +4118,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("36029668-0d6e-4ad8-a578-d6b0baace5a2"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CEFNI HOSPITAL",
                             TBServiceCode = "TBS0301"
                         },
@@ -3994,6 +4126,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("37104a55-4db0-4964-8443-2bc9119c5753"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ABERAERON HOSPITAL",
                             TBServiceCode = "TBS0357"
                         },
@@ -4001,6 +4134,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3725a52c-1e6f-4a30-a55a-5fb4aa983973"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "VICTORIA HEALTH CENTRE",
                             TBServiceCode = "TBS0194"
                         },
@@ -4008,6 +4142,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("37545212-7893-400a-a413-6e75f79500ac"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRYN BERYL HOSPITAL",
                             TBServiceCode = "TBS0397"
                         },
@@ -4015,6 +4150,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("38b840bd-8862-46fb-9120-0088e0b4fdf8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ALTRINCHAM GENERAL HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -4022,6 +4158,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("392a986c-a664-46c9-9c1b-d7f7f5c30b06"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GOOLE DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0078"
                         },
@@ -4029,6 +4166,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("39395bd2-5f8c-4f1a-9245-e4337817e278"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "COUNTY HOSPITAL [DURHAM]",
                             TBServiceCode = "TBS0053"
                         },
@@ -4036,6 +4174,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3a356b79-9fce-4193-8f6a-b43de3d74d7b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BROADGREEN HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -4043,6 +4182,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3af604c4-15d8-4408-be3c-4afed220c84a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HOMERTON UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0092"
                         },
@@ -4050,6 +4190,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3ba14e3a-67a5-4488-a15c-1075e07e9d32"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LEIGH INFIRMARY",
                             TBServiceCode = "TBS0025"
                         },
@@ -4057,6 +4198,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3ba986ff-d53a-43f3-bf55-361061559204"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WYCOMBE HOSPITAL",
                             TBServiceCode = "TBS0234"
                         },
@@ -4064,6 +4206,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3bd5ddb5-9dcf-42b6-8ba7-aa16e9c7bbb3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HEATHERWOOD HOSPITAL",
                             TBServiceCode = "TBS0088"
                         },
@@ -4071,6 +4214,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3be2648f-d5b5-4e8d-880c-ab4dbeb989a6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DUNSTON HILL HOSPITAL",
                             TBServiceCode = "TBS0076"
                         },
@@ -4078,6 +4222,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3be91589-f3e1-4200-a956-7973459ded35"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL SOUTH HANTS HOSPITAL",
                             TBServiceCode = "TBS0188"
                         },
@@ -4085,6 +4230,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3c6b423a-2d73-4bf4-a10f-28b98014ac0c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "OLDCHURCH HOSPITAL",
                             TBServiceCode = "TBS0152"
                         },
@@ -4092,6 +4238,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3cd116f8-c660-46a1-96a0-ef6ce8fb532e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL ALBERT EDWARD INFIRMARY",
                             TBServiceCode = "TBS0025"
                         },
@@ -4099,6 +4246,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3cdda2a9-ab20-4b83-8caf-68e7ecac9cf5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WARRINGTON HOSPITAL",
                             TBServiceCode = "TBS0251"
                         },
@@ -4106,6 +4254,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3d2b0065-bb83-4e0e-9b23-d007500e703f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "TRAFFORD GENERAL HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -4113,6 +4262,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3d450887-56ad-48f6-9599-fdf5625126d4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHAUCER HOSPITAL",
                             TBServiceCode = "TBS0039"
                         },
@@ -4120,6 +4270,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3d46d50f-22d7-44fa-bc9c-358c9a00dcfa"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRO DDYFI COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0352"
                         },
@@ -4127,6 +4278,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3daf070a-73e3-4449-867a-c69dfc90c476"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BATTLE HOSPITAL",
                             TBServiceCode = "TBS0013"
                         },
@@ -4134,6 +4286,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3e39aae9-008b-4cd9-89e4-40d94fcb49dd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRIDLINGTON & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0026"
                         },
@@ -4141,6 +4294,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3e7b18d4-4e67-44bd-9c49-4d8e75f18607"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GREAT ORMOND STREET HOSPITAL CENTRAL LONDON SITE",
                             TBServiceCode = "TBS0080"
                         },
@@ -4148,6 +4302,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3e806307-573a-45f8-b295-06f95884ffc9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LEEK MOORLANDS HOSPITAL",
                             TBServiceCode = "TBS0232"
                         },
@@ -4155,6 +4310,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3e855da9-6a91-49d8-b94a-000863127f59"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "HOLYWELL COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0363"
                         },
@@ -4162,6 +4318,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3ecac202-c204-4384-b3f9-0d3ff412dc36"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SALFORD ROYAL",
                             TBServiceCode = "TBS0193"
                         },
@@ -4169,6 +4326,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3ef911af-689d-41ae-8125-dcbb121c7c66"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BLYTH COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -4176,6 +4334,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("3f83592d-30eb-4f87-a13e-94b62308cc5c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ST DAVIDS HOSPITAL [CARMARTHEN]",
                             TBServiceCode = "TBS0342"
                         },
@@ -4183,6 +4342,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("40ef3e55-4023-44e7-bdbc-dddc966f3c29"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "H M STANLEY HOSPITAL",
                             TBServiceCode = "TBS0305"
                         },
@@ -4190,6 +4350,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("41036c83-c26e-4590-91a1-cf167e32fd1d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BEDFORD HOSPITAL",
                             TBServiceCode = "TBS0014"
                         },
@@ -4197,6 +4358,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("41ba2e29-1862-47bc-bf15-56599ad510e1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN'S HOSPITAL [ROMFORD]",
                             TBServiceCode = "TBS0018"
                         },
@@ -4204,6 +4366,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("41e962f8-d31b-445d-a58d-6d91b74bf966"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DEWSBURY & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0111"
                         },
@@ -4211,6 +4374,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("42047d4a-7837-419c-87b0-ec879f751745"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE MURRAYFIELD HOSPITAL",
                             TBServiceCode = "TBS0006"
                         },
@@ -4218,6 +4382,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4220440e-b0e6-4f2f-827c-539552ff32ad"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PENLEY HOSPITAL",
                             TBServiceCode = "TBS0384"
                         },
@@ -4225,6 +4390,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4227ec35-4c3a-46af-9bdf-61f0d87888f0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GUISBOROUGH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0200"
                         },
@@ -4232,6 +4398,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("42c35589-dd1e-41e1-bc7c-e2b965e2d7ad"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BERWICK INFIRMARY",
                             TBServiceCode = "TBS0137"
                         },
@@ -4239,6 +4406,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("42f9a891-2dec-40c6-8475-d0eb28b51d51"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MORRISTON HOSPITAL",
                             TBServiceCode = "TBS0309"
                         },
@@ -4246,6 +4414,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("447a23ce-6449-47c3-90ea-081681d6c5fd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NEW CROSS HOSPITAL",
                             TBServiceCode = "TBS0262"
                         },
@@ -4253,6 +4422,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("44c3608f-231e-4dd7-963c-4492d804e894"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FRIMLEY PARK HOSPITAL",
                             TBServiceCode = "TBS0075"
                         },
@@ -4260,6 +4430,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("44ead93f-6b3e-4873-9c4b-b590dd2287cf"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS ORKNEY",
                             TBServiceCode = "TBS0420"
                         },
@@ -4267,6 +4438,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("455db200-3f89-4780-bf6c-e970fe8dc06c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MUSGROVE PARK HOSPITAL [SOMERSET]",
                             TBServiceCode = "TBS0199"
                         },
@@ -4274,6 +4446,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("457925d3-db5b-459a-8130-a4d0d367f4ae"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SHEFFIELD CHILDREN'S HOSPITAL",
                             TBServiceCode = "TBS0195"
                         },
@@ -4281,6 +4454,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("459f4747-a065-4288-8184-2536237f016b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST HELENS HOSPITAL [MERSEYSIDE]",
                             TBServiceCode = "TBS0222"
                         },
@@ -4288,6 +4462,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("463ee869-7763-46a5-9319-5dc314b0f488"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MAINDIFF COURT HOSPITAL",
                             TBServiceCode = "TBS0391"
                         },
@@ -4295,6 +4470,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("46ddbeee-a422-4794-9640-0c114e1f6ac9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST LUKE'S HOSPITAL [BRADFORD]",
                             TBServiceCode = "TBS0023"
                         },
@@ -4302,6 +4478,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("470649c0-3f2f-4f13-a23d-fcb1d6b9b6e4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CASTLE HILL HOSPITAL",
                             TBServiceCode = "TBS0040"
                         },
@@ -4309,6 +4486,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("47159ea7-a205-4c4f-a93f-8d2d4498c39f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WHITTINGTON HOSPITAL",
                             TBServiceCode = "TBS0239"
                         },
@@ -4316,6 +4494,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("475fb009-c4b1-4b28-b526-96f06b922db6"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "WREXHAM MAELOR HOSPITAL",
                             TBServiceCode = "TBS0337"
                         },
@@ -4323,6 +4502,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4770940a-f28c-4179-bac6-9f99d56aa7a5"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "FFESTINIOG MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0323"
                         },
@@ -4330,6 +4510,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("482e828f-3d1f-46fa-9269-0ce594879246"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LEICESTER ROYAL INFIRMARY",
                             TBServiceCode = "TBS0107"
                         },
@@ -4337,6 +4518,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("489189b5-f8b5-465b-9b6a-7573d21cc238"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ALDER HEY CHILDREN'S HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -4344,6 +4526,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("48c263ce-33a1-4016-91d8-1beb5d08c99b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN MARY'S HOSPITAL [LONDON]",
                             TBServiceCode = "TBS0171"
                         },
@@ -4351,6 +4534,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("490806c6-db6b-40ca-a528-84f5df075231"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BENENDEN HOSPITAL",
                             TBServiceCode = "TBS0015"
                         },
@@ -4358,6 +4542,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4ad9271b-a7b6-41b3-b8cb-e5b9a1d0c10d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NELSON HOSPITAL",
                             TBServiceCode = "TBS0129"
                         },
@@ -4365,6 +4550,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4b055366-6301-456f-855d-555f5aa7c73f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PRINCESS ROYAL UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0029"
                         },
@@ -4372,6 +4558,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4b90f8da-261c-44af-b4ad-d91fbe6915a4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CONQUEST HOSPITAL",
                             TBServiceCode = "TBS0050"
                         },
@@ -4379,6 +4566,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4bbf4924-b27a-4ec3-94ae-df1004ec415c"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "DOWNE HOSPITAL",
                             TBServiceCode = "TBS0283"
                         },
@@ -4386,6 +4574,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4c04567b-5ad0-4660-9186-e6c36734dfcf"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SHOTLEY BRIDGE HOSPITAL",
                             TBServiceCode = "TBS0053"
                         },
@@ -4393,6 +4582,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4c6d94b4-e66c-46f5-8fad-4167a858a9d6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROCHDALE INFIRMARY",
                             TBServiceCode = "TBS0160"
                         },
@@ -4400,6 +4590,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4c86a46c-f9c9-45ea-8f85-409731b2d9e2"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "DAISY HILL HOSPITAL",
                             TBServiceCode = "TBS0267"
                         },
@@ -4407,6 +4598,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4ca759bf-600e-4e4d-be99-0f5b09f8ad4c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOLIHULL HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -4414,6 +4606,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4caded10-fff2-4e38-9b28-cb45cee309aa"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "YSBYTY GWYNEDD",
                             TBServiceCode = "TBS0320"
                         },
@@ -4421,6 +4614,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4cc99e95-6993-466a-8c7a-1bfce7159bb0"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANDOUGH HOSPITAL",
                             TBServiceCode = "TBS0371"
                         },
@@ -4428,6 +4622,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4cdaac14-f923-4735-91cd-ee695752fee3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOUTH CHESHIRE PRIVATE HOSPITAL",
                             TBServiceCode = "TBS0043"
                         },
@@ -4435,6 +4630,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4d23d7b3-bbb8-4642-a218-b0063a833a14"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LEIGHTON HOSPITAL",
                             TBServiceCode = "TBS0043"
                         },
@@ -4442,6 +4638,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4d3c8bfa-4dd5-48b9-8e52-6215b93e1132"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WESTERN COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0257"
                         },
@@ -4449,6 +4646,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4e5b013c-66d5-4098-ad3f-78d03587c653"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE HARPENDEN HOSPITAL",
                             TBServiceCode = "TBS0208"
                         },
@@ -4456,6 +4654,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4e872775-ef55-4ad9-b176-27c9cf4e61ef"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BIRCH HILL HOSPITAL",
                             TBServiceCode = "TBS0160"
                         },
@@ -4463,6 +4662,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4ee171e5-a4ae-4838-8cba-c4f493508145"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD DIAGNOSTIC CENTRE",
                             TBServiceCode = "TBS0181"
                         },
@@ -4470,6 +4670,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4f16fca0-be6e-4edd-9b2c-5ca70511e480"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MOUNTAIN ASH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0390"
                         },
@@ -4477,6 +4678,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4f7ba3f9-c2c7-453a-8775-1283615f61ff"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BOURNEMOUTH HOSPITAL",
                             TBServiceCode = "TBS0064"
                         },
@@ -4484,6 +4686,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4fc9ec5f-e93e-4447-9cdd-62a8f8e8170f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHESTERFIELD ROYAL HOSPITAL",
                             TBServiceCode = "TBS0044"
                         },
@@ -4491,6 +4694,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("4fcc9e17-fee4-42e9-b4ea-151de79540ad"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BASINGSTOKE AND NORTH HAMPSHIRE HOSPITAL",
                             TBServiceCode = "TBS0011"
                         },
@@ -4498,6 +4702,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("506123fe-47b0-4fbe-b7ec-c6644b184702"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LUDLOW HOSPITAL",
                             TBServiceCode = "TBS0196"
                         },
@@ -4505,6 +4710,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("506c8e5f-467d-4ebf-8fca-66cf0a8b5e30"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ALEXANDRA HOSPITAL [CHEADLE]",
                             TBServiceCode = "TBS0233"
                         },
@@ -4512,6 +4718,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("50757c7c-705d-44e7-968e-c3189b9c94a1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "RUSHDEN HOSPITAL",
                             TBServiceCode = "TBS0140"
                         },
@@ -4519,6 +4726,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("514246ae-1e23-41c2-a6db-2bd6e4a9df4b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHASE FARM HOSPITAL",
                             TBServiceCode = "TBS0038"
                         },
@@ -4526,6 +4734,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5154dc63-f7cb-40c9-b612-3abec95e54ed"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "HILL HOUSE DAY HOSPITAL",
                             TBServiceCode = "TBS0355"
                         },
@@ -4533,6 +4742,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("51f9c113-1d15-4a02-b1a8-3d7edb3fefdb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CLATTERBRIDGE HOSPITAL",
                             TBServiceCode = "TBS0006"
                         },
@@ -4540,6 +4750,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("52afafbe-de61-449d-9d8a-29d54aae6e35"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "MUSGRAVE PARK HOSPITAL [NORTHERN IRELAND]",
                             TBServiceCode = "TBS0268"
                         },
@@ -4547,6 +4758,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("52b6a55a-6ff7-4101-aa17-0b82367f5b8e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTH DOWNS HOSPITAL",
                             TBServiceCode = "TBS0134"
                         },
@@ -4554,6 +4766,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("52d019a7-3fa9-46e4-bef9-a645db4c783f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SEACROFT HOSPITAL",
                             TBServiceCode = "TBS0106"
                         },
@@ -4561,6 +4774,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5334cfd4-c2d9-48ad-b83b-edb432894f4c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ORSETT HOSPITAL",
                             TBServiceCode = "TBS0156"
                         },
@@ -4568,6 +4782,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("54279a3a-dbbd-41a3-a317-fa565d1b6e3b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SANDWELL GENERAL HOSPITAL",
                             TBServiceCode = "TBS0194"
                         },
@@ -4575,6 +4790,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("545e51b4-30f1-4a2b-bc99-a4103e00b963"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHRISTIE HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -4582,6 +4798,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("54a4a2b1-6b88-43e6-8c8c-299526dd9afb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "OAKLANDS HOSPITAL",
                             TBServiceCode = "TBS0193"
                         },
@@ -4589,6 +4806,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("54d734b4-327a-4595-96ef-2f6633735c60"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTHWICK PARK HOSPITAL",
                             TBServiceCode = "TBS0115"
                         },
@@ -4596,6 +4814,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("54e4d207-1a85-46b9-9bfe-225b6ce450e5"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANGOLLEN COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0373"
                         },
@@ -4603,6 +4822,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("54f67f43-a30e-4a7d-8248-783119f1a360"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL SHREWSBURY HOSPITAL",
                             TBServiceCode = "TBS0196"
                         },
@@ -4610,6 +4830,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5543c2b5-bde5-4c41-b856-e1469fa11df9"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PONTYPRIDD & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0300"
                         },
@@ -4617,6 +4838,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("555f7e63-2756-4765-a9eb-1de1acdc9c72"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MAIDSTONE DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0118"
                         },
@@ -4624,6 +4846,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("55cd6665-0b69-4a2d-b8a0-26db6398248b"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS LOTHIAN",
                             TBServiceCode = "TBS0419"
                         },
@@ -4631,6 +4854,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("56b105cc-0f86-4260-b421-7f93628879dd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BISHOP AUCKLAND GENERAL HOSPITAL",
                             TBServiceCode = "TBS0053"
                         },
@@ -4638,6 +4862,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5702d9be-1222-44f9-baeb-3bdfb1642fe8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HAREFIELD HOSPITAL",
                             TBServiceCode = "TBS0084"
                         },
@@ -4645,6 +4870,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("58395bde-7579-47c3-ade3-854acb2e2c5d"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MOLD COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0347"
                         },
@@ -4652,6 +4878,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("590b226a-d7f6-4f1c-a30e-f94a0a1ba53f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHELSFIELD PARK HOSPITAL",
                             TBServiceCode = "TBS0042"
                         },
@@ -4659,6 +4886,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5911c2f6-5441-430b-98f4-369132ce4513"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST MARY'S HOSPITAL [LONDON]",
                             TBServiceCode = "TBS0095"
                         },
@@ -4666,6 +4894,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("59755880-6b5d-4ce2-8b12-5125a7ddf832"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PILGRIM HOSPITAL",
                             TBServiceCode = "TBS0108"
                         },
@@ -4673,6 +4902,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("597979fe-6365-4b9f-8043-83d9897f90e6"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ARDS HOSPITAL",
                             TBServiceCode = "TBS0270"
                         },
@@ -4680,6 +4910,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5a13a8ed-d1ef-452c-ba33-dfc6332b07fc"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HOSPITAL OF ST CROSS",
                             TBServiceCode = "TBS0054"
                         },
@@ -4687,6 +4918,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5a723464-db3e-4387-ad11-ac66c0da2653"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST SUFFOLK HOSPITAL",
                             TBServiceCode = "TBS0256"
                         },
@@ -4694,6 +4926,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5a943494-26bd-4c4e-8277-5ed74d4d55d5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRIDGNORTH HOSPITAL",
                             TBServiceCode = "TBS0196"
                         },
@@ -4701,6 +4934,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5ac5c52f-75ff-4787-9fcb-655e7020b3f9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRISTOL ROYAL HOSPITAL FOR CHILDREN",
                             TBServiceCode = "TBS0028"
                         },
@@ -4708,6 +4942,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5afb1591-0296-42f0-8e1a-4abe24fcfb7a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "TOWNLANDS HOSPITAL",
                             TBServiceCode = "TBS0244"
                         },
@@ -4715,6 +4950,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5b13ce84-37b9-43ad-afa0-3407e277bfe2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WHIPPS CROSS UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0260"
                         },
@@ -4722,6 +4958,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5b733263-b172-492b-9fa2-81d5cd867d6d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHELSEA & WESTMINSTER HOSPITAL",
                             TBServiceCode = "TBS0041"
                         },
@@ -4729,6 +4966,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5baced7b-0109-482a-bc8f-799aea68b010"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH HAYWARDS HEATH HOSPITAL",
                             TBServiceCode = "TBS0147"
                         },
@@ -4736,6 +4974,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5d39f71c-ede7-44bc-a1f8-5376f59666ea"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ORMSKIRK & DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0154"
                         },
@@ -4743,6 +4982,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5d9e6668-df0b-4235-a9f7-e047a5eed8a3"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CLYDACH WAR MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0299"
                         },
@@ -4750,6 +4990,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5d9f3d17-74f1-412e-9b7f-70d6debd7a12"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ASHTON HOUSE HOSPITAL",
                             TBServiceCode = "TBS0006"
                         },
@@ -4757,6 +4998,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5e32e34a-16cd-4287-9788-d243793f1ba8"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "COLWYN BAY COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0313"
                         },
@@ -4764,6 +5006,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5e4cfca5-f1da-4233-afe8-f41f9e34392c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SHELTON HOSPITAL",
                             TBServiceCode = "TBS0196"
                         },
@@ -4771,6 +5014,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5f5233ee-f540-466f-b022-04c1da465ef3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH DERBY HOSPITAL",
                             TBServiceCode = "TBS0181"
                         },
@@ -4778,6 +5022,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5f9ceddf-54d4-4279-b306-fa5382fbb4b4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WATFORD GENERAL HOSPITAL",
                             TBServiceCode = "TBS0253"
                         },
@@ -4785,6 +5030,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("5fa85ad6-b12c-4b32-a3be-71697bfe26e9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WALTON CENTRE FOR NEUROLOGY & NEUROSURGERY",
                             TBServiceCode = "TBS0109"
                         },
@@ -4792,6 +5038,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6057e81e-a0ad-46f2-8ae9-dee253f2c600"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ARROWE PARK HOSPITAL",
                             TBServiceCode = "TBS0006"
                         },
@@ -4799,6 +5046,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("61fcc8a0-34d4-418c-a77d-55328773dbb2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SALISBURY DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0237"
                         },
@@ -4806,6 +5054,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("628e70b0-af6b-4fe6-b63a-36b3c116bebf"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GLOUCESTERSHIRE HOSPITALS NHS FOUNDATION TRUST",
                             TBServiceCode = "TBS0077"
                         },
@@ -4813,6 +5062,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("634f5af4-8a00-48b1-bbf4-cd68cbd1338d"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANDOVERY HOSPITAL",
                             TBServiceCode = "TBS0321"
                         },
@@ -4820,6 +5070,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("63824924-492d-4e99-92f9-92fcef210ff0"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "DEESIDE COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0343"
                         },
@@ -4827,6 +5078,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("63fb8f7e-54b8-4900-9e90-d171a1763fc7"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "SPIRE YALE HOSPITAL",
                             TBServiceCode = "TBS0310"
                         },
@@ -4834,6 +5086,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6414552c-64a4-4309-aec5-d6c6d55b2144"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS LANARKSHIRE",
                             TBServiceCode = "TBS0418"
                         },
@@ -4841,6 +5094,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("642b2ea5-16c2-4642-b811-b7920074a656"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KIDDERMINSTER HOSPITAL",
                             TBServiceCode = "TBS0263"
                         },
@@ -4848,6 +5102,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("653f8e76-c913-4894-8957-f4d812593f1b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "YSTRADGYNLAIS COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0291"
                         },
@@ -4855,6 +5110,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6576fd71-1dfd-414d-b743-deda97b6af0b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLWYNERYR HOSPITAL",
                             TBServiceCode = "TBS0307"
                         },
@@ -4862,6 +5118,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("65937cd7-855c-4e0b-afbb-354d10942588"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "FAIRWOOD HOSPITAL",
                             TBServiceCode = "TBS0361"
                         },
@@ -4869,6 +5126,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("65d18006-fe12-4b5b-b781-96a8a8ad877c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ELIZABETH HOSPITAL [GATESHEAD]",
                             TBServiceCode = "TBS0076"
                         },
@@ -4876,6 +5134,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("65e05417-0c38-40a8-bc03-a60ac083cdd8"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BUILTH WELLS COTTAGE HOSPITAL",
                             TBServiceCode = "TBS0322"
                         },
@@ -4883,6 +5142,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("65f565da-c32c-4dc3-a357-08d4022f334b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CITY GENERAL HOSPITAL [S-O-T]",
                             TBServiceCode = "TBS0232"
                         },
@@ -4890,6 +5150,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6614eacb-155f-4a13-aba1-c585877bc9a6"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "COLERAINE HOSPITAL",
                             TBServiceCode = "TBS0280"
                         },
@@ -4897,6 +5158,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("66290930-5cfe-40e1-96c0-d918f90f4191"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ERITH & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0069"
                         },
@@ -4904,6 +5166,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("66f7ed14-a941-4c1e-b1e9-c72d15671816"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "YSBYTY GEORGE THOMAS",
                             TBServiceCode = "TBS0317"
                         },
@@ -4911,6 +5174,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("66f8bd41-18fb-4c36-a7df-f82b02c31541"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "MID-ULSTER HOSPITAL",
                             TBServiceCode = "TBS0287"
                         },
@@ -4918,6 +5182,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("677ce666-0152-44e2-8fa1-3b56d372b87a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HALTON HOSPITAL",
                             TBServiceCode = "TBS0082"
                         },
@@ -4925,6 +5190,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("67da876c-ac6f-4b1b-8083-385f6abb7fd1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HINCHINGBROOKE HOSPITAL",
                             TBServiceCode = "TBS0139"
                         },
@@ -4932,6 +5198,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("698353ff-870c-4c0d-9f6b-011bd25f3787"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GRANTHAM & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0108"
                         },
@@ -4939,6 +5206,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("69870407-443d-458e-9190-565f8e08127a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRADFORD ROYAL INFIRMARY",
                             TBServiceCode = "TBS0022"
                         },
@@ -4946,6 +5214,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("69c94cd1-0423-4df6-a64d-aab6e96a569c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WINTERBOURNE HOSPITAL",
                             TBServiceCode = "TBS0060"
                         },
@@ -4953,6 +5222,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6a203fa2-8f39-404f-af66-d28e23925625"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PRIORY HOSPITAL",
                             TBServiceCode = "TBS0167"
                         },
@@ -4960,6 +5230,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6a87886f-97b7-40ab-813a-f063c8222a94"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRISTOL EYE HOSPITAL",
                             TBServiceCode = "TBS0028"
                         },
@@ -4967,6 +5238,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6b3e8c14-2249-4d1b-b95b-2459cd4d86cb"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "GORSEINON HOSPITAL",
                             TBServiceCode = "TBS0375"
                         },
@@ -4974,6 +5246,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6b91313f-05c5-4556-848f-0d4bd77b5b11"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "TREGARON HOSPITAL",
                             TBServiceCode = "TBS0369"
                         },
@@ -4981,6 +5254,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6b96e2f9-75a6-4c49-923d-98d448b2a266"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "VICTORIA MEMORIAL HOSPITAL [POWYS]",
                             TBServiceCode = "TBS0339"
                         },
@@ -4988,6 +5262,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6bae1060-fac0-4515-8ce5-d09dd5b6eefe"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL DEVON & EXETER HOSPITAL (WONFORD)",
                             TBServiceCode = "TBS0175"
                         },
@@ -4995,6 +5270,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6e1a2fb2-f33d-407e-b3df-8f01115d9d47"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST PETER'S HOSPITAL [CHERTSEY]",
                             TBServiceCode = "TBS0007"
                         },
@@ -5002,6 +5278,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6e27a0ed-58d1-4a1a-93bb-d757594c6a1b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CRAWLEY HOSPITAL",
                             TBServiceCode = "TBS0055"
                         },
@@ -5009,6 +5286,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6e2b2f97-c1f4-4ecb-b40f-9080bebdc965"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BERKSHIRE INDEPENDENT HOSPITAL",
                             TBServiceCode = "TBS0016"
                         },
@@ -5016,6 +5294,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6ea6858c-cf45-4143-8359-02fe6294ccda"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CAVELL HOSPITAL",
                             TBServiceCode = "TBS0035"
                         },
@@ -5023,6 +5302,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6edfc88e-fa8e-490c-bad6-f54f483ab7aa"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MERIDEN HOSPITAL",
                             TBServiceCode = "TBS0054"
                         },
@@ -5030,6 +5310,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6f797a5c-078a-48f8-b27f-2e3d67203175"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH YORK HOSPITAL",
                             TBServiceCode = "TBS0151"
                         },
@@ -5037,6 +5318,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6f7d6597-8fdb-4fcd-8642-7db216b5dff2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GUY'S HOSPITAL",
                             TBServiceCode = "TBS0081"
                         },
@@ -5044,6 +5326,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6fb3bb96-51c0-4ada-9c9c-8ac06beed41c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MANOR HOSPITAL [WALSALL]",
                             TBServiceCode = "TBS0249"
                         },
@@ -5051,6 +5334,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("6fe59de3-1917-4f36-bf38-610259f71378"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ERYRI HOSPITAL",
                             TBServiceCode = "TBS0392"
                         },
@@ -5058,6 +5342,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7021e407-fb6a-462f-87f7-25ef32a85915"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY COLLEGE HOSPITAL",
                             TBServiceCode = "TBS0239"
                         },
@@ -5065,6 +5350,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("71179d01-f00f-4579-b87a-d622e9dfbb36"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "TYRONE COUNTY HOSPITAL",
                             TBServiceCode = "TBS0282"
                         },
@@ -5072,6 +5358,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("71251e92-d6f6-48c2-946a-47b310243215"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KINGS OAK HOSPITAL",
                             TBServiceCode = "TBS0103"
                         },
@@ -5079,6 +5366,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("716c4d1e-34fc-4eb7-ac79-e65b3b5af255"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BIRMINGHAM CHEST CLINIC",
                             TBServiceCode = "TBS0019"
                         },
@@ -5086,6 +5374,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7292e6aa-d4ee-41fc-a09e-cf9365b38c09"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HIGHFIELD HOSPITAL",
                             TBServiceCode = "TBS0160"
                         },
@@ -5093,6 +5382,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7337c2ec-97e0-44b9-b72c-1a7f5408884c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DORSET COUNTY HOSPITAL",
                             TBServiceCode = "TBS0060"
                         },
@@ -5100,6 +5390,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("73d6dd94-75db-4ec8-a497-ea04af0c8bea"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ELIZABETH THE QUEEN MOTHER HOSPITAL",
                             TBServiceCode = "TBS0100"
                         },
@@ -5107,6 +5398,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("745f7bed-f6be-42c9-ba43-537954cdd284"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN MARY'S HOSPITAL [SIDCUP]",
                             TBServiceCode = "TBS0172"
                         },
@@ -5114,6 +5406,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("74bf9182-ddd1-4bf5-87f0-d3195a79f0a9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CLEMENTINE CHURCHILL HOSPITAL",
                             TBServiceCode = "TBS0048"
                         },
@@ -5121,6 +5414,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7545fc82-4a58-4c7c-aab4-3e169c0dfc13"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST ANNS HOSPITAL [LONDON]",
                             TBServiceCode = "TBS0216"
                         },
@@ -5128,6 +5422,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7640dec2-6863-47bb-933b-b43df54b0866"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GRAVESEND AND NORTH KENT HOSPITAL",
                             TBServiceCode = "TBS0079"
                         },
@@ -5135,6 +5430,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("766271cd-8bb8-4b14-9c4d-50424a30f6bc"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "SOUTH PEMBROKESHIRE HOSPITAL HEALTH & SOCIAL CARE RESOURCE CENTRE",
                             TBServiceCode = "TBS0383"
                         },
@@ -5142,6 +5438,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("769e9162-2ae1-4689-9721-a65912933bf6"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "BANGOR COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0285"
                         },
@@ -5149,6 +5446,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("76e51312-1e1b-42c2-8059-6ffb0dae1eae"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FRIARAGE HOSPITAL",
                             TBServiceCode = "TBS0086"
                         },
@@ -5156,6 +5454,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("775cb1aa-73b9-480b-9edd-23108f1f05e7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "THOMAS LINACRE CENTRE",
                             TBServiceCode = "TBS0025"
                         },
@@ -5163,6 +5462,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("778e92af-2f03-47f3-b692-dc1b20635544"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEENS HOSPITAL [CROYDON]",
                             TBServiceCode = "TBS0131"
                         },
@@ -5170,6 +5470,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("77f47444-1ab3-4245-ae3f-4472ea7e4ade"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST CUMBERLAND HOSPITAL",
                             TBServiceCode = "TBS0057"
                         },
@@ -5177,6 +5478,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("78b6d05e-e916-4536-b091-3552019e326c"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "WHITEABBEY HOSPITAL",
                             TBServiceCode = "TBS0269"
                         },
@@ -5184,6 +5486,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("790391e9-6c41-4d28-8341-c1b8811036de"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PARK SQUARE DAY HOSPITAL",
                             TBServiceCode = "TBS0336"
                         },
@@ -5191,6 +5494,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("79f9b55e-5bd5-4862-a8fc-e5bff1a957f9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITALS OF LEICESTER NHS TRUST",
                             TBServiceCode = "TBS0107"
                         },
@@ -5198,6 +5502,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7a0af4b6-241e-4dde-bcbb-e7aa7908ff3e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NEWCASTLE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -5205,6 +5510,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7b4ce341-b369-4fa4-8410-15fd7e5a7499"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CORBETT HOSPITAL",
                             TBServiceCode = "TBS0062"
                         },
@@ -5212,6 +5518,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7b5935b4-c2e1-4b8c-a8cf-a48ee9cc8617"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH BRENTWOOD HOSPITAL",
                             TBServiceCode = "TBS0143"
                         },
@@ -5219,6 +5526,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7b7a1322-e94d-4272-adae-75dd7df17ee7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HEREFORD COUNTY HOSPITAL",
                             TBServiceCode = "TBS0089"
                         },
@@ -5226,6 +5534,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7bcb517f-6cf3-4396-9d17-fa116d8ece59"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "COUNTESS OF CHESTER HOSPITAL",
                             TBServiceCode = "TBS0052"
                         },
@@ -5233,6 +5542,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7c5c250b-619d-4bda-9dfb-24b7c580c76c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FRENCHAY HOSPITAL",
                             TBServiceCode = "TBS0028"
                         },
@@ -5240,6 +5550,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7d3100cc-0a92-4256-8988-4f9101ee8f45"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST MARY'S HOSPITAL [MANCHESTER]",
                             TBServiceCode = "TBS0119"
                         },
@@ -5247,6 +5558,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7d3350c0-9637-43b9-b866-00562796ebf1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SELLY OAK HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -5254,6 +5566,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7d77c176-c394-4f85-880e-1b76dca15c19"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS SHETLAND",
                             TBServiceCode = "TBS0421"
                         },
@@ -5261,6 +5574,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7e9c715d-0248-4d97-8f67-1134fc133588"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LEEDS GENERAL INFIRMARY",
                             TBServiceCode = "TBS0106"
                         },
@@ -5268,6 +5582,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7eb349c6-db5a-423c-b996-a793b1e4db1b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL AINTREE",
                             TBServiceCode = "TBS0109"
                         },
@@ -5275,6 +5590,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7fd94f8b-83fd-46bc-ad21-9cf5b0fda3d2"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "AMY EVANS MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0340"
                         },
@@ -5282,6 +5598,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("7fe7d00a-f53a-4069-a4ec-0065f14c2339"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRYNSEIONT HOSPITAL",
                             TBServiceCode = "TBS0365"
                         },
@@ -5289,6 +5606,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("802123fa-680b-4d03-bf0a-8d4d53c38067"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FREEMAN HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -5296,6 +5614,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8105af2a-2934-4b33-bd4c-faca0759208d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LISTER HOSPITAL",
                             TBServiceCode = "TBS0063"
                         },
@@ -5303,6 +5622,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("811b7df1-6b75-46d7-8bfe-04513996f7e0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KENT & SUSSEX HOSPITAL",
                             TBServiceCode = "TBS0099"
                         },
@@ -5310,6 +5630,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("81f824fb-01f7-4941-bbd6-17a7e9a7a77f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHELTENHAM GENERAL HOSPITAL",
                             TBServiceCode = "TBS0077"
                         },
@@ -5317,6 +5638,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("82b70e77-fb46-44f1-85df-4809167bef8b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BUCKLAND HOSPITAL",
                             TBServiceCode = "TBS0032"
                         },
@@ -5324,6 +5646,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("834b99ca-f6cc-47aa-bf9a-318726e89dc1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST CORNWALL HOSPITAL (PENZANCE)",
                             TBServiceCode = "TBS0051"
                         },
@@ -5331,6 +5654,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("83ab54b0-8fd8-46d9-9007-d641d575a4ac"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS GREATER GLASGOW AND CLYDE",
                             TBServiceCode = "TBS0416"
                         },
@@ -5338,6 +5662,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("83ad62d2-28ce-4746-b2d2-fc92059a1fa4"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "HAVENWAY DAY HOSPITAL",
                             TBServiceCode = "TBS0289"
                         },
@@ -5345,6 +5670,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("83fab0e7-b142-4326-9897-e73394885d2c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORFOLK & NORWICH UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0132"
                         },
@@ -5352,6 +5678,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("842f158f-9354-4222-81c5-e4416e37255e"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CHIRK COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0294"
                         },
@@ -5359,6 +5686,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("84e57dd3-4cb6-495e-92ae-f09810a6743f"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ALTNAGELVIN AREA HOSPITAL",
                             TBServiceCode = "TBS0286"
                         },
@@ -5366,6 +5694,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("84ef9b5f-cd49-4c74-9cd3-a2e613a86674"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ERNE HOSPITAL",
                             TBServiceCode = "TBS0279"
                         },
@@ -5373,6 +5702,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("850c1f6b-5bef-4660-9a74-7656f784d86c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BLACKBURN HOSPITAL",
                             TBServiceCode = "TBS0065"
                         },
@@ -5380,6 +5710,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("858f0d2c-e3c5-4cff-bd82-c311d8f376c9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL LIVERPOOL UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -5387,6 +5718,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("85d14bcc-8351-47f8-bfb9-000534f66834"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CAERPHILLY DISTRICT MINERS HOSPITAL",
                             TBServiceCode = "TBS0362"
                         },
@@ -5394,6 +5726,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8680a1b4-8271-4004-8b8c-b906ce6b8b4a"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANRWST HEALTH CENTRE",
                             TBServiceCode = "TBS0332"
                         },
@@ -5401,6 +5734,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("868e426f-b11d-45a3-bf2c-e0c31bed2c44"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ASHFORD HOSPITAL",
                             TBServiceCode = "TBS0008"
                         },
@@ -5408,6 +5742,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("86a7ae93-f6ed-414d-a980-d279d583dae2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PRINCESS ROYAL HOSPITAL [TELFORD]",
                             TBServiceCode = "TBS0196"
                         },
@@ -5415,6 +5750,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("86aac5eb-db9d-496e-929d-9d7e34609e58"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PEMBURY HOSPITAL",
                             TBServiceCode = "TBS0245"
                         },
@@ -5422,6 +5758,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("87eed220-c1a8-4f17-9bbb-59c9e8f90e6c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WHISTON HOSPITAL",
                             TBServiceCode = "TBS0261"
                         },
@@ -5429,6 +5766,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("884e400b-1b68-4234-96f4-7e1a2029b15d"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ABERGELE HOSPITAL",
                             TBServiceCode = "TBS0403"
                         },
@@ -5436,6 +5774,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("88ddf0f9-1f3c-450d-a541-6f253bb83ae6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTH MIDDLESEX HOSPITAL",
                             TBServiceCode = "TBS0136"
                         },
@@ -5443,6 +5782,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("88fcd776-b1fb-4e1e-9e8c-31ea47ab719a"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "TONNA DAY HOSPITAL",
                             TBServiceCode = "TBS0358"
                         },
@@ -5450,6 +5790,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("891688fd-d707-4413-bef4-d6692e1582d0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "EDGWARE HOSPITAL",
                             TBServiceCode = "TBS0182"
                         },
@@ -5457,6 +5798,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8a42fca1-8e62-4805-990f-ee19f85a6a4f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "POOLE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0064"
                         },
@@ -5464,6 +5806,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8ae267ca-0751-4b82-b37f-2bc95ac06672"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS FIFE",
                             TBServiceCode = "TBS0413"
                         },
@@ -5471,6 +5814,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8b46b848-3543-4dca-98b7-e6148aa6afb3"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRONLLYS HOSPITAL",
                             TBServiceCode = "TBS0295"
                         },
@@ -5478,6 +5822,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8c3a922e-4f05-4e07-8143-37ec157db294"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HINCKLEY & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0107"
                         },
@@ -5485,6 +5830,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8d22fbaf-33a5-4060-a61a-abec1153390d"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS GRAMPIAN",
                             TBServiceCode = "TBS0415"
                         },
@@ -5492,6 +5838,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8d879b88-5e60-4a5e-91f0-83ecc4967eea"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MAESGWYN HOSPITAL",
                             TBServiceCode = "TBS0346"
                         },
@@ -5499,6 +5846,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8d98d3c3-2705-40c3-9c9c-c22730bd711e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE PARKWAY HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -5506,6 +5854,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8e0b5799-0e39-42fc-ba4c-652cc6fbb918"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HUDDERSFIELD ROYAL INFIRMARY",
                             TBServiceCode = "TBS0110"
                         },
@@ -5513,6 +5862,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8e0bca35-8ae9-49d3-b86b-0d5eda72037f"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS WESTERN ISLES",
                             TBServiceCode = "TBS0423"
                         },
@@ -5520,6 +5870,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8e3a276f-e332-4bbf-955a-16ec59556460"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CANNOCK CHASE HOSPITAL",
                             TBServiceCode = "TBS0232"
                         },
@@ -5527,6 +5878,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8e7f80d2-ecba-4b5a-b878-6587d94da1c5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KINGSTON HOSPITAL",
                             TBServiceCode = "TBS0105"
                         },
@@ -5534,6 +5886,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8ec2b877-6d80-4d09-8dd0-314964f81a16"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "JOHN RADCLIFFE HOSPITAL",
                             TBServiceCode = "TBS0157"
                         },
@@ -5541,6 +5894,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8f3159bc-446d-4e05-ad90-b26b5a983c6c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "SPIRE CARDIFF HOSPITAL",
                             TBServiceCode = "TBS0330"
                         },
@@ -5548,6 +5902,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("8f58e133-4d63-4527-a5c8-29a4eb1a726e"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRYN Y NEUADD DAY HOSPITAL",
                             TBServiceCode = "TBS0378"
                         },
@@ -5555,6 +5910,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("90546964-e70f-4518-a11c-e912c7812587"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE LIVERPOOL HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -5562,6 +5918,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("90554de3-8d9a-4332-bfa6-ac3c174a00dd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DERBYSHIRE ROYAL INFIRMARY",
                             TBServiceCode = "TBS0181"
                         },
@@ -5569,6 +5926,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("915fe2f1-3327-467b-a2e9-295ec96c7c5e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "YEOVIL DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0265"
                         },
@@ -5576,6 +5934,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("91d21969-295e-4a6e-a936-723ebd16e496"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BLACKHEATH HOSPITAL",
                             TBServiceCode = "TBS0020"
                         },
@@ -5583,6 +5942,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9278a04d-c67a-47a6-963d-25048b4fd834"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL HALLAMSHIRE HOSPITAL",
                             TBServiceCode = "TBS0195"
                         },
@@ -5590,6 +5950,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("92908614-3504-420f-866f-8f53d2d796ae"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ROYAL VICTORIA HOSPITAL [BELFAST]",
                             TBServiceCode = "TBS0272"
                         },
@@ -5597,6 +5958,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("92dce1f7-c2aa-4371-a2e6-1a8f24b22b4c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH HEREFORD HOSPITAL",
                             TBServiceCode = "TBS0089"
                         },
@@ -5604,6 +5966,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("930f0749-18d8-47f3-b29e-424c352209be"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "TORBAY DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0243"
                         },
@@ -5611,6 +5974,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9324dfba-f970-4d80-89a5-4af86ab62ed5"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "DEWI SANT DAY HOSPITAL",
                             TBServiceCode = "TBS0380"
                         },
@@ -5618,6 +5982,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("938e9578-51e7-4bc6-8760-97069a6cf535"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHESTER LE STREET HOSPITAL",
                             TBServiceCode = "TBS0053"
                         },
@@ -5625,6 +5990,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("93add9f7-2d74-4fd4-ba27-36fc483cb9eb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LIVERPOOL HEART AND CHEST HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -5632,6 +5998,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("93fa0a6c-474d-4ae8-af23-952076f96336"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ABINGDON COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0001"
                         },
@@ -5639,6 +6006,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("94259dec-cb66-438a-9d2b-2d0e7f707fca"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BURY GENERAL HOSPITAL",
                             TBServiceCode = "TBS0160"
                         },
@@ -5646,6 +6014,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("94e6eba6-4e24-4a85-b3ba-c71ba0cde4b1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LOUGHBOROUGH HOSPITAL",
                             TBServiceCode = "TBS0107"
                         },
@@ -5653,6 +6022,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("96f950fb-2331-413c-966e-5b7cf4c1c4a3"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CYMLA DAY HOSPITAL",
                             TBServiceCode = "TBS0388"
                         },
@@ -5660,6 +6030,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9718b416-b72a-4fe0-b394-c59f0add5d7e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CUMBERLAND INFIRMARY",
                             TBServiceCode = "TBS0057"
                         },
@@ -5667,6 +6038,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("973ce72a-b4de-46ba-98e3-3e03df0e5594"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTH TYNESIDE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -5674,6 +6046,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("978fbf0b-9c22-4c29-bd4d-c3b613429519"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BOURNEMOUTH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0064"
                         },
@@ -5681,6 +6054,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("97b68a41-f8c9-49b5-be79-0f646c3e3ba1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST HELIER HOSPITAL",
                             TBServiceCode = "TBS0068"
                         },
@@ -5688,6 +6062,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9878d735-1022-4001-86ba-7e53f576f850"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "SINGLETON HOSPITAL",
                             TBServiceCode = "TBS0404"
                         },
@@ -5695,6 +6070,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("98ac8f80-56be-43bc-a433-7e92e0cabeb1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SLOANE HOSPITAL",
                             TBServiceCode = "TBS0197"
                         },
@@ -5702,6 +6078,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("98b4f15b-dc64-440d-9df4-9e16c47c5b64"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "LAGAN VALLEY HOSPITAL",
                             TBServiceCode = "TBS0278"
                         },
@@ -5709,6 +6086,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("98bce02c-7f69-4cee-9f1f-8ecb6667fa7f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DONCASTER GATE HOSPITAL",
                             TBServiceCode = "TBS0176"
                         },
@@ -5716,6 +6094,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("98eed1ac-5537-4254-b0ff-7b590bc7fbb0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LYMINGTON HOSPITAL (PERIPHERAL CLINIC)",
                             TBServiceCode = "TBS0117"
                         },
@@ -5723,6 +6102,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("98f248ae-6791-40a6-b241-5753041596db"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BIRMINGHAM CHILDREN'S HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -5730,6 +6110,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9a4f657a-01e7-4ca6-b8d5-b9e033401eb6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PINEHILL HOSPITAL",
                             TBServiceCode = "TBS0161"
                         },
@@ -5737,6 +6118,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9aa7ca5d-bac1-4efa-a393-db5636d183b1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WARWICK HOSPITAL",
                             TBServiceCode = "TBS0054"
                         },
@@ -5744,6 +6126,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9b11d0f4-3c0e-4da3-b11c-bd90c0e4d65a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST ANTHONYS HOSPITAL",
                             TBServiceCode = "TBS0217"
                         },
@@ -5751,6 +6134,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9b5ee9bb-78d0-4207-91c3-7c8437f54b2d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH TUNBRIDGE WELLS HOSPITAL",
                             TBServiceCode = "TBS0149"
                         },
@@ -5758,6 +6142,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9c62e25a-f43f-4483-bdf9-f2000aff61d4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MILE END HOSPITAL",
                             TBServiceCode = "TBS0124"
                         },
@@ -5765,6 +6150,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9c8a6802-5175-45b4-8a62-82d19c5377ce"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CARDIGAN & DISTRICT MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0406"
                         },
@@ -5772,6 +6158,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9d17ed6f-dea4-4c69-8228-ebbe708e3148"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WORTHING HOSPITAL",
                             TBServiceCode = "TBS0264"
                         },
@@ -5779,6 +6166,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9d9c3480-5023-48d8-8850-8ad2e57de397"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MONMOUTH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0349"
                         },
@@ -5786,6 +6174,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("9fd2fb99-4a9b-463f-8b23-a4ad8961de06"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PETERBOROUGH CITY HOSPITAL",
                             TBServiceCode = "TBS0139"
                         },
@@ -5793,6 +6182,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a01ef32a-f363-4276-b02f-256f6acdfe58"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CENTRAL MIDDLESEX HOSPITAL",
                             TBServiceCode = "TBS0113"
                         },
@@ -5800,6 +6190,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a02016f4-22d0-4181-bb0d-832801640419"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HUDDERSFIELD HOSPITAL",
                             TBServiceCode = "TBS0110"
                         },
@@ -5807,6 +6198,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a08d156f-0224-486c-850e-785408b7489a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "EASTBOURNE DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0067"
                         },
@@ -5814,6 +6206,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a0e8bd6c-90eb-4c96-a868-834b41d3390b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "VICTORIA CENTRAL HOSPITAL [WALLASEY]",
                             TBServiceCode = "TBS0006"
                         },
@@ -5821,6 +6214,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a10905be-4797-4e7d-9911-b1be4534f6d8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTHERN GENERAL HOSPITAL",
                             TBServiceCode = "TBS0195"
                         },
@@ -5828,6 +6222,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a12c1fd7-a6c9-4e31-87a5-1cc213aebdd6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST MIDDLESEX UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0254"
                         },
@@ -5835,6 +6230,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a204ba25-78a5-409c-8e47-1f0de979d15f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BARNSLEY HOSPITAL",
                             TBServiceCode = "TBS0202"
                         },
@@ -5842,6 +6238,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a2f561d5-4128-4ea5-b272-b4bd23da30f4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HORSHAM HOSPITAL",
                             TBServiceCode = "TBS0093"
                         },
@@ -5849,6 +6246,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a33f56be-8bc2-4b50-b64e-a533a2e495d6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN VICTORIA HOSPITAL [EAST GRINSTEAD]",
                             TBServiceCode = "TBS0173"
                         },
@@ -5856,6 +6254,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a3c6922e-3566-4f31-8b7b-9bf6f1b55708"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WYTHENSHAWE HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -5863,6 +6262,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a45d75e0-e056-4adf-b269-00f09e89945f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HULL ROYAL INFIRMARY",
                             TBServiceCode = "TBS0040"
                         },
@@ -5870,6 +6270,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a4cba359-68e2-4188-91a7-0991b72b2013"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE ALEXANDRA HOSPITAL",
                             TBServiceCode = "TBS0207"
                         },
@@ -5877,6 +6278,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a5594f9e-9eec-4626-b62a-21f724be2117"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "YSBYTY PENRHOS STANLEY",
                             TBServiceCode = "TBS0372"
                         },
@@ -5884,6 +6286,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a5804acc-75eb-42ac-ba4d-66867cf52964"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BLACKPOOL VICTORIA HOSPITAL",
                             TBServiceCode = "TBS0036"
                         },
@@ -5891,6 +6294,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a594c0c8-227b-414c-83c2-f069b3089f7c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "AIREDALE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0003"
                         },
@@ -5898,6 +6302,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a79f488b-6e6d-420c-b7db-f81b0657d1ce"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HEARTLANDS HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -5905,6 +6310,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a8b004aa-1c5c-4ec3-83b4-8a932bb8117c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MYNYDD MAWR HOSPITAL",
                             TBServiceCode = "TBS0348"
                         },
@@ -5912,6 +6318,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a90ee26b-ec10-4047-bf21-ddbff9735e6d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL NATIONAL ORTHOPAEDIC HOSPITAL (STANMORE)",
                             TBServiceCode = "TBS0187"
                         },
@@ -5919,6 +6326,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("a977da6b-3014-449e-8fc9-477f50d7d502"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PRINCESS ROYAL HOSPITAL [WEST SUSSEX]",
                             TBServiceCode = "TBS0166"
                         },
@@ -5926,6 +6334,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("aa1463dd-93e9-4315-a039-1dfd867fe5f5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WORCESTERSHIRE ROYAL HOSPITAL",
                             TBServiceCode = "TBS0263"
                         },
@@ -5933,6 +6342,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("aa31ed2b-808a-4919-8f7c-bca57aa9b2e1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BURNLEY GENERAL HOSPITAL",
                             TBServiceCode = "TBS0065"
                         },
@@ -5940,6 +6350,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("aaebaac0-3ace-4ab2-b473-8a09749c7787"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BROMPTON HOSPITAL",
                             TBServiceCode = "TBS0179"
                         },
@@ -5947,6 +6358,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ab3317d3-f91e-408f-a639-d6f322b6fa0f"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CAERNARFON COTTAGE HOSPITAL",
                             TBServiceCode = "TBS0302"
                         },
@@ -5954,6 +6366,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ac2a5bd8-b96b-4c0c-9540-6e9539fafd52"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHARING CROSS HOSPITAL",
                             TBServiceCode = "TBS0095"
                         },
@@ -5961,6 +6374,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ac9539f5-8879-4127-90d9-5511cbec1645"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PORTLAND HOSPITAL",
                             TBServiceCode = "TBS0163"
                         },
@@ -5968,6 +6382,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("acc36813-9c02-46fd-88a6-3358b3bfe182"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST GEORGE'S HOSPITAL [STAFFORD]",
                             TBServiceCode = "TBS0221"
                         },
@@ -5975,6 +6390,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ad0e1247-6c1b-4056-bafc-071f67c97550"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL MARSDEN HOSPITAL (LONDON)",
                             TBServiceCode = "TBS0186"
                         },
@@ -5982,6 +6398,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ada8c647-dce1-44b9-8d6a-003927478fc1"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLWYNYPIA HOSPITAL",
                             TBServiceCode = "TBS0364"
                         },
@@ -5989,6 +6406,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("adc02fa9-c7dd-484f-bab0-830241d8dd43"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BARRY HOSPITAL",
                             TBServiceCode = "TBS0408"
                         },
@@ -5996,6 +6414,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ae531d23-0411-47ee-b5a4-29e7074b7e21"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "CEFN COED DAY HOSPITAL",
                             TBServiceCode = "TBS0356"
                         },
@@ -6003,6 +6422,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("aead5943-bc92-402f-8687-9e6db1203f04"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LUTON & DUNSTABLE HOSPITAL",
                             TBServiceCode = "TBS0116"
                         },
@@ -6010,6 +6430,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("af0562fd-363c-4f51-832f-41a133fe8147"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WORCESTER ROYAL INFIRMARY",
                             TBServiceCode = "TBS0263"
                         },
@@ -6017,6 +6438,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("af410a50-e52c-4fa3-8a07-c0eb63f5272f"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS BORDERS",
                             TBServiceCode = "TBS0411"
                         },
@@ -6024,6 +6446,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b0406779-891a-4ba2-9c79-46b78b4966eb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH WOKING HOSPITAL",
                             TBServiceCode = "TBS0150"
                         },
@@ -6031,6 +6454,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b11da708-86fc-4ada-ba28-623aaffd1732"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "MAESTEG GENERAL HOSPITAL",
                             TBServiceCode = "TBS0393"
                         },
@@ -6038,6 +6462,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b140f9a6-c080-4fed-a992-ac7dd71e20dc"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS AYRSHIRE AND ARRAN",
                             TBServiceCode = "TBS0410"
                         },
@@ -6045,6 +6470,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b1880968-3dad-446f-a8e3-65cdb87bc2c1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0122"
                         },
@@ -6052,6 +6478,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b2574388-808a-4a1b-98b5-af09e9caac28"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ALEXANDRA HOSPITAL [REDDITCH]",
                             TBServiceCode = "TBS0263"
                         },
@@ -6059,6 +6486,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b2ad12e9-2017-461f-8938-c6d04129bc04"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "JAMES COOK UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0200"
                         },
@@ -6066,6 +6494,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b302d0dd-7b4b-4a20-925f-ba0d951ca21e"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "GARNGOCH HOSPITAL",
                             TBServiceCode = "TBS0333"
                         },
@@ -6073,6 +6502,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b3997026-533f-4e18-ae41-4d24f0a0f3d5"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KING GEORGE HOSPITAL",
                             TBServiceCode = "TBS0018"
                         },
@@ -6080,6 +6510,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b3b6cb43-1e6e-4857-bc35-b271b9bd42b7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH BOURNEMOUTH HOSPITAL",
                             TBServiceCode = "TBS0064"
                         },
@@ -6087,6 +6518,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b400850e-8fc9-46f0-9018-c6bd26460b44"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST BARTHOLOMEWS HOSPITAL [ROCHESTER]",
                             TBServiceCode = "TBS0219"
                         },
@@ -6094,6 +6526,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b481c80c-fead-4b41-9eb7-5bcc7dca7d7b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CAMBORNE REDRUTH COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0051"
                         },
@@ -6101,6 +6534,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b4e9975d-9bf3-4e8c-82ba-a7a777dcd912"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "GROESWEN HOSPITAL",
                             TBServiceCode = "TBS0293"
                         },
@@ -6108,6 +6542,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b52f9c45-7719-43f3-bc40-d1b140fe0f5c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST PARK HOSPITAL [WOLVERHAMPTON]",
                             TBServiceCode = "TBS0262"
                         },
@@ -6115,6 +6550,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b568b5fb-ff20-4cd5-bb76-47375e796653"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ST JOSEPH'S HOSPITAL",
                             TBServiceCode = "TBS0379"
                         },
@@ -6122,6 +6558,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b5788a2e-a238-49dd-813d-d1ce921258c9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "AMERSHAM HOSPITAL",
                             TBServiceCode = "TBS0004"
                         },
@@ -6129,6 +6566,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b5a9c2bf-f95b-4d72-8d50-c213d2dd7d19"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LONDON INDEPENDENT HOSPITAL",
                             TBServiceCode = "TBS0112"
                         },
@@ -6136,6 +6574,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b5cc1c63-8ab5-4c8a-b181-1488c29d59a7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KINGS PARK HOSPITAL",
                             TBServiceCode = "TBS0104"
                         },
@@ -6143,6 +6582,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b5d14f32-ab54-4fb0-bfa0-09c6d3af9eef"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "HAFEN COED M.I. DAY HOSPITAL",
                             TBServiceCode = "TBS0367"
                         },
@@ -6150,6 +6590,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b6148321-d7b1-4d3f-905d-258ff2711655"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PENDLE COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0065"
                         },
@@ -6157,6 +6598,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b6333773-5b85-45d6-aa19-a60bb101b659"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "STOKE MANDEVILLE HOSPITAL",
                             TBServiceCode = "TBS0234"
                         },
@@ -6164,6 +6606,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b748f1d2-0fd3-4155-99a9-93da8be2c960"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WRIGHTINGTON HOSPITAL",
                             TBServiceCode = "TBS0025"
                         },
@@ -6171,6 +6614,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b77e9ffa-06f8-48d1-9fdc-668d0d13f772"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GLENFIELD HOSPITAL",
                             TBServiceCode = "TBS0107"
                         },
@@ -6178,6 +6622,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b7e758b3-2cdd-436c-9834-24263f901b8a"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS DUMFRIES AND GALLOWAY",
                             TBServiceCode = "TBS0412"
                         },
@@ -6185,6 +6630,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b840b161-3fb0-470c-91be-a8107c1c90e4"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "BELFAST CITY HOSPITAL",
                             TBServiceCode = "TBS0277"
                         },
@@ -6192,6 +6638,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b868aa30-5b13-44db-9d2d-8bd163e9bc7b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ABERYSTWYTH HEALTH CLINIC",
                             TBServiceCode = "TBS0350"
                         },
@@ -6199,6 +6646,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b8aa918d-233f-4c41-b9ae-be8a8dc8be7a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BERKSHIRE HOSPITAL",
                             TBServiceCode = "TBS0177"
                         },
@@ -6206,6 +6654,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("b9b71847-9616-4993-a609-93801703ae02"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "SOUTH TYRONE HOSPITAL",
                             TBServiceCode = "TBS0275"
                         },
@@ -6213,6 +6662,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("baeb671b-1b0d-4064-b637-87c2dbbd97a3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BOLTON HOSPITAL",
                             TBServiceCode = "TBS0178"
                         },
@@ -6220,6 +6670,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bbe36c0a-6070-475a-9db8-d75dbbdbf425"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "NEATH PORT TALBOT HOSPITAL",
                             TBServiceCode = "TBS0303"
                         },
@@ -6227,6 +6678,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bc598aaf-f398-40ff-99ad-0c608bb47484"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HARROGATE DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0086"
                         },
@@ -6234,6 +6686,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bc985eea-5f97-4e02-8bea-c7987fcfa7dd"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRON Y GARTH HOSPITAL",
                             TBServiceCode = "TBS0318"
                         },
@@ -6241,6 +6694,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bcf74c38-ce96-4cbf-8656-eb25021d23b0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "TAMESIDE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0238"
                         },
@@ -6248,6 +6702,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bcfc88e8-ead4-4e40-9d7e-be7896adbd4a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOUTHMEAD HOSPITAL",
                             TBServiceCode = "TBS0028"
                         },
@@ -6255,6 +6710,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bd6dc2e0-43d6-42d7-8f78-d424abeaef2b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "DOLGELLAU & BARMOUTH DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0315"
                         },
@@ -6262,6 +6718,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bd7f3cf7-8686-45eb-932e-a4b0d1853149"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTH HAMPSHIRE HOSPITAL",
                             TBServiceCode = "TBS0135"
                         },
@@ -6269,6 +6726,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bdb0bc8f-01de-4c50-bd28-f9536cb91355"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PONTEFRACT GENERAL INFIRMARY",
                             TBServiceCode = "TBS0162"
                         },
@@ -6276,6 +6734,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("be016df2-0002-46b3-afa2-eb4be27cda7d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DROITWICH SPA HOSPITAL",
                             TBServiceCode = "TBS0263"
                         },
@@ -6283,6 +6742,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bf02e2de-09bf-4f0f-bd63-6e8dd1dc5c8e"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "WEST WALES GENERAL HOSPITAL",
                             TBServiceCode = "TBS0398"
                         },
@@ -6290,6 +6750,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bfaa15e7-93f6-4b1a-822d-7a6bf5e1ecb6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CALDERDALE ROYAL HOSPITAL",
                             TBServiceCode = "TBS0034"
                         },
@@ -6297,6 +6758,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bfaf326c-6452-4ce0-84e9-18fb607d0c2f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LEICESTER GENERAL HOSPITAL",
                             TBServiceCode = "TBS0107"
                         },
@@ -6304,6 +6766,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("bfcbe8f5-4e7c-44e2-880f-95a96e738ee6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MAYDAY UNIVERSITY HOSPITAL",
                             TBServiceCode = "TBS0120"
                         },
@@ -6311,6 +6774,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c0754abf-09ff-429f-a464-fc9d00834b26"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BOURNEMOUTH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0064"
                         },
@@ -6318,6 +6782,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c1adb3e8-8d55-4a30-86e1-8834c328e6f0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST. MARGARET'S HOSPITAL",
                             TBServiceCode = "TBS0231"
                         },
@@ -6325,6 +6790,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c1ce55db-1f5b-4ad1-92ee-2c636716110d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MONTAGUE HEALTH CENTRE",
                             TBServiceCode = "TBS0065"
                         },
@@ -6332,6 +6798,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c1e0fe37-5d3f-436a-bbcf-adf64a269f37"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL UNITED HOSPITAL",
                             TBServiceCode = "TBS0012"
                         },
@@ -6339,6 +6806,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c1fba9f4-1d9f-45fe-b27c-71bd354dc286"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BATH CLINIC",
                             TBServiceCode = "TBS0012"
                         },
@@ -6346,6 +6814,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c29f5a18-29e6-45ca-9f70-f436002750ae"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE MANCHESTER HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -6353,6 +6822,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c2e40f80-03ff-47f4-b092-a5176085bf35"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WANSBECK GENERAL HOSPITAL",
                             TBServiceCode = "TBS0137"
                         },
@@ -6360,6 +6830,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c499b778-7933-49dc-b944-155184fdf522"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ROOKWOOD HOSPITAL",
                             TBServiceCode = "TBS0370"
                         },
@@ -6367,6 +6838,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c4f4d541-f5ec-4f12-b04d-ee2d1dbdedff"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTH DEVON DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0133"
                         },
@@ -6374,6 +6846,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c5a3dc21-16c3-4d47-a945-331d08f42f89"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "YSTRAD MYNACH HOSPITAL",
                             TBServiceCode = "TBS0359"
                         },
@@ -6381,6 +6854,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c5db5f25-9997-4df8-8c5f-9307c5005843"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "CRAIGAVON AREA HOSPITAL",
                             TBServiceCode = "TBS0273"
                         },
@@ -6388,6 +6862,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c62715cd-d9c2-460c-a2fb-7ded14087b63"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "OVERMONNOW DAY HOSPITAL",
                             TBServiceCode = "TBS0402"
                         },
@@ -6395,6 +6870,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c7ce583f-996d-4116-afca-71e1efe96efe"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SCUNTHORPE GENERAL HOSPITAL",
                             TBServiceCode = "TBS0141"
                         },
@@ -6402,6 +6878,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c8088eb9-9205-42a4-9e5e-92679f36123b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROTHERHAM DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0241"
                         },
@@ -6409,6 +6886,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c860f05d-6460-402e-a6f9-cacf8e963396"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "YORK DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0086"
                         },
@@ -6416,6 +6894,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c89248df-265c-4881-a9ae-2aa39b6a7a5c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ASHFIELD COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0123"
                         },
@@ -6423,6 +6902,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c9256947-12e1-4cca-bce3-50124b7fd273"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MONTAGU HOSPITAL",
                             TBServiceCode = "TBS0176"
                         },
@@ -6430,6 +6910,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("c9c50578-f0c3-4ff0-8438-409c9a17a7a0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE LEA CAMBRIDGE HOSPITAL",
                             TBServiceCode = "TBS0210"
                         },
@@ -6437,6 +6918,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ca29f4a2-7b4e-4d06-aeb3-a08ff41d2978"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WALTON HOSPITAL",
                             TBServiceCode = "TBS0044"
                         },
@@ -6444,6 +6926,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cb07a530-0aef-4909-a8d2-a364f9f8183b"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH WARWICKSHIRE HOSPITAL",
                             TBServiceCode = "TBS0054"
                         },
@@ -6451,6 +6934,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cbcc7e03-0e5c-40b8-9dd2-e1e4ca2f2145"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRADFORD ON AVON COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0237"
                         },
@@ -6458,6 +6942,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cc2a6530-f000-4fd6-bc4e-33b1d7d861e6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HAMPSHIRE CLINIC",
                             TBServiceCode = "TBS0083"
                         },
@@ -6465,6 +6950,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ccef02e8-9448-4762-84c3-36e16f0bf43e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DIANA PRINCESS OF WALES HOSPITAL",
                             TBServiceCode = "TBS0153"
                         },
@@ -6472,6 +6958,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cd24e785-e620-4163-a001-feac1082711c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST HEATH HOSPITAL",
                             TBServiceCode = "TBS0019"
                         },
@@ -6479,6 +6966,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cd292c05-fcdb-44a1-9648-7b7521836236"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ELIZABETH HOSPITAL [BIRMINGHAM]",
                             TBServiceCode = "TBS0019"
                         },
@@ -6486,6 +6974,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cd65d55f-1eb0-43c2-a2f0-f08790090ac8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST MARY'S HOSPITAL [KETTERING]",
                             TBServiceCode = "TBS0140"
                         },
@@ -6493,6 +6982,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cd6e1eb8-0a2c-470d-8c2f-c8a6089a7e02"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ST DAVID'S COMMUNITY HOSPITAL [CARDIFF]",
                             TBServiceCode = "TBS0319"
                         },
@@ -6500,6 +6990,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ce450a3a-d9b5-4db8-9472-d1a36936528c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANDUDNO GENERAL HOSPITAL",
                             TBServiceCode = "TBS0311"
                         },
@@ -6507,6 +6998,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cea254e5-b953-4bf2-82f1-8304337ff73c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PRINCE CHARLES HOSPITAL",
                             TBServiceCode = "TBS0409"
                         },
@@ -6514,6 +7006,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ceb2aa32-3740-43a3-aa8a-a153da3cc82f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KETTERING GENERAL HOSPITAL",
                             TBServiceCode = "TBS0140"
                         },
@@ -6521,6 +7014,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cef2d5ad-29fa-4d9d-9dee-549c7802a5f0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KING EDWARD VII HOSPITAL [WINDSOR]",
                             TBServiceCode = "TBS0259"
                         },
@@ -6528,6 +7022,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("cfcedb91-8957-4483-98c8-a796b2d36508"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST JOHN & ST ELIZABETH HOSPITAL",
                             TBServiceCode = "TBS0224"
                         },
@@ -6535,6 +7030,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d04eede9-ba6f-4190-9eaf-e93398312f5c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOUTHPORT & FORMBY DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0206"
                         },
@@ -6542,6 +7038,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d0a0c2bd-6974-46e5-b18c-63a6812f1d41"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ISEBROOK HOSPITAL",
                             TBServiceCode = "TBS0140"
                         },
@@ -6549,6 +7046,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d19da815-0dcb-469b-aae0-08b73255e1fd"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MANCHESTER ROYAL EYE HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -6556,6 +7054,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d1a119d9-92bd-4863-92b5-a03536c18cb1"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOMERFIELD HOSPITAL",
                             TBServiceCode = "TBS0198"
                         },
@@ -6563,6 +7062,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d32fe9db-0260-4107-a1f0-2f1e2c7615a4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DERRIFORD HOSPITAL",
                             TBServiceCode = "TBS0266"
                         },
@@ -6570,6 +7070,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d3717548-d4e0-499a-9ed0-f933624773af"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "WERNDALE HOSPITAL",
                             TBServiceCode = "TBS0288"
                         },
@@ -6577,6 +7078,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d3bf3541-5f1e-4bdb-b779-0225fef56501"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SOUTH TYNESIDE DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0201"
                         },
@@ -6584,6 +7086,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d4042531-c128-4b28-be30-394a487f3d2f"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS FORTH VALLEY",
                             TBServiceCode = "TBS0414"
                         },
@@ -6591,6 +7094,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d473c823-ec99-43f8-ae8f-23eb332b1b29"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE LONGLANDS CONSULTING ROOMS",
                             TBServiceCode = "TBS0211"
                         },
@@ -6598,6 +7102,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d4bd1125-6c1e-4cfa-8f86-bc0ab6fc7216"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANRHAEDR MEDICAL CLINIC",
                             TBServiceCode = "TBS0334"
                         },
@@ -6605,6 +7110,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d4d54135-d9e7-4664-b6f2-38d91b3da119"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "TENBY COTTAGE HOSPITAL",
                             TBServiceCode = "TBS0354"
                         },
@@ -6612,6 +7118,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d5a39d4b-bfa0-4ff0-b6b5-d1b75d75d10c"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "SWN-Y-GWYNT DAY HOSPITAL",
                             TBServiceCode = "TBS0312"
                         },
@@ -6619,6 +7126,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d6a781cb-700f-490d-b2c9-009b772be2dc"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLANFRECHFA GRANGE HOSPITAL",
                             TBServiceCode = "TBS0366"
                         },
@@ -6626,6 +7134,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d6dd3782-f4c3-4192-a99a-bbfd351d1a66"),
                             CountryCode = "S92000003",
+                            IsLegacy = false,
                             Name = "NHS HIGHLAND",
                             TBServiceCode = "TBS0417"
                         },
@@ -6633,6 +7142,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d6f1b12c-0200-42c7-b8e9-7d2bdde46969"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "EAST SURREY HOSPITAL",
                             TBServiceCode = "TBS0066"
                         },
@@ -6640,6 +7150,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d788a508-76be-494d-98b1-69319c71cff8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FURNESS GENERAL HOSPITAL",
                             TBServiceCode = "TBS0056"
                         },
@@ -6647,6 +7158,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d79cea01-9e36-48c2-8b0c-782e5d2bdd2a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LOURDES HOSPITAL",
                             TBServiceCode = "TBS0109"
                         },
@@ -6654,6 +7166,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d7deb78d-a28f-488d-b31a-58fab992083d"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NOTTINGHAM UNIVERSITY HOSPITALS NHS TRUST",
                             TBServiceCode = "TBS0142"
                         },
@@ -6661,6 +7174,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d804bebd-f872-4b4a-868e-6879a0bf4bce"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHRISTCHURCH HOSPITAL",
                             TBServiceCode = "TBS0064"
                         },
@@ -6668,6 +7182,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d9348c9d-2b43-4439-bb05-3c1736a13e02"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL OF HARTLEPOOL",
                             TBServiceCode = "TBS0138"
                         },
@@ -6675,6 +7190,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d9863306-f367-4ffb-92fa-90301ddabf2a"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BROOMFIELD HOSPITAL",
                             TBServiceCode = "TBS0030"
                         },
@@ -6682,6 +7198,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("d9968ce6-7359-494e-8848-71d5f97c2446"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WEST PARK HOSPITAL [EPSOM]",
                             TBServiceCode = "TBS0255"
                         },
@@ -6689,6 +7206,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("db023ca7-b477-4825-ba71-35046ee0337f"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "AMMAN VALLEY HOSPITAL",
                             TBServiceCode = "TBS0360"
                         },
@@ -6696,6 +7214,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("db845686-5165-43fd-9848-2751e2e5d27e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "STRETFORD MEMORIAL HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -6703,6 +7222,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("dc46aa79-983d-4c10-84c9-1181fddd2f4c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL LONDON HOSPITAL",
                             TBServiceCode = "TBS0185"
                         },
@@ -6710,6 +7230,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("dc491bb8-c451-4ec3-b010-f83f826b6232"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ILLKESTON COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0181"
                         },
@@ -6717,6 +7238,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("dd4fbf70-7485-4afd-94a2-4e2f2fa550b7"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "YSBYTY'R TRI CHWM",
                             TBServiceCode = "TBS0381"
                         },
@@ -6724,6 +7246,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("dd610c20-10eb-49ff-aed0-062780823320"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEENS MEDICAL CENTRE [NOTTS]",
                             TBServiceCode = "TBS0142"
                         },
@@ -6731,6 +7254,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("de919ba5-357f-4440-9e13-962762f90535"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GLOUCESTERSHIRE ROYAL HOSPITAL",
                             TBServiceCode = "TBS0077"
                         },
@@ -6738,6 +7262,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ded7a769-fded-46ff-864d-f0d687db5b61"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DELANCEY HOSPITAL",
                             TBServiceCode = "TBS0077"
                         },
@@ -6745,6 +7270,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("deda56b0-32e1-409b-8109-27f96c7308f7"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL SURREY COUNTY HOSPITAL",
                             TBServiceCode = "TBS0189"
                         },
@@ -6752,6 +7278,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("df433bc5-840a-42b2-b329-04df152de40e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KING'S COLLEGE HOSPITAL (DENMARK HILL)",
                             TBServiceCode = "TBS0101"
                         },
@@ -6759,6 +7286,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("df4bf235-5604-4256-ab72-a9ccf68988ad"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PRINCESS OF WALES HOSPITAL",
                             TBServiceCode = "TBS0325"
                         },
@@ -6766,6 +7294,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("df8427d8-4e0e-45d4-ab5c-7bd9fdbb6a78"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GEORGE ELIOT HOSPITAL",
                             TBServiceCode = "TBS0054"
                         },
@@ -6773,6 +7302,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("df9a25f3-dade-4fcc-acde-82e8ae84b5fb"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "FLINT COMMUNITY HOSPITAL",
                             TBServiceCode = "TBS0407"
                         },
@@ -6780,6 +7310,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("dfe60214-36ba-43cb-b863-401a259747eb"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "BRYNMAWR INTERIM DAY HOSPITAL",
                             TBServiceCode = "TBS0345"
                         },
@@ -6787,6 +7318,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e0e07649-eeda-4df2-baea-ddb6836d1ac4"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "GLAN CLWYD GENERAL HOSPITAL",
                             TBServiceCode = "TBS0304"
                         },
@@ -6794,6 +7326,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e1dda57d-81ab-4c5e-bffc-c631204ed830"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST ALBANS CITY HOSPITAL",
                             TBServiceCode = "TBS0215"
                         },
@@ -6801,6 +7334,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e1fc8251-56c4-47fb-8019-2bc0b22c6966"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LINCOLN COUNTY HOSPITAL",
                             TBServiceCode = "TBS0108"
                         },
@@ -6808,6 +7342,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e2dda559-e27c-4e94-99eb-814e4f9fd476"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST JAMES HOSPITAL [SOUTHSEA]",
                             TBServiceCode = "TBS0223"
                         },
@@ -6815,6 +7350,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e3e38a75-0cd0-4f91-bd71-653752d7f209"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ROYAL GWENT HOSPITAL",
                             TBServiceCode = "TBS0395"
                         },
@@ -6822,6 +7358,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e4aaaad2-f694-491f-b83e-e35f43fcd643"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HAMMERSMITH HOSPITAL",
                             TBServiceCode = "TBS0095"
                         },
@@ -6829,6 +7366,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e4d073fa-9f5a-48d4-a0fd-10d4e667a634"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL PRESTON HOSPITAL",
                             TBServiceCode = "TBS0036"
                         },
@@ -6836,6 +7374,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e57e2006-33bd-4432-acab-36b0d3237e81"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ALEXANDRA HOSPITAL",
                             TBServiceCode = "TBS0168"
                         },
@@ -6843,6 +7382,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e5984fde-45f2-45fa-9d8a-bf17a8313d61"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ELIZABETH HOSPITAL [LONDON]",
                             TBServiceCode = "TBS0169"
                         },
@@ -6850,6 +7390,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e96c269c-e38f-4abc-8d92-02ab29ded69c"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL OF NORTH TEES",
                             TBServiceCode = "TBS0138"
                         },
@@ -6857,6 +7398,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("e97e21fb-2810-4664-a21c-cd845b44d4f8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL MANCHESTER CHILDREN'S HOSPITAL",
                             TBServiceCode = "TBS0119"
                         },
@@ -6864,6 +7406,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ea3f028d-3b47-4241-938c-e8c3ddf15e54"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL OF NORTH DURHAM",
                             TBServiceCode = "TBS0053"
                         },
@@ -6871,6 +7414,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("eaad3369-bcc6-4f59-9e05-a9f8503322da"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL BUCKINGHAMSHIRE HOSPITAL",
                             TBServiceCode = "TBS0180"
                         },
@@ -6878,6 +7422,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("eac084df-b5e4-449c-aa97-df6d3cbac41f"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NORTH MANCHESTER GENERAL HOSPITAL",
                             TBServiceCode = "TBS0160"
                         },
@@ -6885,6 +7430,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("eaeb2563-5cff-44f4-91b2-e4ef6d28d6cc"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PARKSIDE HOSPITAL",
                             TBServiceCode = "TBS0159"
                         },
@@ -6892,6 +7438,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ecb3de7f-012b-4f8c-a56e-6d5813cc01ad"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST GEORGE'S HOSPITAL [TOOTING]",
                             TBServiceCode = "TBS0220"
                         },
@@ -6899,6 +7446,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ecbc8d01-bd24-4f9f-85a7-cf3d3f4d4f22"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "DERBY CITY GENERAL HOSPITAL",
                             TBServiceCode = "TBS0181"
                         },
@@ -6906,6 +7454,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ed102eed-92f5-449e-8a9a-ac26b587c0a5"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ST WOOLOS",
                             TBServiceCode = "TBS0326"
                         },
@@ -6913,6 +7462,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ed46f84f-98ba-444f-a27d-f0e27427cb1b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "LLUESTY HOSPITAL",
                             TBServiceCode = "TBS0290"
                         },
@@ -6920,6 +7470,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ed4c6fc7-cde2-4352-8829-d6d5516f6be9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NEWARK HOSPITAL",
                             TBServiceCode = "TBS0123"
                         },
@@ -6927,6 +7478,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ed941380-859c-4c53-aed0-1f4655a8da3e"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHURCH HILL HOUSE HOSPITAL",
                             TBServiceCode = "TBS0046"
                         },
@@ -6934,6 +7486,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("edce7d04-977d-424a-80a8-3782dafd1475"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MANCHESTER ROYAL INFIRMARY",
                             TBServiceCode = "TBS0119"
                         },
@@ -6941,6 +7494,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("eddf6efc-738a-4235-9c80-54d7506556d2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "PAPWORTH HOSPITAL",
                             TBServiceCode = "TBS0158"
                         },
@@ -6948,6 +7502,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ee8f217b-e6e3-4838-be3a-9916b24be160"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST BARTHOLOMEW'S HOSPITAL [LONDON]",
                             TBServiceCode = "TBS0218"
                         },
@@ -6955,6 +7510,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("efc96ca7-099f-4d15-9420-de1e381833de"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST JAMES'S UNIVERSITY HOSPITAL [LEEDS]",
                             TBServiceCode = "TBS0106"
                         },
@@ -6962,6 +7518,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f026fdcd-7baf-4c96-994c-20e436cc8c59"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BRISTOL ROYAL INFIRMARY",
                             TBServiceCode = "TBS0028"
                         },
@@ -6969,6 +7526,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f0698af5-6f64-4a2e-b364-95779b438955"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ANTRIM AREA HOSPITAL",
                             TBServiceCode = "TBS0276"
                         },
@@ -6976,6 +7534,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f07e8eb9-d4ae-4591-b27e-d858be34fba2"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "FAIRFIELD GENERAL HOSPITAL",
                             TBServiceCode = "TBS0160"
                         },
@@ -6983,6 +7542,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f0dd939f-2d7c-407c-9573-34a4fa543670"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "RIDGEWAY HOSPITAL",
                             TBServiceCode = "TBS0236"
                         },
@@ -6990,6 +7550,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f1fbf3a6-4119-40c4-84fd-c7f06b45aacb"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD ORTHOPAEDIC CENTRE",
                             TBServiceCode = "TBS0157"
                         },
@@ -6997,6 +7558,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f40b47db-0d19-40a3-80b1-55458b7ca68b"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "COUNTY HOSPITAL [PONTYPOOL]",
                             TBServiceCode = "TBS0385"
                         },
@@ -7004,6 +7566,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f41ce433-dee7-416c-b1ed-e723e740f5f8"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "WOLVERHAMPTON & MIDLAND EYE INFIRMARY",
                             TBServiceCode = "TBS0262"
                         },
@@ -7011,6 +7574,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f424ce2a-d643-4cb6-99dd-98126cb2c2ce"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST MICHAEL'S HOSPITAL [BRAINTREE]",
                             TBServiceCode = "TBS0227"
                         },
@@ -7018,6 +7582,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f4bf1e54-d0b4-421c-aa7e-eaa31101eff0"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BASILDON & THURROCK HOSPITAL",
                             TBServiceCode = "TBS0010"
                         },
@@ -7025,6 +7590,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f4d45e6f-c8ef-4542-8dc5-a0c680d47e71"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "LOUTH COUNTY HOSPITAL",
                             TBServiceCode = "TBS0108"
                         },
@@ -7032,6 +7598,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f5406aa8-f218-4ec3-a457-e2f73789d5c9"),
                             CountryCode = "N92000002",
+                            IsLegacy = false,
                             Name = "ROYAL HOSPITAL FOR SICK CHILDREN [BELFAST]",
                             TBServiceCode = "TBS0284"
                         },
@@ -7039,6 +7606,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f5fb7f72-8df9-4b9a-b5b3-680b9c19d11f"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "GLANRHYD HOSPITAL",
                             TBServiceCode = "TBS0396"
                         },
@@ -7046,6 +7614,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f606a608-5d17-4226-8fbf-92956ef34c27"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "UPTON HOSPITAL [SLOUGH]",
                             TBServiceCode = "TBS0247"
                         },
@@ -7053,6 +7622,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f6484b85-6324-42ae-b650-5bbcc8e41950"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "WITHYBUSH GENERAL HOSPITAL",
                             TBServiceCode = "TBS0389"
                         },
@@ -7060,6 +7630,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f6801336-866e-4767-9019-b4b576acb729"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL FREE HOSPITAL",
                             TBServiceCode = "TBS0182"
                         },
@@ -7067,6 +7638,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f696ad39-f193-415c-9b25-e29a00aa2315"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "GUEST HOSPITAL",
                             TBServiceCode = "TBS0062"
                         },
@@ -7074,6 +7646,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f6f75ed0-c2ba-4af1-b62a-28559b3f34ef"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "STEPPING HILL HOSPITAL",
                             TBServiceCode = "TBS0233"
                         },
@@ -7081,6 +7654,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f72c4f52-85c3-4ef8-9abf-b636b293b417"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "SPIRE HARTSWOOD HOSPITAL",
                             TBServiceCode = "TBS0209"
                         },
@@ -7088,6 +7662,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f768b1f6-dfc3-43bd-ab29-f03277c812b3"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MOUNT VERNON HOSPITAL",
                             TBServiceCode = "TBS0127"
                         },
@@ -7095,6 +7670,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f778894d-48c3-4f1d-99ed-7755507682fa"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "UNIVERSITY HOSPITAL OF WALES",
                             TBServiceCode = "TBS0401"
                         },
@@ -7102,6 +7678,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f788e479-e3de-4372-87f6-00ad90df8132"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL HAMPSHIRE COUNTY HOSPITAL",
                             TBServiceCode = "TBS0183"
                         },
@@ -7109,6 +7686,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f7f36ffc-549a-4ea1-8802-3efcf7b46ab6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "HORTON GENERAL HOSPITAL",
                             TBServiceCode = "TBS0157"
                         },
@@ -7116,6 +7694,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f862ce99-cca8-46f1-baa9-e7407c7093d6"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "NEWPORT INTERIM DAY HOSPITAL",
                             TBServiceCode = "TBS0297"
                         },
@@ -7123,6 +7702,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f8c58840-0164-47e2-af08-9913cd994f64"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KENT & CANTERBURY HOSPITAL",
                             TBServiceCode = "TBS0100"
                         },
@@ -7130,6 +7710,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f8e5aac4-adb0-4ecf-87d1-851f32559c76"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ROYAL HOSPITAL HASLAR",
                             TBServiceCode = "TBS0184"
                         },
@@ -7137,6 +7718,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("f9509f7f-1858-49cf-9bdb-0af54a20afdd"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ABERBARGOED & DISTRICT HOSPITAL",
                             TBServiceCode = "TBS0368"
                         },
@@ -7144,6 +7726,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fa1d124f-8a8e-4555-941c-8db2a0964659"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "WESTFA DAY HOSPITAL",
                             TBServiceCode = "TBS0351"
                         },
@@ -7151,6 +7734,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fa6a9204-08c5-41ae-911e-d3510ff9b9ba"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "ST TYDFILS HOSPITAL",
                             TBServiceCode = "TBS0314"
                         },
@@ -7158,6 +7742,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fa8f6ee9-81a3-4d37-ba59-2399036597e9"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "COVENTRY & WARWICKSHIRE HOSPITAL",
                             TBServiceCode = "TBS0054"
                         },
@@ -7165,6 +7750,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fb9ed9e8-6779-427e-bafb-8c5c9cb2a119"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "BASSETLAW HOSPITAL",
                             TBServiceCode = "TBS0059"
                         },
@@ -7172,6 +7758,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fbcc8132-cdd9-4a07-9305-12ed8755ca17"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "NUFFIELD HEALTH LEEDS HOSPITAL",
                             TBServiceCode = "TBS0148"
                         },
@@ -7179,6 +7766,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fc02f232-e6c9-477a-bc1c-28b800038857"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "ST MARY'S HOSPITAL [PORTSMOUTH]",
                             TBServiceCode = "TBS0226"
                         },
@@ -7186,6 +7774,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fc865a59-a750-4924-84bf-75d222287f4d"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "VELINDRE HOSPITAL",
                             TBServiceCode = "TBS0400"
                         },
@@ -7193,6 +7782,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fcbb64dd-c63a-4f4c-9925-617cdbf3ff51"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "QUEEN ELIZABETH II HOSPITAL [WELWYN GARDEN CITY]",
                             TBServiceCode = "TBS0063"
                         },
@@ -7200,6 +7790,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fd423059-a4c8-4eab-bc72-9da422524e12"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "PRINCE PHILIP HOSPITAL",
                             TBServiceCode = "TBS0341"
                         },
@@ -7207,6 +7798,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fd8ca1cc-a143-4cf5-a03d-ca1e02014964"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "MACCLESFIELD DISTRICT GENERAL HOSPITAL",
                             TBServiceCode = "TBS0043"
                         },
@@ -7214,6 +7806,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fd9c1d05-d245-4da8-b447-34b0f59244c6"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "TICKHILL ROAD HOSPITAL",
                             TBServiceCode = "TBS0242"
                         },
@@ -7221,6 +7814,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fdab0616-a8a2-4a2d-9cdb-e664f3820b43"),
                             CountryCode = "W92000004",
+                            IsLegacy = false,
                             Name = "OAKDALE HOSPITAL",
                             TBServiceCode = "TBS0296"
                         },
@@ -7228,6 +7822,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("fe42ede2-95f5-4a2b-a6f9-6c7b4fd66bf4"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "CHURCHILL HOSPITAL",
                             TBServiceCode = "TBS0157"
                         },
@@ -7235,6 +7830,7 @@ namespace ntbs_service.Migrations
                         {
                             HospitalId = new Guid("ff62a052-f283-4f0b-804a-bf5d744ef777"),
                             CountryCode = "E92000001",
+                            IsLegacy = false,
                             Name = "KING'S MILL HOSPITAL",
                             TBServiceCode = "TBS0123"
                         });
