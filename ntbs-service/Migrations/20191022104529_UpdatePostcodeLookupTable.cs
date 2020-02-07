@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using CsvHelper;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -23,7 +24,7 @@ namespace ntbs_service.Migrations
             int index = 0;
 
             using (StreamReader reader = new StreamReader(pathToFile)) 
-            using (CsvReader csvReader = new CsvReader(reader)) {
+            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture)) {
                 csvReader.Read();
                 csvReader.ReadHeader();
                 while (csvReader.Read())

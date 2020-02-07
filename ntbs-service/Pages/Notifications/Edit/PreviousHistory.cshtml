@@ -28,7 +28,7 @@
             </nhs-hint>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="PatientTbHistory.NotPreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="false" id="previous-tb-yes" 
+                    <input asp-for="PatientTbHistory.PreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="true" id="previous-tb-yes" 
                            data-aria-controls="conditional-previously-had-tb-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="previous-tb-yes">
                         Yes
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="nhsuk-radios__item">
-                    <input asp-for="PatientTbHistory.NotPreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="true" id="previous-tb-no">
+                    <input asp-for="PatientTbHistory.PreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="false" id="previous-tb-no">
                     <label class="nhsuk-label nhsuk-radios__label" for="previous-tb-no">
                         No
                     </label>

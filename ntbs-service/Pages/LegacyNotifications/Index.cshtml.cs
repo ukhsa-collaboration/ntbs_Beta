@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.Models;
 using ntbs_service.Pages.Notifications;
@@ -14,7 +15,8 @@ namespace ntbs_service.Pages.LegacyNotifications
     {
         private readonly ILegacySearchService _legacySearchService;
         private readonly INotificationImportService _notificationImportService;
-        
+        private readonly INotificationRepository _notificationRepository;
+
         public NotificationBannerModel NotificationBannerModel { get; set; }
         
         [BindProperty(SupportsGet = true)]
@@ -23,10 +25,13 @@ namespace ntbs_service.Pages.LegacyNotifications
         public string RequestId { get; set; }
         public ImportResult LegacyImportResult { get; set; }
 
-        public Index(ILegacySearchService legacySearchService, INotificationImportService notificationImportService)
+        public Index(ILegacySearchService legacySearchService, 
+            INotificationImportService notificationImportService,
+            INotificationRepository notificationRepository)
         {
             _legacySearchService = legacySearchService;
             _notificationImportService = notificationImportService;
+            _notificationRepository = notificationRepository;
         }
         
         public async Task<IActionResult> OnGetAsync()
@@ -54,6 +59,12 @@ namespace ntbs_service.Pages.LegacyNotifications
             NotificationBannerModel = await _legacySearchService.GetByIdAsync(LegacyNotificationId);
             if (NotificationBannerModel == null)
             {
+                var notificationId = await _notificationRepository.GetNotificationIdByLegacyId(LegacyNotificationId);
+                if (notificationId != 0)
+                {
+                    return RedirectToPage("/Notifications/Overview", new {NotificationId = notificationId});
+                }
+
                 return NotFound();
             }
             

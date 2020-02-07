@@ -375,7 +375,8 @@ namespace ntbs_service.Services
                 var notification = await _notificationRepository.GetNotificationAsync(clusterValue.NotificationId);
                 if (notification == null)
                 {
-                    throw new DataException("Reporting database sourced NotificationId was not found in NTBS database.");
+                    throw new DataException(
+                        $"Reporting database sourced NotificationId {clusterValue.NotificationId} was not found in NTBS database.");
                 }
                 
                 notification.ClusterId = clusterValue.ClusterId;

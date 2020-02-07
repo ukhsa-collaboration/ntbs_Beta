@@ -51,7 +51,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["PatientTbHistory.NotPreviouslyHadTB"] = "false",
+                ["PatientTbHistory.PreviouslyHadTB"] = "true",
                 ["PatientTbHistory.PreviousTBDiagnosisYear"] = tbDiagnosisYear.ToString()
             };
 

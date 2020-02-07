@@ -26,7 +26,7 @@ namespace ntbs_service.Services
             var query = $@"
                 SELECT
                     [{nameof(NotificationClusterValue.NotificationId)}]
-                    [{nameof(NotificationClusterValue.ClusterId)}]
+                    ,[{nameof(NotificationClusterValue.ClusterId)}]
                 FROM [dbo].[vwNotificationClusterMatch]";
 
             using (var connection = new SqlConnection(_reportingDbConnectionString))

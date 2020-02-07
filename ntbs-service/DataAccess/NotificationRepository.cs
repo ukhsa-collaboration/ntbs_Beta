@@ -30,6 +30,7 @@ namespace ntbs_service.DataAccess
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
+        Task<int> GetNotificationIdByLegacyId(string legacyId);
         Task<bool> IsNotificationLegacyAsync(int id);
     }
 
@@ -81,6 +82,15 @@ namespace ntbs_service.DataAccess
         {
             return await _context.Notification
                 .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
+        }
+
+        public async Task<int> GetNotificationIdByLegacyId(string legacyId)
+        {
+            return await _context.Notification
+                .Where(n => n.LTBRID == legacyId || n.ETSID == legacyId)
+                .Select(n => n.NotificationId)
+                .FirstOrDefaultAsync();
+
         }
 
         public async Task<bool> IsNotificationLegacyAsync(int id)
