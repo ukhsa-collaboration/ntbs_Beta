@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using CsvHelper;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Helpers
@@ -21,7 +21,7 @@ namespace ntbs_service.Helpers
             var records = new List<object>();
 
             using (StreamReader reader = new StreamReader(filePath)) 
-            using (CsvReader csvReader = new CsvReader(reader)) {
+            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture)) {
                 csvReader.Read();
                 csvReader.ReadHeader();
                 while (csvReader.Read())
