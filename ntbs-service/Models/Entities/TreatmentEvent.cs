@@ -59,7 +59,7 @@ namespace ntbs_service.Models.Entities
         string IHasRootEntity.RootEntityType => RootEntities.Notification;
         string IHasRootEntity.RootId => NotificationId.ToString();
 
-        public IList<TreatmentEventType> EditableTreatmentEventTypes => new List<TreatmentEventType>
+        public static IList<TreatmentEventType> EditableTreatmentEventTypes => new List<TreatmentEventType>
         {
             Enums.TreatmentEventType.TreatmentOutcome,
             Enums.TreatmentEventType.TreatmentRestart
