@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFAuditer;
@@ -48,7 +49,7 @@ namespace ntbs_service.Models.Entities
         public DateTime? Dob { get; set; }
         [NotMapped]
         public DateTime? DateOfNotification { get; set; }
-
+        
         public bool TreatmentEventTypeIsOutcome => TreatmentEventType == Enums.TreatmentEventType.TreatmentOutcome;
         public bool TreatmentEventTypeIsNotRestart => TreatmentEventType != Enums.TreatmentEventType.TreatmentRestart;
 
@@ -57,5 +58,12 @@ namespace ntbs_service.Models.Entities
 
         string IHasRootEntity.RootEntityType => RootEntities.Notification;
         string IHasRootEntity.RootId => NotificationId.ToString();
+
+        public static IList<TreatmentEventType> EditableTreatmentEventTypes => new List<TreatmentEventType>
+        {
+            Enums.TreatmentEventType.TreatmentOutcome,
+            Enums.TreatmentEventType.TreatmentRestart
+        };
+        public bool IsEditable => TreatmentEventType != null && EditableTreatmentEventTypes.Contains(TreatmentEventType.Value);
     }
 }
