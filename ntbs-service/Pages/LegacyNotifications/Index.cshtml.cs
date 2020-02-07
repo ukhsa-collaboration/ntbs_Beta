@@ -59,10 +59,10 @@ namespace ntbs_service.Pages.LegacyNotifications
             NotificationBannerModel = await _legacySearchService.GetByIdAsync(LegacyNotificationId);
             if (NotificationBannerModel == null)
             {
-                var notificationWithLegacyIdExists = await _notificationRepository.NotificationWithLegacyIdExistsAsync(LegacyNotificationId);
-                if (notificationWithLegacyIdExists)
+                var notificationId = await _notificationRepository.GetNotificationIdByLegacyId(LegacyNotificationId);
+                if (notificationId != 0)
                 {
-                    return RedirectToPage("/Notifications/Overview", new {NotificationId = LegacyNotificationId});
+                    return RedirectToPage("/Notifications/Overview", new {NotificationId = notificationId});
                 }
 
                 return NotFound();
