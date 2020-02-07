@@ -173,6 +173,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextAddresses)
                 .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
                 .Include(n => n.Alerts)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

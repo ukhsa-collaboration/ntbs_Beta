@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -12,8 +14,10 @@ namespace ntbs_service.Pages.Notifications
     {
         protected IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
-
+        
         public CultureAndResistance CultureAndResistance { get; set; }
+        public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
+        
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
@@ -49,6 +53,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
+            GroupedTreatmentEvents = EpisodesHelper.CalculateEpisodes(Notification.TreatmentEvents);
             return Page();
         }
 
