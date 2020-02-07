@@ -57,7 +57,7 @@
                 @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
                 {
                     <print-button inline-template>
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary hidden" :click="print" id="print-notification-overview-button">
+                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary hidden" v-on:click="print" id="print-notification-overview-button">
                             Print notification overview
                         </button>
                     </print-button>
