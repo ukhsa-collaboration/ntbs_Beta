@@ -64,7 +64,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void UpdateFlags()
         {
-            if (PatientTbHistory.NotPreviouslyHadTB == true)
+            if (PatientTbHistory.PreviouslyHadTB == false)
             {
                 PatientTbHistory.PreviousTBDiagnosisYear = null;
                 ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");

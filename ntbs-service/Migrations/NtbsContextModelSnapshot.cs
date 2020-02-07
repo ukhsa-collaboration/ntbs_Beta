@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
-using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -14183,9 +14182,9 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<bool?>("NotPreviouslyHadTB");
-
                             b1.Property<int?>("PreviousTBDiagnosisYear");
+
+                            b1.Property<bool?>("PreviouslyHadTB");
 
                             b1.HasKey("NotificationId");
 

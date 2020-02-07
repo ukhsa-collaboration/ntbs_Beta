@@ -100,7 +100,7 @@ namespace ntbs_service.Models.Entities
         public string HospitalName => Episode.Hospital?.Name;
         public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
         public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
-        public string NotPreviouslyHadTBYesNo => (!PatientTBHistory.NotPreviouslyHadTB).FormatYesNo();
+        public string PreviouslyHadTBYesNo => (PatientTBHistory.PreviouslyHadTB).FormatYesNo();
         public string UkBornYesNo => PatientDetails.UkBorn.FormatYesNo();
         public string IsShortCourseYesNo => ClinicalDetails.IsShortCourseTreatment.FormatYesNo();
         public string HasRecentVisitor => VisitorDetails.HasVisitor.FormatYesNo();
