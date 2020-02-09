@@ -150,9 +150,17 @@ namespace ntbs_service.Models.Entities
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         
-        public TreatmentEvent Outcome12Month => TreatmentEvents.First(t => NotificationDate != null && t.EventDate < ((DateTime) NotificationDate).AddMonths(12));
-        public TreatmentEvent Outcome24Month => TreatmentEvents.First(t => NotificationDate != null && t.EventDate < ((DateTime) NotificationDate).AddMonths(24));
-        public TreatmentEvent Outcome36Month => TreatmentEvents.First(t => NotificationDate != null && t.EventDate < ((DateTime) NotificationDate).AddMonths(36));
+        public TreatmentEvent TreatmentEvent12Month => TreatmentEvents.FirstOrDefault(t => NotificationDate != null && 
+                                                                             t.TreatmentEventTypeIsOutcome && 
+                                                                             t.EventDate < ((DateTime) NotificationDate).AddMonths(12));
+
+        public TreatmentEvent TreatmentEvent24Month => TreatmentEvents.FirstOrDefault(t => NotificationDate != null  && 
+                                                                                    t.TreatmentEventTypeIsOutcome && 
+                                                                                    t.EventDate < ((DateTime) NotificationDate).AddMonths(24));
+
+        public TreatmentEvent TreatmentEvent36Month => TreatmentEvents.FirstOrDefault(t => NotificationDate != null &&
+                                                                                    t.TreatmentEventTypeIsOutcome && 
+                                                                                    t.EventDate < ((DateTime) NotificationDate).AddMonths(36));
         
         private string GetNotificationStatusString()
         {

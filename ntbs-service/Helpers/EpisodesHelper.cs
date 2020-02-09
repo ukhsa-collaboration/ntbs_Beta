@@ -17,19 +17,26 @@ namespace ntbs_service.Helpers
             TreatmentOutcomeType.TreatmentStopped
         };
         
-        public static Dictionary<int, List<TreatmentEvent>> CalculateEpisodes(IEnumerable<TreatmentEvent> treatmentEvents)
+        public static Dictionary<int, List<TreatmentEvent>> GroupTreatmentEventsByEpisode(IEnumerable<TreatmentEvent> treatmentEvents)
         {
             var orderedTreatmentEvents = treatmentEvents.OrderBy(t => t.EventDate);
             var groupedEpisodes = new Dictionary<int, List<TreatmentEvent>>();
             var episodeCount = 1;
-            groupedEpisodes.Add(episodeCount, new List<TreatmentEvent>());
+            
             foreach (var treatmentEvent in orderedTreatmentEvents)
             {
-                groupedEpisodes[episodeCount].Add(treatmentEvent);
-                if (IsEpisodeEndingType(treatmentEvent.TreatmentOutcome?.TreatmentOutcomeType))
+                if (!groupedEpisodes.ContainsKey(episodeCount))
+                {
+                    groupedEpisodes.Add(episodeCount, new List<TreatmentEvent>() {treatmentEvent});
+                }
+                else
+                {
+                    groupedEpisodes[episodeCount].Add(treatmentEvent);
+                }
+                if (IsEpisodeEndingType(treatmentEvent.TreatmentOutcome?.TreatmentOutcomeType) 
+                    || (treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut ))
                 {
                     episodeCount++;
-                    groupedEpisodes.Add(episodeCount, new List<TreatmentEvent>());
                 }
             }
 
