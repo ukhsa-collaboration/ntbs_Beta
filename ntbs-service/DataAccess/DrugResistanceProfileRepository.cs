@@ -25,10 +25,10 @@ namespace ntbs_service.DataAccess
         public async Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync()
         {
             var query = $@"
-                SELECT [ReusableNotificationId] AS NotificationId,
-                    [DrugResistanceProfile],
-                    [Species]
-                FROM [dbo].[ReusableNotification]";
+                SELECT NotificationId,
+                    [New DrugResistanceProfile] AS [DrugResistanceProfile],
+                    [New Species] AS [Species]
+                FROM [dbo].[vwChangesToDRPSpecies]";
 
             using (var connection = new SqlConnection(_reportingDbConnectionString))
             {
