@@ -17,15 +17,18 @@ namespace ntbs_service.DataAccess
         Task<IList<Country>> GetAllCountriesApartFromUkAsync();
         Task<Country> GetCountryByIdAsync(int id);
         Task<IList<TBService>> GetAllTbServicesAsync();
-        Task<IList<PHEC>> GetAllPhecs();
         Task<TBService> GetTbServiceByCodeAsync(string code);
+        Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
+        Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode);
+        IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles);
+        IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles);
+        IQueryable<TBService> GetTbServicesQueryable();
+        Task<IList<PHEC>> GetAllPhecs();
         Task<IList<User>> GetAllCaseManagers();
         Task<User> GetCaseManagerByUsernameAsync(string username);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
-        Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
-        Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode);
-        Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
         Task<Hospital> GetHospitalByGuidAsync(Guid guid);
+        Task<IList<User>> GetCaseManagersByTbServiceCodesAsync(IEnumerable<string> tbServiceCodes);
         Task<IList<Sex>> GetAllSexesAsync();
         Task<IList<Ethnicity>> GetAllOrderedEthnicitiesAsync();
         Task<IList<Site>> GetAllSitesAsync();
@@ -33,9 +36,6 @@ namespace ntbs_service.DataAccess
         Task<IList<Occupation>> GetAllOccupationsAsync();
         Task<List<string>> GetTbServiceCodesMatchingRolesAsync(IEnumerable<string> roles);
         Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles);
-        IQueryable<TBService> GetTbServicesQueryable();
-        IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles);
-        IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles);
         Task<ManualTestType> GetManualTestTypeAsync(int value);
         Task<IList<ManualTestType>> GetManualTestTypesAsync();
         Task<SampleType> GetSampleTypeAsync(int value);
@@ -91,21 +91,9 @@ namespace ntbs_service.DataAccess
             return await GetTbServicesQueryable().ToListAsync();
         }
 
-        public async Task<IList<PHEC>> GetAllPhecs()
-        {
-            return await _context.PHEC.ToListAsync();
-        }
-
         public async Task<TBService> GetTbServiceByCodeAsync(string code)
         {
-            return await GetTbServicesQueryable().SingleOrDefaultAsync(t => t.Code == code);
-        }
-
-        public async Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
-        {
-            return await GetTbServicesQueryable()
-                .Where(s => s.PHECCode == phecCode)
-                .ToListAsync();
+            return await _context.TbService.SingleOrDefaultAsync(t => t.Code == code);
         }
 
         public async Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId)
@@ -114,6 +102,38 @@ namespace ntbs_service.DataAccess
                 .Where(h => h.HospitalId == hospitalId)
                 .Select(h => h.TBService)
                 .SingleOrDefaultAsync();
+        }
+        
+        public async Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
+        {
+            return await GetTbServicesQueryable()
+                .Where(s => s.PHECCode == phecCode)
+                .ToListAsync();
+        }
+
+        public IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles)
+        {
+            return GetTbServicesQueryable()
+                .Include(tb => tb.PHEC)
+                .Where(tb => roles.Contains(tb.PHEC.AdGroup));
+        }
+        
+        public IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles)
+        {
+            return GetTbServicesQueryable()
+                .Where(tb => roles.Contains(tb.ServiceAdGroup));
+        }
+
+        public IQueryable<TBService> GetTbServicesQueryable()
+        {
+            return _context.TbService
+                .Where(s => s.IsLegacy == false)
+                .OrderBy(s => s.Name);
+        }
+
+        public async Task<IList<PHEC>> GetAllPhecs()
+        {
+            return await _context.PHEC.ToListAsync();
         }
         
         public async Task<IList<User>> GetAllCaseManagers()
@@ -188,24 +208,6 @@ namespace ntbs_service.DataAccess
         public async Task<List<string>> GetPhecCodesMatchingRolesAsync(IEnumerable<string> roles)
         {
             return await _context.PHEC.Where(ph => roles.Contains(ph.AdGroup)).Select(ph => ph.Code).ToListAsync();
-        }
-
-        public IQueryable<TBService> GetTbServicesQueryable()
-        {
-            return _context.TbService.OrderBy(s => s.Name);
-        }
-
-        public IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles)
-        {
-            return GetTbServicesQueryable()
-                .Where(tb => roles.Contains(tb.ServiceAdGroup));
-        }
-
-        public IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles)
-        {
-            return GetTbServicesQueryable()
-                .Include(tb => tb.PHEC)
-                .Where(tb => roles.Contains(tb.PHEC.AdGroup));
         }
 
         public async Task<ManualTestType> GetManualTestTypeAsync(int id)
