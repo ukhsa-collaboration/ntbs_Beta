@@ -242,11 +242,17 @@ namespace ntbs_service.Services
 
         private static void UpdateRiskFactorFlags(RiskFactorDetails riskFactor)
         {
-            if (riskFactor.Status != Status.Yes)
+            if (riskFactor.Status == Status.Yes)
             {
-                riskFactor.IsCurrent = false;
-                riskFactor.InPastFiveYears = false;
-                riskFactor.MoreThanFiveYearsAgo = false;
+                riskFactor.IsCurrent = riskFactor.IsCurrent ?? false;
+                riskFactor.InPastFiveYears = riskFactor.InPastFiveYears ?? false;
+                riskFactor.MoreThanFiveYearsAgo = riskFactor.MoreThanFiveYearsAgo ?? false;
+            }
+            else
+            {
+                riskFactor.IsCurrent = null;
+                riskFactor.InPastFiveYears = null;
+                riskFactor.MoreThanFiveYearsAgo = null;
             }
         }
 

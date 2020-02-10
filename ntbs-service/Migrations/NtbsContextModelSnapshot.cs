@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Migrations
 {
@@ -14228,11 +14229,11 @@ namespace ntbs_service.Migrations
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
-                                    b2.Property<bool>("InPastFiveYears");
+                                    b2.Property<bool?>("InPastFiveYears");
 
-                                    b2.Property<bool>("IsCurrent");
+                                    b2.Property<bool?>("IsCurrent");
 
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
+                                    b2.Property<bool?>("MoreThanFiveYearsAgo");
 
                                     b2.Property<string>("Status")
                                         .HasMaxLength(30);
@@ -14257,11 +14258,11 @@ namespace ntbs_service.Migrations
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
-                                    b2.Property<bool>("InPastFiveYears");
+                                    b2.Property<bool?>("InPastFiveYears");
 
-                                    b2.Property<bool>("IsCurrent");
+                                    b2.Property<bool?>("IsCurrent");
 
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
+                                    b2.Property<bool?>("MoreThanFiveYearsAgo");
 
                                     b2.Property<string>("Status")
                                         .HasMaxLength(30);
@@ -14286,11 +14287,11 @@ namespace ntbs_service.Migrations
                                 {
                                     b2.Property<int>("SocialRiskFactorsNotificationId");
 
-                                    b2.Property<bool>("InPastFiveYears");
+                                    b2.Property<bool?>("InPastFiveYears");
 
-                                    b2.Property<bool>("IsCurrent");
+                                    b2.Property<bool?>("IsCurrent");
 
-                                    b2.Property<bool>("MoreThanFiveYearsAgo");
+                                    b2.Property<bool?>("MoreThanFiveYearsAgo");
 
                                     b2.Property<string>("Status")
                                         .HasMaxLength(30);

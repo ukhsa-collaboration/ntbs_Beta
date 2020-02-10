@@ -16,9 +16,9 @@ namespace ntbs_service.Models.Entities
         // We already map different types to different tables; this is to distinguish them for auditing
         public RiskFactorType Type { get; set; }
         public Status? Status { get; set; }
-        public bool IsCurrent { get; set; }
-        public bool InPastFiveYears { get; set; }
-        public bool MoreThanFiveYearsAgo { get; set; }
+        public bool? IsCurrent { get; set; }
+        public bool? InPastFiveYears { get; set; }
+        public bool? MoreThanFiveYearsAgo { get; set; }
 
         string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
