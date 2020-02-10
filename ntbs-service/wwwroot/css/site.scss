@@ -1,4 +1,6 @@
 ﻿@import "./reset.scss";
+// Need to override fontHandler to prevent 404s when looking for the GDS specific fonts
+@import "./fonts/govukFontHandler.scss";
 // We're importing the raw scss instaed of a packaged css bundle since we're using some of the dynamic elements ourselves (colour variables, functions etc)
 @import "../../node_modules/nhsuk-frontend/packages/nhsuk.scss";
 // Govuk css - needed for things like conditionally revealed radios sections
