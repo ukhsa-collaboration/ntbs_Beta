@@ -149,19 +149,7 @@ namespace ntbs_service.Models.Entities
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
-        
-        public TreatmentEvent TreatmentEvent12Month => TreatmentEvents.FirstOrDefault(t => NotificationDate != null && 
-                                                                             t.TreatmentEventTypeIsOutcome && 
-                                                                             t.EventDate < ((DateTime) NotificationDate).AddMonths(12));
 
-        public TreatmentEvent TreatmentEvent24Month => TreatmentEvents.FirstOrDefault(t => NotificationDate != null  && 
-                                                                                    t.TreatmentEventTypeIsOutcome && 
-                                                                                    t.EventDate < ((DateTime) NotificationDate).AddMonths(24));
-
-        public TreatmentEvent TreatmentEvent36Month => TreatmentEvents.FirstOrDefault(t => NotificationDate != null &&
-                                                                                    t.TreatmentEventTypeIsOutcome && 
-                                                                                    t.EventDate < ((DateTime) NotificationDate).AddMonths(36));
-        
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)

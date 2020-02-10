@@ -14,11 +14,11 @@ using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class HospitalDetailssPageTests : TestRunnerNotificationBase
+    public class HospitalDetailsPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditHospitalDetails;
 
-        public HospitalDetailssPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public HospitalDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         public static IList<Notification> GetSeedingNotifications()
         {

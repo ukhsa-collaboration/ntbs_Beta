@@ -67,18 +67,31 @@ namespace ntbs_service.Pages.Notifications
 
         private void CalculateOutcomeTypes()
         {
-            OutcomeAt12Month = Notification.TreatmentEvent12Month?.EventDate < DateTime.Now.AddMonths(-12) ? Notification.TreatmentEvent12Month.TreatmentOutcome : null;
+            var notificationDate = Notification.NotificationDate;
+            var treatmentEvent12Month = Notification.TreatmentEvents.FirstOrDefault(t => notificationDate != null && 
+                                                                                         t.TreatmentEventTypeIsOutcome && 
+                                                                                         t.EventDate < ((DateTime) notificationDate).AddMonths(12));
 
-            OutcomeAt24Month = Notification.TreatmentEvent24Month?.EventDate < DateTime.Now.AddMonths(-24) &&
+            var treatmentEvent24Month = Notification.TreatmentEvents.FirstOrDefault(t => notificationDate != null  && 
+                                                                                         t.TreatmentEventTypeIsOutcome && 
+                                                                                         t.EventDate < ((DateTime) notificationDate).AddMonths(24));
+
+            var treatmentEvent36Month = Notification.TreatmentEvents.FirstOrDefault(t => notificationDate != null &&
+                                                                                         t.TreatmentEventTypeIsOutcome && 
+                                                                                         t.EventDate < ((DateTime) notificationDate).AddMonths(36));
+        
+            OutcomeAt12Month = treatmentEvent12Month?.EventDate < DateTime.Now.AddMonths(-12) ? treatmentEvent12Month.TreatmentOutcome : null;
+
+            OutcomeAt24Month = treatmentEvent24Month?.EventDate < DateTime.Now.AddMonths(-24) &&
                                OutcomeAt12Month?.TreatmentOutcomeType == TreatmentOutcomeType.NotEvaluated &&
                                OutcomeAt12Month?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.TransferredAbroad
-                ? Notification.TreatmentEvent24Month?.TreatmentOutcome
+                ? treatmentEvent24Month?.TreatmentOutcome
                 : null;
             
-            OutcomeAt36Month = Notification.TreatmentEvent36Month?.EventDate < DateTime.Now.AddMonths(-36) &&
+            OutcomeAt36Month = treatmentEvent36Month?.EventDate < DateTime.Now.AddMonths(-36) &&
                                OutcomeAt24Month?.TreatmentOutcomeType == TreatmentOutcomeType.NotEvaluated &&
                                OutcomeAt24Month?.TreatmentOutcomeSubType != TreatmentOutcomeSubType.TransferredAbroad
-                ? Notification.TreatmentEvent36Month?.TreatmentOutcome
+                ? treatmentEvent36Month?.TreatmentOutcome
                 : null;
         }
 
