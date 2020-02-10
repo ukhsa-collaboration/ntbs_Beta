@@ -33,7 +33,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityDraftAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-            
+
             var notificationsForBirthCountryAlerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityBirthCountryAlerts();
             foreach (var notification in notificationsForBirthCountryAlerts)
@@ -41,7 +41,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityBirthCountryAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-            
+
             var notificationsForClinicalDatesAlerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityClinicalDatesAlerts();
             foreach (var notification in notificationsForClinicalDatesAlerts)
@@ -49,7 +49,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityClinicalDatesAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-            
+
             var notificationsForClusterAlerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityClusterAlerts();
             foreach (var notification in notificationsForClusterAlerts)
@@ -57,7 +57,31 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-            
+
+            var notificationsForTreatmentOutcome12Alerts =
+                await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
+            foreach (var notification in notificationsForTreatmentOutcome12Alerts)
+            {
+                var alert = new DataQualityTreatmentOutcome12 {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
+            }
+
+            var notificationsForTreatmentOutcome24Alerts =
+                await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
+            foreach (var notification in notificationsForTreatmentOutcome24Alerts)
+            {
+                var alert = new DataQualityTreatmentOutcome24 {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
+            }
+
+            var notificationsForTreatmentOutcome36Alerts =
+                await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
+            foreach (var notification in notificationsForTreatmentOutcome36Alerts)
+            {
+                var alert = new DataQualityTreatmentOutcome36 {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
+            }
+
             Log.Information($"Finished data quality alerts job");
         }
     }
