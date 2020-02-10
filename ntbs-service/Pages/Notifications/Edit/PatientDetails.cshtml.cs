@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -79,6 +80,18 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             PatientDetails = Notification.PatientDetails;
             await SetNotificationProperties(isBeingSubmitted, PatientDetails);
+
+            if (Notification.PatientDetails?.Country?.IsLegacy ?? false)
+            {
+                var countriesList = Countries.ToList();
+                countriesList.Add(new SelectListItem
+                {
+                    Value = Notification.PatientDetails.Country.CountryId.ToString(),
+                    Text = Notification.PatientDetails.Country.Name
+                });
+                countriesList = countriesList.OrderBy(c => c.Text).ToList();
+                Countries = new SelectList(countriesList, "Value", "Text");
+            }
 
             FormattedDob = PatientDetails.Dob.ConvertToFormattedDate();
 
