@@ -185,6 +185,10 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.Alerts)
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TreatmentOutcome)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TbService)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.CaseManager)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

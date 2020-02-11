@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -33,8 +34,7 @@ namespace ntbs_service.Helpers
                 {
                     groupedEpisodes[episodeCount].Add(treatmentEvent);
                 }
-                if (IsEpisodeEndingType(treatmentEvent.TreatmentOutcome?.TreatmentOutcomeType) 
-                    || (treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut ))
+                if (IsEpisodeEndingTreatmentEvent(treatmentEvent))
                 {
                     episodeCount++;
                 }
@@ -43,9 +43,20 @@ namespace ntbs_service.Helpers
             return groupedEpisodes;
         }
 
-        private static bool IsEpisodeEndingType(TreatmentOutcomeType? outcomeType)
+        public static TreatmentEvent GetTreatmentEvent(IEnumerable<TreatmentEvent> treatmentEvents, DateTime startTime, DateTime endTime)
         {
-            return outcomeType != null && episodeEndingOutcomeTypes.Contains((TreatmentOutcomeType) outcomeType);
+            return treatmentEvents.Where(t => t.TreatmentEventTypeIsOutcome
+                                                && t.EventDate > startTime
+                                                && t.EventDate <= endTime)
+                .OrderBy(t => t.EventDate)
+                .LastOrDefault();
+        }
+
+        private static bool IsEpisodeEndingTreatmentEvent(TreatmentEvent treatmentEvent)
+        {
+            return (treatmentEvent.TreatmentOutcome != null 
+                   && episodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType))
+                   || treatmentEvent.TreatmentEventType == TreatmentEventType.TransferOut;
         }
         
     }

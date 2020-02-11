@@ -21,17 +21,17 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<IUserService> _mockUserService;
         private readonly Mock<NtbsContext> _mockContext;
-        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEvent;
+        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository;
 
         public NotificationServiceTest()
         {
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             _mockUserService = new Mock<IUserService>();
-            _mockTreatmentEvent = new Mock<IItemRepository<TreatmentEvent>>();
+            _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
             _mockContext = new Mock<NtbsContext>();
             _notificationService = new NotificationService(_mockNotificationRepository.Object,
-                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockTreatmentEvent.Object, _mockContext.Object);
+                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockTreatmentEventRepository.Object, _mockContext.Object);
 
             _mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
         }
@@ -464,7 +464,7 @@ namespace ntbs_service_unit_tests.Services
             await _notificationService.SubmitNotificationAsync(notification);
 
             // Assert
-            _mockTreatmentEvent.Verify(x => 
+            _mockTreatmentEventRepository.Verify(x => 
                 x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == treatmentDate)), Times.Once);
         }
         
@@ -484,7 +484,7 @@ namespace ntbs_service_unit_tests.Services
             await _notificationService.SubmitNotificationAsync(notification);
 
             // Assert
-            _mockTreatmentEvent.Verify(x => 
+            _mockTreatmentEventRepository.Verify(x => 
                 x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == notificationDate && 
                                                       e.TreatmentEventType == TreatmentEventType.NotificationStart))
                 , Times.Once);
