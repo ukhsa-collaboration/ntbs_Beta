@@ -48,11 +48,15 @@ namespace ntbs_service.Services
 
         public async Task<bool> AddUniqueAlertAsync(Alert alert)
         {
-            var matchingAlert =
-                await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if (matchingAlert != null)
+            if (alert.NotificationId.HasValue)
             {
-                return false;
+                var matchingAlert =
+                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId.Value,
+                        alert.AlertType);
+                if (matchingAlert != null)
+                {
+                    return false;
+                }
             }
 
             await PopulateAndAddAlertAsync(alert);
@@ -61,11 +65,15 @@ namespace ntbs_service.Services
 
         public async Task<bool> AddUniqueOpenAlertAsync(Alert alert)
         {
-            var matchingAlert =
-                await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if (matchingAlert != null)
+            if (alert.NotificationId.HasValue)
             {
-                return false;
+                var matchingAlert =
+                    await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(alert.NotificationId.Value,
+                        alert.AlertType);
+                if (matchingAlert != null)
+                {
+                    return false;
+                }
             }
 
             await PopulateAndAddAlertAsync(alert);

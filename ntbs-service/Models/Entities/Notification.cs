@@ -227,15 +227,15 @@ namespace ntbs_service.Models.Entities
         private static string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
             var timeStrings = new List<string>();
-            if (riskFactor.IsCurrent)
+            if (riskFactor.IsCurrent == true)
             {
                 timeStrings.Add("current");
             }
-            if (riskFactor.InPastFiveYears)
+            if (riskFactor.InPastFiveYears == true)
             {
                 timeStrings.Add("less than 5 years ago");
             }
-            if (riskFactor.MoreThanFiveYearsAgo)
+            if (riskFactor.MoreThanFiveYearsAgo == true)
             {
                 timeStrings.Add("more than 5 years ago");
             }

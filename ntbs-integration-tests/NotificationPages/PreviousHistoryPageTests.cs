@@ -39,8 +39,8 @@ namespace ntbs_integration_tests.NotificationPages
         
         [Theory]
         [InlineData(1899, "Please enter a valid year")]
-        [InlineData(2040, "Previous TB diagnosis year must be equal to or before the current year")]
-        [InlineData(1950, "Previous TB diagnosis year must be later than date of birth")]
+        [InlineData(2040, "Previous year of diagnosis must be the current year or earlier")]
+        [InlineData(1950, "Previous year of diagnosis must be later than date of birth year")]
         public async Task Post_ReturnsPageWithModelErrors_IfYearOfDiagnosisInvalid(int tbDiagnosisYear, string errorMessage)
         {
             // Arrange

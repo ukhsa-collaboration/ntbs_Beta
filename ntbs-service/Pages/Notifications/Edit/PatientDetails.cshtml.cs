@@ -16,6 +16,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class PatientDetailsModel : NotificationEditModelBase
     {
         private readonly IPostcodeService _postcodeService;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
         public SelectList Ethnicities { get; set; }
         public SelectList Countries { get; set; }
@@ -39,19 +40,23 @@ namespace ntbs_service.Pages.Notifications.Edit
             IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
         {
             _postcodeService = postcodeService;
-            GenerateReferenceData(referenceDataRepository);
+            _referenceDataRepository = referenceDataRepository;
             
             CurrentPage = NotificationSubPaths.EditPatientDetails;
         }
 
-        private void GenerateReferenceData(IReferenceDataRepository referenceDataRepository)
+        private async Task GenerateReferenceDataAsync()
         {
             Ethnicities = new SelectList(
-                referenceDataRepository.GetAllOrderedEthnicitiesAsync().Result,
+                await _referenceDataRepository.GetAllOrderedEthnicitiesAsync(),
                 nameof(Ethnicity.EthnicityId),
                 nameof(Ethnicity.Label));
 
-            var countries = referenceDataRepository.GetAllCountriesAsync().Result;
+            var countries = await _referenceDataRepository.GetAllCountriesAsync();
+            if (Notification.PatientDetails?.Country?.IsLegacy ?? false)
+            {
+                countries = countries.Prepend(Notification.PatientDetails.Country).ToList();
+            }
             Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
             RenderConditionalCountryFieldIds = countries
                 .Where(c =>
@@ -60,9 +65,9 @@ namespace ntbs_service.Pages.Notifications.Edit
                 .Select(c => c.CountryId.ToString())
                 .ToList();
 
-            Sexes = referenceDataRepository.GetAllSexesAsync().Result.ToList();
+            Sexes = (await _referenceDataRepository.GetAllSexesAsync()).ToList();
 
-            var occupations = referenceDataRepository.GetAllOccupationsAsync().Result;
+            var occupations = await _referenceDataRepository.GetAllOccupationsAsync();
             Occupations = new SelectList(
                 items: occupations,
                 dataValueField: nameof(Occupation.OccupationId),
@@ -79,7 +84,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             PatientDetails = Notification.PatientDetails;
             await SetNotificationProperties(isBeingSubmitted, PatientDetails);
-
+            
+            await GenerateReferenceDataAsync();
             FormattedDob = PatientDetails.Dob.ConvertToFormattedDate();
 
             if (PatientDetails.ShouldValidateFull)

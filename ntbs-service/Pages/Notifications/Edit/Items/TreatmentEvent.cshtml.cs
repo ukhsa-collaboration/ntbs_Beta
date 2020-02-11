@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -32,6 +34,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         [Display(Name = "Additional information")]
         [BindProperty]
         public TreatmentOutcomeSubType? SelectedTreatmentOutcomeSubType { get; set; }
+        public IEnumerable<SelectListItem> TreatmentEventTypes { get; set; }
 
         public TreatmentEventModel(
             INotificationService service,
@@ -71,6 +74,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 }
             }
 
+            TreatmentEventTypes = TreatmentEvent.EditableTreatmentEventTypes
+                .Select(t => new SelectListItem
+                {
+                    Value = ((int)t).ToString(), Text = t.GetDisplayName()
+                });
+
             return Page();
         }
 
@@ -105,6 +114,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             {
                 if (RowId == null)
                 {
+                    TreatmentEvent.CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername;
+                    TreatmentEvent.TbServiceCode = Notification.HospitalDetails.TBServiceCode;
                     await _treatmentEventRepository.AddAsync(TreatmentEvent);
                 }
                 else

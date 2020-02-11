@@ -73,12 +73,16 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private async Task SetDropdownsAsync()
         {
-            IEnumerable<string> tbServiceCodes;
+            IList<string> tbServiceCodes;
 
             if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft)
             {
                 var services = await _userService.GetTbServicesAsync(User);
-                tbServiceCodes = services.Select(s => s.Code);
+                if (Notification.Episode.TBService?.IsLegacy == true)
+                {
+                    services = services.Prepend(Notification.Episode.TBService);
+                }
+                tbServiceCodes = services.Select(s => s.Code).ToList();
                 TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
             }
             else
@@ -86,7 +90,11 @@ namespace ntbs_service.Pages.Notifications.Edit
                 tbServiceCodes = new List<string> { Notification.HospitalDetails.TBServiceCode };
             }
 
-            var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes);
+            var hospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes))
+                .Where(h => 
+                    h.IsLegacy == false 
+                    || h.HospitalId == Notification.Episode.Hospital?.HospitalId);
+            
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);

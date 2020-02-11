@@ -39,7 +39,7 @@ namespace ntbs_service_unit_tests.Services
         [Theory]
         [InlineData((int)Status.No)]
         [InlineData((int)Status.Unknown)]
-        public async Task SocialRiskFactorChecklist_AreSetToFalseIfStatusNoOrUnknown(int status)
+        public async Task SocialRiskFactorChecklist_AreSetToNullIfStatusNoOrUnknown(int status)
         {
             // Arrange
             var parsedStatus = (Status)status;
@@ -61,9 +61,74 @@ namespace ntbs_service_unit_tests.Services
                         InPastFiveYears = true,
                         Status = parsedStatus
                     },
-                RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment)
+                RiskFactorImprisonment = 
+                    new RiskFactorDetails(RiskFactorType.Imprisonment)
                 {
-                    IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
+                    IsCurrent = true, 
+                    MoreThanFiveYearsAgo = true, 
+                    InPastFiveYears = true, 
+                    Status = parsedStatus
+                },
+            };
+            var notification = new Notification {SocialRiskFactors = socialRiskFactors};
+
+            // Act
+            await _notificationService.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
+
+            // Assert
+            _mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors, socialRiskFactors));
+
+            Assert.Null(socialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.Null(socialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.Null(socialRiskFactors.RiskFactorDrugs.IsCurrent);
+            _mockContext.Verify(context =>
+                context.SetValues(notification.SocialRiskFactors.RiskFactorDrugs, socialRiskFactors.RiskFactorDrugs));
+
+            Assert.Null(socialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.Null(socialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.Null(socialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            _mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors.RiskFactorHomelessness,
+                socialRiskFactors.RiskFactorHomelessness));
+
+            Assert.Null(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.Null(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.Null(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            _mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment,
+                socialRiskFactors.RiskFactorImprisonment));
+
+            VerifyUpdateDatabaseCalled(_mockContext);
+        }
+        
+        [Fact]
+        public async Task SocialRiskFactorChecklist_AreSetToFalseIfNullAndStatusYes()
+        {
+            // Arrange
+            const Status yes = Status.Yes;
+            var socialRiskFactors = new SocialRiskFactors()
+            {
+                RiskFactorDrugs =
+                    new RiskFactorDetails(RiskFactorType.Drugs)
+                    {
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
+                    },
+                RiskFactorHomelessness =
+                    new RiskFactorDetails(RiskFactorType.Homelessness)
+                    {
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
+                    },
+                RiskFactorImprisonment = 
+                    new RiskFactorDetails(RiskFactorType.Imprisonment)
+                {
+                    IsCurrent = null, 
+                    MoreThanFiveYearsAgo = null, 
+                    InPastFiveYears = null, 
+                    Status = yes
                 },
             };
             var notification = new Notification {SocialRiskFactors = socialRiskFactors};
