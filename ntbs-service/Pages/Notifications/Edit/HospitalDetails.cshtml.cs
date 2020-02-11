@@ -78,9 +78,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (Notification.NotificationStatus == Models.Enums.NotificationStatus.Draft)
             {
                 var services = await _userService.GetTbServicesAsync(User);
-                if (Notification.Episode.TBService?.IsLegacy == true)
+                if (Notification.HospitalDetails.TBService?.IsLegacy == true)
                 {
-                    services = services.Prepend(Notification.Episode.TBService);
+                    services = services.Prepend(Notification.HospitalDetails.TBService);
                 }
                 tbServiceCodes = services.Select(s => s.Code).ToList();
                 TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
@@ -93,7 +93,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             var hospitals = (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodes))
                 .Where(h => 
                     h.IsLegacy == false 
-                    || h.HospitalId == Notification.Episode.Hospital?.HospitalId);
+                    || h.HospitalId == Notification.HospitalDetails.Hospital?.HospitalId);
             
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
