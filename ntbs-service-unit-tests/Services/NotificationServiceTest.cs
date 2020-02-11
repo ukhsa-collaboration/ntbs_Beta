@@ -420,7 +420,9 @@ namespace ntbs_service_unit_tests.Services
 
             // Assert
             _mockTreatmentEvent.Verify(x => 
-                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == notificationDate)), Times.Once);
+                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == notificationDate && 
+                                                      e.TreatmentEventType == TreatmentEventType.NotificationStart))
+                , Times.Once);
         }
     }
 }

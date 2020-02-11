@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Helpers;
@@ -56,6 +57,26 @@ namespace ntbs_service.Models.Entities
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
         public bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
         public string FormattedEventDate => EventDate.ConvertToString();
+
+        public string FormattedEventTypeAndOutcome => GetFormattedEventTypeAndOutcome();
+        private string GetFormattedEventTypeAndOutcome()
+        {
+            var eventAndValue = new StringBuilder();
+
+            if (TreatmentEventType == null)
+            {
+                return eventAndValue.ToString();
+            }
+            eventAndValue.Append(TreatmentEventType.GetDisplayName());
+
+            if (TreatmentOutcome == null)
+            {
+                return eventAndValue.ToString();
+            }
+            eventAndValue.Append($" - {TreatmentOutcome.TreatmentOutcomeType.GetDisplayName()}");
+
+            return eventAndValue.ToString();
+        }
 
         string IHasRootEntity.RootEntityType => RootEntities.Notification;
         string IHasRootEntity.RootId => NotificationId.ToString();
