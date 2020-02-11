@@ -513,7 +513,10 @@ namespace ntbs_service.DataAccess
                     .HasValue<DataQualityDraftAlert>(AlertType.DataQualityDraft)
                     .HasValue<DataQualityBirthCountryAlert>(AlertType.DataQualityBirthCountry)
                     .HasValue<DataQualityClinicalDatesAlert>(AlertType.DataQualityClinicalDates)
-                    .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster);
+                    .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster)
+                    .HasValue<DataQualityTreatmentOutcome12>(AlertType.DataQualityTreatmentOutcome12)
+                    .HasValue<DataQualityTreatmentOutcome24>(AlertType.DataQualityTreatmentOutcome24)
+                    .HasValue<DataQualityTreatmentOutcome36>(AlertType.DataQualityTreatmentOutcome36);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });

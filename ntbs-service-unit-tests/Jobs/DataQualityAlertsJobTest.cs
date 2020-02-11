@@ -45,6 +45,12 @@ namespace ntbs_service_unit_tests.Jobs
                 .Returns(testNotificationList);
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClusterAlerts())
                 .Returns(testNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts())
+                .Returns(testNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts())
+                .Returns(testNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts())
+                .Returns(testNotificationList);
             
             // Act
             await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
@@ -54,6 +60,9 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityBirthCountryAlert>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClinicalDatesAlert>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()));
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome12>()));
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()));
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()));
         }
         
         [Fact]
@@ -70,6 +79,12 @@ namespace ntbs_service_unit_tests.Jobs
                 .Returns(emptyNotificationList);
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClusterAlerts())
                 .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts())
+                .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts())
+                .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts())
+                .Returns(emptyNotificationList);
             
             // Act
             await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
@@ -79,6 +94,9 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityBirthCountryAlert>()), Times.Never);
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClinicalDatesAlert>()), Times.Never);
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome12>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()), Times.Never);
         }
     }
 }
