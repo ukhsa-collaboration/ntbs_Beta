@@ -10,8 +10,9 @@ namespace ntbs_service.Models.Entities
 
         public override string ActionLink =>
             RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
-                NotificationId.GetValueOrDefault(),
-                NotificationSubPaths.EditPatientDetails);
+                // ReSharper disable once PossibleInvalidOperationException
+                NotificationId.Value,
+                NotificationSubPaths.EditTreatmentEvents);
 
         public DataQualityTreatmentOutcome36()
         {
