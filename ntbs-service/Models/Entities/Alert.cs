@@ -17,6 +17,7 @@ namespace ntbs_service.Models.Entities
         public int? NotificationId { get; set; }
         public virtual Notification Notification { get; set; }
         public DateTime CreationDate { get; set; }
+        
         [Required(ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat("TransferDestinationNotCurrentTbService", ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
         [Display(Name = "TB Service")]
