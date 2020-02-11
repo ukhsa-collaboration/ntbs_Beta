@@ -61,7 +61,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             if (RowId != null)
             {
                 TreatmentEvent = Notification.TreatmentEvents.SingleOrDefault(r => r.TreatmentEventId == RowId.Value);
-                if (TreatmentEvent == null)
+                if (TreatmentEvent == null || !TreatmentEvent.IsEditable)
                 {
                     return NotFound();
                 }
