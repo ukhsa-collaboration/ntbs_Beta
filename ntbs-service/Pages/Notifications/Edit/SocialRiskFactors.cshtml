@@ -37,7 +37,7 @@
     <div>
         @{
             var drugsModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorDrugs");
-            var drugsViewData = new ViewDataDictionary(this.ViewData) {
+            var drugsViewData = new ViewDataDictionary(ViewData) {
                 { "propertyName", "RiskFactorDrugs" },
                 { "errorState", drugsModelIsValid },
                 { "questionText", "Patient has a history of drug misuse" }
