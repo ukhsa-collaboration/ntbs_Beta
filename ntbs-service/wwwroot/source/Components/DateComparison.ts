@@ -13,7 +13,7 @@ const DateComparison = Vue.extend({
         // wait for children to mount
         this.$nextTick(function ()
         {
-            for (let i = this.dates.length; i >= 0; i--) {
+            for (let i = this.dates.length - 1; i >= 1; i--) {
                 this.datechanged(i);
             }
         })
