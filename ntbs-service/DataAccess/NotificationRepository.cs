@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -221,7 +222,9 @@ namespace ntbs_service.DataAccess
         {
             return GetNotificationsWithBasicInformationIQueryable()
                 .Include(n => n.PatientDetails.Country)
-                .Include(n => n.PatientDetails.Sex);
+                .Include(n => n.PatientDetails.Sex)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome);
         }
 
         // Gets Notification model with basic information for use in notifications homepage lists.
