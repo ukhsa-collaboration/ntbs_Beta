@@ -8,7 +8,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public abstract class SocialContextBase : ModelBase, IHasRootEntity
+    public abstract class SocialContextBase : ModelBase, IHasRootEntityForAuditing
     {
         public int NotificationId { get; set; }
         // We are not including a navigation property to Notification, otherwise it gets validated
@@ -64,7 +64,7 @@ namespace ntbs_service.Models.Entities
 
         public abstract int Id { set; }
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId.ToString();
+        string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
+        string IHasRootEntityForAuditing.RootId => NotificationId.ToString();
     }
 }

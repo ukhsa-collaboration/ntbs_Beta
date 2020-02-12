@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientTBHistory : ModelBase, IOwnedEntity
+    public class PatientTBHistory : ModelBase, IOwnedEntityForAuditing
     {
         public bool? PreviouslyHadTB { get; set; }
         
@@ -24,6 +24,6 @@ namespace ntbs_service.Models.Entities
 
         public bool IsYearBeforeCurrentYear => PreviousTBDiagnosisYear <= DateTime.Now.Year;
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

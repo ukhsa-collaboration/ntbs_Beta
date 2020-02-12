@@ -6,7 +6,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class NotificationSite : ModelBase, IHasRootEntity
+    public class NotificationSite : ModelBase, IHasRootEntityForAuditing
     {
         public int NotificationId { get; set; }
 
@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string SiteDescription { get; set; }
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId.ToString();
+        string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
+        string IHasRootEntityForAuditing.RootId => NotificationId.ToString();
     }
 }

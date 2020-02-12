@@ -11,7 +11,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class Notification : ModelBase, IHasRootEntity
+    public class Notification : ModelBase, IOwnedEntityForAuditing
     {
         public Notification()
         {
@@ -297,7 +297,6 @@ namespace ntbs_service.Models.Entities
 
         #endregion
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId == default ? null : NotificationId.ToString();
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities
     // Unlike most of these classes, TestData is not owned - this is purely due to ef limitations around
     // owned entities being principal sides of non-ownership relationships
     // We use the latter to simplify modeling the validation for ''ManualTestResults' presence
-    public class TestData : ModelBase, IHasRootEntity
+    public class TestData : ModelBase, IOwnedEntityForAuditing
     {
         public int NotificationId { get; set; }
 
@@ -41,7 +41,6 @@ namespace ntbs_service.Models.Entities
         [NotMapped]
         public bool ProceedingToAdd { get; set; }
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId.ToString();
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }
