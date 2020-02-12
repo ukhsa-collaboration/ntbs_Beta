@@ -1,4 +1,5 @@
-﻿using EFAuditer;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 
