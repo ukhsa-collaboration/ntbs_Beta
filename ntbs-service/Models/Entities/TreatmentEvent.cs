@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class TreatmentEvent : ModelBase, IHasRootEntity
+    public class TreatmentEvent : ModelBase, IHasRootEntityForAuditing
     {
         public int TreatmentEventId { get; set; }
 
@@ -56,8 +56,8 @@ namespace ntbs_service.Models.Entities
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
         public bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId.ToString();
+        string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
+        string IHasRootEntityForAuditing.RootId => NotificationId.ToString();
 
         public static IList<TreatmentEventType> EditableTreatmentEventTypes => new List<TreatmentEventType>
         {

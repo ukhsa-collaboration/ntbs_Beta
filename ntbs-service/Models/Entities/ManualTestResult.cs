@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class ManualTestResult : ModelBase, IHasRootEntity
+    public class ManualTestResult : ModelBase, IHasRootEntityForAuditing
     {
         // Even for values which are non-nullable in db, we make them a nullable runtime type so 
         // the Required attribute can be applied properly, producing correct error messages
@@ -64,7 +64,7 @@ namespace ntbs_service.Models.Entities
             ManualTestType != null
             && ManualTestType.ManualTestTypeSampleTypes.Any();
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId.ToString();
+        string IHasRootEntityForAuditing.RootEntityType => RootEntities.Notification;
+        string IHasRootEntityForAuditing.RootId => NotificationId.ToString();
     }
 }
