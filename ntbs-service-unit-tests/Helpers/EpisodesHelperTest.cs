@@ -93,7 +93,7 @@ namespace ntbs_service_unit_tests.Helpers
         {
             var startDate = new DateTime(2016, 12, 12);
             var endDate = new DateTime(2020, 2, 1);
-            var treatmentEvent = EpisodesHelper.GetTreatmentEvent(MockTreatmentEvents, startDate, endDate);
+            var treatmentEvent = EpisodesHelper.GetMostRecentEventInPeriod(MockTreatmentEvents, startDate, endDate);
             
             Assert.Equal(treatmentEvent.EventDate, new DateTime(2020, 1, 1));
         }
@@ -103,7 +103,7 @@ namespace ntbs_service_unit_tests.Helpers
         {
             var startDate = new DateTime(2020, 1, 10);
             var endDate = new DateTime(2020, 2, 10);
-            var treatmentEvent = EpisodesHelper.GetTreatmentEvent(MockTreatmentEvents, startDate, endDate);
+            var treatmentEvent = EpisodesHelper.GetMostRecentEventInPeriod(MockTreatmentEvents, startDate, endDate);
             
             Assert.Null(treatmentEvent);
         }

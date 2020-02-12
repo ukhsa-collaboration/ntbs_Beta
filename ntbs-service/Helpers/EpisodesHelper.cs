@@ -43,7 +43,7 @@ namespace ntbs_service.Helpers
             return groupedEpisodes;
         }
 
-        public static TreatmentEvent GetTreatmentEvent(IEnumerable<TreatmentEvent> treatmentEvents, DateTime startTime, DateTime endTime)
+        public static TreatmentEvent GetMostRecentEventInPeriod(IEnumerable<TreatmentEvent> treatmentEvents, DateTime startTime, DateTime endTime)
         {
             return treatmentEvents.Where(t => t.TreatmentEventTypeIsOutcome
                                                 && t.EventDate > startTime

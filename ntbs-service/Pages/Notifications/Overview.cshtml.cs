@@ -67,18 +67,16 @@ namespace ntbs_service.Pages.Notifications
 
         private void CalculateOutcomeTypes()
         {
-            var orderedTreatmentEvents = Notification.TreatmentEvents.OrderBy(t => t.EventDate).ToList();
-            var notificationDate = Notification.NotificationDate;
-
-            if (notificationDate == null)
+            if ( Notification.NotificationDate == null)
             {
                 return;
             }
 
-            var treatmentEvent12Month = EpisodesHelper.GetTreatmentEvent(
+            var notificationDate = Notification.NotificationDate.Value;
+            var treatmentEvent12Month = EpisodesHelper.GetMostRecentEventInPeriod(
                 Notification.TreatmentEvents, 
-                notificationDate.Value, 
-                notificationDate.Value.AddMonths(12));
+                notificationDate, 
+                notificationDate.AddMonths(12));
             
             OutcomeAt12Month = treatmentEvent12Month?.EventDate < DateTime.Today.AddMonths(-12) ? treatmentEvent12Month.TreatmentOutcome : null;
             if (OutcomeAt12Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated 
@@ -87,10 +85,10 @@ namespace ntbs_service.Pages.Notifications
                 return;
             }          
             
-            var treatmentEvent24Month = EpisodesHelper.GetTreatmentEvent(
+            var treatmentEvent24Month = EpisodesHelper.GetMostRecentEventInPeriod(
                 Notification.TreatmentEvents,
-                notificationDate.Value.AddMonths(12), 
-                notificationDate.Value.AddMonths(24));
+                notificationDate.AddMonths(12), 
+                notificationDate.AddMonths(24));
             
             OutcomeAt24Month = treatmentEvent24Month?.EventDate < DateTime.Today.AddMonths(-24) ? treatmentEvent24Month?.TreatmentOutcome : null;
             if (OutcomeAt24Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
@@ -99,10 +97,10 @@ namespace ntbs_service.Pages.Notifications
                 return;
             }
             
-            var treatmentEvent36Month = EpisodesHelper.GetTreatmentEvent(
+            var treatmentEvent36Month = EpisodesHelper.GetMostRecentEventInPeriod(
                 Notification.TreatmentEvents,
-                notificationDate.Value.AddMonths(24),
-                notificationDate.Value.AddMonths(36));
+                notificationDate.AddMonths(24),
+                notificationDate.AddMonths(36));
             
             OutcomeAt36Month = treatmentEvent36Month?.EventDate < DateTime.Today.AddMonths(-36) ? treatmentEvent36Month?.TreatmentOutcome : null;
         }

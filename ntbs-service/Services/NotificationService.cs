@@ -314,12 +314,12 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
-            CreateTreatmentEvenNotificationStart(notification);
+            await CreateTreatmentEvenNotificationStart(notification);
         }
 
-        private void CreateTreatmentEvenNotificationStart(Notification notification)
+        private async Task CreateTreatmentEvenNotificationStart(Notification notification)
         {
-            _treatmentEventRepository.AddAsync(new TreatmentEvent
+            await _treatmentEventRepository.AddAsync(new TreatmentEvent
             {
                 NotificationId = notification.NotificationId,
                 TreatmentEventType = TreatmentEventType.NotificationStart,
