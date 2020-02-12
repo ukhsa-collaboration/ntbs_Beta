@@ -1,6 +1,8 @@
+@import "./_colors.scss";
+
 .table-row-form {
     padding-top: 20px;
-    background: #f0f4f5;
+    background: $shaded-background-color;
     width: 100%;
     margin-bottom: 20px;
 }

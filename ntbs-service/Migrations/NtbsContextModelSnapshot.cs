@@ -23371,6 +23371,27 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("DataQualityDraft");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityTreatmentOutcome12", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome12");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityTreatmentOutcome24", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome24");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.DataQualityTreatmentOutcome36", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome36");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
