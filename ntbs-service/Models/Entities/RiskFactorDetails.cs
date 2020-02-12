@@ -1,4 +1,5 @@
-﻿using EFAuditer;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 
@@ -19,6 +20,45 @@ namespace ntbs_service.Models.Entities
         public bool? IsCurrent { get; set; }
         public bool? InPastFiveYears { get; set; }
         public bool? MoreThanFiveYearsAgo { get; set; }
+
+        [NotMapped]
+        public bool IsCurrentView
+        {
+            get
+            {
+                return IsCurrent ?? false;
+            }
+            set
+            {
+                IsCurrent = value;
+            }
+        }
+        
+        [NotMapped]
+        public bool InPastFiveYearsView
+        {
+            get
+            {
+                return InPastFiveYears ?? false;
+            }
+            set
+            {
+                InPastFiveYears = value;
+            }
+        }
+        
+        [NotMapped]
+        public bool MoreThanFiveYearsAgoView
+        {
+            get
+            {
+                return MoreThanFiveYearsAgo ?? false;
+            }
+            set
+            {
+                MoreThanFiveYearsAgo = value;
+            }
+        }
 
         string IOwnedEntity.RootEntityType => RootEntities.Notification;
     }
