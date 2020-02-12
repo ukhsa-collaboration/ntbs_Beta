@@ -9,17 +9,26 @@ const DateComparison = Vue.extend({
             dateWarnings: []
         }
     },
+    mounted: function () {
+        // wait for children to mount
+        this.$nextTick(function ()
+        {
+            for (let i = this.dates.length; i >= 0; i--) {
+                this.datechanged(i);
+            }
+        })
+    },
     computed: {
         filteredDateWarnings: function () {
             return this.dateWarnings.filter((i: any) => i);
         }
-
     },
     methods: {
         datechanged: function (rank: any) {
-            var numberOfDates = this.dates.length;
-            var currentIndex = parseInt(rank, 10);
-            var currentDate = this.dates[currentIndex];
+            let i;
+            const numberOfDates = this.dates.length;
+            const currentIndex = parseInt(rank, 10);
+            const currentDate = this.dates[currentIndex];
 
             if (!currentDate) {
                 this.clearWarning(currentIndex, numberOfDates);
@@ -31,8 +40,8 @@ const DateComparison = Vue.extend({
                 return;
             }
 
-            var lowerDateIndex = currentIndex - 1;
-            for (var i = 0; i <= lowerDateIndex; i++) {
+            let lowerDateIndex = currentIndex - 1;
+            for (i = 0; i <= lowerDateIndex; i++) {
                 // We clear this so the warning is shown with respect to current date
                 this.unsetMatchingWarning(i, currentIndex);
             }
@@ -53,8 +62,8 @@ const DateComparison = Vue.extend({
                 lowerDateIndex--;
             }
 
-            var higherDateIndex = currentIndex + 1;
-            for (var i = higherDateIndex; i < numberOfDates; i++) {
+            let higherDateIndex = currentIndex + 1;
+            for (i = higherDateIndex; i < numberOfDates; i++) {
                 // We clear this so the warning is shown with respect to current date
                 this.unsetMatchingWarning(i, currentIndex);
             }
@@ -81,7 +90,7 @@ const DateComparison = Vue.extend({
             if (this.dateWarnings[currentIndex]) {
                 this.$set(this.dateWarnings, currentIndex, null);
             }
-            for (var i = 0; i < numberOfDates; i++) {
+            for (let i = 0; i < numberOfDates; i++) {
                 if (i === currentIndex) {
                     continue;
                 }

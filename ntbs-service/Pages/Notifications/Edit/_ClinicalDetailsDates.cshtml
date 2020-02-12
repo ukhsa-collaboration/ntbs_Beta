@@ -393,7 +393,7 @@
                             var hasDeathDateError = !Model.IsValid("ClinicalDetails.DeathDate");
                             var deathDateGroupState = hasDeathDateError ? Error : Standard;
                         }
-                        <validate-date ref="date6" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" rank="6" v-model="dates[6]" inline-template>
+                        <validate-date name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" inline-template>
                             <nhs-form-group nhs-form-group-type=@deathDateGroupState>
                                 <nhs-fieldset aria-describedby="postmortem-error" role="group">
                                     <nhs-fieldset-legend nhs-legend-size="Standard">
