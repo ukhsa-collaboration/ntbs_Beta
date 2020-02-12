@@ -21,15 +21,17 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<IUserService> _mockUserService;
         private readonly Mock<NtbsContext> _mockContext;
+        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository;
 
         public NotificationServiceTest()
         {
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             _mockUserService = new Mock<IUserService>();
+            _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
             _mockContext = new Mock<NtbsContext>();
             _notificationService = new NotificationService(_mockNotificationRepository.Object,
-                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockContext.Object);
+                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockTreatmentEventRepository.Object, _mockContext.Object);
 
             _mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
         }
@@ -441,6 +443,51 @@ namespace ntbs_service_unit_tests.Services
                         new NotificationClusterValue {NotificationId = notExistingNotification, ClusterId = null}
                     })
             );
+        }
+
+        [Fact]
+        public async Task AddNotificationStartEventType_WithTreatmentDate_WhenNotificationSubmittedHasTreatmentDate()
+        {
+            // Arrange
+            var treatmentDate = new DateTime(2015, 1, 1);
+            const int notificationId = 1;
+            var notification = new Notification
+            {
+                NotificationId = notificationId,
+                ClinicalDetails = new ClinicalDetails
+                {
+                    TreatmentStartDate = treatmentDate
+                }
+            };
+
+            // Act
+            await _notificationService.SubmitNotificationAsync(notification);
+
+            // Assert
+            _mockTreatmentEventRepository.Verify(x => 
+                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == treatmentDate)), Times.Once);
+        }
+        
+        [Fact]
+        public async Task AddNotificationStartEventType_WithNotificationDate_WhenNotificationSubmittedWithoutTreatmentDate()
+        {
+            // Arrange
+            var notificationDate = new DateTime(2015, 1, 1);
+            const int notificationId = 1;
+            var notification = new Notification
+            {
+                NotificationId = notificationId,
+                NotificationDate = notificationDate
+            };
+
+            // Act
+            await _notificationService.SubmitNotificationAsync(notification);
+
+            // Assert
+            _mockTreatmentEventRepository.Verify(x => 
+                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == notificationDate && 
+                                                      e.TreatmentEventType == TreatmentEventType.NotificationStart))
+                , Times.Once);
         }
     }
 }

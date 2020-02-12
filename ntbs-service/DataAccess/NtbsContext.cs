@@ -189,14 +189,14 @@ namespace ntbs_service.DataAccess
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 
-                entity.OwnsOne(e => e.Episode, episode =>
+                entity.OwnsOne(e => e.HospitalDetails, hospitalDetails =>
                 {
-                    episode.Property(e => e.CaseManagerUsername)
+                    hospitalDetails.Property(e => e.CaseManagerUsername)
                         .HasMaxLength(64);
 
-                    episode.HasOne(e => e.CaseManager);
+                    hospitalDetails.HasOne(e => e.CaseManager);
 
-                    episode.ToTable("Episode");
+                    hospitalDetails.ToTable("HospitalDetails");
                 });
 
                 entity.OwnsOne(e => e.PatientDetails, x =>

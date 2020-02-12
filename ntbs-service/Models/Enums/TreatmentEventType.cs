@@ -11,6 +11,8 @@ namespace ntbs_service.Models.Enums
         [Display(Name = "Transfer in")]
         TransferIn,
         [Display(Name = "Transfer out")]
-        TransferOut
+        TransferOut,
+        [Display(Name = "Notification start")]
+        NotificationStart,
     }
 }

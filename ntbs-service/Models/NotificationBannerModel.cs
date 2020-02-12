@@ -38,10 +38,10 @@ namespace ntbs_service.Models
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
-            TbServiceCode = notification.Episode.TBServiceCode;
-            TbServicePHECCode = notification.Episode.TBService?.PHECCode;
+            TbServiceCode = notification.HospitalDetails.TBServiceCode;
+            TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
-            CaseManager = notification.Episode.CaseManagerName;
+            CaseManager = notification.HospitalDetails.CaseManagerName;
             NhsNumber = notification.FormattedNhsNumber;
             DateOfBirth = notification.FormattedDob;
             CountryOfBirth = notification.CountryName;

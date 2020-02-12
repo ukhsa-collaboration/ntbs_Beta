@@ -101,7 +101,7 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
         {
             return _context.Notification
-                .Include(n => n.Episode);
+                .Include(n => n.HospitalDetails);
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts()

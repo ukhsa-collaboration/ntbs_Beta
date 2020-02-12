@@ -30,7 +30,7 @@ namespace ntbs_service_unit_tests.Services
                         Dob = new DateTime(1990, 1, 1),
                         PostcodeToLookup = "SW12RT"
                     },
-                    Episode = new Episode {
+                    HospitalDetails = new HospitalDetails {
                         TBServiceCode = "Ashford hospital"
                     }
                 },
@@ -49,7 +49,7 @@ namespace ntbs_service_unit_tests.Services
                         Dob = new DateTime(1991, 1, 1),
                         PostcodeToLookup = "SW294FB"
                     },
-                    Episode = new Episode {
+                    HospitalDetails = new HospitalDetails {
                         TBServiceCode = "Not Ashford"
                     }
                 },
@@ -239,7 +239,7 @@ namespace ntbs_service_unit_tests.Services
             var result = ((INtbsSearchBuilder)builder.FilterByTBService("Ashford hospital")).GetResult().ToList();
 
             Assert.Single(result);
-            Assert.Equal("Ashford hospital", result.FirstOrDefault().Episode.TBServiceCode);
+            Assert.Equal("Ashford hospital", result.FirstOrDefault().HospitalDetails.TBServiceCode);
         }
 
         [Fact]

@@ -1,0 +1,74 @@
+﻿@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+@model OverviewModel
+
+@{
+    var sectionSubPath = NotificationSubPaths.EditTreatmentEvents;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+    <h3 class="notification-details-type"> Episodes </h3>
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
+    {
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
+    }
+</div>
+
+@if (Model.GroupedTreatmentEvents.Count > 0)
+{
+     <div class="notification-overview-details-container">
+        <div class="event-outcome-at-dates">
+            @if (@Model.OutcomeAt12Month != null)
+            {
+                <div>
+                    <strong> Outcome at 12 months </strong> @Model.OutcomeAt12Month.TreatmentOutcomeType.GetDisplayName() 
+                </div>
+            }
+            
+            @if (@Model.OutcomeAt24Month != null)
+            {
+                <div>
+                    <strong> Outcome at 24 months </strong> @Model.OutcomeAt24Month.TreatmentOutcomeType.GetDisplayName()
+                </div>
+            }
+            
+            @if (@Model.OutcomeAt36Month != null)
+            {
+                <div>
+                    <strong> Outcome at 36 months </strong> @Model.OutcomeAt36Month.TreatmentOutcomeType.GetDisplayName() 
+                </div>
+            }
+        </div>
+
+        @for (var episodeNumber = 1; episodeNumber <= Model.GroupedTreatmentEvents.Count; episodeNumber++)
+        {
+            var treatmentEvents = Model.GroupedTreatmentEvents[episodeNumber];
+            
+            <div>
+                <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4><span>@treatmentEvents.First().FormattedEventDate - @treatmentEvents.Last().FormattedEventDate </span>
+            </div>
+            <nhs-table>
+                <nhs-table-head>
+                    <nhs-table-item>Date</nhs-table-item>
+                    <nhs-table-item>Event</nhs-table-item>
+                    <nhs-table-item>Tb Service</nhs-table-item>
+                    <nhs-table-item>Case Manager</nhs-table-item>
+                </nhs-table-head>
+                <nhs-table-body>
+                    @foreach (var treatmentEvent in treatmentEvents)
+                    {
+                        <nhs-table-body-row>
+                            <nhs-table-item>@treatmentEvent.FormattedEventDate</nhs-table-item>
+                            <nhs-table-item>@treatmentEvent.FormattedEventTypeAndOutcome</nhs-table-item>
+                            <nhs-table-item>@treatmentEvent.TbService?.Name</nhs-table-item>
+                            <nhs-table-item>@treatmentEvent.CaseManager?.FullName</nhs-table-item>
+                        </nhs-table-body-row>
+                    }
+                </nhs-table-body>
+            </nhs-table>
+        }
+    </div>   
+}

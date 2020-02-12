@@ -110,12 +110,12 @@ namespace ntbs_service.Services
 
         private bool UserBelongsToTbServiceOfNotification(Notification notification)
         {
-            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(notification.Episode.TBServiceCode);
+            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(notification.HospitalDetails.TBServiceCode);
         }
         
         private bool UserBelongsToTreatmentPhecOfNotification(Notification notification)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(notification.Episode.TBService?.PHECCode);
+            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(notification.HospitalDetails.TBService?.PHECCode);
         }
         
         private bool UserBelongsToResidencePhecOfNotification(Notification notification)
@@ -132,15 +132,15 @@ namespace ntbs_service.Services
 
             if (_userPermissionsFilter.Type == UserType.NhsUser)
             {
-                notifications = notifications.Where(n => _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.Episode.TBServiceCode));
+                notifications = notifications.Where(n => _userPermissionsFilter.IncludedTBServiceCodes.Contains(n.HospitalDetails.TBServiceCode));
             }
             else if (_userPermissionsFilter.Type == UserType.PheUser)
             {
                 // Having a method in LINQ clause breaks IQueryable abstraction. We have to use inline expression over methods
                 notifications = notifications.Where(n => 
                     (
-                        n.Episode.TBService != null && 
-                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.Episode.TBService.PHECCode)
+                        n.HospitalDetails.TBService != null && 
+                        _userPermissionsFilter.IncludedPHECCodes.Contains(n.HospitalDetails.TBService.PHECCode)
                     ) || (
                         n.PatientDetails.PostcodeLookup != null && 
                         n.PatientDetails.PostcodeLookup.LocalAuthority != null && 
