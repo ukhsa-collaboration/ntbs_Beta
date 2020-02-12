@@ -5,7 +5,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class SocialRiskFactors : ModelBase, IOwnedEntity
+    public class SocialRiskFactors : ModelBase, IOwnedEntityForAuditing
     {
         public SocialRiskFactors()
         {
@@ -23,6 +23,6 @@ namespace ntbs_service.Models.Entities
         public virtual RiskFactorDetails RiskFactorHomelessness { get; set; }
         public virtual RiskFactorDetails RiskFactorImprisonment { get; set; }
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

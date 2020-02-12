@@ -6,7 +6,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ContactTracing : ModelBase, IOwnedEntity
+    public class ContactTracing : ModelBase, IOwnedEntityForAuditing
     {
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
         public int? AdultsIdentified { get; set; }
@@ -64,6 +64,6 @@ namespace ntbs_service.Models.Entities
             return (x ?? 0) + (y ?? 0);
         }
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

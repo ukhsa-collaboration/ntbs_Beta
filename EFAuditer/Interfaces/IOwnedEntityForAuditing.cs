@@ -1,8 +1,7 @@
 ﻿namespace EFAuditer
 {
-    public interface IHasRootEntity
+    public interface IOwnedEntityForAuditing
     {
         string RootEntityType { get; }
-        string RootId { get; }
     }
 }
