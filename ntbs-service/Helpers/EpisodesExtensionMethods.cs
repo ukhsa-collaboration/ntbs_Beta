@@ -6,7 +6,7 @@ using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Helpers
 {
-    public static class EpisodesHelper
+    public static class EpisodesExtensionMethods
     {
         static readonly List<TreatmentOutcomeType> episodeEndingOutcomeTypes = new List<TreatmentOutcomeType>
         {
@@ -18,7 +18,7 @@ namespace ntbs_service.Helpers
             TreatmentOutcomeType.TreatmentStopped
         };
         
-        public static Dictionary<int, List<TreatmentEvent>> GroupTreatmentEventsByEpisode(IEnumerable<TreatmentEvent> treatmentEvents)
+        public static Dictionary<int, List<TreatmentEvent>> GroupByEpisode(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
             var orderedTreatmentEvents = treatmentEvents.OrderBy(t => t.EventDate);
             var groupedEpisodes = new Dictionary<int, List<TreatmentEvent>>();
@@ -43,13 +43,20 @@ namespace ntbs_service.Helpers
             return groupedEpisodes;
         }
 
-        public static TreatmentEvent GetMostRecentEventInPeriod(IEnumerable<TreatmentEvent> treatmentEvents, DateTime startTime, DateTime endTime)
+        public static TreatmentEvent GetMostRecentTreatmentOutcomeInPeriod(this IEnumerable<TreatmentEvent> treatmentEvents, DateTime startTime, DateTime endTime)
         {
             return treatmentEvents.Where(t => t.TreatmentEventTypeIsOutcome
                                                 && t.EventDate > startTime
                                                 && t.EventDate <= endTime)
-                .OrderBy(t => t.EventDate)
-                .LastOrDefault();
+                .OrderByDescending(t => t.EventDate)
+                .FirstOrDefault();
+        }
+
+        public static TreatmentEvent GetMostRecentTreatmentOutcome(this IEnumerable<TreatmentEvent> treatmentEvents)
+        {
+            return treatmentEvents.Where(t => t.TreatmentEventTypeIsOutcome)
+                .OrderByDescending(t => t.EventDate)
+                .FirstOrDefault();
         }
 
         private static bool IsEpisodeEndingTreatmentEvent(TreatmentEvent treatmentEvent)
