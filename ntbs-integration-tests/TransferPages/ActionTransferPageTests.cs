@@ -88,7 +88,7 @@ namespace ntbs_integration_tests.TransferPage
         }
 
         [Fact]
-        public async Task AcceptTransferAlert_SuccessfullyChangesTbServiceOfNotificationAndDismissesAlert()
+        public async Task AcceptTransferAlert_SuccessfullyChangesTbServiceCaseManagerAndHospitalOfNotificationAndDismissesAlert()
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
@@ -100,7 +100,9 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["AcceptTransfer"] = "true"
+                ["AcceptTransfer"] = "true",
+                ["TargetCaseManagerUsername"] = Utilities.CASEMANAGER_ABINGDON_EMAIL,
+                ["TargetHospitalId"] = Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID
             };
 
             // Act
@@ -113,6 +115,7 @@ namespace ntbs_integration_tests.TransferPage
             var overviewPage = await GetDocumentForUrl(overviewUrl);
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
             Assert.Contains("TestCase TestManager", overviewPage.QuerySelector("#banner-case-manager").TextContent);
+            Assert.Contains("ABINGDON COMMUNITY HOSPITAL", overviewPage.QuerySelector("#overview-hospital-name").TextContent);
             Assert.Null(overviewPage.QuerySelector("#alert-20003"));
         }
 

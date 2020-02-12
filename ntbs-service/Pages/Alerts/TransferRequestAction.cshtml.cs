@@ -42,6 +42,12 @@ namespace ntbs_service.Pages.Alerts
         [BindProperty]
         public int AlertId { get; set; }
         public TransferAlert TransferAlert { get; set; }
+        public SelectList Hospitals { get; set; }
+        public SelectList CaseManagers { get; set; }
+        [BindProperty]
+        public Guid TargetHospitalId { get; set; }
+        [BindProperty]
+        public string TargetCaseManagerUsername { get; set; }
 
 
         public TransferRequestActionModel(
@@ -77,6 +83,14 @@ namespace ntbs_service.Pages.Alerts
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
+            var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(
+                new List<string> { TransferAlert.TbServiceCode });
+            Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
+            var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(
+                new List<string> {TransferAlert.TbServiceCode});
+            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.DisplayName));
+            TargetCaseManagerUsername = TransferAlert.CaseManagerUsername;
             return Page();
         }
 
@@ -123,13 +137,8 @@ namespace ntbs_service.Pages.Alerts
             };
             
             Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
-            Notification.HospitalDetails.CaseManagerUsername = TransferAlert.CaseManagerUsername;
-            // Set hospital to the first available hospital in the new TB service where it can be updated by the user after the transfer
-            Notification.HospitalDetails.HospitalId =
-                (await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(new List<string>
-                {
-                    TransferAlert.TbServiceCode
-                })).FirstOrDefault()?.HospitalId;
+            Notification.HospitalDetails.HospitalId = TargetHospitalId;
+            Notification.HospitalDetails.CaseManagerUsername = TargetCaseManagerUsername;
             await Service.UpdateHospitalDetailsAsync(Notification, Notification.HospitalDetails);
             await _treatmentEventRepository.AddAsync(transferOutEvent);
             await _treatmentEventRepository.AddAsync(transferInEvent);

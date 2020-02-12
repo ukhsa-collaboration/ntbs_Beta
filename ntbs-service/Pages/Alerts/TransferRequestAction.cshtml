@@ -51,14 +51,35 @@
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
                         <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
-                            value="true" id="accept-transfer-input" aria-describedby="action-error">
+                            value="true" id="accept-transfer-input" data-aria-controls="conditional-radio-accept" aria-describedby="action-error">
                         <label nhs-label-type="Radios" for="accept-transfer-input">
                             Accept transfer
                         </label>
                     </div>
+                    
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-accept">
+                        <nhs-grid-row>
+                            <nhs-grid-column grid-column-width="OneHalf">
+                                <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                                    Hospital
+                                </label>
+                                <select nhs-select-type="Standard" asp-items="Model.Hospitals" asp-for="TargetHospitalId">
+                                </select>
+                            </nhs-grid-column>
+                            <nhs-grid-column grid-column-width="OneHalf">
+                                <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                                    Case manager
+                                </label>
+                                <select nhs-select-type="Standard" asp-items="Model.CaseManagers" asp-for="TargetCaseManagerUsername">
+                                    <option value="" selected> No Case Manager </option>
+                                </select>
+                            </nhs-grid-column>
+                        </nhs-grid-row>
+                    </div>
+                                        
                     <div class="nhsuk-radios__item">
                         <input asp-for="AcceptTransfer" nhs-input-type="Radios" type="radio"
-                            value="false" id="decline-transfer-input" data-aria-controls="conditional-radio" aria-describedby="action-error">
+                            value="false" id="decline-transfer-input" data-aria-controls="conditional-radio-decline" aria-describedby="action-error">
                         <label nhs-label-type="Radios" for="decline-transfer-input">
                             Decline transfer
                         </label>
@@ -69,7 +90,7 @@
                         var commentFormGroupType = hasCommentError ? Error : Standard;
                     }
 
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-decline">
                         <nhs-form-group nhs-form-group-type="@commentFormGroupType">
                             <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
                                 Provide explanatory comment
