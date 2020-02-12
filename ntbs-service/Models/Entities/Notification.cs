@@ -11,13 +11,13 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public class Notification : ModelBase, IHasRootEntity
+    public class Notification : ModelBase, IOwnedEntityForAuditing
     {
         public Notification()
         {
             NotificationStatus = NotificationStatus.Draft;
             PatientDetails = new PatientDetails();
-            Episode = new Episode();
+            HospitalDetails = new HospitalDetails();
             SocialRiskFactors = new SocialRiskFactors();
             ClinicalDetails = new ClinicalDetails();
             PatientTBHistory = new PatientTBHistory();
@@ -68,7 +68,7 @@ namespace ntbs_service.Models.Entities
         public virtual List<NotificationSite> NotificationSites { get; set; }
         public virtual PatientDetails PatientDetails { get; set; }
         public virtual ClinicalDetails ClinicalDetails { get; set; }
-        public virtual Episode Episode { get; set; }
+        public virtual HospitalDetails HospitalDetails { get; set; }
         public virtual PatientTBHistory PatientTBHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
@@ -96,8 +96,8 @@ namespace ntbs_service.Models.Entities
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
         public string CountryName => PatientDetails.Country?.Name;
         [Display(Name = "TB Service")]
-        public string TBServiceName => Episode.TBService?.Name;
-        public string HospitalName => Episode.Hospital?.Name;
+        public string TBServiceName => HospitalDetails.TBService?.Name;
+        public string HospitalName => HospitalDetails.Hospital?.Name;
         public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
         public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
         public string PreviouslyHadTBYesNo => (PatientTBHistory.PreviouslyHadTB).FormatYesNo();
@@ -138,7 +138,7 @@ namespace ntbs_service.Models.Entities
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
         public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
         public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
-        public string TreatmentPHECName => Episode.TBService?.PHEC?.Name;
+        public string TreatmentPHECName => HospitalDetails.TBService?.PHEC?.Name;
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
         public string MDRCaseCountryName => MDRDetails.Country?.Name;
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
@@ -149,7 +149,7 @@ namespace ntbs_service.Models.Entities
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
-        
+
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)
@@ -297,7 +297,6 @@ namespace ntbs_service.Models.Entities
 
         #endregion
 
-        string IHasRootEntity.RootEntityType => RootEntities.Notification;
-        string IHasRootEntity.RootId => NotificationId == default ? null : NotificationId.ToString();
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

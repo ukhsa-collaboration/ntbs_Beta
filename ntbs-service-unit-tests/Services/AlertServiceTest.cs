@@ -70,7 +70,7 @@ namespace ntbs_service_unit_tests.Services
             var mockNotification = Task.FromResult(new Notification
             {
                 NotificationId = 1,
-                Episode = new Episode
+                HospitalDetails = new HospitalDetails
                 {
                     CaseManagerUsername = "testUsername@email.com",
                     TBServiceCode = "AB0000001"

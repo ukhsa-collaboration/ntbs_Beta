@@ -21,7 +21,7 @@ namespace ntbs_service.Services
         Task UpdateTestDataAsync(Notification notification, TestData testData);
         Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites);
         Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails);
-        Task UpdateEpisodeAsync(Notification notification, Episode episode);
+        Task UpdateHospitalDetailsAsync(Notification notification, HospitalDetails hospitalDetails);
         Task SubmitNotificationAsync(Notification notification);
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails);
@@ -44,16 +44,19 @@ namespace ntbs_service.Services
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserService _userService;
         private readonly NtbsContext _context;
+        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
 
         public NotificationService(
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IUserService userService,
+            IItemRepository<TreatmentEvent> treatmentEventRepository,
             NtbsContext context)
         {
             _notificationRepository = notificationRepository;
             _referenceDataRepository = referenceDataRepository;
             _userService = userService;
+            _treatmentEventRepository = treatmentEventRepository;
             _context = context;
         }
 
@@ -158,9 +161,9 @@ namespace ntbs_service.Services
             await UpdateDatabaseAsync();
         }
 
-        public async Task UpdateEpisodeAsync(Notification notification, Episode episode)
+        public async Task UpdateHospitalDetailsAsync(Notification notification, HospitalDetails hospitalDetails)
         {
-            _context.SetValues(notification.Episode, episode);
+            _context.SetValues(notification.HospitalDetails, hospitalDetails);
 
             await UpdateDatabaseAsync();
         }
@@ -311,6 +314,17 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
+            await CreateTreatmentEvenNotificationStart(notification);
+        }
+
+        private async Task CreateTreatmentEvenNotificationStart(Notification notification)
+        {
+            await _treatmentEventRepository.AddAsync(new TreatmentEvent
+            {
+                NotificationId = notification.NotificationId,
+                TreatmentEventType = TreatmentEventType.NotificationStart,
+                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate
+            });
         }
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
@@ -349,7 +363,7 @@ namespace ntbs_service.Services
             var notification = new Notification
             {
                 CreationDate = DateTime.Now,
-                Episode =
+                HospitalDetails =
                 {
                     TBService = defaultTbService,
                     CaseManagerUsername = caseManagerEmail

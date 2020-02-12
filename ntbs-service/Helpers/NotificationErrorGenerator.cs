@@ -45,8 +45,8 @@ namespace ntbs_service.Helpers
                         displayName = "Test Results";
                         break;
                     case "NotificationDate":
-                    case "Episode":
-                        subPath = NotificationSubPaths.EditEpisode;
+                    case "HospitalDetails":
+                        subPath = NotificationSubPaths.EditHospitalDetails;
                         displayName = "Hospital Details";
                         break;
                     case "PatientTBHistory":

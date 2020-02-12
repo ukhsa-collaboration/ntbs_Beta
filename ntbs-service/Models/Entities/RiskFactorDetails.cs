@@ -6,7 +6,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class RiskFactorDetails : IOwnedEntity
+    public class RiskFactorDetails : IOwnedEntityForAuditing
     {
         public RiskFactorDetails() { }
         public RiskFactorDetails(RiskFactorType type)
@@ -60,6 +60,6 @@ namespace ntbs_service.Models.Entities
             }
         }
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [NotMapped]
-    public class VisitorDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntity
+    public class VisitorDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntityForAuditing
     {
         private const int MaxTotalLengthOfStay = 24;
 
@@ -94,6 +94,6 @@ namespace ntbs_service.Models.Entities
 
         #endregion
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

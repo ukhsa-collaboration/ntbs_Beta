@@ -69,11 +69,11 @@ namespace EFAuditer
 
             switch (entry.Entity)
             {
-                case IHasRootEntity entityWithParent:
+                case IHasRootEntityForAuditing entityWithParent:
                     audit.RootEntity = entityWithParent.RootEntityType;
                     audit.RootId = entityWithParent.RootId;
                     break;
-                case IOwnedEntity ownedEntity:
+                case IOwnedEntityForAuditing ownedEntity:
                     audit.RootEntity = ownedEntity.RootEntityType;
                     audit.RootId = audit.OriginalId;
                     break;

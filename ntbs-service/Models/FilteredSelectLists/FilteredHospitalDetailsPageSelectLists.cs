@@ -2,7 +2,7 @@
 
 namespace ntbs_service.Models.FilteredSelectLists
 {
-    public class FilteredEpisodePageSelectLists
+    public class FilteredHospitalDetailsPageSelectLists
     {
         public IEnumerable<OptionValue> Hospitals { get; set; }
         public IEnumerable<OptionValue> CaseManagers { get; set; }

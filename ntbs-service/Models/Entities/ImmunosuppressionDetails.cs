@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ImmunosuppressionDetails : ModelBase, IOwnedEntity
+    public class ImmunosuppressionDetails : ModelBase, IOwnedEntityForAuditing
     {
         [AssertThat(@"TestAtLeastOneSelectedWhenYes", 
             ErrorMessage = ValidationMessages.ImmunosuppressionTypeRequired)]
@@ -49,7 +49,7 @@ namespace ntbs_service.Models.Entities
             return sb.ToString();
         }
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
 
         public bool TestAtLeastOneSelectedWhenYes 
             => Status != Enums.Status.Yes
