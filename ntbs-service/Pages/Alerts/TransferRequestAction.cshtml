@@ -60,14 +60,14 @@
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio-accept">
                         <nhs-grid-row>
                             <nhs-grid-column grid-column-width="OneHalf">
-                                <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                                <label asp-for="TargetHospitalId" nhs-label-type="Standard">
                                     Hospital
                                 </label>
                                 <select nhs-select-type="Standard" asp-items="Model.Hospitals" asp-for="TargetHospitalId">
                                 </select>
                             </nhs-grid-column>
                             <nhs-grid-column grid-column-width="OneHalf">
-                                <label asp-for="DeclineTransferReason" nhs-label-type="Standard">
+                                <label asp-for="TargetCaseManagerUsername" nhs-label-type="Standard">
                                     Case manager
                                 </label>
                                 <select nhs-select-type="Standard" asp-items="Model.CaseManagers" asp-for="TargetCaseManagerUsername">
