@@ -1,0 +1,26 @@
+﻿@page "/LabResults/{handler?}"
+@using Markdig
+@model ntbs_service.Pages.Help.Index
+
+@{
+    Layout = "./_Layout";
+}
+
+<nhs-width-container container-width="Standard">
+    <h1>FAQ</h1>
+    <div class="nhsuk-expander-group">
+        @foreach (var questionAndAnswer in Model.FAQs)
+        {
+            <details class="nhsuk-details nhsuk-expander">
+                <summary class="nhsuk-details__summary">
+                    <span class="nhsuk-details__summary-text">
+                        @questionAndAnswer.Question
+                    </span>
+                </summary>
+                <div class="nhsuk-details__text">
+                    @Html.Raw(Markdown.ToHtml(questionAndAnswer.Answer))
+                </div>
+            </details>
+        }
+    </div>
+</nhs-width-container>
