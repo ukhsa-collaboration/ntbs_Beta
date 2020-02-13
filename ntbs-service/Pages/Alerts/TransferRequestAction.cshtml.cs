@@ -85,10 +85,13 @@ namespace ntbs_service.Pages.Alerts
 
             var hospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(
                 new List<string> { TransferAlert.TbServiceCode });
-            Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
+            Hospitals = new SelectList(hospitals, 
+                nameof(Hospital.HospitalId), 
+                nameof(Hospital.Name));
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(
                 new List<string> {TransferAlert.TbServiceCode});
-            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username),
+            CaseManagers = new SelectList(caseManagers, 
+                nameof(Models.Entities.User.Username),
                 nameof(Models.Entities.User.DisplayName));
             TargetCaseManagerUsername = TransferAlert.CaseManagerUsername;
             return Page();
