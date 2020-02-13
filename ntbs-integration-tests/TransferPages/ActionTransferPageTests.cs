@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -55,7 +56,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -77,7 +78,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             // Act
             var result = await Client.SendPostFormWithData(initialDocument, null, url);
@@ -93,7 +94,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             Assert.Equal("  ", initialDocument.QuerySelector("#banner-tb-service").TextContent);
             Assert.Equal("  ", initialDocument.QuerySelector("#banner-case-manager").TextContent);
@@ -112,7 +113,7 @@ namespace ntbs_integration_tests.TransferPage
             // Assert
             Assert.NotNull(resultDocument.QuerySelector("#return-to-notification"));
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
-            var overviewPage = await GetDocumentForUrl(overviewUrl);
+            var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.Contains("Abingdon Community Hospital", overviewPage.QuerySelector("#banner-tb-service").TextContent);
             Assert.Contains("TestCase TestManager", overviewPage.QuerySelector("#banner-case-manager").TextContent);
             Assert.Contains("ABINGDON COMMUNITY HOSPITAL", overviewPage.QuerySelector("#overview-hospital-name").TextContent);
@@ -125,12 +126,11 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT;
             var treatmentEventsUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditTreatmentEvents);
-            var initialTreatmentEventsPage = await GetDocumentForUrl(treatmentEventsUrl);
-            Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-event-1"));
-            Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-event-2"));
+            var initialTreatmentEventsPage = await GetDocumentForUrlAsync(treatmentEventsUrl);
+            Assert.Null(initialTreatmentEventsPage.QuerySelector("#treatment-events"));
             
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -140,11 +140,12 @@ namespace ntbs_integration_tests.TransferPage
             // Act
             await Client.SendPostFormWithData(initialDocument, formData, url);
             
-            var reloadedTreatmentEventsPage = await GetDocumentForUrl(treatmentEventsUrl);
+            var reloadedTreatmentEventsPage = await GetDocumentForUrlAsync(treatmentEventsUrl);
             
             // Assert
-            Assert.NotNull(reloadedTreatmentEventsPage.QuerySelector("#treatment-event-1"));
-            Assert.NotNull(reloadedTreatmentEventsPage.QuerySelector("#treatment-event-2"));
+            var reloadedTreatmentEventsTable = reloadedTreatmentEventsPage.QuerySelector("#treatment-events");
+            Assert.Contains("Transfer in", reloadedTreatmentEventsTable.InnerHtml);
+            Assert.Contains("Transfer out", reloadedTreatmentEventsTable.InnerHtml);
         }
         
         [Fact]
@@ -153,7 +154,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -166,7 +167,7 @@ namespace ntbs_integration_tests.TransferPage
 
             // Assert
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
-            var overviewPage = await GetDocumentForUrl(overviewUrl);
+            var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.NotNull(overviewPage.QuerySelector(".overview-alerts-container"));
         }
     }
