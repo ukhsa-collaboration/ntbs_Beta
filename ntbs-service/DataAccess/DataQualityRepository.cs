@@ -16,6 +16,9 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
     }
 
     public class DataQualityRepository : IDataQualityRepository
@@ -64,10 +67,41 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
+        public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts()
+        {
+            return await GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(12);
+        }
+
+        public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts()
+        {
+            return await GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(24);
+        }
+
+        public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts()
+        {
+            return await GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(36);
+        }
+
+        private async Task<IList<Notification>> GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(
+            int notificationAgeRequirementInMonths)
+        {
+            var outcomeDateLowerLimit = notificationAgeRequirementInMonths - 12;
+            var outcomeDateUpperLimit = notificationAgeRequirementInMonths;
+            
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
+                .Where(n =>
+                    n.NotificationDate <= DateTime.Today.AddMonths(-notificationAgeRequirementInMonths)
+                    && !n.TreatmentEvents.Any(t =>
+                        t.TreatmentEventType == TreatmentEventType.TreatmentOutcome
+                        && t.EventDate >= n.NotificationDate.Value.AddMonths(outcomeDateLowerLimit)
+                        && t.EventDate < n.NotificationDate.Value.AddMonths(outcomeDateUpperLimit)))
+                .ToListAsync();
+        }
+
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
         {
             return _context.Notification
-                .Include(n => n.Episode);
+                .Include(n => n.HospitalDetails);
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts()

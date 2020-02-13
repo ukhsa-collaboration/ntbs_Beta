@@ -11,7 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class Episode : ModelBase, IOwnedEntity
+    public class HospitalDetails : ModelBase, IOwnedEntityForAuditing
     {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
@@ -62,6 +62,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Case Manager")]
         public string CaseManagerName => CaseManager?.FullName;
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

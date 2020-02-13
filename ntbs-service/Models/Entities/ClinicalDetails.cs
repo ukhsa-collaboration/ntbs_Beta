@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ClinicalDetails : ModelBase, IOwnedEntity
+    public class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
     {
         #region DB Mapped Fields
         public bool? IsSymptomatic { get; set; }
@@ -101,6 +101,6 @@ namespace ntbs_service.Models.Entities
         public DateTime? Dob { get; set; }
         public bool AfterDob(DateTime date) => Dob == null || date >= Dob;
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

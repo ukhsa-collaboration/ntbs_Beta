@@ -118,6 +118,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.ServiceAdGroup).HasMaxLength(64);
                 entity.HasIndex(e => e.ServiceAdGroup).IsUnique();
                 entity.HasIndex(e => e.Name);
+                entity.HasIndex(e => new {e.IsLegacy, e.Name});
 
                 entity.HasOne(e => e.PHEC)
                     .WithMany()
@@ -188,14 +189,14 @@ namespace ntbs_service.DataAccess
                     .WithMany(g => g.Notifications)
                     .HasForeignKey(e => e.GroupId);
 
-                entity.OwnsOne(e => e.Episode, episode =>
+                entity.OwnsOne(e => e.HospitalDetails, hospitalDetails =>
                 {
-                    episode.Property(e => e.CaseManagerUsername)
+                    hospitalDetails.Property(e => e.CaseManagerUsername)
                         .HasMaxLength(64);
 
-                    episode.HasOne(e => e.CaseManager);
+                    hospitalDetails.HasOne(e => e.CaseManager);
 
-                    episode.ToTable("Episode");
+                    hospitalDetails.ToTable("HospitalDetails");
                 });
 
                 entity.OwnsOne(e => e.PatientDetails, x =>
@@ -512,7 +513,10 @@ namespace ntbs_service.DataAccess
                     .HasValue<DataQualityDraftAlert>(AlertType.DataQualityDraft)
                     .HasValue<DataQualityBirthCountryAlert>(AlertType.DataQualityBirthCountry)
                     .HasValue<DataQualityClinicalDatesAlert>(AlertType.DataQualityClinicalDates)
-                    .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster);
+                    .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster)
+                    .HasValue<DataQualityTreatmentOutcome12>(AlertType.DataQualityTreatmentOutcome12)
+                    .HasValue<DataQualityTreatmentOutcome24>(AlertType.DataQualityTreatmentOutcome24)
+                    .HasValue<DataQualityTreatmentOutcome36>(AlertType.DataQualityTreatmentOutcome36);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });

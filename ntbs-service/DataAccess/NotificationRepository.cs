@@ -30,6 +30,7 @@ namespace ntbs_service.DataAccess
         Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
+        Task<int> GetNotificationIdByLegacyId(string legacyId);
         Task<bool> IsNotificationLegacyAsync(int id);
     }
 
@@ -73,7 +74,7 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationForAlertCreation(int notificationId)
         {
             return await GetBaseNotificationsIQueryable()
-                .Include(n => n.Episode)
+                .Include(n => n.HospitalDetails)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -81,6 +82,15 @@ namespace ntbs_service.DataAccess
         {
             return await _context.Notification
                 .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
+        }
+
+        public async Task<int> GetNotificationIdByLegacyId(string legacyId)
+        {
+            return await _context.Notification
+                .Where(n => n.LTBRID == legacyId || n.ETSID == legacyId)
+                .Select(n => n.NotificationId)
+                .FirstOrDefaultAsync();
+
         }
 
         public async Task<bool> IsNotificationLegacyAsync(int id)
@@ -110,7 +120,7 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationWithCaseManagerTbServices(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
-                .Include(n => n.Episode.CaseManager.CaseManagerTbServices)
+                .Include(n => n.HospitalDetails.CaseManager.CaseManagerTbServices)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -153,8 +163,8 @@ namespace ntbs_service.DataAccess
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Ethnicity)
                 .Include(n => n.PatientDetails).ThenInclude(p => p.Occupation)
-                .Include(n => n.Episode).ThenInclude(p => p.Hospital)
-                .Include(n => n.Episode.CaseManager.CaseManagerTbServices)
+                .Include(n => n.HospitalDetails).ThenInclude(p => p.Hospital)
+                .Include(n => n.HospitalDetails.CaseManager.CaseManagerTbServices)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
@@ -173,6 +183,12 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextAddresses)
                 .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
                 .Include(n => n.Alerts)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TbService)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.CaseManager)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -200,7 +216,7 @@ namespace ntbs_service.DataAccess
                             .ThenInclude(l => l.LocalAuthority)
                                 .ThenInclude(la => la.LocalAuthorityToPHEC)
                 .Include(g => g.Notifications)
-                    .ThenInclude(n => n.Episode)
+                    .ThenInclude(n => n.HospitalDetails)
                         .ThenInclude(e => e.TBService)
                 .SingleOrDefaultAsync();
         }
@@ -224,8 +240,8 @@ namespace ntbs_service.DataAccess
                         .ThenInclude(pc => pc.LocalAuthority)
                             .ThenInclude(la => la.LocalAuthorityToPHEC)
                                 .ThenInclude(pl => pl.PHEC)
-                .Include(n => n.Episode.TBService.PHEC)
-                .Include(n => n.Episode.CaseManager);
+                .Include(n => n.HospitalDetails.TBService.PHEC)
+                .Include(n => n.HospitalDetails.CaseManager);
         }
 
         private IQueryable<Notification> GetBaseNotificationsIQueryable()

@@ -29,7 +29,8 @@
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
         public const string NotValid = "{0} is not valid";
-        public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth"; 
+        public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth";
+        public const string DateShouldBeLaterThanDobYear = "{0} must be later than date of birth year";
         public const string DateShouldBeLaterThanNotification = "{0} must be after the date of notification";
 
         #endregion
@@ -107,7 +108,7 @@
 
         #region Previous History
         public const string ValidYear = "Please enter a valid year";
-        public const string BeforeCurrentYear = "{0} must be equal to or before the current year";
+        public const string BeforeCurrentYear = "{0} must be the current year or earlier";
         #endregion
 
         #region MDR Details

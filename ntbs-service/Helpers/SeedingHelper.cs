@@ -40,19 +40,25 @@ namespace ntbs_service.Helpers
                     HospitalId = Guid.Parse(csvReader.GetField("HospitalId")),
                     Name = csvReader.GetField("Name"),
                     CountryCode = csvReader.GetField("CountryCode"),
-                    TBServiceCode = csvReader.GetField("TBServiceCode")
+                    TBServiceCode = csvReader.GetField("TBServiceCode"),
+                    IsLegacy = csvReader.GetField<bool>("IsLegacy")
                 }
             );
         }
 
         public static List<object> GetTBServices(string relativePathToFile)
         {
-            return GetRecordsFromCSV(relativePathToFile, 
-                (CsvReader csvReader) => new TBService {
+            return GetRecordsFromCSV(relativePathToFile, csvReader => new TBService
+                {
                     Code = csvReader.GetField("Code"),
                     Name = csvReader.GetField("Name"),
-                    PHECCode = string.IsNullOrEmpty(csvReader.GetField("PHEC_Code")) ? null : csvReader.GetField("PHEC_Code"),
-                    ServiceAdGroup = string.IsNullOrEmpty(csvReader.GetField("Service_Ad_Group")) ? null : csvReader.GetField("Service_Ad_Group")
+                    PHECCode = string.IsNullOrEmpty(csvReader.GetField("PHEC_Code"))
+                        ? null
+                        : csvReader.GetField("PHEC_Code"),
+                    ServiceAdGroup = string.IsNullOrEmpty(csvReader.GetField("Service_Ad_Group"))
+                        ? null
+                        : csvReader.GetField("Service_Ad_Group"),
+                    IsLegacy = csvReader.GetField<bool>("IsLegacy")
                 }
             );
         }

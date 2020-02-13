@@ -152,7 +152,7 @@ namespace ntbs_integration_tests.NotificationPages
         private static readonly List<string> EditSubPaths = new List<string>()
         {
             NotificationSubPaths.EditPatientDetails,
-            NotificationSubPaths.EditEpisode,
+            NotificationSubPaths.EditHospitalDetails,
             NotificationSubPaths.EditClinicalDetails,
             NotificationSubPaths.EditContactTracing,
             NotificationSubPaths.EditSocialRiskFactors,

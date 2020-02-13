@@ -8,7 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="15.0.2" />
-    <PackageReference Include="Dapper" Version="1.60.9" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
     <PackageReference Include="CsvHelper" Version="15.0.0" />
     <PackageReference Include="Hangfire.Console" Version="1.4.2" />
     <PackageReference Include="Hangfire.Core" Version="1.7.9" />
@@ -35,8 +35,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EFAuditer\EFAuditer.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Admin\UsersSync.cshtml" />
   </ItemGroup>
 </Project>

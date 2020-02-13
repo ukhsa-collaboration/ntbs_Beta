@@ -21,15 +21,17 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<IUserService> _mockUserService;
         private readonly Mock<NtbsContext> _mockContext;
+        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository;
 
         public NotificationServiceTest()
         {
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             _mockUserService = new Mock<IUserService>();
+            _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
             _mockContext = new Mock<NtbsContext>();
             _notificationService = new NotificationService(_mockNotificationRepository.Object,
-                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockContext.Object);
+                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockTreatmentEventRepository.Object, _mockContext.Object);
 
             _mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
         }
@@ -37,7 +39,7 @@ namespace ntbs_service_unit_tests.Services
         [Theory]
         [InlineData((int)Status.No)]
         [InlineData((int)Status.Unknown)]
-        public async Task SocialRiskFactorChecklist_AreSetToFalseIfStatusNoOrUnknown(int status)
+        public async Task SocialRiskFactorChecklist_AreSetToNullIfStatusNoOrUnknown(int status)
         {
             // Arrange
             var parsedStatus = (Status)status;
@@ -59,9 +61,74 @@ namespace ntbs_service_unit_tests.Services
                         InPastFiveYears = true,
                         Status = parsedStatus
                     },
-                RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment)
+                RiskFactorImprisonment = 
+                    new RiskFactorDetails(RiskFactorType.Imprisonment)
                 {
-                    IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
+                    IsCurrent = true, 
+                    MoreThanFiveYearsAgo = true, 
+                    InPastFiveYears = true, 
+                    Status = parsedStatus
+                },
+            };
+            var notification = new Notification {SocialRiskFactors = socialRiskFactors};
+
+            // Act
+            await _notificationService.UpdateSocialRiskFactorsAsync(notification, socialRiskFactors);
+
+            // Assert
+            _mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors, socialRiskFactors));
+
+            Assert.Null(socialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.Null(socialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.Null(socialRiskFactors.RiskFactorDrugs.IsCurrent);
+            _mockContext.Verify(context =>
+                context.SetValues(notification.SocialRiskFactors.RiskFactorDrugs, socialRiskFactors.RiskFactorDrugs));
+
+            Assert.Null(socialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.Null(socialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.Null(socialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            _mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors.RiskFactorHomelessness,
+                socialRiskFactors.RiskFactorHomelessness));
+
+            Assert.Null(socialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.Null(socialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            Assert.Null(socialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            _mockContext.Verify(context => context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment,
+                socialRiskFactors.RiskFactorImprisonment));
+
+            VerifyUpdateDatabaseCalled(_mockContext);
+        }
+        
+        [Fact]
+        public async Task SocialRiskFactorChecklist_AreSetToFalseIfNullAndStatusYes()
+        {
+            // Arrange
+            const Status yes = Status.Yes;
+            var socialRiskFactors = new SocialRiskFactors()
+            {
+                RiskFactorDrugs =
+                    new RiskFactorDetails(RiskFactorType.Drugs)
+                    {
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
+                    },
+                RiskFactorHomelessness =
+                    new RiskFactorDetails(RiskFactorType.Homelessness)
+                    {
+                        IsCurrent = null,
+                        MoreThanFiveYearsAgo = null,
+                        InPastFiveYears = null,
+                        Status = yes
+                    },
+                RiskFactorImprisonment = 
+                    new RiskFactorDetails(RiskFactorType.Imprisonment)
+                {
+                    IsCurrent = null, 
+                    MoreThanFiveYearsAgo = null, 
+                    InPastFiveYears = null, 
+                    Status = yes
                 },
             };
             var notification = new Notification {SocialRiskFactors = socialRiskFactors};
@@ -376,6 +443,51 @@ namespace ntbs_service_unit_tests.Services
                         new NotificationClusterValue {NotificationId = notExistingNotification, ClusterId = null}
                     })
             );
+        }
+
+        [Fact]
+        public async Task AddNotificationStartEventType_WithTreatmentDate_WhenNotificationSubmittedHasTreatmentDate()
+        {
+            // Arrange
+            var treatmentDate = new DateTime(2015, 1, 1);
+            const int notificationId = 1;
+            var notification = new Notification
+            {
+                NotificationId = notificationId,
+                ClinicalDetails = new ClinicalDetails
+                {
+                    TreatmentStartDate = treatmentDate
+                }
+            };
+
+            // Act
+            await _notificationService.SubmitNotificationAsync(notification);
+
+            // Assert
+            _mockTreatmentEventRepository.Verify(x => 
+                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == treatmentDate)), Times.Once);
+        }
+        
+        [Fact]
+        public async Task AddNotificationStartEventType_WithNotificationDate_WhenNotificationSubmittedWithoutTreatmentDate()
+        {
+            // Arrange
+            var notificationDate = new DateTime(2015, 1, 1);
+            const int notificationId = 1;
+            var notification = new Notification
+            {
+                NotificationId = notificationId,
+                NotificationDate = notificationDate
+            };
+
+            // Act
+            await _notificationService.SubmitNotificationAsync(notification);
+
+            // Assert
+            _mockTreatmentEventRepository.Verify(x => 
+                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == notificationDate && 
+                                                      e.TreatmentEventType == TreatmentEventType.NotificationStart))
+                , Times.Once);
         }
     }
 }

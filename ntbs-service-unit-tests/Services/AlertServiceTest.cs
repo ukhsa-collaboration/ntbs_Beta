@@ -34,10 +34,10 @@ namespace ntbs_service_unit_tests.Services
         public async Task AddUniqueAlert_AddsIfNoAlertWithSameNotificationIdAndAlertType()
         {
             // Arrange
-            var matchingAlert = Task.FromResult((Alert)new TestAlert() {AlertId = 2});
+            var matchingAlert = Task.FromResult((Alert)new TestAlert {AlertId = 2});
             var testAlert = new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest};
             _mockAlertRepository.Setup(x =>
-                    x.GetAlertByNotificationIdAndTypeAsync(testAlert.NotificationId, testAlert.AlertType))
+                    x.GetAlertByNotificationIdAndTypeAsync(testAlert.NotificationId.Value, testAlert.AlertType))
                 .Returns(matchingAlert);
 
             // Act
@@ -70,7 +70,7 @@ namespace ntbs_service_unit_tests.Services
             var mockNotification = Task.FromResult(new Notification
             {
                 NotificationId = 1,
-                Episode = new Episode
+                HospitalDetails = new HospitalDetails
                 {
                     CaseManagerUsername = "testUsername@email.com",
                     TBServiceCode = "AB0000001"

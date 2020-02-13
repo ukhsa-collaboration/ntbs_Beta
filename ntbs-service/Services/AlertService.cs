@@ -48,11 +48,15 @@ namespace ntbs_service.Services
 
         public async Task<bool> AddUniqueAlertAsync(Alert alert)
         {
-            var matchingAlert =
-                await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if (matchingAlert != null)
+            if (alert.NotificationId.HasValue)
             {
-                return false;
+                var matchingAlert =
+                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId.Value,
+                        alert.AlertType);
+                if (matchingAlert != null)
+                {
+                    return false;
+                }
             }
 
             await PopulateAndAddAlertAsync(alert);
@@ -61,11 +65,15 @@ namespace ntbs_service.Services
 
         public async Task<bool> AddUniqueOpenAlertAsync(Alert alert)
         {
-            var matchingAlert =
-                await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(alert.NotificationId, alert.AlertType);
-            if (matchingAlert != null)
+            if (alert.NotificationId.HasValue)
             {
-                return false;
+                var matchingAlert =
+                    await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(alert.NotificationId.Value,
+                        alert.AlertType);
+                if (matchingAlert != null)
+                {
+                    return false;
+                }
             }
 
             await PopulateAndAddAlertAsync(alert);
@@ -80,12 +88,12 @@ namespace ntbs_service.Services
                 alert.CreationDate = DateTime.Now;
                 if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
                 {
-                    alert.CaseManagerUsername = notification?.Episode?.CaseManagerUsername;
+                    alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
                 }
 
                 if (alert.TbServiceCode == null)
                 {
-                    alert.TbServiceCode = notification?.Episode?.TBServiceCode;
+                    alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
                 }
             }
 
@@ -124,8 +132,8 @@ namespace ntbs_service.Services
                         AlertStatus = AlertStatus.Open,
                         NotificationId = notification.NotificationId,
                         SpecimenId = specimenMatchPairing.ReferenceLaboratoryNumber,
-                        CaseManagerUsername = notification.Episode.CaseManagerUsername,
-                        TbServiceCode = notification.Episode.TBServiceCode,
+                        CaseManagerUsername = notification.HospitalDetails.CaseManagerUsername,
+                        TbServiceCode = notification.HospitalDetails.TBServiceCode,
                         CreationDate = DateTime.Now
                     });
                 }

@@ -29,7 +29,7 @@ namespace ntbs_integration_tests.TransferPage
                     {
                         new NotificationSite { NotificationId = Utilities.NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT, SiteId = (int)SiteId.PULMONARY }
                     },
-                    Episode = new Episode
+                    HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
                         HospitalId = Guid.Parse(Utilities.HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
@@ -40,7 +40,7 @@ namespace ntbs_integration_tests.TransferPage
                 {
                     NotificationId = Utilities.NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT,
                     NotificationStatus = NotificationStatus.Notified,
-                    Episode = new Episode
+                    HospitalDetails = new HospitalDetails()
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID,
                         CaseManagerUsername = Utilities.CASEMANAGER_ABINGDON_EMAIL

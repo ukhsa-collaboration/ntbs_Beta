@@ -42,7 +42,7 @@ namespace ntbs_integration_tests.NotificationPages
                     NotificationId = Utilities.LINKED_NOTIFICATION_ABINGDON_TB_SERVICE,
                     NotificationStatus = NotificationStatus.Notified,
                     GroupId = Utilities.OVERVIEW_NOTIFICATION_GROUP_ID,
-                    Episode = new Episode
+                    HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
                     }
@@ -52,7 +52,7 @@ namespace ntbs_integration_tests.NotificationPages
                     NotificationId = Utilities.LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE,
                     NotificationStatus = NotificationStatus.Notified,
                     GroupId = Utilities.OVERVIEW_NOTIFICATION_GROUP_ID,
-                    Episode = new Episode
+                    HospitalDetails = new HospitalDetails
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID
                     }
@@ -215,7 +215,7 @@ namespace ntbs_integration_tests.NotificationPages
         public static IEnumerable<object[]> AnchorSubPaths() => new List<string>
         {
            NotificationSubPaths.EditPatientDetails,
-           NotificationSubPaths.EditEpisode,
+           NotificationSubPaths.EditHospitalDetails,
            NotificationSubPaths.EditClinicalDetails,
            NotificationSubPaths.EditContactTracing,
            NotificationSubPaths.EditTestResults,

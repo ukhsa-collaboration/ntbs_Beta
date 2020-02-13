@@ -2,6 +2,7 @@
 @using NHSUK.FrontEndLibrary.TagHelpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using ntbs_service.Helpers
+@using ntbs_service.Models.Entities
 @using ntbs_service.Models.Enums
 
 <div class="table-row-form">
@@ -13,6 +14,8 @@
 
         <form method="post" autocomplete="off">
             <input type="hidden" asp-for="TreatmentEvent.TreatmentOutcomeId" />
+            <input type="hidden" asp-for="TreatmentEvent.CaseManagerUsername" />
+            <input type="hidden" asp-for="TreatmentEvent.TbServiceCode" />
 
             <nhs-grid-row>
                 <nhs-grid-column grid-column-width="Full">
@@ -99,7 +102,7 @@
                                     <select id="treatmentevent-type"
                                             nhs-select-type="@(hasTreatmentEventTypeError ? SelectType.Error : SelectType.Standard)"
                                             asp-for="TreatmentEvent.TreatmentEventType"
-                                            asp-items="Html.GetEnumSelectList<TreatmentEventType>()"
+                                            asp-items="Model.TreatmentEventTypes"
                                             ref="selectField"
                                             v-on:change="validate">
                                         <option value="">Please select</option>
