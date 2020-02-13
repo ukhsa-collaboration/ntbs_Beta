@@ -25,15 +25,15 @@ Feature: Notification creation
         And I select radio value 'postcode-no'
         And I click on the 'save-button' button
 
-        # Episode page
-        Then I should be on the Episode page
+        # HospitalDetails page
+        Then I should be on the HospitalDetails page
         When I enter 1 into 'FormattedNotificationDate_Day'
         And I enter 1 into 'FormattedNotificationDate_Month'
         And I enter 2019 into 'FormattedNotificationDate_Year'
-        And I select TBS0008 for 'Episode_TBServiceCode'
+        And I select TBS0008 for 'HospitalDetails_TBServiceCode'
         # Wait until javascript has populated the hospital dropdown
         And I wait
-        And I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for 'Episode_HospitalId'
+        And I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for 'HospitalDetails_HospitalId'
         And I click on the 'save-button' button
 
         # Clinical details page
