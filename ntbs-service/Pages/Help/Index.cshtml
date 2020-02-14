@@ -1,4 +1,4 @@
-﻿@page "/LabResults/{handler?}"
+﻿@page "/Help/{handler?}"
 @using Markdig
 @model ntbs_service.Pages.Help.Index
 
@@ -8,19 +8,12 @@
 
 <nhs-width-container container-width="Standard">
     <h1>FAQ</h1>
-    <div class="nhsuk-expander-group">
+    <nhs-expander-group>
         @foreach (var questionAndAnswer in Model.FAQs)
         {
-            <details class="nhsuk-details nhsuk-expander">
-                <summary class="nhsuk-details__summary">
-                    <span class="nhsuk-details__summary-text">
-                        @questionAndAnswer.Question
-                    </span>
-                </summary>
-                <div class="nhsuk-details__text">
-                    @Html.Raw(Markdown.ToHtml(questionAndAnswer.Answer))
-                </div>
-            </details>
+            <nhs-details display-text="@questionAndAnswer.Question" nhs-details-type="Expander">
+                @Html.Raw(Markdown.ToHtml(questionAndAnswer.Answer))
+            </nhs-details>
         }
-    </div>
+    </nhs-expander-group>
 </nhs-width-container>
