@@ -10,12 +10,12 @@ namespace ntbs_service_unit_tests.Services
     public class MdrServiceTest
     {
         private readonly Mock<IAlertService> mockAlertService;
-        private readonly MdrService mdrService;
+        private readonly EnhancedSurveillanceAlertsService EnhancedSurveillanceAlertsService;
 
         public MdrServiceTest()
         {
             mockAlertService = new Mock<IAlertService>();
-            mdrService = new MdrService(mockAlertService.Object);
+            EnhancedSurveillanceAlertsService = new EnhancedSurveillanceAlertsService(mockAlertService.Object);
         }
 
         [Theory]
@@ -43,7 +43,7 @@ namespace ntbs_service_unit_tests.Services
             };
             
             // Act
-            mdrService.CreateOrDismissMdrAlert(notification);
+            EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
             
             // Assert
             var numberOfCalls = shouldCreateAlert ? Times.Once() : Times.Never();

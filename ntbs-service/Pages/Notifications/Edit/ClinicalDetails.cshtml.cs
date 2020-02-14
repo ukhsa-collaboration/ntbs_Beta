@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IAlertService _alertService;
-        private readonly IMdrService _mdrService;
+        private readonly IEnhancedSurveillanceAlertsService EnhancedSurveillanceAlertsService;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -46,11 +46,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IAlertService alertService,
-            IMdrService mdrService) : base(service, authorizationService, notificationRepository)
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService) : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;
-            _mdrService = mdrService;
+            EnhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
 
             CurrentPage = NotificationSubPaths.EditClinicalDetails;
         }
@@ -178,7 +178,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 
                 if (mdrChanged)
                 {
-                    await _mdrService.CreateOrDismissMdrAlert(Notification);
+                    await EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
                 }
             }
         }

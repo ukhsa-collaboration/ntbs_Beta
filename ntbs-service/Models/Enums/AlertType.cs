@@ -6,7 +6,8 @@ namespace ntbs_service.Models.Enums
     {
         [Display(Name = "Enhanced surveillance - MDR")]
         EnhancedSurveillanceMDR,
-        EnhancedSurveillanceMBovis,
+        [Display(Name = "Enhanced surveillance - M. bovis")]
+        EnhancedSurveillanceMbovis,
         MissingTreatmentOutcome,
         [Display(Name = "Unmatched lab result")]
         UnmatchedLabResult,
