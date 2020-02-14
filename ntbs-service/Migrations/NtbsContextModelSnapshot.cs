@@ -18,6 +18,7 @@ namespace ntbs_service.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("Relational:Sequence:shared.OrderIndex", "'OrderIndex', 'shared', '1', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
@@ -77,6 +78,25 @@ namespace ntbs_service.Migrations
                     b.HasIndex("TbServiceCode");
 
                     b.ToTable("CaseManagerTbService");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.FrequentlyAskedQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Answer");
+
+                    b.Property<int>("OrderIndex")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
+
+                    b.Property<string>("Question");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrequentlyAskedQuestion");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
@@ -15790,6 +15810,8 @@ namespace ntbs_service.Migrations
                     b.HasIndex("ServiceAdGroup")
                         .IsUnique()
                         .HasFilter("[ServiceAdGroup] IS NOT NULL");
+
+                    b.HasIndex("IsLegacy", "Name");
 
                     b.ToTable("TbService");
 
