@@ -33,7 +33,7 @@ namespace ntbs_service.Services
         
         public async Task CreateOrDismissMBovisAlert(Notification notification)
         {
-            if (notification.IsMbovis)
+            if (notification.IsMBovis)
             {
                 await CreateMBovisAlert(notification);
             }
