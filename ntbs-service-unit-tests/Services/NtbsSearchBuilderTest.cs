@@ -93,6 +93,15 @@ namespace ntbs_service_unit_tests.Services
             Assert.Single(result);
             Assert.Equal("1234567890", result.FirstOrDefault().PatientDetails.NhsNumber);
         }
+        
+        [Fact]
+        public void SearchByIdWithSpaces_ReturnsMatchOnNhsNumber()
+        {
+            var result = ((INtbsSearchBuilder)builder.FilterById("123 456 7890")).GetResult().ToList();
+
+            Assert.Single(result);
+            Assert.Equal("1234567890", result.FirstOrDefault().PatientDetails.NhsNumber);
+        }
 
         [Fact]
         public void SearchById_ReturnsEmptyList_WhenNoMatchFound()
