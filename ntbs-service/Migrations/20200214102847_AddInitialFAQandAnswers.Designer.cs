@@ -11,8 +11,8 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20200212170741_AddFaqTable")]
-    partial class AddFaqTable
+    [Migration("20200214102847_AddInitialFAQandAnswers")]
+    partial class AddInitialFAQandAnswers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,7 +92,7 @@ namespace ntbs_service.Migrations
 
                     b.Property<int>("OrderIndex")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderNumbers");
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
 
                     b.Property<string>("Question");
 

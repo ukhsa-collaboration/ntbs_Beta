@@ -20,7 +20,7 @@ namespace ntbs_service.DataAccess
         
         public IEnumerable<FrequentlyAskedQuestion> GetAll()
         {
-            return _context.FrequentlyAnsweredQuestions
+            return _context.FrequentlyAskedQuestion
                 .OrderBy(x => x.OrderIndex);
         }
     }

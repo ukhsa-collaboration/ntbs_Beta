@@ -50,7 +50,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<TreatmentEvent> TreatmentEvent { get; set; }
         public virtual DbSet<TreatmentOutcome> TreatmentOutcome { get; set; }
         public virtual DbSet<SocialContextAddress> SocialContextAddress { get; set; }
-        public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAnsweredQuestions { get; set; }
+        public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestion { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {

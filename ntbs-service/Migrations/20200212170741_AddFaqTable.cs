@@ -15,7 +15,7 @@ namespace ntbs_service.Migrations
                 schema: "shared");
 
             migrationBuilder.CreateTable(
-                name: "FrequentlyAnsweredQuestions",
+                name: "FrequentlyAskedQuestion",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -26,14 +26,14 @@ namespace ntbs_service.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FrequentlyAnsweredQuestions", x => x.Id);
+                    table.PrimaryKey("PK_FrequentlyAskedQuestion", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FrequentlyAnsweredQuestions");
+                name: "FrequentlyAskedQuestion");
 
             migrationBuilder.DropSequence(
                 name: "OrderIndex",

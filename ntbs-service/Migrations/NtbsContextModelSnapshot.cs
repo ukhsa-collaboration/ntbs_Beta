@@ -90,13 +90,13 @@ namespace ntbs_service.Migrations
 
                     b.Property<int>("OrderIndex")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderNumbers");
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
 
                     b.Property<string>("Question");
 
                     b.HasKey("Id");
 
-                    b.ToTable("FrequentlyAnsweredQuestions");
+                    b.ToTable("FrequentlyAskedQuestion");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
