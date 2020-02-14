@@ -36,6 +36,7 @@ namespace ntbs_service_unit_tests.Services
         {
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             _mockOptionsMonitor = new Mock<IOptionsMonitor<AdfsOptions>>();
+            _mockUserRepository = new Mock<IUserRepository>();
             _mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(_options);
             _service = new UserService(_mockReferenceDataRepository.Object, _mockUserRepository.Object, _mockOptionsMonitor.Object);
 

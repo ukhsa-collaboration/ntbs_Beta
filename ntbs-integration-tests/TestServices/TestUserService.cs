@@ -66,6 +66,11 @@ namespace ntbs_integration_tests.TestServices
         {
             throw new NotImplementedException();
         }
+        
+        public Task RecordUserLogin(string username)
+        {
+            return Task.CompletedTask;
+        }
     }
     
     public class NhsUserWithNoTbServices : IUserService
@@ -97,6 +102,11 @@ namespace ntbs_integration_tests.TestServices
         public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
         {
             throw new NotImplementedException();
+        }
+        
+        public Task RecordUserLogin(string username)
+        {
+            return Task.CompletedTask;
         }
     }
 
@@ -130,6 +140,11 @@ namespace ntbs_integration_tests.TestServices
             var phecCodes = new List<string> {Utilities.PERMITTED_PHEC_CODE};
             return Task.FromResult((IEnumerable<string>)phecCodes);
         }
+        
+        public Task RecordUserLogin(string username)
+        {
+            return Task.CompletedTask;
+        }
     }
     
     public class NationalTeamUser : IUserService
@@ -157,6 +172,11 @@ namespace ntbs_integration_tests.TestServices
         public Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user)
         {
             throw new NotImplementedException();
+        }
+
+        public Task RecordUserLogin(string username)
+        {
+            return Task.CompletedTask;
         }
     }
 }
