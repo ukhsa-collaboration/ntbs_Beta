@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
 using Hangfire;
@@ -110,8 +111,7 @@ namespace ntbs_service
 
                     options.Events.OnSecurityTokenValidated += context =>
                     {
-                        var username = context.Principal.Claims
-                            .FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+                        var username = context.Principal.FindFirstValue(ClaimTypes.Email);
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
