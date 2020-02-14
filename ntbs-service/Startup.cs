@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Hangfire;
@@ -104,6 +105,18 @@ namespace ntbs_service
                             context.Response.Redirect("/");
                         }
 
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnSecurityTokenValidated += context =>
+                    {
+                        var username = context.Principal.Claims
+                            .FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+                        if (username != null)
+                        {
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                            userService.RecordUserLogin(username);
+                        }
                         return Task.CompletedTask;
                     };
                 })

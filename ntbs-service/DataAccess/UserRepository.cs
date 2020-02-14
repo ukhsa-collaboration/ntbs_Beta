@@ -10,6 +10,7 @@ namespace ntbs_service.DataAccess
     public interface IUserRepository
     {
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
+        Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
     }
 
     public class UserRepository : IUserRepository
@@ -34,6 +35,12 @@ namespace ntbs_service.DataAccess
             {
                 await AddUser(user, tbServices);
             }
+        }
+
+        public async Task AddUserLoginEvent(UserLoginEvent userLoginEvent)
+        {
+            _context.UserLoginEvent.Add(userLoginEvent);
+            await _context.SaveChangesAsync();
         }
 
         private async Task AddUser(User user, IEnumerable<TBService> tbServices)
