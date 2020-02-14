@@ -18,16 +18,16 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
-            var initialOverviewPage = await GetDocumentForUrl(overviewUrl);
+            var initialOverviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.NotNull(initialOverviewPage.QuerySelector("#alert-20005"));
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             // Act
             await Client.SendPostFormWithData(initialDocument, null, url);
 
             // Assert
-            var resultOverviewPage = await GetDocumentForUrl(overviewUrl);
+            var resultOverviewPage = await GetDocumentForUrlAsync(overviewUrl);
             Assert.Null(resultOverviewPage.QuerySelector("#alert-20005"));
         }
     }

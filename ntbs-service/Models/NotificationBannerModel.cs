@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models
@@ -24,6 +26,7 @@ namespace ntbs_service.Models
         public string Name;
         public string Sex;
         public string DrugResistance;
+        public string TreatmentOutcome;
         public string Source;
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
@@ -34,7 +37,8 @@ namespace ntbs_service.Models
         // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
         // implemented across the codebase due to there being no visual difference between no permission level and readonly
         // permission on notification banner models
-        public NotificationBannerModel(Notification notification, bool showPadlock = false, bool showLink = false) {
+        public NotificationBannerModel(Notification notification, bool showPadlock = false, bool showLink = false) 
+        {
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
             TbService = notification.TBServiceName;
@@ -52,12 +56,21 @@ namespace ntbs_service.Models
             NotificationStatusString = notification.NotificationStatusString;
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
+            TreatmentOutcome = CalculateOutcome(notification);
             Source = "ntbs";
             ShowLink = showLink;
             ShowPadlock = showPadlock;
             RedirectPath = RouteHelper.GetNotificationPath(notification.NotificationId, NotificationSubPaths.Overview);
         }
-        
+
+        private static string CalculateOutcome(Notification notification)
+        {
+            return notification.TreatmentEvents
+                       .GetMostRecentTreatmentOutcome()
+                       ?.TreatmentOutcome
+                       .TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
+        }
+
         public NotificationBannerModel() {}
     }
 }

@@ -19,7 +19,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -45,7 +45,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -67,7 +67,7 @@ namespace ntbs_integration_tests.TransferPage
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             Assert.NotNull(initialDocument.QuerySelector("#cancel-transfer-button"));
         }
