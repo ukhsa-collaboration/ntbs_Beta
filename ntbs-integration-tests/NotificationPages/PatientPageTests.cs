@@ -71,7 +71,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -106,7 +106,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -132,7 +132,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -165,7 +165,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string givenName = "Test";
             const string familyName = "User";
@@ -203,7 +203,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditEpisode, id), GetRedirectLocation(result));
+            Assert.Contains(GetPathForId(NotificationSubPaths.EditHospitalDetails, id), GetRedirectLocation(result));
 
             var reloadedPage = await Client.GetAsync(url);
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
@@ -283,7 +283,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(pageNotificationId);
 
             // Act
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             // Assert
             Assert.False(initialDocument.GetElementById("nhs-number-warning").ClassList.Contains("hidden"));
@@ -407,7 +407,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -440,7 +440,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(id);
 
             // Act
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Assert
             var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);

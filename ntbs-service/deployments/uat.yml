@@ -36,21 +36,11 @@ spec:
               secretKeyRef:
                 name: test-specimen-matching-connection-string
                 key: connectionString
-          - name: ConnectionStrings__ltbr   
-            valueFrom:
-              secretKeyRef:
-                name: lgeacy-and-migration-connection-strings
-                key: ltbr
-          - name: ConnectionStrings__ets
-            valueFrom:
-              secretKeyRef:
-                name: lgeacy-and-migration-connection-strings
-                key: ets
           - name: ConnectionStrings__migration
             valueFrom:
               secretKeyRef:
-                name: lgeacy-and-migration-connection-strings
-                key: migration
+                name: migration-connection-string
+                key: connectionString
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-uat.da0c702c3b574e3185f6.uksouth.aksapp.io"
           - name: LdapConnectionSettings__Password

@@ -168,7 +168,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./Episode", new { NotificationId, isBeingSubmitted });
+            return RedirectToPage("./HospitalDetails", new { NotificationId, isBeingSubmitted });
         }
 
         public ContentResult OnGetValidatePatientDetailsProperty(string key, string value, bool shouldValidateFull)

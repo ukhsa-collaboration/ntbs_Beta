@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientDetails : ModelBase, IHasPostcode, IOwnedEntity
+    public class PatientDetails : ModelBase, IHasPostcode, IOwnedEntityForAuditing
     {
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [StringLength(35)]
@@ -107,6 +107,6 @@ namespace ntbs_service.Models.Entities
             return Occupation.Sector == "Other" ? Occupation.Role : $"{Occupation.Sector} - {Occupation.Role}";
         }
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

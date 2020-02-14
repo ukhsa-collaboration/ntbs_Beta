@@ -54,7 +54,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DELETE_NO_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -78,7 +78,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -103,7 +103,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DELETE_WITH_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {

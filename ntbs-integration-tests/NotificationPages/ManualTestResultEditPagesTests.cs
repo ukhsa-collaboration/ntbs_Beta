@@ -60,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.DRAFT_ID;
             var url = GetPathForId(NotificationSubPaths.AddManualTestResult, notificationId);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -132,7 +132,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -170,7 +170,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -197,7 +197,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -227,7 +227,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -270,7 +270,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_MANUAL_TESTS;
             var editUrl = GetCurrentPathForId(notificationId) + TEST_TO_DELETE_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string> { };

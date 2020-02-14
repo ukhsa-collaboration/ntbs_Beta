@@ -23674,7 +23674,7 @@ namespace ntbs_service.Migrations
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.Episode", "Episode", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.HospitalDetails", "HospitalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -23696,7 +23696,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("TBServiceCode");
 
-                            b1.ToTable("Episode");
+                            b1.ToTable("HospitalDetails");
 
                             b1.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                                 .WithMany()
@@ -23707,8 +23707,8 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("HospitalId");
 
                             b1.HasOne("ntbs_service.Models.Entities.Notification")
-                                .WithOne("Episode")
-                                .HasForeignKey("ntbs_service.Models.Entities.Episode", "NotificationId")
+                                .WithOne("HospitalDetails")
+                                .HasForeignKey("ntbs_service.Models.Entities.HospitalDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")

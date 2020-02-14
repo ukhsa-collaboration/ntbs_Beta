@@ -10,12 +10,12 @@ namespace EFAuditer_tests.UnitTests.Services
 {
     public class Entity { }
 
-    public class OwnedEntity : IOwnedEntity
+    public class OwnedEntityForAuditing : IOwnedEntityForAuditing
     {
         public string RootEntityType => TestHelper.OwnedEntityTypeString;
     }
 
-    public class HasRootEntity : IHasRootEntity
+    public class HasRootEntityForAuditing : IHasRootEntityForAuditing
     {
         public string RootEntityType => TestHelper.HasRootEntityTypeString;
         public string RootId => TestHelper.HasRootEntityRootEntityId;
@@ -188,7 +188,7 @@ namespace EFAuditer_tests.UnitTests.Services
         public void AuditActionForIOwnedEntity_SetsUpdateValuesCorrectly()
         {
             // Arrange
-            var entity = new OwnedEntity();
+            var entity = new OwnedEntityForAuditing();
             var ev = new AuditEvent
             {
                 Environment = new AuditEventEnvironment()
@@ -219,7 +219,7 @@ namespace EFAuditer_tests.UnitTests.Services
         public void AuditActionForIHasRootEntity_SetsUpdateValuesCorrectly()
         {
             // Arrange
-            var entity = new HasRootEntity();
+            var entity = new HasRootEntityForAuditing();
             var ev = new AuditEvent
             {
                 Environment = new AuditEventEnvironment()

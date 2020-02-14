@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class MDRDetails : ModelBase, IOwnedEntity
+    public class MDRDetails : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR-TB Case?")]
         public Status? ExposureToKnownCaseStatus { get; set; }
@@ -34,6 +34,6 @@ namespace ntbs_service.Models.Entities
         public virtual Country Country { get; set; }
         public bool MDRDetailsEntered => ExposureToKnownCaseStatus != null;
 
-        string IOwnedEntity.RootEntityType => RootEntities.Notification;
+        string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
 }

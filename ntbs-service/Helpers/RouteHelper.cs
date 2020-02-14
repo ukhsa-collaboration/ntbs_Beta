@@ -48,7 +48,7 @@ namespace ntbs_service.Helpers
         public static string EditClinicalDetails => "Edit/ClinicalDetails";
         public static string EditTestResults => "Edit/TestResults";
         public static string EditPatientDetails => "Edit/PatientDetails";
-        public static string EditEpisode => "Edit/Episode";
+        public static string EditHospitalDetails => "Edit/HospitalDetails";
         public static string EditContactTracing => "Edit/ContactTracing";
         public static string EditSocialRiskFactors => "Edit/SocialRiskFactors";
         public static string EditTravel => "Edit/Travel";
@@ -86,7 +86,7 @@ namespace ntbs_service.Helpers
         private static readonly Dictionary<string, string> _subPathToAnchorId = new Dictionary<string, string>
         {
             {NotificationSubPaths.EditPatientDetails, "overview-patient-details"},
-            {NotificationSubPaths.EditEpisode, "overview-hospital-details"},
+            {NotificationSubPaths.EditHospitalDetails, "overview-hospital-details"},
             {NotificationSubPaths.EditClinicalDetails, "overview-clinical-details"},
             {NotificationSubPaths.EditContactTracing, "overview-contact-tracing"},
             {NotificationSubPaths.EditTestResults, "overview-test-results"},
