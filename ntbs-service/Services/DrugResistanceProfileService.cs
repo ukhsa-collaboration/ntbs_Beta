@@ -54,7 +54,7 @@ namespace ntbs_service.Services
                 {
                     await _notificationService.UpdateDrugResistanceProfile(notification, drugResistanceProfile);
                     await EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
-                    await EnhancedSurveillanceAlertsService.CreateOrDismissMbovisAlert(notification);
+                    await EnhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
                 }
                 catch (Exception e)
                 {

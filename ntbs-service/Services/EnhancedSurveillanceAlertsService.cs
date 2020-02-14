@@ -7,7 +7,7 @@ namespace ntbs_service.Services
     public interface IEnhancedSurveillanceAlertsService
     {
         Task CreateOrDismissMdrAlert(Notification notification);
-        Task CreateOrDismissMbovisAlert(Notification notification);
+        Task CreateOrDismissMBovisAlert(Notification notification);
     }
     
     public class EnhancedSurveillanceAlertsService : IEnhancedSurveillanceAlertsService
@@ -31,11 +31,11 @@ namespace ntbs_service.Services
             }
         }
         
-        public async Task CreateOrDismissMbovisAlert(Notification notification)
+        public async Task CreateOrDismissMBovisAlert(Notification notification)
         {
             if (notification.IsMbovis)
             {
-                await CreateMbovisAlert(notification);
+                await CreateMBovisAlert(notification);
             }
             else
             {
@@ -49,10 +49,10 @@ namespace ntbs_service.Services
             await _alertService.AddUniqueAlertAsync(mdrAlert);
         }
 
-        private async Task CreateMbovisAlert(Notification notification)
+        private async Task CreateMBovisAlert(Notification notification)
         {
-            var mbovisAlert = new MbovisAlert { NotificationId = notification.NotificationId};
-            await _alertService.AddUniqueAlertAsync(mbovisAlert);
+            var mBovisAlert = new MBovisAlert { NotificationId = notification.NotificationId};
+            await _alertService.AddUniqueAlertAsync(mBovisAlert);
         }
     }
 }

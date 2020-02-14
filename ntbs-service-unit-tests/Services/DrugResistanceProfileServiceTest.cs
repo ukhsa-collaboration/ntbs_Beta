@@ -84,6 +84,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Never);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Never);
         }
         
         [Fact]
@@ -107,6 +108,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Exactly(2));
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Exactly(2));
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -133,6 +135,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Never);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Never);
         }       
         
         [Fact]
@@ -159,6 +162,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Once);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Once);
         }
         
         [Fact]
@@ -173,10 +177,10 @@ namespace ntbs_service_unit_tests.Services
                 }));
             
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithMdr.NotificationId))
+                .Setup(x => x.GetNotificationAsync(mockNotificationWithMbovis.NotificationId))
                 .Returns(Task.FromResult(mockNotificationWithMbovis));           
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithoutMdr.NotificationId))
+                .Setup(x => x.GetNotificationAsync(mockNotificationWithoutMbovis.NotificationId))
                 .Returns(Task.FromResult(mockNotificationWithoutMbovis));
             
             // Act
@@ -185,6 +189,7 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Once);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Once);
         }
         
         private Task<Notification> GetNotificationWithEmptyDrugResistanceProfile(int notificationId)

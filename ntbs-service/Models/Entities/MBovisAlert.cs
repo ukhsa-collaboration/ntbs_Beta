@@ -3,17 +3,17 @@ using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities
 {
-    public class MbovisAlert : Alert
+    public class MBovisAlert : Alert
     {
         public override string Action => "M. bovis identified. Please complete enhanced surveillance questionnaire";
-        // TODO MBovis provide correct anchor
+        // TODO NTBS-371 MBovis provide correct anchor (use NotificationSubPaths.EditMBovisExposureToKnownCases)
         public override string ActionLink => RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
             NotificationId.GetValueOrDefault(),
-            NotificationSubPaths.EditClinicalDetails);
+            "overview-mbovis-exposure-details");
 
-        public MbovisAlert()
+        public MBovisAlert()
         {
-            AlertType = AlertType.EnhancedSurveillanceMbovis;
+            AlertType = AlertType.EnhancedSurveillanceMBovis;
         }
     }
 }
