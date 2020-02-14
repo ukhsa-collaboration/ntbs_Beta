@@ -29,14 +29,16 @@ namespace ntbs_service_unit_tests.Services
 
         private readonly Mock<IOptionsMonitor<AdfsOptions>> _mockOptionsMonitor;
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
+        private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<ClaimsPrincipal> _mockUser;
 
         public UserServiceTest()
         {
             _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
             _mockOptionsMonitor = new Mock<IOptionsMonitor<AdfsOptions>>();
+            _mockUserRepository = new Mock<IUserRepository>();
             _mockOptionsMonitor.Setup(o => o.CurrentValue).Returns(_options);
-            _service = new UserService(_mockReferenceDataRepository.Object, _mockOptionsMonitor.Object);
+            _service = new UserService(_mockReferenceDataRepository.Object, _mockUserRepository.Object, _mockOptionsMonitor.Object);
 
             _mockUser = new Mock<ClaimsPrincipal>();
         }

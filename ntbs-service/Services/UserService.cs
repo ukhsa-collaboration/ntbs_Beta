@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
@@ -19,18 +21,22 @@ namespace ntbs_service.Services
         Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
         UserType GetUserType(ClaimsPrincipal user);
         Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
+        Task RecordUserLogin(string username);
     }
 
     public class UserService : IUserService
     {
         private readonly AdfsOptions _config;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IUserRepository _userRepository;
 
         public UserService(
             IReferenceDataRepository referenceDataRepository,
+            IUserRepository userRepository,
             IOptionsMonitor<AdfsOptions> options)
         {
             _referenceDataRepository = referenceDataRepository;
+            _userRepository = userRepository;
             _config = options.CurrentValue;
         }
 
@@ -89,6 +95,16 @@ namespace ntbs_service.Services
                 return (await _referenceDataRepository.GetAllPhecs())?.Select(x => x.Code);
             }
             return await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(GetRoles(user));
+        }
+
+        public async Task RecordUserLogin(string username)
+        {
+            await _userRepository.AddUserLoginEvent(new UserLoginEvent()
+            {
+                SystemName = "NTBS",
+                Username = username,
+                LoginDate = DateTime.Now
+            });
         }
 
         private IQueryable<TBService> GetTbServicesQuery(ClaimsPrincipal user)
