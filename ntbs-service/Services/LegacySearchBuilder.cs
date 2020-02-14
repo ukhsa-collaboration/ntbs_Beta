@@ -28,8 +28,9 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
+                var idNoWhitespace = id.Replace(" ", "");
                 AppendCondition("(dmg.OldNotificationId = @id OR (n.GroupId = @id AND n.Source = 'LTBR') OR dmg.NhsNumber = @id)");
-                parameters.id = id;
+                parameters.id = idNoWhitespace;
             }
             return this;
         }
