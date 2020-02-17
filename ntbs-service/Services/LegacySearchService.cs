@@ -27,9 +27,9 @@ namespace ntbs_service.Services
         private const string SelectQueryStartTemplate = @"SELECT * " + FromString;
         private const string CountQueryTemplate = @"SELECT COUNT(*) " + FromString;
         const string FromString = @"
-            FROM Notifications n 
-            LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
+            FROM MergedNotifications n 
+            LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.PrimaryNotificationId
+            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.PrimaryNotificationId
             WHERE NOT EXISTS ({0})
             ";
         private string SelectQueryStart => string.Format(SelectQueryStartTemplate, _notificationImportHelper.SelectImportedNotificationByIdQuery);
@@ -42,11 +42,11 @@ namespace ntbs_service.Services
                     WHEN n.NtbsHospitalId NOT IN @editPermissionHospitals THEN 0
                     END DESC,
                 n.NotificationDate DESC,
-                n.OldNotificationId DESC
+                n.PrimaryNotificationId DESC
             OFFSET @Offset ROWS
             FETCH NEXT @Fetch ROWS ONLY";
 
-        private const string SelectByIdCondition = @"AND dmg.OldNotificationId = @id";
+        private const string SelectByIdCondition = @"AND n.PrimaryNotificationId = @id";
 
         private readonly string connectionString;
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -134,7 +134,7 @@ namespace ntbs_service.Services
             }
             var notificationBannerModel = new NotificationBannerModel
             {
-                NotificationId = result.OldNotificationId,
+                NotificationId = result.PrimaryNotificationId,
                 NotificationStatus = NotificationStatus.Legacy,
                 NotificationStatusString = "Legacy",
                 NotificationDate = (result.NotificationDate as DateTime?).ConvertToString(),
@@ -152,7 +152,7 @@ namespace ntbs_service.Services
                 DateOfBirth = (result.DateOfBirth as DateTime?).ConvertToString(),
                 ShowPadlock = true,
                 ShowLink = true,
-                RedirectPath = RouteHelper.GetLegacyNotificationPath(result.OldNotificationId)
+                RedirectPath = RouteHelper.GetLegacyNotificationPath(result.PrimaryNotificationId)
             };
 
             return notificationBannerModel;

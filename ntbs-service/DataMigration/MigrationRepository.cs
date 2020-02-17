@@ -21,49 +21,11 @@ namespace ntbs_service.DataMigration
     public class MigrationRepository : IMigrationRepository
     {
         const string NotificationsQuery = @"
-            SELECT *,
-            	trvl.Country1 AS travel_Country1,
-                trvl.Country2 AS travel_Country2,
-                trvl.Country3 AS travel_Country3,
-                trvl.TotalNumberOfCountries AS travel_TotalNumberOfCountries,
-                trvl.StayLengthInMonths1 AS travel_StayLengthInMonths1,
-                trvl.StayLengthInMonths2 AS travel_StayLengthInMonths2,
-                trvl.StayLengthInMonths3 AS travel_StayLengthInMonths3,
-                vstr.Country1 AS visitor_Country1,
-                vstr.Country2 AS visitor_Country2,
-                vstr.Country3 AS visitor_Country3,
-                vstr.TotalNumberOfCountries AS visitor_TotalNumberOfCountries,
-                vstr.StayLengthInMonths1 AS visitor_StayLengthInMonths1,
-                vstr.StayLengthInMonths2 AS visitor_StayLengthInMonths2,
-                vstr.StayLengthInMonths3 AS visitor_StayLengthInMonths3,
-                rfd.Status AS riskFactorDrugs_Status,
-                rfd.IsCurrent AS riskFactorDrugs_IsCurrent,
-                rfd.InPastFiveYears AS riskFactorDrugs_InPastFiveYears,
-                rfd.MoreThanFiveYearsAgo AS riskFactorDrugs_MoreThanFiveYearsAgo,
-                rfh.Status AS riskFactorHomelessNess_Status,
-                rfh.IsCurrent AS riskFactorHomelessNess_IsCurrent,
-                rfh.InPastFiveYears AS riskFactorHomelessNess_InPastFiveYears,
-                rfh.MoreThanFiveYearsAgo AS riskFactorHomelessNess_MoreThanFiveYearsAgo,
-                rfi.Status AS riskFactorImprisonment_Status,
-                rfi.IsCurrent AS riskFactorImprisonment_IsCurrent,
-                rfi.InPastFiveYears AS riskFactorImprisonment_InPastFiveYears,
-                rfi.MoreThanFiveYearsAgo AS riskFactorImprisonment_MoreThanFiveYearsAgo
-            FROM Notifications n 
-            LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.OldNotificationId
-            LEFT JOIN DeathDates dd ON dd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN VisitorHistory vstr ON vstr.OldNotificationId = n.OldNotificationId
-            LEFT JOIN TravelHistory trvl ON trvl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ClinicalDetails clncl ON clncl.OldNotificationId = n.OldNotificationId
-            LEFT JOIN Comorbidities cmrbd ON cmrbd.OldNotificationId = n.OldNotificationId
-            LEFT JOIN ImmunoSuppression immn ON immn.OldNotificationId = n.OldNotificationId
-            LEFT JOIN SocialRiskFactors srf ON srf.OldNotificationId = n.OldNotificationId
-            LEFT JOIN RiskFactorDrugs rfd on n.OldNotificationId = rfd.OldNotificationId
-            LEFT JOIN RiskFactorHomelessness rfh on n.OldNotificationId = rfh.OldNotificationId
-            LEFT JOIN RiskFactorImprisonment rfi on n.OldNotificationId = rfi.OldNotificationId
+            SELECT *
+            FROM MigrationNotificationsView n
             WHERE GroupId IN (
                 SELECT GroupId
-                FROM Notifications n 
+                FROM MigrationNotificationsView n 
                 {0}
             )";
         readonly string NotificationsByIdQuery = string.Format(NotificationsQuery, "WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids");
