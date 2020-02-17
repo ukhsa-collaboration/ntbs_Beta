@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
 using Hangfire;

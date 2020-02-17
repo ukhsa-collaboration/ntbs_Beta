@@ -87,7 +87,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
             var url = GetCurrentPathForId(id);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
@@ -111,7 +111,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(id);
 
             // Act
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Assert
             var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, NotificationSubPath);
@@ -124,7 +124,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
             var url = GetPathForId(NotificationSubPaths.AddMBovisExposureToKnownCase, id);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             
             // Act
             var formData = new Dictionary<string, string>
@@ -164,7 +164,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
             var url = GetPathForId(NotificationSubPaths.AddMBovisExposureToKnownCase, id);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             
             // Act
             var formData = new Dictionary<string, string>
