@@ -40,8 +40,8 @@
         public const string InvalidNhsNumber = "This {0} is not valid. Confirm you have entered it correctly";
         public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeNotFound = "{0} is not found";
-        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
-        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year";
+        public const string YearMustBeAfterDobYear = "{0} must be after patient's date of birth";
+        public const string YearMustNotBeInFuture = "{0} must be no later than this year";
         #endregion
 
         #region Clinical Details
@@ -137,7 +137,13 @@
             "The notification ID does not exist, verify you have entered the correct ID before moving forward";
         public const string LabResultNotificationMatchNoPermission =
             "The notification does not belong to one of your services. If you believe this is the correct notification, please contact ntbs@phe.gov.uk";
+        
+        #endregion
 
+        #region MBovisDetails
+
+        public const string HasNoExposureRecords =
+            "Please add a record of exposure to known TB cases or confirm no exposure has occurred";
 
         #endregion
     }

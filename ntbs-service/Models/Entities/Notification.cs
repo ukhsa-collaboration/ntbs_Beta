@@ -29,6 +29,7 @@ namespace ntbs_service.Models.Entities
             MDRDetails = new MDRDetails();
             TestData = new TestData();
             DrugResistanceProfile = new DrugResistanceProfile();
+            MBovisDetails = new MBovisDetails();
         }
 
         #region DB Mapped Fields
@@ -80,6 +81,7 @@ namespace ntbs_service.Models.Entities
         public virtual MDRDetails MDRDetails { get; set; }
         public virtual NotificationGroup Group { get; set; }
         public virtual TestData TestData { get; set; }
+        public virtual MBovisDetails MBovisDetails { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
@@ -149,7 +151,8 @@ namespace ntbs_service.Models.Entities
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
-        public bool IsMBovis => DrugResistanceProfile.Species == "M. bovis";
+        public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
+        
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)

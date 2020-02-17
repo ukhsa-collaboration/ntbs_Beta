@@ -22,6 +22,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithSocialContextAddressesAsync(int notificationId);
         Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId);
+        Task<Notification> GetNotificationWithMBovisExposureToKnownCases(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
@@ -158,6 +159,13 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
+        public async Task<Notification> GetNotificationWithMBovisExposureToKnownCases(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
@@ -189,6 +197,7 @@ namespace ntbs_service.DataAccess
                     .ThenInclude(t => t.TbService)
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.CaseManager)
+                .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

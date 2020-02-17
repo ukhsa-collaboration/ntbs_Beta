@@ -1,0 +1,60 @@
+@using ntbs_service.Helpers
+@model ICollection<ntbs_service.Models.Entities.MBovisExposureToKnownCase>
+
+@{
+    var showEditLinks = (bool) (ViewData["ShowMBovisExposureToKnownCaseEditLinks"] ?? false);
+    var orderedResults = Model.OrderByDescending(r => r.YearOfExposure).ToList();
+    var currentPage = (string) ViewData["CurrentPage"];
+}
+
+@if (!orderedResults.Any())
+{
+    if (currentPage == NotificationSubPaths.Overview)
+    {
+        <dl>
+            No recorded exposures to known cases
+        </dl>
+    }
+    else
+    {
+        return;
+    }
+}
+else
+{
+    <div id="mbovis-exposure-to-known-cases-table">
+        @foreach (var result in orderedResults)
+        {
+            <div class="notification-overview-type-and-edit-container">
+                @{
+                    var exposingNotificationOverviewPath = RouteHelper.GetNotificationPath(result.ExposureNotificationId.Value, NotificationSubPaths.Overview);
+                }
+                <h5 class="notification-details-type"> Exposure to <a href="@exposingNotificationOverviewPath"> #@result.ExposureNotificationId </a> </h5>
+                @if (showEditLinks)
+                {
+                    var path = RouteHelper.GetNotificationPath(result.NotificationId, NotificationSubPaths.EditMBovisExposureToKnownCase(result.MBovisExposureToKnownCaseId));
+                    <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
+                }
+
+            </div>
+            <dl class="notification-overview-details-container">
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.YearOfExposure) </dt>
+                        <dd class="cell-min-height"> @result.YearOfExposure </dd>
+                    </nhs-grid-column>
+                    <nhs-grid-column grid-column-width="OneHalf">
+                        <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureSetting) </dt>
+                        <dd class="cell-min-height"> @result.ExposureSetting.GetDisplayName() </dd>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="Full">
+                        <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.OtherDetails) </dt>
+                        <dd class="cell-min-height"> @result.OtherDetails </dd>
+                    </nhs-grid-column>
+                </nhs-grid-row>
+            </dl>
+        }
+    </div>
+}

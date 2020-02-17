@@ -16,7 +16,7 @@ namespace ntbs_service.DataAccess
         protected override TreatmentEvent GetEntityToUpdate(Notification notification, TreatmentEvent treatmentEvent)
         {
             return notification.TreatmentEvents
-                .First(s => s.TreatmentEventId == treatmentEvent.TreatmentEventId);
+                .Single(s => s.TreatmentEventId == treatmentEvent.TreatmentEventId);
         }
     }
 }

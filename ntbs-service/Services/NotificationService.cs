@@ -36,6 +36,7 @@ namespace ntbs_service.Services
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
         Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
         Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
+        Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails);
     }
 
     public class NotificationService : INotificationService
@@ -394,6 +395,12 @@ namespace ntbs_service.Services
         public async Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile)
         {
             _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
+            await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasExposureToKnownCases});
             await UpdateDatabaseAsync();
         }
 
