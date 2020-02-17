@@ -39,7 +39,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                await _alertService.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR);
+                await _alertService.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMBovis);
             }
         }
         
