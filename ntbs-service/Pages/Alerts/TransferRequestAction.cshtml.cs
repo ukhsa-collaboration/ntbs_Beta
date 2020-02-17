@@ -155,7 +155,7 @@ namespace ntbs_service.Pages.Alerts
             {
                 CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername,
                 NotificationId = NotificationId,
-                RejectionReason = DeclineTransferReason ?? "No reason was given when declining this transfer",
+                RejectionReason = DeclineTransferReason ?? "No reason was given when declining this transfer.",
                 DecliningUserAndTbServiceString = $"{user.DisplayName}, {TransferAlert.TbServiceName}",
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode
             };
