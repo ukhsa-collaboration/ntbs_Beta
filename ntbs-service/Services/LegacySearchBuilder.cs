@@ -33,8 +33,9 @@ namespace ntbs_service.Services
                     "n.SecondaryNotificationId = @id OR " +
                     "(n.GroupId = @id AND n.PrimarySource = 'LTBR') OR " +
                     "dmg.NhsNumber = @id";
+                var idNoWhitespace = id.Replace(" ", "");
                 AppendCondition(condition);
-                parameters.id = id;
+                parameters.id = idNoWhitespace;
             }
             return this;
         }

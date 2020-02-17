@@ -36,7 +36,7 @@ namespace ntbs_service.Pages.LegacyNotifications
         
         public async Task<IActionResult> OnGetAsync()
         {
-            return await GetPage();
+            return await GetPageAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -51,10 +51,10 @@ namespace ntbs_service.Pages.LegacyNotifications
                 return RedirectToPage("/Notifications/Overview", new { NotificationId = notificationId });
             }
 
-            return await GetPage();
+            return await GetPageAsync();
         }
 
-        private async Task<IActionResult> GetPage()
+        private async Task<IActionResult> GetPageAsync()
         {
             NotificationBannerModel = await _legacySearchService.GetByIdAsync(LegacyNotificationId);
             if (NotificationBannerModel == null)

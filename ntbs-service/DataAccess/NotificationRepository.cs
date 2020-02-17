@@ -227,7 +227,9 @@ namespace ntbs_service.DataAccess
         {
             return GetNotificationsWithBasicInformationIQueryable()
                 .Include(n => n.PatientDetails.Country)
-                .Include(n => n.PatientDetails.Sex);
+                .Include(n => n.PatientDetails.Sex)
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome);
         }
 
         // Gets Notification model with basic information for use in notifications homepage lists.

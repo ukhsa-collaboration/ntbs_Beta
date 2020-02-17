@@ -59,7 +59,7 @@ namespace ntbs_service.Pages.Notifications
             }
 
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
-            GroupedTreatmentEvents = EpisodesHelper.GroupTreatmentEventsByEpisode(Notification.TreatmentEvents);
+            GroupedTreatmentEvents = Notification.TreatmentEvents.GroupByEpisode();
 
             CalculateOutcomeTypes();
             return Page();
@@ -73,10 +73,9 @@ namespace ntbs_service.Pages.Notifications
             }
 
             var notificationDate = Notification.NotificationDate.Value;
-            var treatmentEvent12Month = EpisodesHelper.GetMostRecentEventInPeriod(
-                Notification.TreatmentEvents, 
-                notificationDate, 
-                notificationDate.AddMonths(12));
+            var treatmentEvent12Month = 
+                Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(notificationDate,
+                    notificationDate.AddMonths(12));
             
             OutcomeAt12Month = treatmentEvent12Month?.EventDate < DateTime.Today.AddMonths(-12) ? treatmentEvent12Month.TreatmentOutcome : null;
             if (OutcomeAt12Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated 
@@ -85,8 +84,7 @@ namespace ntbs_service.Pages.Notifications
                 return;
             }          
             
-            var treatmentEvent24Month = EpisodesHelper.GetMostRecentEventInPeriod(
-                Notification.TreatmentEvents,
+            var treatmentEvent24Month = Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(
                 notificationDate.AddMonths(12), 
                 notificationDate.AddMonths(24));
             
@@ -97,8 +95,7 @@ namespace ntbs_service.Pages.Notifications
                 return;
             }
             
-            var treatmentEvent36Month = EpisodesHelper.GetMostRecentEventInPeriod(
-                Notification.TreatmentEvents,
+            var treatmentEvent36Month = Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(
                 notificationDate.AddMonths(24),
                 notificationDate.AddMonths(36));
             

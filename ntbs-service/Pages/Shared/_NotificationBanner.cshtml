@@ -82,10 +82,17 @@
                 <div class="bold-label"> Sex </div>
                 <div class="cell-min-height"> @Model.Sex </div>
             </nhs-grid-column>
-            <nhs-grid-column grid-column-width="OneHalf">
-                <div class="bold-label"> Drug resistance profile </div>
-                <div> @Model.DrugResistance </div>
-            </nhs-grid-column>
+            @if (Model.NotificationStatus != NotificationStatus.Legacy)
+            {
+                <nhs-grid-column grid-column-width="OneQuarter">
+                    <div class="bold-label"> Drug resistance profile </div>
+                    <div> @Model.DrugResistance </div>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneQuarter">
+                    <div class="bold-label"> Treatment outcome </div>
+                    <div> @Model.TreatmentOutcome </div>
+                </nhs-grid-column>
+            }
         </nhs-grid-row>
     </div>
 </dl>

@@ -58,7 +58,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.DRAFT_ID;
             var url = GetPathForId(NotificationSubPaths.AddSocialContextAddress, notificationId);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -134,7 +134,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
             var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -166,7 +166,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
             var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -208,7 +208,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_ADDRESSES;
             var editUrl = GetCurrentPathForId(notificationId) + ADDRESS_TO_DELETE_ID;
-            var editDocument = await GetDocumentForUrl(editUrl);
+            var editDocument = await GetDocumentForUrlAsync(editUrl);
 
             // Act
             var formData = new Dictionary<string, string> { };
@@ -253,7 +253,7 @@ namespace ntbs_integration_tests.NotificationPages
             const int id = Utilities.NOTIFIED_ID;
             var notificationSubPath = NotificationSubPaths.EditSocialContextAddresses;
             var url = GetPathForId(notificationSubPath, id);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Act
             var result = await Client.SendPostFormWithData(document, null, url);
@@ -272,7 +272,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetPathForId(notificationSubPath, id);
 
             // Act
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Assert
             var overviewLink = RouteHelper.GetNotificationOverviewPathWithSectionAnchor(id, notificationSubPath);

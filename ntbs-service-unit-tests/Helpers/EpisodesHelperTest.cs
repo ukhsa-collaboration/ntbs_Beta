@@ -80,7 +80,7 @@ namespace ntbs_service_unit_tests.Helpers
         [Fact]
         public void GroupTreatmentEventsByEpisode_GroupsBasedOnEndingOutcomeType()
         {
-            var groupedEpisodes = EpisodesHelper.GroupTreatmentEventsByEpisode(MockTreatmentEvents);
+            var groupedEpisodes = MockTreatmentEvents.GroupByEpisode();
             Assert.Equal(4, groupedEpisodes.Count());
             Assert.Equal(2, groupedEpisodes[1].Count());
             Assert.Single(groupedEpisodes[2]);
@@ -93,7 +93,7 @@ namespace ntbs_service_unit_tests.Helpers
         {
             var startDate = new DateTime(2016, 12, 12);
             var endDate = new DateTime(2020, 2, 1);
-            var treatmentEvent = EpisodesHelper.GetMostRecentEventInPeriod(MockTreatmentEvents, startDate, endDate);
+            var treatmentEvent = MockTreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(startDate, endDate);
             
             Assert.Equal(treatmentEvent.EventDate, new DateTime(2020, 1, 1));
         }
@@ -103,7 +103,7 @@ namespace ntbs_service_unit_tests.Helpers
         {
             var startDate = new DateTime(2020, 1, 10);
             var endDate = new DateTime(2020, 2, 10);
-            var treatmentEvent = EpisodesHelper.GetMostRecentEventInPeriod(MockTreatmentEvents, startDate, endDate);
+            var treatmentEvent = MockTreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(startDate, endDate);
             
             Assert.Null(treatmentEvent);
         }

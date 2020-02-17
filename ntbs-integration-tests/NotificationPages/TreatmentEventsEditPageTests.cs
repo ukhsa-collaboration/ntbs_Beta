@@ -133,7 +133,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_WITH_TREATMENT_EVENTS);
 
             // Act
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Assert
             var treatmentTable = document.QuerySelector("#treatment-events");
@@ -160,7 +160,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_RESTART;
             var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             const string noteText = "Hello is it me you're looking for";
 
             // Act
@@ -176,7 +176,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
-            var treatmentEventsDocument = await GetDocumentForUrl(GetRedirectLocation(result));
+            var treatmentEventsDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
             var treatmentEventRows = treatmentEventsDocument.QuerySelectorAll("#treatment-events tbody tr");
             var row = treatmentEventRows.First();
 
@@ -192,7 +192,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_FOR_ADD_TREATMENT_OUTCOME;
             var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             const string noteText = "I can see it in your smile";
 
             // Act
@@ -210,7 +210,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
-            var treatmentEventsDocument = await GetDocumentForUrl(GetRedirectLocation(result));
+            var treatmentEventsDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
             var treatmentEventRows = treatmentEventsDocument.QuerySelectorAll("#treatment-events tbody tr");
             Assert.Single(treatmentEventRows);
             var row = treatmentEventRows.First();
@@ -233,7 +233,7 @@ namespace ntbs_integration_tests.NotificationPages
             const string noteTargetValue = "I can see it in your eyes";
 
             var url = GetPathForId(NotificationSubPaths.EditTreatmentEvent(treatmentEventId), notificationId);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             var preEditRow = document.QuerySelector($"#treatment-event-{EDIT_TREATMENT_EVENT_ID}");
             Assert.NotNull(preEditRow);
             Assert.DoesNotContain(noteTargetValue, preEditRow.TextContent);
@@ -252,7 +252,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
-            var treatmentEventsDocument = await GetDocumentForUrl(GetRedirectLocation(result));
+            var treatmentEventsDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
 
             var treatmentRestartWithNoteRow = treatmentEventsDocument.QuerySelector($"#treatment-event-{treatmentEventId}");
             Assert.NotNull(treatmentRestartWithNoteRow);
@@ -269,7 +269,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFICATION_WITH_TREATMENT_EVENTS;
             var url = GetPathForId(NotificationSubPaths.EditTreatmentEvent(DELETE_TREATMENT_EVENT_ID), notificationId);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string> { };
@@ -277,7 +277,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditTreatmentEvents, notificationId));
-            var treatmentEventsDocument = await GetDocumentForUrl(GetRedirectLocation(result));
+            var treatmentEventsDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
 
             Assert.Null(treatmentEventsDocument.GetElementById($"social-context-venue-{DELETE_TREATMENT_EVENT_ID}"));
         }
@@ -288,7 +288,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFIED_ID;
             var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -321,7 +321,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int notificationId = Utilities.NOTIFIED_ID;
             var url = GetPathForId(NotificationSubPaths.AddTreatmentEvent, notificationId);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string>
@@ -395,7 +395,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_WITH_TREATMENT_EVENTS);
 
             // Act
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
 
             // Assert
             var treatmentTable = document.QuerySelector("#treatment-events");

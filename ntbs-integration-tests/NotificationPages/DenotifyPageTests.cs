@@ -62,7 +62,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DENOTIFY_NO_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -97,7 +97,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.DENOTIFY_WITH_DESCRIPTION;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -134,7 +134,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "0";
             const string denotifyDateMonth = "1";
@@ -166,7 +166,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -198,7 +198,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_NOTIFICATION_DATE;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -229,7 +229,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";
@@ -259,7 +259,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
             var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrl(url);
+            var initialDocument = await GetDocumentForUrlAsync(url);
 
             const string denotifyDateDay = "1";
             const string denotifyDateMonth = "1";

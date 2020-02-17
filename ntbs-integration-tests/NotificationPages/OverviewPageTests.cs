@@ -148,7 +148,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             var dismissPageRoute = "/Alerts/20001/Dismiss?Page=Overview";
             Assert.NotNull(document.QuerySelector("#alert-20001"));
 
@@ -158,7 +158,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
             Assert.Contains(GetRedirectLocation(result), url);
-            var reloadedDocument = await GetDocumentForUrl(GetRedirectLocation(result));
+            var reloadedDocument = await GetDocumentForUrlAsync(GetRedirectLocation(result));
             Assert.Null(reloadedDocument.QuerySelector("#alert-20001"));
         }
 
@@ -167,7 +167,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_TODAY);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             
             // Assert
             Assert.Null(document.QuerySelector("#new-linked-notification-button"));
@@ -178,7 +178,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFICATION_DATE_OVER_YEAR_AGO);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             
             // Assert
             Assert.NotNull(document.QuerySelector("#new-linked-notification-button"));
@@ -189,7 +189,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             
             Assert.NotNull(document.QuerySelector("#print-notification-overview-button"));
         }
@@ -199,7 +199,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.DENOTIFIED_ID);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             Assert.Contains("Other - a great reason", document.QuerySelector("#overview-denotification-reason").TextContent);
         }
         
@@ -208,7 +208,7 @@ namespace ntbs_integration_tests.NotificationPages
         {
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             Assert.Null(document.QuerySelector("#overview-denotification-reason"));
         }
         
@@ -237,7 +237,7 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             
             // Act
-            var document = await GetDocumentForUrl(url);
+            var document = await GetDocumentForUrlAsync(url);
             
             // Assert
             Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}"));
