@@ -150,13 +150,13 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task RejectTransferAndDismissAlertAsync()
         {
-            var user = await _referenceDataRepository.GetCaseManagerByUsernameAsync(User.FindFirstValue(ClaimTypes.Email));
-            var transferRejectedAlert = new TransferRejectedAlert()
+            var user = await _referenceDataRepository.GetUserByUsernameAsync(User.FindFirstValue(ClaimTypes.Email));
+            var transferRejectedAlert = new TransferRejectedAlert
             {
                 CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername,
                 NotificationId = NotificationId,
-                RejectionReason = DeclineTransferReason,
-                CaseManagerTbServiceString = $"{user.DisplayName}, {TransferAlert.TbServiceName}",
+                RejectionReason = DeclineTransferReason ?? "No reason was given when declining this transfer",
+                DecliningUserAndTbServiceString = $"{user.DisplayName}, {TransferAlert.TbServiceName}",
                 TbServiceCode = Notification.HospitalDetails.TBServiceCode
             };
 
