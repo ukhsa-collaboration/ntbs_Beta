@@ -123,7 +123,10 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var resultDocument = await GetDocumentAsync(result);
-            resultDocument.AssertErrorSummaryMessage("PatientDetails-YearOfUkEntry", "year-of-entry", "Year of entry to the UK must be after patient's date of birth");
+            resultDocument.AssertErrorSummaryMessage(
+                "PatientDetails-YearOfUkEntry", 
+                "year-of-entry", 
+                "Year of uk entry must be after patient's date of birth");
         }
 
         [Fact]
