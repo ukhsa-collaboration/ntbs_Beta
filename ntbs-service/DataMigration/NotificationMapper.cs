@@ -77,9 +77,10 @@ namespace ntbs_service.DataMigration
         {
             var rawNotification = rawResult.rawNotification;
             var sites = AsSites(rawResult.rawSites);
+            
             var notification = new Notification();
-            notification.ETSID = rawNotification.Source == "ETS" ? rawNotification.OldNotificationId.ToString() : null;
-            notification.LTBRID = rawNotification.Source == "LTBR" ? rawNotification.OldNotificationId.ToString() : null;
+            notification.ETSID = rawNotification.EtsId;
+            notification.LTBRID = rawNotification.LtbrId;
             notification.LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null;
             notification.NotificationDate = rawNotification.NotificationDate;
             notification.CreationDate = DateTime.Now;
@@ -90,11 +91,24 @@ namespace ntbs_service.DataMigration
             notification.ComorbidityDetails = ExtractComorbidityDetails(rawNotification);
             notification.ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification);
             notification.SocialRiskFactors = ExtractSocialRiskFactors(rawNotification);
-            notification.HospitalDetails = ExtractEpisodeDetails(rawNotification);
-            notification.NotificationStatus = NotificationStatus.Notified;
+            notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
+            notification.NotificationStatus = rawNotification.DenotificationDate == null
+                ? NotificationStatus.Notified
+                : NotificationStatus.Denotified;
             notification.NotificationSites = sites;
 
-            if (notification.HospitalDetails.HospitalId is Guid guid)
+            return notification;
+        }
+
+        private async Task<HospitalDetails> ExtractHospitalDetailsAsync(dynamic rawNotification)
+        {
+            var details = new HospitalDetails();
+            details.HospitalId = rawNotification.NtbsHospitalId;
+            details.CaseManagerUsername = rawNotification.CaseManager;
+            details.Consultant = rawNotification.Consultant;
+            // details.TBServiceCode is set below, based on the hospital
+
+            if (details.HospitalId is Guid guid)
             {
                 var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
                 if (tbService == null)
@@ -105,20 +119,21 @@ namespace ntbs_service.DataMigration
                 {
                     // It's OK to only set this where it exists
                     // - the service missing will come up in notification validation  
-                    notification.HospitalDetails.TBServiceCode = tbService.Code;
+                    details.TBServiceCode = tbService.Code;
                 }
             }
 
-            return notification;
-        }
-
-        private static HospitalDetails ExtractEpisodeDetails(dynamic rawNotification)
-        {
-            return new HospitalDetails
+            if (!string.IsNullOrEmpty(details.CaseManagerUsername))
             {
-                HospitalId = rawNotification.NtbsHospitalId,
-                Consultant = rawNotification.Consultant
-            };
+                var tbService =
+                    await _referenceDataRepository.GetCaseManagerByUsernameAsync(details.CaseManagerUsername);
+                if (tbService == null)
+                {
+                    Log.Error($"No case manager exists with username {details.CaseManagerUsername}");
+                }
+            }
+            
+            return details;
         }
 
         private static List<NotificationSite> AsSites(IEnumerable<dynamic> rawResultRawSites)
@@ -175,7 +190,7 @@ namespace ntbs_service.DataMigration
         private static ClinicalDetails ExtractClinicalDetails(dynamic notification)
         {
             var details = new ClinicalDetails();
-            details.SymptomStartDate = notification.SymptomStartDate;
+            details.SymptomStartDate = notification.SymptomOnsetDate;
             details.FirstPresentationDate = notification.FirstPresentationDate;
             details.TBServicePresentationDate = notification.TbServicePresentationDate;
             details.DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate;
@@ -184,7 +199,12 @@ namespace ntbs_service.DataMigration
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsMDRTreatment = notification.IsMDRTreatment;
             details.IsSymptomatic = StringToValueConverter.GetNullableBoolValue(notification.IsSymptomatic);
+            details.IsShortCourseTreatment = notification.IsShortCourseTreatment;
+            details.IsPostMortem = notification.IsPostMortem;
             details.DeathDate = notification.DeathDate;
+            details.HIVTestState = StringToValueConverter.GetHivStatusValue(notification.HIVTestStatus);
+            details.DotStatus = StringToValueConverter.GetDotStatusValue(notification.DotStatus);
+            details.EnhancedCaseManagementStatus = notification.EnhancedCaseManagementStatus;
             return details;
         }
 
@@ -224,9 +244,18 @@ namespace ntbs_service.DataMigration
 
         private static PatientDetails ExtractPatientDetails(dynamic notification)
         {
+            var addressRaw = string.Join(" \n",
+                new string[]
+                {
+                    notification.Line1, 
+                    notification.Line2,
+                    notification.City,
+                    notification.County,
+                    notification.Postcode
+                });
             var address = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-                notification.Line1 + " " + notification.Line2);
+                addressRaw);
             var givenName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.GivenName);
             var familyName = RemoveCharactersNotIn(ValidationRegexes.CharacterValidation, notification.FamilyName);
             var localPatientId = RemoveCharactersNotIn(
