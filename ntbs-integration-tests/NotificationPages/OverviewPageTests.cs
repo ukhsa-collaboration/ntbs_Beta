@@ -225,7 +225,9 @@ namespace ntbs_integration_tests.NotificationPages
            NotificationSubPaths.EditSocialContextAddresses,
            NotificationSubPaths.EditSocialContextVenues,
            NotificationSubPaths.EditPreviousHistory,
-           NotificationSubPaths.EditMDRDetails
+           NotificationSubPaths.EditMDRDetails,
+           NotificationSubPaths.EditMBovisExposureToKnownCases,
+           NotificationSubPaths.EditMBovisExposureToKnownCases
         }.Select(subPath => new object[] { subPath });
 
         [Theory]

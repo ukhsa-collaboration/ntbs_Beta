@@ -78,9 +78,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        private async Task<Notification> GetRelatedNotification(int noticicationId)
+        private async Task<Notification> GetRelatedNotification(int notificationId)
         {
-            return await NotificationRepository.GetNotificationAsync(noticicationId);
+            return await NotificationRepository.GetNotificationAsync(notificationId);
         }
 
         private void UpdateFlags()

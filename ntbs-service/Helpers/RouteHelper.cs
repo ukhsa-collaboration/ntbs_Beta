@@ -58,6 +58,7 @@ namespace ntbs_service.Helpers
         public static string EditPreviousHistory => "Edit/PreviousHistory";
         public static string EditMDRDetails => "Edit/MDRDetails";
         public static string EditTreatmentEvents => "Edit/TreatmentEvents";
+        public static string EditMBovisExposureToKnownCases => "Edit/MBovis/ExposureToKnownCases";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
@@ -79,6 +80,9 @@ namespace ntbs_service.Helpers
 
         public static string EditTreatmentEvent(int treatmentEventId) => $"Edit/TreatmentEvent/{treatmentEventId}";
         public static string AddTreatmentEvent => $"Edit/TreatmentEvent/New";
+
+        public static string EditMBovisExposureToKnownCase(int mBovisExposureToKnownCaseId) => $"Edit/MBovis/ExposureToKnownCase/{mBovisExposureToKnownCaseId}";
+        public static string AddMBovisExposureToKnownCase => "Edit/MBovis/ExposureToKnownCase/New";
     }
 
     public static class OverviewSubPathToAnchorMap
@@ -97,6 +101,7 @@ namespace ntbs_service.Helpers
             {NotificationSubPaths.EditSocialContextVenues, "overview-social-venues"},
             {NotificationSubPaths.EditPreviousHistory, "overview-previous-history"},
             {NotificationSubPaths.EditMDRDetails, "overview-mdr-details"},
+            {NotificationSubPaths.EditMBovisExposureToKnownCases, "overview-mbovis-exposure-details"}
         };
 
         public static string GetOverviewAnchorId(string notificationSubPath)

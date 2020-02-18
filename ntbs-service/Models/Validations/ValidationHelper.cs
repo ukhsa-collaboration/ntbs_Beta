@@ -13,6 +13,7 @@
         }
 
         #region Shared
+        
         public const string InvalidYearForAttribute = "{0} has an invalid year";
         public const string StandardStringFormat = "{0} can only contain letters and the symbols ' - . ,";
         public const string StandardStringWithNumbersFormat = "{0} can only contain letters, numbers and the symbols ' - . ,";
@@ -32,7 +33,8 @@
         public const string DateShouldBeLaterThanDob = "{0} must be later than date of birth";
         public const string DateShouldBeLaterThanDobYear = "{0} must be later than date of birth year";
         public const string DateShouldBeLaterThanNotification = "{0} must be after the date of notification";
-
+        public const string BeforeCurrentYear = "{0} must be the current year or earlier";
+        
         #endregion
 
         #region Patient Details
@@ -40,8 +42,6 @@
         public const string InvalidNhsNumber = "This {0} is not valid. Confirm you have entered it correctly";
         public const string FieldRequired = "{0} is a mandatory field";
         public const string PostcodeNotFound = "{0} is not found";
-        public const string YearOfUkEntryMustBeAfterDob = "Year of entry to the UK must be after patient's date of birth";
-        public const string YearOfUkEntryMustNotBeInFuture = "Year of entry to the UK must be no later than this year";
         #endregion
 
         #region Clinical Details
@@ -108,7 +108,6 @@
 
         #region Previous History
         public const string ValidYear = "Please enter a valid year";
-        public const string BeforeCurrentYear = "{0} must be the current year or earlier";
         #endregion
 
         #region MDR Details
@@ -137,7 +136,13 @@
             "The notification ID does not exist, verify you have entered the correct ID before moving forward";
         public const string LabResultNotificationMatchNoPermission =
             "The notification does not belong to one of your services. If you believe this is the correct notification, please contact ntbs@phe.gov.uk";
+        
+        #endregion
 
+        #region MBovisDetails
+
+        public const string HasNoExposureRecords =
+            "Please add a record of exposure to known TB cases or confirm no exposure has occurred";
 
         #endregion
     }

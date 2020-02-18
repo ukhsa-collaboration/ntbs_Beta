@@ -52,8 +52,14 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<SocialContextAddress> SocialContextAddress { get; set; }
         public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestion { get; set; }
         public virtual DbSet<UserLoginEvent> UserLoginEvent { get; set; }
+        public virtual DbSet<MBovisExposureToKnownCase> MBovisExposureToKnownCase { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
+        {
+            this.Entry(entity).CurrentValues.SetValues(values);
+        }
+
+        public virtual void SetValues<TEntityClass>(TEntityClass entity, object values)
         {
             this.Entry(entity).CurrentValues.SetValues(values);
         }
@@ -149,6 +155,7 @@ namespace ntbs_service.DataAccess
             var treatmentOutcomeTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeType>();
             var treatmentOutcomeSubTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeSubType>();
             var transferReasonEnumConverter = new EnumToStringConverter<TransferReason>();
+            var exposureSettingEnumConverter = new EnumToStringConverter<ExposureSetting>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -350,7 +357,8 @@ namespace ntbs_service.DataAccess
                     i.ToTable("MDRDetails");
                 });
                 
-                entity.OwnsOne(e => e.DrugResistanceProfile).ToTable("DrugResistanceProfile");
+                entity.OwnsOne(e => e.DrugResistanceProfile)
+                    .ToTable("DrugResistanceProfile");
 
 
                 entity.HasIndex(e => e.NotificationStatus);
@@ -474,6 +482,12 @@ namespace ntbs_service.DataAccess
                 entity.HasData(Models.SeedData.ManualTestTypeSampleTypes.GetJoinDataManualTestTypeToSampleType());
             });
 
+            modelBuilder.Entity<TestData>(entity =>
+            {
+                entity.HasKey(e => e.NotificationId);
+                entity.HasMany(e => e.ManualTestResults);
+            });
+            
             modelBuilder.Entity<ManualTestResult>(entity =>
             {
                 entity.Property(e => e.Result)
@@ -489,10 +503,17 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(e => e.SampleTypeId);
             });
 
-            modelBuilder.Entity<TestData>(entity =>
+            modelBuilder.Entity<MBovisDetails>(entity =>
             {
                 entity.HasKey(e => e.NotificationId);
-                entity.HasMany(e => e.ManualTestResults);
+                entity.HasMany(e => e.MBovisExposureToKnownCases);
+            });
+
+            modelBuilder.Entity<MBovisExposureToKnownCase>(entity =>
+            {
+                entity.Property(e => e.ExposureSetting)
+                    .HasConversion(exposureSettingEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
             });
 
             modelBuilder.Entity<Alert>(entity =>

@@ -328,7 +328,7 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
             // Here we check that the page has reloaded as the form is invalid, we can't check directly for an error as
             // no error is shown for this case
-            Assert.NotNull(resultDocument.QuerySelector($"div[id='hospital-details-page-content']"));
+            Assert.NotNull(resultDocument.QuerySelector($"#hospital-details-page-content"));
         }
 
         [Fact]

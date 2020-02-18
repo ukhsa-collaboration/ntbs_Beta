@@ -79,5 +79,13 @@
                 </a>
             </li>
         }
+        @if (Model.Notification.IsMBovis)
+        {
+            <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMBovisExposureToKnownCases ? "contents-list-item--current" : ""))">
+                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisExposureToKnownCases)">
+                    M. bovis - Other cases
+                </a>
+            </li>
+        }
     </ul>
 </nhs-grid-column>

@@ -52,12 +52,16 @@ namespace ntbs_integration_tests.Helpers
 
         public const int NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT = 10091;
         public const int NOTIFICATION_WITH_TRANSFER_REQUEST_TO_ACCEPT = 10092;
+        
 
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID1 = MockSpecimenService.MockSpecimenNotificationId1; // 10100
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID2 = MockSpecimenService.MockSpecimenNotificationId2; // 10101
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID3 = MockSpecimenService.MockSpecimenNotificationId3; // 10102
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID4 = MockSpecimenService.MockSpecimenNotificationId4; // 10103
         public const int SPECIMEN_MATCHING_MANUAL_MATCH_NOTIFICATION_ID = 10104;
+
+        public const int NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES = 10130;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_NO_ENTITIES = 10131;
 
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
@@ -114,6 +118,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(ClinicalDetailsPageTests.GetSeedingNotifications());
             context.Notification.AddRange(ActionTransferPageTests.GetSeedingNotifications());
             context.Notification.AddRange(LabResultsPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(MBovisExposureToKnownCasesPageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
 
@@ -213,9 +218,11 @@ namespace ntbs_integration_tests.Helpers
                     PatientDetails = new PatientDetails
                     {
                         Dob = new DateTime(1970, 1, 1)
-                    }
+                    },
+                    ClinicalDetails = new ClinicalDetails {IsMDRTreatment = true},
+                    DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
                 },
-                new Notification()
+                new Notification
                 {
                     NotificationId = DENOTIFIED_ID,
                     NotificationStatus = NotificationStatus.Denotified,
@@ -230,7 +237,7 @@ namespace ntbs_integration_tests.Helpers
                         new NotificationSite {NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY}
                     }
                 },
-                new Notification()
+                new Notification
                 {
                     NotificationId = MDR_DETAILS_EXIST,
                     NotificationStatus = NotificationStatus.Notified,
