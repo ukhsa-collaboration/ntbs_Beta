@@ -63,9 +63,28 @@ namespace ntbs_service.DataAccess
         private static void AddCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
         {
             var caseManagerTbServices = tbServices
-                .Select(tb => new CaseManagerTbService {TbService = tb, CaseManager = user})
+                .Select(tb => new CaseManagerTbService
+                {
+                    TbServiceCode = tb.Code,
+                    CaseManagerUsername = user.Username
+                })
                 .ToList();
-            user.CaseManagerTbServices = caseManagerTbServices.Any() ? caseManagerTbServices : null;
+
+            foreach (var caseManagerTbService in user.CaseManagerTbServices)
+            {
+                if (!caseManagerTbServices.Any(c => caseManagerTbService.Equals(c)))
+                {
+                    user.CaseManagerTbServices.Remove(caseManagerTbService);
+                }
+            }
+
+            foreach (var caseManagerTbService in caseManagerTbServices)
+            {
+                if (!user.CaseManagerTbServices.Any(c => c.Equals(caseManagerTbService)))
+                {
+                    user.CaseManagerTbServices.Add(caseManagerTbService);
+                }
+            }
         }
     }
 }
