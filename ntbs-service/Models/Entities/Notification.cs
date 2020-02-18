@@ -149,22 +149,25 @@ namespace ntbs_service.Models.Entities
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
-
+        public bool IsMBovis => DrugResistanceProfile.Species == "M. bovis";
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)
             {
                 return "Draft";
             }
-            else if (NotificationStatus == NotificationStatus.Notified)
+
+            if (NotificationStatus == NotificationStatus.Notified)
             {
                 return "Notification";
             }
-            else if (NotificationStatus == NotificationStatus.Denotified)
+
+            if (NotificationStatus == NotificationStatus.Denotified)
             {
                 return "Denotified";
             }
-            else if (NotificationStatus == NotificationStatus.Legacy)
+
+            if (NotificationStatus == NotificationStatus.Legacy)
             {
                 return "Legacy";
             }
