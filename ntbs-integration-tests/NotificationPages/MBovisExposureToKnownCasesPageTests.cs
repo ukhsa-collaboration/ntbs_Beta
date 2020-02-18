@@ -63,7 +63,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(document.QuerySelector("div[id='mbovis-exposure-to-known-cases-table']"));
+            Assert.NotNull(document.QuerySelector("#mbovis-exposure-to-known-cases-table"));
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(document.QuerySelector("div[id='mbovis-exposure-to-known-cases-table']"));
+            Assert.Null(document.QuerySelector("#mbovis-exposure-to-known-cases-table"));
         }
         
         [Fact]

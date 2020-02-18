@@ -14,9 +14,9 @@ namespace ntbs_service.Models.Entities
         public int NotificationId { get; set; }
         
         [Required]
+        [AssertThat(nameof(YearOfExposureAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
+        [AssertThat(nameof(YearOfExposureNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
-        [AssertThat(nameof(YearOfExposureAfterBirth), ErrorMessage = ValidationMessages.YearMustBeAfterDobYear)]
-        [AssertThat(nameof(YearOfExposureNotInFuture), ErrorMessage = ValidationMessages.YearMustNotBeInFuture)]
         [Display(Name = "Year of exposure")]
         public int? YearOfExposure { get; set; }
         

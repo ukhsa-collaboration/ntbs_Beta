@@ -28,8 +28,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(document.QuerySelector("div[id='lab-results-summary']"));
-            Assert.NotNull(document.QuerySelector("div[id='specimens-details']"));
+            Assert.NotNull(document.QuerySelector("#lab-results-summary"));
+            Assert.NotNull(document.QuerySelector("#specimens-details"));
         }
 
         [Fact]
@@ -44,8 +44,8 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(document.QuerySelector("div[id='lab-results-summary']"));
-            Assert.Null(document.QuerySelector("div[id='specimens-details']"));
+            Assert.Null(document.QuerySelector("#lab-results-summary"));
+            Assert.Null(document.QuerySelector("#specimens-details"));
         }
         
         [Fact]
