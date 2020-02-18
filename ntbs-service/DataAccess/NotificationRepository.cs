@@ -23,6 +23,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId);
         Task<Notification> GetNotificationWithMBovisExposureToKnownCases(int notificationId);
+        Task<Notification> GetNotificationWithMBovisUnpasteurisedMilkConsumption(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
@@ -166,6 +167,14 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
+        public async Task<Notification> GetNotificationWithMBovisUnpasteurisedMilkConsumption(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                    .ThenInclude(m => m.Country)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);        
+        }
+
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
@@ -198,6 +207,8 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.CaseManager)
                 .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
+                .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                    .ThenInclude(m => m.Country)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

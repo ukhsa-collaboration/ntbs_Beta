@@ -53,6 +53,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestion { get; set; }
         public virtual DbSet<UserLoginEvent> UserLoginEvent { get; set; }
         public virtual DbSet<MBovisExposureToKnownCase> MBovisExposureToKnownCase { get; set; }
+        public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -156,6 +157,8 @@ namespace ntbs_service.DataAccess
             var treatmentOutcomeSubTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeSubType>();
             var transferReasonEnumConverter = new EnumToStringConverter<TransferReason>();
             var exposureSettingEnumConverter = new EnumToStringConverter<ExposureSetting>();
+            var milkProductEnumConverter = new EnumToStringConverter<MilkProductType>();
+            var consumptionFrequencyEnumConverter = new EnumToStringConverter<ConsumptionFrequency>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -513,6 +516,17 @@ namespace ntbs_service.DataAccess
             {
                 entity.Property(e => e.ExposureSetting)
                     .HasConversion(exposureSettingEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+
+            modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
+            {
+                entity.Property(e => e.ConsumptionFrequency)
+                    .HasConversion(consumptionFrequencyEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.Property(e => e.MilkProductType)
+                    .HasConversion(milkProductEnumConverter)
                     .HasMaxLength(EnumMaxLength);
             });
 

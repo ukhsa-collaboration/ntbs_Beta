@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200218121221_AddMBovisMilkConsumptionEntities")]
+    partial class AddMBovisMilkConsumptionEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23508,13 +23510,6 @@ namespace ntbs_service.Migrations
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
                     b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome36");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAlert", b =>
-                {
-                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
-
-                    b.HasDiscriminator().HasValue("EnhancedSurveillanceMBovis");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
