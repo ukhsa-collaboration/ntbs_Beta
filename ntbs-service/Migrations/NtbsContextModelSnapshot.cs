@@ -80,11 +80,28 @@ namespace ntbs_service.Migrations
                     b.ToTable("CaseManagerTbService");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+            modelBuilder.Entity("ntbs_service.Models.Entities.FrequentlyAskedQuestion", b =>
                 {
-                    b.Property<int>("NotificationId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Answer");
+
+                    b.Property<int>("OrderIndex")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
+
+                    b.Property<string>("Question");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrequentlyAskedQuestion");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+                {
+                    b.Property<int>("NotificationId");
 
                     b.Property<bool?>("HasExposureToKnownCases");
 
@@ -119,25 +136,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("NotificationId");
 
                     b.ToTable("MBovisExposureToKnownCase");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.FrequentlyAskedQuestion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Answer");
-
-                    b.Property<int>("OrderIndex")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
-
-                    b.Property<string>("Question");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FrequentlyAskedQuestion");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
@@ -23556,6 +23554,14 @@ namespace ntbs_service.Migrations
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany("CaseManagerTbServices")
                         .HasForeignKey("TbServiceCode")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
+                        .WithOne("MBovisDetails")
+                        .HasForeignKey("ntbs_service.Models.Entities.MBovisDetails", "NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

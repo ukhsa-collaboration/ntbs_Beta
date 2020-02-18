@@ -11,14 +11,18 @@ namespace ntbs_service.Migrations
                 name: "MBovisDetails",
                 columns: table => new
                 {
-                    NotificationId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy",
-                            SqlServerValueGenerationStrategy.IdentityColumn),
+                    NotificationId = table.Column<int>(nullable: false),
                     HasExposureToKnownCases = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MBovisDetails", x => x.NotificationId);
+                    table.ForeignKey(
+                        name: "FK_MBovisDetails_Notification_NotificationId",
+                        column: x => x.NotificationId,
+                        principalTable: "Notification",
+                        principalColumn: "NotificationId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
