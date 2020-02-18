@@ -58,6 +58,28 @@
   padding-right: 50px;
 }
 
+.overview-treatment-events-table {
+  & th, td {
+    font-size: 16px;
+  }
+  
+  & .date-column {
+    width: 15%;
+  }
+  
+  & .event-column {
+    width: 35%;
+  }
+  
+  & .tb-service-column {
+    width: 35%;
+  }
+  
+  & .case-manager-column {
+    width: 15%;
+  }
+}
+
 .event-outcome-at-dates {
   padding: 20px 0 20px 0;
 }
