@@ -12,7 +12,7 @@ namespace ntbs_service.Helpers
 
         public static bool GetBoolValue(int? value)
         {
-            return value == 1 ? true : false;
+            return value == 1;
         }
 
         public static bool? GetNullableBoolValue(int? value)

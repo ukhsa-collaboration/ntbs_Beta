@@ -92,6 +92,8 @@ namespace ntbs_service.DataMigration
             notification.ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification);
             notification.SocialRiskFactors = ExtractSocialRiskFactors(rawNotification);
             notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
+            notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
+            notification.PatientTBHistory = ExtractPatientTBHistory(rawNotification);
             notification.NotificationStatus = rawNotification.DenotificationDate == null
                 ? NotificationStatus.Notified
                 : NotificationStatus.Denotified;
@@ -168,7 +170,7 @@ namespace ntbs_service.DataMigration
         private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
         {
             var details = new ImmunosuppressionDetails();
-            details.Status = StringToValueConverter.GetStatusFromString(notification.Status);
+            details.Status = StringToValueConverter.GetStatusFromString(notification.ImmunosuppressionStatus);
             details.HasBioTherapy = StringToValueConverter.GetBoolValue(notification.HasBioTherapy);
             details.HasTransplantation = StringToValueConverter.GetBoolValue(notification.HasTransplantation);
             details.HasOther = StringToValueConverter.GetBoolValue(notification.HasOther);
@@ -205,6 +207,34 @@ namespace ntbs_service.DataMigration
             details.HIVTestState = StringToValueConverter.GetHivStatusValue(notification.HIVTestStatus);
             details.DotStatus = StringToValueConverter.GetDotStatusValue(notification.DotStatus);
             details.EnhancedCaseManagementStatus = notification.EnhancedCaseManagementStatus;
+            details.BCGVaccinationState = notification.BCGVaccination;
+            details.BCGVaccinationYear = notification.BCGVaccinationYear;
+            return details;
+        }
+
+        private ContactTracing ExtractContactTracingDetails(dynamic rawNotification)
+        {
+            var details = new ContactTracing();
+            details.AdultsIdentified = rawNotification.AdultsIdentified;
+            details.ChildrenIdentified = rawNotification.ChildrenIdentified;
+            details.AdultsScreened = rawNotification.AdultsScreened;
+            details.ChildrenScreened = rawNotification.ChildrenScreened;
+            details.AdultsActiveTB = rawNotification.AdultsActiveTB;
+            details.ChildrenActiveTB = rawNotification.ChildrenActiveTB;
+            details.AdultsLatentTB = rawNotification.AdultsLatentTB;
+            details.ChildrenLatentTB = rawNotification.ChildrenLatentTB;
+            details.AdultsStartedTreatment = rawNotification.AdultsStartedTreatment;
+            details.ChildrenStartedTreatment = rawNotification.ChildrenStartedTreatment;
+            details.AdultsFinishedTreatment = rawNotification.AdultsFinishedTreatment;
+            details.ChildrenFinishedTreatment = rawNotification.ChildrenFinishedTreatment;
+            return details;
+        }
+
+        private PatientTBHistory ExtractPatientTBHistory(dynamic rawNotification)
+        {
+            var details = new PatientTBHistory();
+            details.PreviouslyHadTB = rawNotification.PreviouslyHadTB;
+            details.PreviousTBDiagnosisYear = rawNotification.PreviousTBDiagnosisYear;
             return details;
         }
 
