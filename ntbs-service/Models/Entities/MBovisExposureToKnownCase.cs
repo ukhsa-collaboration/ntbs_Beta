@@ -28,9 +28,15 @@ namespace ntbs_service.Models.Entities
         public ExposureSetting? ExposureSetting { get; set; }
         
         [Required]
+        [AssertThat(nameof(ExposureNotificationIdIsDifferentToNotificationId), ErrorMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId)]
         [Display(Name = "NTBS ID")]
         public int? ExposureNotificationId { get; set; }
 
+        public bool ExposureNotificationIdIsDifferentToNotificationId => 
+            !ExposureNotificationId.HasValue 
+            || NotificationId == default 
+            || ExposureNotificationId.Value != NotificationId;
+        
         [MaxLength(150)]
         [RegularExpression(
             ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
