@@ -23474,6 +23474,13 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("DataQualityTreatmentOutcome36");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alert");
+
+                    b.HasDiscriminator().HasValue("EnhancedSurveillanceMBovis");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.MdrAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");

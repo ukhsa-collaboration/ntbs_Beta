@@ -530,6 +530,7 @@ namespace ntbs_service.DataAccess
                 entity.HasDiscriminator<AlertType>("AlertType")
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
+                    .HasValue<MBovisAlert>(AlertType.EnhancedSurveillanceMBovis)
                     .HasValue<TransferAlert>(AlertType.TransferRequest)
                     .HasValue<TransferRejectedAlert>(AlertType.TransferRejected)
                     .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult)
