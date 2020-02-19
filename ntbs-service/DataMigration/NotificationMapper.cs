@@ -266,9 +266,9 @@ namespace ntbs_service.DataMigration
             details.Country1Id = notification.visitor_Country1;
             details.Country2Id = notification.visitor_Country2;
             details.Country3Id = notification.visitor_Country3;
-            details.StayLengthInMonths1 = StringToValueConverter.ToNullableInt(notification.visitor_StayLengthInMonths1);
-            details.StayLengthInMonths2 = StringToValueConverter.ToNullableInt(notification.visitor_StayLengthInMonths2);
-            details.StayLengthInMonths3 = StringToValueConverter.ToNullableInt(notification.visitor_StayLengthInMonths3);
+            details.StayLengthInMonths1 = notification.visitor_StayLengthInMonths1;
+            details.StayLengthInMonths2 = notification.visitor_StayLengthInMonths2;
+            details.StayLengthInMonths3 = notification.visitor_StayLengthInMonths3;
             return details;
         }
 
