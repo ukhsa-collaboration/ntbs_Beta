@@ -37,47 +37,91 @@ namespace ntbs_service.DataMigration
 
         public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
         {
-            var notificationsRaw = await _migrationRepository.GetNotificationsByDate(rangeStartDate, endStartDate);
+            var groupedIds = await _migrationRepository.GetGroupedNotificationIdsByDate(rangeStartDate, endStartDate);
 
-            return await GetGroupedResultsAsNotificationAsync(notificationsRaw);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds);
         }
 
         public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
         {
-            var notificationsRaw = await _migrationRepository.GetNotificationsById(notificationIds);
+            var groupedIds = await _migrationRepository.GetGroupedNotificationIdsById(notificationIds);
 
-            return await GetGroupedResultsAsNotificationAsync(notificationsRaw);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds);
         }
 
-        private async Task<IEnumerable<IEnumerable<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<dynamic> notificationsRaw)
+        private async Task<IEnumerable<IEnumerable<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds)
         {
-            var diseaseSitesPerNotification = await GetDiseaseSitesPerNotification(notificationsRaw);
-            var notifications = notificationsRaw.Join(diseaseSitesPerNotification,
-                n => n.OldNotificationId,
-                nsGroup => nsGroup.Key,
-                (n, sites) => (rawNotification: n, rawSites: sites.Where(x => x != null && x.SiteId != null)));
+            // return await Task.WhenAll();
+            return await Task.WhenAll(groupedIds.Select(async el =>
+            {
+                var legacyIds = el.ToList();
+                var legacyNotifications = _migrationRepository.GetNotificationsById(legacyIds);
+                var sitesOfDisease = _migrationRepository.GetNotificationSites(legacyIds);
+                var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);
+                var socialContextVenues = _migrationRepository.GetSocialContextVenues(legacyIds);
+                var socialContextAddresses = _migrationRepository.GetSocialContextAddresses(legacyIds);
+                var transferEvents =  _migrationRepository.GetTransferEvents(legacyIds);
+                // TODO outcome events
 
-            var notificationGroups = notifications.GroupBy(x => x.rawNotification.GroupId);
+                return await CombineDataForGroup(
+                    legacyIds,
+                    (await legacyNotifications).ToList(),
+                    (await sitesOfDisease).ToList(),
+                    (await manualTestResults).ToList(),
+                    (await socialContextVenues).ToList(),
+                    (await socialContextAddresses).ToList(),
+                    (await transferEvents).ToList()
+                    );
+            }));
+        }
 
-            return Task.WhenAll(notificationGroups
-                .Select(group =>
+        private async Task<IEnumerable<Notification>> CombineDataForGroup(List<string> legacyIds,
+            IList<dynamic> notifications,
+            IList<dynamic> sitesOfDisease,
+            IList<dynamic> manualTestResults,
+            IList<dynamic> socialContextVenues,
+            IList<dynamic> socialContextAddresses, 
+            IList<dynamic> transferEvents)
+        {
+            return await Task.WhenAll(legacyIds.Select(async id =>
+            {
+                var rawNotification = notifications.Single(n => n.OldNotificationId == id);
+                var notificationSites = AsSites(sitesOfDisease
+                    .Where(s => s.OldNotificationId == id)
+                );
+                var notificationTestResults = manualTestResults
+                    .Where(t => t.OldNotificationId == id)
+                    .Select(AsManualTestResult)
+                    .ToList();
+                var notificationSocialContextVenues = socialContextVenues
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsSocialContextVenue)
+                    .ToList();
+                var notificationSocialContextAddresses = socialContextAddresses
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsSocialContextAddress)
+                    .ToList();
+                var notificationTransferEvents = await Task.WhenAll(transferEvents
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsTransferEvent)
+                    .ToList()
+                );
+
+                Notification notification = await AsNotificationAsync(rawNotification);
+                notification.NotificationSites = notificationSites;
+                notification.TestData = new TestData
                 {
-                    return Task.WhenAll(group.Select(AsNotificationAsync));
-                })).Result;
+                    HasTestCarriedOut = notificationTestResults.Any(), ManualTestResults = notificationTestResults
+                };
+                notification.SocialContextAddresses = notificationSocialContextAddresses;
+                notification.SocialContextVenues = notificationSocialContextVenues;
+                notification.TreatmentEvents = notificationTransferEvents; //TODO combine with outcome events
+                return notification;
+            }));
         }
 
-        private async Task<IEnumerable<IGrouping<string, dynamic>>> GetDiseaseSitesPerNotification(IEnumerable<dynamic> notificationsRaw)
+        private async Task<Notification> AsNotificationAsync(dynamic rawNotification)
         {
-            var legacyIds = notificationsRaw.Select(x => x.OldNotificationId).Cast<string>();
-            var notificationSitesRaw = await _migrationRepository.GetNotificationSites(legacyIds);
-            return notificationSitesRaw.GroupBy(x => x.OldNotificationId as string);
-        }
-
-        private async Task<Notification> AsNotificationAsync((dynamic rawNotification, IEnumerable<dynamic> rawSites) rawResult)
-        {
-            var rawNotification = rawResult.rawNotification;
-            var sites = AsSites(rawResult.rawSites);
-            
             var notification = new Notification();
             notification.ETSID = rawNotification.EtsId;
             notification.LTBRID = rawNotification.LtbrId;
@@ -97,7 +141,6 @@ namespace ntbs_service.DataMigration
             notification.NotificationStatus = rawNotification.DenotificationDate == null
                 ? NotificationStatus.Notified
                 : NotificationStatus.Denotified;
-            notification.NotificationSites = sites;
 
             return notification;
         }
@@ -125,6 +168,7 @@ namespace ntbs_service.DataMigration
                 }
             }
 
+            // ReSharper disable once InvertIf
             if (!string.IsNullOrEmpty(details.CaseManagerUsername))
             {
                 var tbService =
@@ -204,8 +248,8 @@ namespace ntbs_service.DataMigration
             details.IsShortCourseTreatment = notification.IsShortCourseTreatment;
             details.IsPostMortem = notification.IsPostMortem;
             details.DeathDate = notification.DeathDate;
-            details.HIVTestState = StringToValueConverter.GetHivStatusValue(notification.HIVTestStatus);
-            details.DotStatus = StringToValueConverter.GetDotStatusValue(notification.DotStatus);
+            details.HIVTestState = StringToValueConverter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
+            details.DotStatus = StringToValueConverter.GetEnumValue<DotStatus>((string) notification.DotStatus);
             details.EnhancedCaseManagementStatus = notification.EnhancedCaseManagementStatus;
             details.BCGVaccinationState = notification.BCGVaccination;
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
@@ -361,6 +405,66 @@ namespace ntbs_service.DataMigration
             factors.RiskFactorImprisonment.InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
             factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
             return factors;
+        }
+
+        private static ManualTestResult AsManualTestResult(dynamic rawResult)
+        {
+            var manualTest = new ManualTestResult();
+            manualTest.ManualTestTypeId = rawResult.ManualTestTypeId;
+            manualTest.SampleTypeId = rawResult.SampleTypeId;
+            manualTest.Result =  StringToValueConverter.GetEnumValue<Result>(rawResult.Result);
+            manualTest.TestDate = rawResult.TestDate;
+            return manualTest;
+        }
+
+        private static SocialContextVenue AsSocialContextVenue(dynamic rawVenue)
+        {
+            var venue = new SocialContextVenue();
+            venue.VenueTypeId = rawVenue.VenueTypeId;
+            venue.Name = rawVenue.Name;
+            venue.Address = rawVenue.Address;
+            venue.Postcode = rawVenue.Postcode;
+            venue.Frequency = StringToValueConverter.GetEnumValue<Frequency>(rawVenue.Frequency);
+            venue.DateFrom = rawVenue.DateFrom;
+            venue.DateTo = rawVenue.DateTo;
+            venue.Details = rawVenue.Details;
+            return venue;
+        }
+
+        private static SocialContextAddress AsSocialContextAddress(dynamic rawAddress)
+        {
+            var address = new SocialContextAddress();
+             address.Address = rawAddress.Address;
+             address.Postcode = rawAddress.Postcode;
+             address.DateFrom = rawAddress.DateFrom;
+             address.DateTo = rawAddress.DateTo;
+             address.Details = rawAddress.Details;
+            return address;
+        }
+
+        private async Task<TreatmentEvent> AsTransferEvent(dynamic rawEvent)
+        {
+            var ev = new TreatmentEvent();
+            ev.EventDate = rawEvent.EventDate;
+            ev.TreatmentEventType = StringToValueConverter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
+            ev.CaseManager = rawEvent.CaseManager;
+
+            // ReSharper disable once InvertIf
+            if (rawEvent.HospitalId is Guid guid)
+            {
+                var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
+                if (tbService == null)
+                {
+                    Log.Warning(
+                        $"No TB service exists for hospital with guid {guid} - treatment event recorded without a service");
+                }
+                else
+                {
+                    ev.TbServiceCode = tbService.Code;
+                }
+            }
+
+            return ev;
         }
     }
 }

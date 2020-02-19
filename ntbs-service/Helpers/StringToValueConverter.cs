@@ -29,18 +29,7 @@ namespace ntbs_service.Helpers
             return int.TryParse(stringValue, out var intValue) ? (int?)intValue : null;
         }
 
-        public static HIVTestStatus? GetHivStatusValue(string hivTestStatusRaw)
-        {
-            return GetEnumValue<HIVTestStatus>(hivTestStatusRaw);
-        }
-
-        public static DotStatus? GetDotStatusValue(string dotStatus)
-        {
-            return GetEnumValue<DotStatus>(dotStatus);
-        }
-        
-        
-        static T? GetEnumValue<T>(string raw) where T : struct
+        public static T? GetEnumValue<T>(string raw) where T : struct
         {
             return string.IsNullOrEmpty(raw) ? 
                 null : 
