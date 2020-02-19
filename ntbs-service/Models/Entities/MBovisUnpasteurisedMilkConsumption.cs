@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Entities
         [AssertThat(nameof(YearOfConsumptionAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
         [AssertThat(nameof(YearOfConsumptionNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
-        [Display(Name = "Year of milk product consumption")]
+        [Display(Name = "Year of consumption")]
         public int? YearOfConsumption { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
@@ -30,7 +30,7 @@ namespace ntbs_service.Models.Entities
         public ConsumptionFrequency? ConsumptionFrequency { get; set; }
         
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
-        [Display(Name = "Country in which contact occurred")]
+        [Display(Name = "Country")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
         

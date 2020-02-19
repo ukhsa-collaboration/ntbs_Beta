@@ -1,17 +1,17 @@
-﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/UnpasteurisedMilkConsumption/{handler?}"
+﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/UnpasteurisedMilkConsumptions/{handler?}"
 @using ntbs_service.Models.Entities
 @model ntbs_service.Pages.Notifications.Edit.MBovisUnpasteurisedMilkConsumptionsModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - M. Bovis - Unpasteurised milk consumption";
+    ViewData["Title"] = "Notification - M. bovis - Unpasteurised milk consumption";
     var fullValidation = Model.MBovisDetails.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2> M. Bovis - Unpasteurised milk consumption </h2>
+<h2> M. bovis - Unpasteurised milk consumption </h2>
 
 <div>
 
