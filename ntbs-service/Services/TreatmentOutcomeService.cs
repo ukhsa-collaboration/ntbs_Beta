@@ -13,6 +13,7 @@ namespace ntbs_service.Services
 {
     public interface ITreatmentOutcomeService
     {
+        bool IsTreatmentOutcomeNeeded(Notification notification, int yearsAfterTreatmentStartDate);
     }
 
     public class TreatmentOutcomeService : ITreatmentOutcomeService
@@ -25,8 +26,27 @@ namespace ntbs_service.Services
             _alertRepository = alertRepository;
         }
 
-        public async Task<bool> IsTreatmentOutcomeNeededAsync(IList<TreatmentEvent> treatmentEvents)
+        public bool IsTreatmentOutcomeNeeded(Notification notification, int yearsAfterTreatmentStartDate)
         {
+            if (yearsAfterTreatmentStartDate == 1)
+            {
+                return true;
+            }
+
+            var treatmentEventsBetweenOneAndTwoYears =
+                notification.TreatmentEvents.Where(t =>
+                    t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(2)
+                    && t.EventDate > (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(1));
+            
+            if (yearsAfterTreatmentStartDate == 2)
+            {
+                
+            }
+            
+            var treatmentEventsBetweenTwoAndThreeYears =
+                notification.TreatmentEvents.Where(t =>
+                    t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(3)
+                    && t.EventDate > (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(2));
             return false;
         }
     }
