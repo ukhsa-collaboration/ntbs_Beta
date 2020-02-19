@@ -46,7 +46,7 @@ namespace ntbs_service.DataAccess
         private async Task AddUser(User user, IEnumerable<TBService> tbServices)
         {
             _context.User.Add(user);
-            AddCaseManagerTbServices(user, tbServices);
+            SyncCaseManagerTbServices(user, tbServices);
             await _context.SaveChangesAsync();
         }
 
@@ -56,11 +56,11 @@ namespace ntbs_service.DataAccess
             // case insensitive string comparison.
             newUser.Username = existingUser.Username;
             _context.Entry(existingUser).CurrentValues.SetValues(newUser);
-            AddCaseManagerTbServices(existingUser, tbServices);
+            SyncCaseManagerTbServices(existingUser, tbServices);
             await _context.SaveChangesAsync();
         }
 
-        private static void AddCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
+        private static void SyncCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
         {
             var caseManagerTbServices = tbServices
                 .Select(tb => new CaseManagerTbService
@@ -69,15 +69,21 @@ namespace ntbs_service.DataAccess
                     CaseManagerUsername = user.Username
                 })
                 .ToList();
+            var caseManagerTbServicesToRemove = new List<CaseManagerTbService>();
 
             foreach (var caseManagerTbService in user.CaseManagerTbServices)
             {
                 if (!caseManagerTbServices.Any(c => caseManagerTbService.Equals(c)))
                 {
-                    user.CaseManagerTbServices.Remove(caseManagerTbService);
+                    caseManagerTbServicesToRemove.Add(caseManagerTbService);
                 }
             }
 
+            foreach (var caseManagerTbService in caseManagerTbServicesToRemove)
+            {
+                user.CaseManagerTbServices.Remove(caseManagerTbService);
+            }
+            
             foreach (var caseManagerTbService in caseManagerTbServices)
             {
                 if (!user.CaseManagerTbServices.Any(c => c.Equals(caseManagerTbService)))
