@@ -33,13 +33,13 @@
                 }
 
                 <nhs-form-group nhs-form-group-type="@hasMilkConsumptionsGroupState" id="MBovisDetails-HasUnpasteurisedMilkConsumption">
-                    <nhs-fieldset aria-describedby="has-milk-consumption@(hasMilkConsumptionsValues ? " has-milk-consumption-disabled" : string.Empty)" title="@hasMilkConsumptionsDisabledText">
+                    <nhs-fieldset aria-describedby="has-milk-consumption-error@(hasMilkConsumptionsValues ? " has-milk-consumption-disabled" : string.Empty)" title="@hasMilkConsumptionsDisabledText">
                         <nhs-fieldset-legend nhs-legend-size="Standard">
                             @Html.DisplayNameFor(m => m.MBovisDetails.HasUnpasteurisedMilkConsumption)
                         </nhs-fieldset-legend>
                         @if (hasMilkConsumptionsValues)
                         {
-                            <span id="milk-consumption-disabled" class="govuk-visually-hidden">@hasMilkConsumptionsDisabledText</span>
+                            <span id="has-milk-consumption-disabled" class="govuk-visually-hidden">@hasMilkConsumptionsDisabledText</span>
                             <input type="hidden" asp-for="MBovisDetails.HasUnpasteurisedMilkConsumption"/>
                         }
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="MBovisDetails.HasUnpasteurisedMilkConsumption" has-error="@hasMilkConsumptionsError" id="has-milk-consumption-error"></span>

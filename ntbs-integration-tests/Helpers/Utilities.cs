@@ -60,8 +60,10 @@ namespace ntbs_integration_tests.Helpers
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID4 = MockSpecimenService.MockSpecimenNotificationId4; // 10103
         public const int SPECIMEN_MATCHING_MANUAL_MATCH_NOTIFICATION_ID = 10104;
 
-        public const int NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES = 10130;
-        public const int NOTIFICATION_ID_WITH_MBOVIS_NO_ENTITIES = 10131;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES = 10130;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_NO_ENTITIES = 10131;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES = 10132;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_MILK_NO_ENTITIES = 10133;
 
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
@@ -119,6 +121,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(ActionTransferPageTests.GetSeedingNotifications());
             context.Notification.AddRange(LabResultsPageTests.GetSeedingNotifications());
             context.Notification.AddRange(MBovisExposureToKnownCasesPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(MBovisUnpasteurisedMilkConsumptionPageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
 
