@@ -98,6 +98,7 @@ namespace ntbs_service.Helpers
             {NotificationSubPaths.EditComorbidities, "overview-comorbidities"},
             {NotificationSubPaths.EditTravel, "overview-travel-and-visitors"},
             {NotificationSubPaths.EditSocialContextAddresses, "overview-social-addresses"},
+            {NotificationSubPaths.EditTreatmentEvents, "overview-episodes"},
             {NotificationSubPaths.EditSocialContextVenues, "overview-social-venues"},
             {NotificationSubPaths.EditPreviousHistory, "overview-previous-history"},
             {NotificationSubPaths.EditMDRDetails, "overview-mdr-details"},
