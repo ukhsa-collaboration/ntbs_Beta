@@ -43,6 +43,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
 #pragma warning restore 1998
         {
+            if (!Notification.IsMBovis)
+            {
+                return NotFound();
+            }
+            
             if (RowId == null)
             {
                 return Page();

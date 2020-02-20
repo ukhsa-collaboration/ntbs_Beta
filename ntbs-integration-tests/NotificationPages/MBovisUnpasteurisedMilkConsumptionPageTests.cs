@@ -144,23 +144,23 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisUnpasteurisedMilkConsumption-YearOfConsumption",
                 "year-of-consumption",
-                ValidationMessages.InvalidYear("Year of consumption"));
+                "Year of consumption has an invalid year");
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisUnpasteurisedMilkConsumption-CountryId",
                 "country",
-                string.Format(ValidationMessages.RequiredSelect, "Country"));
+                "Please select Country");
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisUnpasteurisedMilkConsumption-MilkProductType",
                 "milk-product",
-                string.Format(ValidationMessages.RequiredSelect, "Product type"));
+                "Please select Product type");
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisUnpasteurisedMilkConsumption-ConsumptionFrequency",
                 "frequency",
-                string.Format(ValidationMessages.RequiredSelect, "Frequency"));
+                "Please select Frequency");
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisUnpasteurisedMilkConsumption-OtherDetails",
                 "other-details",
-                string.Format(ValidationMessages.StringWithNumbersAndForwardSlashFormat, "Other details"));
+                "Other details can only contain letters, numbers and the symbols ' - . , /");
         }
 
         [Fact]
@@ -177,15 +177,14 @@ namespace ntbs_integration_tests.NotificationPages
                 ["MBovisUnpasteurisedMilkConsumption.YearOfConsumption"] = "2000",
                 ["MBovisUnpasteurisedMilkConsumption.CountryId"] = "1",
                 ["MBovisUnpasteurisedMilkConsumption.MilkProductType"] = ((int)MilkProductType.Cheese).ToString(),
-                ["MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"] = ((int)ConsumptionFrequency.Occasionally).ToString()
+                ["MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"] =
+                    ((int)ConsumptionFrequency.Occasionally).ToString()
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
-            var resultDocument = await GetDocumentAsync(result);
 
             // Assert
-            result.AssertRedirectTo(RouteHelper.GetNotificationPath(
-                id,
-                NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions));
+            result.AssertRedirectTo(
+                RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions));
         }
     }
 }

@@ -39,7 +39,7 @@ namespace ntbs_service.Models.Entities
         public bool UnpasteurisedMilkConsumptionsIsPopulatedIfTrue =>
             // Test only relevant if collection is loaded
             MBovisUnpasteurisedMilkConsumptions == null
-            // Test only relevant if HasExposure is true
+            // Test only relevant if HasConsumption is true
             || HasUnpasteurisedMilkConsumption == false 
             // Confirm collection is populated...
             || MBovisUnpasteurisedMilkConsumptions.Any()

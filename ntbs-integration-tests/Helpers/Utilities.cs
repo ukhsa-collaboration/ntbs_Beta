@@ -201,7 +201,20 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<Notification>
             {
-                new Notification {NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft},
+                new Notification
+                {
+                    NotificationId = DRAFT_ID,
+                    NotificationStatus = NotificationStatus.Draft,
+                    DrugResistanceProfile = new DrugResistanceProfile
+                    {
+                        DrugResistanceProfileString = "RR/MDR/XDR",
+                        Species = "M. bovis"
+                    },
+                    ClinicalDetails = new ClinicalDetails
+                    {
+                        IsMDRTreatment = true
+                    }
+                },
                 new Notification
                 {
                     NotificationId = NOTIFIED_ID,
@@ -238,6 +251,15 @@ namespace ntbs_integration_tests.Helpers
                     NotificationSites = new List<NotificationSite>
                     {
                         new NotificationSite {NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY}
+                    },
+                    DrugResistanceProfile = new DrugResistanceProfile
+                    {
+                        DrugResistanceProfileString = "RR/MDR/XDR",
+                        Species = "M. bovis"
+                    },
+                    ClinicalDetails = new ClinicalDetails
+                    {
+                        IsMDRTreatment = true
                     }
                 },
                 new Notification
