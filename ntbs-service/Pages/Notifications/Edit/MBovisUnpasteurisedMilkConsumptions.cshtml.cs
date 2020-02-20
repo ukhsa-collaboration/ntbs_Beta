@@ -10,15 +10,15 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class MBovisExposureToKnownCasesModel : NotificationEditModelBase
+    public class MBovisUnpasteurisedMilkConsumptionsModel : NotificationEditModelBase
     {
-        public MBovisExposureToKnownCasesModel(
+        public MBovisUnpasteurisedMilkConsumptionsModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(notificationService, authorizationService,
             notificationRepository)
         {
-            CurrentPage = NotificationSubPaths.EditMBovisExposureToKnownCases;
+            CurrentPage = NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions;
         }
 
         [BindProperty] 
@@ -45,7 +45,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Items/NewMBovisExposureToKnownCase", new { NotificationId });
+            return RedirectToPage("./Items/NewMBovisUnpasteurisedMilkConsumption", new { NotificationId });
         }
         
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -56,13 +56,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             // Set the collection so it can be included in the validation
-            MBovisDetails.MBovisExposureToKnownCases = Notification.MBovisDetails.MBovisExposureToKnownCases;
+            MBovisDetails.MBovisUnpasteurisedMilkConsumptions = Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions;
             MBovisDetails.ProceedingToAdd = ActionName == "Create";
             MBovisDetails.SetValidationContext(Notification);
             
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
-                await Service.UpdateMBovisDetailsExposureToKnownCases(Notification, MBovisDetails);
+                await Service.UpdateMBovisDetailsUnpasteurisedMilkConsumption(Notification, MBovisDetails);
             }
         }
         
@@ -73,7 +73,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisExposureToKnownCases(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisUnpasteurisedMilkConsumption(notificationId);
         }
     }
 }

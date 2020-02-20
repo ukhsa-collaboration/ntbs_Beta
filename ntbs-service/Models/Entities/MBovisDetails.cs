@@ -29,6 +29,22 @@ namespace ntbs_service.Models.Entities
             || MBovisExposureToKnownCases.Any()
             // ...unless about to add entry, in which case that's fine too
             || ProceedingToAdd;
+        
+        [AssertThat(nameof(UnpasteurisedMilkConsumptionsIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords)]
+        [Display(Name = "Has consumption of unpasteurised milk products")]
+        public bool? HasUnpasteurisedMilkConsumption { get; set; }
+        public virtual ICollection<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumptions { get; set; }
+
+        [NotMapped]
+        public bool UnpasteurisedMilkConsumptionsIsPopulatedIfTrue =>
+            // Test only relevant if collection is loaded
+            MBovisUnpasteurisedMilkConsumptions == null
+            // Test only relevant if HasConsumption is true
+            || HasUnpasteurisedMilkConsumption == false 
+            // Confirm collection is populated...
+            || MBovisUnpasteurisedMilkConsumptions.Any()
+            // ...unless about to add entry, in which case that's fine too
+            || ProceedingToAdd;
 
 
         // Only used to inform validation, much like the `ShouldValidateFull` property

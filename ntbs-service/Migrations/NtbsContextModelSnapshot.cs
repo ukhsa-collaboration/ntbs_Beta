@@ -105,6 +105,8 @@ namespace ntbs_service.Migrations
 
                     b.Property<bool?>("HasExposureToKnownCases");
 
+                    b.Property<bool?>("HasUnpasteurisedMilkConsumption");
+
                     b.HasKey("NotificationId");
 
                     b.ToTable("MBovisDetails");
@@ -136,6 +138,40 @@ namespace ntbs_service.Migrations
                     b.HasIndex("NotificationId");
 
                     b.ToTable("MBovisExposureToKnownCase");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
+                {
+                    b.Property<int>("MBovisUnpasteurisedMilkConsumptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConsumptionFrequency")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int?>("CountryId")
+                        .IsRequired();
+
+                    b.Property<string>("MilkProductType")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("OtherDetails")
+                        .HasMaxLength(150);
+
+                    b.Property<int?>("YearOfConsumption")
+                        .IsRequired();
+
+                    b.HasKey("MBovisUnpasteurisedMilkConsumptionId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("MBovisUnpasteurisedMilkConsumption");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
@@ -23576,6 +23612,19 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.MBovisDetails")
                         .WithMany("MBovisExposureToKnownCases")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails")
+                        .WithMany("MBovisUnpasteurisedMilkConsumptions")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -1,0 +1,204 @@
+﻿@model MBovisUnpasteurisedMilkConsumptionModel
+@using NHSUK.FrontEndLibrary.TagHelpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Entities
+@using ntbs_service.Models.Enums
+
+<div class="table-row-form">
+    <nhs-width-container container-width="Standard">
+
+        <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial"/>
+
+        <h2> M. bovis - @(Model.RowId == null ? "Add new " : "Edit ") unpasteurised milk consumption </h2>
+
+        <form method="post" autocomplete="off">
+
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasYearError = !Model.IsValid($"{nameof(Model.MBovisUnpasteurisedMilkConsumption)}.{nameof(Model.MBovisUnpasteurisedMilkConsumption.YearOfConsumption)}");
+                        var yearErrorGroupState = hasYearError ? Error : Standard;
+                    }
+                    <validate-input model="@nameof(MBovisUnpasteurisedMilkConsumption)" property="@nameof(MBovisUnpasteurisedMilkConsumption.YearOfConsumption)" inline-template>
+                        <nhs-form-group
+                            id="@($"{nameof(MBovisUnpasteurisedMilkConsumption)}-{nameof(MBovisUnpasteurisedMilkConsumption.YearOfConsumption)}")"
+                            nhs-form-group-type="@yearErrorGroupState"
+                            aria-describedby="year-of-consumption-error">
+                            <label nhs-label-type="Standard" asp-for="MBovisUnpasteurisedMilkConsumption.YearOfConsumption">
+                                @Html.DisplayNameFor(m => m.MBovisUnpasteurisedMilkConsumption.YearOfConsumption)
+                            </label>
+                            <span
+                                id="year-of-consumption-error"
+                                nhs-span-type="ErrorMessage"
+                                ref="errorField"
+                                asp-validation-for="MBovisUnpasteurisedMilkConsumption.YearOfConsumption"
+                                has-error="@hasYearError">
+                            </span>
+                            <input
+                                nhs-input-type="Standard"
+                                type="number"
+                                ref="inputField"
+                                asp-for="MBovisUnpasteurisedMilkConsumption.YearOfConsumption"
+                                v-on:blur="validate"
+                                fixed-width="Four">
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasCountryError = !Model.IsValid($"{nameof(Model.MBovisUnpasteurisedMilkConsumption)}.{nameof(Model.MBovisUnpasteurisedMilkConsumption.CountryId)}");
+                        var countryGroupState = hasCountryError ? Error : Standard;
+                        var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
+                    }
+                    <validate-input model="@nameof(MBovisUnpasteurisedMilkConsumption)" property="@nameof(MBovisUnpasteurisedMilkConsumption.CountryId)" inline-template>
+                        <nhs-form-group
+                            id="@($"{nameof(MBovisUnpasteurisedMilkConsumption)}-{nameof(MBovisUnpasteurisedMilkConsumption.CountryId)}")"
+                            nhs-form-group-type="@countryGroupState"
+                            aria-describedby="country-error">
+                            <label nhs-label-type="Standard" asp-for="MBovisUnpasteurisedMilkConsumption.CountryId">
+                                Country
+                            </label>
+                            <span
+                                id="country-error"
+                                nhs-span-type="ErrorMessage"
+                                ref="errorField"
+                                asp-validation-for="MBovisUnpasteurisedMilkConsumption.CountryId"
+                                has-error="@hasCountryError">
+                            </span>
+                            <div ref="selectField" class="@countrySelectErrorClass">
+                                <autocomplete-select v-on:validate-input="validate" placeholder="Please select" validate="true" inline-template>
+                                    <select asp-for="MBovisUnpasteurisedMilkConsumption.CountryId" asp-items="Model.Countries" ref="selectElement">
+                                        <option value=""></option>
+                                    </select>
+                                </autocomplete-select>
+                            </div>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+            </nhs-grid-row>
+
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasMilkProductError = !Model.IsValid($"{nameof(Model.MBovisUnpasteurisedMilkConsumption)}.{nameof(Model.MBovisUnpasteurisedMilkConsumption.MilkProductType)}");
+                        var milkProductGroupState = hasMilkProductError ? Error : Standard;
+                    }
+                    <validate-input model="@nameof(MBovisUnpasteurisedMilkConsumption)" property="@nameof(MBovisUnpasteurisedMilkConsumption.MilkProductType)" inline-template>
+                        <nhs-form-group
+                            id="@($"{nameof(MBovisUnpasteurisedMilkConsumption)}-{nameof(MBovisUnpasteurisedMilkConsumption.MilkProductType)}")"
+                            nhs-form-group-type="@milkProductGroupState"
+                            aria-describedby="milk-product-error">
+                            <label nhs-label-type="Standard" asp-for="MBovisUnpasteurisedMilkConsumption.MilkProductType">
+                                @Html.DisplayNameFor(m => m.MBovisUnpasteurisedMilkConsumption.MilkProductType)
+                            </label>
+                            <span
+                                id="milk-product-error"
+                                nhs-span-type="ErrorMessage"
+                                has-error="@hasMilkProductError"
+                                asp-validation-for="MBovisUnpasteurisedMilkConsumption.MilkProductType"
+                                ref="errorField">
+                            </span>
+                            <select
+                                nhs-select-type="@(hasMilkProductError ? SelectType.Error : SelectType.Standard)"
+                                asp-for="MBovisUnpasteurisedMilkConsumption.MilkProductType"
+                                asp-items="Html.GetEnumSelectList<MilkProductType>()"
+                                ref="selectField"
+                                v-on:change="validate">
+                                <option value="">Please select</option>
+                            </select>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+                
+                <nhs-grid-column grid-column-width="OneHalf">
+                    @{
+                        var hasFrequencyError = !Model.IsValid($"{nameof(Model.MBovisUnpasteurisedMilkConsumption)}.{nameof(Model.MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency)}");
+                        var frequencyGroupState = hasFrequencyError ? Error : Standard;
+                    }
+                    <validate-input model="@nameof(MBovisUnpasteurisedMilkConsumption)" property="@nameof(MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency)" inline-template>
+                        <nhs-form-group
+                            id="@($"{nameof(MBovisUnpasteurisedMilkConsumption)}-{nameof(MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency)}")"
+                            nhs-form-group-type="@frequencyGroupState"
+                            aria-describedby="frequency-error">
+                            <label nhs-label-type="Standard" asp-for="MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency">
+                                @Html.DisplayNameFor(m => m.MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency)
+                            </label>
+                            <span
+                                id="frequency-error"
+                                nhs-span-type="ErrorMessage"
+                                has-error="@hasFrequencyError"
+                                asp-validation-for="MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"
+                                ref="errorField">
+                            </span>
+                            <select
+                                nhs-select-type="@(hasFrequencyError ? SelectType.Error : SelectType.Standard)"
+                                asp-for="MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"
+                                asp-items="Html.GetEnumSelectList<ConsumptionFrequency>()"
+                                ref="selectField"
+                                v-on:change="validate">
+                                <option value="">Please select</option>
+                            </select>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+            </nhs-grid-row>
+
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="Full">
+                    @{
+                        var hasOtherDetailsError = !Model.IsValid($"{nameof(Model.MBovisUnpasteurisedMilkConsumption)}.{nameof(Model.MBovisUnpasteurisedMilkConsumption.OtherDetails)}");
+                        var otherDetailsGroupState = hasOtherDetailsError ? Error : Standard;
+                        var otherDetailsTextAreaType = hasOtherDetailsError ? TextAreaType.Error : TextAreaType.Standard;
+                    }
+                    <validate-input model="@nameof(MBovisUnpasteurisedMilkConsumption)" property="@nameof(MBovisUnpasteurisedMilkConsumption.OtherDetails)" inline-template>
+                        <nhs-form-group
+                            id="@($"{nameof(MBovisUnpasteurisedMilkConsumption)}-{nameof(MBovisUnpasteurisedMilkConsumption.OtherDetails)}")"
+                            nhs-form-group-type="@otherDetailsGroupState"
+                            aria-describedby="other-details-error">
+                            <label nhs-label-type="Standard" asp-for="MBovisUnpasteurisedMilkConsumption.OtherDetails">
+                                @Html.DisplayNameFor(m => m.MBovisUnpasteurisedMilkConsumption.OtherDetails)
+                            </label>
+                            <span
+                                id="other-details-error"
+                                nhs-span-type="ErrorMessage"
+                                ref="errorField"
+                                asp-validation-for="MBovisUnpasteurisedMilkConsumption.OtherDetails"
+                                has-error="@hasOtherDetailsError">
+                            </span>
+                            <textarea
+                                  asp-for="MBovisUnpasteurisedMilkConsumption.OtherDetails"
+                                  v-on:change="validate"
+                                  ref="textareaField"
+                                  nhs-textarea-type="@otherDetailsTextAreaType"
+                                  rows="2"
+                                  classes="nhsuk-input--width-30"> </textarea>
+                        </nhs-form-group>
+                    </validate-input>
+                </nhs-grid-column>
+            </nhs-grid-row>
+
+            <button id="save-button" nhs-button-type="Standard" classes="ntbsuk-button--primary">
+                Save
+            </button>
+            @if (Model.RowId != null)
+            {
+                <button id="delete-button"
+                        asp-page-handler="Delete"
+                        nhs-button-type="Standard"
+                        classes="ntbsuk-button--secondary">
+                    Delete
+                </button>
+            }
+        </form>
+    </nhs-width-container>
+</div>
+<nhs-width-container container-width="Standard">
+    <h2> Exposure to known cases </h2>
+
+    <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
+
+    <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions)">
+        Back to M. bovis exposure to known cases
+    </a>
+</nhs-width-container>

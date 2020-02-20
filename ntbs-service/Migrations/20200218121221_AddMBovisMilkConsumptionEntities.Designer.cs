@@ -11,8 +11,8 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    [Migration("20200212152656_AddMBovisExposureToKnownCaseEntities")]
-    partial class AddMBovisExposureToKnownCaseEntities
+    [Migration("20200218121221_AddMBovisMilkConsumptionEntities")]
+    partial class AddMBovisMilkConsumptionEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,7 @@ namespace ntbs_service.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("Relational:Sequence:shared.OrderIndex", "'OrderIndex', 'shared', '1', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alert", b =>
@@ -81,11 +82,32 @@ namespace ntbs_service.Migrations
                     b.ToTable("CaseManagerTbService");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.FrequentlyAskedQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Answer");
+
+                    b.Property<int>("OrderIndex")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.OrderIndex");
+
+                    b.Property<string>("Question");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrequentlyAskedQuestion");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
                 {
                     b.Property<int>("NotificationId");
 
                     b.Property<bool?>("HasExposureToKnownCases");
+
+                    b.Property<bool?>("HasUnpasteurisedMilkConsumption");
 
                     b.HasKey("NotificationId");
 
@@ -118,6 +140,40 @@ namespace ntbs_service.Migrations
                     b.HasIndex("NotificationId");
 
                     b.ToTable("MBovisExposureToKnownCase");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
+                {
+                    b.Property<int>("MBovisUnpasteurisedMilkConsumptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConsumptionFrequency")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int?>("CountryId")
+                        .IsRequired();
+
+                    b.Property<string>("MilkProductType")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("OtherDetails")
+                        .HasMaxLength(150);
+
+                    b.Property<int?>("YearOfConsumption")
+                        .IsRequired();
+
+                    b.HasKey("MBovisUnpasteurisedMilkConsumptionId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("MBovisUnpasteurisedMilkConsumption");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
@@ -370,6 +426,27 @@ namespace ntbs_service.Migrations
                     b.HasKey("Username");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.UserLoginEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("LoginDate");
+
+                    b.Property<string>("SystemName")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLoginEvent");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.VenueType", b =>
@@ -23470,7 +23547,7 @@ namespace ntbs_service.Migrations
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alert");
 
-                    b.Property<string>("CaseManagerTbServiceString")
+                    b.Property<string>("DecliningUserAndTbServiceString")
                         .HasMaxLength(200);
 
                     b.Property<string>("RejectionReason")
@@ -23518,10 +23595,31 @@ namespace ntbs_service.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Entities.Notification")
+                        .WithOne("MBovisDetails")
+                        .HasForeignKey("ntbs_service.Models.Entities.MBovisDetails", "NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisExposureToKnownCase", b =>
                 {
                     b.HasOne("ntbs_service.Models.Entities.MBovisDetails")
                         .WithMany("MBovisExposureToKnownCases")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails")
+                        .WithMany("MBovisUnpasteurisedMilkConsumptions")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -23725,7 +23823,7 @@ namespace ntbs_service.Migrations
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.Episode", "Episode", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.HospitalDetails", "HospitalDetails", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
@@ -23747,7 +23845,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("TBServiceCode");
 
-                            b1.ToTable("Episode");
+                            b1.ToTable("HospitalDetails");
 
                             b1.HasOne("ntbs_service.Models.Entities.User", "CaseManager")
                                 .WithMany()
@@ -23758,8 +23856,8 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("HospitalId");
 
                             b1.HasOne("ntbs_service.Models.Entities.Notification")
-                                .WithOne("Episode")
-                                .HasForeignKey("ntbs_service.Models.Entities.Episode", "NotificationId")
+                                .WithOne("HospitalDetails")
+                                .HasForeignKey("ntbs_service.Models.Entities.HospitalDetails", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TBService")

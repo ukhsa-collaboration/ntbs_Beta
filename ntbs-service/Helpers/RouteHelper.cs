@@ -59,6 +59,7 @@ namespace ntbs_service.Helpers
         public static string EditMDRDetails => "Edit/MDRDetails";
         public static string EditTreatmentEvents => "Edit/TreatmentEvents";
         public static string EditMBovisExposureToKnownCases => "Edit/MBovis/ExposureToKnownCases";
+        public static string EditMBovisUnpasteurisedMilkConsumptions => "Edit/MBovis/UnpasteurisedMilkConsumptions";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
@@ -83,6 +84,9 @@ namespace ntbs_service.Helpers
 
         public static string EditMBovisExposureToKnownCase(int mBovisExposureToKnownCaseId) => $"Edit/MBovis/ExposureToKnownCase/{mBovisExposureToKnownCaseId}";
         public static string AddMBovisExposureToKnownCase => "Edit/MBovis/ExposureToKnownCase/New";
+        
+        public static string EditMBovisUnpasteurisedMilkConsumption(int mBovisUnpasteurisedMilkConsumptionId) => $"Edit/MBovis/UnpasteurisedMilkConsumption/{mBovisUnpasteurisedMilkConsumptionId}";
+        public static string AddMBovisUnpasteurisedMilkConsumption => "Edit/MBovis/UnpasteurisedMilkConsumption/New";
     }
 
     public static class OverviewSubPathToAnchorMap
@@ -102,7 +106,8 @@ namespace ntbs_service.Helpers
             {NotificationSubPaths.EditSocialContextVenues, "overview-social-venues"},
             {NotificationSubPaths.EditPreviousHistory, "overview-previous-history"},
             {NotificationSubPaths.EditMDRDetails, "overview-mdr-details"},
-            {NotificationSubPaths.EditMBovisExposureToKnownCases, "overview-mbovis-exposure-details"}
+            {NotificationSubPaths.EditMBovisExposureToKnownCases, "overview-mbovis-exposure-details"},
+            {NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions, "overview-mbovis-milk-consumption-details"}
         };
 
         public static string GetOverviewAnchorId(string notificationSubPath)
