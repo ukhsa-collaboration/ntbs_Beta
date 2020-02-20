@@ -19,7 +19,6 @@ namespace ntbs_service
             SetUpLogger();
             try
             {
-
                 Log.Information("Building web host");
                 var host = CreateWebHostBuilder(args).Build();
                 using (var scope = host.Services.CreateScope())
@@ -61,7 +60,15 @@ namespace ntbs_service
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSerilog();
+                .UseSentry()
+                .UseSerilog((context, configuration) =>
+                {
+                    configuration.WriteTo.Sentry(s =>
+                    {
+                        s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                        s.MinimumEventLevel = LogEventLevel.Warning;
+                    });
+                });
 
         private static void MigrateAppDb(IServiceProvider services)
         {
