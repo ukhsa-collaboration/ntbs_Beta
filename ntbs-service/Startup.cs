@@ -194,6 +194,7 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.AddScoped<IItemRepository<MBovisExposureToKnownCase>, MBovisExposureToKnownCaseRepository>();
             services.AddScoped<IItemRepository<MBovisUnpasteurisedMilkConsumption>, MBovisUnpasteurisedMilkConsumptionRepository>();
+            services.AddScoped<IItemRepository<MBovisOccupationExposure>, MBovisOccupationExposureRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();

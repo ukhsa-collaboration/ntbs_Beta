@@ -146,6 +146,8 @@
             "Please add a record of exposure to known TB cases or confirm no exposure has occurred";
         public const string HasNoUnpasteurisedMilkConsumptionRecords =
             "Please add a record of unpasteurised milk consumption or confirm no consumption has occurred";
+        public const string HasNoOccupationExposureRecords =
+            "Please add a record of occupation exposure or confirm no exposure has occurred";
 
         #endregion
     }
