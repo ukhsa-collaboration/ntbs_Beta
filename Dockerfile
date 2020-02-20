@@ -31,6 +31,10 @@ RUN npm run build:prod
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 
+RUN apt-get update \
+    && apt-get install -y krb5-user \
+    && apt-get install -y procps
+
 # Satisfying Openshift requirements:
 # - this tells it that the app is OK to run under random user id
 USER 1001
