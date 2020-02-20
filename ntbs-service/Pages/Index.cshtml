@@ -108,6 +108,9 @@
                     @Html.DisplayNameFor(model => model.DraftNotifications[0].NotificationId)
                 </nhs-table-item>
                 <nhs-table-item>
+                    @Html.DisplayNameFor(model => model.DraftNotifications[0].FullName)
+                </nhs-table-item>
+                <nhs-table-item>
                     @Html.DisplayNameFor(model => model.DraftNotifications[0].FormattedCreationDate)
                 </nhs-table-item>
                 <nhs-table-item>
@@ -125,6 +128,9 @@
                             <a href="@RouteHelper.GetNotificationPath(item.NotificationId, NotificationSubPaths.Overview)" class="govuk-link govuk-link--no-visited-state">
                                 @Html.DisplayFor(_ => item.NotificationId)
                             </a>
+                        </nhs-table-item>
+                        <nhs-table-item>
+                            @Html.DisplayFor(_ => item.FullName)
                         </nhs-table-item>
                         <nhs-table-item>
                             @Html.DisplayFor(_ => item.FormattedCreationDate)
@@ -150,6 +156,9 @@
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].NotificationId)
             </nhs-table-item>
             <nhs-table-item>
+                @Html.DisplayNameFor(model => model.RecentNotifications[0].FullName)
+            </nhs-table-item>
+            <nhs-table-item>
                 @Html.DisplayNameFor(model => model.RecentNotifications[0].FormattedNotificationDate)
             </nhs-table-item>
             <nhs-table-item>
@@ -167,6 +176,9 @@
                         <a href="@RouteHelper.GetNotificationPath(item.NotificationId, NotificationSubPaths.Overview)" class="govuk-link--no-visited-state">
                             @Html.DisplayFor(modelItem => item.NotificationId)
                         </a>
+                    </nhs-table-item>
+                    <nhs-table-item>
+                        @Html.DisplayFor(modelItem => item.FullName)
                     </nhs-table-item>
                     <nhs-table-item>
                         @Html.DisplayFor(modelItem => item.FormattedNotificationDate)
