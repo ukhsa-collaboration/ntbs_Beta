@@ -41,21 +41,19 @@ else
                     var path = RouteHelper.GetNotificationPath(result.NotificationId, NotificationSubPaths.EditMBovisExposureToKnownCase(result.MBovisExposureToKnownCaseId));
                     <a href="@path" class="notification-edit-link govuk-link--no-visited-state"> Edit </a>
                 }
-
             </div>
+            
             <dl class="notification-overview-details-container">
                 <nhs-grid-row>
-                    <nhs-grid-column grid-column-width="OneHalf">
+                    <nhs-grid-column grid-column-width="OneQuarter">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.YearOfExposure) </dt>
                         <dd class="cell-min-height"> @result.YearOfExposure </dd>
                     </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneHalf">
+                    <nhs-grid-column grid-column-width="OneQuarter">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureSetting) </dt>
                         <dd class="cell-min-height"> @result.ExposureSetting.GetDisplayName() </dd>
                     </nhs-grid-column>
-                </nhs-grid-row>
-                <nhs-grid-row>
-                    <nhs-grid-column grid-column-width="Full">
+                    <nhs-grid-column grid-column-width="OneHalf">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.OtherDetails) </dt>
                         <dd class="cell-min-height"> @result.OtherDetails </dd>
                     </nhs-grid-column>

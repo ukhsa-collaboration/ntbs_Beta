@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -99,6 +100,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             
             if (int.TryParse(value, out var notificationId))
             {
+                if (notificationId == NotificationId)
+                {
+                    return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId });
+                }
+                
                 var relatedNotification = await GetNotificationAsync(notificationId);
                 if (relatedNotification == null) 
                 {
@@ -120,6 +126,13 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         {
             if (MBovisExposureToKnownCase.ExposureNotificationId != null)
             {
+                if (MBovisExposureToKnownCase.ExposureNotificationId == NotificationId)
+                {
+                    ModelState.AddModelError(
+                        $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
+                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);   
+                }
+
                 var exposureNotification = await NotificationRepository.GetNotificationAsync(
                     MBovisExposureToKnownCase.ExposureNotificationId.Value);
                 if (exposureNotification == null)
