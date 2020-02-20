@@ -37,7 +37,7 @@ namespace ntbs_ui_tests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.UseEnvironment("Test");
+            builder.UseEnvironment("CI");
 
             builder.ConfigureServices(services =>
             {
@@ -94,7 +94,7 @@ namespace ntbs_ui_tests
             RootUri = host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.LastOrDefault(); //port 5001
 
             // This is a 'fake' server, needed to be returned by the method but will not actually be used.
-            return new TestServer(new WebHostBuilder().UseEnvironment("Test").UseStartup<TStartup>());
+            return new TestServer(new WebHostBuilder().UseEnvironment("CI").UseStartup<TStartup>());
         }
         
         public void ConfigureLogger(string testName)

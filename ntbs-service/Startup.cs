@@ -55,7 +55,7 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            if (!Env.IsEnvironment("Test"))
+            if (!Env.IsEnvironment("CI"))
             {
                 services.AddHangfire(config =>
                 {
@@ -261,7 +261,7 @@ namespace ntbs_service
 
             app.UseStaticFiles();
 
-            if (!Env.IsEnvironment("Test"))
+            if (!Env.IsEnvironment("CI"))
             {
                 /*
                 Making this conditional is the result of serilog not playing nicely with WebApplicationFactory
@@ -294,7 +294,7 @@ namespace ntbs_service
 
         private void ConfigureHangfire(IApplicationBuilder app)
         {
-            if (Env.IsEnvironment("Test"))
+            if (Env.IsEnvironment("CI"))
             {
                 return;
             }
