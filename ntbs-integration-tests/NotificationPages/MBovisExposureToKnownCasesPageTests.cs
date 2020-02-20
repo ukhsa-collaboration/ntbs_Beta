@@ -91,7 +91,8 @@ namespace ntbs_integration_tests.NotificationPages
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = id.ToString(), ["MBovisDetails.HasExposureToKnownCases"] = "false"
+                ["NotificationId"] = id.ToString(),
+                ["MBovisDetails.HasExposureToKnownCases"] = "false"
             };
 
             // Act
