@@ -53,7 +53,7 @@ spec:
           - name: MigrationConfig__TablePrefix
             value: "Test"
           - name: Sentry__Environment
-            value: "int"
+            value: "test"
       imagePullSecrets:
       - name: registery-password
 ---
