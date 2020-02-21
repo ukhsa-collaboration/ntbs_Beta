@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.AspNetCore;
@@ -68,6 +68,7 @@ namespace ntbs_service
                         s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
                         s.MinimumEventLevel = LogEventLevel.Warning;
                     });
+                    configuration.WriteTo.Logger(Log.Logger);
                 });
 
         private static void MigrateAppDb(IServiceProvider services)
