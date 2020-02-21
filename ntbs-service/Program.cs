@@ -54,6 +54,11 @@ namespace ntbs_service
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.Sentry(s =>
+                {
+                    s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                    s.MinimumEventLevel = LogEventLevel.Warning;
+                })
                 .CreateLogger();
         }
 
@@ -61,15 +66,7 @@ namespace ntbs_service
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseSentry()
-                .UseSerilog((context, configuration) =>
-                {
-                    configuration.WriteTo.Sentry(s =>
-                    {
-                        s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
-                        s.MinimumEventLevel = LogEventLevel.Warning;
-                    });
-                    configuration.WriteTo.Logger(Log.Logger);
-                });
+                .UseSerilog();
 
         private static void MigrateAppDb(IServiceProvider services)
         {
