@@ -316,16 +316,18 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
-            await CreateTreatmentEvenNotificationStart(notification);
+            await CreateTreatmentEventNotificationStart(notification);
         }
 
-        private async Task CreateTreatmentEvenNotificationStart(Notification notification)
+        private async Task CreateTreatmentEventNotificationStart(Notification notification)
         {
             await _treatmentEventRepository.AddAsync(new TreatmentEvent
             {
                 NotificationId = notification.NotificationId,
                 TreatmentEventType = TreatmentEventType.NotificationStart,
-                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate
+                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate,
+                CaseManager = notification.HospitalDetails.CaseManager,
+                TbService = notification.HospitalDetails.TBService
             });
         }
 

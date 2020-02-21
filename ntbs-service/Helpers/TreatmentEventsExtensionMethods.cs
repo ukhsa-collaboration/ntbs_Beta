@@ -34,7 +34,7 @@ namespace ntbs_service.Helpers
                 {
                     groupedEpisodes[episodeCount].Add(treatmentEvent);
                 }
-                if (IsEpisodeEndingTreatmentEvent(treatmentEvent))
+                if (treatmentEvent.IsEpisodeEndingTreatmentEvent())
                 {
                     episodeCount++;
                 }
@@ -59,7 +59,7 @@ namespace ntbs_service.Helpers
                 .FirstOrDefault();
         }
 
-        private static bool IsEpisodeEndingTreatmentEvent(TreatmentEvent treatmentEvent)
+        public static bool IsEpisodeEndingTreatmentEvent(this TreatmentEvent treatmentEvent)
         {
             return (treatmentEvent.TreatmentOutcome != null 
                    && episodeEndingOutcomeTypes.Contains(treatmentEvent.TreatmentOutcome.TreatmentOutcomeType))

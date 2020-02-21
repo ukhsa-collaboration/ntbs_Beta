@@ -77,7 +77,7 @@ namespace ntbs_service.Pages.Notifications
                 Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(notificationDate,
                     notificationDate.AddMonths(12));
             
-            OutcomeAt12Month = treatmentEvent12Month?.EventDate < DateTime.Today.AddMonths(-12) ? treatmentEvent12Month.TreatmentOutcome : null;
+            OutcomeAt12Month = treatmentEvent12Month?.EventDate <= DateTime.Today.AddMonths(-12) ? treatmentEvent12Month.TreatmentOutcome : null;
             if (OutcomeAt12Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated 
                 || OutcomeAt12Month?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.TransferredAbroad)
             {
@@ -88,7 +88,7 @@ namespace ntbs_service.Pages.Notifications
                 notificationDate.AddMonths(12), 
                 notificationDate.AddMonths(24));
             
-            OutcomeAt24Month = treatmentEvent24Month?.EventDate < DateTime.Today.AddMonths(-24) ? treatmentEvent24Month?.TreatmentOutcome : null;
+            OutcomeAt24Month = treatmentEvent24Month?.EventDate <= DateTime.Today.AddMonths(-24) ? treatmentEvent24Month?.TreatmentOutcome : null;
             if (OutcomeAt24Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
                 || OutcomeAt24Month?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.TransferredAbroad)
             {
@@ -99,7 +99,7 @@ namespace ntbs_service.Pages.Notifications
                 notificationDate.AddMonths(24),
                 notificationDate.AddMonths(36));
             
-            OutcomeAt36Month = treatmentEvent36Month?.EventDate < DateTime.Today.AddMonths(-36) ? treatmentEvent36Month?.TreatmentOutcome : null;
+            OutcomeAt36Month = treatmentEvent36Month?.EventDate <= DateTime.Today.AddMonths(-36) ? treatmentEvent36Month?.TreatmentOutcome : null;
         }
 
         public async Task<IActionResult> OnPostCreateLinkAsync()
