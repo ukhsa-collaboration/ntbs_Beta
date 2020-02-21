@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -237,7 +236,8 @@ namespace ntbs_integration_tests.NotificationPages
                 NotificationSubPaths.EditPreviousHistory,
                 NotificationSubPaths.EditMDRDetails,
                 NotificationSubPaths.EditMBovisExposureToKnownCases,
-                NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions
+                NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions,
+                NotificationSubPaths.EditMBovisOccupationExposures
             }.ForEach(subPath =>
             {
                 var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);

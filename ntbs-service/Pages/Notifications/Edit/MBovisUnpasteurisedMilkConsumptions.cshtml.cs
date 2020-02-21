@@ -50,7 +50,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("./MBovisUnpasteurisedMilkConsumptions", new { NotificationId, isBeingSubmitted });
+            return RedirectToPage("./MBovisOccupationExposures", new { NotificationId, isBeingSubmitted });
         }
         
         protected override async Task ValidateAndSave()
