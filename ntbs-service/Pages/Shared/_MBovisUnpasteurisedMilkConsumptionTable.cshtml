@@ -46,7 +46,10 @@ else
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.CountryId) </dt>
                         <dd class="cell-min-height"> @result.Country.Name </dd>
                     </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneHalf">
+                </nhs-grid-row>
+                
+                <nhs-grid-row>
+                    <nhs-grid-column grid-column-width="Full">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.OtherDetails) </dt>
                         <dd class="cell-min-height"> @result.OtherDetails </dd>
                     </nhs-grid-column>
