@@ -49,7 +49,7 @@
             
             <div>
                 <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4>
-                @if (treatmentEvents.Last().TreatmentEventTypeIsOutcome)
+                @if (treatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
                     <span>@treatmentEvents.First().FormattedEventDate - @treatmentEvents.Last().FormattedEventDate</span>
                 }
