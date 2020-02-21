@@ -20,8 +20,8 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
-        Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
+        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
+        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
@@ -35,21 +35,21 @@ namespace ntbs_service.DataMigration
             _referenceDataRepository = referenceDataRepository;
         }
 
-        public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
+        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsByDate(rangeStartDate, endStartDate);
 
             return await GetGroupedResultsAsNotificationAsync(groupedIds);
         }
 
-        public async Task<IEnumerable<IEnumerable<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
+        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsById(notificationIds);
 
             return await GetGroupedResultsAsNotificationAsync(groupedIds);
         }
 
-        private async Task<IEnumerable<IEnumerable<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds)
+        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds)
         {
             // return await Task.WhenAll();
             return await Task.WhenAll(groupedIds.Select(async el =>
@@ -75,7 +75,8 @@ namespace ntbs_service.DataMigration
             }));
         }
 
-        private async Task<IEnumerable<Notification>> CombineDataForGroup(List<string> legacyIds,
+        private async Task<IList<Notification>> CombineDataForGroup(
+            IEnumerable<string> legacyIds,
             IList<dynamic> notifications,
             IList<dynamic> sitesOfDisease,
             IList<dynamic> manualTestResults,

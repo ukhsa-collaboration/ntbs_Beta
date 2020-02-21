@@ -22,6 +22,7 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<dynamic>> GetSocialContextVenues(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds);
+        Task<IEnumerable<Tuple<string, string>>> GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds);
     }
 
     public class MigrationRepository : IMigrationRepository
@@ -70,6 +71,12 @@ namespace ntbs_service.DataMigration
             SELECT *
             FROM MigrationTransferEventsView
             WHERE OldNotificationId IN @Ids
+        ";
+        
+        const string ReferenceLaboratoryMatchesQuery = @"
+            SELECT LegacyId, ReferenceLaboratoryNumber
+            FROM EtsLaboratoryResultsView
+            WHERE LegacyId IN @Ids
         ";
         
         private readonly string connectionString;
@@ -182,11 +189,22 @@ namespace ntbs_service.DataMigration
 
         public async Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds)
         {
-            
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 return await connection.QueryAsync(TransferEventsQuery, new {Ids = legacyIds});
+            }
+        }
+
+        public async Task<IEnumerable<Tuple<string, string>>> GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
+        { 
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync<string, string, Tuple<string, string>>(
+                    ReferenceLaboratoryMatchesQuery,
+                    Tuple.Create,
+                    new {Ids = legacyIds});
             }
         }
     }
