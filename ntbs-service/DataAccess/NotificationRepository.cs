@@ -178,7 +178,7 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationWithMBovisOccupationExposure(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
-                .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                .Include(n => n.MBovisDetails.MBovisOccupationExposures)
                     .ThenInclude(m => m.Country)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);           
         }
@@ -217,7 +217,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
                 .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
                     .ThenInclude(m => m.Country)
-                .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                .Include(n => n.MBovisDetails.MBovisOccupationExposures)
                     .ThenInclude(m => m.Country)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
