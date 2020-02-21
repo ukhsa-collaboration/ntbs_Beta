@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.AspNetCore;
@@ -74,6 +74,7 @@ namespace ntbs_service
         {
             try
             {
+                Log.Information("Starting app db migration");
                 var context = services.GetRequiredService<NtbsContext>();
                 context.Database.Migrate();
             }
@@ -88,6 +89,7 @@ namespace ntbs_service
         {
             try
             {
+                Log.Information("Starting audit db migration");
                 var context = services.GetRequiredService<AuditDatabaseContext>();
                 context.Database.Migrate();
             }

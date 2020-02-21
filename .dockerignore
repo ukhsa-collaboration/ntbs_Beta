@@ -10,6 +10,3 @@ Dockerfile*
 **/out/
 
 ntbs-service/deployments/*
-
-# These files are massive and are useful in development but are not needed for building the app
-**/*.Designer.cs
