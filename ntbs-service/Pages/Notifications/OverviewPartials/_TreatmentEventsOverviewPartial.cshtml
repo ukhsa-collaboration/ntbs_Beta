@@ -49,19 +49,21 @@
             
             <div>
                 <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4>
-                    <span>@treatmentEvents.First().FormattedEventDate
-                        @if (episodeNumber != Model.GroupedTreatmentEvents.Count)
-                        {
-                            <span> - @treatmentEvents.Last().FormattedEventDate</span>
-                        }
-                    </span>
+                @if (treatmentEvents.Last().TreatmentEventTypeIsOutcome)
+                {
+                    <span>@treatmentEvents.First().FormattedEventDate - @treatmentEvents.Last().FormattedEventDate</span>
+                }
+                else
+                {
+                    <span>@treatmentEvents.First().FormattedEventDate</span>
+                }
             </div>
-            <nhs-table classes="overview-treatment-events-table">
+            <nhs-table classes="nhsuk-table--reduced-font">
                 <nhs-table-head>
-                    <nhs-table-item classes="date-column">Date</nhs-table-item>
-                    <nhs-table-item classes="event-column">Event</nhs-table-item>
-                    <nhs-table-item classes="tb-service-column">TB Service</nhs-table-item>
-                    <nhs-table-item classes="case-manager-column">Case Manager</nhs-table-item>
+                    <nhs-table-item classes="one-sixth-column">Date</nhs-table-item>
+                    <nhs-table-item classes="two-sixth-column">Event</nhs-table-item>
+                    <nhs-table-item classes="two-sixth-column">TB Service</nhs-table-item>
+                    <nhs-table-item classes="one-sixth-column">Case Manager</nhs-table-item>
                 </nhs-table-head>
                 <nhs-table-body>
                     @foreach (var treatmentEvent in treatmentEvents)
