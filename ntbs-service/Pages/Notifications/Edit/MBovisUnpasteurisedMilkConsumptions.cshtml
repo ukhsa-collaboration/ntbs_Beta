@@ -1,0 +1,76 @@
+﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/UnpasteurisedMilkConsumptions/{handler?}"
+@using ntbs_service.Models.Entities
+@model ntbs_service.Pages.Notifications.Edit.MBovisUnpasteurisedMilkConsumptionsModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    Layout = "../../Shared/_NotificationEditLayout.cshtml";
+    ViewData["Title"] = "Notification - M. bovis - Unpasteurised milk consumption";
+    var fullValidation = Model.MBovisDetails.ShouldValidateFull ? "True" : "False";
+}
+
+<partial name="_SinglePageErrorSummaryPartial"/>
+
+<h2> M. bovis - Unpasteurised milk consumption </h2>
+
+<div>
+
+    <hide-section-if-false inline-template>
+        <div>
+            <validate-input
+                model="@nameof(MBovisDetails)"
+                property="@nameof(MBovisDetails.HasUnpasteurisedMilkConsumption)"
+                shouldvalidatefull="@fullValidation"
+                v-on:valid="hideOrShowSection" 
+                v-on:mounted="hideOrShowSection" 
+                ref="inner-validate" 
+                inline-template>
+                @{
+                    var hasMilkConsumptionsError = !Model.IsValid($"{nameof(MBovisDetails)}.{nameof(MBovisDetails.HasUnpasteurisedMilkConsumption)}");
+                    var hasMilkConsumptionsGroupState = hasMilkConsumptionsError ? Error : Standard;
+                    var hasMilkConsumptionsValues = Model.MBovisDetails.HasUnpasteurisedMilkConsumption == true && Model.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.Any();
+                    var hasMilkConsumptionsDisabledText = hasMilkConsumptionsValues ? "Cannot modify value when records are logged against notification" : string.Empty;
+                }
+
+                <nhs-form-group nhs-form-group-type="@hasMilkConsumptionsGroupState" id="MBovisDetails-HasUnpasteurisedMilkConsumption">
+                    <nhs-fieldset aria-describedby="has-milk-consumption-error@(hasMilkConsumptionsValues ? " has-milk-consumption-disabled" : string.Empty)" title="@hasMilkConsumptionsDisabledText">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                            @Html.DisplayNameFor(m => m.MBovisDetails.HasUnpasteurisedMilkConsumption)
+                        </nhs-fieldset-legend>
+                        @if (hasMilkConsumptionsValues)
+                        {
+                            <span id="has-milk-consumption-disabled" class="govuk-visually-hidden">@hasMilkConsumptionsDisabledText</span>
+                            <input type="hidden" asp-for="MBovisDetails.HasUnpasteurisedMilkConsumption"/>
+                        }
+                        <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="MBovisDetails.HasUnpasteurisedMilkConsumption" has-error="@hasMilkConsumptionsError" id="has-milk-consumption-error"></span>
+                        <nhs-radios nhs-radios-type="Standard" v-on:change="validate">
+                            <nhs-radios-item>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasUnpasteurisedMilkConsumption" id="has-milk-consumption-yes" type="radio" value="true" disabled="@hasMilkConsumptionsValues"/>
+                                <label nhs-label-type="Radios" for="has-milk-consumption-yes">Yes</label>
+                            </nhs-radios-item>
+                            <nhs-radios-item>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasUnpasteurisedMilkConsumption" id="has-milk-consumption-no" ref="conditional-false" type="radio" value="false" disabled="@hasMilkConsumptionsValues"/>
+                                <label nhs-label-type="Radios" for="has-milk-consumption-no">No</label>
+                            </nhs-radios-item>
+                        </nhs-radios>
+                    </nhs-fieldset>
+                </nhs-form-group>
+            </validate-input>
+
+            <div ref="conditional-section">
+                @{
+                    ViewData["ShowMBovisUnpasteurisedMilkConsumptionEditLinks"] = true;
+                }
+                <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
+
+                <button id="add-new-button"
+                        nhs-button-type="Standard"
+                        classes="ntbsuk-button--primary"
+                        name="actionName"
+                        value="Create">
+                    Add New
+                </button>
+            </div>
+        </div>
+    </hide-section-if-false>
+</div>

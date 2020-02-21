@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using EFAuditer;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
@@ -19,6 +18,7 @@ namespace ntbs_service.Services
         private const string READ_EVENT = "Read";
         private const string UNMATCH_EVENT = "Unmatch";
         private const string MATCH_EVENT = "Match";
+        private const string SPECIMEN_ENTITY_TYPE = "Specimen";
 
         public AuditService(AuditDatabaseContext auditContext)
         {
@@ -43,7 +43,7 @@ namespace ntbs_service.Services
         {
             await _auditContext.AuditOperationAsync(
                 labReferenceNumber,
-                typeof(MatchedSpecimen).Name,
+                SPECIMEN_ENTITY_TYPE,
                 null,
                 UNMATCH_EVENT,
                 userName,
@@ -55,7 +55,7 @@ namespace ntbs_service.Services
         {
             await _auditContext.AuditOperationAsync(
                 labReferenceNumber,
-                typeof(UnmatchedSpecimen).Name,
+                SPECIMEN_ENTITY_TYPE,
                 null,
                 MATCH_EVENT,
                 userName,

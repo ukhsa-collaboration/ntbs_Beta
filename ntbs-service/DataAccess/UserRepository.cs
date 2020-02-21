@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ namespace ntbs_service.DataAccess
         private async Task AddUser(User user, IEnumerable<TBService> tbServices)
         {
             _context.User.Add(user);
-            AddCaseManagerTbServices(user, tbServices);
+            SyncCaseManagerTbServices(user, tbServices);
             await _context.SaveChangesAsync();
         }
 
@@ -56,16 +57,54 @@ namespace ntbs_service.DataAccess
             // case insensitive string comparison.
             newUser.Username = existingUser.Username;
             _context.Entry(existingUser).CurrentValues.SetValues(newUser);
-            AddCaseManagerTbServices(existingUser, tbServices);
+            SyncCaseManagerTbServices(existingUser, tbServices);
             await _context.SaveChangesAsync();
         }
 
-        private static void AddCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
+        private static void SyncCaseManagerTbServices(User user, IEnumerable<TBService> tbServices)
         {
             var caseManagerTbServices = tbServices
-                .Select(tb => new CaseManagerTbService {TbService = tb, CaseManager = user})
+                .Select(tb => new CaseManagerTbService
+                {
+                    TbServiceCode = tb.Code,
+                    CaseManagerUsername = user.Username
+                })
                 .ToList();
-            user.CaseManagerTbServices = caseManagerTbServices.Any() ? caseManagerTbServices : null;
+
+            if (user.CaseManagerTbServices == null)
+            {
+                user.CaseManagerTbServices = caseManagerTbServices;
+            }
+            else
+            {
+                RemoveUnmatchedCaseManagerTbServices(user.CaseManagerTbServices, caseManagerTbServices);
+
+                foreach (var caseManagerTbService in caseManagerTbServices)
+                {
+                    if (!user.CaseManagerTbServices.Any(c => c.Equals(caseManagerTbService)))
+                    {
+                        user.CaseManagerTbServices.Add(caseManagerTbService);
+                    }
+                }
+            }
+        }
+
+        private static void RemoveUnmatchedCaseManagerTbServices(
+            ICollection<CaseManagerTbService> userCaseManagerTbServices,
+            IList<CaseManagerTbService> adCaseManagerTbServices)
+        {
+            var caseManagerTbServicesToRemove = new List<CaseManagerTbService>();
+            foreach (var caseManagerTbService in userCaseManagerTbServices)
+            {
+                if (!adCaseManagerTbServices.Any(c => caseManagerTbService.Equals(c)))
+                {
+                    caseManagerTbServicesToRemove.Add(caseManagerTbService);
+                }
+            }
+            foreach (var caseManagerTbService in caseManagerTbServicesToRemove)
+            {
+                userCaseManagerTbServices.Remove(caseManagerTbService);
+            }
         }
     }
 }

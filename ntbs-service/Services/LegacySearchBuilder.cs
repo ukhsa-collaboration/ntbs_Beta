@@ -28,8 +28,13 @@ namespace ntbs_service.Services
         {
             if (!string.IsNullOrEmpty(id))
             {
+                var condition =
+                    "n.PrimaryNotificationId = @id OR " +
+                    "n.SecondaryNotificationId = @id OR " +
+                    "(n.GroupId = @id AND n.PrimarySource = 'LTBR') OR " +
+                    "dmg.NhsNumber = @id";
                 var idNoWhitespace = id.Replace(" ", "");
-                AppendCondition("(dmg.OldNotificationId = @id OR (n.GroupId = @id AND n.Source = 'LTBR') OR dmg.NhsNumber = @id)");
+                AppendCondition(condition);
                 parameters.id = idNoWhitespace;
             }
             return this;

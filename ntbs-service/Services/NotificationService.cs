@@ -36,6 +36,8 @@ namespace ntbs_service.Services
         Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
         Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
         Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
+        Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsUnpasteurisedMilkConsumption(Notification notification, MBovisDetails mBovisDetails);
     }
 
     public class NotificationService : INotificationService
@@ -397,6 +399,18 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
             await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasExposureToKnownCases});
+            await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumption(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasUnpasteurisedMilkConsumption});
+            await UpdateDatabaseAsync();        
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)

@@ -70,12 +70,13 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_RedirectsToNextPageAndSavesContent_IfModelValid()
         {
             // Arrange
+            const int id = Utilities.DRAFT_ID;
             var url = GetCurrentPathForId(Utilities.DRAFT_ID);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
                 ["MDRDetails.CaseInUKStatus"] = "Yes",
@@ -86,10 +87,9 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditMDRDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditMBovisExposureToKnownCases, id));
 
-            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(id));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             reloadedDocument.AssertInputRadioValue("exposure-yes", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");
@@ -101,12 +101,13 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ClearsConditionalInputValues_IfExposureNotTrue()
         {
             // Arrange
-            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Unknown",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
                 ["MDRDetails.CaseInUKStatus"] = "Unknown",
@@ -117,10 +118,9 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditMDRDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditMBovisExposureToKnownCases, id));
 
-            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(id));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("exposure-unknown")).IsChecked);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("MDRDetails_RelationshipToCase")).Value);
@@ -136,12 +136,13 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ClearsRelatedNotificationId_IfContactNotInUK()
         {
             // Arrange
-            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
                 ["MDRDetails.CaseInUKStatus"] = "No",
@@ -153,10 +154,9 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditMDRDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditMBovisExposureToKnownCases, id));
 
-            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(id));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             reloadedDocument.AssertInputRadioValue("exposure-yes", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");
@@ -169,12 +169,13 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task Post_ClearsCountry_IfContactInUK()
         {
             // Arrange
-            var url = GetCurrentPathForId(Utilities.DRAFT_ID);
+            const int id = Utilities.DRAFT_ID;
+            var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
-                ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
+                ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
                 ["MDRDetails.CaseInUKStatus"] = "Yes",
@@ -186,10 +187,9 @@ namespace ntbs_integration_tests.NotificationPages
             var result = await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
-            Assert.Contains(GetPathForId(NotificationSubPaths.EditMDRDetails, Utilities.DRAFT_ID), GetRedirectLocation(result));
+            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditMBovisExposureToKnownCases, id));
 
-            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
+            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(id));
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             reloadedDocument.AssertInputRadioValue("exposure-yes", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");

@@ -35,6 +35,16 @@
 
 <partial name="./OverviewPartials/_PreviousHistoryOverviewPartial"/>
 
-<partial name="./OverviewPartials/_MDRDetailsOverviewPartial"/>
+@if (Model.Notification.IsMdr)
+{
+    <partial name="./OverviewPartials/_MDRDetailsOverviewPartial"/>
+}
+
+@if (Model.Notification.IsMBovis)
+{
+    <partial name="OverviewPartials/_MBovisExposureToKnownCasesOverviewPartial"/>
+    
+    <partial name="OverviewPartials/_MBovisUnpasteurisedMilkConsumptionOverviewPartial"/>
+}
 
 <a href='#top' class="govuk-link--no-visited-state no-print"> Back to top </a>

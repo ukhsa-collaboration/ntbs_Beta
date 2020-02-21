@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Rejection reason")]
         public string RejectionReason { get; set; }
         [MaxLength(200)]
-        public string CaseManagerTbServiceString { get; set; }
+        public string DecliningUserAndTbServiceString { get; set; }
         public override string Action => "Transfer request rejected";
         public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.Value, NotificationSubPaths.TransferDeclined);
         public override bool NotDismissable => true;

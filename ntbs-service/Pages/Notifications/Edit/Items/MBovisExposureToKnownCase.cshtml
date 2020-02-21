@@ -1,0 +1,9 @@
+﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/ExposureToKnownCase/{RowId:int}/{handler?}"
+@model MBovisExposureToKnownCaseModel
+
+@{
+    Layout = "../../../Shared/_NotificationLayout.cshtml";
+    ViewData["Title"] = "Notification - M. bovis - Edit exposure to known case";
+}
+
+<partial name="_MBovisExposureToKnownCase"/>

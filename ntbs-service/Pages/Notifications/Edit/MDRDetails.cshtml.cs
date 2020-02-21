@@ -37,6 +37,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
+            if (!Notification.IsMdr)
+            {
+                return NotFound();
+            }
+            
             MDRDetails = Notification.MDRDetails;
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
 
@@ -50,8 +55,8 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            // This is the last page in the flow, so there's no next page to go to
-            return RedirectToPage("./MDRDetails", new { NotificationId, isBeingSubmitted });
+            var nextPage = Notification.IsMBovis ? "./MBovisExposureToKnownCases" : "./MDRDetails";
+            return RedirectToPage(nextPage, new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()
@@ -78,9 +83,9 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        private async Task<Notification> GetRelatedNotification(int noticicationId)
+        private async Task<Notification> GetRelatedNotification(int notificationId)
         {
-            return await NotificationRepository.GetNotificationAsync(noticicationId);
+            return await NotificationRepository.GetNotificationAsync(notificationId);
         }
 
         private void UpdateFlags()

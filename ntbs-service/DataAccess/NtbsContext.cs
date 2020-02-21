@@ -52,8 +52,15 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<SocialContextAddress> SocialContextAddress { get; set; }
         public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestion { get; set; }
         public virtual DbSet<UserLoginEvent> UserLoginEvent { get; set; }
+        public virtual DbSet<MBovisExposureToKnownCase> MBovisExposureToKnownCase { get; set; }
+        public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
+        {
+            this.Entry(entity).CurrentValues.SetValues(values);
+        }
+
+        public virtual void SetValues<TEntityClass>(TEntityClass entity, object values)
         {
             this.Entry(entity).CurrentValues.SetValues(values);
         }
@@ -149,6 +156,9 @@ namespace ntbs_service.DataAccess
             var treatmentOutcomeTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeType>();
             var treatmentOutcomeSubTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeSubType>();
             var transferReasonEnumConverter = new EnumToStringConverter<TransferReason>();
+            var exposureSettingEnumConverter = new EnumToStringConverter<ExposureSetting>();
+            var milkProductEnumConverter = new EnumToStringConverter<MilkProductType>();
+            var consumptionFrequencyEnumConverter = new EnumToStringConverter<ConsumptionFrequency>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -350,7 +360,8 @@ namespace ntbs_service.DataAccess
                     i.ToTable("MDRDetails");
                 });
                 
-                entity.OwnsOne(e => e.DrugResistanceProfile).ToTable("DrugResistanceProfile");
+                entity.OwnsOne(e => e.DrugResistanceProfile)
+                    .ToTable("DrugResistanceProfile");
 
 
                 entity.HasIndex(e => e.NotificationStatus);
@@ -474,6 +485,12 @@ namespace ntbs_service.DataAccess
                 entity.HasData(Models.SeedData.ManualTestTypeSampleTypes.GetJoinDataManualTestTypeToSampleType());
             });
 
+            modelBuilder.Entity<TestData>(entity =>
+            {
+                entity.HasKey(e => e.NotificationId);
+                entity.HasMany(e => e.ManualTestResults);
+            });
+            
             modelBuilder.Entity<ManualTestResult>(entity =>
             {
                 entity.Property(e => e.Result)
@@ -489,10 +506,28 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(e => e.SampleTypeId);
             });
 
-            modelBuilder.Entity<TestData>(entity =>
+            modelBuilder.Entity<MBovisDetails>(entity =>
             {
                 entity.HasKey(e => e.NotificationId);
-                entity.HasMany(e => e.ManualTestResults);
+                entity.HasMany(e => e.MBovisExposureToKnownCases);
+            });
+
+            modelBuilder.Entity<MBovisExposureToKnownCase>(entity =>
+            {
+                entity.Property(e => e.ExposureSetting)
+                    .HasConversion(exposureSettingEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+
+            modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
+            {
+                entity.Property(e => e.ConsumptionFrequency)
+                    .HasConversion(consumptionFrequencyEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.Property(e => e.MilkProductType)
+                    .HasConversion(milkProductEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
             });
 
             modelBuilder.Entity<Alert>(entity =>
@@ -509,6 +544,7 @@ namespace ntbs_service.DataAccess
                 entity.HasDiscriminator<AlertType>("AlertType")
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
+                    .HasValue<MBovisAlert>(AlertType.EnhancedSurveillanceMBovis)
                     .HasValue<TransferAlert>(AlertType.TransferRequest)
                     .HasValue<TransferRejectedAlert>(AlertType.TransferRejected)
                     .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult)

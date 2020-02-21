@@ -37,7 +37,7 @@ namespace ntbs_service.DataMigration
         private const string SelectImportedNotificationByIdTemplate = @"
             SELECT *
             FROM {0} impNtfc
-            WHERE impNtfc.LegacyId = n.OldNotificationId";
+            WHERE impNtfc.LegacyId = n.PrimaryNotificationId";
 
         public NotificationImportHelper(IConfiguration configuration, IOptions<MigrationConfig> migrationConfig)
         {
