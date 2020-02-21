@@ -323,7 +323,7 @@ namespace ntbs_service.Services
             await _treatmentEventRepository.AddAsync(new TreatmentEvent
             {
                 NotificationId = notification.NotificationId,
-                TreatmentEventType = TreatmentEventType.NotificationStart,
+                TreatmentEventType = TreatmentEventType.TreatmentStart,
                 EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate
             });
         }

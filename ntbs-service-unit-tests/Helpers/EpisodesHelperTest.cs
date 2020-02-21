@@ -22,7 +22,7 @@ namespace ntbs_service_unit_tests.Helpers
                 new TreatmentEvent
                 {
                     EventDate = new DateTime(2011, 1, 1),
-                    TreatmentEventType = TreatmentEventType.NotificationStart
+                    TreatmentEventType = TreatmentEventType.TreatmentStart
                 },                
                 new TreatmentEvent
                 {

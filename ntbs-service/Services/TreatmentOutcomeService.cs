@@ -5,77 +5,76 @@ using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Dapper;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
     public interface ITreatmentOutcomeService
     {
-        bool IsTreatmentOutcomeNeeded(Notification notification, int yearsAfterTreatmentStartDate);
+        bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
+        TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
     }
 
     public class TreatmentOutcomeService : ITreatmentOutcomeService
     {
-        private readonly IAlertRepository _alertRepository;
-
-        public TreatmentOutcomeService(
-            IAlertRepository alertRepository)
+        public TreatmentOutcomeService()
         {
-            _alertRepository = alertRepository;
         }
 
-        public bool IsTreatmentOutcomeNeeded(Notification notification, int yearsAfterTreatmentStartDate)
+        public TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
-            if (yearsAfterTreatmentStartDate == 1)
+            // If a treatment outcome is needed at X years then one must not already exist
+            if (IsTreatmentOutcomeNeededAtXYears(notification, yearsAfterTreatmentStartDate))
             {
-                return true;
+                return null;
             }
-
-            var treatmentEventsBetweenOneAndTwoYears =
-                GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, 2);
             
-            if (yearsAfterTreatmentStartDate == 2)
-            {
-                return IsOutcomeNeededAt24Months(notification);
-            }
+            // If a treatment outcome is not needed that is because one either exists as the last event of the 1 year period
+            // or one is not needed and so is null
+            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.First(x => x.TreatmentOutcome != null).TreatmentOutcome;
+        }
 
-            if (yearsAfterTreatmentStartDate == 3)
+        public bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        {
+            for (var i = yearsAfterTreatmentStartDate; i >= 1; i--)
             {
-                var treatmentEventsBetweenTwoAndThreeYears =
-                    GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, 3);
-                if (treatmentEventsBetweenTwoAndThreeYears == null)
+                var lastTreatmentEventsBetweenIAndIMinusOneYears = GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, i)?.FirstOrDefault();
+                
+                // Check if any events have happened in this year window, look back a year if none exist
+                if (lastTreatmentEventsBetweenIAndIMinusOneYears == null)
                 {
-                    return IsOutcomeNeededAt24Months(notification);
+                    continue;
+                }
+                // If a previous year has a treatment outcome of not evaluated this is not an ending treatment outcome
+                // so a new treatment outcome will be needed for this 12 month period
+                if (i < yearsAfterTreatmentStartDate &&
+                    lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentOutcome?.TreatmentOutcomeType ==
+                    TreatmentOutcomeType.NotEvaluated)
+                {
+                    return true;
+                }
+                // If a treatment outcome event exists then a new one is not needed
+                if (lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentEventTypeIsOutcome)
+                {
+                    return false;
                 }
             }
-
-            return false;
+            return true;
         }
-
-        public IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(Notification notification, int numberOfYears)
+        
+        private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(Notification notification, int numberOfYears)
         {
-            return notification.TreatmentEvents.Where(t =>
-                t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
-                && t.EventDate > (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
+            return notification.TreatmentEvents?.Where(t =>
+                    t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
+                    && t.EventDate > (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
                 .OrderByDescending(t => t.EventDate);
         }
-
-        private bool IsOutcomeNeededAt24Months(Notification notification)
-        {
-            var treatmentEventsBetweenOneAndTwoYears =
-                GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, 2);
-            if (treatmentEventsBetweenOneAndTwoYears == null)
-            {
-                var mostRecentTreatmentEventBetweenZeroAndOneYears =
-                    GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, 1).First();
-                return mostRecentTreatmentEventBetweenZeroAndOneYears.TreatmentOutcome.TreatmentOutcomeType ==
-                       TreatmentOutcomeType.NotEvaluated || !mostRecentTreatmentEventBetweenZeroAndOneYears.TreatmentEventTypeIsOutcome;
-            }
-            return treatmentEventsBetweenOneAndTwoYears.Last().TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.NotEvaluated;
-        }
+        
     }
 }

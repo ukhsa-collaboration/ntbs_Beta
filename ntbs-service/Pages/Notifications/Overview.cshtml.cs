@@ -14,8 +14,9 @@ namespace ntbs_service.Pages.Notifications
 {
     public class OverviewModel : NotificationModelBase
     {
-        protected IAlertService _alertService;
+        private readonly IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
+        private readonly ITreatmentOutcomeService _treatmentOutcomeService;
         
         public CultureAndResistance CultureAndResistance { get; set; }
         public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
@@ -29,10 +30,12 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IAlertService alertService,
             INotificationRepository notificationRepository,
-            ICultureAndResistanceService cultureAndResistanceService) : base(service, authorizationService, notificationRepository)
+            ICultureAndResistanceService cultureAndResistanceService,
+            ITreatmentOutcomeService treatmentOutcomeService) : base(service, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
+            _treatmentOutcomeService = treatmentOutcomeService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -61,45 +64,17 @@ namespace ntbs_service.Pages.Notifications
             CultureAndResistance = await _cultureAndResistanceService.GetCultureAndResistanceDetailsAsync(NotificationId);
             GroupedTreatmentEvents = Notification.TreatmentEvents.GroupByEpisode();
 
-            CalculateOutcomeTypes();
+            CalculateTreatmentOutcomes();
             return Page();
         }
 
-        private void CalculateOutcomeTypes()
+        private void CalculateTreatmentOutcomes()
         {
-            if ( Notification.NotificationDate == null)
-            {
-                return;
-            }
-
-            var notificationDate = Notification.NotificationDate.Value;
-            var treatmentEvent12Month = 
-                Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(notificationDate,
-                    notificationDate.AddMonths(12));
+            OutcomeAt12Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 1);
             
-            OutcomeAt12Month = treatmentEvent12Month?.EventDate < DateTime.Today.AddMonths(-12) ? treatmentEvent12Month.TreatmentOutcome : null;
-            if (OutcomeAt12Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated 
-                || OutcomeAt12Month?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.TransferredAbroad)
-            {
-                return;
-            }          
+            OutcomeAt24Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 2);
             
-            var treatmentEvent24Month = Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(
-                notificationDate.AddMonths(12), 
-                notificationDate.AddMonths(24));
-            
-            OutcomeAt24Month = treatmentEvent24Month?.EventDate < DateTime.Today.AddMonths(-24) ? treatmentEvent24Month?.TreatmentOutcome : null;
-            if (OutcomeAt24Month?.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
-                || OutcomeAt24Month?.TreatmentOutcomeSubType == TreatmentOutcomeSubType.TransferredAbroad)
-            {
-                return;
-            }
-            
-            var treatmentEvent36Month = Notification.TreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(
-                notificationDate.AddMonths(24),
-                notificationDate.AddMonths(36));
-            
-            OutcomeAt36Month = treatmentEvent36Month?.EventDate < DateTime.Today.AddMonths(-36) ? treatmentEvent36Month?.TreatmentOutcome : null;
+            OutcomeAt36Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 3);
         }
 
         public async Task<IActionResult> OnPostCreateLinkAsync()

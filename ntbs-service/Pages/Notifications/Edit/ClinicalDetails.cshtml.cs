@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -20,6 +21,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IAlertService _alertService;
         private readonly IEnhancedSurveillanceAlertsService EnhancedSurveillanceAlertsService;
+        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -46,11 +48,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IAlertService alertService,
-            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService) : base(service, authorizationService, notificationRepository)
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
+            IItemRepository<TreatmentEvent> treatmentEventRepository) : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;
             EnhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
+            _treatmentEventRepository = treatmentEventRepository;
 
             CurrentPage = NotificationSubPaths.EditClinicalDetails;
         }
@@ -163,6 +167,9 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
+            var treatmentStartDateChanged =
+                ClinicalDetails.TreatmentStartDate != Notification.ClinicalDetails.TreatmentStartDate &&
+                ClinicalDetails.TreatmentStartDate != null;
             var mdrChanged = Notification.ClinicalDetails.IsMDRTreatment != ClinicalDetails.IsMDRTreatment;
             var nonMdrNotAllowed = ClinicalDetails.IsMDRTreatment == false && Notification.MDRDetails.MDRDetailsEntered;
 
@@ -176,10 +183,25 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
                 
+                if (treatmentStartDateChanged)
+                {
+                    UpdateTreatmentStartEvent();    
+                }
+
                 if (mdrChanged)
                 {
                     await EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
                 }
+            }
+        }
+
+        private void UpdateTreatmentStartEvent()
+        {
+            var treatmentStartEvent = Notification.TreatmentEvents.SingleOrDefault(t => t.TreatmentEventType == TreatmentEventType.TreatmentStart);
+            if (treatmentStartEvent != null)
+            {
+                treatmentStartEvent.EventDate = ClinicalDetails.TreatmentStartDate;
+                _treatmentEventRepository.UpdateAsync(Notification, treatmentStartEvent);
             }
         }
 

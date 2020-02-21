@@ -202,6 +202,7 @@ namespace ntbs_service
             services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<IFaqRepository, FaqRepository>();
+            services.AddScoped<ITreatmentOutcomeService, TreatmentOutcomeService>();
 
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(ldapConnectionSettings);

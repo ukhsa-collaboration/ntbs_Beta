@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Services;
 
 namespace ntbs_service.DataAccess
 {
@@ -24,12 +25,14 @@ namespace ntbs_service.DataAccess
     public class DataQualityRepository : IDataQualityRepository
     {
         private readonly NtbsContext _context;
+        private readonly ITreatmentOutcomeService _treatmentOutcomeService;
         private int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
         private int MIN_NUMBER_DAYS_DRAFT_FOR_ALERT = 90;
         
-        public DataQualityRepository(NtbsContext context)
+        public DataQualityRepository(NtbsContext context, ITreatmentOutcomeService treatmentOutcomeService)
         {
             _context = context;
+            _treatmentOutcomeService = treatmentOutcomeService;
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityDraftAlerts()
@@ -69,17 +72,26 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts()
         {
-            return await GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(12);
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
+                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Now.AddYears(-1))
+                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeNeededAtXYears(n, 1))
+                .ToListAsync();
         }
 
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts()
         {
-            return await GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(24);
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
+                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Now.AddYears(-2))
+                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeNeededAtXYears(n, 2))
+                .ToListAsync();
         }
 
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts()
         {
-            return await GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(36);
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
+                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Now.AddYears(-3))
+                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeNeededAtXYears(n, 3))
+                .ToListAsync();
         }
 
         private async Task<IList<Notification>> GetNotificationsEligibleForTreatmentOutcomeAlertByAgeInMonths(
@@ -101,7 +113,8 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
         {
             return _context.Notification
-                .Include(n => n.HospitalDetails);
+                .Include(n => n.HospitalDetails)
+                .Include(n => n.TreatmentEvents);
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts()

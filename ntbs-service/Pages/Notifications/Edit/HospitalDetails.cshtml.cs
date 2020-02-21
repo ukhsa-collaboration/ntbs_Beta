@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
@@ -20,6 +22,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         private readonly NtbsContext _context;
         private readonly IUserService _userService;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
 
         public SelectList TbServices { get; set; }
         public SelectList Hospitals { get; set; }
@@ -37,11 +40,13 @@ namespace ntbs_service.Pages.Notifications.Edit
             IReferenceDataRepository referenceDataRepository,
             IAuthorizationService authorizationService,
             IUserService userService,
+            IItemRepository<TreatmentEvent> treatmentEventRepository,
             NtbsContext context) : base(notificationService, authorizationService, notificationRepository)
         {
             _context = context;
             _userService = userService;
             _referenceDataRepository = referenceDataRepository;
+            _treatmentEventRepository = treatmentEventRepository;
 
             CurrentPage = NotificationSubPaths.EditHospitalDetails;
         }
@@ -108,8 +113,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
+            FormattedNotificationDate.TryConvertToDateTime(out var notificationDate);
+            var notificationDateHasChanged = notificationDate.HasValue && notificationDate != Notification.NotificationDate;
             await SetValuesForValidation();
-            if (Notification.NotificationStatus != Models.Enums.NotificationStatus.Draft && Notification.HospitalDetails.TBServiceCode != HospitalDetails.TBServiceCode)
+            if (Notification.NotificationStatus != NotificationStatus.Draft && Notification.HospitalDetails.TBServiceCode != HospitalDetails.TBServiceCode)
             {
                 ModelState.AddModelError("HospitalDetails.TBServiceCode", ValidationMessages.TBServiceCantChange);
             }
@@ -122,6 +129,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             if (ModelState.IsValid)
             {
                 await Service.UpdateHospitalDetailsAsync(Notification, HospitalDetails);
+                if (notificationDateHasChanged)
+                {
+                    UpdateTreatmentStartEvent(notificationDate.Value);    
+                }
             }
             else
             {
@@ -142,6 +153,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             // Query notification by Id when date validation depends on other properties of model
             Notification notification = await NotificationRepository.GetNotificationAsync(notificationId);
             return ValidationService.GetDateValidationResult(notification, key, day, month, year);
+        }
+        
+        private void UpdateTreatmentStartEvent(DateTime notificationDate)
+        {
+            if (Notification.ClinicalDetails.TreatmentStartDate == null)
+            {
+                var treatmentStartEvent = Notification.TreatmentEvents.SingleOrDefault(t => t.TreatmentEventType == TreatmentEventType.TreatmentStart);
+                if (treatmentStartEvent == null)
+                {
+                    return;
+                }
+
+                treatmentStartEvent.EventDate = notificationDate;
+                _treatmentEventRepository.UpdateAsync(Notification, treatmentStartEvent);
+            }
         }
 
         private async Task SetValuesForValidation()
