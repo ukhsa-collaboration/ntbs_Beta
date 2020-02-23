@@ -17,33 +17,34 @@
 }
 
 <nhs-width-container container-width="Standard">
-    <form method="post" autocomplete="off">
+    <form-leave-checker inline-template>
+        <form ref="notificationForm" method="post" autocomplete="off">
+            @RenderSection("MainFormButton", required: false)
+            @if (isDraft)
+            {
+                <partial name="./_DraftSubmitDeleteButtons"/>
+            }
+    
+            <nhs-grid-row>
+                <nhs-grid-column grid-column-width="Full">
+                    <div class="@linksClass">
+                        <partial name="_NotificationUnderBannerNav"/>
+                    </div>
+                </nhs-grid-column>
+    
+                <partial name="./_SideMenu" model="@Model"/>
+    
+                <nhs-grid-column grid-column-width="@mainGridWidth">
+                    <input type="hidden" asp-for="NotificationId"/>
+                    @RenderBody()
+                </nhs-grid-column>
+    
+                <nhs-grid-column grid-column-width="Full">
+                    <div class="@endClass"> </div>
+                </nhs-grid-column>
+    
+            </nhs-grid-row>
+       </form>
+    </form-leave-checker>
 
-        @RenderSection("MainFormButton", required: false)
-
-        @if (isDraft)
-        {
-            <partial name="./_DraftSubmitDeleteButtons"/>
-        }
-
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="Full">
-                <div class="@linksClass">
-                    <partial name="_NotificationUnderBannerNav"/>
-                </div>
-            </nhs-grid-column>
-
-            <partial name="./_SideMenu" model="@Model"/>
-
-            <nhs-grid-column grid-column-width="@mainGridWidth">
-                <input type="hidden" asp-for="NotificationId"/>
-                @RenderBody()
-            </nhs-grid-column>
-
-            <nhs-grid-column grid-column-width="Full">
-                <div class="@endClass"> </div>
-            </nhs-grid-column>
-
-        </nhs-grid-row>
-    </form>
 </nhs-width-container>
