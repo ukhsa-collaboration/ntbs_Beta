@@ -16,8 +16,8 @@ namespace ntbs_service.Models.Entities
         public int NotificationId { get; set; }
 
         [Display(Name = "Test carried out")]
-        [RequiredIf("ShouldValidateFull", ErrorMessage = ValidationMessages.Mandatory)]
-        [AssertThat("ResultAddedIfTestCarriedOut", ErrorMessage = ValidationMessages.NoTestResult)]
+        [RequiredIf(nameof(ShouldValidateFull), ErrorMessage = ValidationMessages.Mandatory)]
+        [AssertThat(nameof(ResultAddedIfTestCarriedOut), ErrorMessage = ValidationMessages.NoTestResult)]
         public bool? HasTestCarriedOut { get; set; }
         public virtual ICollection<ManualTestResult> ManualTestResults { get; set; }
 
@@ -29,13 +29,6 @@ namespace ntbs_service.Models.Entities
             || HasTestCarriedOut == false || ManualTestResults.Any()
             // ...unless they are about to add them, in which case that's fine too
             || ProceedingToAdd;
-
-        [NotMapped]
-        public bool NoImpliesEmptyCollection =>
-            // This test only makes sense if test are loaded
-            ManualTestResults == null
-            // if test is marked not carried out, make sure there are no results
-            || HasTestCarriedOut == true || !ManualTestResults.Any();
 
         // Only used to inform validation, much like the `ShouldValidateFull` property
         [NotMapped]

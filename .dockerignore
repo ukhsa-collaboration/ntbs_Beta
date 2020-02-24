@@ -8,3 +8,5 @@ Dockerfile*
 **/bin/
 **/obj/
 **/out/
+
+ntbs-service/deployments/*

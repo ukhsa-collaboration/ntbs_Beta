@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
@@ -56,7 +55,7 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            if (!Env.IsEnvironment("Test"))
+            if (!Env.IsEnvironment("CI"))
             {
                 services.AddHangfire(config =>
                 {
@@ -192,15 +191,17 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
             services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
+            services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
+            services.AddScoped<IItemRepository<MBovisExposureToKnownCase>, MBovisExposureToKnownCaseRepository>();
+            services.AddScoped<IItemRepository<MBovisUnpasteurisedMilkConsumption>, MBovisUnpasteurisedMilkConsumptionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
-            services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.AddScoped<IHomepageKpiService, HomepageKpiService>();
             services.AddScoped<IDataQualityRepository, DataQualityRepository>();
             services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
-            services.AddScoped<IMdrService, MdrService>();
+            services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<IFaqRepository, FaqRepository>();
 
             services.Configure<AdfsOptions>(adfsConfig);
@@ -261,7 +262,7 @@ namespace ntbs_service
 
             app.UseStaticFiles();
 
-            if (!Env.IsEnvironment("Test"))
+            if (!Env.IsEnvironment("CI"))
             {
                 /*
                 Making this conditional is the result of serilog not playing nicely with WebApplicationFactory
@@ -294,7 +295,7 @@ namespace ntbs_service
 
         private void ConfigureHangfire(IApplicationBuilder app)
         {
-            if (Env.IsEnvironment("Test"))
+            if (Env.IsEnvironment("CI"))
             {
                 return;
             }

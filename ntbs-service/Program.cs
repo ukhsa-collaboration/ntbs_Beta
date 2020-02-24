@@ -19,7 +19,6 @@ namespace ntbs_service
             SetUpLogger();
             try
             {
-
                 Log.Information("Building web host");
                 var host = CreateWebHostBuilder(args).Build();
                 using (var scope = host.Services.CreateScope())
@@ -55,18 +54,25 @@ namespace ntbs_service
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.Sentry(s =>
+                {
+                    s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                    s.MinimumEventLevel = LogEventLevel.Warning;
+                })
                 .CreateLogger();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseSentry()
                 .UseSerilog();
 
         private static void MigrateAppDb(IServiceProvider services)
         {
             try
             {
+                Log.Information("Starting app db migration");
                 var context = services.GetRequiredService<NtbsContext>();
                 context.Database.Migrate();
             }
@@ -81,6 +87,7 @@ namespace ntbs_service
         {
             try
             {
+                Log.Information("Starting audit db migration");
                 var context = services.GetRequiredService<AuditDatabaseContext>();
                 context.Database.Migrate();
             }

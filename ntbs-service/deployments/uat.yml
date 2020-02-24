@@ -52,6 +52,8 @@ spec:
             value: ""
           - name: MigrationConfig__TablePrefix
             value: "Uat"
+          - name: Sentry__Environment
+            value: "uat"
       imagePullSecrets:
       - name: registery-password
 ---

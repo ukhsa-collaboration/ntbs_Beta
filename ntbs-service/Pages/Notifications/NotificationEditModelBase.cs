@@ -117,7 +117,7 @@ namespace ntbs_service.Pages.Notifications
 
             await Service.SubmitNotificationAsync(Notification);
 
-            return RedirectAfterSaveForNotified();
+            return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }           
 
         private IActionResult RedirectAfterSave(bool isBeingSubmitted)

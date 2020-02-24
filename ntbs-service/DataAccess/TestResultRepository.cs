@@ -16,7 +16,7 @@ namespace ntbs_service.DataAccess
         protected override ManualTestResult GetEntityToUpdate(Notification notification, ManualTestResult testResult)
         {
             return notification.TestData.ManualTestResults
-                .First(t => t.ManualTestResultId == testResult.ManualTestResultId);
+                .Single(t => t.ManualTestResultId == testResult.ManualTestResultId);
         }
     }
 }

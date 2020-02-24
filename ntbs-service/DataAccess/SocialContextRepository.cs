@@ -16,7 +16,7 @@ namespace ntbs_service.DataAccess
         protected override SocialContextVenue GetEntityToUpdate(Notification notification, SocialContextVenue venue)
         {
             return notification.SocialContextVenues
-                .First(s => s.SocialContextVenueId == venue.SocialContextVenueId);
+                .Single(s => s.SocialContextVenueId == venue.SocialContextVenueId);
         }
     }
 
@@ -32,7 +32,7 @@ namespace ntbs_service.DataAccess
         protected override SocialContextAddress GetEntityToUpdate(Notification notification, SocialContextAddress address)
         {
             return notification.SocialContextAddresses
-                .First(s => s.SocialContextAddressId == address.SocialContextAddressId);
+                .Single(s => s.SocialContextAddressId == address.SocialContextAddressId);
         }
     }
 }

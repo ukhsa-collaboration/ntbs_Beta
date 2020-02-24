@@ -29,6 +29,7 @@ namespace ntbs_service.Models.Entities
             MDRDetails = new MDRDetails();
             TestData = new TestData();
             DrugResistanceProfile = new DrugResistanceProfile();
+            MBovisDetails = new MBovisDetails();
         }
 
         #region DB Mapped Fields
@@ -80,6 +81,7 @@ namespace ntbs_service.Models.Entities
         public virtual MDRDetails MDRDetails { get; set; }
         public virtual NotificationGroup Group { get; set; }
         public virtual TestData TestData { get; set; }
+        public virtual MBovisDetails MBovisDetails { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<SocialContextVenue> SocialContextVenues { get; set; }
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
@@ -91,6 +93,7 @@ namespace ntbs_service.Models.Entities
         #region Display and Formatting methods/fields
 
         public string NotificationStatusString => GetNotificationStatusString();
+        [Display(Name = "Name")]
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
         public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
@@ -149,22 +152,26 @@ namespace ntbs_service.Models.Entities
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
-
+        public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
+        
         private string GetNotificationStatusString()
         {
             if (NotificationStatus == NotificationStatus.Draft)
             {
                 return "Draft";
             }
-            else if (NotificationStatus == NotificationStatus.Notified)
+
+            if (NotificationStatus == NotificationStatus.Notified)
             {
                 return "Notification";
             }
-            else if (NotificationStatus == NotificationStatus.Denotified)
+
+            if (NotificationStatus == NotificationStatus.Denotified)
             {
                 return "Denotified";
             }
-            else if (NotificationStatus == NotificationStatus.Legacy)
+
+            if (NotificationStatus == NotificationStatus.Legacy)
             {
                 return "Legacy";
             }

@@ -18,7 +18,7 @@ maxAttempts=20
 
 while [[ $attempts -lt $maxAttempts ]]; do
   ((attempts=attempts+1))
-  sleep .5
+  sleep 1
   unavailableReplicas=$(kubectl get deployment ntbs-$env -o jsonpath="{.status.unavailableReplicas}")
   echo "Attempt $attempts/$maxAttempts - unavailable replicas found: ${unavailableReplicas}"
   
@@ -29,4 +29,5 @@ while [[ $attempts -lt $maxAttempts ]]; do
 done
 
 # Max number of attempts exceeded
+echo "!!!WARNING: The deployment has not completed in $maxAttempts seconds. Double check the deployment status!"
 exit 1

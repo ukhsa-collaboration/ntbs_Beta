@@ -66,8 +66,8 @@ namespace ntbs_service.Models.Entities
         public virtual Country Country { get; set; }
 
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
-        [AssertThat("UkEntryAfterBirth == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustBeAfterDob)]
-        [AssertThat("UkEntryNotInFuture == true", ErrorMessage = ValidationMessages.YearOfUkEntryMustNotBeInFuture)]
+        [AssertThat(nameof(UkEntryAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
+        [AssertThat(nameof(UkEntryNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Display(Name = "Year of uk entry")]
         public int? YearOfUkEntry { get; set; }
 

@@ -14,19 +14,19 @@ namespace ntbs_service.Services
     {
         private readonly INotificationService _notificationService;
         private readonly INotificationRepository _notificationRepository;
-        private readonly IMdrService _mdrService;
+        private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
         private readonly IDrugResistanceProfileRepository _drugResistanceProfileRepository;
 
         public DrugResistanceProfileService(
             INotificationService notificationService, 
             INotificationRepository notificationRepository,
             IDrugResistanceProfileRepository drugResistanceProfileRepository,
-            IMdrService mdrService)
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService)
         {
             _notificationService = notificationService;
             _notificationRepository = notificationRepository;
             _drugResistanceProfileRepository = drugResistanceProfileRepository;
-            _mdrService = mdrService;
+            _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
         }
 
         public async Task UpdateDrugResistanceProfiles()
@@ -53,7 +53,8 @@ namespace ntbs_service.Services
                 try
                 {
                     await _notificationService.UpdateDrugResistanceProfile(notification, drugResistanceProfile);
-                    await _mdrService.CreateOrDismissMdrAlert(notification);
+                    await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
+                    await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
                 }
                 catch (Exception e)
                 {
