@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +23,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId);
         Task<Notification> GetNotificationWithMBovisExposureToKnownCases(int notificationId);
         Task<Notification> GetNotificationWithMBovisUnpasteurisedMilkConsumption(int notificationId);
+        Task<Notification> GetNotificationWithMBovisOccupationExposure(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
@@ -175,6 +175,14 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);        
         }
 
+        public async Task<Notification> GetNotificationWithMBovisOccupationExposure(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.MBovisDetails.MBovisOccupationExposures)
+                    .ThenInclude(m => m.Country)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);           
+        }
+
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
@@ -208,6 +216,8 @@ namespace ntbs_service.DataAccess
                     .ThenInclude(t => t.CaseManager)
                 .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
                 .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                    .ThenInclude(m => m.Country)
+                .Include(n => n.MBovisDetails.MBovisOccupationExposures)
                     .ThenInclude(m => m.Country)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }

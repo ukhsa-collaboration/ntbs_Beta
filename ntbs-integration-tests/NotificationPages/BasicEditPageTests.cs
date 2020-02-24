@@ -163,7 +163,8 @@ namespace ntbs_integration_tests.NotificationPages
             NotificationSubPaths.EditSocialContextVenues,
             NotificationSubPaths.EditSocialContextAddresses,
             NotificationSubPaths.EditMBovisExposureToKnownCases,
-            NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions
+            NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions,
+            NotificationSubPaths.EditMBovisOccupationExposures
         };
     }
 }

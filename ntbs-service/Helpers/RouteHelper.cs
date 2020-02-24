@@ -60,6 +60,7 @@ namespace ntbs_service.Helpers
         public static string EditTreatmentEvents => "Edit/TreatmentEvents";
         public static string EditMBovisExposureToKnownCases => "Edit/MBovis/ExposureToKnownCases";
         public static string EditMBovisUnpasteurisedMilkConsumptions => "Edit/MBovis/UnpasteurisedMilkConsumptions";
+        public static string EditMBovisOccupationExposures => "Edit/MBovis/OccupationExposures";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
@@ -87,6 +88,9 @@ namespace ntbs_service.Helpers
         
         public static string EditMBovisUnpasteurisedMilkConsumption(int mBovisUnpasteurisedMilkConsumptionId) => $"Edit/MBovis/UnpasteurisedMilkConsumption/{mBovisUnpasteurisedMilkConsumptionId}";
         public static string AddMBovisUnpasteurisedMilkConsumption => "Edit/MBovis/UnpasteurisedMilkConsumption/New";
+        
+        public static string EditMBovisOccupationExposure(int mBovisOccupationExposureId) => $"Edit/MBovis/OccupationExposure/{mBovisOccupationExposureId}";
+        public static string AddMBovisOccupationExposure => "Edit/MBovis/OccupationExposure/New";
     }
 
     public static class OverviewSubPathToAnchorMap
@@ -107,7 +111,8 @@ namespace ntbs_service.Helpers
             {NotificationSubPaths.EditPreviousHistory, "overview-previous-history"},
             {NotificationSubPaths.EditMDRDetails, "overview-mdr-details"},
             {NotificationSubPaths.EditMBovisExposureToKnownCases, "overview-mbovis-exposure-details"},
-            {NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions, "overview-mbovis-milk-consumption-details"}
+            {NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions, "overview-mbovis-milk-consumption-details"},
+            {NotificationSubPaths.EditMBovisOccupationExposures, "overview-mbovis-occupation-exposure"}
         };
 
         public static string GetOverviewAnchorId(string notificationSubPath)

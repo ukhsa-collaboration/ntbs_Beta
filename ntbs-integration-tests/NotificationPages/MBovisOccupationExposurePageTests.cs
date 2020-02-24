@@ -11,11 +11,11 @@ using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class MBovisUnpasteurisedMilkConsumptionPageTests : TestRunnerNotificationBase
+    public class MBovisOccupationExposurePageTests : TestRunnerNotificationBase
     {
-        protected override string NotificationSubPath => NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions;
+        protected override string NotificationSubPath => NotificationSubPaths.EditMBovisOccupationExposures;
 
-        public MBovisUnpasteurisedMilkConsumptionPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
+        public MBovisOccupationExposurePageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
         }
 
@@ -25,27 +25,27 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 new Notification
                 {
-                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES,
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES,
                     NotificationStatus = NotificationStatus.Notified,
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"},
                     MBovisDetails = new MBovisDetails
                     {
-                        HasUnpasteurisedMilkConsumption = true,
-                        MBovisUnpasteurisedMilkConsumptions = new List<MBovisUnpasteurisedMilkConsumption>
+                        HasOccupationExposure = true,
+                        MBovisOccupationExposures = new List<MBovisOccupationExposure>
                         {
-                            new MBovisUnpasteurisedMilkConsumption
+                            new MBovisOccupationExposure
                             {
-                                YearOfConsumption = 2000,
-                                MilkProductType = MilkProductType.Cheese,
-                                CountryId = 1,
-                                ConsumptionFrequency = ConsumptionFrequency.Once
+                                YearOfExposure = 2000,
+                                OccupationDuration = 12,
+                                OccupationSetting = OccupationSetting.Farm,
+                                CountryId = 1
                             }
                         }
                     }
                 },
                 new Notification
                 {
-                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_NO_ENTITIES,
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_NO_ENTITIES,
                     NotificationStatus = NotificationStatus.Notified,
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
                 }
@@ -56,7 +56,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfNotificationHasKnownCases_DisplaysTable()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
 
             // Act
             var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
@@ -64,14 +64,14 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(document.QuerySelector("#mbovis-milk-consumption-table"));
+            Assert.NotNull(document.QuerySelector("#mbovis-occupation-exposure-table"));
         }
 
         [Fact]
         public async Task IfNotificationDoesNotHaveKnownCases_DoesNotDisplayTable()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_NO_ENTITIES;
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_NO_ENTITIES;
 
             // Act
             var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
@@ -79,21 +79,21 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var document = await GetDocumentAsync(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(document.QuerySelector("#mbovis-milk-consumption-table"));
+            Assert.Null(document.QuerySelector("#mbovis-occupation-exposure-table"));
         }
 
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(), 
-                ["MBovisDetails.HasUnpasteurisedMilkConsumption"] = "false"
+                ["MBovisDetails.HasOccupationExposure"] = "false"
             };
 
             // Act
@@ -108,7 +108,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task NotifiedPageHasReturnLinkToOverview()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
             var url = GetCurrentPathForId(id);
 
             // Act
@@ -123,18 +123,18 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task AddPage_WhenModelInvalid_ShowsExpectedValidationMessages()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
-            var url = GetPathForId(NotificationSubPaths.AddMBovisUnpasteurisedMilkConsumption, id);
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
+            var url = GetPathForId(NotificationSubPaths.AddMBovisOccupationExposure, id);
             var document = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string>
             {
-                ["MBovisUnpasteurisedMilkConsumption.YearOfConsumption"] = "1899",
-                ["MBovisUnpasteurisedMilkConsumption.CountryId"] = "",
-                ["MBovisUnpasteurisedMilkConsumption.MilkProductType"] = "",
-                ["MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"] = "",
-                ["MBovisUnpasteurisedMilkConsumption.OtherDetails"] = "$£$£$£"
+                ["MBovisOccupationExposure.YearOfExposure"] = "1100",
+                ["MBovisOccupationExposure.CountryId"] = "",
+                ["MBovisOccupationExposure.OccupationSetting"] = "",
+                ["MBovisOccupationExposure.OccupationDuration"] = "1100",
+                ["MBovisOccupationExposure.OtherDetails"] = "$£$£$£"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
             var resultDocument = await GetDocumentAsync(result);
@@ -143,23 +143,23 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertValidationErrorResponse();
 
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-YearOfConsumption",
-                "year-of-consumption",
-                "Year of consumption has an invalid year");
+                "MBovisOccupationExposure-YearOfExposure",
+                "year-of-exposure",
+                "Year of exposure has an invalid year");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-CountryId",
+                "MBovisOccupationExposure-CountryId",
                 "country",
                 "Please select Country");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-MilkProductType",
-                "milk-product",
-                "Please select Product type");
+                "MBovisOccupationExposure-OccupationSetting",
+                "occupation-setting",
+                "Please select Occupation setting");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-ConsumptionFrequency",
-                "frequency",
-                "Please select Frequency");
+                "MBovisOccupationExposure-OccupationDuration",
+                "duration",
+                "The field Duration (years) must be between 1 and 99.");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-OtherDetails",
+                "MBovisOccupationExposure-OtherDetails",
                 "other-details",
                 "Other details can only contain letters, numbers and the symbols ' - . , /");
         }
@@ -168,24 +168,23 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task AddPage_WhenModelValid_RedirectsToCollectionView()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES;
-            var url = GetPathForId(NotificationSubPaths.AddMBovisUnpasteurisedMilkConsumption, id);
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES;
+            var url = GetPathForId(NotificationSubPaths.AddMBovisOccupationExposure, id);
             var document = await GetDocumentForUrlAsync(url);
 
             // Act
             var formData = new Dictionary<string, string>
             {
-                ["MBovisUnpasteurisedMilkConsumption.YearOfConsumption"] = "2000",
-                ["MBovisUnpasteurisedMilkConsumption.CountryId"] = "1",
-                ["MBovisUnpasteurisedMilkConsumption.MilkProductType"] = ((int)MilkProductType.Cheese).ToString(),
-                ["MBovisUnpasteurisedMilkConsumption.ConsumptionFrequency"] =
-                    ((int)ConsumptionFrequency.Occasionally).ToString()
+                ["MBovisOccupationExposure.YearOfExposure"] = "2000",
+                ["MBovisOccupationExposure.CountryId"] = "1",
+                ["MBovisOccupationExposure.OccupationSetting"] = ((int)OccupationSetting.Farm).ToString(),
+                ["MBovisOccupationExposure.OccupationDuration"] = "1"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
 
             // Assert
             result.AssertRedirectTo(
-                RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions));
+                RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisOccupationExposures));
         }
     }
 }

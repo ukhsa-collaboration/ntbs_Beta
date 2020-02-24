@@ -1,24 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class MBovisUnpasteurisedMilkConsumptionsModel : NotificationEditModelBase
+    public class MBovisOccupationExposuresModel : NotificationEditModelBase
     {
-        public MBovisUnpasteurisedMilkConsumptionsModel(
+        public MBovisOccupationExposuresModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(notificationService, authorizationService,
             notificationRepository)
         {
-            CurrentPage = NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions;
+            CurrentPage = NotificationSubPaths.EditMBovisOccupationExposures;
         }
 
         [BindProperty] 
@@ -45,7 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Items/NewMBovisUnpasteurisedMilkConsumption", new { NotificationId });
+            return RedirectToPage("./Items/NewMBovisOccupationExposure", new { NotificationId });
         }
         
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -56,13 +53,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             // Set the collection so it can be included in the validation
-            MBovisDetails.MBovisUnpasteurisedMilkConsumptions = Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions;
+            MBovisDetails.MBovisOccupationExposures = Notification.MBovisDetails.MBovisOccupationExposures;
             MBovisDetails.ProceedingToAdd = ActionName == "Create";
             MBovisDetails.SetValidationContext(Notification);
             
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
-                await Service.UpdateMBovisDetailsUnpasteurisedMilkConsumption(Notification, MBovisDetails);
+                await Service.UpdateMBovisDetailsOccupationExposure(Notification, MBovisDetails);
             }
         }
         
@@ -73,7 +70,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisUnpasteurisedMilkConsumption(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisOccupationExposure(notificationId);
         }
     }
 }
