@@ -14,15 +14,19 @@ namespace ntbs_service.DataMigration
     {
         Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications);
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds);
+
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsByDate(DateTime rangeStartDate,
             DateTime endStartDate);
+
         Task<IEnumerable<dynamic>> GetNotificationsById(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds);
         Task<IEnumerable<dynamic>> GetManualTestResults(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetSocialContextVenues(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds);
-        Task<IEnumerable<Tuple<string, string>>> GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds);
+
+        Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
+            IEnumerable<string> legacyIds);
     }
 
     public class MigrationRepository : IMigrationRepository
@@ -35,9 +39,13 @@ namespace ntbs_service.DataMigration
                 FROM MigrationNotificationsView n 
                 {0}
             )";
-        readonly string NotificationIdsWithGroupIdsByIdQuery = string.Format(NotificationIdsWithGroupIdsQuery, "WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids");
-        readonly string NotificationsIdsWithGroupIdsByDateQuery = string.Format(NotificationIdsWithGroupIdsQuery, @"WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate");
-        
+
+        readonly string NotificationIdsWithGroupIdsByIdQuery = string.Format(NotificationIdsWithGroupIdsQuery,
+            "WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids");
+
+        readonly string NotificationsIdsWithGroupIdsByDateQuery = string.Format(NotificationIdsWithGroupIdsQuery,
+            @"WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate");
+
         const string NotificationsByIdQuery = @"
             SELECT *
             FROM MigrationNotificationsView n
@@ -48,37 +56,37 @@ namespace ntbs_service.DataMigration
             FROM NotificationSite
             WHERE OldNotificationId IN @Ids
         ";
-        
+
         const string ManualTestResultsQuery = @"
             SELECT *
             FROM ManualTestResults
             WHERE OldNotificationId IN @Ids
         ";
-        
+
         const string SocialContextVenuesQuery = @"
             SELECT *
             FROM MigrationSocialContextVenueView
             WHERE OldNotificationId IN @Ids
         ";
-        
+
         const string SocialContextAddressesQuery = @"
             SELECT *
             FROM MigrationSocialContextAddressView
             WHERE OldNotificationId IN @Ids
         ";
-        
+
         const string TransferEventsQuery = @"
             SELECT *
             FROM MigrationTransferEventsView
             WHERE OldNotificationId IN @Ids
         ";
-        
+
         const string ReferenceLaboratoryMatchesQuery = @"
             SELECT LegacyId, ReferenceLaboratoryNumber
             FROM EtsLaboratoryResultsView
             WHERE LegacyId IN @Ids
         ";
-        
+
         private readonly string connectionString;
         private readonly INotificationImportHelper _importHelper;
 
@@ -101,7 +109,7 @@ namespace ntbs_service.DataMigration
                     foreach (var notification in notifications)
                     {
                         await connection.ExecuteAsync(
-                            _importHelper.InsertImportedNotificationQuery, 
+                            _importHelper.InsertImportedNotificationQuery,
                             new {notification.LegacyId, ImportedAt = importedAt}
                         );
                     }
@@ -119,11 +127,9 @@ namespace ntbs_service.DataMigration
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var tuples = await connection.QueryAsync<string, string, Tuple<string, string>>(
-                    NotificationIdsWithGroupIdsByIdQuery,
-                    Tuple.Create,
-                    new { Ids = legacyIds });
-                return tuples.GroupBy(t => t.Item2, t => t.Item1);
+                return (await connection.QueryAsync<(string notificationId, string groupId)>(
+                        NotificationIdsWithGroupIdsByIdQuery, new {Ids = legacyIds}))
+                    .GroupBy(t => t.groupId, t => t.notificationId);
             }
         }
 
@@ -134,11 +140,10 @@ namespace ntbs_service.DataMigration
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var tuples = await connection.QueryAsync<string, string, Tuple<string, string>>(
-                    NotificationsIdsWithGroupIdsByDateQuery,
-                    Tuple.Create,
-                    new {StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s")});
-                return tuples.GroupBy(t => t.Item2, t => t.Item1);
+                return (await connection.QueryAsync<(string notificationId, string groupId)>(
+                        NotificationsIdsWithGroupIdsByDateQuery,
+                        new {StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s")}))
+                    .GroupBy(t => t.groupId, t => t.notificationId);
             }
         }
 
@@ -196,15 +201,25 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public async Task<IEnumerable<Tuple<string, string>>> GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
-        { 
+        public async Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
+            GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
+        {
+            // The table we're referencing here has legacyIds stored as INTs (since they are all ETS ids)
+            // Therefore we need to convert to and from strings
+            var intIds = legacyIds
+                .Select(id => int.TryParse(id, out var intId) ? intId : (int?)null)
+                .Where(id => id.HasValue)
+                .Select((id => id.Value));
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync<string, string, Tuple<string, string>>(
-                    ReferenceLaboratoryMatchesQuery,
-                    Tuple.Create,
-                    new {Ids = legacyIds});
+                return (await connection.QueryAsync<(int LegacyId, string ReferenceLaboratoryNumber)>(
+                        ReferenceLaboratoryMatchesQuery, new {Ids = intIds}))
+                    .Select(tuple =>
+                    {
+                        string legacyId = tuple.LegacyId.ToString();
+                        return (LegacyId: legacyId, tuple.ReferenceLaboratoryNumber);
+                    });
             }
         }
     }

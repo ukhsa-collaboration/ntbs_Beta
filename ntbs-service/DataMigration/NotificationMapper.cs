@@ -215,10 +215,10 @@ namespace ntbs_service.DataMigration
         private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
         {
             var details = new ImmunosuppressionDetails();
-            details.Status = StringToValueConverter.GetStatusFromString(notification.ImmunosuppressionStatus);
-            details.HasBioTherapy = StringToValueConverter.GetBoolValue(notification.HasBioTherapy);
-            details.HasTransplantation = StringToValueConverter.GetBoolValue(notification.HasTransplantation);
-            details.HasOther = StringToValueConverter.GetBoolValue(notification.HasOther);
+            details.Status = Converter.GetStatusFromString(notification.ImmunosuppressionStatus);
+            details.HasBioTherapy = Converter.GetBoolValue(notification.HasBioTherapy);
+            details.HasTransplantation = Converter.GetBoolValue(notification.HasTransplantation);
+            details.HasOther = Converter.GetBoolValue(notification.HasOther);
             details.OtherDescription = notification.OtherDescription;
             return details;
         }
@@ -226,11 +226,11 @@ namespace ntbs_service.DataMigration
         private static ComorbidityDetails ExtractComorbidityDetails(dynamic notification)
         {
             var details = new ComorbidityDetails();
-            details.DiabetesStatus = StringToValueConverter.GetStatusFromString(notification.DiabetesStatus);
-            details.LiverDiseaseStatus = StringToValueConverter.GetStatusFromString(notification.LiverDiseaseStatus);
-            details.RenalDiseaseStatus = StringToValueConverter.GetStatusFromString(notification.RenalDiseaseStatus);
-            details.HepatitisBStatus = StringToValueConverter.GetStatusFromString(notification.HepatitisBStatus);
-            details.HepatitisCStatus = StringToValueConverter.GetStatusFromString(notification.HepatitisCStatus);
+            details.DiabetesStatus = Converter.GetStatusFromString(notification.DiabetesStatus);
+            details.LiverDiseaseStatus = Converter.GetStatusFromString(notification.LiverDiseaseStatus);
+            details.RenalDiseaseStatus = Converter.GetStatusFromString(notification.RenalDiseaseStatus);
+            details.HepatitisBStatus = Converter.GetStatusFromString(notification.HepatitisBStatus);
+            details.HepatitisCStatus = Converter.GetStatusFromString(notification.HepatitisCStatus);
             return details;
         }
 
@@ -241,17 +241,17 @@ namespace ntbs_service.DataMigration
             details.FirstPresentationDate = notification.FirstPresentationDate;
             details.TBServicePresentationDate = notification.TbServicePresentationDate;
             details.DiagnosisDate = notification.DiagnosisDate ?? notification.StartOfTreatmentDate ?? notification.NotificationDate;
-            details.DidNotStartTreatment = StringToValueConverter.GetNullableBoolValue(notification.DidNotStartTreatment);
+            details.DidNotStartTreatment = Converter.GetNullableBoolValue(notification.DidNotStartTreatment);
             details.TreatmentStartDate = notification.StartOfTreatmentDate;
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsMDRTreatment = notification.IsMDRTreatment;
-            details.IsSymptomatic = StringToValueConverter.GetNullableBoolValue(notification.IsSymptomatic);
-            details.IsShortCourseTreatment = notification.IsShortCourseTreatment;
-            details.IsPostMortem = notification.IsPostMortem;
+            details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
+            details.IsShortCourseTreatment = Converter.GetNullableBoolValue(notification.IsShortCourseTreatment);
+            details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
             details.DeathDate = notification.DeathDate;
-            details.HIVTestState = StringToValueConverter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
-            details.DotStatus = StringToValueConverter.GetEnumValue<DotStatus>((string) notification.DotStatus);
-            details.EnhancedCaseManagementStatus = notification.EnhancedCaseManagementStatus;
+            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
+            details.DotStatus = Converter.GetEnumValue<DotStatus>((string) notification.DotStatus);
+            details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
             details.BCGVaccinationState = notification.BCGVaccination;
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
             return details;
@@ -278,7 +278,7 @@ namespace ntbs_service.DataMigration
         private PatientTBHistory ExtractPatientTBHistory(dynamic rawNotification)
         {
             var details = new PatientTBHistory();
-            details.PreviouslyHadTB = rawNotification.PreviouslyHadTB;
+            details.PreviouslyHadTB = Converter.GetNullableBoolValue(rawNotification.PreviouslyHadTB);
             details.PreviousTBDiagnosisYear = rawNotification.PreviousTBDiagnosisYear;
             return details;
         }
@@ -286,7 +286,7 @@ namespace ntbs_service.DataMigration
         private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
             bool? hasTravel = notification.HasTravel;
-            var totalNumberOfCountries = hasTravel ?? false ? StringToValueConverter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
+            var totalNumberOfCountries = hasTravel ?? false ? Converter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
 
             var details = new TravelDetails();
             details.HasTravel = hasTravel;
@@ -303,7 +303,7 @@ namespace ntbs_service.DataMigration
         private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
             bool? hasVisitor = notification.HasVisitor;
-            var totalNumberOfCountries = hasVisitor ?? false ? StringToValueConverter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
+            var totalNumberOfCountries = hasVisitor ?? false ? Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
 
             var details = new VisitorDetails();
             details.HasVisitor = hasVisitor;
@@ -385,26 +385,26 @@ namespace ntbs_service.DataMigration
         private static SocialRiskFactors ExtractSocialRiskFactors(dynamic notification)
         {
             var factors = new SocialRiskFactors();
-            factors.AlcoholMisuseStatus = StringToValueConverter.GetStatusFromString(notification.AlcoholMisuseStatus);
-            factors.SmokingStatus = StringToValueConverter.GetStatusFromString(notification.SmokingStatus);
-            factors.MentalHealthStatus = StringToValueConverter.GetStatusFromString(notification.MentalHealthStatus);
-            factors.AsylumSeekerStatus = StringToValueConverter.GetStatusFromString(notification.AsylumSeekerStatus);
-            factors.ImmigrationDetaineeStatus = StringToValueConverter.GetStatusFromString(notification.ImmigrationDetaineeStatus);
+            factors.AlcoholMisuseStatus = Converter.GetStatusFromString(notification.AlcoholMisuseStatus);
+            factors.SmokingStatus = Converter.GetStatusFromString(notification.SmokingStatus);
+            factors.MentalHealthStatus = Converter.GetStatusFromString(notification.MentalHealthStatus);
+            factors.AsylumSeekerStatus = Converter.GetStatusFromString(notification.AsylumSeekerStatus);
+            factors.ImmigrationDetaineeStatus = Converter.GetStatusFromString(notification.ImmigrationDetaineeStatus);
             
-            factors.RiskFactorDrugs.Status = StringToValueConverter.GetStatusFromString(notification.riskFactorDrugs_Status);
-            factors.RiskFactorDrugs.IsCurrent = StringToValueConverter.GetBoolValue(notification.riskFactorDrugs_IsCurrent);
-            factors.RiskFactorDrugs.InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorDrugs_InPastFiveYears);
-            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorDrugs_MoreThanFiveYearsAgo);
+            factors.RiskFactorDrugs.Status = Converter.GetStatusFromString(notification.riskFactorDrugs_Status);
+            factors.RiskFactorDrugs.IsCurrent = Converter.GetBoolValue(notification.riskFactorDrugs_IsCurrent);
+            factors.RiskFactorDrugs.InPastFiveYears = Converter.GetBoolValue(notification.riskFactorDrugs_InPastFiveYears);
+            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = Converter.GetBoolValue(notification.riskFactorDrugs_MoreThanFiveYearsAgo);
             
-            factors.RiskFactorHomelessness.Status = StringToValueConverter.GetStatusFromString(notification.riskFactorHomelessness_Status);
-            factors.RiskFactorHomelessness.IsCurrent = StringToValueConverter.GetBoolValue(notification.riskFactorHomelessness_IsCurrent);
-            factors.RiskFactorHomelessness.InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorHomelessness_InPastFiveYears);
-            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
+            factors.RiskFactorHomelessness.Status = Converter.GetStatusFromString(notification.riskFactorHomelessness_Status);
+            factors.RiskFactorHomelessness.IsCurrent = Converter.GetBoolValue(notification.riskFactorHomelessness_IsCurrent);
+            factors.RiskFactorHomelessness.InPastFiveYears = Converter.GetBoolValue(notification.riskFactorHomelessness_InPastFiveYears);
+            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = Converter.GetBoolValue(notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
             
-            factors.RiskFactorImprisonment.Status = StringToValueConverter.GetStatusFromString(notification.riskFactorImprisonment_Status);
-            factors.RiskFactorImprisonment.IsCurrent = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_IsCurrent);
-            factors.RiskFactorImprisonment.InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
-            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
+            factors.RiskFactorImprisonment.Status = Converter.GetStatusFromString(notification.riskFactorImprisonment_Status);
+            factors.RiskFactorImprisonment.IsCurrent = Converter.GetBoolValue(notification.riskFactorImprisonment_IsCurrent);
+            factors.RiskFactorImprisonment.InPastFiveYears = Converter.GetBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
+            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = Converter.GetBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
             return factors;
         }
 
@@ -413,7 +413,7 @@ namespace ntbs_service.DataMigration
             var manualTest = new ManualTestResult();
             manualTest.ManualTestTypeId = rawResult.ManualTestTypeId;
             manualTest.SampleTypeId = rawResult.SampleTypeId;
-            manualTest.Result =  StringToValueConverter.GetEnumValue<Result>(rawResult.Result);
+            manualTest.Result =  Converter.GetEnumValue<Result>(rawResult.Result);
             manualTest.TestDate = rawResult.TestDate;
             return manualTest;
         }
@@ -425,7 +425,7 @@ namespace ntbs_service.DataMigration
             venue.Name = rawVenue.Name;
             venue.Address = rawVenue.Address;
             venue.Postcode = rawVenue.Postcode;
-            venue.Frequency = StringToValueConverter.GetEnumValue<Frequency>(rawVenue.Frequency);
+            venue.Frequency = Converter.GetEnumValue<Frequency>(rawVenue.Frequency);
             venue.DateFrom = rawVenue.DateFrom;
             venue.DateTo = rawVenue.DateTo;
             venue.Details = rawVenue.Details;
@@ -447,7 +447,7 @@ namespace ntbs_service.DataMigration
         {
             var ev = new TreatmentEvent();
             ev.EventDate = rawEvent.EventDate;
-            ev.TreatmentEventType = StringToValueConverter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
+            ev.TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
             ev.CaseManager = rawEvent.CaseManager;
 
             // ReSharper disable once InvertIf

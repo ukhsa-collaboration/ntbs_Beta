@@ -185,7 +185,7 @@ namespace ntbs_service.DataMigration
         /// </summary>
         private async Task ImportReferenceLabResultsAsync(IList<Notification> notifications, ImportResult importResult)
         {
-            var legacyIds = notifications.Select(n => n.LegacyId);
+            var legacyIds = notifications.Select(n => n.ETSID);
             var matches = await _migrationRepository.GetReferenceLaboratoryMatches(legacyIds);
             foreach (var (legacyId, referenceLaboratoryNumber) in matches)
             {
