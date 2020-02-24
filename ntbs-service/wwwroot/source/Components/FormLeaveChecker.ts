@@ -1,5 +1,7 @@
 ﻿import Vue from "vue";
 import ConfirmComponent from "./ConfirmComponent";
+require('formdata-polyfill');
+require('array-from-polyfill');
 
 const FormLeaveChecker = Vue.extend({
     created(): void {
@@ -22,8 +24,6 @@ const FormLeaveChecker = Vue.extend({
                         .then(() => {
                             window.location.href = eventTarget.href;
                         })
-                        .catch(() => {
-                        })
                         .finally(() => {
                             this.$modal.close()
                         });
@@ -32,13 +32,10 @@ const FormLeaveChecker = Vue.extend({
         },
         serialiseForm: function () {
             const formData: any = new FormData(this.$refs["notificationForm"]);
-            const formEntries = Array.from(formData.entries());
-            
             let stringifiedForm = "";
-            formEntries.forEach(function(entry: any) {
+            for (const entry of Array.from(formData.entries())) {
                 stringifiedForm += JSON.stringify(entry);
-            });
-            
+            }
             return stringifiedForm;
         }
     }

@@ -2,15 +2,13 @@
 
 const confirmTemplate = `
     <div class="dialog-box">
-        <template>
-            <section>
-                <h3 class="dialog-box-message">{{ message }}</h3>
-                <div class="dialog-box-button-container">
-                    <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="rejectHandler">Stay</button>
-                    <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="resolveHandler">Leave</button>
-                </div>
-            </section>
-        </template>
+        <section>
+            <h3 class="dialog-box-message">{{ message }}</h3>
+            <div class="dialog-box-button-container">
+                <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="rejectHandler">Stay</button>
+                <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="resolveHandler">Leave</button>
+            </div>
+        </section>
     </div>
     `;
 
@@ -33,11 +31,11 @@ export default Vue.extend({
     },
     methods: {
         resolveHandler() {
-            // this value will be passed to `then`
+            // this method will trigger `then` handler of a Promise
             this.resolve()
         },
         rejectHandler() {
-            // this value will be passed to `catch`
+            // this method will trigger `catch` handler of a Promise
             this.reject()
         },
     },
