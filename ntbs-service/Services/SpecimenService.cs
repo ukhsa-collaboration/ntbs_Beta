@@ -24,10 +24,24 @@ namespace ntbs_service.Services
             IEnumerable<string> phecCodes);
 
         Task<IEnumerable<SpecimenMatchPairing>> GetAllSpecimenPotentialMatchesAsync();
-        
-        Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
 
-        Task MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
+        /// <summary>
+        /// Calls stored proc which removes the match record
+        /// </summary>
+        /// <param name="notificationId">NTBS ID of the notification to match</param>
+        /// <param name="labReferenceNumber">identifier of the specimen</param>
+        /// <param name="userName">username to record in the audit trail</param>
+        /// <returns>boolean that's true when the proc returned a success flag</returns>
+        Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
+
+        /// <summary>
+        /// Calls stored proc which records the match
+        /// </summary>
+        /// <param name="notificationId">NTBS ID of the notification to match</param>
+        /// <param name="labReferenceNumber">identifier of the specimen</param>
+        /// <param name="userName">username to record in the audit trail</param>
+        /// <returns>boolean that's true when the proc returned a success flag</returns>
+        Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
     }
 
     public class SpecimenService : ISpecimenService
@@ -142,33 +156,50 @@ namespace ntbs_service.Services
                 });
         }
         
-        public async Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
+        public async Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
-                await connection.QueryAsync(
-                    "uspUnmatchSpecimen",
+                var returnValue = await connection.QuerySingleAsync<int>(
+                    @"DECLARE @result int;  
+                        exec @result = uspUnmatchSpecimen @referenceLaboratoryNumber, @notificationId;
+                        SELECT @result",
                     new {referenceLaboratoryNumber = labReferenceNumber, notificationId},
                     commandType: CommandType.StoredProcedure);
-            }
 
-            await _auditService.AuditUnmatchSpecimen(notificationId, labReferenceNumber, userName);
+                var success = returnValue == 0;
+
+                if (success)
+                {
+                    await _auditService.AuditUnmatchSpecimen(notificationId, labReferenceNumber, userName);
+                }
+
+                return success;
+            }
         }
 
-        public async Task MatchSpecimenAsync(int notificationId, string referenceLaboratoryNumber, string userName)
+        public async Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
-                await connection.QueryAsync(
-                    "uspMatchSpecimen",
-                    new {referenceLaboratoryNumber, notificationId},
-                    commandType: CommandType.StoredProcedure);
+                var returnValue = await connection.QuerySingleAsync<int>(
+                    @"DECLARE @result int;  
+                    exec @result = uspMatchSpecimen @referenceLaboratoryNumber, @notificationId;
+                    SELECT @result",
+                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId});
+
+                var success = returnValue == 0;
+
+                if (success)
+                {
+                    await _auditService.AuditMatchSpecimen(notificationId, labReferenceNumber, userName);
+                    await _alertRepository.CloseUnmatchedLabResultAlertsForSpecimenIdAsync(labReferenceNumber);
+                }
+                
+                return success;
             }
-            
-            await _auditService.AuditMatchSpecimen(notificationId, referenceLaboratoryNumber, userName);
-            await _alertRepository.CloseUnmatchedLabResultAlertsForSpecimenIdAsync(referenceLaboratoryNumber);
         }
 
         private class UnmatchedQueryResultRow

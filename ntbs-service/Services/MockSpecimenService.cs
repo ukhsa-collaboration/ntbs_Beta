@@ -156,14 +156,14 @@ namespace ntbs_service.Services
             return Task.FromResult((IEnumerable<SpecimenMatchPairing>)new List<SpecimenMatchPairing>());
         }
 
-        public Task UnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
+        public Task<bool> UnmatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
-        public Task MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
+        public Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
     }
 }
