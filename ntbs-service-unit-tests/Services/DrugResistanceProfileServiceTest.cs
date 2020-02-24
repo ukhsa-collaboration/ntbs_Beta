@@ -82,7 +82,7 @@ namespace ntbs_service_unit_tests.Services
             drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Never);
         }
@@ -106,7 +106,7 @@ namespace ntbs_service_unit_tests.Services
             drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Exactly(2));
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Exactly(2));
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Exactly(2));
             mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Exactly(2));
         }
@@ -133,7 +133,7 @@ namespace ntbs_service_unit_tests.Services
             drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Never);
             mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Never);
         }       
@@ -160,7 +160,7 @@ namespace ntbs_service_unit_tests.Services
             drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Once);
             mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Once);
         }
@@ -187,7 +187,7 @@ namespace ntbs_service_unit_tests.Services
             drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfile(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
             mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Once);
             mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Once);
         }

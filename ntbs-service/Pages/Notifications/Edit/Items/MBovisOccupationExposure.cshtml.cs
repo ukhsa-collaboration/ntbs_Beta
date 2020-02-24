@@ -121,7 +121,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisOccupationExposure(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisOccupationExposureAsync(notificationId);
         }
     }
 }

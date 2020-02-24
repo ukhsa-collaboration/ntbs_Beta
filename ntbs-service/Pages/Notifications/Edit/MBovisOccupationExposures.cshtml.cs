@@ -59,7 +59,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
-                await Service.UpdateMBovisDetailsOccupationExposure(Notification, MBovisDetails);
+                await Service.UpdateMBovisDetailsOccupationExposureAsync(Notification, MBovisDetails);
             }
         }
         
@@ -70,7 +70,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisOccupationExposure(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisOccupationExposureAsync(notificationId);
         }
     }
 }
