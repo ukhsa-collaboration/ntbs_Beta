@@ -63,6 +63,23 @@ namespace ntbs_service.Models.Entities
             || MBovisOccupationExposures.Any()
             // ...unless about to add entry, in which case that's fine too
             || ProceedingToAdd;
+        
+        
+        [AssertThat(nameof(AnimalExposuresIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoAnimalExposureRecords)]
+        [Display(Name = "Has animal exposure")]
+        public bool? HasAnimalExposure { get; set; }
+        public virtual ICollection<MBovisAnimalExposure> MBovisAnimalExposures { get; set; }
+
+        [NotMapped]
+        public bool AnimalExposuresIsPopulatedIfTrue =>
+            // Test only relevant if collection is loaded
+            MBovisAnimalExposures == null
+            // Test only relevant if HasExposure is true
+            || HasAnimalExposure == false 
+            // Confirm collection is populated...
+            || MBovisAnimalExposures.Any()
+            // ...unless about to add entry, in which case that's fine too
+            || ProceedingToAdd;
 
         
         // Only used to inform validation, much like the `ShouldValidateFull` property

@@ -1,0 +1,21 @@
+@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
+@model OverviewModel
+
+@{
+    var sectionSubPath = NotificationSubPaths.EditMBovisAnimalExposures;
+}
+
+<div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
+    <h3 class="notification-details-type"> M. bovis - Animal exposure </h3>
+    @if (Model.PermissionLevel == PermissionLevel.Edit)
+    {
+        <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
+           class="notification-edit-link govuk-link--no-visited-state">
+            Edit
+        </a>
+    }
+</div>
+<div class="notification-overview-details-container">
+    <partial name="_MBovisAnimalExposureOverviewPartial" for="Notification.MBovisDetails.MBovisAnimalExposures"/>
+</div>
