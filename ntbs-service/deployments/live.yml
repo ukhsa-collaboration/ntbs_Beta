@@ -81,7 +81,7 @@ spec:
         - name: krb-tab
           secret:
             defaultMode: 420
-            secretName: ntbs-srs-svc
+            secretName: ntbs-live-sql-svc
 ---
 apiVersion: v1
 kind: Service
