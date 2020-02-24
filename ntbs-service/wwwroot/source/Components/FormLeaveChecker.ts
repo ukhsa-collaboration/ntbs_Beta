@@ -14,7 +14,7 @@ const FormLeaveChecker = Vue.extend({
         },
         checkLeave: function (event : MouseEvent) {
             const eventTarget = (event.target as HTMLLinkElement);
-            if (eventTarget.tagName.toLowerCase() === "a" && eventTarget.parentElement.dataset.ignoreSafeNavigationPopup !== "true") {
+            if (eventTarget.tagName.toLowerCase() === "a" && eventTarget.parentElement.dataset.ignoreFormLeaveChecker !== "true") {
                 if (this.serialiseForm() !== this.initialFormData) {
                     event.preventDefault();
                     
