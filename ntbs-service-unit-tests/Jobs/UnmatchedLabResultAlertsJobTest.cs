@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Moq;
@@ -35,7 +36,7 @@ namespace ntbs_service_unit_tests.Jobs
         public async Task OnRun_WithAlertsAndMatchesInParity_CallsExpectedMethodsWithEmptyParams()
         {
             // Arrange
-            _mockAlertRepository.Setup(r => r.CloseAlertsByIdsAsync(It.IsAny<IEnumerable<int>>()));
+            _mockAlertRepository.Setup(r => r.CloseAlertRangeAsync(It.IsAny<IEnumerable<Alert>>()));
             _mockAlertService.Setup(r =>
                 r.CreateAlertsForUnmatchedLabResults(It.IsAny<IEnumerable<SpecimenMatchPairing>>()));
 
@@ -64,7 +65,7 @@ namespace ntbs_service_unit_tests.Jobs
             await _unmatchedLabResultAlertsJob.Run(JobCancellationToken.Null);
 
             // Assert
-            _mockAlertRepository.Verify(s => s.CloseAlertsByIdsAsync(new List<int>()));
+            _mockAlertRepository.Verify(s => s.CloseAlertRangeAsync(new List<Alert>()));
             _mockAlertService.Verify(s => s.CreateAlertsForUnmatchedLabResults(new List<SpecimenMatchPairing>()));
         }
 
@@ -72,7 +73,7 @@ namespace ntbs_service_unit_tests.Jobs
         public async Task OnRun_WithAlertsAndMatchesOutOfParity_CallsExpectedMethodsWithExpectedParams()
         {
             // Arrange
-            _mockAlertRepository.Setup(r => r.CloseAlertsByIdsAsync(It.IsAny<IEnumerable<int>>()));
+            _mockAlertRepository.Setup(r => r.CloseAlertRangeAsync(It.IsAny<IEnumerable<Alert>>()));
             _mockAlertService.Setup(r =>
                 r.CreateAlertsForUnmatchedLabResults(It.IsAny<IEnumerable<SpecimenMatchPairing>>()));
 
@@ -101,11 +102,10 @@ namespace ntbs_service_unit_tests.Jobs
 
             // Assert
             _mockAlertRepository.Verify(s =>
-                s.CloseAlertsByIdsAsync(new List<int>
-                {
-                    3,
-                    4
-                }));
+                s.CloseAlertRangeAsync(It.Is<IEnumerable<Alert>>(n => 
+                    n.All(alert => 
+                        alert.AlertId == 3 || alert.AlertId == 4))));
+            
             _mockAlertService.Verify(s =>
                 s.CreateAlertsForUnmatchedLabResults(new List<SpecimenMatchPairing>
                 {

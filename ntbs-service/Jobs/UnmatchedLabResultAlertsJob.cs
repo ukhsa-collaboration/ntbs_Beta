@@ -40,7 +40,7 @@ namespace ntbs_service.Jobs
                     dbMatch.ReferenceLaboratoryNumber == alert.SpecimenId)).ToList();
             
             Log.Debug($"Number of redundant unmatched lab result alerts to be closed: {unneededAlerts.Count}");
-            await _alertRepository.CloseAlertsByIdsAsync(unneededAlerts.Select(alert => alert.AlertId));
+            await _alertRepository.CloseAlertRangeAsync(unneededAlerts);
 
             var dbMatchesRequiringAlerts = dbPotentialMatches.Where(
                 dbMatch => !currentUnmatchedLabResultAlerts.Any(alert =>
