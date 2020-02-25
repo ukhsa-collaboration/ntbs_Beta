@@ -9,6 +9,7 @@ using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
+using Sentry;
 
 namespace ntbs_service.DataMigration
 {
@@ -35,9 +36,15 @@ namespace ntbs_service.DataMigration
                              INotificationImportRepository notificationImportRepository,
                              IPostcodeService postcodeService,
                              IImportLogger logger,
+                             IHub sentryHub,
                              IMigrationRepository migrationRepository,
                              ISpecimenService specimenService)
         {
+            sentryHub.ConfigureScope(s =>
+            {
+                s.SetTag("context", "migration"); 
+            });
+
             _notificationMapper = notificationMapper;
             _notificationRepository = notificationRepository;
             _notificationImportRepository = notificationImportRepository;
