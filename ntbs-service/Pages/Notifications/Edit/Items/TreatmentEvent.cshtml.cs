@@ -53,11 +53,6 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
 #pragma warning restore 1998
         {
-            if (Notification.NotificationStatus == NotificationStatus.Draft)
-            {
-                return NotFound();
-            }
-
             if (RowId != null)
             {
                 TreatmentEvent = Notification.TreatmentEvents.SingleOrDefault(r => r.TreatmentEventId == RowId.Value);
@@ -187,7 +182,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            throw new NotImplementedException();
+            return RedirectToPage("/Notifications/Edit/TreatmentEvents", new { NotificationId });
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)

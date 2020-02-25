@@ -83,7 +83,6 @@ namespace ntbs_service.Pages.Notifications.Edit
             FormattedTbServicePresentationDate = ClinicalDetails.TBServicePresentationDate.ConvertToFormattedDate();
             FormattedDiagnosisDate = ClinicalDetails.DiagnosisDate.ConvertToFormattedDate();
             FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
-            FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
             FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
             FormattedHomeVisitDate = ClinicalDetails.FirstHomeVisitDate.ConvertToFormattedDate();
 
@@ -120,7 +119,25 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
+            if (Request.Form["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
+            {
+                return RedirectToPage("./TreatmentEvents", new {NotificationId, isBeingSubmitted});
+            }
             return RedirectToPage("./TestResults", new { NotificationId, isBeingSubmitted });
+        }
+        
+        protected override IActionResult RedirectAfterSaveForNotified()
+        {
+            if (Request.Form["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
+            {
+                return RedirectToPage("./TreatmentEvents", new { NotificationId });
+            }
+            var overviewAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(CurrentPage);
+            return RedirectToPage(
+                pageName: "/Notifications/Overview", 
+                pageHandler: null,  
+                routeValues: new { NotificationId },
+                fragment: overviewAnchorId);
         }
 
         protected override async Task ValidateAndSave()
@@ -132,7 +149,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 (nameof(ClinicalDetails.TBServicePresentationDate), FormattedTbServicePresentationDate),
                 (nameof(ClinicalDetails.DiagnosisDate), FormattedDiagnosisDate),
                 (nameof(ClinicalDetails.TreatmentStartDate), FormattedTreatmentDate),
-                (nameof(ClinicalDetails.DeathDate), FormattedDeathDate),
                 (nameof(ClinicalDetails.FirstHomeVisitDate), FormattedHomeVisitDate),
                 (nameof(ClinicalDetails.MDRTreatmentStartDate), FormattedMdrTreatmentDate)
             }.ForEach(item => 
@@ -219,13 +235,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ClinicalDetails.TreatmentStartDate = null;
                 FormattedTreatmentDate = ClinicalDetails.TreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.TreatmentStartDate");
-            }
-
-            if (ClinicalDetails.IsPostMortem == false)
-            {
-                ClinicalDetails.DeathDate = null;
-                FormattedDeathDate = ClinicalDetails.DeathDate.ConvertToFormattedDate();
-                ModelState.Remove("ClinicalDetails.DeathDate");
             }
 
             if (ClinicalDetails.BCGVaccinationState != Status.Yes)

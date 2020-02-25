@@ -9,6 +9,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using Serilog;
 
@@ -90,9 +91,10 @@ namespace ntbs_service.DataMigration
             notification.ComorbidityDetails = ExtractComorbidityDetails(rawNotification);
             notification.ImmunosuppressionDetails = ExtractImmunosuppressionDetails(rawNotification);
             notification.SocialRiskFactors = ExtractSocialRiskFactors(rawNotification);
-            notification.HospitalDetails = ExtractEpisodeDetails(rawNotification);
+            notification.HospitalDetails = ExtractHospitalDetails(rawNotification);
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.NotificationSites = sites;
+            notification.TreatmentEvents = ExtractTreatmentEvents(rawNotification);
 
             if (notification.HospitalDetails.HospitalId is Guid guid)
             {
@@ -112,7 +114,7 @@ namespace ntbs_service.DataMigration
             return notification;
         }
 
-        private static HospitalDetails ExtractEpisodeDetails(dynamic rawNotification)
+        private static HospitalDetails ExtractHospitalDetails(dynamic rawNotification)
         {
             return new HospitalDetails
             {
@@ -184,7 +186,6 @@ namespace ntbs_service.DataMigration
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsMDRTreatment = notification.IsMDRTreatment;
             details.IsSymptomatic = StringToValueConverter.GetNullableBoolValue(notification.IsSymptomatic);
-            details.DeathDate = notification.DeathDate;
             return details;
         }
 
@@ -302,6 +303,22 @@ namespace ntbs_service.DataMigration
             factors.RiskFactorImprisonment.InPastFiveYears = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
             factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = StringToValueConverter.GetBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
             return factors;
+        }
+        
+         private static List<TreatmentEvent> ExtractTreatmentEvents(dynamic notification)
+         {
+             var treatmentEvents = new List<TreatmentEvent> {new TreatmentEvent
+             {
+                 EventDate = notification.DeathDate,
+                 TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                 TreatmentOutcome = new TreatmentOutcome
+                 {
+                     TreatmentOutcomeId = 10,
+                     TreatmentOutcomeType = TreatmentOutcomeType.Died,
+                     TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                 }
+             }};
+            return treatmentEvents;
         }
     }
 }

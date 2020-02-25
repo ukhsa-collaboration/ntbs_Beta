@@ -123,7 +123,6 @@ namespace ntbs_integration_tests.NotificationPages
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name is a mandatory field");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year is a mandatory field");
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DeathDate", "postmortem", "Date of death is a mandatory field");
         }
 
         [Fact]
@@ -360,9 +359,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedTreatmentDate.Month"] = "1",
                 ["FormattedTreatmentDate.Year"] = "2012",
                 ["ClinicalDetails.DidNotStartTreatment"] = "true",
-                ["FormattedDeathDate.Day"] = "1",
-                ["FormattedDeathDate.Month"] = "1",
-                ["FormattedDeathDate.Year"] = "2012",
                 ["ClinicalDetails.IsPostMortem"] = "false",
                 ["FormattedSymptomDate.Day"] = "10",
                 ["FormattedSymptomDate.Month"] = "10",
@@ -388,9 +384,6 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTreatmentDate_Month")).Value);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedTreatmentDate_Year")).Value);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
-            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Day")).Value);
-            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Month")).Value);
-            Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDeathDate_Year")).Value);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("symptomatic-no")).IsChecked);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Day")).Value);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedSymptomDate_Month")).Value);

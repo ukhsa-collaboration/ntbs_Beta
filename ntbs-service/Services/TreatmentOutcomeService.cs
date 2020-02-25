@@ -37,7 +37,7 @@ namespace ntbs_service.Services
             
             // If a treatment outcome is not needed that is because one either exists as the last event of the 1 year period
             // or one is not needed and so is null
-            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.First(x => x.TreatmentOutcome != null).TreatmentOutcome;
+            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.FirstOrDefault(x => x.TreatmentOutcome != null)?.TreatmentOutcome;
         }
 
         public bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
@@ -72,7 +72,7 @@ namespace ntbs_service.Services
         {
             return notification.TreatmentEvents?.Where(t =>
                     t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
-                    && t.EventDate > (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
+                    && t.EventDate >= (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
                 .OrderByDescending(t => t.EventDate);
         }
         

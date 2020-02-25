@@ -24,12 +24,6 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            // Page is not accessible in draft state
-            if (Notification.NotificationStatus == NotificationStatus.Draft)
-            {
-                return NotFound();
-            }
-
             TreatmentEvents = Notification.TreatmentEvents;
             await SetNotificationProperties(isBeingSubmitted);
 

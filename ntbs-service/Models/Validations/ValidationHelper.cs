@@ -123,6 +123,7 @@
         // Below are not currently surfaced in the application - but adding messages if down the line import uses these.
         public const string TreatmentOutcomeRequiredForOutcome = "Please supply treatment outcome type for a treatment outcome";
         public const string TreatmentOutcomeInvalidForRestart = "Treatment outcome type is not allowed for a treatment restart";
+        public const string DeathEventRequiredForPostMortemCase = "A death event is required for a post mortem case";
 
         #endregion
 
