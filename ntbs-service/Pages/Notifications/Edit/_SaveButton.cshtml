@@ -34,5 +34,5 @@
 
 @if (!isDraft)
 {
-    <nhs-back-link href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">Cancel & go back</nhs-back-link>
+    <nhs-back-link data-ignore-form-leave-checker="true" href="@RouteHelper.GetNotificationOverviewPathWithSectionAnchor(Model.NotificationId, currentPage)">Cancel & go back</nhs-back-link>
 }

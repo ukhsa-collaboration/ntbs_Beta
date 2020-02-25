@@ -18,9 +18,7 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-
         @RenderSection("MainFormButton", required: false)
-
         @if (isDraft)
         {
             <partial name="./_DraftSubmitDeleteButtons"/>
@@ -45,5 +43,6 @@
             </nhs-grid-column>
 
         </nhs-grid-row>
-    </form>
+   </form>
+
 </nhs-width-container>

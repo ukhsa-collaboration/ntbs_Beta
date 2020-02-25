@@ -1,0 +1,25 @@
+﻿.dialog-box {
+  padding: 20px;
+  align-self: center;
+}
+
+.dialog-box-message {
+  text-align: center;
+}
+
+.v-modal {
+  &__content {
+    max-width: 500px;
+    width: 80%;
+  }
+}
+
+.dialog-box-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.dialog-box-button {
+  margin: 20px;
+  width: 100px;
+}
