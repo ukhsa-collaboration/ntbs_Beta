@@ -1,4 +1,5 @@
 ﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/ExposureToKnownCases/{handler?}"
+@using ntbs_service.Models
 @using ntbs_service.Models.Entities
 @model ntbs_service.Pages.Notifications.Edit.MBovisExposureToKnownCasesModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
@@ -67,7 +68,7 @@
                         nhs-button-type="Standard"
                         classes="ntbsuk-button--primary"
                         name="actionName"
-                        value="Create">
+                        value="@ActionNameString.Create">
                     Add New
                 </button>
             </div>

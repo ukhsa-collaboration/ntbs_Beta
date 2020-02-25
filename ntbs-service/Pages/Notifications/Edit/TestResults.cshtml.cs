@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
@@ -62,7 +63,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             // Set the collection so it can be included in the validation
             TestData.ManualTestResults = Notification.TestData.ManualTestResults;
-            TestData.ProceedingToAdd = ActionName == "Create";
+            TestData.ProceedingToAdd = ActionName == ActionNameString.Create;
             TestData.SetValidationContext(Notification);
             if (TryValidateModel(TestData, nameof(TestData)))
             {

@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
-using Xunit;
+using ntbs_service.Models;
 
 namespace ntbs_integration_tests.Helpers
 {
@@ -28,7 +28,7 @@ namespace ntbs_integration_tests.Helpers
             IHtmlFormElement form,
             Dictionary<string, string> formValues,
             string path,
-            string submitType = "Save")
+            string submitType = ActionNameString.Save)
         {
             return SendAsync(client, form, formValues, path, HttpMethod.Post, submitType);
         }

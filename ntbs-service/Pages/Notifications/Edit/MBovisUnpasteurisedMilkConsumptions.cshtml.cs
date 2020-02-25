@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -57,7 +55,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisUnpasteurisedMilkConsumptions = Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions;
-            MBovisDetails.ProceedingToAdd = ActionName == "Create";
+            MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;
             MBovisDetails.SetValidationContext(Notification);
             
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
