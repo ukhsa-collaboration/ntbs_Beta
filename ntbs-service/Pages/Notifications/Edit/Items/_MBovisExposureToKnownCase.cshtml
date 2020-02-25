@@ -36,12 +36,12 @@
                                 has-error="@hasYearError">
                             </span>
                             <input
-                                nhs-input-type="Standard"
-                                type="number"
+                                nhs-input-type="Date"
                                 ref="inputField"
                                 asp-for="MBovisExposureToKnownCase.YearOfExposure"
                                 v-on:blur="validate"
-                                fixed-width="Four">
+                                fixed-width="Four"
+                                is-error-input="@hasYearError">
                         </nhs-form-group>
                     </validate-input>
 
@@ -100,10 +100,9 @@
                                 ref="inputField"
                                 v-on:blur="validate"
                                 is-error-input="@hasRelatedNotificationError"
-                                nhs-input-type="Standard"
+                                nhs-input-type="Date"
                                 fixed-width="Ten"
-                                asp-for="MBovisExposureToKnownCase.ExposureNotificationId"
-                                type="number">
+                                asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
                             <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
                         </nhs-form-group>
                     </validate-related-notification>

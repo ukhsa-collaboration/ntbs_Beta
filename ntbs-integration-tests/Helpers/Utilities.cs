@@ -66,6 +66,8 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFICATION_ID_WITH_MBOVIS_MILK_NO_ENTITIES = 10133;
         public const int NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES = 10134;
         public const int NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_NO_ENTITIES = 10135;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_ENTITIES = 10136;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_NO_ENTITIES = 10137;
 
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
@@ -125,6 +127,7 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(MBovisExposureToKnownCasesPageTests.GetSeedingNotifications());
             context.Notification.AddRange(MBovisUnpasteurisedMilkConsumptionPageTests.GetSeedingNotifications());
             context.Notification.AddRange(MBovisOccupationExposurePageTests.GetSeedingNotifications());
+            context.Notification.AddRange(MBovisAnimalExposurePageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
 

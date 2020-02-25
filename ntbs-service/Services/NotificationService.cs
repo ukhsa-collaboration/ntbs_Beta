@@ -33,12 +33,14 @@ namespace ntbs_service.Services
         Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user);
         Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails);
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
-        Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
+        Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user);
         Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
-        Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
-        Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails);
-        Task UpdateMBovisDetailsUnpasteurisedMilkConsumption(Notification notification, MBovisDetails mBovisDetails);
-        Task UpdateMBovisDetailsOccupationExposure(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile);
+        Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+
     }
 
     public class NotificationService : INotificationService
@@ -334,7 +336,7 @@ namespace ntbs_service.Services
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
         {
-            var linkedNotification = await CreateNewNotificationForUser(user);
+            var linkedNotification = await CreateNewNotificationForUserAsync(user);
             _context.Attach(linkedNotification);
             _context.SetValues(linkedNotification.PatientDetails, notification.PatientDetails);
             await UpdateDatabaseAsync();
@@ -360,7 +362,7 @@ namespace ntbs_service.Services
             return linkedNotification;
         }
 
-        public async Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user)
+        public async Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user)
         {
             var defaultTbService = await _userService.GetDefaultTbService(user);
             var caseManagerEmail = await GetDefaultCaseManagerEmail(user, defaultTbService?.Code);
@@ -396,28 +398,34 @@ namespace ntbs_service.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile)
+        public async Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile)
         {
             _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
             await UpdateDatabaseAsync();
         }
 
-        public async Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails)
+        public async Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasExposureToKnownCases});
             await UpdateDatabaseAsync();
         }
 
-        public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumption(Notification notification, MBovisDetails mBovisDetails)
+        public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasUnpasteurisedMilkConsumption});
             await UpdateDatabaseAsync();        
         }
 
-        public async Task UpdateMBovisDetailsOccupationExposure(Notification notification, MBovisDetails mBovisDetails)
+        public async Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasOccupationExposure});
             await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasAnimalExposure});
+            await UpdateDatabaseAsync();            
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)

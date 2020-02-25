@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200224124933_AddMBovisAnimalExposureTable")]
+    partial class AddMBovisAnimalExposureTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,8 +150,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<bool?>("HasExposureToKnownCases");
 
-                    b.Property<bool?>("HasOccupationExposure");
-
                     b.Property<bool?>("HasUnpasteurisedMilkConsumption");
 
                     b.HasKey("NotificationId");
@@ -183,39 +183,6 @@ namespace ntbs_service.Migrations
                     b.HasIndex("NotificationId");
 
                     b.ToTable("MBovisExposureToKnownCase");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisOccupationExposure", b =>
-                {
-                    b.Property<int>("MBovisOccupationExposureId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CountryId")
-                        .IsRequired();
-
-                    b.Property<int>("NotificationId");
-
-                    b.Property<int?>("OccupationDuration")
-                        .IsRequired();
-
-                    b.Property<string>("OccupationSetting")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<string>("OtherDetails")
-                        .HasMaxLength(150);
-
-                    b.Property<int?>("YearOfExposure")
-                        .IsRequired();
-
-                    b.HasKey("MBovisOccupationExposureId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.ToTable("MBovisOccupationExposures");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
@@ -23703,19 +23670,6 @@ namespace ntbs_service.Migrations
                 {
                     b.HasOne("ntbs_service.Models.Entities.MBovisDetails")
                         .WithMany("MBovisExposureToKnownCases")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisOccupationExposure", b =>
-                {
-                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails")
-                        .WithMany("MBovisOccupationExposures")
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -55,7 +55,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisExposureToKnownCase> MBovisExposureToKnownCase { get; set; }
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
-
+        public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -162,6 +162,8 @@ namespace ntbs_service.DataAccess
             var milkProductEnumConverter = new EnumToStringConverter<MilkProductType>();
             var consumptionFrequencyEnumConverter = new EnumToStringConverter<ConsumptionFrequency>();
             var occupationSettingEnumConverter = new EnumToStringConverter<OccupationSetting>();
+            var animalTypeEnumConverter = new EnumToStringConverter<AnimalType>();
+            var animalTbStatusEnumConverter = new EnumToStringConverter<AnimalTbStatus>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -537,6 +539,17 @@ namespace ntbs_service.DataAccess
             {
                 entity.Property(e => e.OccupationSetting)
                     .HasConversion(occupationSettingEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+
+            modelBuilder.Entity<MBovisAnimalExposure>(entity =>
+            {
+                entity.Property(e => e.AnimalType)
+                    .HasConversion(animalTypeEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                
+                entity.Property(e => e.AnimalTbStatus)
+                    .HasConversion(animalTbStatusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
             });
 

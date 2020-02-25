@@ -48,7 +48,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return NotificationRepository.GetNotificationWithCaseManagerTbServices(notificationId);
+            return NotificationRepository.GetNotificationWithCaseManagerTbServicesAsync(notificationId);
         }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)

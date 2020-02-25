@@ -36,12 +36,12 @@
                                 has-error="@hasYearError">
                             </span>
                             <input
-                                nhs-input-type="Standard"
-                                type="number"
+                                nhs-input-type="Date"
                                 ref="inputField"
                                 asp-for="MBovisOccupationExposure.YearOfExposure"
                                 v-on:blur="validate"
-                                fixed-width="Four">
+                                fixed-width="Four"
+                                is-error-input="@hasYearError">
                         </nhs-form-group>
                     </validate-input>
                 </nhs-grid-column>
@@ -133,12 +133,12 @@
                                 ref="errorField">
                             </span>
                             <input
-                                nhs-input-type="Standard"
-                                type="number"
+                                nhs-input-type="Date"
                                 ref="inputField"
                                 asp-for="MBovisOccupationExposure.OccupationDuration"
                                 v-on:blur="validate"
-                                fixed-width="Two">
+                                fixed-width="Two"
+                                is-error-input="@hasDurationError">
                         </nhs-form-group>
                     </validate-input>
                 </nhs-grid-column>

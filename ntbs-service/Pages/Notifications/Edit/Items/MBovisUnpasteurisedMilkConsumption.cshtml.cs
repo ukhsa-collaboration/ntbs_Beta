@@ -124,7 +124,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisUnpasteurisedMilkConsumption(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisUnpasteurisedMilkConsumptionAsync(notificationId);
         }
     }
 }

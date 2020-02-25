@@ -122,7 +122,7 @@ namespace ntbs_service.Services
             var alerts = new List<UnmatchedLabResultAlert>();
             foreach (var specimenMatchPairing in specimenMatchPairings)
             {
-                var notification = await _notificationRepository.GetNotificationForAlertCreation(
+                var notification = await _notificationRepository.GetNotificationForAlertCreationAsync(
                     specimenMatchPairing.NotificationId);
 
                 if (notification != null)

@@ -8,15 +8,15 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
-    public class MBovisOccupationExposuresModel : NotificationEditModelBase
+    public class MBovisAnimalExposuresModel : NotificationEditModelBase
     {
-        public MBovisOccupationExposuresModel(
+        public MBovisAnimalExposuresModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository) : base(notificationService, authorizationService,
             notificationRepository)
         {
-            CurrentPage = NotificationSubPaths.EditMBovisOccupationExposures;
+            CurrentPage = NotificationSubPaths.EditMBovisAnimalExposures;
         }
 
         [BindProperty] 
@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override IActionResult RedirectToCreate()
         {
-            return RedirectToPage("./Items/NewMBovisOccupationExposure", new { NotificationId });
+            return RedirectToPage("./Items/NewMBovisAnimalExposure", new { NotificationId });
         }
         
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
@@ -54,13 +54,13 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             // Set the collection so it can be included in the validation
-            MBovisDetails.MBovisOccupationExposures = Notification.MBovisDetails.MBovisOccupationExposures;
+            MBovisDetails.MBovisAnimalExposures = Notification.MBovisDetails.MBovisAnimalExposures;
             MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;
             MBovisDetails.SetValidationContext(Notification);
             
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
-                await Service.UpdateMBovisDetailsOccupationExposureAsync(Notification, MBovisDetails);
+                await Service.UpdateMBovisDetailsAnimalExposureAsync(Notification, MBovisDetails);
             }
         }
         
@@ -71,7 +71,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisOccupationExposureAsync(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisAnimalExposuresAsync(notificationId);
         }
     }
 }

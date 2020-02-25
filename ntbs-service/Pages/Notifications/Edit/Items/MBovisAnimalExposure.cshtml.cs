@@ -9,28 +9,28 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit.Items
 {
-    public class MBovisOccupationExposureModel : NotificationEditModelBase
+    public class MBovisAnimalExposureModel : NotificationEditModelBase
     {
-        private readonly IItemRepository<MBovisOccupationExposure> _mBovisOccupationExposureRepository;
+        private readonly IItemRepository<MBovisAnimalExposure> _mBovisAnimalExposureRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
         [BindProperty(SupportsGet = true)] 
         public int? RowId { get; set; }
 
         [BindProperty] 
-        public MBovisOccupationExposure MBovisOccupationExposure { get; set; }
+        public MBovisAnimalExposure MBovisAnimalExposure { get; set; }
 
         public SelectList Countries { get; set; }
 
-        public MBovisOccupationExposureModel(
+        public MBovisAnimalExposureModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<MBovisOccupationExposure> mBovisOccupationExposureRepository) : base(service, authorizationService, notificationRepository)
+            IItemRepository<MBovisAnimalExposure> mBovisAnimalExposureRepository) : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
-            _mBovisOccupationExposureRepository = mBovisOccupationExposureRepository;
+            _mBovisAnimalExposureRepository = mBovisAnimalExposureRepository;
 
             Countries = new SelectList(
                 _referenceDataRepository.GetAllCountriesAsync().Result,
@@ -53,9 +53,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 return Page();
             }
 
-            MBovisOccupationExposure = Notification.MBovisDetails.MBovisOccupationExposures
-                .SingleOrDefault(m => m.MBovisOccupationExposureId == RowId);
-            if (MBovisOccupationExposure == null)
+            MBovisAnimalExposure = Notification.MBovisDetails.MBovisAnimalExposures
+                .SingleOrDefault(m => m.MBovisAnimalExposureId == RowId);
+            if (MBovisAnimalExposure == null)
             {
                 return NotFound();
             }
@@ -65,20 +65,20 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task ValidateAndSave()
         {
-            MBovisOccupationExposure.SetValidationContext(Notification);
-            MBovisOccupationExposure.NotificationId = NotificationId;
-            MBovisOccupationExposure.DobYear = Notification.PatientDetails.Dob?.Year;
+            MBovisAnimalExposure.SetValidationContext(Notification);
+            MBovisAnimalExposure.NotificationId = NotificationId;
+            MBovisAnimalExposure.DobYear = Notification.PatientDetails.Dob?.Year;
 
-            if (TryValidateModel(MBovisOccupationExposure, nameof(MBovisOccupationExposure)))
+            if (TryValidateModel(MBovisAnimalExposure, nameof(MBovisAnimalExposure)))
             {
                 if (RowId == null)
                 {
-                    await _mBovisOccupationExposureRepository.AddAsync(MBovisOccupationExposure);
+                    await _mBovisAnimalExposureRepository.AddAsync(MBovisAnimalExposure);
                 }
                 else
                 {
-                    MBovisOccupationExposure.MBovisOccupationExposureId = RowId.Value;
-                    await _mBovisOccupationExposureRepository.UpdateAsync(Notification, MBovisOccupationExposure);
+                    MBovisAnimalExposure.MBovisAnimalExposureId = RowId.Value;
+                    await _mBovisAnimalExposureRepository.UpdateAsync(Notification, MBovisAnimalExposure);
                 }
             }
         }
@@ -91,37 +91,36 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 return ForbiddenResult();
             }
 
-            var mBovisOccupationExposure = Notification.MBovisDetails.MBovisOccupationExposures
-                .SingleOrDefault(m => m.MBovisOccupationExposureId == RowId);
-            if (mBovisOccupationExposure == null)
+            var mBovisAnimalExposure = Notification.MBovisDetails.MBovisAnimalExposures
+                .SingleOrDefault(m => m.MBovisAnimalExposureId == RowId);
+            if (mBovisAnimalExposure == null)
             {
                 return NotFound();
             }
 
-            await _mBovisOccupationExposureRepository.DeleteAsync(mBovisOccupationExposure);
+            await _mBovisAnimalExposureRepository.DeleteAsync(mBovisAnimalExposure);
 
-            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
         }
 
-        public ContentResult OnGetValidateMBovisOccupationExposureProperty(string key, string value,
-            bool shouldValidateFull)
+        public ContentResult OnGetValidateMBovisAnimalExposureProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.GetPropertyValidationResult<MBovisOccupationExposure>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<MBovisAnimalExposure>(key, value, shouldValidateFull);
         }
 
         protected override IActionResult RedirectAfterSaveForNotified()
         {
-            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
         }
 
         protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
         {
-            return RedirectToPage("/Notifications/Edit/MBovisOccupationExposures", new {NotificationId});
+            return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
         }
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisOccupationExposureAsync(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisAnimalExposuresAsync(notificationId);
         }
     }
 }

@@ -88,6 +88,11 @@
                     M. bovis - Occupation
                 </a>
             </li>
+            <li class="@("contents-list-item " + (currentPage == NotificationSubPaths.EditMBovisAnimalExposures ? "contents-list-item--current" : ""))">
+                <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisAnimalExposures)">
+                    M. bovis - Animal exposure
+                </a>
+            </li>
         }
         @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)
         {
