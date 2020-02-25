@@ -31,10 +31,14 @@ const FormLeaveChecker = Vue.extend({
             }
         },
         serialiseForm: function () {
-            const formData: any = new FormData(this.$refs["notificationForm"]);
+            const forms : any = document.querySelectorAll('form');
             let stringifiedForm = "";
-            for (const entry of Array.from(formData.entries())) {
-                stringifiedForm += JSON.stringify(entry);
+
+            for (const form of forms) {
+                const formData: any = new FormData(form);
+                for (const entry of Array.from(formData.entries())) {
+                    stringifiedForm += JSON.stringify(entry);
+                }
             }
             return stringifiedForm;
         }
