@@ -58,6 +58,8 @@ spec:
               value: ""
             - name: AppConfig__AuditingEnabled
               value: "false"
+            - name: Sentry__Environment
+              value: live
             - name: KRB5CCNAME
               value: /krb5cc/cc
           volumeMounts:
