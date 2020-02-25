@@ -93,8 +93,8 @@ namespace ntbs_service.Helpers
         public static string EditMBovisOccupationExposure(int mBovisOccupationExposureId) => $"Edit/MBovis/OccupationExposure/{mBovisOccupationExposureId}";
         public static string AddMBovisOccupationExposure => "Edit/MBovis/OccupationExposure/New";
         
-        public static string EditMBovisAnimalExposure(int mBovisAnimalExposureId) => $"Edit/MBovis/EditMBovisAnimalExposure/{mBovisAnimalExposureId}";
-        public static string AddMBovisAnimalExposure => "Edit/MBovis/EditMBovisAnimalExposure/New";
+        public static string EditMBovisAnimalExposure(int mBovisAnimalExposureId) => $"Edit/MBovis/AnimalExposure/{mBovisAnimalExposureId}";
+        public static string AddMBovisAnimalExposure => "Edit/MBovis/AnimalExposure/New";
     }
 
     public static class OverviewSubPathToAnchorMap

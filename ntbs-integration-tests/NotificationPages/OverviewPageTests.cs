@@ -237,7 +237,8 @@ namespace ntbs_integration_tests.NotificationPages
                 NotificationSubPaths.EditMDRDetails,
                 NotificationSubPaths.EditMBovisExposureToKnownCases,
                 NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions,
-                NotificationSubPaths.EditMBovisOccupationExposures
+                NotificationSubPaths.EditMBovisOccupationExposures,
+                NotificationSubPaths.EditMBovisAnimalExposures
             }.ForEach(subPath =>
             {
                 var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
