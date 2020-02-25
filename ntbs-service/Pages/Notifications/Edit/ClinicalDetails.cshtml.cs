@@ -20,7 +20,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IAlertService _alertService;
-        private readonly IEnhancedSurveillanceAlertsService EnhancedSurveillanceAlertsService;
+        private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
 
         public ClinicalDetails ClinicalDetails { get; set; }
@@ -53,7 +53,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             _referenceDataRepository = referenceDataRepository;
             _alertService = alertService;
-            EnhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
+            _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
             _treatmentEventRepository = treatmentEventRepository;
 
             CurrentPage = NotificationSubPaths.EditClinicalDetails;
@@ -183,7 +183,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
-            var treatmentStartDateChanged =
+            var hasTreatmentStartDateChanged =
                 ClinicalDetails.TreatmentStartDate != Notification.ClinicalDetails.TreatmentStartDate &&
                 ClinicalDetails.TreatmentStartDate != null;
             var mdrChanged = Notification.ClinicalDetails.IsMDRTreatment != ClinicalDetails.IsMDRTreatment;
@@ -199,14 +199,14 @@ namespace ntbs_service.Pages.Notifications.Edit
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
                 
-                if (treatmentStartDateChanged)
+                if (hasTreatmentStartDateChanged)
                 {
                     UpdateTreatmentStartEvent();    
                 }
 
                 if (mdrChanged)
                 {
-                    await EnhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
+                    await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
                 }
             }
         }

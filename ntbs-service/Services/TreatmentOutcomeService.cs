@@ -17,7 +17,7 @@ namespace ntbs_service.Services
 {
     public interface ITreatmentOutcomeService
     {
-        bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
+        bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
         TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
     }
 
@@ -29,22 +29,22 @@ namespace ntbs_service.Services
 
         public TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
-            // If a treatment outcome is needed at X years then one must not already exist
-            if (IsTreatmentOutcomeNeededAtXYears(notification, yearsAfterTreatmentStartDate))
+            // If a treatment outcome is missing at X years then one must not already exist
+            if (IsTreatmentOutcomeMissingAtXYears(notification, yearsAfterTreatmentStartDate))
             {
                 return null;
             }
             
-            // If a treatment outcome is not needed that is because one either exists as the last event of the 1 year period
+            // If a treatment outcome is not missing that is because one either exists as the last event of the 1 year period
             // or one is not needed and so is null
             return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.FirstOrDefault(x => x.TreatmentOutcome != null)?.TreatmentOutcome;
         }
 
-        public bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        public bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
             for (var i = yearsAfterTreatmentStartDate; i >= 1; i--)
             {
-                var lastTreatmentEventsBetweenIAndIMinusOneYears = GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, i)?.FirstOrDefault();
+                var lastTreatmentEventsBetweenIAndIMinusOneYears = GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, i)?.LastOrDefault();
                 
                 // Check if any events have happened in this year window, look back a year if none exist
                 if (lastTreatmentEventsBetweenIAndIMinusOneYears == null)
@@ -73,7 +73,7 @@ namespace ntbs_service.Services
             return notification.TreatmentEvents?.Where(t =>
                     t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
                     && t.EventDate >= (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
-                .OrderByDescending(t => t.EventDate);
+                .OrderBy(t => t.EventDate);
         }
         
     }
