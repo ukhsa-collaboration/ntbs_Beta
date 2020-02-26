@@ -89,23 +89,11 @@ namespace ntbs_service_unit_tests.Helpers
         }
 
         [Fact]
-        public void GetTreatmentEvent_ReturnsLastTreatmentEventBeforeEndDate()
+        public void GetMostRecentTreatmentEvent_ReturnsLastTreatmentEvent()
         {
-            var startDate = new DateTime(2016, 12, 12);
-            var endDate = new DateTime(2020, 2, 1);
-            var treatmentEvent = MockTreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(startDate, endDate);
+            var treatmentEvent = MockTreatmentEvents.GetMostRecentTreatmentEvent();
             
             Assert.Equal(treatmentEvent.EventDate, new DateTime(2020, 1, 1));
-        }
-        
-        [Fact]
-        public void GetTreatmentEvent_ReturnsEmptyList_WhenNoDateInRange()
-        {
-            var startDate = new DateTime(2020, 1, 10);
-            var endDate = new DateTime(2020, 2, 10);
-            var treatmentEvent = MockTreatmentEvents.GetMostRecentTreatmentOutcomeInPeriod(startDate, endDate);
-            
-            Assert.Null(treatmentEvent);
         }
     }
 }

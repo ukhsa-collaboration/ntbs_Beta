@@ -19,6 +19,7 @@ namespace ntbs_service_unit_tests.Services
 
         public static IEnumerable<object[]> NotificationsAndExpectedOutcome()
         {
+            // Example 1
             yield return new object[] 
             {
                 CreateNotificationWithNotificationEvents(1, 
@@ -43,6 +44,7 @@ namespace ntbs_service_unit_tests.Services
                     null,
                     null
                 };
+            // Example 2
             yield return new object[] 
             { 
                 CreateNotificationWithNotificationEvents(2, 
@@ -81,6 +83,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            // Example 3
             yield return new object[] 
             { 
                 CreateNotificationWithNotificationEvents(3, new List<TreatmentEvent>
@@ -119,6 +122,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            // Example 4
             yield return new object[] 
             { 
                 CreateNotificationWithNotificationEvents(4, new List<TreatmentEvent>
@@ -156,6 +160,7 @@ namespace ntbs_service_unit_tests.Services
                 TreatmentOutcomeType.Cured,
                 null
             };
+            // Example 5
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(5, new List<TreatmentEvent>
@@ -170,6 +175,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            // Example 6
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(6, new List<TreatmentEvent>
@@ -193,6 +199,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            // Example 7
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(7, new List<TreatmentEvent>
@@ -230,6 +237,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 TreatmentOutcomeType.Cured
             };
+            // Example 8
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(8, new List<TreatmentEvent>
@@ -271,6 +279,7 @@ namespace ntbs_service_unit_tests.Services
                 TreatmentOutcomeType.Died,
                 null
             };
+            // Example 9
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(9, new List<TreatmentEvent>
@@ -299,6 +308,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            // Example 10
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(10, new List<TreatmentEvent>
@@ -327,6 +337,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            // Example 11
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(11, new List<TreatmentEvent>
@@ -359,6 +370,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 TreatmentOutcomeType.NotEvaluated
             };
+            // Example 12
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(12, new List<TreatmentEvent>
@@ -391,6 +403,7 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 TreatmentOutcomeType.NotEvaluated
             };
+            // Example 13
             yield return new object[]
             {
                 CreateNotificationWithNotificationEvents(13, new List<TreatmentEvent>
