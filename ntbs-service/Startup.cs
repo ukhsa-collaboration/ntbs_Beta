@@ -140,6 +140,7 @@ namespace ntbs_service
                 {
                     options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
                     options.Conventions.AllowAnonymousToPage("/Logout");
+                    options.Conventions.AllowAnonymousToPage("/Health");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
