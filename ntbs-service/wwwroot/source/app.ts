@@ -4,13 +4,16 @@
 
 // Root styles import - other global styles are imported from this sass file
 import "../css/site.scss"
-import VueAccessibleModal from 'vue-accessible-modal'
 
 // @ts-ignore
 import config from "./config/config-APP_TARGET";
 import Vue from "vue";
 import { initAll as govUkJsInitAll } from "govuk-frontend";
 import '../../node_modules/nhsuk-frontend/packages/components/details/details.polyfill';
+import VueAccessibleModal from 'vue-accessible-modal'
+import cssVars from 'css-vars-ponyfill';
+
+// Components
 import { ValidateInput } from "./Components/ValidateInput";
 import { ValidateDate } from "./Components/ValidateDate";
 import { DateComparison } from "./Components/DateComparison";
@@ -78,6 +81,6 @@ if (config.env === "development") {
     console.log("RUNNING IN DEVELOPMENT MODE - Accepting hot reload");
     module.hot.accept();
 }
-
+cssVars();
 govUkJsInitAll();
 
