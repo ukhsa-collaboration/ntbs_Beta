@@ -303,7 +303,7 @@ namespace ntbs_service.Models.Entities
         #endregion
         [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
         public bool HasDeathEventForPostMortemCase =>
-            TreatmentEvents.Any(x =>
+            ClinicalDetails.IsPostMortem == true && TreatmentEvents.Any(x =>
                 x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died);
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
