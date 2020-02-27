@@ -20,7 +20,7 @@ const DateComparison = Vue.extend({
     },
     computed: {
         filteredDateWarnings: function () {
-            return this.dateWarnings.filter((i: any) => i);
+            return this.dateWarnings;
         }
     },
     methods: {
@@ -55,7 +55,8 @@ const DateComparison = Vue.extend({
                     this.$set(this.dateWarnings, currentIndex,
                         {
                             message: warningMessageEarlier(this.$refs[`date${currentIndex}`].name, this.$refs[`date${lowerDateIndex}`].name),
-                            comparedTo: lowerDateIndex
+                            comparedTo: lowerDateIndex,
+                            currentIndex: i
                         });
                     return;
                 }
@@ -77,7 +78,8 @@ const DateComparison = Vue.extend({
                     this.$set(this.dateWarnings, currentIndex,
                         {
                             message: warningMessageLater(this.$refs[`date${currentIndex}`].name, this.$refs[`date${higherDateIndex}`].name),
-                            comparedTo: higherDateIndex
+                            comparedTo: higherDateIndex,
+                            currentIndex: i
                         });
                     return;
                 }
