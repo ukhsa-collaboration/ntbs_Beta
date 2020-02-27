@@ -40,7 +40,9 @@ COPY ./ntbs-service/package*.json ./
 RUN npm install
 
 WORKDIR /
+COPY ./NuGet.Config ./NuGet.Config
 COPY ./EFAuditer ./EFAuditer
+COPY ./frontend-dotnetcore ./frontend-dotnetcore
 COPY ./ntbs-service ./ntbs-service
 COPY ./ntbs-ui-tests ./ntbs-ui-tests
 
