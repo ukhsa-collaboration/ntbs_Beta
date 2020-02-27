@@ -30,7 +30,7 @@
     "vue-accessible-modal": "0.4.0"
   },
   "devDependencies": {
-    "@sentry/webpack-plugin": "^1.10.0",
+    "@sentry/webpack-plugin": "1.10.0",
     "@types/node": "13.7.4",
     "@types/webpack-env": "1.15.1",
     "aspnet-webpack": "3.0.0",
