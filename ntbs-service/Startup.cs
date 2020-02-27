@@ -21,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
-using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.Jobs;
@@ -124,7 +123,6 @@ namespace ntbs_service
             services.AddScoped<INotificationMapper, NotificationMapper>();
             services.AddScoped<IImportLogger, ImportLogger>();
             services.AddScoped<INotificationImportService, NotificationImportService>();
-            services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IUserService, UserService>();
