@@ -11,6 +11,15 @@
 
 <date-comparison inline-template>
     <div>
+        <div v-if="dateWarnings[0]">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[0].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-SymptomStartDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">Patient is symptomatic</nhs-fieldset-legend>
@@ -73,15 +82,15 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-        @* <div v-if="filteredDateWarnings.filter(x => x.currentIndex == 1).length > 0"> *@
-        @*     <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text"> *@
-        @*         <div class="warning-container"> *@
-        @*             <p> *@
-        @*                 <strong> {{filteredDateWarnings.filter(x => x.currentIndex == 1)[0].message}} </strong> *@
-        @*             </p> *@
-        @*         </div> *@
-        @*     </govuk-warning-text> *@
-        @* </div> *@
+        <div v-if="dateWarnings[1]">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[1].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <validate-date ref="date1" name="@Html.DisplayNameFor(model => model.ClinicalDetails.FirstPresentationDate)" model="ClinicalDetails" property="FirstPresentationDate" rank="1" v-model="dates[1]" inline-template>
             @{
                 var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.FirstPresentationDate");
@@ -167,11 +176,11 @@
              </nhs-fieldset>
         </nhs-form-group>
         <br />
-        <div v-if="filteredDateWarnings[2]">
+        <div v-if="dateWarnings[2]">
             <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
                 <div class="warning-container">
                     <p>
-                        <strong> {{filteredDateWarnings[2].message}} </strong>
+                        <strong> {{dateWarnings[2].message}} </strong>
                     </p>
                 </div>
             </govuk-warning-text>
@@ -215,15 +224,15 @@
             </nhs-form-group>
         </validate-date>
         <br />
-        @* <div v-if="filteredDateWarnings.filter(x => x.currentIndex == 3).length > 0"> *@
-        @*     <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text"> *@
-        @*         <div class="warning-container"> *@
-        @*             <p> *@
-        @*                 <strong> {{filteredDateWarnings.filter(x => x.currentIndex == 3)[0].message}} </strong> *@
-        @*             </p> *@
-        @*         </div> *@
-        @*     </govuk-warning-text> *@
-        @* </div> *@
+    <div v-if="dateWarnings[3]">
+        <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
+            <div class="warning-container">
+                <p>
+                    <strong> {{dateWarnings[3].message}} </strong>
+                </p>
+            </div>
+        </govuk-warning-text>
+    </div>
         <validate-date ref="date3" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate)" model="ClinicalDetails" property="DiagnosisDate" rank="3" v-model="dates[3]" inline-template>
             @{
                 var hasDiagnosisError = !Model.IsValid("ClinicalDetails.DiagnosisDate");
@@ -263,15 +272,15 @@
             </nhs-form-group>
         </validate-date>
         <br />
-        @* <div v-if="filteredDateWarnings.filter(x => x.currentIndex == 4).length > 0"> *@
-        @*     <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text"> *@
-        @*         <div class="warning-container"> *@
-        @*             <p> *@
-        @*                 <strong> {{filteredDateWarnings.filter(x => x.currentIndex == 4)[0].message}} </strong> *@
-        @*             </p> *@
-        @*         </div> *@
-        @*     </govuk-warning-text> *@
-        @* </div> *@
+    <div v-if="dateWarnings[4]">
+        <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
+            <div class="warning-container">
+                <p>
+                    <strong> {{dateWarnings[4].message}} </strong>
+                </p>
+            </div>
+        </govuk-warning-text>
+    </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-TreatmentStartDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">Patient started treatment</nhs-fieldset-legend>
@@ -332,15 +341,15 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-        @* <div v-if="filteredDateWarnings.filter(x => x.currentIndex == 5).length > 0"> *@
-        @*     <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text"> *@
-        @*         <div class="warning-container"> *@
-        @*             <p> *@
-        @*                 <strong> {{filteredDateWarnings.filter(x => x.currentIndex == 5)[0].message}} </strong> *@
-        @*             </p> *@
-        @*         </div> *@
-        @*     </govuk-warning-text> *@
-        @* </div> *@
+    <div v-if="dateWarnings[5]">
+        <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
+            <div class="warning-container">
+                <p>
+                    <strong> {{dateWarnings[5].message}} </strong>
+                </p>
+            </div>
+        </govuk-warning-text>
+    </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HomeVisitDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.HomeVisitCarriedOut)</nhs-fieldset-legend>
