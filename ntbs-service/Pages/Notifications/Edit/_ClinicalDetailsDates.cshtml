@@ -11,7 +11,7 @@
 
 <date-comparison inline-template>
     <div>
-        <div v-if="dateWarnings[0]">
+        <div v-if="dateWarnings[0]" class="hidden" ref="date-warning-0">
             <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
                 <div class="warning-container">
                     <p>
@@ -82,7 +82,7 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-        <div v-if="dateWarnings[1]">
+        <div v-if="dateWarnings[1]" class="hidden" ref="date-warning-1">
             <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
                 <div class="warning-container">
                     <p>
@@ -176,7 +176,7 @@
              </nhs-fieldset>
         </nhs-form-group>
         <br />
-        <div v-if="dateWarnings[2]">
+        <div v-if="dateWarnings[2]" class="hidden" ref="date-warning-2">
             <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
                 <div class="warning-container">
                     <p>
@@ -224,7 +224,7 @@
             </nhs-form-group>
         </validate-date>
         <br />
-    <div v-if="dateWarnings[3]">
+    <div v-if="dateWarnings[3]" class="hidden" ref="date-warning-3">
         <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
             <div class="warning-container">
                 <p>
@@ -272,7 +272,7 @@
             </nhs-form-group>
         </validate-date>
         <br />
-    <div v-if="dateWarnings[4]">
+    <div v-if="dateWarnings[4]" class="hidden" ref="date-warning-4">
         <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
             <div class="warning-container">
                 <p>
@@ -341,7 +341,7 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-    <div v-if="dateWarnings[5]">
+    <div v-if="dateWarnings[5]" class="hidden" ref="date-warning-5">
         <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text">
             <div class="warning-container">
                 <p>

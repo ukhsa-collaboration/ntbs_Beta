@@ -15,6 +15,7 @@ const DateComparison = Vue.extend({
         {
             for (let i = 0; i < this.dates.length; i++) {
                 this.datechanged(i);
+                this.$refs[`date-warning-${i}`].classList.remove("hidden");
             }
         })
     },
