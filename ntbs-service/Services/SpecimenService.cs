@@ -42,6 +42,8 @@ namespace ntbs_service.Services
         /// <param name="userName">username to record in the audit trail</param>
         /// <returns>boolean that's true when the proc returned a success flag</returns>
         Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
+
+        Task<bool> UnmatchAllSpecimensForNotification(int notificationId, string auditUsername);
     }
 
     public class SpecimenService : ISpecimenService
@@ -165,8 +167,7 @@ namespace ntbs_service.Services
                     @"DECLARE @result int;  
                         exec @result = uspUnmatchSpecimen @referenceLaboratoryNumber, @notificationId;
                         SELECT @result",
-                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId},
-                    commandType: CommandType.StoredProcedure);
+                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId});
 
                 var success = returnValue == 0;
 
@@ -200,6 +201,15 @@ namespace ntbs_service.Services
                 
                 return success;
             }
+        }
+
+        public async Task<bool> UnmatchAllSpecimensForNotification(int notificationId, string auditUsername)
+        {
+            var existingMatches = await GetMatchedSpecimenDetailsForNotificationAsync(notificationId);
+            var resultsTasks = existingMatches.Select(match => match.ReferenceLaboratoryNumber)
+                .Select(labNumber => UnmatchSpecimenAsync(notificationId, labNumber, auditUsername));
+            var results = await Task.WhenAll(resultsTasks);
+            return results.All(result => result); // Check if all were successes
         }
 
         private class UnmatchedQueryResultRow
