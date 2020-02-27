@@ -241,6 +241,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 ClinicalDetails.DotStatus = null;
             }
+
+            if (ClinicalDetails.EnhancedCaseManagementStatus != Status.Yes)
+            {
+                ClinicalDetails.EnhancedCaseManagementLevel = 0;
+            }
         }
 
         private IEnumerable<NotificationSite> CreateNotificationSitesFromModel(Notification notification)

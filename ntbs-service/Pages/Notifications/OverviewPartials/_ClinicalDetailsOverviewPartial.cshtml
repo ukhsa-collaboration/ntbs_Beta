@@ -129,7 +129,22 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Enhanced Case Management </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails?.EnhancedCaseManagementStatus </div>
+            <div class="cell-min-height">
+                @{
+                    string enhancedCaseManagementString = "";
+                    var enhancedCaseManagementStatus = Model.Notification.ClinicalDetails.EnhancedCaseManagementStatus;
+                    if (enhancedCaseManagementStatus != Status.Yes)
+                    {
+                        enhancedCaseManagementString = enhancedCaseManagementStatus.ToString();
+                    }
+                    else
+                    {
+                        var enhancedCaseManagementLevel = Model.Notification.ClinicalDetails.EnhancedCaseManagementLevel;
+                        enhancedCaseManagementString = $"{enhancedCaseManagementStatus} - Level {enhancedCaseManagementLevel}";
+                    }
+                } 
+                @enhancedCaseManagementString
+            </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Standard therapy treatment </div>

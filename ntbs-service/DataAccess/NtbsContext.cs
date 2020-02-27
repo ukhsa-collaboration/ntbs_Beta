@@ -247,6 +247,8 @@ namespace ntbs_service.DataAccess
                         .HasMaxLength(EnumMaxLength);
                     e.Property(c => c.Notes)
                         .HasMaxLength(1000);
+                    e.Property(c => c.EnhancedCaseManagementLevel)
+                        .HasDefaultValue(0);
                     e.ToTable("ClinicalDetails");
                 });
 
