@@ -64,4 +64,13 @@ namespace ntbs_service.Services
             }
         }
     }
+    
+    class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
+    {
+        public Task UpdateDrugResistanceProfiles()
+        {
+            return Task.CompletedTask;
+        }
+    }
+
 }

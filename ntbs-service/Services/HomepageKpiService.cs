@@ -2,12 +2,10 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using Audit.Core;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
@@ -23,7 +21,7 @@ namespace ntbs_service.Services
 
         public HomepageKpiService(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("reporting");
+            _connectionString = configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING);
         }
 
         public async Task<IEnumerable<HomepageKpi>> GetKpiForPhec(IEnumerable<string> phecCodes)
@@ -51,6 +49,21 @@ namespace ntbs_service.Services
                 connection.Open();
                 return await connection.QueryAsync<HomepageKpi>(query, new {param});
             }
+        }
+    }
+    
+    public class MockHomepageKpiService : IHomepageKpiService
+    {
+        public Task<IEnumerable<HomepageKpi>> GetKpiForPhec(IEnumerable<string> phecCodes)
+        {
+            var homepageKpiDetails = phecCodes.Select(x => new HomepageKpi {Code = x, Name = x});
+            return Task.FromResult(homepageKpiDetails);
+        }
+
+        public Task<IEnumerable<HomepageKpi>> GetKpiForTbService(IEnumerable<string> tbServiceCodes)
+        {
+            var homepageKpiDetails = tbServiceCodes.Select(x => new HomepageKpi {Code = x, Name = x});
+            return Task.FromResult(homepageKpiDetails);
         }
     }
 }

@@ -133,12 +133,11 @@ namespace ntbs_service
             services.AddScoped<ILegacySearchService, LegacySearchService>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
-            services.AddScoped<IHomepageKpiService, HomepageKpiService>();
-            services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);
+            AddReportingServices(services);
         }
 
         private void SetupHangfire(IServiceCollection services)
@@ -265,6 +264,22 @@ namespace ntbs_service
                 services.AddScoped<ISpecimenService, SpecimenService>();
             }
         }
+
+        private void AddReportingServices(IServiceCollection services)
+        {
+            if (string.IsNullOrEmpty(Configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING)))
+            {
+                services.AddScoped<IHomepageKpiService, MockHomepageKpiService>();
+                services.AddScoped<IDrugResistanceProfilesService, MockDrugResistanceProfilesService>();                
+            }
+            else
+            {
+
+                services.AddScoped<IHomepageKpiService, HomepageKpiService>();
+                services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();                
+            }
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
