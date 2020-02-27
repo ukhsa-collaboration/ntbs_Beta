@@ -68,7 +68,7 @@ namespace ntbs_service.Models
             return notification.TreatmentEvents
                        .GetMostRecentTreatmentEvent()
                        ?.TreatmentOutcome
-                       .TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
+                       ?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
         }
 
         public NotificationBannerModel() {}
