@@ -1,7 +1,6 @@
 ﻿import Vue from "vue";
 import ConfirmComponent from "./ConfirmComponent";
-require('formdata-polyfill');
-require('array-from-polyfill');
+import 'formdata-polyfill';
 
 const FormLeaveChecker = Vue.extend({
     created(): void {
@@ -34,12 +33,18 @@ const FormLeaveChecker = Vue.extend({
             const forms : any = document.querySelectorAll('form');
             let stringifiedForm = "";
 
-            for (const form of forms) {
-                const formData: any = new FormData(form);
-                for (const entry of Array.from(formData.entries())) {
-                    stringifiedForm += JSON.stringify(entry);
+            for (let index = 0; index < forms.length; index++) {
+                const formData: any = new FormData(forms[index]);
+                const allEntries = formData.entries();
+                
+                let currentValue = allEntries.next();
+                while (!currentValue.done)
+                {
+                    stringifiedForm += JSON.stringify(currentValue);
+                    currentValue = allEntries.next();
                 }
             }
+            
             return stringifiedForm;
         }
     }

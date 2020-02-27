@@ -165,5 +165,10 @@ namespace ntbs_service.Services
         {
             return Task.FromResult(true);
         }
+
+        public Task<bool> UnmatchAllSpecimensForNotification(int notificationId, string auditUsername)
+        {
+            return Task.FromResult(true);
+        }
     }
 }

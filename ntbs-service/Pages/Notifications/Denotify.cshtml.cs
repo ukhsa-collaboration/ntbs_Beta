@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -79,7 +80,10 @@ namespace ntbs_service.Pages.Notifications
 
             if (Notification.NotificationStatus == NotificationStatus.Notified)
             {
-                await Service.DenotifyNotificationAsync(NotificationId, DenotificationDetails);
+                await Service.DenotifyNotificationAsync(
+                    NotificationId, 
+                    DenotificationDetails,
+                    User.FindFirstValue(ClaimTypes.Email));
             }
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
