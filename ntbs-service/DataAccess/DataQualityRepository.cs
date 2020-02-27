@@ -73,7 +73,7 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts()
         {
             return await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Now.AddYears(-1))
+                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-1))
                 .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 1))
                 .ToListAsync();
         }
@@ -81,7 +81,7 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts()
         {
             return await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Now.AddYears(-2))
+                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-2))
                 .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 2))
                 .ToListAsync();
         }
@@ -89,7 +89,7 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts()
         {
             return await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Now.AddYears(-3))
+                .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-3))
                 .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 3))
                 .ToListAsync();
         }
@@ -116,8 +116,7 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
         {
             return GetBaseNotificationQueryableWithTreatmentEventsForAlerts()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT));
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified);
         }
     }
 }

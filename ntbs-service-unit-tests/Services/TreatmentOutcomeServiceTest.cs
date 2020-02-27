@@ -17,6 +17,9 @@ namespace ntbs_service_unit_tests.Services
             _treatmentOutcomeService = new TreatmentOutcomeService();
         }
 
+        // The example notifications are taken from pdf attached to ticket NTBS-923 TODO: update this to actual googlesheet
+        // Each notification is seeded with an expected treatment outcome at 12/24/36 months based on what
+        // GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAtXYear should return
         public static IEnumerable<object[]> NotificationsAndExpectedOutcome()
         {
             // Example 1

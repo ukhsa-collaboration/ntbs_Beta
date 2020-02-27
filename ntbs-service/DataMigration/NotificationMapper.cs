@@ -10,8 +10,10 @@ using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
 using Serilog;
+using Countries = ntbs_service.Models.Countries;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 // We're not using object initialization syntax in this file, as it obscures errors caused by wrong date types
@@ -313,7 +315,7 @@ namespace ntbs_service.DataMigration
                  TreatmentEventType = TreatmentEventType.TreatmentOutcome,
                  TreatmentOutcome = new TreatmentOutcome
                  {
-                     TreatmentOutcomeId = 10,
+                     TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
                      TreatmentOutcomeType = TreatmentOutcomeType.Died,
                      TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
                  }
