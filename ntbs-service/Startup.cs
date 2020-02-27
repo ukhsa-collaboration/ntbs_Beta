@@ -136,46 +136,9 @@ namespace ntbs_service
             services.AddScoped<IHomepageKpiService, HomepageKpiService>();
             services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
-
-            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
-            {
-                services.AddEFAuditer(auditDbConnectionString);
-            }
-            else
-            {
-                Audit.Core.Configuration.AuditDisabled = true;
-            }
-
-            var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
-            if (referenceLabResultsConfig.GetValue<bool>("MockOutSpecimenMatching"))
-            {
-                var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
-                var tbServiceCode = referenceLabResultsConfig.GetValue<string>("MockedTbServiceCode");
-                var phecCode = referenceLabResultsConfig.GetValue<string>("MockedPhecCode");
-                services.AddScoped<ICultureAndResistanceService>(
-                    sp => new MockCultureAndResistanceService(notificationId));
-                services.AddScoped<ISpecimenService>(
-                    sp => new MockSpecimenService(notificationId, tbServiceCode, phecCode));
-            }
-            else
-            {
-                services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
-                services.AddScoped<ISpecimenService, SpecimenService>();
-            }
-
-            var clusterMatchingConfig = Configuration.GetSection("ClusterMatchingConfig");
-            if (clusterMatchingConfig.GetValue<bool>("MockOutClusterMatching"))
-            {
-                var notificationClusterValues = new List<NotificationClusterValue>();
-                clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
-
-                services.AddScoped<INotificationClusterService>(sp =>
-                    new MockNotificationClusterService(notificationClusterValues));
-            }
-            else
-            {
-                services.AddScoped<INotificationClusterService, NotificationClusterService>();
-            }
+            AddAuditService(services, auditDbConnectionString);
+            AddReferenceLabResultServices(services);
+            AddClusterService(services);
         }
 
         private void SetupHangfire(IServiceCollection services)
@@ -251,6 +214,55 @@ namespace ntbs_service
             if (setupDummyAuth)
             {
                 authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
+            }
+        }
+
+        private void AddAuditService(IServiceCollection services, string auditDbConnectionString)
+        {
+            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            {
+                services.AddEFAuditer(auditDbConnectionString);
+            }
+            else
+            {
+                Audit.Core.Configuration.AuditDisabled = true;
+            }
+        }
+
+        private void AddClusterService(IServiceCollection services)
+        {
+            var clusterMatchingConfig = Configuration.GetSection(Constants.CLUSTER_MATCHING_CONFIG);
+            if (clusterMatchingConfig.GetValue<bool>(Constants.CLUSTER_MATCHING_CONFIG__MOCKOUT))
+            {
+                var notificationClusterValues = new List<NotificationClusterValue>();
+                clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
+
+                services.AddScoped<INotificationClusterService>(sp =>
+                    new MockNotificationClusterService(notificationClusterValues));
+            }
+            else
+            {
+                services.AddScoped<INotificationClusterService, NotificationClusterService>();
+            }
+        }
+
+        private void AddReferenceLabResultServices(IServiceCollection services)
+        {
+            var referenceLabResultsConfig = Configuration.GetSection(Constants.REFERENCE_LAB_RESULTS_CONFIG);
+            if (referenceLabResultsConfig.GetValue<bool>(Constants.REFERENCE_LAB_RESULTS_CONFIG__MOCKOUT))
+            {
+                var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
+                var tbServiceCode = referenceLabResultsConfig.GetValue<string>("MockedTbServiceCode");
+                var phecCode = referenceLabResultsConfig.GetValue<string>("MockedPhecCode");
+                services.AddScoped<ICultureAndResistanceService>(
+                    sp => new MockCultureAndResistanceService(notificationId));
+                services.AddScoped<ISpecimenService>(
+                    sp => new MockSpecimenService(notificationId, tbServiceCode, phecCode));
+            }
+            else
+            {
+                services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
+                services.AddScoped<ISpecimenService, SpecimenService>();
             }
         }
 
