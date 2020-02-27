@@ -26,6 +26,12 @@ RUN npm install
 COPY ./ntbs-service/wwwroot ./wwwroot
 COPY ./ntbs-service/tsconfig.json ./
 COPY ./ntbs-service/webpack* ./
+
+ENV SENTRY_ORG=phe-ntbs
+ENV SENTRY_PROJECT=ntbs-frontend
+ARG SENTRY_AUTH_TOKEN
+ARG RELEASE
+
 RUN npm run build:prod
 
 
@@ -45,5 +51,9 @@ ENV ASPNETCORE_URLS=http://*:8080
 WORKDIR /app
 COPY --from=build /app/ntbs-service/out ./
 COPY --from=build-frontend /app/wwwroot/dist ./wwwroot/dist/
+
+ARG RELEASE
+# We want it to be avaialble inside the container
+ENV RELEASE=$RELEASE 
 
 ENTRYPOINT ["dotnet", "ntbs-service.dll"]

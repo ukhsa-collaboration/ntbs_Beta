@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.AspNetCore;
@@ -65,7 +65,7 @@ namespace ntbs_service
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSentry()
+                .UseSentry(o => o.Release = Environment.GetEnvironmentVariable("RELEASE"))
                 .UseSerilog();
 
         private static void MigrateAppDb(IServiceProvider services)
