@@ -17,23 +17,24 @@ namespace ntbs_service_unit_tests.Services
     public class NotificationServiceTest
     {
         private readonly INotificationService _notificationService;
-        private readonly Mock<INotificationRepository> _mockNotificationRepository;
-        private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
-        private readonly Mock<IUserService> _mockUserService;
-        private readonly Mock<NtbsContext> _mockContext;
-        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository;
+        private readonly Mock<INotificationRepository> _mockNotificationRepository = new Mock<INotificationRepository>();
+        private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
+        private readonly Mock<IUserService> _mockUserService = new Mock<IUserService>();
+        private readonly Mock<ISpecimenService> _mockSpecimenService = new Mock<ISpecimenService>();
+        private readonly Mock<NtbsContext> _mockContext = new Mock<NtbsContext>();
+        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
 
         public NotificationServiceTest()
         {
-            _mockNotificationRepository = new Mock<INotificationRepository>();
-            _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
-            _mockUserService = new Mock<IUserService>();
-            _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
-            _mockContext = new Mock<NtbsContext>();
-            _notificationService = new NotificationService(_mockNotificationRepository.Object,
-                _mockReferenceDataRepository.Object, _mockUserService.Object, _mockTreatmentEventRepository.Object, _mockContext.Object);
-
             _mockContext.Setup(context => context.SetValues(It.IsAny<Object>(), It.IsAny<Object>()));
+
+            _notificationService = new NotificationService(
+                _mockNotificationRepository.Object,
+                _mockReferenceDataRepository.Object,
+                _mockUserService.Object,
+                _mockTreatmentEventRepository.Object,
+                _mockContext.Object,
+                _mockSpecimenService.Object);
         }
 
         [Theory]
