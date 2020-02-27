@@ -48,86 +48,20 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configuration
+            var adfsConfig = Configuration.GetSection("AdfsOptions");
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-            if (!Env.IsEnvironment("CI"))
-            {
-                services.AddHangfire(config =>
-                {
-                    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                        .UseSimpleAssemblyNameTypeSerializer()
-                        .UseRecommendedSerializerSettings()
-                        .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"),
-                            new SqlServerStorageOptions
-                            {
-                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                                QueuePollInterval = TimeSpan.Zero,
-                                UseRecommendedIsolationLevel = true,
-                                UsePageLocksOnDequeue = true,
-                                DisableGlobalLocks = true
-                            })
-                        .UseConsole();
-                });
-            }
-
-            var adfsConfig = Configuration.GetSection("AdfsOptions");
-            var ldapConnectionSettings = Configuration.GetSection("LdapConnectionSettings");
-            var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
-            var authSetup = services
-                .AddAuthentication(sharedOptions =>
-                {
-                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                })
-                .AddWsFederation(options =>
-                {
-                    options.MetadataAddress =
-                        adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
-                    options.Wtrealm = adfsConfig["Wtrealm"];
-                    
-                    /*
-                     * Below event handler is to prevent stale logins from showing a 500 error screen, instead to force
-                     * back to the landing page - and cause a re-challenge or continue if already authenticated.
-                     * https://community.auth0.com/t/asp-net-core-2-intermittent-correlation-failed-errors/11918/14
-                     */
-                    options.Events.OnRemoteFailure += context =>
-                    {
-                        if (context.Failure.Message == "Correlation failed.")
-                        {
-                            context.HandleResponse();
-                            context.Response.Redirect("/");
-                        }
-
-                        return Task.CompletedTask;
-                    };
-
-                    options.Events.OnSecurityTokenValidated += context =>
-                    {
-                        var username = context.Principal.FindFirstValue(ClaimTypes.Email);
-                        if (username != null)
-                        {
-                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                            userService.RecordUserLogin(username);
-                        }
-                        return Task.CompletedTask;
-                    };
-                })
-                .AddCookie(options =>
-                {
-                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
-                });
-
-            if (setupDummyAuth)
-            {
-                authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
-            }
+            services.Configure<AdfsOptions>(adfsConfig);
+            services.Configure<LdapConnectionSettings>(Configuration.GetSection("LdapConnectionSettings"));
+            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
+            
+            // Plugin services
+            SetupAuthentication(services, adfsConfig);
 
             services.AddMvc(options =>
                 {
@@ -151,7 +85,9 @@ namespace ntbs_service
                     policy.RequireRole(GetAdminRoleName());
                 });
             });
+            SetupHangfire(services);
 
+            // DB Contexts
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
@@ -162,33 +98,13 @@ namespace ntbs_service
                 options.UseSqlServer(auditDbConnectionString)
             );
 
-            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
-            {
-                services.AddEFAuditer(auditDbConnectionString);
-            }
-            else
-            {
-                Audit.Core.Configuration.AuditDisabled = true;
-            }
-
+            // Repositories
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IAlertService, AlertService>();
             services.AddScoped<IAlertRepository, AlertRepository>();
-            services.AddScoped<INotificationMapper, NotificationMapper>();
-            services.AddScoped<IImportLogger, ImportLogger>();
-            services.AddScoped<INotificationImportService, NotificationImportService>();
             services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
             services.AddScoped<INotificationImportHelper, NotificationImportHelper>();
             services.AddScoped<IMigrationRepository, MigrationRepository>();
-            services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<IAuditService, AuditService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IPostcodeService, PostcodeService>();
-            services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
-            services.AddScoped<ILegacySearchService, LegacySearchService>();
             services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
             services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
             services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
@@ -198,19 +114,38 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<MBovisOccupationExposure>, MBovisOccupationExposureRepository>();
             services.AddScoped<IItemRepository<MBovisAnimalExposure>, MBovisAnimalExposureRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDataQualityRepository, DataQualityRepository>();
+            services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
+            services.AddScoped<IFaqRepository, FaqRepository>();
+            
+            // Services
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IAlertService, AlertService>();
+            services.AddScoped<INotificationMapper, NotificationMapper>();
+            services.AddScoped<IImportLogger, ImportLogger>();
+            services.AddScoped<INotificationImportService, NotificationImportService>();
+            services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPostcodeService, PostcodeService>();
+            services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
+            services.AddScoped<ILegacySearchService, LegacySearchService>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IHomepageKpiService, HomepageKpiService>();
-            services.AddScoped<IDataQualityRepository, DataQualityRepository>();
-            services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
-            services.AddScoped<IFaqRepository, FaqRepository>();
 
-            services.Configure<AdfsOptions>(adfsConfig);
-            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
-            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
-            
+            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            {
+                services.AddEFAuditer(auditDbConnectionString);
+            }
+            else
+            {
+                Audit.Core.Configuration.AuditDisabled = true;
+            }
+
             var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
             if (referenceLabResultsConfig.GetValue<bool>("MockOutSpecimenMatching"))
             {
@@ -240,6 +175,82 @@ namespace ntbs_service
             else
             {
                 services.AddScoped<INotificationClusterService, NotificationClusterService>();
+            }
+        }
+
+        private void SetupHangfire(IServiceCollection services)
+        {
+            if (!Env.IsEnvironment("CI"))
+            {
+                services.AddHangfire(config =>
+                {
+                    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseRecommendedSerializerSettings()
+                        .UseSqlServerStorage(Configuration.GetConnectionString("ntbsContext"),
+                            new SqlServerStorageOptions
+                            {
+                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                                QueuePollInterval = TimeSpan.Zero,
+                                UseRecommendedIsolationLevel = true,
+                                UsePageLocksOnDequeue = true,
+                                DisableGlobalLocks = true
+                            })
+                        .UseConsole();
+                });
+            }
+        }
+
+        private static void SetupAuthentication(IServiceCollection services, IConfigurationSection adfsConfig)
+        {
+            var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
+            var authSetup = services
+                .AddAuthentication(sharedOptions =>
+                {
+                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                })
+                .AddWsFederation(options =>
+                {
+                    options.MetadataAddress =
+                        adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
+                    options.Wtrealm = adfsConfig["Wtrealm"];
+
+                    /*
+                     * Below event handler is to prevent stale logins from showing a 500 error screen, instead to force
+                     * back to the landing page - and cause a re-challenge or continue if already authenticated.
+                     * https://community.auth0.com/t/asp-net-core-2-intermittent-correlation-failed-errors/11918/14
+                     */
+                    options.Events.OnRemoteFailure += context =>
+                    {
+                        if (context.Failure.Message == "Correlation failed.")
+                        {
+                            context.HandleResponse();
+                            context.Response.Redirect("/");
+                        }
+
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnSecurityTokenValidated += context =>
+                    {
+                        var username = context.Principal.FindFirstValue(ClaimTypes.Email);
+                        if (username != null)
+                        {
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                            userService.RecordUserLogin(username);
+                        }
+
+                        return Task.CompletedTask;
+                    };
+                })
+                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
+
+            if (setupDummyAuth)
+            {
+                authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
             }
         }
 
