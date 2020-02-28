@@ -5,6 +5,7 @@
     var hiddenPartialData = new ViewDataDictionary(ViewData) {["id"] = "save-button-hidden"};
 }
 
+<form-leave-checker inline-template><div></div></form-leave-checker>
 @section MainFormButton {
     <div hidden>
         <partial name="Notifications/Edit/_SaveButton" for="Notification" view-data="@hiddenPartialData"/>
