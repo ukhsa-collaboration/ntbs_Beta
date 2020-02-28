@@ -17,9 +17,9 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts();
-        Task<IEnumerable<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
-        Task<IEnumerable<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
-        Task<IEnumerable<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
     }
 
     public class DataQualityRepository : IDataQualityRepository
@@ -70,7 +70,7 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts()
+        public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts()
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
@@ -78,10 +78,11 @@ namespace ntbs_service.DataAccess
                     .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) <
                                 DateTime.Today.AddYears(-1))
                     .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 1));
+                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 1))
+                .ToList();
         }
 
-        public async Task<IEnumerable<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts()
+        public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts()
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
@@ -89,17 +90,19 @@ namespace ntbs_service.DataAccess
                     .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) <
                                 DateTime.Today.AddYears(-2))
                     .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 2));
+                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 2))
+                .ToList();
         }
 
-        public async Task<IEnumerable<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts()
+        public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts()
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
             return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
                     .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-3))
                     .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 3));
+                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 3))
+                .ToList();
         }
 
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
