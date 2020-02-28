@@ -3,6 +3,9 @@ import Vue from 'vue';
 // Component to validate date order. Compares the members of the "dates" array, in ascending index order.
 // Bind dates using v-model, and have bound component emit a datechanged event when date changes.
 const DateComparison = Vue.extend({
+    props: {
+        numberOfDates: Number
+    },
     data: function () {
         return {
             dates: [],
@@ -16,12 +19,10 @@ const DateComparison = Vue.extend({
             for (let i = 0; i < this.dates.length; i++) {
                 this.datechanged(i);
             }
+            for (let i = 0; i < this.$props.numberOfDates; i++) {
+                this.$refs[`date-warning-${i}`]?.classList.remove("hidden");
+            }
         })
-    },
-    computed: {
-        filteredDateWarnings: function () {
-            return this.dateWarnings.filter((i: any) => i);
-        }
     },
     methods: {
         datechanged: function (rank: any) {
