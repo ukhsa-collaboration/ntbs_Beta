@@ -8,14 +8,16 @@
 </head>
 <body>
     <div id="app">
-        <div>
-            <partial name="./_Header.cshtml" />
-            
-            <nhs-main-wrapper classes="main-wrapper">
-                @RenderBody()
-            </nhs-main-wrapper>
-                <partial name="./_Footer.cshtml" />
-        </div>
+        <form-leave-checker inline-template>
+            <div>
+                <partial name="./_Header.cshtml" />
+                
+                <nhs-main-wrapper classes="main-wrapper">
+                    @RenderBody()
+                </nhs-main-wrapper>
+                    <partial name="./_Footer.cshtml" />
+            </div>
+        </form-leave-checker>
         
         <vue-accessible-modal/>
     </div>
