@@ -7,7 +7,7 @@ RUN dotnet restore EFAuditer/EFAuditer.csproj
 
 # restore app (in a separate layer to speed up the build)
 COPY ./NuGet.Config ./NuGet.Config
-COPY ./frontend-dotnetcore ./frontend-dotnetcore
+COPY ./frontend-dotnetcore/dist ./frontend-dotnetcore/dist
 COPY ntbs-service/ntbs-service.csproj ./ntbs-service/
 RUN dotnet restore ntbs-service/ntbs-service.csproj
 
