@@ -7,12 +7,18 @@ using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ntbs_integration_tests.NotificationPages
 {
     public class BasicEditPageTests : TestRunnerNotificationBase
     {
-        public BasicEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        private readonly ITestOutputHelper _output;
+
+        public BasicEditPageTests(NtbsWebApplicationFactory<Startup> factory, ITestOutputHelper output) : base(factory)
+        {
+            _output = output;
+        }
 
         [Theory, MemberData(nameof(EditPageSubPaths))]
         public async Task Get_ReturnsNotFound_ForNewId(string subPath)
@@ -47,6 +53,7 @@ namespace ntbs_integration_tests.NotificationPages
                     // Act
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
+                    _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 });
@@ -66,6 +73,7 @@ namespace ntbs_integration_tests.NotificationPages
                     // Act
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
+                    _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
                     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
                 });
@@ -85,6 +93,7 @@ namespace ntbs_integration_tests.NotificationPages
                     // Act
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
+                    _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 });
@@ -104,6 +113,7 @@ namespace ntbs_integration_tests.NotificationPages
                     // Act
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
+                    _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
                     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 });
@@ -123,6 +133,7 @@ namespace ntbs_integration_tests.NotificationPages
                     // Act
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
+                    _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
                     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
                 });
@@ -142,6 +153,7 @@ namespace ntbs_integration_tests.NotificationPages
                     // Act
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
+                    _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
                     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
                 });
