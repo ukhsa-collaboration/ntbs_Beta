@@ -12,7 +12,7 @@ namespace ntbs_service.Models.Enums
         TransferIn,
         [Display(Name = "Transfer out")]
         TransferOut,
-        [Display(Name = "Notification start")]
-        NotificationStart,
+        [Display(Name = "Treatment start")]
+        TreatmentStart,
     }
 }

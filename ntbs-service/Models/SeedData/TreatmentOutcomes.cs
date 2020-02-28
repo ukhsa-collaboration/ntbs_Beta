@@ -6,6 +6,7 @@ namespace ntbs_service.Models.SeedData
 {
     public class TreatmentOutcomes
     {
+        public static int UnknownDeathEventOutcomeId = 10;
         public static IEnumerable<TreatmentOutcome> GetTreatmentOutcomes()
         {
             return new List<TreatmentOutcome>
@@ -21,7 +22,7 @@ namespace ntbs_service.Models.SeedData
                 new TreatmentOutcome { TreatmentOutcomeId = 7, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbCausedDeath },
                 new TreatmentOutcome { TreatmentOutcomeId = 8, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbContributedToDeath },
                 new TreatmentOutcome { TreatmentOutcomeId = 9, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.TbIncidentalToDeath },
-                new TreatmentOutcome { TreatmentOutcomeId = 10, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown },
+                new TreatmentOutcome { TreatmentOutcomeId = UnknownDeathEventOutcomeId, TreatmentOutcomeType = TreatmentOutcomeType.Died, TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown },
 
                 new TreatmentOutcome { TreatmentOutcomeId = 11, TreatmentOutcomeType = TreatmentOutcomeType.Lost, TreatmentOutcomeSubType = TreatmentOutcomeSubType.PatientLeftUk },
                 new TreatmentOutcome { TreatmentOutcomeId = 12, TreatmentOutcomeType = TreatmentOutcomeType.Lost, TreatmentOutcomeSubType = TreatmentOutcomeSubType.PatientNotLeftUk },

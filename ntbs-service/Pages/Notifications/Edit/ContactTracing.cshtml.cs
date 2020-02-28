@@ -28,7 +28,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./SocialRiskFactors", new { NotificationId, isBeingSubmitted });
         }

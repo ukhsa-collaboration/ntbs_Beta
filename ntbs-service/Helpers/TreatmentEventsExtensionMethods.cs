@@ -43,18 +43,9 @@ namespace ntbs_service.Helpers
             return groupedEpisodes;
         }
 
-        public static TreatmentEvent GetMostRecentTreatmentOutcomeInPeriod(this IEnumerable<TreatmentEvent> treatmentEvents, DateTime startTime, DateTime endTime)
+        public static TreatmentEvent GetMostRecentTreatmentEvent(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
-            return treatmentEvents.Where(t => t.TreatmentEventTypeIsOutcome
-                                                && t.EventDate > startTime
-                                                && t.EventDate <= endTime)
-                .OrderByDescending(t => t.EventDate)
-                .FirstOrDefault();
-        }
-
-        public static TreatmentEvent GetMostRecentTreatmentOutcome(this IEnumerable<TreatmentEvent> treatmentEvents)
-        {
-            return treatmentEvents.Where(t => t.TreatmentEventTypeIsOutcome)
+            return treatmentEvents
                 .OrderByDescending(t => t.EventDate)
                 .FirstOrDefault();
         }

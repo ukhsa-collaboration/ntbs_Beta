@@ -417,7 +417,6 @@
         </nhs-form-group>
     
         <h2>Post Mortem Diagnosis</h2>
-        <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DeathDate">
             <nhs-fieldset>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
@@ -427,44 +426,15 @@
                         </label>
                     </div>
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
-                        @{
-                            var hasDeathDateError = !Model.IsValid("ClinicalDetails.DeathDate");
-                            var deathDateGroupState = hasDeathDateError ? Error : Standard;
-                        }
-                        <validate-date name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" inline-template>
-                            <nhs-form-group nhs-form-group-type=@deathDateGroupState>
-                                <nhs-fieldset aria-describedby="postmortem-error" role="group">
-                                    <nhs-fieldset-legend nhs-legend-size="Standard">
-                                        @Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)
-                                    </nhs-fieldset-legend>
-                                    <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DeathDate"
-                                          has-error="@hasDeathDateError" id="postmortem-error"></span>
-                                    <nhs-date-input id="postmortem">
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Day">Day</label>
-                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                       is-error-input=@hasDeathDateError asp-for="FormattedDeathDate.Day" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Month">Month</label>
-                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                       is-error-input=@hasDeathDateError asp-for="FormattedDeathDate.Month" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Year">Year</label>
-                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                       is-error-input=@hasDeathDateError asp-for="FormattedDeathDate.Year" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                    </nhs-date-input>
-                                </nhs-fieldset>
-                            </nhs-form-group>
-                        </validate-date>
+                        <label class="nhsuk-label" for="postmortem-save-button"> Please record the death outcome on the treatment events page </label>
+                        <button
+                            nhs-button-type="Standard"
+                            classes="ntbsuk-button--primary"
+                            name="SaveAndRouteToTreatmentEvents"
+                            value="SaveAndRouteToTreatmentEvents"
+                            id="postmortem-save-button">
+                            Save and go to treatment events
+                        </button>
                     </div>
                     <div class="nhsuk-radios__item">
                         <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-no" class="nhsuk-radios__input" type="radio" value="false">
@@ -474,6 +444,5 @@
                     </div>
                 </div>
             </nhs-fieldset>
-        </nhs-form-group>
     </div>
 </date-comparison>

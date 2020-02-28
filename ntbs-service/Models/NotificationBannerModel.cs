@@ -66,9 +66,9 @@ namespace ntbs_service.Models
         private static string CalculateOutcome(Notification notification)
         {
             return notification.TreatmentEvents
-                       .GetMostRecentTreatmentOutcome()
+                       .GetMostRecentTreatmentEvent()
                        ?.TreatmentOutcome
-                       .TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
+                       ?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded";
         }
 
         public NotificationBannerModel() {}
