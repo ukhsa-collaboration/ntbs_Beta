@@ -16,6 +16,7 @@ Make sure you have the following tools installed locally:
 
 In this directory, run:
 
+- `git submodule update --init --recursive` to recursively initialise and update submodules, if this was not done as part of the cloning process
 - `dotnet restore` and `npm install` to pull in dependencies
 - `dotnet run` to launch the webserver locally
 - `dotnet watch run` to launch the webserver locally with hot-reloading enabled

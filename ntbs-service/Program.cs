@@ -65,7 +65,7 @@ namespace ntbs_service
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSentry(o => o.Release = Environment.GetEnvironmentVariable("RELEASE"))
+                .UseSentry(o => o.Release = Environment.GetEnvironmentVariable(Constants.RELEASE))
                 .UseSerilog();
 
         private static void MigrateAppDb(IServiceProvider services)

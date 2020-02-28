@@ -15,7 +15,10 @@ namespace ntbs_service.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            
+            migrationBuilder.DeleteData(
+                "FrequentlyAskedQuestion",
+                "Question",
+                "Why must I perform a search before creating a new notification?");
         }
     }
 }

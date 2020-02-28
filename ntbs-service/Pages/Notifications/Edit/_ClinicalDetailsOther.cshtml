@@ -30,8 +30,8 @@
                         <label nhs-label-type="Standard" asp-for="ClinicalDetails.BCGVaccinationYear">Year of vaccination </label>
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.BCGVaccinationYear"
                               id="bcg-vaccination-error" has-error="@hasBcgVaccinationError"></span>
-                        <input ref="inputField" nhs-input-type="Standard" v-on:blur="validate" fixed-width="Four"
-                               asp-for="ClinicalDetails.BCGVaccinationYear" type="number">
+                        <input ref="inputField" nhs-input-type="Number" v-on:blur="validate" fixed-width="Four"
+                               asp-for="ClinicalDetails.BCGVaccinationYear">
                     </nhs-form-group>
                 </year-comparison>
             </div>

@@ -44,8 +44,8 @@
                             <label nhs-label-type="Standard" asp-for="PatientTbHistory.PreviousTBDiagnosisYear"> Year of diagnosis </label>
                             <span nhs-span-type="ErrorMessage" id="previous-tb-diagnosis-year-error" ref="errorField"
                                   asp-validation-for="PatientTbHistory.PreviousTBDiagnosisYear" has-error="@hasPreviousTbDiagnosisError"></span>
-                            <input  type="number" ref="inputField" v-on:blur="validate" is-error-input=@hasPreviousTbDiagnosisError
-                                   nhs-input-type="Standard" fixed-width="Four" asp-for="PatientTbHistory.PreviousTBDiagnosisYear">
+                            <input ref="inputField" v-on:blur="validate" is-error-input="@hasPreviousTbDiagnosisError"
+                                   nhs-input-type="Number" fixed-width="Four" asp-for="PatientTbHistory.PreviousTBDiagnosisYear">
                         </nhs-form-group>
                     </validate-input>
                 </div>
