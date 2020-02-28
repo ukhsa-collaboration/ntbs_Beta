@@ -19,7 +19,7 @@ namespace ntbs_integration_tests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseSerilog();
-            builder.UseEnvironment("Test");
+            builder.UseEnvironment("CI");
 
             builder.ConfigureServices(services =>
             {

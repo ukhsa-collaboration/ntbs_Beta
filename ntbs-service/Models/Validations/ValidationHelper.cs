@@ -114,6 +114,7 @@
         public const string RelationshipToCaseIsRequired = "Please supply details of the relationship to case";
         public const string CaseInUKStatusIsRequired = "Please specify whether the contact was a case in the UK";
         public const string RelatedNotificationIdInvalid = "The NTBS ID does not match an existing ID in the system";
+        public const string RelatedNotificationIdCannotBeSameAsNotificationId = "The NTBS ID cannot be the same as the current notification";
         public const string RelatedNotificationIdMustBeInteger = "The NTBS ID must be an integer";
         #endregion
 
@@ -144,6 +145,12 @@
 
         public const string HasNoExposureRecords =
             "Please add a record of exposure to known TB cases or confirm no exposure has occurred";
+        public const string HasNoUnpasteurisedMilkConsumptionRecords =
+            "Please add a record of unpasteurised milk consumption or confirm no consumption has occurred";
+        public const string HasNoOccupationExposureRecords =
+            "Please add a record of occupation exposure or confirm no exposure has occurred";
+        public const string HasNoAnimalExposureRecords =
+            "Please add a record of occupation exposure or confirm no exposure has occurred";
 
         #endregion
     }

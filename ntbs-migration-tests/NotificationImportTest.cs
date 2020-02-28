@@ -20,6 +20,7 @@ namespace ntbs_migration_tests
         private readonly Mock<INotificationRepository> _mockNotificationRepository;
         private readonly Mock<IMigrationRepository> _mockMigrationRepository;
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
+        private readonly Mock<ISpecimenService> _mockSpecimenService;
         private readonly Mock<INotificationImportRepository> _mockNotificationImportRepository;
         private readonly Mock<IImportLogger> _mockLogger;
         private readonly Mock<IPostcodeService> _mockPostcodeService;
@@ -45,12 +46,14 @@ namespace ntbs_migration_tests
             _mockNotificationImportRepository = new Mock<INotificationImportRepository>();
             _mockLogger = new Mock<IImportLogger>();
             _mockPostcodeService = new Mock<IPostcodeService>();
+            _mockSpecimenService = new Mock<ISpecimenService>();
             _notifcationImportService = new NotificationImportService(_notificationMapper,
                                                                     _mockNotificationRepository.Object,
                                                                     _mockNotificationImportRepository.Object,
                                                                     _mockPostcodeService.Object,
                                                                     _mockLogger.Object,
-                                                                    _mockMigrationRepository.Object);
+                                                                    _mockMigrationRepository.Object,
+                                                                    _mockSpecimenService.Object);
         }
 
         [Fact]

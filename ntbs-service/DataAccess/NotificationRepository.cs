@@ -17,21 +17,24 @@ namespace ntbs_service.DataAccess
         IQueryable<Notification> GetDraftNotificationsIQueryable();
 
         Task<Notification> GetNotificationWithNotificationSitesAsync(int notificationId);
-        Task<Notification> GetNotificationWithCaseManagerTbServices(int notificationId);
+        Task<Notification> GetNotificationWithCaseManagerTbServicesAsync(int notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
         Task<Notification> GetNotificationWithSocialContextAddressesAsync(int notificationId);
         Task<Notification> GetNotificationWithSocialContextVenuesAsync(int notificationId);
         Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId);
-        Task<Notification> GetNotificationWithMBovisExposureToKnownCases(int notificationId);
+        Task<Notification> GetNotificationWithMBovisExposureToKnownCasesAsync(int notificationId);
+        Task<Notification> GetNotificationWithMBovisUnpasteurisedMilkConsumptionAsync(int notificationId);
+        Task<Notification> GetNotificationWithMBovisOccupationExposureAsync(int notificationId);
+        Task<Notification> GetNotificationWithMBovisAnimalExposuresAsync(int notificationId);
         Task<Notification> GetNotificationWithAllInfoAsync(int notificationId);
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
-        Task<Notification> GetNotificationForAlertCreation(int notificationId);
+        Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
-        Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber);
+        Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
-        Task<int> GetNotificationIdByLegacyId(string legacyId);
+        Task<int> GetNotificationIdByLegacyIdAsync(string legacyId);
         Task<bool> IsNotificationLegacyAsync(int id);
     }
 
@@ -72,7 +75,7 @@ namespace ntbs_service.DataAccess
                          && n.NotificationStatus == NotificationStatus.Notified);
         }
 
-        public async Task<Notification> GetNotificationForAlertCreation(int notificationId)
+        public async Task<Notification> GetNotificationForAlertCreationAsync(int notificationId)
         {
             return await GetBaseNotificationsIQueryable()
                 .Include(n => n.HospitalDetails)
@@ -85,7 +88,7 @@ namespace ntbs_service.DataAccess
                 .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
         }
 
-        public async Task<int> GetNotificationIdByLegacyId(string legacyId)
+        public async Task<int> GetNotificationIdByLegacyIdAsync(string legacyId)
         {
             return await _context.Notification
                 .Where(n => n.LTBRID == legacyId || n.ETSID == legacyId)
@@ -101,7 +104,7 @@ namespace ntbs_service.DataAccess
                 .AnyAsync(n => n.LTBRID != null || n.ETSID != null);
         }
 
-        public async Task<IList<int>> GetNotificationIdsByNhsNumber(string nhsNumber)
+        public async Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber)
         {
             return await _context.Notification
                 .Where(n => (n.NotificationStatus == NotificationStatus.Notified ||
@@ -118,7 +121,7 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
-        public async Task<Notification> GetNotificationWithCaseManagerTbServices(int notificationId)
+        public async Task<Notification> GetNotificationWithCaseManagerTbServicesAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.HospitalDetails.CaseManager.CaseManagerTbServices)
@@ -159,11 +162,35 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
-        public async Task<Notification> GetNotificationWithMBovisExposureToKnownCases(int notificationId)
+        public async Task<Notification> GetNotificationWithMBovisExposureToKnownCasesAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
                 .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
+        public async Task<Notification> GetNotificationWithMBovisUnpasteurisedMilkConsumptionAsync(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                    .ThenInclude(m => m.Country)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);        
+        }
+
+        public async Task<Notification> GetNotificationWithMBovisOccupationExposureAsync(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()
+                .Include(n => n.MBovisDetails.MBovisOccupationExposures)
+                    .ThenInclude(m => m.Country)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);           
+        }
+
+        public async Task<Notification> GetNotificationWithMBovisAnimalExposuresAsync(int notificationId)
+        {
+            return await GetBannerReadyNotificationsIQueryable()                
+                .Include(n => n.MBovisDetails.MBovisAnimalExposures)
+                    .ThenInclude(m => m.Country)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);           
         }
 
         public async Task<Notification> GetNotificationWithAllInfoAsync(int notificationId)
@@ -198,6 +225,12 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.CaseManager)
                 .Include(n => n.MBovisDetails.MBovisExposureToKnownCases)
+                .Include(n => n.MBovisDetails.MBovisUnpasteurisedMilkConsumptions)
+                    .ThenInclude(m => m.Country)
+                .Include(n => n.MBovisDetails.MBovisOccupationExposures)
+                    .ThenInclude(m => m.Country)
+                .Include(n => n.MBovisDetails.MBovisAnimalExposures)
+                    .ThenInclude(m => m.Country)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 

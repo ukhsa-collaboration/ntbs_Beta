@@ -1,5 +1,6 @@
 @page "/Notifications/{NotificationId:int}/Edit/TestResults/{handler?}"
 @model TestResultsModel
+@using ntbs_service.Models
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -63,7 +64,7 @@
                         nhs-button-type="Standard"
                         classes="ntbsuk-button--primary"
                         name="actionName"
-                        value="Create">
+                        value="@ActionNameString.Create">
                     Add New
                 </button>
             </div>

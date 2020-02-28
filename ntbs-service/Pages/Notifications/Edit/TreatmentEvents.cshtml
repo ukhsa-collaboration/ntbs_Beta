@@ -1,10 +1,12 @@
 @page "/Notifications/{NotificationId:int}/Edit/TreatmentEvents/{handler?}"
+@using ntbs_service.Models
 @model TreatmentEventsModel
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Treatment events";
     ViewData["ShowTreatmentEventEditLinks"] = true;
+    ViewData["IsEditPage"] = false;
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
@@ -18,7 +20,7 @@
             nhs-button-type="Standard"
             classes="ntbsuk-button--primary"
             name="actionName"
-            value="Create">
+            value="@ActionNameString.Create">
         Add New
     </button>
 </div>

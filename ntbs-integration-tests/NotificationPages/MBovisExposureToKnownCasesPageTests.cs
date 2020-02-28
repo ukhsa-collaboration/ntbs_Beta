@@ -18,14 +18,14 @@ namespace ntbs_integration_tests.NotificationPages
         public MBovisExposureToKnownCasesPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory)
         {
         }
-        
+
         public static IList<Notification> GetSeedingNotifications()
         {
             return new List<Notification>
             {
                 new Notification
                 {
-                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES,
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES,
                     NotificationStatus = NotificationStatus.Notified,
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"},
                     MBovisDetails = new MBovisDetails
@@ -37,14 +37,14 @@ namespace ntbs_integration_tests.NotificationPages
                             {
                                 ExposureSetting = ExposureSetting.Household,
                                 YearOfExposure = 2010,
-                                ExposureNotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NO_ENTITIES
+                                ExposureNotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_NO_ENTITIES
                             }
                         }
                     }
                 },
                 new Notification
                 {
-                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NO_ENTITIES,
+                    NotificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_NO_ENTITIES,
                     NotificationStatus = NotificationStatus.Notified,
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
                 }
@@ -55,7 +55,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfNotificationHasKnownCases_DisplaysTable()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
 
             // Act
             var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
@@ -70,7 +70,7 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task IfNotificationDoesNotHaveKnownCases_DoesNotDisplayTable()
         {
             // Arrange
-            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_NO_ENTITIES;
+            const int notificationId = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_NO_ENTITIES;
 
             // Act
             var response = await Client.GetAsync(GetCurrentPathForId(notificationId));
@@ -80,12 +80,12 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(document.QuerySelector("#mbovis-exposure-to-known-cases-table"));
         }
-        
+
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
             var url = GetCurrentPathForId(id);
             var document = await GetDocumentForUrlAsync(url);
 
@@ -102,12 +102,12 @@ namespace ntbs_integration_tests.NotificationPages
             var sectionAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(NotificationSubPath);
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
-        
+
         [Fact]
         public async Task NotifiedPageHasReturnLinkToOverview()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
             var url = GetCurrentPathForId(id);
 
             // Act
@@ -122,10 +122,10 @@ namespace ntbs_integration_tests.NotificationPages
         public async Task AddPage_WhenModelInvalid_ShowsExpectedValidationMessages()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
             var url = GetPathForId(NotificationSubPaths.AddMBovisExposureToKnownCase, id);
             var document = await GetDocumentForUrlAsync(url);
-            
+
             // Act
             var formData = new Dictionary<string, string>
             {
@@ -141,31 +141,31 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertValidationErrorResponse();
 
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisExposureToKnownCase-YearOfExposure", 
-                "year-of-exposure", 
-                ValidationMessages.InvalidYear("Year of exposure"));
+                "MBovisExposureToKnownCase-YearOfExposure",
+                "year-of-exposure",
+                "Year of exposure has an invalid year");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisExposureToKnownCase-ExposureSetting", 
-                "exposure-setting", 
-                string.Format(ValidationMessages.RequiredSelect, "Exposure setting"));
+                "MBovisExposureToKnownCase-ExposureSetting",
+                "exposure-setting",
+                "Please select Exposure setting");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisExposureToKnownCase-ExposureNotificationId", 
-                "related-notification", 
-                ValidationMessages.RelatedNotificationIdInvalid);
+                "MBovisExposureToKnownCase-ExposureNotificationId",
+                "related-notification",
+                "The NTBS ID does not match an existing ID in the system");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisExposureToKnownCase-OtherDetails", 
-                "other-details", 
-                string.Format(ValidationMessages.StringWithNumbersAndForwardSlashFormat, "Other details"));
+                "MBovisExposureToKnownCase-OtherDetails",
+                "other-details",
+                "Other details can only contain letters, numbers and the symbols ' - . , /");
         }
-        
+
         [Fact]
         public async Task AddPage_WhenModelValid_RedirectsToCollectionView()
         {
             // Arrange
-            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES;
+            const int id = Utilities.NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES;
             var url = GetPathForId(NotificationSubPaths.AddMBovisExposureToKnownCase, id);
             var document = await GetDocumentForUrlAsync(url);
-            
+
             // Act
             var formData = new Dictionary<string, string>
             {
@@ -174,11 +174,10 @@ namespace ntbs_integration_tests.NotificationPages
                 ["MBovisExposureToKnownCase.ExposureNotificationId"] = $"{Utilities.NOTIFIED_ID}"
             };
             var result = await Client.SendPostFormWithData(document, formData, url);
-            var resultDocument = await GetDocumentAsync(result);
 
             // Assert
-            result.AssertRedirectTo(RouteHelper.GetNotificationPath(id,
-                NotificationSubPaths.EditMBovisExposureToKnownCases));
+            result.AssertRedirectTo(
+                RouteHelper.GetNotificationPath(id, NotificationSubPaths.EditMBovisExposureToKnownCases));
         }
     }
 }

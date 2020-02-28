@@ -4,11 +4,18 @@
 
 // Root styles import - other global styles are imported from this sass file
 import "../css/site.scss"
+
 // @ts-ignore
 import config from "./config/config-APP_TARGET";
 import Vue from "vue";
 import { initAll as govUkJsInitAll } from "govuk-frontend";
+import * as Sentry from '@sentry/browser';
+import * as SentryIntegrations from '@sentry/integrations';
 import '../../node_modules/nhsuk-frontend/packages/components/details/details.polyfill';
+import VueAccessibleModal from 'vue-accessible-modal'
+import cssVars from 'css-vars-ponyfill';
+
+// Components
 import { ValidateInput } from "./Components/ValidateInput";
 import { ValidateDate } from "./Components/ValidateDate";
 import { DateComparison } from "./Components/DateComparison";
@@ -31,13 +38,20 @@ import HideSectionIfFalse from "./Components/HideSectionIfFalse";
 import FetchSpecimenPotentialMatch from "./Components/FetchSpecimenPotentialMatch";
 import FilteredHomepageKpiDetails from "./Components/FilteredHomepageKpiDetails";
 import PrintButton from "./Components/PrintButton";
+import FormLeaveChecker from "./Components/FormLeaveChecker";
+import ConfirmComponent from "./Components/ConfirmComponent";
 
 // For compatibility with IE11
 require("es6-promise").polyfill();
 
-// Vue needs to be the first thing to load!
-// Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
+if (config.env === "production") {
+    Sentry.init({
+        dsn: 'https://83b245064a684fa7ac86658bf38d2ad3@sentry.io/2862017', // identifies the sentry project
+        integrations: [new SentryIntegrations.Vue({Vue, attachProps: true, logErrors: true})],
+    });
+}
 
+Vue.use(VueAccessibleModal, { transition: "fade" });
 // register Vue components
 Vue.component("validate-input", ValidateInput);
 Vue.component("validate-date", ValidateDate);
@@ -61,7 +75,11 @@ Vue.component("hide-section-if-false", HideSectionIfFalse);
 Vue.component("fetch-specimen-potential-match", FetchSpecimenPotentialMatch);
 Vue.component("filtered-homepage-kpi", FilteredHomepageKpiDetails);
 Vue.component("print-button", PrintButton);
+Vue.component("form-leave-checker", FormLeaveChecker);
+Vue.component("confirm-component", ConfirmComponent);
 
+// Vue needs to be the first thing to load!
+// Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!
 new Vue({
     el: "#app",
 });
@@ -71,6 +89,6 @@ if (config.env === "development") {
     console.log("RUNNING IN DEVELOPMENT MODE - Accepting hot reload");
     module.hot.accept();
 }
-
+cssVars();
 govUkJsInitAll();
 

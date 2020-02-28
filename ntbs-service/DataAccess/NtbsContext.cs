@@ -53,6 +53,9 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<FrequentlyAskedQuestion> FrequentlyAskedQuestion { get; set; }
         public virtual DbSet<UserLoginEvent> UserLoginEvent { get; set; }
         public virtual DbSet<MBovisExposureToKnownCase> MBovisExposureToKnownCase { get; set; }
+        public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
+        public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
+        public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -156,6 +159,11 @@ namespace ntbs_service.DataAccess
             var treatmentOutcomeSubTypeEnumConverter = new EnumToStringConverter<TreatmentOutcomeSubType>();
             var transferReasonEnumConverter = new EnumToStringConverter<TransferReason>();
             var exposureSettingEnumConverter = new EnumToStringConverter<ExposureSetting>();
+            var milkProductEnumConverter = new EnumToStringConverter<MilkProductType>();
+            var consumptionFrequencyEnumConverter = new EnumToStringConverter<ConsumptionFrequency>();
+            var occupationSettingEnumConverter = new EnumToStringConverter<OccupationSetting>();
+            var animalTypeEnumConverter = new EnumToStringConverter<AnimalType>();
+            var animalTbStatusEnumConverter = new EnumToStringConverter<AnimalTbStatus>();
 
             modelBuilder.Entity<PHEC>(entity =>
             {
@@ -516,6 +524,35 @@ namespace ntbs_service.DataAccess
                     .HasMaxLength(EnumMaxLength);
             });
 
+            modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
+            {
+                entity.Property(e => e.ConsumptionFrequency)
+                    .HasConversion(consumptionFrequencyEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+
+                entity.Property(e => e.MilkProductType)
+                    .HasConversion(milkProductEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+            
+            modelBuilder.Entity<MBovisOccupationExposure>(entity =>
+            {
+                entity.Property(e => e.OccupationSetting)
+                    .HasConversion(occupationSettingEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+
+            modelBuilder.Entity<MBovisAnimalExposure>(entity =>
+            {
+                entity.Property(e => e.AnimalType)
+                    .HasConversion(animalTypeEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                
+                entity.Property(e => e.AnimalTbStatus)
+                    .HasConversion(animalTbStatusEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+            });
+
             modelBuilder.Entity<Alert>(entity =>
             {
                 entity.Property(e => e.AlertStatus)
@@ -530,6 +567,7 @@ namespace ntbs_service.DataAccess
                 entity.HasDiscriminator<AlertType>("AlertType")
                     .HasValue<TestAlert>(AlertType.Test)
                     .HasValue<MdrAlert>(AlertType.EnhancedSurveillanceMDR)
+                    .HasValue<MBovisAlert>(AlertType.EnhancedSurveillanceMBovis)
                     .HasValue<TransferAlert>(AlertType.TransferRequest)
                     .HasValue<TransferRejectedAlert>(AlertType.TransferRejected)
                     .HasValue<UnmatchedLabResultAlert>(AlertType.UnmatchedLabResult)

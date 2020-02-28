@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
@@ -212,36 +211,39 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Null(document.QuerySelector("#overview-denotification-reason"));
         }
         
-        public static IEnumerable<object[]> AnchorSubPaths() => new List<string>
-        {
-           NotificationSubPaths.EditPatientDetails,
-           NotificationSubPaths.EditHospitalDetails,
-           NotificationSubPaths.EditClinicalDetails,
-           NotificationSubPaths.EditContactTracing,
-           NotificationSubPaths.EditTestResults,
-           NotificationSubPaths.EditSocialRiskFactors,
-           NotificationSubPaths.EditTravel,
-           NotificationSubPaths.EditComorbidities,
-           NotificationSubPaths.EditSocialContextAddresses,
-           NotificationSubPaths.EditSocialContextVenues,
-           NotificationSubPaths.EditPreviousHistory,
-           NotificationSubPaths.EditMDRDetails,
-           NotificationSubPaths.EditMBovisExposureToKnownCases
-        }.Select(subPath => new object[] { subPath });
-
-        [Theory]
-        [MemberData(nameof(AnchorSubPaths))]
-        public async Task OverviewPageContainsAnchorId_ForNotificationSubPath(string subPath)
+        [Fact]
+        public async Task OverviewPageContainsAnchorId_ForNotificationSubPath()
         {
             // Arrange
-            var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             
             // Act
             var document = await GetDocumentForUrlAsync(url);
             
             // Assert
-            Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}"));
+            new List<string>
+            {
+                NotificationSubPaths.EditPatientDetails,
+                NotificationSubPaths.EditHospitalDetails,
+                NotificationSubPaths.EditClinicalDetails,
+                NotificationSubPaths.EditContactTracing,
+                NotificationSubPaths.EditTestResults,
+                NotificationSubPaths.EditSocialRiskFactors,
+                NotificationSubPaths.EditTravel,
+                NotificationSubPaths.EditComorbidities,
+                NotificationSubPaths.EditSocialContextAddresses,
+                NotificationSubPaths.EditSocialContextVenues,
+                NotificationSubPaths.EditPreviousHistory,
+                NotificationSubPaths.EditMDRDetails,
+                NotificationSubPaths.EditMBovisExposureToKnownCases,
+                NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions,
+                NotificationSubPaths.EditMBovisOccupationExposures,
+                NotificationSubPaths.EditMBovisAnimalExposures
+            }.ForEach(subPath =>
+            {
+                var expectedAnchorString = OverviewSubPathToAnchorMap.GetOverviewAnchorId(subPath);
+                Assert.NotNull(document.QuerySelector($"#{expectedAnchorString}"));
+            });
         }
     }
 }

@@ -9,6 +9,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -31,12 +32,17 @@ namespace ntbs_service.Services
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task UpdateMDRDetailsAsync(Notification notification, MDRDetails details);
         Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user);
-        Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails);
+        Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails,
+            string auditUsername);
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
-        Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user);
+        Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user);
         Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
-        Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile);
-        Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile);
+        Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+
     }
 
     public class NotificationService : INotificationService
@@ -46,19 +52,23 @@ namespace ntbs_service.Services
         private readonly IUserService _userService;
         private readonly NtbsContext _context;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        private readonly ISpecimenService _specimenService;
+
 
         public NotificationService(
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IUserService userService,
             IItemRepository<TreatmentEvent> treatmentEventRepository,
-            NtbsContext context)
+            NtbsContext context, 
+            ISpecimenService specimenService)
         {
             _notificationRepository = notificationRepository;
             _referenceDataRepository = referenceDataRepository;
             _userService = userService;
             _treatmentEventRepository = treatmentEventRepository;
             _context = context;
+            _specimenService = specimenService;
         }
 
         public async Task AddNotificationAsync(Notification notification)
@@ -315,22 +325,24 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
-            await CreateTreatmentEvenNotificationStart(notification);
+            await CreateTreatmentEventNotificationStart(notification);
         }
 
-        private async Task CreateTreatmentEvenNotificationStart(Notification notification)
+        private async Task CreateTreatmentEventNotificationStart(Notification notification)
         {
             await _treatmentEventRepository.AddAsync(new TreatmentEvent
             {
                 NotificationId = notification.NotificationId,
                 TreatmentEventType = TreatmentEventType.TreatmentStart,
-                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate
+                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate,
+                CaseManager = notification.HospitalDetails.CaseManager,
+                TbService = notification.HospitalDetails.TBService
             });
         }
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)
         {
-            var linkedNotification = await CreateNewNotificationForUser(user);
+            var linkedNotification = await CreateNewNotificationForUserAsync(user);
             _context.Attach(linkedNotification);
             _context.SetValues(linkedNotification.PatientDetails, notification.PatientDetails);
             await UpdateDatabaseAsync();
@@ -356,7 +368,7 @@ namespace ntbs_service.Services
             return linkedNotification;
         }
 
-        public async Task<Notification> CreateNewNotificationForUser(ClaimsPrincipal user)
+        public async Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user)
         {
             var defaultTbService = await _userService.GetDefaultTbService(user);
             var caseManagerEmail = await GetDefaultCaseManagerEmail(user, defaultTbService?.Code);
@@ -392,16 +404,34 @@ namespace ntbs_service.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateDrugResistanceProfile(Notification notification, DrugResistanceProfile drugResistanceProfile)
+        public async Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile)
         {
             _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
             await UpdateDatabaseAsync();
         }
 
-        public async Task UpdateMBovisDetailsExposureToKnownCases(Notification notification, MBovisDetails mBovisDetails)
+        public async Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasExposureToKnownCases});
             await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasUnpasteurisedMilkConsumption});
+            await UpdateDatabaseAsync();        
+        }
+
+        public async Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasOccupationExposure});
+            await UpdateDatabaseAsync();
+        }
+
+        public async Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails)
+        {
+            _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasAnimalExposure});
+            await UpdateDatabaseAsync();            
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
@@ -428,8 +458,10 @@ namespace ntbs_service.Services
             await UpdateDatabaseAsync();
         }
 
-        public async Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails)
+        public async Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails,
+            string auditUsername)
         {
+            Log.Debug($"Denotifying {notificationId}");
             var notification = await _notificationRepository.GetNotificationAsync(notificationId);
             if (notification.DenotificationDetails == null)
             {
@@ -443,6 +475,13 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Denotified;
 
             await UpdateDatabaseAsync(NotificationAuditType.Denotified);
+            
+            Log.Debug($"{notificationId} denotified, removing lab result matches");
+            var success = await _specimenService.UnmatchAllSpecimensForNotification(notificationId, auditUsername);
+            if (!success)
+            {
+                Log.Error($"Failed to remove some lab results for {notificationId}");
+            }
         }
 
         public async Task DeleteNotificationAsync(int notificationId, string deletionReason)

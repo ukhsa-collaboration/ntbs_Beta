@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using ntbs_service.Models.Entities;
 
 namespace ntbs_service.DataMigration
 {
@@ -33,6 +32,18 @@ namespace ntbs_service.DataMigration
         public void AddValidNotification(string legacyId)
         {
             ValidationErrors.Add(legacyId, null);
+        }
+
+        public void AddNotificationError(string legacyId, string error)
+        {
+            if (ValidationErrors.ContainsKey(legacyId))
+            {
+                ValidationErrors[legacyId].Add(error);
+            }
+            else
+            {
+                ValidationErrors.Add(legacyId, new List<string> {error});
+            }
         }
     }
 }

@@ -12,17 +12,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "7.8.4",
+    "@babel/preset-env": "7.8.4",
+    "@sentry/browser": "5.12.4",
+    "@sentry/integrations": "5.12.4",
     "accessible-autocomplete": "2.0.2",
     "axios": "0.19.2",
+    "babel-loader": "8.0.6",
+    "css-vars-ponyfill": "2.2.1",
     "es6-promise": "4.2.8",
+    "formdata-polyfill": "3.0.19",
     "govuk-frontend": "3.5.0",
     "nhsuk-frontend": "2.3.0",
     "qs": "6.9.1",
     "url-loader": "3.0.0",
-    "vue": "2.6.11"
+    "vue": "2.6.11",
+    "vue-accessible-modal": "0.4.0"
   },
   "devDependencies": {
-    "@types/node": "13.7.1",
+    "@sentry/webpack-plugin": "1.10.0",
+    "@types/node": "13.7.4",
     "@types/webpack-env": "1.15.1",
     "aspnet-webpack": "3.0.0",
     "css-loader": "3.4.2",

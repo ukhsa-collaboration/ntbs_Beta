@@ -77,7 +77,7 @@ namespace ntbs_service_unit_tests.Services
                 }
             });
             _mockNotificationRepository
-                .Setup(s => s.GetNotificationForAlertCreation(It.IsAny<int>()))
+                .Setup(s => s.GetNotificationForAlertCreationAsync(It.IsAny<int>()))
                 .Returns(mockNotification);
 
             var matchesRequiringAlerts = new List<SpecimenMatchPairing>

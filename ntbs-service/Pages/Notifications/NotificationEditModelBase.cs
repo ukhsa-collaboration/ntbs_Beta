@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Interfaces;
@@ -82,11 +83,10 @@ namespace ntbs_service.Pages.Notifications
 
             switch (ActionName)
             {
-                case "Submit":
+                case ActionNameString.Submit:
                     return await SubmitAsync();
-                case "Create":
+                case ActionNameString.Create:
                     return RedirectToCreate();
-                case "Save": // intentional fall-through: treating Save as the default case
                 default:
                     return RedirectAfterSave(isBeingSubmitted);
             }
@@ -94,7 +94,7 @@ namespace ntbs_service.Pages.Notifications
 
         private async Task SetNotification(string actionName)
         {
-            if (actionName == "Submit")
+            if (actionName == ActionNameString.Submit)
             {
                 // When submitting, we need to validate the entire record, not just the currently edited page
                 Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);

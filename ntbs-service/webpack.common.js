@@ -22,6 +22,22 @@ module.exports = {
         exclude: /node_modules/
       },
       {
+          test: /\.js/,
+          use: {
+              loader: 'babel-loader',
+              options: {
+                  presets: [
+                      [
+                      "@babel/preset-env",
+                      {
+                          "targets": {"ie": 11}
+                      }
+                      ]
+                  ]
+              }
+          }
+      },
+      {
         test: /\.(sc|c)ss$/,
         use: [
           {

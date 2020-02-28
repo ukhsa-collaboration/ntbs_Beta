@@ -60,8 +60,14 @@ namespace ntbs_integration_tests.Helpers
         public static int SPECIMEN_MATCHING_NOTIFICATION_ID4 = MockSpecimenService.MockSpecimenNotificationId4; // 10103
         public const int SPECIMEN_MATCHING_MANUAL_MATCH_NOTIFICATION_ID = 10104;
 
-        public const int NOTIFICATION_ID_WITH_MBOVIS_AND_ENTITIES = 10130;
-        public const int NOTIFICATION_ID_WITH_MBOVIS_NO_ENTITIES = 10131;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_ENTITIES = 10130;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_OTHER_CASE_NO_ENTITIES = 10131;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_MILK_ENTITIES = 10132;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_MILK_NO_ENTITIES = 10133;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_ENTITIES = 10134;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_OCCUPATION_NO_ENTITIES = 10135;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_ENTITIES = 10136;
+        public const int NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_NO_ENTITIES = 10137;
 
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
@@ -119,6 +125,9 @@ namespace ntbs_integration_tests.Helpers
             context.Notification.AddRange(ActionTransferPageTests.GetSeedingNotifications());
             context.Notification.AddRange(LabResultsPageTests.GetSeedingNotifications());
             context.Notification.AddRange(MBovisExposureToKnownCasesPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(MBovisUnpasteurisedMilkConsumptionPageTests.GetSeedingNotifications());
+            context.Notification.AddRange(MBovisOccupationExposurePageTests.GetSeedingNotifications());
+            context.Notification.AddRange(MBovisAnimalExposurePageTests.GetSeedingNotifications());
 
             context.TreatmentOutcome.AddRange(TreatmentEventEditPageTests.GetSeedingOutcomes());
 
@@ -198,7 +207,20 @@ namespace ntbs_integration_tests.Helpers
         {
             return new List<Notification>
             {
-                new Notification {NotificationId = DRAFT_ID, NotificationStatus = NotificationStatus.Draft},
+                new Notification
+                {
+                    NotificationId = DRAFT_ID,
+                    NotificationStatus = NotificationStatus.Draft,
+                    DrugResistanceProfile = new DrugResistanceProfile
+                    {
+                        DrugResistanceProfileString = "RR/MDR/XDR",
+                        Species = "M. bovis"
+                    },
+                    ClinicalDetails = new ClinicalDetails
+                    {
+                        IsMDRTreatment = true
+                    }
+                },
                 new Notification
                 {
                     NotificationId = NOTIFIED_ID,
@@ -235,6 +257,15 @@ namespace ntbs_integration_tests.Helpers
                     NotificationSites = new List<NotificationSite>
                     {
                         new NotificationSite {NotificationId = DENOTIFIED_ID, SiteId = (int)SiteId.PULMONARY}
+                    },
+                    DrugResistanceProfile = new DrugResistanceProfile
+                    {
+                        DrugResistanceProfileString = "RR/MDR/XDR",
+                        Species = "M. bovis"
+                    },
+                    ClinicalDetails = new ClinicalDetails
+                    {
+                        IsMDRTreatment = true
                     }
                 },
                 new Notification

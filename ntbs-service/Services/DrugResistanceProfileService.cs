@@ -52,7 +52,7 @@ namespace ntbs_service.Services
 
                 try
                 {
-                    await _notificationService.UpdateDrugResistanceProfile(notification, drugResistanceProfile);
+                    await _notificationService.UpdateDrugResistanceProfileAsync(notification, drugResistanceProfile);
                     await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
                     await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
                 }

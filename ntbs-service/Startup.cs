@@ -55,7 +55,7 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            if (!Env.IsEnvironment("Test"))
+            if (!Env.IsEnvironment("CI"))
             {
                 services.AddHangfire(config =>
                 {
@@ -140,6 +140,7 @@ namespace ntbs_service
                 {
                     options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
                     options.Conventions.AllowAnonymousToPage("/Logout");
+                    options.Conventions.AllowAnonymousToPage("/Health");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -193,6 +194,9 @@ namespace ntbs_service
             services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
             services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
             services.AddScoped<IItemRepository<MBovisExposureToKnownCase>, MBovisExposureToKnownCaseRepository>();
+            services.AddScoped<IItemRepository<MBovisUnpasteurisedMilkConsumption>, MBovisUnpasteurisedMilkConsumptionRepository>();
+            services.AddScoped<IItemRepository<MBovisOccupationExposure>, MBovisOccupationExposureRepository>();
+            services.AddScoped<IItemRepository<MBovisAnimalExposure>, MBovisAnimalExposureRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
@@ -262,7 +266,7 @@ namespace ntbs_service
 
             app.UseStaticFiles();
 
-            if (!Env.IsEnvironment("Test"))
+            if (!Env.IsEnvironment("CI"))
             {
                 /*
                 Making this conditional is the result of serilog not playing nicely with WebApplicationFactory
@@ -295,7 +299,7 @@ namespace ntbs_service
 
         private void ConfigureHangfire(IApplicationBuilder app)
         {
-            if (Env.IsEnvironment("Test"))
+            if (Env.IsEnvironment("CI"))
             {
                 return;
             }

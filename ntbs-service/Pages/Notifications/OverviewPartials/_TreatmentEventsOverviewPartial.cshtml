@@ -48,14 +48,22 @@
             var treatmentEvents = Model.GroupedTreatmentEvents[episodeNumber];
             
             <div>
-                <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4><span>@treatmentEvents.First().FormattedEventDate - @treatmentEvents.Last().FormattedEventDate </span>
+                <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4>
+                @if (treatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
+                {
+                    <span>@treatmentEvents.First().FormattedEventDate - @treatmentEvents.Last().FormattedEventDate</span>
+                }
+                else
+                {
+                    <span>@treatmentEvents.First().FormattedEventDate</span>
+                }
             </div>
-            <nhs-table>
+            <nhs-table classes="nhsuk-table--reduced-font">
                 <nhs-table-head>
-                    <nhs-table-item>Date</nhs-table-item>
-                    <nhs-table-item>Event</nhs-table-item>
-                    <nhs-table-item>Tb Service</nhs-table-item>
-                    <nhs-table-item>Case Manager</nhs-table-item>
+                    <nhs-table-item classes="one-sixth-column">Date</nhs-table-item>
+                    <nhs-table-item classes="two-sixth-column">Event</nhs-table-item>
+                    <nhs-table-item classes="two-sixth-column">TB Service</nhs-table-item>
+                    <nhs-table-item classes="one-sixth-column">Case Manager</nhs-table-item>
                 </nhs-table-head>
                 <nhs-table-body>
                     @foreach (var treatmentEvent in treatmentEvents)

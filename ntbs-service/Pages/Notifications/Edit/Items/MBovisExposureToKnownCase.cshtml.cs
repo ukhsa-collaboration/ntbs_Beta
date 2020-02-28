@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -33,6 +34,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
 #pragma warning restore 1998
         {
+            if (!Notification.IsMBovis)
+            {
+                return NotFound();
+            }
+            
             if (RowId == null)
             {
                 return Page();
@@ -99,6 +105,11 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             
             if (int.TryParse(value, out var notificationId))
             {
+                if (notificationId == NotificationId)
+                {
+                    return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId });
+                }
+                
                 var relatedNotification = await GetNotificationAsync(notificationId);
                 if (relatedNotification == null) 
                 {
@@ -120,6 +131,13 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         {
             if (MBovisExposureToKnownCase.ExposureNotificationId != null)
             {
+                if (MBovisExposureToKnownCase.ExposureNotificationId == NotificationId)
+                {
+                    ModelState.AddModelError(
+                        $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
+                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);   
+                }
+
                 var exposureNotification = await NotificationRepository.GetNotificationAsync(
                     MBovisExposureToKnownCase.ExposureNotificationId.Value);
                 if (exposureNotification == null)
@@ -143,7 +161,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisExposureToKnownCases(notificationId);
+            return await NotificationRepository.GetNotificationWithMBovisExposureToKnownCasesAsync(notificationId);
         }
     }
 }

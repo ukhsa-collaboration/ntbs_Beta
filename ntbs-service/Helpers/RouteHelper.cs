@@ -59,6 +59,9 @@ namespace ntbs_service.Helpers
         public static string EditMDRDetails => "Edit/MDRDetails";
         public static string EditTreatmentEvents => "Edit/TreatmentEvents";
         public static string EditMBovisExposureToKnownCases => "Edit/MBovis/ExposureToKnownCases";
+        public static string EditMBovisUnpasteurisedMilkConsumptions => "Edit/MBovis/UnpasteurisedMilkConsumptions";
+        public static string EditMBovisOccupationExposures => "Edit/MBovis/OccupationExposures";
+        public static string EditMBovisAnimalExposures => "Edit/MBovis/AnimalExposures";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
         public static string Denotify => "Denotify";
@@ -83,6 +86,15 @@ namespace ntbs_service.Helpers
 
         public static string EditMBovisExposureToKnownCase(int mBovisExposureToKnownCaseId) => $"Edit/MBovis/ExposureToKnownCase/{mBovisExposureToKnownCaseId}";
         public static string AddMBovisExposureToKnownCase => "Edit/MBovis/ExposureToKnownCase/New";
+        
+        public static string EditMBovisUnpasteurisedMilkConsumption(int mBovisUnpasteurisedMilkConsumptionId) => $"Edit/MBovis/UnpasteurisedMilkConsumption/{mBovisUnpasteurisedMilkConsumptionId}";
+        public static string AddMBovisUnpasteurisedMilkConsumption => "Edit/MBovis/UnpasteurisedMilkConsumption/New";
+        
+        public static string EditMBovisOccupationExposure(int mBovisOccupationExposureId) => $"Edit/MBovis/OccupationExposure/{mBovisOccupationExposureId}";
+        public static string AddMBovisOccupationExposure => "Edit/MBovis/OccupationExposure/New";
+        
+        public static string EditMBovisAnimalExposure(int mBovisAnimalExposureId) => $"Edit/MBovis/AnimalExposure/{mBovisAnimalExposureId}";
+        public static string AddMBovisAnimalExposure => "Edit/MBovis/AnimalExposure/New";
     }
 
     public static class OverviewSubPathToAnchorMap
@@ -98,10 +110,14 @@ namespace ntbs_service.Helpers
             {NotificationSubPaths.EditComorbidities, "overview-comorbidities"},
             {NotificationSubPaths.EditTravel, "overview-travel-and-visitors"},
             {NotificationSubPaths.EditSocialContextAddresses, "overview-social-addresses"},
+            {NotificationSubPaths.EditTreatmentEvents, "overview-episodes"},
             {NotificationSubPaths.EditSocialContextVenues, "overview-social-venues"},
             {NotificationSubPaths.EditPreviousHistory, "overview-previous-history"},
             {NotificationSubPaths.EditMDRDetails, "overview-mdr-details"},
-            {NotificationSubPaths.EditMBovisExposureToKnownCases, "overview-mbovis-exposure-details"}
+            {NotificationSubPaths.EditMBovisExposureToKnownCases, "overview-mbovis-exposure-details"},
+            {NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions, "overview-mbovis-milk-consumption-details"},
+            {NotificationSubPaths.EditMBovisOccupationExposures, "overview-mbovis-occupation-exposure"},
+            {NotificationSubPaths.EditMBovisAnimalExposures, "overview-mbovis-animal-exposure-details"}
         };
 
         public static string GetOverviewAnchorId(string notificationSubPath)

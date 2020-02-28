@@ -1,4 +1,5 @@
 @using ntbs_service.Helpers
+@using ntbs_service.Models
 @using ntbs_service.Models.Enums
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 
@@ -9,7 +10,7 @@
 <nhs-grid-row classes="flex-container">
     <nhs-grid-column grid-column-width="OneThird" classes="submit-delete-buttons-container">
         <div class= "@cssClasses">
-            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="Submit" id="submit-button">
+            <button nhs-button-type="Standard" classes="ntbsuk-button--primary" name="actionName" value="@ActionNameString.Submit" id="submit-button">
                 Submit
             </button>
             @{ var deleteHref = @RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Delete); }

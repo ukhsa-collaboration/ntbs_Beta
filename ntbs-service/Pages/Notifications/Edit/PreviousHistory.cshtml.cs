@@ -41,6 +41,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 nextPage = "./MDRDetails";
             }
+            else if (Notification.IsMBovis)
+            {
+                nextPage = "./MBovisExposureToKnownCases";
+            }
             else
             {
                 nextPage = "./PreviousHistory";

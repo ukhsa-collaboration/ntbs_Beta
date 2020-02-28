@@ -26,10 +26,20 @@ RUN npm install
 COPY ./ntbs-service/wwwroot ./wwwroot
 COPY ./ntbs-service/tsconfig.json ./
 COPY ./ntbs-service/webpack* ./
+
+ENV SENTRY_ORG=phe-ntbs
+ENV SENTRY_PROJECT=ntbs-frontend
+ARG SENTRY_AUTH_TOKEN
+ARG RELEASE
+
 RUN npm run build:prod
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+
+RUN apt-get update \
+    && apt-get install -y krb5-user \
+    && apt-get install -y procps
 
 # Satisfying Openshift requirements:
 # - this tells it that the app is OK to run under random user id
@@ -41,5 +51,9 @@ ENV ASPNETCORE_URLS=http://*:8080
 WORKDIR /app
 COPY --from=build /app/ntbs-service/out ./
 COPY --from=build-frontend /app/wwwroot/dist ./wwwroot/dist/
+
+ARG RELEASE
+# We want it to be avaialble inside the container
+ENV RELEASE=$RELEASE 
 
 ENTRYPOINT ["dotnet", "ntbs-service.dll"]

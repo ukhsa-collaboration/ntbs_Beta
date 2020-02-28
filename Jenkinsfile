@@ -54,11 +54,13 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://ntbscontainerregistry.azurecr.io', 'ntbs-registery-credentials') {
-            ntbsImage = docker.build("ntbs-service:${NTBS_BUILD}",  ".")
-            echo "Uploading build image ${NTBS_BUILD}"
-            ntbsImage.push()
-            echo "Uploading latest image"
-            ntbsImage.push("latest")
+            withCredentials([string(credentialsId: 'sentry-auth-token', variable: 'SENTRY_AUTH_TOKEN')]) {
+              ntbsImage = docker.build("ntbs-service:${NTBS_BUILD}",  "--build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} .")
+              echo "Uploading build image ${NTBS_BUILD}"
+              ntbsImage.push()
+              echo "Uploading latest image"
+              ntbsImage.push("latest")
+            }
           }
         }
       }

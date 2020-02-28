@@ -9,6 +9,9 @@ spec:
     metadata:
       labels:
         app: ntbs-live
+      annotations:
+        image.openshift.io/triggers: >-
+          [{"from":{"kind":"ImageStreamTag","name":"krb5-authenticator:latest","namespace":"krb5-authenticator"},"fieldPath":"spec.template.spec.containers[?(@.name==\"krb5-authenticator\")].image"}]
     spec:
       containers:
         - name: ntbs-live
@@ -55,8 +58,32 @@ spec:
               value: ""
             - name: AppConfig__AuditingEnabled
               value: "false"
+            - name: Sentry__Environment
+              value: live
+            - name: KRB5CCNAME
+              value: /krb5cc/cc
+          volumeMounts:
+            - mountPath: /krb5cc
+              name: krb5cc
+        - name: krb5-authenticator
+          image: krb5-authenticator/krb5-authenticator:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /krb5cc
+              name: krb5cc
+            - mountPath: /run/secrets/keytab
+              name: krb-tab
+              readOnly: true
       imagePullSecrets:
         - name: registery-password
+        - name: default-dockercfg-bs7wj
+      volumes:
+        - name: krb5cc
+          emptyDir: {}
+        - name: krb-tab
+          secret:
+            defaultMode: 420
+            secretName: ntbs-live-sql-svc
 ---
 apiVersion: v1
 kind: Service

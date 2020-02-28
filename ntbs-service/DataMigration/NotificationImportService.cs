@@ -9,6 +9,7 @@ using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
+using Sentry;
 
 namespace ntbs_service.DataMigration
 {
@@ -28,20 +29,29 @@ namespace ntbs_service.DataMigration
         private readonly IPostcodeService _postcodeService;
         private readonly IImportLogger _logger;
         private readonly IMigrationRepository _migrationRepository;
+        private readonly ISpecimenService _specimenService;
 
         public NotificationImportService(INotificationMapper notificationMapper,
                              INotificationRepository notificationRepository,
                              INotificationImportRepository notificationImportRepository,
                              IPostcodeService postcodeService,
                              IImportLogger logger,
-                             IMigrationRepository migrationRepository)
+                             IHub sentryHub,
+                             IMigrationRepository migrationRepository,
+                             ISpecimenService specimenService)
         {
+            sentryHub.ConfigureScope(s =>
+            {
+                s.SetTag("context", "migration"); 
+            });
+
             _notificationMapper = notificationMapper;
             _notificationRepository = notificationRepository;
             _notificationImportRepository = notificationImportRepository;
             _postcodeService = postcodeService;
             _logger = logger;
             _migrationRepository = migrationRepository;
+            _specimenService = specimenService;
         }
 
 
@@ -71,7 +81,7 @@ namespace ntbs_service.DataMigration
             return importResults;
         }
 
-        private async Task<List<ImportResult>> ImportNotificationGroupsAsync(PerformContext context, string requestId, IEnumerable<IEnumerable<Notification>> notificationsGroups)
+        private async Task<List<ImportResult>> ImportNotificationGroupsAsync(PerformContext context, string requestId, IEnumerable<IList<Notification>> notificationsGroups)
         {
             // Filter out notifications that already exist in ntbs database
             var notificationsGroupsToImport = new List<List<Notification>>();
@@ -156,7 +166,7 @@ namespace ntbs_service.DataMigration
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
                 await _migrationRepository.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
-
+                await ImportReferenceLabResultsAsync(savedNotifications, importResult);
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
@@ -174,6 +184,26 @@ namespace ntbs_service.DataMigration
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             return importResult;
+        }
+
+        /// <summary>
+        /// We have to run the reference lab result matches after the notifications have been imported into the main db,
+        /// since the matches are stored externally - we need to know what the generated NTBS ids are beforehand.
+        /// </summary>
+        private async Task ImportReferenceLabResultsAsync(IList<Notification> notifications, ImportResult importResult)
+        {
+            var legacyIds = notifications.Select(n => n.ETSID);
+            var matches = await _migrationRepository.GetReferenceLaboratoryMatches(legacyIds);
+            foreach (var (legacyId, referenceLaboratoryNumber) in matches)
+            {
+                var notificationId = notifications.Single(n => n.LegacyId == legacyId).NotificationId;
+                var success = await _specimenService.MatchSpecimenAsync(notificationId, referenceLaboratoryNumber, "SYSTEM");
+                if (!success)
+                {
+                    var error = $"Failed to set the specimen match for Notification: {notificationId}, reference lab number: {referenceLaboratoryNumber}";
+                    importResult.AddNotificationError(legacyId, error);
+                }
+            }
         }
 
         private async Task<List<string>> FilterOutImportedIdsAsync(PerformContext context, string requestId, List<string> legacyIds)

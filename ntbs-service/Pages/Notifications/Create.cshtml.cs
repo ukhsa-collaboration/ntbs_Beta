@@ -16,7 +16,7 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var notification = await notificationService.CreateNewNotificationForUser(User);
+            var notification = await notificationService.CreateNewNotificationForUserAsync(User);
 
             return RedirectToPage("./Edit/PatientDetails", new { notification.NotificationId });
         }

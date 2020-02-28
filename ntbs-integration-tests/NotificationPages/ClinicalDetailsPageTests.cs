@@ -6,6 +6,7 @@ using AngleSharp.Html.Dom;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -208,7 +209,7 @@ namespace ntbs_integration_tests.NotificationPages
             };
 
             // Act
-            var result = await Client.SendPostFormWithData(initialDocument, formData, url, submitType: "Save");
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url, submitType: ActionNameString.Save);
 
             // Assert
             result.EnsureSuccessStatusCode();

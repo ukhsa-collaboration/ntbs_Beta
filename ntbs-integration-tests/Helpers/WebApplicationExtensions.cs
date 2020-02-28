@@ -35,10 +35,12 @@ namespace ntbs_integration_tests.Helpers
 
         public static HttpClient CreateClientWithoutRedirects(this WebApplicationFactory<Startup> factory)
         {
-            return factory.CreateClient(new WebApplicationFactoryClientOptions
+            var client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false
             });
+            client.Timeout = TimeSpan.FromMinutes(3);
+            return client;
         }
 
         private static void UpdateDatabase(IWebHostBuilder builder, Action<NtbsContext> updateMethod)

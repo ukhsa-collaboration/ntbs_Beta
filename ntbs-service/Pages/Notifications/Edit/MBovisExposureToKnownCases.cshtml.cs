@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -26,7 +24,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            if (Notification.NotificationStatus == NotificationStatus.Draft)
+            if (!Notification.IsMBovis)
             {
                 return NotFound();
             }
@@ -48,16 +46,21 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./Items/NewMBovisExposureToKnownCase", new { NotificationId });
         }
         
+        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        {
+            return RedirectToPage("./MBovisUnpasteurisedMilkConsumptions", new { NotificationId, isBeingSubmitted });
+        }
+        
         protected override async Task ValidateAndSave()
         {
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisExposureToKnownCases = Notification.MBovisDetails.MBovisExposureToKnownCases;
-            MBovisDetails.ProceedingToAdd = ActionName == "Create";
+            MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;
             MBovisDetails.SetValidationContext(Notification);
             
             if (TryValidateModel(MBovisDetails, nameof(MBovisDetails)))
             {
-                await Service.UpdateMBovisDetailsExposureToKnownCases(Notification, MBovisDetails);
+                await Service.UpdateMBovisDetailsExposureToKnownCasesAsync(Notification, MBovisDetails);
             }
         }
         
@@ -68,13 +71,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task<Notification> GetNotificationAsync(int notificationId)
         {
-            return await NotificationRepository.GetNotificationWithMBovisExposureToKnownCases(notificationId);
-        }
-        
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
-        {
-            // Page is not directly accessible for draft
-            throw new NotImplementedException();
+            return await NotificationRepository.GetNotificationWithMBovisExposureToKnownCasesAsync(notificationId);
         }
     }
 }

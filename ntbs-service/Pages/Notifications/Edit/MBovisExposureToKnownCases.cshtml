@@ -1,17 +1,18 @@
 ﻿@page "/Notifications/{NotificationId:int}/Edit/MBovis/ExposureToKnownCases/{handler?}"
+@using ntbs_service.Models
 @using ntbs_service.Models.Entities
 @model ntbs_service.Pages.Notifications.Edit.MBovisExposureToKnownCasesModel
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - M. Bovis - Exposure To Known Cases";
+    ViewData["Title"] = "Notification - M. bovis - Exposure To Known Cases";
     var fullValidation = Model.MBovisDetails.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2> M. Bovis - Exposure to Known Cases </h2>
+<h2> M. bovis - Exposure to Known Cases </h2>
 
 <div>
 
@@ -67,7 +68,7 @@
                         nhs-button-type="Standard"
                         classes="ntbsuk-button--primary"
                         name="actionName"
-                        value="Create">
+                        value="@ActionNameString.Create">
                     Add New
                 </button>
             </div>

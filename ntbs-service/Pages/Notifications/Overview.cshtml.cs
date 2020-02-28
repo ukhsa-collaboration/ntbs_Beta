@@ -71,9 +71,7 @@ namespace ntbs_service.Pages.Notifications
         private void CalculateTreatmentOutcomes()
         {
             OutcomeAt12Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 1);
-            
             OutcomeAt24Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 2);
-            
             OutcomeAt36Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 3);
         }
 
