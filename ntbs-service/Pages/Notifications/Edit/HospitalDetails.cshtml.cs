@@ -106,7 +106,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.FullName));
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./ClinicalDetails", new { NotificationId, isBeingSubmitted });
         }

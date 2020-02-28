@@ -108,12 +108,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetPropertyValidationResult<MBovisAnimalExposure>(key, value, shouldValidateFull);
         }
 
-        protected override IActionResult RedirectAfterSaveForNotified()
+        protected override IActionResult RedirectForNotified()
         {
             return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("/Notifications/Edit/MBovisAnimalExposures", new {NotificationId});
         }

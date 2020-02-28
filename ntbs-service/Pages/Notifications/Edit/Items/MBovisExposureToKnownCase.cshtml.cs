@@ -149,12 +149,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             }
         }
 
-        protected override IActionResult RedirectAfterSaveForNotified()
+        protected override IActionResult RedirectForNotified()
         {
             return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new {NotificationId});
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new {NotificationId});
         }

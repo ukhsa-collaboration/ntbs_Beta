@@ -112,12 +112,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 shouldValidateFull);
         }
 
-        protected override IActionResult RedirectAfterSaveForNotified()
+        protected override IActionResult RedirectForNotified()
         {
             return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new {NotificationId});
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("/Notifications/Edit/MBovisUnpasteurisedMilkConsumptions", new {NotificationId});
         }

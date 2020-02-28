@@ -38,7 +38,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public FormattedDate FormattedTbServicePresentationDate { get; set; }
         public FormattedDate FormattedDiagnosisDate { get; set; }
         public FormattedDate FormattedTreatmentDate { get; set; }
-        public FormattedDate FormattedDeathDate { get; set; }
         public FormattedDate FormattedMdrTreatmentDate { get; set; }
         public FormattedDate FormattedHomeVisitDate { get; set; }
 
@@ -117,18 +116,18 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            if (Request.Form["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
+            if (Request.Form?["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
             {
                 return RedirectToPage("./TreatmentEvents", new {NotificationId, isBeingSubmitted});
             }
             return RedirectToPage("./TestResults", new { NotificationId, isBeingSubmitted });
         }
         
-        protected override IActionResult RedirectAfterSaveForNotified()
+        protected override IActionResult RedirectForNotified()
         {
-            if (Request.Form["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
+            if (Request.Method == "POST" && Request.Form?["SaveAndRouteToTreatmentEvents"].FirstOrDefault() != null)
             {
                 return RedirectToPage("./TreatmentEvents", new { NotificationId });
             }

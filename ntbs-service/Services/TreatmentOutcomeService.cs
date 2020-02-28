@@ -37,7 +37,7 @@ namespace ntbs_service.Services
             
             // If a treatment outcome is not missing that is because one either exists as the last event of the 1 year period
             // or one is not needed and so is null
-            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.FirstOrDefault(x => x.TreatmentOutcome != null)?.TreatmentOutcome;
+            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.LastOrDefault(x => x.TreatmentOutcome != null)?.TreatmentOutcome;
         }
 
         public bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate)

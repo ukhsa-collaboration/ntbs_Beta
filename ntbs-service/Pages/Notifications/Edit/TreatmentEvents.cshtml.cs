@@ -48,7 +48,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return await NotificationRepository.GetNotificationWithTreatmentEventsAsync(notificationId);
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             // Page is not accessible in draft state
             throw new NotImplementedException();
