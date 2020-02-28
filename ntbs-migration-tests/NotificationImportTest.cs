@@ -10,6 +10,7 @@ using ntbs_service.DataAccess;
 using System.Threading.Tasks;
 using ntbs_service.Services;
 using Hangfire.Server;
+using Sentry;
 
 namespace ntbs_migration_tests
 {
@@ -24,6 +25,7 @@ namespace ntbs_migration_tests
         private readonly Mock<INotificationImportRepository> _mockNotificationImportRepository;
         private readonly Mock<IImportLogger> _mockLogger;
         private readonly Mock<IPostcodeService> _mockPostcodeService;
+        private readonly Mock<IHub> _mockSentryHub;
         private readonly NotificationImportService _notifcationImportService;
         private readonly PerformContext _performContext = null;
         private readonly string _connectionString = Environment.GetEnvironmentVariable("migrationDbUnitTest");
@@ -47,11 +49,13 @@ namespace ntbs_migration_tests
             _mockLogger = new Mock<IImportLogger>();
             _mockPostcodeService = new Mock<IPostcodeService>();
             _mockSpecimenService = new Mock<ISpecimenService>();
+            _mockSentryHub = new Mock<IHub>();
             _notifcationImportService = new NotificationImportService(_notificationMapper,
                                                                     _mockNotificationRepository.Object,
                                                                     _mockNotificationImportRepository.Object,
                                                                     _mockPostcodeService.Object,
                                                                     _mockLogger.Object,
+                                                                    _mockSentryHub.Object,
                                                                     _mockMigrationRepository.Object,
                                                                     _mockSpecimenService.Object);
         }
