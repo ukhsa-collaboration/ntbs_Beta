@@ -1,12 +1,13 @@
 import Vue from "vue";
-var accessible = require("accessible-autocomplete");
+
+const accessible = require("accessible-autocomplete");
 
 const AutocompleteSelect = Vue.extend({
     props: ["placeholder", "validate"],
     mounted: function() {
         this.selectElement = this.$refs["selectElement"];
-        var selectId = this.selectElement.id;
-        var options:any = {
+        const selectId = this.selectElement.id;
+        const options: any = {
             placeholder: this.$props.placeholder,
             autoselect: false,
             showAllValues: true,
@@ -44,11 +45,11 @@ const AutocompleteSelect = Vue.extend({
             if (!this.$props.validate || value != undefined) {
                 return;
             }
-            var event = new Event('select-changed');
-            var autocompleteValue = this.autocompleteElement.value;
+            const event = new Event('select-changed');
+            const autocompleteValue = this.autocompleteElement.value;
             // the actual select element does not have its value set at this point; the only way we seem to be able to find it is by searching for the matching autocomplete
             // value by name in all the options
-            for (var i=0; i < this.selectElement.options.length; i++) {
+            for (let i=0; i < this.selectElement.options.length; i++) {
                 if (autocompleteValue === this.selectElement[i].textContent) {
                     this.selectElement.value = this.selectElement[i].value;
                     this.selectElement.dispatchEvent(event);
@@ -63,6 +64,4 @@ const AutocompleteSelect = Vue.extend({
     }
 });
 
-export {
-    AutocompleteSelect
-};
+export default AutocompleteSelect;

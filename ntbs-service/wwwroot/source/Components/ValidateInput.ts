@@ -25,7 +25,7 @@ const ValidateInput = Vue.extend({
             };
             axios.request(requestConfig)
                 .then((response: any) => {
-                    var errorMessage = response.data;
+                    const errorMessage = response.data;
                     if (errorMessage) {
                         this.$emit("invalid");
                         this.$el.classList.add("nhsuk-form-group--error");
@@ -62,6 +62,4 @@ const ValidateInput = Vue.extend({
     }
 });
 
-export {
-    ValidateInput
-};
+export default ValidateInput;

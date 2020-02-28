@@ -11,7 +11,7 @@ const ValidateRelatedNotification = Vue.extend({
         }
     },
     mounted: function() {
-        var currentId = this.$refs["inputField"].value;
+        const currentId = this.$refs["inputField"].value;
         if (currentId) {
             this.tryGetNotification(currentId);
         }
@@ -33,8 +33,8 @@ const ValidateRelatedNotification = Vue.extend({
             };
             axios.request(requestConfig)
                 .then((response: any) => {
-                    var responseContent = response.data;
-                    var hasError = responseContent.hasOwnProperty('validationMessage');
+                    const responseContent = response.data;
+                    const hasError = responseContent.hasOwnProperty('validationMessage');
                     if (hasError) {
                         this.$el.classList.add("nhsuk-form-group--error");
                         this.$refs["errorField"].classList.remove("hidden");
@@ -59,6 +59,4 @@ const ValidateRelatedNotification = Vue.extend({
     }
 });
 
-export {
-    ValidateRelatedNotification
-};
+export default ValidateRelatedNotification;

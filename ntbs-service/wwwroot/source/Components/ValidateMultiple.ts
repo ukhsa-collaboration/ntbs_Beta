@@ -21,19 +21,19 @@ const ValidateMultiple = Vue.extend({
         // Each error message will be mapped to the corresponding field.
         validate: function () {
             const inputs = this.createArrayFromRefElements("input");
-            var queryString: string;
+            let queryString: string;
             if (this.isDateValidation) {
                 // In the case of data validation, inputs will be vue components (ValidateDate.ts)
                 const vueInputs: Array<Vue> = inputs;
-                var dayInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.dayInput).value);
+                const dayInputs = vueInputs.map(i => (<HTMLInputElement>i.$refs.dayInput).value);
                 if (arrayContainsEmptyValues(dayInputs)) {
                     return;
                 }
-                var monthInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.monthInput).value);
+                const monthInputs = vueInputs.map(i => (<HTMLInputElement>i.$refs.monthInput).value);
                 if (arrayContainsEmptyValues(monthInputs)) {
                     return;
                 }
-                var yearInputs = vueInputs.map(i => (<HTMLInputElement> i.$refs.yearInput).value);
+                const yearInputs = vueInputs.map(i => (<HTMLInputElement>i.$refs.yearInput).value);
                 if (arrayContainsEmptyValues(yearInputs)) {
                     return;
                 }
@@ -43,14 +43,14 @@ const ValidateMultiple = Vue.extend({
             else if (inputs[0].type === "radio") {
                 // TODO: Do this mapping for other types if element is reused for non-radio inputs.
                 const radioInputs: Array<HTMLInputElement> = inputs;
-                var inputValues = radioInputs.map(i => i.checked);
+                const inputValues = radioInputs.map(i => i.checked);
                 queryString = buildKeyValuePairsQueryString(this.properties, inputValues);
                 this.errorFields = this.createArrayFromRefElements("errorField");
             }
 
             axios.get(`${getValidationPath(this.$props.model)}${this.isDateValidation ? 'Dates' : 'Properties'}?${queryString}`, { headers: getHeaders() })
                 .then((response: any) => {
-                    var errorMessages = response.data;
+                    const errorMessages = response.data;
                     this.hasError = !!errorMessages;
 
                     if (this.hasError) {
@@ -101,6 +101,4 @@ function arrayContainsEmptyValues(array: Array<string>): boolean {
     return array.some(el => !el);
 }
 
-export {
-    ValidateMultiple
-};
+export default ValidateMultiple;

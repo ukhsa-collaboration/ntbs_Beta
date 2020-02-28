@@ -109,6 +109,4 @@ const ValidateContactTracing = Vue.extend({
     }
 });
 
-export {
-    ValidateContactTracing
-};
+export default ValidateContactTracing;

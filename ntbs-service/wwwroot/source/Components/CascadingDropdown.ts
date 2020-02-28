@@ -62,7 +62,7 @@ const CascadingDropdown = Vue.extend({
                 params: {
                     "value": value
                 }
-            }
+            };
 
             axios.request(requestConfig)
                 .then((response: any) => {
