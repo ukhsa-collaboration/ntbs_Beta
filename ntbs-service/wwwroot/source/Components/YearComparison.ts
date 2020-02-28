@@ -22,7 +22,7 @@ const YearComparison = Vue.extend({
             };
             axios.request(requestConfig)
                 .then((response: any) => {
-                    var errorMessage = response.data;
+                    const errorMessage = response.data;
                     if (errorMessage) {
                         this.$el.classList.add("nhsuk-form-group--error");
                         this.$refs["errorField"].textContent = errorMessage;
@@ -46,6 +46,4 @@ const YearComparison = Vue.extend({
     }
 });
 
-export {
-    YearComparison
-};
+export default YearComparison;

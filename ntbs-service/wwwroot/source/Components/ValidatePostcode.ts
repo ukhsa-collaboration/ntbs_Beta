@@ -21,7 +21,7 @@ const ValidatePostcode = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    var errorMessages = response.data;
+                    const errorMessages = response.data;
                     if (errorMessages) {
                         this.$refs["formGroup"].classList.add("nhsuk-form-group--error");
                         this.$refs["inputField"].classList.add("nhsuk-input--error");
@@ -42,6 +42,4 @@ const ValidatePostcode = Vue.extend({
     }
 });
 
-export {
-    ValidatePostcode
-};
+export default ValidatePostcode;

@@ -14,6 +14,4 @@ const NotificationInfo = Vue.extend({
     `
 });
 
-export {
-    NotificationInfo
-};
+export default NotificationInfo;

@@ -8,7 +8,7 @@ const ValidateRequiredCheckboxes = Vue.extend({
     props: ["property", "shouldvalidatefull"],
     methods: {
         validate: function () {
-            var notificationSiteRegex = /NotificationSiteMap\[(.*)\]/;
+            const notificationSiteRegex = /NotificationSiteMap\[(.*)\]/;
             const checkboxes: Array<HTMLInputElement> = Array.from(this.$refs["checkboxgroup"].getElementsByClassName("nhsuk-checkboxes__input"));
             const checkboxList = checkboxes
                 .filter(x => x.checked)
@@ -26,7 +26,7 @@ const ValidateRequiredCheckboxes = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    var errorMessage = response.data;
+                    const errorMessage = response.data;
                     if (errorMessage) {
                         this.$el.classList.add("nhsuk-form-group--error");
                         this.$refs["errorField"].textContent = errorMessage;
@@ -44,6 +44,4 @@ const ValidateRequiredCheckboxes = Vue.extend({
     }
 });
 
-export {
-    ValidateRequiredCheckboxes
-};
+export default ValidateRequiredCheckboxes;

@@ -105,14 +105,12 @@ const DateComparison = Vue.extend({
     },
 });
 
-export {
-    DateComparison
-};
-
 function warningMessageEarlier(first: string, second: string) {
     return `${first} is earlier than ${second}`;
-};
+}
 
 function warningMessageLater(first: string, second: string) {
     return `${first} is later than ${second}`;
-};
+}
+
+export default DateComparison;

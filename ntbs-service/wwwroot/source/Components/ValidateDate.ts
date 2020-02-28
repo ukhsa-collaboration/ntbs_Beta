@@ -16,7 +16,7 @@ const ValidateDate = Vue.extend({
     },
     methods: {
         validate: function () {
-            var date: FormattedDate = this.getFormattedDate();
+            const date: FormattedDate = this.getFormattedDate();
             if (!date) {
                 if (this.rank) {
                     this.$emit("input", null);
@@ -40,7 +40,7 @@ const ValidateDate = Vue.extend({
 
             axios.request(requestConfig)
                 .then((response: any) => {
-                    var errorMessage = response.data;
+                    const errorMessage = response.data;
 
                     this.$refs["errorField"].textContent = errorMessage;
                     if (errorMessage) {
@@ -90,6 +90,4 @@ const ValidateDate = Vue.extend({
     }
 });
 
-export {
-    ValidateDate
-};
+export default ValidateDate;
