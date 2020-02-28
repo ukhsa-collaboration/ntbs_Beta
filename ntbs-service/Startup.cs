@@ -30,6 +30,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
+using Serilog.Events;
 
 namespace ntbs_service
 {
@@ -312,6 +313,8 @@ namespace ntbs_service
                 {
                     options.MessageTemplate =
                         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
+                    // Set Logging Level of Request logging to Information - prevents duplicated exceptions in sentry. 
+                    options.GetLevel = (_, __, ___) => LogEventLevel.Information; 
                 });
             }
 
