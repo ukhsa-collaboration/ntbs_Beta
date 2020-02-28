@@ -110,7 +110,9 @@ namespace ntbs_service_unit_tests.Models
                 var dateTime = new DateTime((int)year, (int)month, (int)day);
                 TestNotification.ClinicalDetails.MDRTreatmentStartDate = dateTime;
             }
-            TestNotification.ClinicalDetails.IsMDRTreatment = state;
+
+            var targetTreatmentRegiment = state ? TreatmentRegimen.MdrTreatment : TreatmentRegimen.StandardTherapy;
+            TestNotification.ClinicalDetails.TreatmentRegimen = targetTreatmentRegiment;
 
             // Act
             var stateAndDate = TestNotification.MDRTreatmentStateAndDate;

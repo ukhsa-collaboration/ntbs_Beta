@@ -244,9 +244,7 @@ namespace ntbs_service.DataMigration
             details.DidNotStartTreatment = Converter.GetNullableBoolValue(notification.DidNotStartTreatment);
             details.TreatmentStartDate = notification.StartOfTreatmentDate;
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
-            details.IsMDRTreatment = notification.IsMDRTreatment;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
-            details.IsShortCourseTreatment = Converter.GetNullableBoolValue(notification.IsShortCourseTreatment);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
             details.DeathDate = notification.DeathDate;
             details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);

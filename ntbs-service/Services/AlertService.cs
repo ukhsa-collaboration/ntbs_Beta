@@ -39,11 +39,14 @@ namespace ntbs_service.Services
         {
             var alert = await _alertRepository.GetAlertByIdAsync(alertId);
 
-            alert.ClosingUserId = userId;
-            alert.ClosureDate = DateTime.Now;
-            alert.AlertStatus = AlertStatus.Closed;
+            if (alert != null)
+            {
+                alert.ClosingUserId = userId;
+                alert.ClosureDate = DateTime.Now;
+                alert.AlertStatus = AlertStatus.Closed;
 
-            await _alertRepository.SaveAlertChangesAsync();
+                await _alertRepository.SaveAlertChangesAsync();
+            }
         }
 
         public async Task<bool> AddUniqueAlertAsync(Alert alert)

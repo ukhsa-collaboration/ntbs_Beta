@@ -163,8 +163,8 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
-            var mdrChanged = Notification.ClinicalDetails.IsMDRTreatment != ClinicalDetails.IsMDRTreatment;
-            var nonMdrNotAllowed = ClinicalDetails.IsMDRTreatment == false && Notification.MDRDetails.MDRDetailsEntered;
+            var mdrChanged = Notification.ClinicalDetails.TreatmentRegimen != ClinicalDetails.TreatmentRegimen;
+            var nonMdrNotAllowed = ClinicalDetails.TreatmentRegimen != TreatmentRegimen.MdrTreatment && Notification.MDRDetails.MDRDetailsEntered;
 
             if (mdrChanged && nonMdrNotAllowed)
             {
@@ -212,11 +212,18 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ModelState.Remove("ClinicalDetails.BCGVaccinationYear");
             }
 
-            if (ClinicalDetails.IsMDRTreatment.HasValue && !ClinicalDetails.IsMDRTreatment.Value)
+            ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
+            if (ClinicalDetails.TreatmentRegimen != TreatmentRegimen.MdrTreatment)
             {
                 ClinicalDetails.MDRTreatmentStartDate = null;
                 FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
                 ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
+            }
+
+            if (ClinicalDetails.TreatmentRegimen != TreatmentRegimen.Other)
+            {
+                ClinicalDetails.TreatmentRegimenOtherDescription = null;
+                ModelState.Remove("ClinicalDetails.TreatmentRegimenOtherDescription");
             }
 
             if (!NotificationSiteMap.ContainsKey(SiteId.OTHER) || !NotificationSiteMap[SiteId.OTHER])
@@ -310,6 +317,5 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             return ValidationService.GetPropertyValidationResult<ClinicalDetails>(key, value, shouldValidateFull);
         }
-
     }
 }
