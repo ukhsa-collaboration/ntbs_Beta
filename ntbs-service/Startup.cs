@@ -21,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
-using ntbs_service.Data.Legacy;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
 using ntbs_service.Jobs;
@@ -48,13 +47,99 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configuration
+            var adfsConfig = Configuration.GetSection("AdfsOptions");
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.Configure<AdfsOptions>(adfsConfig);
+            services.Configure<LdapConnectionSettings>(Configuration.GetSection("LdapConnectionSettings"));
+            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
+            
+            // Plugin services
+            SetupAuthentication(services, adfsConfig);
 
+            services.AddMvc(options =>
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .RequireRole(adfsConfig["BaseUserGroup"])
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                }).AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
+                    options.Conventions.AllowAnonymousToPage("/Logout");
+                    options.Conventions.AllowAnonymousToPage("/Health");
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                {
+                    policy.RequireRole(GetAdminRoleName());
+                });
+            });
+            SetupHangfire(services);
+
+            // DB Contexts
+            services.AddDbContext<NtbsContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
+            );
+
+            var auditDbConnectionString = Configuration.GetConnectionString("auditContext");
+
+            services.AddDbContext<AuditDatabaseContext>(options =>
+                options.UseSqlServer(auditDbConnectionString)
+            );
+
+            // Repositories
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
+            services.AddScoped<IAlertRepository, AlertRepository>();
+            services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
+            services.AddScoped<INotificationImportHelper, NotificationImportHelper>();
+            services.AddScoped<IMigrationRepository, MigrationRepository>();
+            services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
+            services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
+            services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
+            services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
+            services.AddScoped<IItemRepository<MBovisExposureToKnownCase>, MBovisExposureToKnownCaseRepository>();
+            services.AddScoped<IItemRepository<MBovisUnpasteurisedMilkConsumption>, MBovisUnpasteurisedMilkConsumptionRepository>();
+            services.AddScoped<IItemRepository<MBovisOccupationExposure>, MBovisOccupationExposureRepository>();
+            services.AddScoped<IItemRepository<MBovisAnimalExposure>, MBovisAnimalExposureRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDataQualityRepository, DataQualityRepository>();
+            services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
+            services.AddScoped<IFaqRepository, FaqRepository>();
+            
+            // Services
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IAlertService, AlertService>();
+            services.AddScoped<INotificationMapper, NotificationMapper>();
+            services.AddScoped<IImportLogger, ImportLogger>();
+            services.AddScoped<INotificationImportService, NotificationImportService>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPostcodeService, PostcodeService>();
+            services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
+            services.AddScoped<ILegacySearchService, LegacySearchService>();
+            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
+            services.AddScoped<IAdImportService, AdImportService>();
+            services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
+            AddAuditService(services, auditDbConnectionString);
+            AddReferenceLabResultServices(services);
+            AddClusterService(services);
+            AddReportingServices(services);
+        }
+
+        private void SetupHangfire(IServiceCollection services)
+        {
             if (!Env.IsEnvironment("CI"))
             {
                 services.AddHangfire(config =>
@@ -75,9 +160,10 @@ namespace ntbs_service
                         .UseConsole();
                 });
             }
+        }
 
-            var adfsConfig = Configuration.GetSection("AdfsOptions");
-            var ldapConnectionSettings = Configuration.GetSection("LdapConnectionSettings");
+        private static void SetupAuthentication(IServiceCollection services, IConfigurationSection adfsConfig)
+        {
             var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
             var authSetup = services
                 .AddAuthentication(sharedOptions =>
@@ -91,7 +177,7 @@ namespace ntbs_service
                     options.MetadataAddress =
                         adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                     options.Wtrealm = adfsConfig["Wtrealm"];
-                    
+
                     /*
                      * Below event handler is to prevent stale logins from showing a 500 error screen, instead to force
                      * back to the landing page - and cause a re-challenge or continue if already authenticated.
@@ -116,52 +202,20 @@ namespace ntbs_service
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                             userService.RecordUserLogin(username);
                         }
+
                         return Task.CompletedTask;
                     };
                 })
-                .AddCookie(options =>
-                {
-                    options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null;
-                });
+                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
 
             if (setupDummyAuth)
             {
                 authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
             }
+        }
 
-            services.AddMvc(options =>
-                {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .RequireRole(adfsConfig["BaseUserGroup"])
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                }).AddRazorPagesOptions(options =>
-                {
-                    options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
-                    options.Conventions.AllowAnonymousToPage("/Logout");
-                    options.Conventions.AllowAnonymousToPage("/Health");
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminOnly", policy =>
-                {
-                    policy.RequireRole(GetAdminRoleName());
-                });
-            });
-
-            services.AddDbContext<NtbsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
-            );
-
-            var auditDbConnectionString = Configuration.GetConnectionString("auditContext");
-
-            services.AddDbContext<AuditDatabaseContext>(options =>
-                options.UseSqlServer(auditDbConnectionString)
-            );
-
+        private void AddAuditService(IServiceCollection services, string auditDbConnectionString)
+        {
             if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
             {
                 services.AddEFAuditer(auditDbConnectionString);
@@ -170,49 +224,29 @@ namespace ntbs_service
             {
                 Audit.Core.Configuration.AuditDisabled = true;
             }
+        }
 
-            services.AddScoped<INotificationRepository, NotificationRepository>();
-            services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IAlertService, AlertService>();
-            services.AddScoped<IAlertRepository, AlertRepository>();
-            services.AddScoped<INotificationMapper, NotificationMapper>();
-            services.AddScoped<IImportLogger, ImportLogger>();
-            services.AddScoped<INotificationImportService, NotificationImportService>();
-            services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
-            services.AddScoped<INotificationImportHelper, NotificationImportHelper>();
-            services.AddScoped<IMigrationRepository, MigrationRepository>();
-            services.AddScoped<IAnnualReportSearchService, AnnualReportSearcher>();
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<IAuditService, AuditService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IPostcodeService, PostcodeService>();
-            services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
-            services.AddScoped<ILegacySearchService, LegacySearchService>();
-            services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();
-            services.AddScoped<IItemRepository<SocialContextVenue>, SocialContextVenueRepository>();
-            services.AddScoped<IItemRepository<SocialContextAddress>, SocialContextAddressRepository>();
-            services.AddScoped<IItemRepository<TreatmentEvent>, TreatmentEventRepository>();
-            services.AddScoped<IItemRepository<MBovisExposureToKnownCase>, MBovisExposureToKnownCaseRepository>();
-            services.AddScoped<IItemRepository<MBovisUnpasteurisedMilkConsumption>, MBovisUnpasteurisedMilkConsumptionRepository>();
-            services.AddScoped<IItemRepository<MBovisOccupationExposure>, MBovisOccupationExposureRepository>();
-            services.AddScoped<IItemRepository<MBovisAnimalExposure>, MBovisAnimalExposureRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
-            services.AddScoped<IAdImportService, AdImportService>();
-            services.AddScoped<IHomepageKpiService, HomepageKpiService>();
-            services.AddScoped<IDataQualityRepository, DataQualityRepository>();
-            services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
-            services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
-            services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
-            services.AddScoped<IFaqRepository, FaqRepository>();
+        private void AddClusterService(IServiceCollection services)
+        {
+            var clusterMatchingConfig = Configuration.GetSection(Constants.CLUSTER_MATCHING_CONFIG);
+            if (clusterMatchingConfig.GetValue<bool>(Constants.CLUSTER_MATCHING_CONFIG__MOCKOUT))
+            {
+                var notificationClusterValues = new List<NotificationClusterValue>();
+                clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
 
-            services.Configure<AdfsOptions>(adfsConfig);
-            services.Configure<LdapConnectionSettings>(ldapConnectionSettings);
-            services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
-            
-            var referenceLabResultsConfig = Configuration.GetSection("ReferenceLabResultsConfig");
-            if (referenceLabResultsConfig.GetValue<bool>("MockOutSpecimenMatching"))
+                services.AddScoped<INotificationClusterService>(sp =>
+                    new MockNotificationClusterService(notificationClusterValues));
+            }
+            else
+            {
+                services.AddScoped<INotificationClusterService, NotificationClusterService>();
+            }
+        }
+
+        private void AddReferenceLabResultServices(IServiceCollection services)
+        {
+            var referenceLabResultsConfig = Configuration.GetSection(Constants.REFERENCE_LAB_RESULTS_CONFIG);
+            if (referenceLabResultsConfig.GetValue<bool>(Constants.REFERENCE_LAB_RESULTS_CONFIG__MOCKOUT))
             {
                 var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
                 var tbServiceCode = referenceLabResultsConfig.GetValue<string>("MockedTbServiceCode");
@@ -227,21 +261,23 @@ namespace ntbs_service
                 services.AddScoped<ICultureAndResistanceService, CultureAndResistanceService>();
                 services.AddScoped<ISpecimenService, SpecimenService>();
             }
+        }
 
-            var clusterMatchingConfig = Configuration.GetSection("ClusterMatchingConfig");
-            if (clusterMatchingConfig.GetValue<bool>("MockOutClusterMatching"))
+        private void AddReportingServices(IServiceCollection services)
+        {
+            if (string.IsNullOrEmpty(Configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING)))
             {
-                var notificationClusterValues = new List<NotificationClusterValue>();
-                clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
-
-                services.AddScoped<INotificationClusterService>(sp =>
-                    new MockNotificationClusterService(notificationClusterValues));
+                services.AddScoped<IHomepageKpiService, MockHomepageKpiService>();
+                services.AddScoped<IDrugResistanceProfilesService, MockDrugResistanceProfilesService>();                
             }
             else
             {
-                services.AddScoped<INotificationClusterService, NotificationClusterService>();
+
+                services.AddScoped<IHomepageKpiService, HomepageKpiService>();
+                services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();                
             }
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
