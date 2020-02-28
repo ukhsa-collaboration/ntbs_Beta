@@ -18,7 +18,7 @@ namespace ntbs_service.Services
 
         public NotificationClusterService(IConfiguration configuration)
         {
-            _reportingDbConnectionString = configuration.GetConnectionString("reporting");
+            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING);
         }
         
         public async Task<IEnumerable<NotificationClusterValue>> GetNotificationClusterValues()

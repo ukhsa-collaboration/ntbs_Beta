@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Hangfire.Server;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
@@ -23,41 +24,48 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
-        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
+        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, List<string> notificationId);
+        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
     {
         private readonly IMigrationRepository _migrationRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IImportLogger _logger;
 
-        public NotificationMapper(IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository)
+        public NotificationMapper(IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository, IImportLogger logger)
         {
             _migrationRepository = migrationRepository;
             _referenceDataRepository = referenceDataRepository;
+            _logger = logger;
         }
 
-        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
+        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, DateTime rangeStartDate, DateTime endStartDate)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsByDate(rangeStartDate, endStartDate);
 
-            return await GetGroupedResultsAsNotificationAsync(groupedIds);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, requestId);
         }
 
-        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
+        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, List<string> notificationIds)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsById(notificationIds);
 
-            return await GetGroupedResultsAsNotificationAsync(groupedIds);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, requestId);
         }
 
-        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds)
+        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds, PerformContext context, string requestId)
         {
-            // return await Task.WhenAll();
-            return await Task.WhenAll(groupedIds.Select(async el =>
+            var resultList = new List<IList<Notification>>();
+            foreach (var group in groupedIds)
             {
-                var legacyIds = el.ToList();
+                var legacyIds = group.ToList();
+                _logger.LogInformation(context, requestId, $"Getting ids {string.Join(", ", legacyIds)}");
                 var legacyNotifications = _migrationRepository.GetNotificationsById(legacyIds);
                 var sitesOfDisease = _migrationRepository.GetNotificationSites(legacyIds);
                 var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);
@@ -66,7 +74,7 @@ namespace ntbs_service.DataMigration
                 var transferEvents =  _migrationRepository.GetTransferEvents(legacyIds);
                 // TODO outcome events
 
-                return await CombineDataForGroup(
+                var notificationsForGroup = await CombineDataForGroup(
                     legacyIds,
                     (await legacyNotifications).ToList(),
                     (await sitesOfDisease).ToList(),
@@ -74,8 +82,10 @@ namespace ntbs_service.DataMigration
                     (await socialContextVenues).ToList(),
                     (await socialContextAddresses).ToList(),
                     (await transferEvents).ToList()
-                    );
-            }));
+                );
+                resultList.Add(notificationsForGroup);
+            }
+            return resultList;
         }
 
         private async Task<IList<Notification>> CombineDataForGroup(

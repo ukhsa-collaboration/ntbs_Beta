@@ -6,12 +6,15 @@ COPY EFAuditer/EFAuditer.csproj ./EFAuditer/
 RUN dotnet restore EFAuditer/EFAuditer.csproj
 
 # restore app (in a separate layer to speed up the build)
+COPY ./NuGet.Config ./NuGet.Config
+COPY ./frontend-dotnetcore/dist ./frontend-dotnetcore/dist
 COPY ntbs-service/ntbs-service.csproj ./ntbs-service/
 RUN dotnet restore ntbs-service/ntbs-service.csproj
 
 # copy and build app
+
 COPY ntbs-service/ ./ntbs-service/
-COPY EFAuditer/ ./EFAuditer/
+COPY ./EFAuditer ./EFAuditer
 RUN dotnet publish ntbs-service/*.csproj -c Release -o out
 
 FROM node AS build-frontend

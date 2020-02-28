@@ -13,8 +13,14 @@
 </head>
 <body>
 <div>
-Release: @Model.Release    
-    
+<h1>Release</h1>
+Release: @Model.Release
+<h2>Optional modules</h2>
+<div>Audit: @(Model.AuditEnabled ? "enabled" : "disabled")</div>
+<div>Cluster matching: @(Model.ClusterMatchingEnabled ? "enabled" : "disabled")</div>
+<div>Reference lab restults: @(Model.ReferenceLabResultsEnabled ? "enabled" : "disabled")</div>
+<div>Reporing services: @(Model.ReportingServicesEnabled ? "enabled" : "disabled")</div>
+
 </div>
 </body>
 </html>

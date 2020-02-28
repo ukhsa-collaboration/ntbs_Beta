@@ -31,14 +31,14 @@
                             var hasRelationshipDescriptionError = !Model.IsValid("MDRDetails.RelationshipToCase");
                             var relationshipDescriptionGroupState = hasRelationshipDescriptionError ? Error : Standard;
                         }
-                        <nhs-form-group nhs-form-group-type=@relationshipDescriptionGroupState aria-describedby="relationship-description-error"
+                        <nhs-form-group nhs-form-group-type="@relationshipDescriptionGroupState" aria-describedby="relationship-description-error"
                             id="MDRDetails-RelationshipToCase">
                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelationshipDescriptionError"
                                     asp-validation-for="MDRDetails.RelationshipToCase" id="relationship-description-error"></span>
                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelationshipToCase">
                                 @Html.DisplayNameFor(model => model.MDRDetails.RelationshipToCase)
                             </label>
-                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasRelationshipDescriptionError nhs-input-type="Standard"
+                            <input ref="inputField" v-on:blur="validate" is-error-input="@hasRelationshipDescriptionError" nhs-input-type="Standard"
                                     fixed-width="Ten" asp-for="MDRDetails.RelationshipToCase" type="text">
                         </nhs-form-group>
                     </validate-input>
@@ -46,7 +46,7 @@
                         var hasCaseInUKError = !Model.IsValid("MDRDetails.CaseInUKStatus");
                         var caseInUKGroupState = hasCaseInUKError ? Error : Standard;
                     }
-                    <nhs-form-group nhs-form-group-type=@caseInUKGroupState aria-describedby="case-in-uk-error" id="MDRDetails-CaseInUKStatus">
+                    <nhs-form-group nhs-form-group-type="@caseInUKGroupState" aria-describedby="case-in-uk-error" id="MDRDetails-CaseInUKStatus">
                         <nhs-fieldset>
                             <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.CaseInUKStatus)</nhs-fieldset-legend>
                             <span id="case-in-uk-error" nhs-span-type="ErrorMessage"
@@ -64,15 +64,15 @@
                                             var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
                                             var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
                                         }
-                                        <nhs-form-group nhs-form-group-type=@relatedNotificationGroupState aria-describedby="related-notification-error"
+                                        <nhs-form-group nhs-form-group-type="@relatedNotificationGroupState" aria-describedby="related-notification-error"
                                             id="MDRDetails-RelatedNotificationId">
                                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelatedNotificationError"
                                                     asp-validation-for="MDRDetails.RelatedNotificationId" id="related-notification-error"></span>
                                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
                                                 @Html.DisplayNameFor(model => model.MDRDetails.RelatedNotificationId)
                                             </label>
-                                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasRelatedNotificationError nhs-input-type="Date"
-                                                    fixed-width="Ten" asp-for="MDRDetails.RelatedNotificationId" type="number">
+                                            <input ref="inputField" v-on:blur="validate" is-error-input="@hasRelatedNotificationError" nhs-input-type="Number"
+                                                    fixed-width="Ten" asp-for="MDRDetails.RelatedNotificationId">
                                             <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
                                         </nhs-form-group>
                                     </validate-related-notification>

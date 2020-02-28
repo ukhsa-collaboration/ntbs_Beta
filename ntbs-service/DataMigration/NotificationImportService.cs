@@ -60,9 +60,9 @@ namespace ntbs_service.DataMigration
             _logger.LogInformation(context, requestId, $"Request to import by Date started");
             _logger.LogInformation(context, requestId, $"Importing notifications in range from {rangeStartDate.Date} to {rangeEndDate.Date}");
 
-            var notificationsGroups = await _notificationMapper.GetNotificationsGroupedByPatient(rangeStartDate, rangeEndDate);
+            var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(context, requestId, rangeStartDate, rangeEndDate);
 
-            var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroups);
+            var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroupsToImport);
 
             _logger.LogInformation(context, requestId, $"Request to import by Date finished");
             return importResults;
@@ -73,7 +73,7 @@ namespace ntbs_service.DataMigration
         {
             _logger.LogInformation(context, requestId, $"Request to import by Id started");
 
-            var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(legacyIds);
+            var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(context, requestId, legacyIds);
 
             var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroupsToImport);
 
