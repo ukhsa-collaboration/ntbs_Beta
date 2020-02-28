@@ -37,8 +37,9 @@
         }
          <validate-input model="ClinicalDetails" property="Notes" inline-template>
             <nhs-form-group nhs-form-group-type="@notesGroupState">
+                <label nhs-label-type="Standard" asp-for="ClinicalDetails.Notes" classes="govuk-visually-hidden"> Please enter any additional clinical details not captured above. </label>
                 <span ref="errorField" id="notes-error" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.Notes" has-error="@notesError"></span>
-                <textarea ref="textAreaField" v-on:blur="validate"  classes="nhsuk-input--width-30" asp-for="ClinicalDetails.Notes" 
+                <textarea ref="textAreaField" v-on:blur="validate" classes="nhsuk-input--width-30" asp-for="ClinicalDetails.Notes" 
                         nhs-textarea-type="Standard" rows="10" is-error-input="@notesError" aria-describedby="notes-error"></textarea>
             </nhs-form-group>
         </validate-input>

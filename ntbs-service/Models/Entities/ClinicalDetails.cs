@@ -89,6 +89,9 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
         
+        [Display(Name = "Enhanced Case Management Level")]
+        public byte EnhancedCaseManagementLevel { get; set; }
+        
         #endregion
         
         [NotMapped]
