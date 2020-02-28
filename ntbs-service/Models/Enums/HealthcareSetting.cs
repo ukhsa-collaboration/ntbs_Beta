@@ -8,8 +8,8 @@ namespace ntbs_service.Models.Enums
         AccidentAndEmergency,
         [Display(Name = "Contact Tracing")]
         ContactTracing,
-        [Display(Name = "Find and Trace")]
-        FindAndTrace,
+        [Display(Name = "Find and Treat")]
+        FindAndTreat,
         [Display(Name = "GP")]
         GP,
         [Display(Name = "Other")]
