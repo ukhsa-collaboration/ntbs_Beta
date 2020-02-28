@@ -27,6 +27,7 @@ namespace ntbs_service.Helpers
 
                 string displayName;
                 string subPath;
+
                 switch (propertyKey)
                 {
                     case "PatientDetails":
@@ -65,9 +66,15 @@ namespace ntbs_service.Helpers
                         displayName = "Travel and visitor history";
                         break;
                     default:
+                        if (propertyKey == "HasDeathEventForPostMortemCase")
+                        {
+                            subPath = NotificationSubPaths.EditTreatmentEvents;
+                            displayName = "Treatment Events";
+                            break;
+                        }
                         continue;
                 }
-
+                
                 var url = RouteHelper.GetSubmittingNotificationPath(notificationId, subPath);
                 AddErrorMessagesIntoDictionary(displayName, url,
                     modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList());

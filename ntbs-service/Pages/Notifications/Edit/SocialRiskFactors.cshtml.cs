@@ -37,7 +37,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./Travel", new { NotificationId, isBeingSubmitted });
         }

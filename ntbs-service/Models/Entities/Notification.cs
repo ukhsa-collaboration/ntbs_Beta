@@ -132,7 +132,6 @@ namespace ntbs_service.Models.Entities
         public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
         public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
-        public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
         [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
@@ -303,6 +302,10 @@ namespace ntbs_service.Models.Entities
         
 
         #endregion
+        [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
+        public bool HasDeathEventForPostMortemCase =>
+            ClinicalDetails.IsPostMortem != true || TreatmentEvents.Any(x =>
+                x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died);
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

@@ -53,7 +53,7 @@ namespace ntbs_service.Pages.Notifications
             await AuthorizeAndSetBannerAsync();
             if (PermissionLevel != PermissionLevel.Edit)
             {
-                return RedirectAfterSaveForNotified();
+                return RedirectForNotified();
             }
 
             return await PrepareAndDisplayPageAsync(isBeingSubmitted);
@@ -124,15 +124,15 @@ namespace ntbs_service.Pages.Notifications
         {
             if (Notification.NotificationStatus != NotificationStatus.Draft)
             {
-                return RedirectAfterSaveForNotified();
+                return RedirectForNotified();
             }
 
-            return RedirectAfterSaveForDraft(isBeingSubmitted);
+            return RedirectForDraft(isBeingSubmitted);
         }
 
         // By default saving a notified record takes user to Overview page,
         // but this can be overriden for sub-entity pages such as TestResult
-        protected virtual IActionResult RedirectAfterSaveForNotified()
+        protected virtual IActionResult RedirectForNotified()
         {
             var overviewAnchorId = OverviewSubPathToAnchorMap.GetOverviewAnchorId(CurrentPage);
             return RedirectToPage(
@@ -179,7 +179,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected abstract Task ValidateAndSave();
         protected abstract Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted);
-        protected abstract IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted);
+        protected abstract IActionResult RedirectForDraft(bool isBeingSubmitted);
 
         protected virtual IActionResult RedirectToCreate()
         {

@@ -10,8 +10,11 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
 using Serilog;
+using Countries = ntbs_service.Models.Countries;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 // We're not using object initialization syntax in this file, as it obscures errors caused by wrong date types
@@ -149,6 +152,7 @@ namespace ntbs_service.DataMigration
             notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
             notification.PatientTBHistory = ExtractPatientTBHistory(rawNotification);
+            notification.TreatmentEvents = ExtractTreatmentEvents(rawNotification);
             notification.NotificationStatus = rawNotification.DenotificationDate == null
                 ? NotificationStatus.Notified
                 : NotificationStatus.Denotified;
@@ -258,7 +262,6 @@ namespace ntbs_service.DataMigration
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
             details.IsShortCourseTreatment = Converter.GetNullableBoolValue(notification.IsShortCourseTreatment);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
-            details.DeathDate = notification.DeathDate;
             details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
             details.DotStatus = Converter.GetEnumValue<DotStatus>((string) notification.DotStatus);
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
@@ -451,6 +454,22 @@ namespace ntbs_service.DataMigration
              address.DateTo = rawAddress.DateTo;
              address.Details = rawAddress.Details;
             return address;
+        }
+        
+        private static List<TreatmentEvent> ExtractTreatmentEvents(dynamic notification)
+        {
+            var treatmentEvents = new List<TreatmentEvent> {new TreatmentEvent
+            {
+                EventDate = notification.DeathDate,
+                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                TreatmentOutcome = new TreatmentOutcome
+                {
+                    TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
+                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
+                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                }
+            }};
+            return treatmentEvents;
         }
 
         private async Task<TreatmentEvent> AsTransferEvent(dynamic rawEvent)

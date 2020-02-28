@@ -132,6 +132,7 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
+            services.AddScoped<ITreatmentOutcomeService, TreatmentOutcomeService>();
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);
@@ -225,7 +226,7 @@ namespace ntbs_service
                 Audit.Core.Configuration.AuditDisabled = true;
             }
         }
-
+        
         private void AddClusterService(IServiceCollection services)
         {
             var clusterMatchingConfig = Configuration.GetSection(Constants.CLUSTER_MATCHING_CONFIG);
