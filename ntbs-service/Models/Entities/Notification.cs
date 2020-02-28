@@ -123,6 +123,9 @@ namespace ntbs_service.Models.Entities
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
         public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
+        public string FormattedCaseManagementStatus => ClinicalDetails.EnhancedCaseManagementStatus != Status.Yes
+            ? ClinicalDetails.EnhancedCaseManagementStatus.ToString()
+            : $"{ClinicalDetails.EnhancedCaseManagementStatus} - Level {ClinicalDetails.EnhancedCaseManagementLevel}"; 
         public string FormattedSymptomStartDate => ClinicalDetails.SymptomStartDate.ConvertToString();
         public string FormattedPresentationToAnyHealthServiceDate => ClinicalDetails.FirstPresentationDate.ConvertToString();
         public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
