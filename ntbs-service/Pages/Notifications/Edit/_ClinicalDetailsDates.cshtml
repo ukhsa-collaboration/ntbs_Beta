@@ -9,18 +9,17 @@
 
 <h2>Clinical Dates</h2>
 
-<date-comparison inline-template>
+<date-comparison inline-template number-of-dates="6">
     <div>
-        <div v-if="filteredDateWarnings.length > 0">
-            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning">
+        <div class="hidden" ref="date-warning-0">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[0]">
                 <div class="warning-container">
-                    <p v-for="warning in filteredDateWarnings">
-                        <strong>{{ warning.message }}</strong>
+                    <p>
+                        <strong> {{dateWarnings[0].message}} </strong>
                     </p>
                 </div>
             </govuk-warning-text>
         </div>
-
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-SymptomStartDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">Patient is symptomatic</nhs-fieldset-legend>
@@ -83,7 +82,15 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-
+        <div class="hidden" ref="date-warning-1">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[1]">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[1].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <validate-date ref="date1" name="@Html.DisplayNameFor(model => model.ClinicalDetails.FirstPresentationDate)" model="ClinicalDetails" property="FirstPresentationDate" rank="1" v-model="dates[1]" inline-template>
             @{
                 var hasPresentationAnyHealthServiceError = !Model.IsValid("ClinicalDetails.FirstPresentationDate");
@@ -123,7 +130,6 @@
             </nhs-form-group>
         </validate-date>
         <br />
-        
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HealthcareSetting">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.HealthcareSetting)</nhs-fieldset-legend>
@@ -170,7 +176,15 @@
              </nhs-fieldset>
         </nhs-form-group>
         <br />
-
+        <div class="hidden" ref="date-warning-2">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[2]">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[2].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <validate-date ref="date2" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TBServicePresentationDate)" model="ClinicalDetails" property="TBServicePresentationDate" rank="2" v-model="dates[2]" inline-template>
             @{
                 var hasPresentationTbServiceError = !Model.IsValid("ClinicalDetails.TBServicePresentationDate");
@@ -210,7 +224,15 @@
             </nhs-form-group>
         </validate-date>
         <br />
-
+        <div class="hidden" ref="date-warning-3">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[3]">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[3].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <validate-date ref="date3" name="@Html.DisplayNameFor(m => m.ClinicalDetails.DiagnosisDate)" model="ClinicalDetails" property="DiagnosisDate" rank="3" v-model="dates[3]" inline-template>
             @{
                 var hasDiagnosisError = !Model.IsValid("ClinicalDetails.DiagnosisDate");
@@ -250,7 +272,15 @@
             </nhs-form-group>
         </validate-date>
         <br />
-
+        <div class="hidden" ref="date-warning-4">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[4]">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[4].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-TreatmentStartDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">Patient started treatment</nhs-fieldset-legend>
@@ -311,7 +341,15 @@
             </nhs-fieldset>
         </nhs-form-group>
         <br />
-
+        <div class="hidden" ref="date-warning-5">
+            <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[5]">
+                <div class="warning-container">
+                    <p>
+                        <strong> {{dateWarnings[5].message}} </strong>
+                    </p>
+                </div>
+            </govuk-warning-text>
+        </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-HomeVisitDate">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(m => m.ClinicalDetails.HomeVisitCarriedOut)</nhs-fieldset-legend>
@@ -379,7 +417,6 @@
         </nhs-form-group>
     
         <h2>Post Mortem Diagnosis</h2>
-        <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DeathDate">
             <nhs-fieldset>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
@@ -389,44 +426,15 @@
                         </label>
                     </div>
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-postmortem-conditional">
-                        @{
-                            var hasDeathDateError = !Model.IsValid("ClinicalDetails.DeathDate");
-                            var deathDateGroupState = hasDeathDateError ? Error : Standard;
-                        }
-                        <validate-date name="@Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)" model="ClinicalDetails" property="DeathDate" inline-template>
-                            <nhs-form-group nhs-form-group-type=@deathDateGroupState>
-                                <nhs-fieldset aria-describedby="postmortem-error" role="group">
-                                    <nhs-fieldset-legend nhs-legend-size="Standard">
-                                        @Html.DisplayNameFor(m => m.ClinicalDetails.DeathDate)
-                                    </nhs-fieldset-legend>
-                                    <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.DeathDate"
-                                          has-error="@hasDeathDateError" id="postmortem-error"></span>
-                                    <nhs-date-input id="postmortem">
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Day">Day</label>
-                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                       is-error-input=@hasDeathDateError asp-for="FormattedDeathDate.Day" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Month">Month</label>
-                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                       is-error-input=@hasDeathDateError asp-for="FormattedDeathDate.Month" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedDeathDate.Year">Year</label>
-                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                       is-error-input=@hasDeathDateError asp-for="FormattedDeathDate.Year" />
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                    </nhs-date-input>
-                                </nhs-fieldset>
-                            </nhs-form-group>
-                        </validate-date>
+                        <label class="nhsuk-label" for="postmortem-save-button"> Please record the death outcome on the treatment events page </label>
+                        <button
+                            nhs-button-type="Standard"
+                            classes="ntbsuk-button--primary"
+                            name="SaveAndRouteToTreatmentEvents"
+                            value="SaveAndRouteToTreatmentEvents"
+                            id="postmortem-save-button">
+                            Save and go to treatment events
+                        </button>
                     </div>
                     <div class="nhsuk-radios__item">
                         <input asp-for="ClinicalDetails.IsPostMortem" id="postmortem-no" class="nhsuk-radios__input" type="radio" value="false">
@@ -436,6 +444,5 @@
                     </div>
                 </div>
             </nhs-fieldset>
-        </nhs-form-group>
     </div>
 </date-comparison>

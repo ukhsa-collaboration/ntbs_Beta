@@ -16,24 +16,24 @@ import VueAccessibleModal from 'vue-accessible-modal'
 import cssVars from 'css-vars-ponyfill';
 
 // Components
-import { ValidateInput } from "./Components/ValidateInput";
-import { ValidateDate } from "./Components/ValidateDate";
-import { DateComparison } from "./Components/DateComparison";
-import { YearComparison } from "./Components/YearComparison";
-import { ValidateContactTracing } from "./Components/ValidateContactTracing";
+import ValidateInput from "./Components/ValidateInput";
+import ValidateDate from "./Components/ValidateDate";
+import DateComparison from "./Components/DateComparison";
+import YearComparison from "./Components/YearComparison";
+import ValidateContactTracing from "./Components/ValidateContactTracing";
 import ValidateImmunosuppression from "./Components/ValidateImmunosuppression";
 import ValidateTravelOrVisit from "./Components/ValidateTravelOrVisit";
-import { ValidateMultiple } from "./Components/ValidateMultiple";
-import { ValidateRequiredCheckboxes } from "./Components/ValidateRequiredCheckboxes";
-import { ValidatePostcode } from "./Components/ValidatePostcode";
+import ValidateMultiple from "./Components/ValidateMultiple";
+import ValidateRequiredCheckboxes from "./Components/ValidateRequiredCheckboxes";
+import ValidatePostcode from "./Components/ValidatePostcode";
 import ConditionalSelectWrapper from "./Components/ConditionalSelectWrapper";
-import { AutocompleteSelect } from "./Components/AutocompleteSelect";
+import AutocompleteSelect from "./Components/AutocompleteSelect";
 import NhsNumberDuplicateWarning from "./Components/NhsNumberDuplicateWarning";
 import FilteredDropdown from "./Components/FilteredDropdown";
 import CascadingDropdown from "./Components/CascadingDropdown";
 import TbServiceFilteredAlerts from "./Components/TbServiceFilteredAlerts";
-import { ValidateRelatedNotification } from "./Components/ValidateRelatedNotification";
-import { NotificationInfo } from "./Components/NotificationInfo";
+import ValidateRelatedNotification from "./Components/ValidateRelatedNotification";
+import NotificationInfo from "./Components/NotificationInfo";
 import HideSectionIfFalse from "./Components/HideSectionIfFalse";
 import FetchSpecimenPotentialMatch from "./Components/FetchSpecimenPotentialMatch";
 import FilteredHomepageKpiDetails from "./Components/FilteredHomepageKpiDetails";

@@ -76,7 +76,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
             await _socialContextRepository.DeleteAsync(model);
 
-            return RedirectAfterSaveForNotified();
+            return RedirectForNotified();
         }
 
         private void SetDates(T model, string modelName)

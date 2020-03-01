@@ -166,7 +166,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 notification.IsLegacy);
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./HospitalDetails", new { NotificationId, isBeingSubmitted });
         }

@@ -122,6 +122,10 @@ namespace ntbs_service.Models.Entities
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
         public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.TreatmentRegimen == TreatmentRegimen.MdrTreatment, ClinicalDetails.MDRTreatmentStartDate);
+        public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
+        public string FormattedCaseManagementStatus => ClinicalDetails.EnhancedCaseManagementStatus != Status.Yes
+            ? ClinicalDetails.EnhancedCaseManagementStatus.ToString()
+            : $"{ClinicalDetails.EnhancedCaseManagementStatus} - Level {ClinicalDetails.EnhancedCaseManagementLevel}"; 
         public string FormattedSymptomStartDate => ClinicalDetails.SymptomStartDate.ConvertToString();
         public string FormattedPresentationToAnyHealthServiceDate => ClinicalDetails.FirstPresentationDate.ConvertToString();
         public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
@@ -131,7 +135,6 @@ namespace ntbs_service.Models.Entities
         public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
         public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
-        public string FormattedDeathDate => ClinicalDetails.DeathDate.ConvertToString();
         public string FormattedDob => PatientDetails.Dob.ConvertToString();
         [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
@@ -150,7 +153,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedDenotificationDate => DenotificationDetails?.DateOfDenotification.ConvertToString();
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
-        public bool IsMdr => ClinicalDetails.TreatmentRegimen == TreatmentRegimen.MdrTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
+        public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
         
         private string GetNotificationStatusString()
@@ -302,6 +305,10 @@ namespace ntbs_service.Models.Entities
         
 
         #endregion
+        [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
+        public bool HasDeathEventForPostMortemCase =>
+            ClinicalDetails.IsPostMortem != true || TreatmentEvents.Any(x =>
+                x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died);
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

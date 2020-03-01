@@ -59,12 +59,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 dataGroupField: nameof(VenueType.Category));
         }
 
-        protected override IActionResult RedirectAfterSaveForNotified()
+        protected override IActionResult RedirectForNotified()
         {
             return RedirectToPage("/Notifications/Edit/SocialContextVenues", new { NotificationId });
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("/Notifications/Edit/SocialContextVenues", new { NotificationId, isBeingSubmitted });
         }

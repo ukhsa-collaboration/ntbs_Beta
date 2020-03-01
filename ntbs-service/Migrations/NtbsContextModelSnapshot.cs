@@ -23765,14 +23765,16 @@ namespace ntbs_service.Migrations
 
                             b1.Property<int?>("BCGVaccinationYear");
 
-                            b1.Property<DateTime?>("DeathDate");
-
                             b1.Property<DateTime?>("DiagnosisDate");
 
                             b1.Property<bool?>("DidNotStartTreatment");
 
                             b1.Property<string>("DotStatus")
                                 .HasMaxLength(30);
+
+                            b1.Property<byte>("EnhancedCaseManagementLevel")
+                                .ValueGeneratedOnAdd()
+                                .HasDefaultValue((byte)0);
 
                             b1.Property<string>("EnhancedCaseManagementStatus")
                                 .HasMaxLength(30);

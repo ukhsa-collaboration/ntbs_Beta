@@ -107,16 +107,6 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task GetTreatmentEvents_ReturnsNotFound_ForDraft()
-        {
-            // Act
-            var response = await Client.GetAsync(GetCurrentPathForId(Utilities.DRAFT_ID));
-
-            // Assert
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
         public async Task GetTreatmentEvents_ReturnsOk_ForNotified()
         {
             // Act

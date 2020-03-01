@@ -53,7 +53,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             var nextPage = Notification.IsMBovis ? "./MBovisExposureToKnownCases" : "./MDRDetails";
             return RedirectToPage(nextPage, new { NotificationId, isBeingSubmitted });

@@ -40,7 +40,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./Items/NewSocialContextVenue", "", new { NotificationId }, "social-context-venue-form");
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./PreviousHistory", new { NotificationId, isBeingSubmitted });
         }

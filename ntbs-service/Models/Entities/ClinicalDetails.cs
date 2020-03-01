@@ -40,13 +40,7 @@ namespace ntbs_service.Models.Entities
         [ValidClinicalDate]
         [AssertThat(@"AfterDob(TreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TreatmentStartDate { get; set; }
-
-        [Display(Name = "Date of death")]
-        [RequiredIf(@"ShouldValidateFull && IsPostMortem == true", ErrorMessage = ValidationMessages.FieldRequired)]
-        [ValidClinicalDate]
-        [AssertThat(@"AfterDob(DeathDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        public DateTime? DeathDate { get; set; }
-
+        
         public bool? DidNotStartTreatment { get; set; }
         public bool? IsPostMortem { get; set; }
 
@@ -98,6 +92,9 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
+        
+        [Display(Name = "Enhanced Case Management Level")]
+        public byte EnhancedCaseManagementLevel { get; set; }
         
         #endregion
         

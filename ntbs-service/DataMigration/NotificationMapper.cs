@@ -4,13 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Hangfire.Server;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Helpers;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
+using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
 using Serilog;
+using Countries = ntbs_service.Models.Countries;
 
 // ReSharper disable UseObjectOrCollectionInitializer
 // We're not using object initialization syntax in this file, as it obscures errors caused by wrong date types
@@ -20,41 +24,48 @@ namespace ntbs_service.DataMigration
 {
     public interface INotificationMapper
     {
-        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationId);
-        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate);
+        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, List<string> notificationId);
+        Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, DateTime rangeStartDate, DateTime endStartDate);
     }
 
     public class NotificationMapper : INotificationMapper
     {
         private readonly IMigrationRepository _migrationRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IImportLogger _logger;
 
-        public NotificationMapper(IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository)
+        public NotificationMapper(IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository, IImportLogger logger)
         {
             _migrationRepository = migrationRepository;
             _referenceDataRepository = referenceDataRepository;
+            _logger = logger;
         }
 
-        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(DateTime rangeStartDate, DateTime endStartDate)
+        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, DateTime rangeStartDate, DateTime endStartDate)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsByDate(rangeStartDate, endStartDate);
 
-            return await GetGroupedResultsAsNotificationAsync(groupedIds);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, requestId);
         }
 
-        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(List<string> notificationIds)
+        public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
+            string requestId, List<string> notificationIds)
         {
             var groupedIds = await _migrationRepository.GetGroupedNotificationIdsById(notificationIds);
 
-            return await GetGroupedResultsAsNotificationAsync(groupedIds);
+            return await GetGroupedResultsAsNotificationAsync(groupedIds, context, requestId);
         }
 
-        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds)
+        private async Task<IEnumerable<IList<Notification>>> GetGroupedResultsAsNotificationAsync(IEnumerable<IGrouping<string, string>> groupedIds, PerformContext context, string requestId)
         {
-            // return await Task.WhenAll();
-            return await Task.WhenAll(groupedIds.Select(async el =>
+            var resultList = new List<IList<Notification>>();
+            foreach (var group in groupedIds)
             {
-                var legacyIds = el.ToList();
+                var legacyIds = group.ToList();
+                _logger.LogInformation(context, requestId, $"Getting ids {string.Join(", ", legacyIds)}");
                 var legacyNotifications = _migrationRepository.GetNotificationsById(legacyIds);
                 var sitesOfDisease = _migrationRepository.GetNotificationSites(legacyIds);
                 var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);
@@ -63,7 +74,7 @@ namespace ntbs_service.DataMigration
                 var transferEvents =  _migrationRepository.GetTransferEvents(legacyIds);
                 // TODO outcome events
 
-                return await CombineDataForGroup(
+                var notificationsForGroup = await CombineDataForGroup(
                     legacyIds,
                     (await legacyNotifications).ToList(),
                     (await sitesOfDisease).ToList(),
@@ -71,8 +82,10 @@ namespace ntbs_service.DataMigration
                     (await socialContextVenues).ToList(),
                     (await socialContextAddresses).ToList(),
                     (await transferEvents).ToList()
-                    );
-            }));
+                );
+                resultList.Add(notificationsForGroup);
+            }
+            return resultList;
         }
 
         private async Task<IList<Notification>> CombineDataForGroup(
@@ -139,6 +152,7 @@ namespace ntbs_service.DataMigration
             notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
             notification.PatientTBHistory = ExtractPatientTBHistory(rawNotification);
+            notification.TreatmentEvents = ExtractTreatmentEvents(rawNotification);
             notification.NotificationStatus = rawNotification.DenotificationDate == null
                 ? NotificationStatus.Notified
                 : NotificationStatus.Denotified;
@@ -246,7 +260,6 @@ namespace ntbs_service.DataMigration
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
-            details.DeathDate = notification.DeathDate;
             details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
             details.DotStatus = Converter.GetEnumValue<DotStatus>((string) notification.DotStatus);
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
@@ -439,6 +452,22 @@ namespace ntbs_service.DataMigration
              address.DateTo = rawAddress.DateTo;
              address.Details = rawAddress.Details;
             return address;
+        }
+        
+        private static List<TreatmentEvent> ExtractTreatmentEvents(dynamic notification)
+        {
+            var treatmentEvents = new List<TreatmentEvent> {new TreatmentEvent
+            {
+                EventDate = notification.DeathDate,
+                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                TreatmentOutcome = new TreatmentOutcome
+                {
+                    TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
+                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
+                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                }
+            }};
+            return treatmentEvents;
         }
 
         private async Task<TreatmentEvent> AsTransferEvent(dynamic rawEvent)

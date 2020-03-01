@@ -19,7 +19,7 @@ namespace ntbs_service.DataAccess
 
         public DrugResistanceProfileRepository(IConfiguration configuration)
         {
-            _reportingDbConnectionString = configuration.GetConnectionString("reporting");
+            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING);
         }
         
         public async Task<Dictionary<int, DrugResistanceProfile>> GetDrugResistanceProfilesAsync()

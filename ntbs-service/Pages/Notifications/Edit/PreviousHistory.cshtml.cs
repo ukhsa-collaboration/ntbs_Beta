@@ -34,7 +34,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return Page();
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             string nextPage;
             if (Notification.IsMdr)

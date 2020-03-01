@@ -92,10 +92,6 @@
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Date of death </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedDeathDate </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Postmortem diagnosis </div>
             <div class="cell-min-height"> @Model.Notification.IsPostMortemYesNo </div>
         </nhs-grid-column>
@@ -129,7 +125,7 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Enhanced Case Management </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails?.EnhancedCaseManagementStatus </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedCaseManagementStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Standard therapy treatment </div>

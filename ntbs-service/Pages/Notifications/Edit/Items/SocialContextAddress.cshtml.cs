@@ -42,12 +42,12 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             await ValidateAndSave(Address, "Address");
         }
 
-        protected override IActionResult RedirectAfterSaveForNotified()
+        protected override IActionResult RedirectForNotified()
         {
             return RedirectToPage("/Notifications/Edit/SocialContextAddresses", new { NotificationId });
         }
 
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("/Notifications/Edit/SocialContextAddresses", new { NotificationId, isBeingSubmitted });
         }

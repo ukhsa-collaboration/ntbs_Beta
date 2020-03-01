@@ -46,7 +46,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             return RedirectToPage("./Items/NewMBovisUnpasteurisedMilkConsumption", new { NotificationId });
         }
         
-        protected override IActionResult RedirectAfterSaveForDraft(bool isBeingSubmitted)
+        protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             return RedirectToPage("./MBovisOccupationExposures", new { NotificationId, isBeingSubmitted });
         }

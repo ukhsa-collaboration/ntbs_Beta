@@ -7,12 +7,18 @@ using ntbs_integration_tests.TestServices;
 using ntbs_service;
 using ntbs_service.Helpers;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ntbs_integration_tests.NotificationPages
 {
     public class BasicEditPageTests : TestRunnerNotificationBase
     {
-        public BasicEditPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        private readonly ITestOutputHelper _output;
+
+        public BasicEditPageTests(NtbsWebApplicationFactory<Startup> factory, ITestOutputHelper output) : base(factory)
+        {
+            _output = output;
+        }
 
         [Theory, MemberData(nameof(EditPageSubPaths))]
         public async Task Get_ReturnsNotFound_ForNewId(string subPath)
@@ -34,99 +40,123 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Theory, MemberData(nameof(EditPageSubPaths))]
-        public async Task Get_ReturnsOk_ForNhsUserWithPermission(string subPath)
+        [Fact]
+        public async Task Get_ReturnsOk_ForNhsUserWithPermission()
         {
             // Arrange
             using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                //Act
-                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
+                EditSubPaths.ForEach( subPath =>
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                // Assert
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                });
             }
         }
 
-        [Theory, MemberData(nameof(EditPageSubPaths))]
-        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission(string subPath)
+        [Fact]
+        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission()
         {
             // Arrange
             using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                //Act
-                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
+                EditSubPaths.ForEach( subPath =>
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                // Assert
-                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                });
             }
         }
 
-        [Theory, MemberData(nameof(EditPageSubPaths))]
-        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission(string subPath)
+        [Fact]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                //Act
-                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
+                EditSubPaths.ForEach( subPath =>
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                // Assert
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                });
             }
         }
 
-        [Theory, MemberData(nameof(EditPageSubPaths))]
-        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission(string subPath)
+        [Fact]
+        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {
-                //Act
-                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
+                EditSubPaths.ForEach( subPath =>
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                // Assert
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                });
             }
         }
 
-        [Theory, MemberData(nameof(EditPageSubPaths))]
-        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission(string subPath)
+        [Fact]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_SERVICE_CODE)
                                         .CreateClientWithoutRedirects())
             {
-                //Act
-                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
+                EditSubPaths.ForEach( subPath =>
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                // Assert
-                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                });
             }
         }
 
-        [Theory, MemberData(nameof(EditPageSubPaths))]
-        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission(string subPath)
+        [Fact]
+        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
                                         .WithNotificationAndPostcodeConnected(Utilities.DRAFT_ID, Utilities.UNPERMITTED_POSTCODE)
                                         .CreateClientWithoutRedirects())
             {
-                //Act
-                var response = await client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID));
+                EditSubPaths.ForEach( subPath =>
+                {
+                    // Act
+                    var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
-                // Assert
-                Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                    _output.WriteLine("Testing subpath {0}", subPath);
+                    // Assert
+                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                });
             }
         }
 
