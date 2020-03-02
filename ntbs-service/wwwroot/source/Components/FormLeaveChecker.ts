@@ -1,8 +1,9 @@
-﻿import Vue from "vue";
+﻿import Vue, {VNode} from "vue";
 import ConfirmComponent from "./ConfirmComponent";
 import 'formdata-polyfill';
 
 const FormLeaveChecker = Vue.extend({
+    render(): any { return null },
     created(): void {
         window.onclick = this.checkLeave.bind(this);
     },
