@@ -20,7 +20,7 @@ namespace ntbs_service.Services
     {
         bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
         TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
-        bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
+        bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
     }
 
     public class TreatmentOutcomeService : ITreatmentOutcomeService
@@ -70,7 +70,7 @@ namespace ntbs_service.Services
             return true;
         }
 
-        public bool IsTreatmentOutcomeNeededAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        public bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
             if (notification.NotificationDate == null || DateTime.Now < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate).Value.AddYears(yearsAfterTreatmentStartDate))
             {

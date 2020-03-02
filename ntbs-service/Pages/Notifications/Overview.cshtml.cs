@@ -21,9 +21,9 @@ namespace ntbs_service.Pages.Notifications
         public CultureAndResistance CultureAndResistance { get; set; }
         public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
 
-        public bool IsOutcomeAt12MonthsNeeded { get; set; }
-        public bool IsOutcomeAt24MonthsNeeded { get; set; }
-        public bool IsOutcomeAt36MonthsNeeded { get; set; }
+        public bool Should12MonthOutcomeBeDisplayed { get; set; }
+        public bool Should24MonthOutcomeBeDisplayed { get; set; }
+        public bool Should36MonthOutcomeBeDisplayed { get; set; }
         public TreatmentOutcome OutcomeAt12Months { get; set; }
         public TreatmentOutcome OutcomeAt24Months { get; set; }
         public TreatmentOutcome OutcomeAt36Months { get; set; }
@@ -73,19 +73,19 @@ namespace ntbs_service.Pages.Notifications
 
         private void CalculateTreatmentOutcomes()
         {
-            if (_treatmentOutcomeService.IsTreatmentOutcomeNeededAtXYears(Notification, 1))
+            if (_treatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 1))
             {
-                IsOutcomeAt12MonthsNeeded = true;
+                Should12MonthOutcomeBeDisplayed = true;
                 OutcomeAt12Months = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 1);
             }
-            if (_treatmentOutcomeService.IsTreatmentOutcomeNeededAtXYears(Notification, 2))
+            if (_treatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 2))
             {
-                IsOutcomeAt24MonthsNeeded = true;
+                Should24MonthOutcomeBeDisplayed = true;
                 OutcomeAt24Months = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 2);
             }
-            if (_treatmentOutcomeService.IsTreatmentOutcomeNeededAtXYears(Notification, 3))
+            if (_treatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 3))
             {
-                IsOutcomeAt36MonthsNeeded = true;
+                Should36MonthOutcomeBeDisplayed = true;
                 OutcomeAt36Months = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 3);
             }
         }
