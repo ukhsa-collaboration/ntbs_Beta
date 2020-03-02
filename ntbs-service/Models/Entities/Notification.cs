@@ -155,9 +155,6 @@ namespace ntbs_service.Models.Entities
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
-        public bool AgeEligibleFor12MonthOutcome = true;
-        public bool AgeEligibleFor24MonthOutcome = true;
-        public bool AgeEligibleFor36MonthOutcome = true;
         
         private string GetNotificationStatusString()
         {

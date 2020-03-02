@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace ntbs_service.Services
     {
         bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
         TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
+        bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
     }
 
     public class TreatmentOutcomeService : ITreatmentOutcomeService
@@ -66,6 +68,21 @@ namespace ntbs_service.Services
                 }
             }
             return true;
+        }
+
+        public bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        {
+            if (notification.NotificationDate == null || DateTime.Now < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate).Value.AddYears(yearsAfterTreatmentStartDate))
+            {
+                return false;
+            }
+            
+            if (GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)
+                    ?.LastOrDefault(x => x.TreatmentOutcome != null) != null)
+            {
+                return true;
+            }
+            return IsTreatmentOutcomeMissingAtXYears(notification, yearsAfterTreatmentStartDate);
         }
         
         private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(Notification notification, int numberOfYears)
