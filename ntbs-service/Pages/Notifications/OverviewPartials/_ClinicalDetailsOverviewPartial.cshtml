@@ -128,8 +128,8 @@
             <div class="cell-min-height"> @Model.Notification.FormattedCaseManagementStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Standard therapy treatment </div>
-            <div class="cell-min-height">  </div>
+            <div class="notification-details-label"> Planned treatment regimen </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.TreatmentRegimen </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> RR/MDR/XDR treatment </div>

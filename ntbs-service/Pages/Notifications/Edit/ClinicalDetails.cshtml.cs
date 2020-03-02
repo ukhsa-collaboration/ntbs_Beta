@@ -186,7 +186,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ClinicalDetails.TreatmentStartDate != Notification.ClinicalDetails.TreatmentStartDate &&
                 ClinicalDetails.TreatmentStartDate != null;
             var mdrChanged = Notification.ClinicalDetails.TreatmentRegimen != ClinicalDetails.TreatmentRegimen;
-            var nonMdrNotAllowed = ClinicalDetails.TreatmentRegimen != TreatmentRegimen.MdrTreatment && Notification.MDRDetails.MDRDetailsEntered;
+            var nonMdrNotAllowed = !ClinicalDetails.IsMDRTreatment && Notification.MDRDetails.MDRDetailsEntered;
 
             if (mdrChanged && nonMdrNotAllowed)
             {
@@ -243,7 +243,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
 
             ModelState.Remove("ClinicalDetails.MDRTreatmentStartDate");
-            if (ClinicalDetails.TreatmentRegimen != TreatmentRegimen.MdrTreatment)
+            if (!ClinicalDetails.IsMDRTreatment)
             {
                 ClinicalDetails.MDRTreatmentStartDate = null;
                 FormattedMdrTreatmentDate = ClinicalDetails.MDRTreatmentStartDate.ConvertToFormattedDate();
