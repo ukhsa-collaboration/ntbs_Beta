@@ -55,15 +55,13 @@ const DateComparison = Vue.extend({
                 }
 
                 if (currentDate < this.dates[lowerDateIndex]) {
-                    if (this.dateWarnings[lowerDateIndex] && this.dateWarnings[lowerDateIndex].comparedTo > currentIndex)
-                    {
-                        continue
+                    if (!(this.dateWarnings[lowerDateIndex] && this.dateWarnings[lowerDateIndex].comparedTo < currentIndex)) {
+                        this.$set(this.dateWarnings, lowerDateIndex,
+                            {
+                                message: warningMessageLater(this.$refs[`date${lowerDateIndex}`].name, this.$refs[`date${currentIndex}`].name),
+                                comparedTo: currentIndex
+                            });
                     }
-                    this.$set(this.dateWarnings, lowerDateIndex,
-                        {
-                            message: warningMessageLater(this.$refs[`date${lowerDateIndex}`].name, this.$refs[`date${currentIndex}`].name),
-                            comparedTo: currentIndex
-                        });
                 }
                 lowerDateIndex--;
             }
