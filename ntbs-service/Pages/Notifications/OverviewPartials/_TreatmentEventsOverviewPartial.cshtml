@@ -21,24 +21,24 @@
 {
      <div class="notification-overview-details-container">
         <div class="event-outcome-at-dates">
-            @if (@Model.OutcomeAt12Month != null)
+            @if (Model.Notification.AgeEligibleFor12MonthOutcome)
             {
                 <div>
-                    <strong> Outcome at 12 months </strong> @Model.OutcomeAt12Month.TreatmentOutcomeType.GetDisplayName() 
+                    <strong> Outcome at 12 months </strong> @(Model.OutcomeAt12Month?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
             
-            @if (@Model.OutcomeAt24Month != null)
+            @if (Model.Notification.AgeEligibleFor24MonthOutcome)
             {
                 <div>
-                    <strong> Outcome at 24 months </strong> @Model.OutcomeAt24Month.TreatmentOutcomeType.GetDisplayName()
+                    <strong> Outcome at 24 months </strong> @(Model.OutcomeAt24Month?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
             
-            @if (@Model.OutcomeAt36Month != null)
+            @if (Model.Notification.AgeEligibleFor36MonthOutcome)
             {
                 <div>
-                    <strong> Outcome at 36 months </strong> @Model.OutcomeAt36Month.TreatmentOutcomeType.GetDisplayName() 
+                    <strong> Outcome at 36 months </strong> @(Model.OutcomeAt36Month?.TreatmentOutcomeType.GetDisplayName() ?? "No outcome recorded")
                 </div>
             }
         </div>
