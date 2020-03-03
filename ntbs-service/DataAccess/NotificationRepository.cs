@@ -11,7 +11,7 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        IQueryable<Notification> GetBannerReadyNotificationsIQueryable();
+        IQueryable<Notification> GetBaseNotificationsIQueryable();
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
@@ -219,8 +219,6 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
                 .Include(n => n.Alerts)
                 .Include(n => n.TreatmentEvents)
-                    .ThenInclude(t => t.TreatmentOutcome)
-                .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TbService)
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.CaseManager)
@@ -265,7 +263,7 @@ namespace ntbs_service.DataAccess
 
         // Adds enough information to display notification banner, which makes it a good
         // base for most notification queries. Can be expanded upon for further pages as needed.
-        public IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
+        private IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
                 .Include(n => n.PatientDetails.Country)
@@ -288,7 +286,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.HospitalDetails.CaseManager);
         }
 
-        private IQueryable<Notification> GetBaseNotificationsIQueryable()
+        public IQueryable<Notification> GetBaseNotificationsIQueryable()
         {
             return _context.Notification
                 .Where(n => n.NotificationStatus != NotificationStatus.Deleted);

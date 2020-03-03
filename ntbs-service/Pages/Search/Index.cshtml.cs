@@ -78,7 +78,7 @@ namespace ntbs_service.Pages.Search
                 PageSize = 50, PageIndex = pageIndex ?? 1, LegacyOffset = legacyOffset, NtbsOffset = ntbsOffset
             };
 
-            var ntbsQueryable = _notificationRepository.GetBannerReadyNotificationsIQueryable();
+            var ntbsQueryable = _notificationRepository.GetBaseNotificationsIQueryable();
 
             var ntbsFilteredSearchBuilder = (INtbsSearchBuilder)FilterBySearchParameters(new NtbsSearchBuilder(ntbsQueryable));
             var legacyFilteredSearchBuilder = (ILegacySearchBuilder)FilterBySearchParameters(new LegacySearchBuilder(_referenceDataRepository));
