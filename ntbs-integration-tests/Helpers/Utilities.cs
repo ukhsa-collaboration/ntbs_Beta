@@ -69,6 +69,8 @@ namespace ntbs_integration_tests.Helpers
         public const int NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_ENTITIES = 10136;
         public const int NOTIFICATION_ID_WITH_MBOVIS_ANIMAL_NO_ENTITIES = 10137;
 
+        public const int CLOSED_NOTIFICATION_IN_ABINGDON = 10140;
+
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
         public const int TRANSFER_ALERT_ID_TO_ACCEPT = 20003;

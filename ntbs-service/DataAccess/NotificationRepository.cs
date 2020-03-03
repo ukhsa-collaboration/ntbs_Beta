@@ -31,6 +31,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
         Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
+        Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync();
         Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
@@ -50,7 +51,7 @@ namespace ntbs_service.DataAccess
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified || n.NotificationStatus == NotificationStatus.Closed)
                 .OrderByDescending(n => n.SubmissionDate);
         }
 
@@ -245,6 +246,17 @@ namespace ntbs_service.DataAccess
                     .Where(n => ids.Contains(n.NotificationId))
                     .ToListAsync())
                 .Select(n => new NotificationBannerModel(n, showLink: true));
+        }
+
+        public async Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync()
+        {
+            return await _context.Notification
+                .Where(n =>
+                    n.TreatmentEvents.OrderByDescending(t => t.EventDate).FirstOrDefault().TreatmentEventTypeIsOutcome
+                    && n.TreatmentEvents.OrderByDescending(t => t.EventDate).FirstOrDefault().TreatmentOutcome.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
+                    && n.TreatmentEvents.OrderByDescending(t => t.EventDate).FirstOrDefault().EventDate < DateTime.Today.AddYears(-1)
+                    )
+                .ToListAsync();
         }
 
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)

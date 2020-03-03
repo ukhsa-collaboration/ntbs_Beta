@@ -11,7 +11,13 @@ namespace ntbs_service.Jobs
                 "user-sync",
                 job => job.Run(JobCancellationToken.Null),
                 Cron.Daily(3),
-                TimeZoneInfo.Local);            
+                TimeZoneInfo.Local);
+            
+            RecurringJob.AddOrUpdate<CloseInactiveNotificationsJob>(
+                "close-inactive-notifications",
+                job => job.Run(JobCancellationToken.Null),
+                Cron.Daily(3),
+                TimeZoneInfo.Local);
             
             RecurringJob.AddOrUpdate<DrugResistanceProfileUpdateJob>(
                 "drug-resistance-profile-update",
