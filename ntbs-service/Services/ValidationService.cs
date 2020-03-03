@@ -68,7 +68,7 @@ namespace ntbs_service.Services
                 }
                 catch (Exception)
                 {
-                    var propertyDisplayName = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                    var propertyDisplayName = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name ?? key;
                     ModelState.AddModelError(key, ValidationMessages.ValueInvalid(propertyDisplayName));
                 }
             }
@@ -119,7 +119,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name ?? key;
                 return _pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
