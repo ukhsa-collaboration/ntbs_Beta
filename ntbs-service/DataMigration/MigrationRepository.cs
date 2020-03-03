@@ -13,8 +13,11 @@ namespace ntbs_service.DataMigration
     public interface IMigrationRepository
     {
         Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications);
+
+        /// <returns>Groups of notifications, indexed by group id, or notification id for singletons</returns>
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds);
 
+        /// <returns>Groups of notifications, indexed by group id, or notification id for singletons</returns>
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsByDate(DateTime rangeStartDate,
             DateTime endStartDate);
 
@@ -124,7 +127,7 @@ namespace ntbs_service.DataMigration
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationIdsWithGroupIdsByIdQuery, new {Ids = legacyIds}))
-                    .GroupBy(t => t.groupId, t => t.notificationId);
+                    .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
             }
         }
 
@@ -138,7 +141,7 @@ namespace ntbs_service.DataMigration
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationsIdsWithGroupIdsByDateQuery,
                         new {StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s")}))
-                    .GroupBy(t => t.groupId, t => t.notificationId);
+                    .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
             }
         }
 
