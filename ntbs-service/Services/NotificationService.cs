@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -297,7 +298,7 @@ namespace ntbs_service.Services
 
         public async Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites)
         {
-            var currentSites = _context.NotificationSite.Where(ns => ns.NotificationId == notificationId);
+            var currentSites = await _context.NotificationSite.Where(ns => ns.NotificationId == notificationId).ToListAsync();
 
             foreach (var newSite in notificationSites)
             {
