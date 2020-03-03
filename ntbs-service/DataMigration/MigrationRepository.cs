@@ -31,20 +31,15 @@ namespace ntbs_service.DataMigration
 
     public class MigrationRepository : IMigrationRepository
     {
-        const string NotificationIdsWithGroupIdsQuery = @"
-            SELECT n.OldNotificationId, n.GroupId
+        const string NotificationIdsWithGroupIdsByIdQuery =
+            @"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
-            WHERE GroupId IN (
-                SELECT GroupId
-                FROM MigrationNotificationsView n 
-                {0}
-            )";
+            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids";
 
-        readonly string NotificationIdsWithGroupIdsByIdQuery = string.Format(NotificationIdsWithGroupIdsQuery,
-            "WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids");
-
-        readonly string NotificationsIdsWithGroupIdsByDateQuery = string.Format(NotificationIdsWithGroupIdsQuery,
-            @"WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate");
+        const string NotificationsIdsWithGroupIdsByDateQuery = 
+            @"SELECT n.OldNotificationId, n.GroupId 
+            FROM MigrationNotificationsView n
+            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate";
 
         const string NotificationsByIdQuery = @"
             SELECT *
