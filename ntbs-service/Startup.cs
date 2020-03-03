@@ -59,7 +59,7 @@ namespace ntbs_service
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(Configuration.GetSection("LdapConnectionSettings"));
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
-            
+
             // Plugin services
             SetupAuthentication(services, adfsConfig);
 
@@ -350,14 +350,16 @@ namespace ntbs_service
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-            
+
             if (!Env.IsDevelopment())	
             {
                 // Most of the time we don't care about recurring jobs in dev mode.
-                // Having this exclusion is also useful when connecting to non-dev databases for debugging.
-                // as jobs scheduled from (windows) dev machines won't run on linux due to different timezone formats
-                // Comment out this check to work with jobs locally.
-                HangfireJobScheduler.ScheduleRecurringJobs();
+                // Having this exclusion is also useful when connecting to non-dev databases for debugging
+                // as jobs scheduled from (windows) dev machines won't run on linux due to different timezone formats.
+                // When running locally confirm jobs to be ran are enabled in configuration.
+                var scheduledJobConfig = new ScheduledJobConfig();
+                Configuration.GetSection("ScheduledJobConfig").Bind(scheduledJobConfig);
+                HangfireJobScheduler.ScheduleRecurringJobs(scheduledJobConfig);
             }
         }
 
