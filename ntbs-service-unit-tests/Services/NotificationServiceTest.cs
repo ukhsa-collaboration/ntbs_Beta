@@ -23,6 +23,7 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<ISpecimenService> _mockSpecimenService = new Mock<ISpecimenService>();
         private readonly Mock<NtbsContext> _mockContext = new Mock<NtbsContext>();
         private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
+        private readonly Mock<IAlertRepository> _mockAlertRepository = new Mock<IAlertRepository>();
 
         public NotificationServiceTest()
         {
@@ -34,7 +35,8 @@ namespace ntbs_service_unit_tests.Services
                 _mockUserService.Object,
                 _mockTreatmentEventRepository.Object,
                 _mockContext.Object,
-                _mockSpecimenService.Object);
+                _mockSpecimenService.Object, 
+                _mockAlertRepository.Object);
         }
 
         [Theory]

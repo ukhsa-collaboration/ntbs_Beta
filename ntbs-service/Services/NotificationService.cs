@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
+using MoreLinq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -54,6 +55,7 @@ namespace ntbs_service.Services
         private readonly NtbsContext _context;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
         private readonly ISpecimenService _specimenService;
+        private readonly IAlertRepository _alertRepository;
 
 
         public NotificationService(
@@ -62,7 +64,7 @@ namespace ntbs_service.Services
             IUserService userService,
             IItemRepository<TreatmentEvent> treatmentEventRepository,
             NtbsContext context, 
-            ISpecimenService specimenService)
+            ISpecimenService specimenService, IAlertRepository alertRepository)
         {
             _notificationRepository = notificationRepository;
             _referenceDataRepository = referenceDataRepository;
@@ -70,6 +72,7 @@ namespace ntbs_service.Services
             _treatmentEventRepository = treatmentEventRepository;
             _context = context;
             _specimenService = specimenService;
+            _alertRepository = alertRepository;
         }
 
         public async Task AddNotificationAsync(Notification notification)
@@ -327,6 +330,7 @@ namespace ntbs_service.Services
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
             await CreateTreatmentEventNotificationStart(notification);
+            await _alertRepository.CloseAlertRangeAsync(notification.Alerts.Where(a => a is DataQualityDraftAlert));
         }
 
         private async Task CreateTreatmentEventNotificationStart(Notification notification)
