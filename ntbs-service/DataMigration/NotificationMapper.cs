@@ -65,7 +65,7 @@ namespace ntbs_service.DataMigration
             foreach (var group in groupedIds)
             {
                 var legacyIds = group.ToList();
-                _logger.LogInformation(context, requestId, $"Getting ids {string.Join(", ", legacyIds)}");
+                _logger.LogInformation(context, requestId, $"Fetching data for legacy notifications {string.Join(", ", legacyIds)}");
                 var legacyNotifications = _migrationRepository.GetNotificationsById(legacyIds);
                 var sitesOfDisease = _migrationRepository.GetNotificationSites(legacyIds);
                 var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);
@@ -375,6 +375,8 @@ namespace ntbs_service.DataMigration
 
         private static string RemoveCharactersNotIn(string matchingRegex, string input)
         {
+            if (input == null) { return null; }
+
             // We assume the matching regex to be of the format "[someLettersHere]+"
             // and we are aiming to turn it into "[^someLettersHere]"
             var notMatchingRegex = matchingRegex
@@ -477,7 +479,7 @@ namespace ntbs_service.DataMigration
             var ev = new TreatmentEvent();
             ev.EventDate = rawEvent.EventDate;
             ev.TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
-            ev.CaseManager = rawEvent.CaseManager;
+            ev.CaseManagerUsername = rawEvent.CaseManager;
 
             // ReSharper disable once InvertIf
             if (rawEvent.HospitalId is Guid guid)

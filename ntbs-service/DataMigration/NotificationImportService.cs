@@ -10,6 +10,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 using Sentry;
+using Serilog;
 
 namespace ntbs_service.DataMigration
 {
@@ -175,11 +176,13 @@ namespace ntbs_service.DataMigration
             }
             catch (MarkingNotificationsAsImportedFailedException e)
             {
+                Log.Error(e, e.Message);
                 _logger.LogWarning(context, requestId, message: e.Message);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             catch (Exception e)
             {
+                Log.Error(e, e.Message);
                 _logger.LogFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
@@ -196,7 +199,7 @@ namespace ntbs_service.DataMigration
             var matches = await _migrationRepository.GetReferenceLaboratoryMatches(legacyIds);
             foreach (var (legacyId, referenceLaboratoryNumber) in matches)
             {
-                var notificationId = notifications.Single(n => n.LegacyId == legacyId).NotificationId;
+                var notificationId = notifications.Single(n => n.ETSID == legacyId).NotificationId;
                 var success = await _specimenService.MatchSpecimenAsync(notificationId, referenceLaboratoryNumber, "SYSTEM");
                 if (!success)
                 {
@@ -247,6 +250,18 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(ValidateObject(notification.ClinicalDetails));
             validationsResults.AddRange(ValidateObject(notification.TravelDetails));
             validationsResults.AddRange(ValidateObject(notification.VisitorDetails));
+            validationsResults.AddRange(ValidateObject(notification.ComorbidityDetails));
+            validationsResults.AddRange(ValidateObject(notification.ImmunosuppressionDetails));
+            validationsResults.AddRange(ValidateObject(notification.SocialRiskFactors));
+            validationsResults.AddRange(ValidateObject(notification.HospitalDetails));
+            validationsResults.AddRange(ValidateObject(notification.ContactTracing));
+            validationsResults.AddRange(ValidateObject(notification.PatientTBHistory));
+            validationsResults.AddRange(ValidateObject(notification.TestData));
+            validationsResults.AddRange(notification.TestData.ManualTestResults.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.SocialContextAddresses.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.SocialContextVenues.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.TreatmentEvents.SelectMany(ValidateObject));
+            // TODO add outcomes
 
             return validationsResults;
         }
