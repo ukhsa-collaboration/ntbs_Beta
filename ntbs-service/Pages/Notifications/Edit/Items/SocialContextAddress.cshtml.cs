@@ -16,7 +16,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IItemRepository<SocialContextAddress> socialContextAddressRepository) : base(service, authorizationService, notificationRepository, socialContextAddressRepository)
+            IItemRepository<SocialContextAddress> socialContextAddressRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, socialContextAddressRepository, alertRepository)
         {
         }
 

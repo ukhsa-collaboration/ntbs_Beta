@@ -27,7 +27,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<MBovisUnpasteurisedMilkConsumption> mBovisUnpasteurisedMilkConsumptionRepository) : base(service, authorizationService, notificationRepository)
+            IItemRepository<MBovisUnpasteurisedMilkConsumption> mBovisUnpasteurisedMilkConsumptionRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _mBovisUnpasteurisedMilkConsumptionRepository = mBovisUnpasteurisedMilkConsumptionRepository;

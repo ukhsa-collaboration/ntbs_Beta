@@ -37,7 +37,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             IPostcodeService postcodeService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
+            IReferenceDataRepository referenceDataRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _postcodeService = postcodeService;
             _referenceDataRepository = referenceDataRepository;

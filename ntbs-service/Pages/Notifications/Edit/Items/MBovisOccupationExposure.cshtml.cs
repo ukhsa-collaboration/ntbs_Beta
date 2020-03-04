@@ -27,7 +27,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<MBovisOccupationExposure> mBovisOccupationExposureRepository) : base(service, authorizationService, notificationRepository)
+            IItemRepository<MBovisOccupationExposure> mBovisOccupationExposureRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _mBovisOccupationExposureRepository = mBovisOccupationExposureRepository;
