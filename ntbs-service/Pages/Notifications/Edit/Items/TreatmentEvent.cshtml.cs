@@ -20,6 +20,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        private readonly IAlertService _alertService;
 
         [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
@@ -41,11 +42,13 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<TreatmentEvent> treatmentEventRepository)
+            IItemRepository<TreatmentEvent> treatmentEventRepository,
+            IAlertService alertService)
             : base(service, authorizationService, notificationRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _treatmentEventRepository = treatmentEventRepository;
+            _alertService = alertService;
         }
 
         // Pragma disabled 'not using async' to allow auto-magical wrapping in a Task
@@ -118,6 +121,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     TreatmentEvent.TreatmentEventId = RowId.Value;
                     await _treatmentEventRepository.UpdateAsync(Notification, TreatmentEvent);
                 }
+                await _alertService.AutoDismissAlertAsync<DataQualityTreatmentOutcome12>(Notification);
+                await _alertService.AutoDismissAlertAsync<DataQualityTreatmentOutcome24>(Notification);
+                await _alertService.AutoDismissAlertAsync<DataQualityTreatmentOutcome36>(Notification);
             }
             else
             {

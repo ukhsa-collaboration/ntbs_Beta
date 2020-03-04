@@ -50,7 +50,7 @@ namespace ntbs_service.Services
 
         public async Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert
         {
-            var alert = notification.Alerts.FirstOrDefault(a => a is T);
+            var alert = await _alertRepository.GetOpenAlertByNotificationId<T>(notification.NotificationId);
             if (alert == null) { return; }
 
             Func<Notification,bool> notificationQualifiesCheck;
@@ -67,6 +67,15 @@ namespace ntbs_service.Services
                     break;
                 case DataQualityClusterAlert _:
                     notificationQualifiesCheck = DataQualityClusterAlert.NotificationQualifies;
+                    break;
+                case DataQualityTreatmentOutcome12 _:
+                    notificationQualifiesCheck = DataQualityTreatmentOutcome12.NotificationQualifies;
+                    break;
+                case DataQualityTreatmentOutcome24 _:
+                    notificationQualifiesCheck = DataQualityTreatmentOutcome24.NotificationQualifies;
+                    break;
+                case DataQualityTreatmentOutcome36 _:
+                    notificationQualifiesCheck = DataQualityTreatmentOutcome36.NotificationQualifies;
                     break;
                 default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
             }

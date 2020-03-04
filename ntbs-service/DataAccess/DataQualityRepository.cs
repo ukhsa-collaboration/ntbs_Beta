@@ -23,13 +23,11 @@ namespace ntbs_service.DataAccess
     public class DataQualityRepository : IDataQualityRepository
     {
         private readonly NtbsContext _context;
-        private readonly ITreatmentOutcomeService _treatmentOutcomeService;
         private int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
         
-        public DataQualityRepository(NtbsContext context, ITreatmentOutcomeService treatmentOutcomeService)
+        public DataQualityRepository(NtbsContext context)
         {
             _context = context;
-            _treatmentOutcomeService = treatmentOutcomeService;
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityDraftAlerts()
@@ -64,11 +62,11 @@ namespace ntbs_service.DataAccess
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                    .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) <
-                                DateTime.Today.AddYears(-1))
-                    .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 1))
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
+                .Where(DataQualityTreatmentOutcome12.NotificationInQualifyingDateRangeExpression)
+                .ToListAsync();
+            return notificationsInDateRange
+                .Where(DataQualityTreatmentOutcome12.NotificationInRangeQualifies)
                 .ToList();
         }
 
@@ -76,11 +74,11 @@ namespace ntbs_service.DataAccess
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                    .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) <
-                                DateTime.Today.AddYears(-2))
-                    .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 2))
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
+                .Where(DataQualityTreatmentOutcome24.NotificationInQualifyingDateRangeExpression)
+                .ToListAsync();
+            return notificationsInDateRange
+                .Where(DataQualityTreatmentOutcome24.NotificationInRangeQualifies)
                 .ToList();
         }
 
@@ -88,10 +86,11 @@ namespace ntbs_service.DataAccess
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                    .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-3))
-                    .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 3))
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
+                .Where(DataQualityTreatmentOutcome36.NotificationInQualifyingDateRangeExpression)
+                .ToListAsync();
+            return notificationsInDateRange
+                .Where(DataQualityTreatmentOutcome36.NotificationInRangeQualifies)
                 .ToList();
         }
 

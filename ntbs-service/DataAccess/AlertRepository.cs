@@ -13,6 +13,7 @@ namespace ntbs_service.DataAccess
         Task<Alert> GetAlertByIdAsync(int? alertId);
         Task<Alert> GetAlertByNotificationIdAndTypeAsync(int notificationId, AlertType alertType);
         Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int notificationId, AlertType alertType);
+        Task<Alert> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert;
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
@@ -50,7 +51,14 @@ namespace ntbs_service.DataAccess
             return await GetBaseAlertIQueryable()
                 .Where(a => a.NotificationId == notificationId)
                 .Where(a => a.AlertType == alertType)
-                .Where(a => a.AlertStatus == AlertStatus.Open)
+                .SingleOrDefaultAsync();
+        }
+
+        public async Task<Alert> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert
+        {
+            return await GetBaseAlertIQueryable()
+                .Where(a => a.NotificationId == notificationId)
+                .Where(a => a is T)
                 .SingleOrDefaultAsync();
         }
 

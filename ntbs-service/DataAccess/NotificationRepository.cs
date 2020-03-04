@@ -157,8 +157,6 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
-                .Include(n => n.TreatmentEvents)
-                    .ThenInclude(n => n.TreatmentOutcome)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
