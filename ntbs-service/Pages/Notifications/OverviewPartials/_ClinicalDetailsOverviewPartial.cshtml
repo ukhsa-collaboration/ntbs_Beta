@@ -127,13 +127,9 @@
             <div class="notification-details-label"> Enhanced Case Management </div>
             <div class="cell-min-height"> @Model.Notification.FormattedCaseManagementStatus </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneQuarter">
+        <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Planned treatment regimen </div>
-            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.TreatmentRegimen </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> RR/MDR/XDR treatment </div>
-            <div class="cell-min-height"> @Model.Notification.MDRTreatmentStateAndDate </div>
+            <div class="cell-min-height"> @Model.Notification.FormattedTreatmentRegimen </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>

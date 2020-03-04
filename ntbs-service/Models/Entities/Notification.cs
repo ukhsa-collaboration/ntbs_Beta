@@ -121,7 +121,31 @@ namespace ntbs_service.Models.Entities
         public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
-        public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
+        public string MDRTreatmentStateAndDate => ClinicalDetails.MDRTreatmentStartDate.ConvertToString();
+        public string FormattedTreatmentRegimen => GetFormattedTreatmentRegimen();
+
+        private string GetFormattedTreatmentRegimen()
+        {
+            if (ClinicalDetails.TreatmentRegimen == null)
+            {
+                return "";
+            }
+            
+            switch (ClinicalDetails.TreatmentRegimen)
+            {
+                case TreatmentRegimen.MdrTreatment :
+                    return ClinicalDetails.TreatmentStartDate == null
+                        ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
+                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.TreatmentStartDate.ConvertToString()}";
+                case TreatmentRegimen.Other :
+                    return ClinicalDetails.TreatmentRegimenOtherDescription == null
+                        ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
+                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.TreatmentRegimenOtherDescription}";
+                default:
+                    return ClinicalDetails.TreatmentRegimen.GetDisplayName();
+            }
+        }
+
         public string FormattedCaseManagementStatus => ClinicalDetails.EnhancedCaseManagementStatus != Status.Yes
             ? ClinicalDetails.EnhancedCaseManagementStatus.ToString()
             : $"{ClinicalDetails.EnhancedCaseManagementStatus} - Level {ClinicalDetails.EnhancedCaseManagementLevel}"; 

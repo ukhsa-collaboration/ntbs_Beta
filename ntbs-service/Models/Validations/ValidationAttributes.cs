@@ -69,34 +69,6 @@ namespace ntbs_service.Models.Validations
         }
     }
 
-    public class OnlyOneTrue : ValidationAttribute
-    {
-
-        public string ComparisonValue { get; set; }
-        public OnlyOneTrue(string comparisonValue)
-        {
-            ComparisonValue = comparisonValue;
-        }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            object instance = validationContext.ObjectInstance;
-            var propertyToCompare = instance.GetType().GetProperty(ComparisonValue);
-            object valueToCompare = propertyToCompare.GetValue(instance);
-
-            if (IsTruthy(valueToCompare) && IsTruthy(value))
-            {
-                return new ValidationResult(ErrorMessage);
-            }
-            return null;
-        }
-
-        private bool IsTruthy(object value)
-        {
-            return value != null && (bool)value;
-        }
-    }
-
     [AttributeUsage(AttributeTargets.Class)]
     public class AtLeastOnePropertyAttribute : ValidationAttribute
     {

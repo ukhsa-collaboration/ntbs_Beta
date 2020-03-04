@@ -265,6 +265,7 @@ namespace ntbs_service.DataMigration
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
             details.BCGVaccinationState = notification.BCGVaccination;
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
+            details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string) notification.TreatmentRegimen);
             return details;
         }
 
