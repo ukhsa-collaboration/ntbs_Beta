@@ -18,7 +18,7 @@ namespace ntbs_service.Services
     public interface INotificationService
     {
         Task AddNotificationAsync(Notification notification);
-        Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
+        Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patientDetails);
         Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateTestDataAsync(Notification notification, TestData testData);
@@ -55,7 +55,7 @@ namespace ntbs_service.Services
         private readonly NtbsContext _context;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
         private readonly ISpecimenService _specimenService;
-        private readonly IAlertRepository _alertRepository;
+        private readonly IAlertService _alertService;
 
 
         public NotificationService(
@@ -64,7 +64,8 @@ namespace ntbs_service.Services
             IUserService userService,
             IItemRepository<TreatmentEvent> treatmentEventRepository,
             NtbsContext context, 
-            ISpecimenService specimenService, IAlertRepository alertRepository)
+            ISpecimenService specimenService, 
+            IAlertService alertService)
         {
             _notificationRepository = notificationRepository;
             _referenceDataRepository = referenceDataRepository;
@@ -72,7 +73,7 @@ namespace ntbs_service.Services
             _treatmentEventRepository = treatmentEventRepository;
             _context = context;
             _specimenService = specimenService;
-            _alertRepository = alertRepository;
+            _alertService = alertService;
         }
 
         public async Task AddNotificationAsync(Notification notification)
@@ -81,12 +82,13 @@ namespace ntbs_service.Services
             await UpdateDatabaseAsync(NotificationAuditType.Added);
         }
 
-        public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)
+        public async Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patient)
         {
             await UpdatePatientFlagsAsync(patient);
             _context.SetValues(notification.PatientDetails, patient);
 
             await UpdateDatabaseAsync();
+            await _alertService.AutoDismissAlertAsync<DataQualityBirthCountryAlert>(notification);
         }
 
         public async Task UpdatePatientFlagsAsync(PatientDetails patientDetails)
@@ -330,7 +332,7 @@ namespace ntbs_service.Services
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
             await CreateTreatmentEventNotificationStart(notification);
-            await _alertRepository.CloseAlertRangeAsync(notification.Alerts.Where(a => a is DataQualityDraftAlert));
+            await _alertService.AutoDismissAlertAsync<DataQualityDraftAlert>(notification);
         }
 
         private async Task CreateTreatmentEventNotificationStart(Notification notification)

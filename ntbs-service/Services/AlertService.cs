@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -14,6 +15,7 @@ namespace ntbs_service.Services
         Task<bool> AddUniqueAlertAsync(Alert alert);
         Task<bool> AddUniqueOpenAlertAsync(Alert alert);
         Task DismissAlertAsync(int alertId, string userId);
+        Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
         Task DismissMatchingAlertAsync(int notificationId, AlertType alertType);
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
@@ -44,6 +46,29 @@ namespace ntbs_service.Services
             alert.AlertStatus = AlertStatus.Closed;
 
             await _alertRepository.SaveAlertChangesAsync();
+        }
+
+        public async Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert
+        {
+            var alert = notification.Alerts.FirstOrDefault(a => a is T);
+            if (alert == null) { return; }
+
+            Func<Notification,bool> notificationQualifiesCheck;
+            switch (alert)
+            {
+                case DataQualityBirthCountryAlert _:
+                    notificationQualifiesCheck = DataQualityBirthCountryAlert.NotificationQualifies;
+                    break;
+                case DataQualityDraftAlert _:
+                    notificationQualifiesCheck = DataQualityDraftAlert.NotificationQualifies;
+                    break;
+                default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
+            }
+            
+            if (!notificationQualifiesCheck(notification))
+            {
+                await DismissAlertAsync(alert.AlertId, null);
+            }
         }
 
         public async Task<bool> AddUniqueAlertAsync(Alert alert)

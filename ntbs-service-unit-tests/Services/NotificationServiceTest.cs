@@ -23,7 +23,7 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<ISpecimenService> _mockSpecimenService = new Mock<ISpecimenService>();
         private readonly Mock<NtbsContext> _mockContext = new Mock<NtbsContext>();
         private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
-        private readonly Mock<IAlertRepository> _mockAlertRepository = new Mock<IAlertRepository>();
+        private readonly Mock<IAlertService> _mockAlertService = new Mock<IAlertService>();
 
         public NotificationServiceTest()
         {
@@ -36,7 +36,7 @@ namespace ntbs_service_unit_tests.Services
                 _mockTreatmentEventRepository.Object,
                 _mockContext.Object,
                 _mockSpecimenService.Object, 
-                _mockAlertRepository.Object);
+                _mockAlertService.Object);
         }
 
         [Theory]
@@ -180,7 +180,7 @@ namespace ntbs_service_unit_tests.Services
             var patient = new PatientDetails() {CountryId = country.CountryId};
 
             // Act
-            await _notificationService.UpdatePatientAsync(notification, patient);
+            await _notificationService.UpdatePatientDetailsAsync(notification, patient);
 
             // Assert
             Assert.Equal(expectedResult, patient.UkBorn);
@@ -196,7 +196,7 @@ namespace ntbs_service_unit_tests.Services
             var patient = new PatientDetails() {UkBorn = true};
 
             // Act
-            await _notificationService.UpdatePatientAsync(notification, patient);
+            await _notificationService.UpdatePatientDetailsAsync(notification, patient);
 
             // Assert
             Assert.Null(patient.UkBorn);

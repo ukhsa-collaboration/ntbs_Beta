@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -27,7 +25,6 @@ namespace ntbs_service.DataAccess
         private readonly NtbsContext _context;
         private readonly ITreatmentOutcomeService _treatmentOutcomeService;
         private int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
-        private int MIN_NUMBER_DAYS_DRAFT_FOR_ALERT = 90;
         
         public DataQualityRepository(NtbsContext context, ITreatmentOutcomeService treatmentOutcomeService)
         {
@@ -38,15 +35,14 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityDraftAlerts()
         {
             return await GetBaseNotificationQueryableForAlerts()
-                .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .Where(n => n.CreationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_DRAFT_FOR_ALERT))
+                .Where(DataQualityDraftAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts()
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
-                .Where(n => n.PatientDetails.CountryId == Countries.UnknownId)
+                .Where(DataQualityBirthCountryAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
         
