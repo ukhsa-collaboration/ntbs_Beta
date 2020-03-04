@@ -4,6 +4,7 @@
     {
         public bool UserSyncEnabled { get; set; }
         public string UserSyncCron { get; set; }
+        
         public bool CloseInactiveNotificationsEnabled { get; set; }
         public string CloseInactiveNotificationsCron { get; set; }
         

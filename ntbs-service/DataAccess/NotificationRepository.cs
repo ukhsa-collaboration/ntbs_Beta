@@ -260,8 +260,7 @@ namespace ntbs_service.DataAccess
                     if (lastTreatmentEvent != null)
                     {
                         return lastTreatmentEvent.TreatmentEventTypeIsOutcome
-                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeType !=
-                               TreatmentOutcomeType.NotEvaluated
+                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
                                && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
                     }
                     return false;

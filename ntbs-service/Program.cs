@@ -48,10 +48,10 @@ namespace ntbs_service
         {
             Log.Logger = new LoggerConfiguration()
                 // Swap these to increase logging. In particular to see EF queries
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                // .MinimumLevel.Information()
-                // .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                // .MinimumLevel.Debug()
+                // .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.Sentry(s =>
