@@ -16,6 +16,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
+        Task<DataQualityDraftAlert> GetOpenDraftAlertForNotificationAsync(int notificationId);
         Task AddAlertAsync(Alert alert);
         Task AddAlertRangeAsync(IEnumerable<Alert> alerts);
 
@@ -68,6 +69,15 @@ namespace ntbs_service.DataAccess
             return await GetBaseAlertIQueryable()
                 .OfType<UnmatchedLabResultAlert>()
                 .ToListAsync();
+        }
+
+        public async Task<DataQualityDraftAlert> GetOpenDraftAlertForNotificationAsync(int notificationId)
+        {
+            return (DataQualityDraftAlert) await _context.Alert
+                .Where(n => n.AlertStatus != AlertStatus.Closed)
+                .Where(n => n.NotificationId == notificationId)
+                .OfType<DataQualityDraftAlert>()
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId)

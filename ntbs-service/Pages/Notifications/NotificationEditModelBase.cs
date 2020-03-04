@@ -16,13 +16,16 @@ namespace ntbs_service.Pages.Notifications
     public abstract class NotificationEditModelBase : NotificationModelBase
     {
         protected readonly ValidationService ValidationService;
+        private readonly IAlertRepository _alertRepository;
 
         protected NotificationEditModelBase(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository)
         {
             ValidationService = new ValidationService(this);
+            _alertRepository = alertRepository;
         }
 
         [ViewData]
@@ -54,6 +57,11 @@ namespace ntbs_service.Pages.Notifications
             if (PermissionLevel != PermissionLevel.Edit)
             {
                 return RedirectForNotified();
+            }
+
+            if (Notification.NotificationStatus == NotificationStatus.Draft)
+            {
+                DraftAlert = await GetDraftAlertIfItExistsAsync();
             }
 
             return await PrepareAndDisplayPageAsync(isBeingSubmitted);
@@ -184,6 +192,11 @@ namespace ntbs_service.Pages.Notifications
         protected virtual IActionResult RedirectToCreate()
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<DataQualityDraftAlert> GetDraftAlertIfItExistsAsync()
+        {
+            return await _alertRepository.GetOpenDraftAlertForNotificationAsync(NotificationId);
         }
     }
 }

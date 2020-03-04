@@ -24,7 +24,8 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IItemRepository<MBovisExposureToKnownCase> mBovisExposureToKnownCasesRepository) : base(service, authorizationService, notificationRepository)
+            IItemRepository<MBovisExposureToKnownCase> mBovisExposureToKnownCasesRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _mBovisExposureToKnownCasesRepository = mBovisExposureToKnownCasesRepository;
         }

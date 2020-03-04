@@ -33,8 +33,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<ManualTestResult> testResultsRepository)
-            : base(notificationService, authorizationService, notificationRepository)
+            IItemRepository<ManualTestResult> testResultsRepository,
+            IAlertRepository alertRepository)
+            : base(notificationService, authorizationService, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _testResultsRepository = testResultsRepository;
