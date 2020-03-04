@@ -62,6 +62,12 @@ namespace ntbs_service.Services
                 case DataQualityDraftAlert _:
                     notificationQualifiesCheck = DataQualityDraftAlert.NotificationQualifies;
                     break;
+                case DataQualityClinicalDatesAlert _:
+                    notificationQualifiesCheck = DataQualityClinicalDatesAlert.NotificationQualifies;
+                    break;
+                case DataQualityClusterAlert _:
+                    notificationQualifiesCheck = DataQualityClusterAlert.NotificationQualifies;
+                    break;
                 default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
             }
             

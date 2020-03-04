@@ -15,6 +15,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
     public abstract class SocialContextBaseModel<T> : NotificationEditModelBase where T : SocialContextBase
     {
         protected readonly IItemRepository<T> _socialContextRepository;
+        private readonly IAlertService _alertService;
 
         [BindProperty(SupportsGet = true)]
         public int? RowId { get; set; }
@@ -24,13 +25,15 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         [BindProperty]
         public FormattedDate FormattedDateTo { get; set; }
 
-        public SocialContextBaseModel(
+        protected SocialContextBaseModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IItemRepository<T> socialContextRepository) : base(service, authorizationService, notificationRepository)
+            IItemRepository<T> socialContextRepository,
+            IAlertService alertService) : base(service, authorizationService, notificationRepository)
         {
             _socialContextRepository = socialContextRepository;
+            _alertService = alertService;
         }
 
         protected void FormatDatesForGet(T model)
@@ -51,6 +54,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 if (RowId == null)
                 {
                     await _socialContextRepository.AddAsync(model);
+                    await _alertService.AutoDismissAlertAsync<DataQualityClusterAlert>(Notification);
                 }
                 else
                 {

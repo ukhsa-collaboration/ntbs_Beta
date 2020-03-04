@@ -49,20 +49,14 @@ namespace ntbs_service.DataAccess
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts()
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
-                .Where(n => n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
-                            || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
-                            || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
-                            || n.ClinicalDetails.TBServicePresentationDate > n.ClinicalDetails.DiagnosisDate
-                            || n.ClinicalDetails.DiagnosisDate > n.ClinicalDetails.TreatmentStartDate)
+                .Where(DataQualityClinicalDatesAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts()
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
-                .Where(n => n.ClusterId != null 
-                            && !n.SocialContextAddresses.Any()
-                            && !n.SocialContextVenues.Any())
+                .Where(DataQualityClusterAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
 

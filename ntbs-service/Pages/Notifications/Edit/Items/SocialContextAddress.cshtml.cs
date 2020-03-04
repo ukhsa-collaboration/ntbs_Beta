@@ -9,14 +9,15 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 {
     public class SocialContextAddressModel : SocialContextBaseModel<SocialContextAddress>
     {
-        [BindProperty]
-        public SocialContextAddress Address { get; set; }
+        [BindProperty] public SocialContextAddress Address { get; set; }
 
         public SocialContextAddressModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IItemRepository<SocialContextAddress> socialContextAddressRepository) : base(service, authorizationService, notificationRepository, socialContextAddressRepository)
+            IItemRepository<SocialContextAddress> socialContextAddressRepository,
+            IAlertService alertService)
+            : base(service, authorizationService, notificationRepository, socialContextAddressRepository, alertService)
         {
         }
 

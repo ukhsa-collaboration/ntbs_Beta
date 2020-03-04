@@ -168,6 +168,7 @@ namespace ntbs_service.Services
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
 
             await UpdateDatabaseAsync();
+            await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
         }
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
