@@ -76,7 +76,7 @@ namespace ntbs_service.DataAccess
             return (DataQualityDraftAlert) await _context.Alert
                 .Where(n => n.AlertStatus != AlertStatus.Closed)
                 .Where(n => n.NotificationId == notificationId)
-                .Where(n => n.AlertType == AlertType.DataQualityDraft)
+                .OfType<DataQualityDraftAlert>()
                 .SingleOrDefaultAsync();
         }
 
