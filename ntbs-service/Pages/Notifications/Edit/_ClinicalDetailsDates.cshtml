@@ -9,7 +9,7 @@
 
 <h2>Clinical Dates</h2>
 
-<date-comparison inline-template number-of-dates="6">
+<date-comparison inline-template v-bind:number-of-dates="6">
     <div>
         <div class="hidden" ref="date-warning-0">
             <govuk-warning-text id="nhs-number-warning" ref="nhs-number-warning" class="reduced-margin-warning-text" v-if="dateWarnings[0]">

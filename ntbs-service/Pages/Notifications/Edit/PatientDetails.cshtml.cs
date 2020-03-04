@@ -34,10 +34,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public PatientDetailsModel(
             INotificationService service,
-            IPostcodeService postcodeService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
+            IAlertRepository alertRepository,
+            IPostcodeService postcodeService,
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _postcodeService = postcodeService;
             _referenceDataRepository = referenceDataRepository;
