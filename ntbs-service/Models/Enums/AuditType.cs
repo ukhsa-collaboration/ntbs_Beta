@@ -7,6 +7,7 @@ namespace ntbs_service.Models.Enums
         Denotified,
         Deleted,
         Imported,
-        Full
+        Full,
+        Closed
     }
 }
