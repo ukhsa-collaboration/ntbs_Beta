@@ -1,41 +1,83 @@
 ﻿using System;
 using Hangfire;
+using ntbs_service.Properties;
 
 namespace ntbs_service.Jobs
 {
     static class HangfireJobScheduler
     {
-        public static void ScheduleRecurringJobs()
+        private const string UserSyncJobId = "user-sync";
+        private const string DrugResistanceProfileUpdateJobId = "drug-resistance-profile-update";
+        private const string UnmatchedLabResultAlertsJobId = "unmatched-lab-result-alerts";
+        private const string DataQualityAlertsJobId = "data-quality-alerts";
+        private const string NotificationClusterUpdateJobId = "notification-cluster-update";
+        
+        public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
-            RecurringJob.AddOrUpdate<UserSyncJob>(
-                "user-sync",
-                job => job.Run(JobCancellationToken.Null),
-                Cron.Daily(3),
-                TimeZoneInfo.Local);            
-            
-            RecurringJob.AddOrUpdate<DrugResistanceProfileUpdateJob>(
-                "drug-resistance-profile-update",
-                job => job.Run(JobCancellationToken.Null),
-                Cron.Daily(4),
-                TimeZoneInfo.Local);
-            
-            RecurringJob.AddOrUpdate<UnmatchedLabResultAlertsJob>(
-                "unmatched-lab-result-alerts",
-                job => job.Run(JobCancellationToken.Null),
-                Cron.Daily(4),
-                TimeZoneInfo.Local);
-            
-            RecurringJob.AddOrUpdate<DataQualityAlertsJob>(
-                "data-quality-alerts",
-                job => job.Run(JobCancellationToken.Null),
-                Cron.Daily(4),
-                TimeZoneInfo.Local);
-            
-            RecurringJob.AddOrUpdate<NotificationClusterUpdateJob>(
-                "notification-cluster-update",
-                job => job.Run(JobCancellationToken.Null),
-                Cron.Weekly(DayOfWeek.Sunday, 5),
-                TimeZoneInfo.Local);
+            if (scheduledJobsConfig.UserSyncEnabled)
+            {
+                RecurringJob.AddOrUpdate<UserSyncJob>(
+                    UserSyncJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.UserSyncCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(UserSyncJobId);
+            }
+
+            if (scheduledJobsConfig.DrugResistanceProfileUpdateEnabled)
+            {
+                RecurringJob.AddOrUpdate<DrugResistanceProfileUpdateJob>(
+                    DrugResistanceProfileUpdateJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.DrugResistanceProfileUpdateCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(DrugResistanceProfileUpdateJobId);
+            }
+
+            if (scheduledJobsConfig.UnmatchedLabResultAlertsEnabled)
+            {
+                RecurringJob.AddOrUpdate<UnmatchedLabResultAlertsJob>(
+                    UnmatchedLabResultAlertsJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.UnmatchedLabResultAlertsCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(UnmatchedLabResultAlertsJobId);
+            }
+
+            if (scheduledJobsConfig.DataQualityAlertsEnabled)
+            {
+                RecurringJob.AddOrUpdate<DataQualityAlertsJob>(
+                    DataQualityAlertsJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.DataQualityAlertsCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(DataQualityAlertsJobId);
+            }
+
+            if (scheduledJobsConfig.NotificationClusterUpdateEnabled)
+            {
+                RecurringJob.AddOrUpdate<NotificationClusterUpdateJob>(
+                    NotificationClusterUpdateJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.NotificationClusterUpdateCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(NotificationClusterUpdateJobId);
+            }
         }
     }
 }
