@@ -2,15 +2,14 @@
 {
     public static class ValidationMessages
     {
+        public static string ValueInvalid(string name) => $"Value is not valid for {name}";
         public static string InvalidDate(string name) => $"{name} does not have a valid date selection";
         public static string InvalidYear(string name) => $"{name} has an invalid year";
         public static string TodayOrEarlier(string name) => $"{name} must be today or earlier";
-        public static string DateValidityRangeStart(string name, string startDate) => $"{name} must not be before {startDate}";
-
-        public static string ValidYearLaterThanBirthYear(string name, int birthYear)
-        {
-            return $"{name} should be later than birth year ({birthYear})";
-        }
+        public static string DateValidityRangeStart(string name, string startDate) => 
+            $"{name} must not be before {startDate}";
+        public static string ValidYearLaterThanBirthYear(string name, int birthYear) =>
+            $"{name} should be later than birth year ({birthYear})";
 
         #region Shared
         
