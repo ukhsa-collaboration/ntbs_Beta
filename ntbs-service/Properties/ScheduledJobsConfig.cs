@@ -1,20 +1,20 @@
 ﻿namespace ntbs_service.Properties
 {
-    public class ScheduledJobConfig
+    public class ScheduledJobsConfig
     {
         public bool UserSyncEnabled { get; set; }
-        public string UserSyncTiming { get; set; }
+        public string UserSyncCron { get; set; }
         
         public bool DrugResistanceProfileUpdateEnabled { get; set; }
-        public string DrugResistanceProfileUpdateTiming { get; set; }
+        public string DrugResistanceProfileUpdateCron { get; set; }
         
         public bool UnmatchedLabResultAlertsEnabled { get; set; }
-        public string UnmatchedLabResultAlertsTiming { get; set; }
+        public string UnmatchedLabResultAlertsCron { get; set; }
         
         public bool DataQualityAlertsEnabled { get; set; }
-        public string DataQualityAlertsTiming { get; set; }
+        public string DataQualityAlertsCron { get; set; }
         
         public bool NotificationClusterUpdateEnabled { get; set; }
-        public string NotificationClusterUpdateTiming { get; set; }
+        public string NotificationClusterUpdateCron { get; set; }
     }
 }

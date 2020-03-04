@@ -6,51 +6,77 @@ namespace ntbs_service.Jobs
 {
     static class HangfireJobScheduler
     {
-        public static void ScheduleRecurringJobs(ScheduledJobConfig scheduledJobConfig)
+        private const string UserSyncJobId = "user-sync";
+        private const string DrugResistanceProfileUpdateJobId = "drug-resistance-profile-update";
+        private const string UnmatchedLabResultAlertsJobId = "unmatched-lab-result-alerts";
+        private const string DataQualityAlertsJobId = "data-quality-alerts";
+        private const string NotificationClusterUpdateJobId = "notification-cluster-update";
+        
+        public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
-            if (scheduledJobConfig.UserSyncEnabled)
+            if (scheduledJobsConfig.UserSyncEnabled)
             {
                 RecurringJob.AddOrUpdate<UserSyncJob>(
-                    "user-sync",
+                    UserSyncJobId,
                     job => job.Run(JobCancellationToken.Null),
-                    scheduledJobConfig.UserSyncTiming,
+                    scheduledJobsConfig.UserSyncCron,
                     TimeZoneInfo.Local);
             }
+            else
+            {
+                RecurringJob.RemoveIfExists(UserSyncJobId);
+            }
 
-            if (scheduledJobConfig.DrugResistanceProfileUpdateEnabled)
+            if (scheduledJobsConfig.DrugResistanceProfileUpdateEnabled)
             {
                 RecurringJob.AddOrUpdate<DrugResistanceProfileUpdateJob>(
-                    "drug-resistance-profile-update",
+                    DrugResistanceProfileUpdateJobId,
                     job => job.Run(JobCancellationToken.Null),
-                    scheduledJobConfig.DrugResistanceProfileUpdateTiming,
+                    scheduledJobsConfig.DrugResistanceProfileUpdateCron,
                     TimeZoneInfo.Local);
             }
+            else
+            {
+                RecurringJob.RemoveIfExists(DrugResistanceProfileUpdateJobId);
+            }
 
-            if (scheduledJobConfig.UnmatchedLabResultAlertsEnabled)
+            if (scheduledJobsConfig.UnmatchedLabResultAlertsEnabled)
             {
                 RecurringJob.AddOrUpdate<UnmatchedLabResultAlertsJob>(
-                    "unmatched-lab-result-alerts",
+                    UnmatchedLabResultAlertsJobId,
                     job => job.Run(JobCancellationToken.Null),
-                    scheduledJobConfig.UnmatchedLabResultAlertsTiming,
+                    scheduledJobsConfig.UnmatchedLabResultAlertsCron,
                     TimeZoneInfo.Local);
             }
+            else
+            {
+                RecurringJob.RemoveIfExists(UnmatchedLabResultAlertsJobId);
+            }
 
-            if (scheduledJobConfig.DataQualityAlertsEnabled)
+            if (scheduledJobsConfig.DataQualityAlertsEnabled)
             {
                 RecurringJob.AddOrUpdate<DataQualityAlertsJob>(
-                    "data-quality-alerts",
+                    DataQualityAlertsJobId,
                     job => job.Run(JobCancellationToken.Null),
-                    scheduledJobConfig.DataQualityAlertsTiming,
+                    scheduledJobsConfig.DataQualityAlertsCron,
                     TimeZoneInfo.Local);
             }
+            else
+            {
+                RecurringJob.RemoveIfExists(DataQualityAlertsJobId);
+            }
 
-            if (scheduledJobConfig.NotificationClusterUpdateEnabled)
+            if (scheduledJobsConfig.NotificationClusterUpdateEnabled)
             {
                 RecurringJob.AddOrUpdate<NotificationClusterUpdateJob>(
-                    "notification-cluster-update",
+                    NotificationClusterUpdateJobId,
                     job => job.Run(JobCancellationToken.Null),
-                    scheduledJobConfig.NotificationClusterUpdateTiming,
+                    scheduledJobsConfig.NotificationClusterUpdateCron,
                     TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(NotificationClusterUpdateJobId);
             }
         }
     }
