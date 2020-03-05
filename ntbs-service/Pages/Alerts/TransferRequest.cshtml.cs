@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -57,7 +55,7 @@ namespace ntbs_service.Pages.Alerts
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
             
-            var pendingTransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
+            var pendingTransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             if (pendingTransferAlert != null)
             {
                 TransferAlert = pendingTransferAlert;
@@ -116,7 +114,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostCancelAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = (TransferAlert)(await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest));
+            TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
@@ -135,7 +133,7 @@ namespace ntbs_service.Pages.Alerts
                         Value = n.Code.ToString(),
                         Text = n.Name
                     }),
-                    CaseManagers = new List<OptionValue> {}
+                    CaseManagers = new List<OptionValue>()
                 });
         }
 

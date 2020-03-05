@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
@@ -12,11 +11,11 @@ namespace ntbs_service.Services
 {
     public interface IAlertService
     {
-        Task<bool> AddUniqueAlertAsync(Alert alert);
-        Task<bool> AddUniqueOpenAlertAsync(Alert alert);
+        Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
+        Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
-        Task DismissMatchingAlertAsync(int notificationId, AlertType alertType);
+        Task DismissMatchingAlertAsync<T>(int notificationId) where T : Alert;
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
     }
@@ -86,13 +85,12 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task<bool> AddUniqueAlertAsync(Alert alert)
+        public async Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert
         {
             if (alert.NotificationId.HasValue)
             {
                 var matchingAlert =
-                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync(alert.NotificationId.Value,
-                        alert.AlertType);
+                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(alert.NotificationId.Value);
                 if (matchingAlert != null)
                 {
                     return false;
@@ -103,13 +101,11 @@ namespace ntbs_service.Services
             return true;
         }
 
-        public async Task<bool> AddUniqueOpenAlertAsync(Alert alert)
+        public async Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert
         {
             if (alert.NotificationId.HasValue)
             {
-                var matchingAlert =
-                    await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(alert.NotificationId.Value,
-                        alert.AlertType);
+                var matchingAlert = await _alertRepository.GetOpenAlertByNotificationId<T>(alert.NotificationId.Value);
                 if (matchingAlert != null)
                 {
                     return false;
@@ -140,9 +136,9 @@ namespace ntbs_service.Services
             await _alertRepository.AddAlertAsync(alert);
         }
 
-        public async Task DismissMatchingAlertAsync(int notificationId, AlertType alertType)
+        public async Task DismissMatchingAlertAsync<T>(int notificationId) where T : Alert
         {
-            var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(notificationId, alertType);
+            var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(notificationId);
             if (matchingAlert != null)
             {
                 await DismissAlertAsync(matchingAlert.AlertId, "System");
