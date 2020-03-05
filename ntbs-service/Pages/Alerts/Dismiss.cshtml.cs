@@ -26,7 +26,7 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var alertToDismiss = await alertRepository.GetAlertByIdAsync(AlertId);
+            var alertToDismiss = await alertRepository.GetOpenAlertByIdAsync(AlertId);
             
             if(await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
