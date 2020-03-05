@@ -4,23 +4,9 @@
 @{
     var showEditLinks = (bool) (ViewData["ShowMBovisExposureToKnownCaseEditLinks"] ?? false);
     var orderedResults = Model.OrderByDescending(r => r.YearOfExposure).ToList();
-    var currentPage = (string) ViewData["CurrentPage"];
 }
 
-@if (!orderedResults.Any())
-{
-    if (currentPage == NotificationSubPaths.Overview)
-    {
-        <dl>
-            No recorded exposures to known cases
-        </dl>
-    }
-    else
-    {
-        return;
-    }
-}
-else
+@if (orderedResults.Any())
 {
     <div id="mbovis-exposure-to-known-cases-table">
         @foreach (var result in orderedResults)
@@ -49,7 +35,7 @@ else
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.YearOfExposure) </dt>
                         <dd class="cell-min-height"> @result.YearOfExposure </dd>
                     </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneQuarter">
+                    <nhs-grid-column grid-column-width="ThreeQuarters">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureSetting) </dt>
                         <dd class="cell-min-height"> @result.ExposureSetting.GetDisplayName() </dd>
                     </nhs-grid-column>

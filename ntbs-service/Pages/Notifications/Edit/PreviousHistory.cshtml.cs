@@ -13,7 +13,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         public PreviousHistoryModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(service, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditPreviousHistory;
         }

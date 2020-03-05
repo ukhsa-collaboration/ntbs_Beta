@@ -17,5 +17,20 @@
     }
 </div>
 <div class="notification-overview-details-container">
-    <partial name="Shared/_MBovisAnimalExposureTable" for="Notification.MBovisDetails.MBovisAnimalExposures"/>
+    @if (Model.Notification.MBovisDetails.HasAnimalExposure != null)
+    {
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.HasAnimalExposure) </div>
+                <div class="cell-min-height"> @Model.Notification.MBovisDetails.HasAnimalExposure.FormatYesNo() </div>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <br/>
+        
+        <partial name="Shared/_MBovisAnimalExposureTable" for="Notification.MBovisDetails.MBovisAnimalExposures"/>
+    }
+    else
+    {
+        <dl>No recorded animal exposures</dl>
+    }
 </div>

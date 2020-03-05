@@ -44,6 +44,7 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task CloseInactiveNotifications();
 
     }
 
@@ -332,7 +333,10 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
-            await CreateTreatmentEventNotificationStart(notification);
+            if (notification.ClinicalDetails.IsPostMortem != true)
+            {
+                await CreateTreatmentEventNotificationStart(notification);
+            }
             await _alertService.AutoDismissAlertAsync<DataQualityDraftAlert>(notification);
         }
 
@@ -500,6 +504,16 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Deleted;
 
             await UpdateDatabaseAsync(NotificationAuditType.Deleted);
+        }
+
+        public async Task CloseInactiveNotifications()
+        {
+            var notificationsToSetClosed = await _notificationRepository.GetInactiveNotificationsToCloseAsync();
+            foreach (var notification in notificationsToSetClosed)
+            {
+                notification.NotificationStatus = NotificationStatus.Closed;
+            }
+            await UpdateDatabaseAsync(NotificationAuditType.Closed);
         }
     }
 }

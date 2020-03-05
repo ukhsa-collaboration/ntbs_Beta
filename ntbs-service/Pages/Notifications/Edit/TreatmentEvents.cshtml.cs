@@ -17,7 +17,8 @@ namespace ntbs_service.Pages.Notifications.Edit
         public TreatmentEventsModel(
             INotificationService notificationService,
             IAuthorizationService authorizationService,
-            INotificationRepository notificationRepository) : base(notificationService, authorizationService, notificationRepository)
+            INotificationRepository notificationRepository,
+            IAlertRepository alertRepository) : base(notificationService, authorizationService, notificationRepository, alertRepository)
         {
             CurrentPage = NotificationSubPaths.EditTreatmentEvents;
         }

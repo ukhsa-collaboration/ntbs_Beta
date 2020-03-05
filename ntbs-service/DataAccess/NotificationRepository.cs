@@ -31,6 +31,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
         Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
+        Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync();
         Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
@@ -50,7 +51,7 @@ namespace ntbs_service.DataAccess
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified || n.NotificationStatus == NotificationStatus.Closed)
                 .OrderByDescending(n => n.SubmissionDate);
         }
 
@@ -241,6 +242,27 @@ namespace ntbs_service.DataAccess
                     .Where(n => ids.Contains(n.NotificationId))
                     .ToListAsync())
                 .Select(n => new NotificationBannerModel(n, showLink: true));
+        }
+
+        public async Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync()
+        {
+            return (await _context.Notification
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome)
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null))
+                .ToListAsync())
+                .Where(n =>
+                {
+                    var lastTreatmentEvent = n.TreatmentEvents.OrderByDescending(t => t.EventDate).FirstOrDefault();
+                    if (lastTreatmentEvent != null)
+                    {
+                        return lastTreatmentEvent.TreatmentEventTypeIsOutcome
+                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
+                               && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+                    }
+                    return false;
+                });
         }
 
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)

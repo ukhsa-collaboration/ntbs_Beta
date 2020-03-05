@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,8 +42,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IItemRepository<TreatmentEvent> treatmentEventRepository,
+            IAlertRepository alertRepository,
             IAlertService alertService)
-            : base(service, authorizationService, notificationRepository)
+            : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _treatmentEventRepository = treatmentEventRepository;

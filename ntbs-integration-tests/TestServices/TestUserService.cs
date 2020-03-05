@@ -67,7 +67,7 @@ namespace ntbs_integration_tests.TestServices
             throw new NotImplementedException();
         }
         
-        public Task RecordUserLogin(string username)
+        public Task RecordUserLoginAsync(string username)
         {
             return Task.CompletedTask;
         }
@@ -104,7 +104,7 @@ namespace ntbs_integration_tests.TestServices
             throw new NotImplementedException();
         }
         
-        public Task RecordUserLogin(string username)
+        public Task RecordUserLoginAsync(string username)
         {
             return Task.CompletedTask;
         }
@@ -141,7 +141,7 @@ namespace ntbs_integration_tests.TestServices
             return Task.FromResult((IEnumerable<string>)phecCodes);
         }
         
-        public Task RecordUserLogin(string username)
+        public Task RecordUserLoginAsync(string username)
         {
             return Task.CompletedTask;
         }
@@ -174,7 +174,7 @@ namespace ntbs_integration_tests.TestServices
             throw new NotImplementedException();
         }
 
-        public Task RecordUserLogin(string username)
+        public Task RecordUserLoginAsync(string username)
         {
             return Task.CompletedTask;
         }

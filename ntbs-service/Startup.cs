@@ -59,7 +59,7 @@ namespace ntbs_service
             services.Configure<AdfsOptions>(adfsConfig);
             services.Configure<LdapConnectionSettings>(Configuration.GetSection("LdapConnectionSettings"));
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
-            
+
             // Plugin services
             SetupAuthentication(services, adfsConfig);
 
@@ -117,7 +117,7 @@ namespace ntbs_service
             services.AddScoped<IDataQualityRepository, DataQualityRepository>();
             services.AddScoped<IDrugResistanceProfileRepository, DrugResistanceProfileRepository>();
             services.AddScoped<IFaqRepository, FaqRepository>();
-            
+
             // Services
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IAlertService, AlertService>();
@@ -195,16 +195,14 @@ namespace ntbs_service
                         return Task.CompletedTask;
                     };
 
-                    options.Events.OnSecurityTokenValidated += context =>
+                    options.Events.OnSecurityTokenValidated += async context =>
                     {
                         var username = context.Principal.FindFirstValue(ClaimTypes.Email);
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                            userService.RecordUserLogin(username);
+                            await userService.RecordUserLoginAsync(username);
                         }
-
-                        return Task.CompletedTask;
                     };
                 })
                 .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
@@ -226,7 +224,7 @@ namespace ntbs_service
                 Audit.Core.Configuration.AuditDisabled = true;
             }
         }
-        
+
         private void AddClusterService(IServiceCollection services)
         {
             var clusterMatchingConfig = Configuration.GetSection(Constants.CLUSTER_MATCHING_CONFIG);
@@ -269,13 +267,12 @@ namespace ntbs_service
             if (string.IsNullOrEmpty(Configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING)))
             {
                 services.AddScoped<IHomepageKpiService, MockHomepageKpiService>();
-                services.AddScoped<IDrugResistanceProfilesService, MockDrugResistanceProfilesService>();                
+                services.AddScoped<IDrugResistanceProfilesService, MockDrugResistanceProfilesService>();
             }
             else
             {
-
                 services.AddScoped<IHomepageKpiService, HomepageKpiService>();
-                services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();                
+                services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
             }
         }
 
@@ -283,13 +280,12 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())	
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                    HotModuleReplacement = true,
-                    ConfigFile = "webpack.dev.js"
+                    HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
                 });
             }
             else
@@ -314,7 +310,7 @@ namespace ntbs_service
                     options.MessageTemplate =
                         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
                     // Set Logging Level of Request logging to Information - prevents duplicated exceptions in sentry. 
-                    options.GetLevel = (_, __, ___) => LogEventLevel.Information; 
+                    options.GetLevel = (_, __, ___) => LogEventLevel.Information;
                 });
             }
 
@@ -344,20 +340,19 @@ namespace ntbs_service
 
             var dashboardOptions = new DashboardOptions
             {
-                Authorization = new[] { new HangfireAuthorisationFilter(GetAdminRoleName()) }
+                Authorization = new[] {new HangfireAuthorisationFilter(GetAdminRoleName())},
+                DisplayStorageConnectionString = false,
+                // Added to squash intermittent 'The required antiforgery cookie token must be provided' exceptions
+                // Does not pose a significant attack vector as all jobs are essentially idempotent.
+                IgnoreAntiforgeryToken = true
             };
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-            
-            if (!Env.IsDevelopment())	
-            {
-                // Most of the time we don't care about recurring jobs in dev mode.
-                // Having this exclusion is also useful when connecting to non-dev databases for debugging.
-                // as jobs scheduled from (windows) dev machines won't run on linux due to different timezone formats
-                // Comment out this check to work with jobs locally.
-                HangfireJobScheduler.ScheduleRecurringJobs();
-            }
+            app.UseHangfireServer(new BackgroundJobServerOptions {WorkerCount = 1});
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
+
+            var scheduledJobConfig = new ScheduledJobsConfig();
+            Configuration.GetSection("ScheduledJobsConfig").Bind(scheduledJobConfig);
+            HangfireJobScheduler.ScheduleRecurringJobs(scheduledJobConfig);
         }
 
         private string GetAdminRoleName()
