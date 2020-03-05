@@ -10,5 +10,6 @@ namespace ntbs_service
         public const string LEGACY_SEARCH_ENABLED_CONFIG_VALUE = "AppConfig:LegacySearchEnabled";
         public const string REFERENCE_LAB_RESULTS_CONFIG = "ReferenceLabResultsConfig";
         public const string REFERENCE_LAB_RESULTS_CONFIG__MOCKOUT = "MockOutSpecimenMatching";
+        public const string SCHEDULED_JOBS_CONFIG = "ScheduledJobsConfig";
     }
 }
