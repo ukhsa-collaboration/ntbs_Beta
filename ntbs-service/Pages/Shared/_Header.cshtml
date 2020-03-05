@@ -54,6 +54,14 @@
                             Help
                         </a>
                     </li>
+                    @if (User.IsInRole("Global.NIS.NTBS.ADMIN"))
+                    {
+                        <li class="govuk-header__navigation-item" class="header-navigation-link">
+                            <a class="govuk-header__link header-navigation-list-item" href="/Admin">
+                                Admin
+                            </a>
+                        </li>
+                    }
                     <li class="govuk-header__navigation-item" class="header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/Logout">
                             @(User.Identity.Name) (Logout)
