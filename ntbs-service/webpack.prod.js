@@ -9,13 +9,15 @@ const plugins = [
     })
 ];
 
-if (process.env.RELEASE) {
+if (process.env.RELEASE && process.env.SENTRY_AUTH_TOKEN) {
     plugins.push(new SentryWebpackPlugin({
         release: process.env.RELEASE,
         include: '.',
         ignoreFile: '.sentrycliignore',
         ignore: ['node_modules', 'webpack.config.js']
     }));
+} else {
+    console.warn(  "Cannot publish sentry release, make sure RELEASE and SENTRY_AUTH_TOKEN env variables are set")
 }
 
 module.exports = merge(common, {
