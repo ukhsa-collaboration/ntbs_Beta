@@ -63,7 +63,7 @@ namespace ntbs_service.Services
                 return PermissionLevel.Edit;
             }
 
-            if (UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
+            if (UserBelongsToResidencePhecOfNotification(notification) || UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
             {
                 return PermissionLevel.ReadOnly;
             }
@@ -104,8 +104,7 @@ namespace ntbs_service.Services
 
         private bool UserHasDirectRelationToNotification(Notification notification)
         {
-            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification) ||
-                UserBelongsToResidencePhecOfNotification(notification);
+            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification);
         }
 
         private bool UserBelongsToTbServiceOfNotification(Notification notification)

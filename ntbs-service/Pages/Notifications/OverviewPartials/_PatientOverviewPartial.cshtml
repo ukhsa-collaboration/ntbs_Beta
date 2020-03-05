@@ -11,7 +11,8 @@
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
-           class="notification-edit-link govuk-link--no-visited-state">
+           class="notification-edit-link govuk-link--no-visited-state"
+           id="patient-details-edit-link">
             Edit
         </a>
     }
