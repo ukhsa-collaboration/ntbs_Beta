@@ -106,6 +106,8 @@ Ensure you have `azure-cli` installed
 ## Images registry
 We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registry user.
 `az acr credential show -n ntbsContainerRegistry`
+Login into docker with above credentials
+` docker login -u [Username] -p [Password] [SERVER]`
 
 ## Deploying to environments
 `master` branch deploys to `int` automatically.

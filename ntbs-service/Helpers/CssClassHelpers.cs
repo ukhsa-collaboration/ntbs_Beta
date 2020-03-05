@@ -11,13 +11,13 @@ namespace ntbs_service.Helpers
                 case NotificationStatus.Draft:
                     return "--draft";
                 case NotificationStatus.Notified:
+                case NotificationStatus.Closed:
                     return "--notified";
                 case NotificationStatus.Denotified:
                     return "--denotified";
                 case NotificationStatus.Legacy:
                     return "--legacy";
             }
-
             return "";
         }
     }

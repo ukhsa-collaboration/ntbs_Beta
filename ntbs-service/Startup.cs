@@ -196,16 +196,14 @@ namespace ntbs_service
                         return Task.CompletedTask;
                     };
 
-                    options.Events.OnSecurityTokenValidated += context =>
+                    options.Events.OnSecurityTokenValidated += async context =>
                     {
                         var username = context.Principal.FindFirstValue(ClaimTypes.Email);
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                            userService.RecordUserLogin(username);
+                            await userService.RecordUserLoginAsync(username);
                         }
-
-                        return Task.CompletedTask;
                     };
                 })
                 .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });

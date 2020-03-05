@@ -57,6 +57,12 @@ namespace ntbs_service.Services
             {
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
+
+            if (notification.NotificationStatus == NotificationStatus.Closed &&
+                _userPermissionsFilter.Type != UserType.NationalTeam)
+            {
+                return PermissionLevel.ReadOnly;
+            }
             
             if (UserHasDirectRelationToNotification(notification) || _userPermissionsFilter.Type == UserType.NationalTeam)
             {

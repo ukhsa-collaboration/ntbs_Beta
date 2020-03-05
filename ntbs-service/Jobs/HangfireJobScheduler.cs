@@ -7,6 +7,7 @@ namespace ntbs_service.Jobs
     static class HangfireJobScheduler
     {
         private const string UserSyncJobId = "user-sync";
+        private const string CloseInactiveNotificationsJobId = "close-inactive-notifications";
         private const string DrugResistanceProfileUpdateJobId = "drug-resistance-profile-update";
         private const string UnmatchedLabResultAlertsJobId = "unmatched-lab-result-alerts";
         private const string DataQualityAlertsJobId = "data-quality-alerts";
@@ -25,6 +26,19 @@ namespace ntbs_service.Jobs
             else
             {
                 RecurringJob.RemoveIfExists(UserSyncJobId);
+            }
+            
+            if (scheduledJobsConfig.CloseInactiveNotificationsEnabled)
+            {
+                RecurringJob.AddOrUpdate<CloseInactiveNotificationsJob>(
+                    CloseInactiveNotificationsJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.CloseInactiveNotificationsCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(CloseInactiveNotificationsJobId);
             }
 
             if (scheduledJobsConfig.DrugResistanceProfileUpdateEnabled)
