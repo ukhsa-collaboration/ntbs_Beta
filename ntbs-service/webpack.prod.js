@@ -17,7 +17,7 @@ if (process.env.RELEASE && process.env.SENTRY_AUTH_TOKEN) {
         ignore: ['node_modules', 'webpack.config.js']
     }));
 } else {
-    Console.log("Cannot publish sentry release, make sure RELEASE and SENTRY_AUTH_TOKEN env variables are set")
+    console.warn(  "Cannot publish sentry release, make sure RELEASE and SENTRY_AUTH_TOKEN env variables are set")
 }
 
 module.exports = merge(common, {
