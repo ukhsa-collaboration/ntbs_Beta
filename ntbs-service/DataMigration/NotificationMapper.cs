@@ -182,18 +182,11 @@ namespace ntbs_service.DataMigration
                     details.TBServiceCode = tbService.Code;
                 }
             }
-
-            // ReSharper disable once InvertIf
-            if (!string.IsNullOrEmpty(details.CaseManagerUsername))
-            {
-                var tbService =
-                    await _referenceDataRepository.GetCaseManagerByUsernameAsync(details.CaseManagerUsername);
-                if (tbService == null)
-                {
-                    Log.Error($"No case manager exists with username {details.CaseManagerUsername}");
-                }
-            }
             
+            // we are not doing the same check to case manager here, because leaving it empty would make it pass
+            // validation - it is not a mandatory field. we don't want to lose it where it exists, so that check
+            // is explicitly done during the validation step
+
             return details;
         }
 
