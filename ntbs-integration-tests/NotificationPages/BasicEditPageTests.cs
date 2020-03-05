@@ -101,7 +101,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsOk_ForPheUserWithMatchingPostcodePermission()
+        public async Task Get_ReturnsRedirectToOverview_ForPheUserWithMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
@@ -115,7 +115,9 @@ namespace ntbs_integration_tests.NotificationPages
 
                     _output.WriteLine("Testing subpath {0}", subPath);
                     // Assert
-                    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+                    
+                    response.AssertRedirectTo($"/Notifications/{Utilities.DRAFT_ID}");
                 });
             }
         }
