@@ -16,7 +16,6 @@ namespace ntbs_service.Pages.Notifications
     {
         private readonly IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
-        private readonly ITreatmentOutcomeService _treatmentOutcomeService;
         
         public CultureAndResistance CultureAndResistance { get; set; }
         public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
@@ -33,12 +32,10 @@ namespace ntbs_service.Pages.Notifications
             IAuthorizationService authorizationService,
             IAlertService alertService,
             INotificationRepository notificationRepository,
-            ICultureAndResistanceService cultureAndResistanceService,
-            ITreatmentOutcomeService treatmentOutcomeService) : base(service, authorizationService, notificationRepository)
+            ICultureAndResistanceService cultureAndResistanceService) : base(service, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
-            _treatmentOutcomeService = treatmentOutcomeService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -73,20 +70,20 @@ namespace ntbs_service.Pages.Notifications
 
         private void CalculateTreatmentOutcomes()
         {
-            if (_treatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 1))
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 1))
             {
                 Should12MonthOutcomeBeDisplayed = true;
-                OutcomeAt12Months = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 1);
+                OutcomeAt12Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 1);
             }
-            if (_treatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 2))
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 2))
             {
                 Should24MonthOutcomeBeDisplayed = true;
-                OutcomeAt24Months = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 2);
+                OutcomeAt24Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 2);
             }
-            if (_treatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 3))
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 3))
             {
                 Should36MonthOutcomeBeDisplayed = true;
-                OutcomeAt36Months = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 3);
+                OutcomeAt36Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 3);
             }
         }
 

@@ -47,10 +47,10 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             var numberOfCallsToCreate = shouldCreateAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(x =>x.AddUniqueAlertAsync(It.IsAny<MdrAlert>()), numberOfCallsToCreate);
-            
+
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(
-                x => x.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR, "System"), 
+                x => x.DismissMatchingAlertAsync<MdrAlert>(notification.NotificationId, "System"),
                 numberOfCallsToDismiss);
         }
         
@@ -80,7 +80,7 @@ namespace ntbs_service_unit_tests.Services
             
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(
-                x => x.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMBovis, "System"), 
+                x => x.DismissMatchingAlertAsync<MBovisAlert>(notification.NotificationId, "System"),
                 numberOfCallsToDismiss);
         }
     }

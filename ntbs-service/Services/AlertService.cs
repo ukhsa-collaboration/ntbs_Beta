@@ -12,10 +12,11 @@ namespace ntbs_service.Services
 {
     public interface IAlertService
     {
-        Task<bool> AddUniqueAlertAsync(Alert alert);
-        Task<bool> AddUniqueOpenAlertAsync(Alert alert);
+        Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
+        Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
-        Task DismissMatchingAlertAsync(int notificationId, AlertType alertType, string auditUsername = "System");
+        Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
+        Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = "System") where T : Alert;
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
     }
@@ -50,13 +51,50 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task<bool> AddUniqueAlertAsync(Alert alert)
+        public async Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert
+        {
+            var alert = await _alertRepository.GetOpenAlertByNotificationId<T>(notification.NotificationId);
+            if (alert == null) { return; }
+
+            Func<Notification,bool> notificationQualifiesCheck;
+            switch (alert)
+            {
+                case DataQualityBirthCountryAlert _:
+                    notificationQualifiesCheck = DataQualityBirthCountryAlert.NotificationQualifies;
+                    break;
+                case DataQualityDraftAlert _:
+                    notificationQualifiesCheck = DataQualityDraftAlert.NotificationQualifies;
+                    break;
+                case DataQualityClinicalDatesAlert _:
+                    notificationQualifiesCheck = DataQualityClinicalDatesAlert.NotificationQualifies;
+                    break;
+                case DataQualityClusterAlert _:
+                    notificationQualifiesCheck = DataQualityClusterAlert.NotificationQualifies;
+                    break;
+                case DataQualityTreatmentOutcome12 _:
+                    notificationQualifiesCheck = DataQualityTreatmentOutcome12.NotificationQualifies;
+                    break;
+                case DataQualityTreatmentOutcome24 _:
+                    notificationQualifiesCheck = DataQualityTreatmentOutcome24.NotificationQualifies;
+                    break;
+                case DataQualityTreatmentOutcome36 _:
+                    notificationQualifiesCheck = DataQualityTreatmentOutcome36.NotificationQualifies;
+                    break;
+                default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
+            }
+            
+            if (!notificationQualifiesCheck(notification))
+            {
+                await DismissAlertAsync(alert.AlertId, null);
+            }
+        }
+
+        public async Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert
         {
             if (alert.NotificationId.HasValue)
             {
-                var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(
-                    alert.NotificationId.Value,
-                    alert.AlertType);
+                var matchingAlert =
+                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(alert.NotificationId.Value);
                 if (matchingAlert != null)
                 {
                     return false;
@@ -67,13 +105,11 @@ namespace ntbs_service.Services
             return true;
         }
 
-        public async Task<bool> AddUniqueOpenAlertAsync(Alert alert)
+        public async Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert
         {
             if (alert.NotificationId.HasValue)
             {
-                var matchingAlert = await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(
-                    alert.NotificationId.Value,
-                    alert.AlertType);
+                var matchingAlert = await _alertRepository.GetOpenAlertByNotificationId<T>(alert.NotificationId.Value);
                 if (matchingAlert != null)
                 {
                     return false;
@@ -83,10 +119,10 @@ namespace ntbs_service.Services
             await PopulateAndAddAlertAsync(alert);
             return true;
         }
-        
-        public async Task DismissMatchingAlertAsync(int notificationId, AlertType alertType, string auditUsername)
+
+        public async Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername) where T : Alert
         {
-            var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync(notificationId, alertType);
+            var matchingAlert = await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(notificationId);
             if (matchingAlert != null)
             {
                 await DismissAlertAsync(matchingAlert.AlertId, auditUsername);

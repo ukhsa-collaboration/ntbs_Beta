@@ -34,10 +34,10 @@ namespace ntbs_service_unit_tests.Services
         public async Task AddUniqueAlert_AddsIfNoAlertWithSameNotificationIdAndAlertType()
         {
             // Arrange
-            var matchingAlert = Task.FromResult((Alert)new TestAlert {AlertId = 2});
-            var testAlert = new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest};
+            var matchingAlert = Task.FromResult(new TestAlert {AlertId = 2});
+            var testAlert = new TestAlert {NotificationId = 2, AlertType = AlertType.TransferRequest};
             _mockAlertRepository.Setup(x =>
-                    x.GetAlertByNotificationIdAndTypeAsync(testAlert.NotificationId.Value, testAlert.AlertType))
+                    x.GetAlertByNotificationIdAndTypeAsync<TestAlert>(testAlert.NotificationId.Value))
                 .Returns(matchingAlert);
 
             // Act
@@ -52,9 +52,9 @@ namespace ntbs_service_unit_tests.Services
         {
             // Arrange
             _mockAlertRepository.Setup(x =>
-                    x.GetAlertByNotificationIdAndTypeAsync(It.IsAny<int>(), It.IsAny<AlertType>()))
-                .Returns(Task.FromResult((Alert)null));
-            var testAlert = new TestAlert() {NotificationId = 2, AlertType = AlertType.TransferRequest};
+                    x.GetAlertByNotificationIdAndTypeAsync<TestAlert>(It.IsAny<int>()))
+                .Returns(Task.FromResult((TestAlert)null));
+            var testAlert = new TestAlert {NotificationId = 2, AlertType = AlertType.TransferRequest};
 
             // Act
             var result = await _alertService.AddUniqueAlertAsync(testAlert);

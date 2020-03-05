@@ -11,8 +11,8 @@ namespace ntbs_service.DataAccess
     public interface IAlertRepository
     {
         Task<Alert> GetOpenAlertByIdAsync(int? alertId);
-        Task<Alert> GetAlertByNotificationIdAndTypeAsync(int notificationId, AlertType alertType);
-        Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int notificationId, AlertType alertType);
+        Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert;
+        Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert;
         Task<IList<Alert>> GetOpenAlertsForNotificationAsync(int notificationId);
         Task<IList<Alert>> GetOpenAlertsByTbServiceCodesAsync(IEnumerable<string> tbServices);
         Task<IList<UnmatchedLabResultAlert>> GetAllOpenUnmatchedLabResultAlertsAsync();
@@ -40,17 +40,18 @@ namespace ntbs_service.DataAccess
                 .SingleOrDefaultAsync(m => m.AlertId == alertId);
         }
 
-        public async Task<Alert> GetAlertByNotificationIdAndTypeAsync(int notificationId, AlertType alertType)
+        public async Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert 
         {
             return await _context.Alert
-                .SingleOrDefaultAsync(m => m.NotificationId == notificationId && m.AlertType == alertType);
+                .OfType<T>()
+                .SingleOrDefaultAsync(m => m.NotificationId == notificationId);
         }
 
-        public async Task<Alert> GetOpenAlertByNotificationIdAndTypeAsync(int notificationId, AlertType alertType)
+        public async Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert
         {
             return await GetBaseOpenAlertIQueryable()
                 .Where(a => a.NotificationId == notificationId)
-                .Where(a => a.AlertType == alertType)
+                .OfType<T>()
                 .SingleOrDefaultAsync();
         }
 

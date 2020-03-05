@@ -35,7 +35,8 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnGetAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferRejectedAlert = (TransferRejectedAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRejected);
+            TransferRejectedAlert =
+                await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             await AuthorizeAndSetBannerAsync();
             
             // Check edit permission of user and redirect if they don't have permission or the alert does not exist
@@ -49,7 +50,8 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            TransferRejectedAlert = (TransferRejectedAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRejected);
+            TransferRejectedAlert = 
+                await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             await _alertService.DismissAlertAsync(TransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }

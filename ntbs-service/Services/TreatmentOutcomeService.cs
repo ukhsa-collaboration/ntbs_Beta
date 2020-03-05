@@ -1,35 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
-using Castle.Core.Internal;
-using Dapper;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Configuration;
-using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
-    public interface ITreatmentOutcomeService
+    public static class TreatmentOutcomesHelper
     {
-        bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
-        TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
-        bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate);
-    }
-
-    public class TreatmentOutcomeService : ITreatmentOutcomeService
-    {
-        public TreatmentOutcomeService()
-        {
-        }
-
-        public TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        public static TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
             // If a treatment outcome is missing at X years then one must not already exist
             if (IsTreatmentOutcomeMissingAtXYears(notification, yearsAfterTreatmentStartDate))
@@ -39,10 +19,12 @@ namespace ntbs_service.Services
             
             // If a treatment outcome is not missing that is because one either exists as the last event of the 1 year period
             // or one is not needed and so is null
-            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)?.LastOrDefault(x => x.TreatmentOutcome != null)?.TreatmentOutcome;
+            return GetOrderedTreatmentEventsInWindowXtoXMinus1Years(notification, yearsAfterTreatmentStartDate)
+                ?.LastOrDefault(x => x.TreatmentOutcome != null)
+                ?.TreatmentOutcome;
         }
 
-        public bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        public static bool IsTreatmentOutcomeMissingAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
             for (var i = yearsAfterTreatmentStartDate; i >= 1; i--)
             {
@@ -70,7 +52,7 @@ namespace ntbs_service.Services
             return true;
         }
 
-        public bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
+        public static bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
             if (notification.NotificationDate == null || DateTime.Now < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate).Value.AddYears(yearsAfterTreatmentStartDate))
             {
@@ -92,6 +74,5 @@ namespace ntbs_service.Services
                     && t.EventDate >= (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
                 .OrderBy(t => t.EventDate);
         }
-        
     }
 }

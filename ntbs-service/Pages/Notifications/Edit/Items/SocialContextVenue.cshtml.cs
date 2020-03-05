@@ -22,7 +22,9 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IItemRepository<SocialContextVenue> socialContextVenueRepository,
-            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, socialContextVenueRepository, alertRepository)
+            IAlertService alertService,
+            IAlertRepository alertRepository) 
+            : base(service, authorizationService, notificationRepository, socialContextVenueRepository, alertService, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
         }
