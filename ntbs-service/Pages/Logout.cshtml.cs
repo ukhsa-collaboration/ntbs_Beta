@@ -15,7 +15,7 @@ namespace ntbs_service.Pages
     public LogoutModel(IOptionsMonitor<AdfsOptions> options)
     {
         // We just want to return to the homepage (which will trigger going to login again)
-        ReturnUrl = options.CurrentValue.Wtrealm;
+        ReturnUrl = $"{options.CurrentValue.Wtrealm}Index";
         BaseUrl = options.CurrentValue.AdfsUrl;
     }
 
