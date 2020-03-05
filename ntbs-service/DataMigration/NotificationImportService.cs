@@ -7,6 +7,7 @@ using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
+using ntbs_service.Jobs;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 using Sentry;
@@ -17,7 +18,9 @@ namespace ntbs_service.DataMigration
 
     public interface INotificationImportService
     {
+        [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds);
+        [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
     }
 
@@ -58,7 +61,6 @@ namespace ntbs_service.DataMigration
             _referenceDataRepository = referenceDataRepository;
         }
 
-
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
         {
             _logger.LogInformation(context, requestId, "Request to import by Date started");
@@ -71,7 +73,6 @@ namespace ntbs_service.DataMigration
             _logger.LogInformation(context, requestId, "Request to import by Date finished");
             return importResults;
         }
-
 
         public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
         {
@@ -115,6 +116,7 @@ namespace ntbs_service.DataMigration
 
             return importResults;
         }
+        
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
             var patientName = notifications.First().FullName;
