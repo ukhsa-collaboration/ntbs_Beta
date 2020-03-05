@@ -8,7 +8,6 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
-using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -66,21 +65,13 @@ namespace ntbs_service.Services
                 LdapConnection.SCOPE_SUB,
                 filter,
                 null,
-                false);
+                false,
+                new LdapSearchConstraints {ReferralFollowing = true});
             
             // We don't want to use LdapSearchResults directly as Enumerable, since it can throw on `Next` 
             while (searchResults.HasMore())
             {
-                LdapEntry nextResult = null;
-                try
-                {
-                     nextResult = searchResults.Next();
-                }
-                catch (LdapReferralException e)
-                {
-                    Log.Warning("Ldap result skipped", e);
-                }
-
+                var nextResult = searchResults.Next();
                 if (nextResult != null)
                 {
                     yield return nextResult;
