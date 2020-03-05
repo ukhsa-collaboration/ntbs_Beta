@@ -21,7 +21,7 @@ namespace ntbs_service.Services
         Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user);
         UserType GetUserType(ClaimsPrincipal user);
         Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
-        Task RecordUserLogin(string username);
+        Task RecordUserLoginAsync(string username);
     }
 
     public class UserService : IUserService
@@ -97,7 +97,7 @@ namespace ntbs_service.Services
             return await _referenceDataRepository.GetPhecCodesMatchingRolesAsync(GetRoles(user));
         }
 
-        public async Task RecordUserLogin(string username)
+        public async Task RecordUserLoginAsync(string username)
         {
             await _userRepository.AddUserLoginEvent(new UserLoginEvent()
             {

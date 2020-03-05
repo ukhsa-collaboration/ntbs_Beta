@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Data;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
-using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -36,31 +35,21 @@ namespace ntbs_service.Services
             foreach (var (notificationId, drugResistanceProfile) in drugResistanceProfiles)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(notificationId);
-
-                // No notifications found with given notification id
                 if (notification == null)
                 {
-                    continue;
+                    throw new DataException(
+                        $"Reporting database sourced NotificationId {notificationId} was not found in NTBS database.");
                 }
                 
-                // There are no changes in Drug resistance profile details
                 if (notification.DrugResistanceProfile.Species == drugResistanceProfile.Species &&
                     notification.DrugResistanceProfile.DrugResistanceProfileString == drugResistanceProfile.DrugResistanceProfileString)
                 {
                     continue;
                 }
-
-                try
-                {
-                    await _notificationService.UpdateDrugResistanceProfileAsync(notification, drugResistanceProfile);
-                    await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
-                    await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
-                }
-                catch (Exception e)
-                {
-                    Log.Warning("Error occured when updating drug resistance profile", e);
-                }
                 
+                await _notificationService.UpdateDrugResistanceProfileAsync(notification, drugResistanceProfile);
+                await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
+                await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
             }
         }
     }

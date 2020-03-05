@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -42,6 +43,7 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task CloseInactiveNotifications();
 
     }
 
@@ -297,7 +299,7 @@ namespace ntbs_service.Services
 
         public async Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites)
         {
-            var currentSites = _context.NotificationSite.Where(ns => ns.NotificationId == notificationId);
+            var currentSites = await _context.NotificationSite.Where(ns => ns.NotificationId == notificationId).ToListAsync();
 
             foreach (var newSite in notificationSites)
             {
@@ -325,7 +327,10 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
-            await CreateTreatmentEventNotificationStart(notification);
+            if (notification.ClinicalDetails.IsPostMortem != true)
+            {
+                await CreateTreatmentEventNotificationStart(notification);
+            }
         }
 
         private async Task CreateTreatmentEventNotificationStart(Notification notification)
@@ -492,6 +497,16 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Deleted;
 
             await UpdateDatabaseAsync(NotificationAuditType.Deleted);
+        }
+
+        public async Task CloseInactiveNotifications()
+        {
+            var notificationsToSetClosed = await _notificationRepository.GetInactiveNotificationsToCloseAsync();
+            foreach (var notification in notificationsToSetClosed)
+            {
+                notification.NotificationStatus = NotificationStatus.Closed;
+            }
+            await UpdateDatabaseAsync(NotificationAuditType.Closed);
         }
     }
 }

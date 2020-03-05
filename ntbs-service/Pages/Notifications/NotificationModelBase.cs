@@ -31,6 +31,7 @@ namespace ntbs_service.Pages.Notifications
         public Notification Notification { get; set; }
         public NotificationBannerModel NotificationBannerModel { get; set; }
         public IList<Alert> Alerts { get; set; }
+        public DataQualityDraftAlert DraftAlert { get; set; }
 
         public PermissionLevel PermissionLevel { get; set; }
 
