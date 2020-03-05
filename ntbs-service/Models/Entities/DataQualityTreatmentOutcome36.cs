@@ -12,7 +12,7 @@ namespace ntbs_service.Models.Entities
             n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-3);
 
         public static readonly Func<Notification, bool> NotificationInRangeQualifies =
-            n => TreatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 3);
+            n => TreatmentOutcomesHelper.IsTreatmentOutcomeMissingAtXYears(n, 3);
 
         public static readonly Func<Notification, bool> NotificationQualifies = 
             n => NotificationInQualifyingDateRangeExpression.Compile()(n) && NotificationInRangeQualifies(n);

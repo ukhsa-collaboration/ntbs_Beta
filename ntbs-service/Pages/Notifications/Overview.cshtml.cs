@@ -70,20 +70,20 @@ namespace ntbs_service.Pages.Notifications
 
         private void CalculateTreatmentOutcomes()
         {
-            if (TreatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 1))
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 1))
             {
                 Should12MonthOutcomeBeDisplayed = true;
-                OutcomeAt12Months = TreatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 1);
+                OutcomeAt12Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 1);
             }
-            if (TreatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 2))
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 2))
             {
                 Should24MonthOutcomeBeDisplayed = true;
-                OutcomeAt24Months = TreatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 2);
+                OutcomeAt24Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 2);
             }
-            if (TreatmentOutcomeService.IsTreatmentOutcomeExpectedAtXYears(Notification, 3))
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 3))
             {
                 Should36MonthOutcomeBeDisplayed = true;
-                OutcomeAt36Months = TreatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 3);
+                OutcomeAt36Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 3);
             }
         }
 

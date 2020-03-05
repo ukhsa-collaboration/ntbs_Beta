@@ -7,7 +7,7 @@ using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
-    public static class TreatmentOutcomeService
+    public static class TreatmentOutcomesHelper
     {
         public static TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {

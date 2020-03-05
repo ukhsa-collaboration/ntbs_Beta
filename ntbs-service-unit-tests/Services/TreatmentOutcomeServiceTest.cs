@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ntbs_service_unit_tests.Services
 {
-    public class TreatmentOutcomeServiceTest
+    public class TreatmentOutcomesHelperTest
     {
         // The example notifications are taken from pdf attached to ticket NTBS-923 TODO: update this to actual googlesheet
         // Each notification is seeded with an expected treatment outcome at 12/24/36 months based on what
@@ -447,7 +447,7 @@ namespace ntbs_service_unit_tests.Services
             TreatmentOutcomeType? _, 
             TreatmentOutcomeType? __)
         {
-            var treatmentOutcomeAt1Year = TreatmentOutcomeService.GetTreatmentOutcomeAtXYears(notification, 1);
+            var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 1);
             Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt1Year);
         }
         
@@ -457,7 +457,7 @@ namespace ntbs_service_unit_tests.Services
             TreatmentOutcomeType? expectedOutcomeAt2Years, 
             TreatmentOutcomeType? __)
         {
-            var treatmentOutcomeAt1Year = TreatmentOutcomeService.GetTreatmentOutcomeAtXYears(notification, 2);
+            var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 2);
             Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt2Years);
         }
         
@@ -467,7 +467,7 @@ namespace ntbs_service_unit_tests.Services
             TreatmentOutcomeType? __,
             TreatmentOutcomeType? expectedOutcomeAt3Years)
         {
-            var treatmentOutcomeAt1Year = TreatmentOutcomeService.GetTreatmentOutcomeAtXYears(notification, 3);
+            var treatmentOutcomeAt1Year = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(notification, 3);
             Assert.Equal(treatmentOutcomeAt1Year?.TreatmentOutcomeType, expectedOutcomeAt3Years);
         }
 
