@@ -352,7 +352,7 @@ namespace ntbs_service
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
 
             var scheduledJobConfig = new ScheduledJobsConfig();
-            Configuration.GetSection("ScheduledJobsConfig").Bind(scheduledJobConfig);
+            Configuration.GetSection(Constants.SCHEDULED_JOBS_CONFIG).Bind(scheduledJobConfig);
             HangfireJobScheduler.ScheduleRecurringJobs(scheduledJobConfig);
         }
 
