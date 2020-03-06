@@ -24,14 +24,14 @@
 
         <div>
             @{
-                var notificationDateStartError = !Model.ValidationService.IsValid("NotificationDateRangeStart");
+                var notificationDateStartError = !Model.ValidationService.IsValid(nameof(Model.NotificationDateRangeStart));
                 var notificationDateStartGroupState = notificationDateStartError ? Error : Standard;
             }
             <nhs-form-group nhs-form-group-type=@notificationDateStartGroupState classes="nhs-form-group--import-by-date">
                 <span nhs-span-type="ErrorMessage" id="notification-start-date-error" classes="import-error"
                     asp-validation-for="NotificationDateRangeStart" has-error="@notificationDateStartError"></span>
                 <label nhs-label-type="Standard" for="notification-start-date"> Start Notification Date Range </label>
-                <nhs-date-input id="notification-date">
+                <nhs-date-input id="notification-start-date">
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Day">Day</label>
@@ -59,14 +59,14 @@
 
         <div>
             @{
-                var notificationDateEndError = !Model.ValidationService.IsValid("NotificationDateRangeEnd");
+                var notificationDateEndError = !Model.ValidationService.IsValid(nameof(Model.NotificationDateRangeEnd));
                 var notificationDateEndGroupState = notificationDateEndError ? Error : Standard;
             }
             <nhs-form-group nhs-form-group-type=@notificationDateEndGroupState classes="nhs-form-group--import-by-date">
                 <span nhs-span-type="ErrorMessage" id="notification-end-date-error" classes="import-error"
                     asp-validation-for="NotificationDateRangeEnd" has-error="@notificationDateEndError"></span>
                 <label nhs-label-type="Standard" for="notification-end-date"> End Notification Date Range </label>
-                <nhs-date-input id="notification-date">
+                <nhs-date-input id="notification-end-date">
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Day">Day</label>
@@ -100,5 +100,4 @@
     </form>
 
     <br/>
-    <a href='/Hangfire/jobs/succeeded'> Navigate to dashboard </a>
 </nhs-width-container>
