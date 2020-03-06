@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Services;
 
 namespace ntbs_service.DataAccess
 {
@@ -23,8 +22,15 @@ namespace ntbs_service.DataAccess
     public class DataQualityRepository : IDataQualityRepository
     {
         private readonly NtbsContext _context;
-        private int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
-        
+        private const int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
+
+        private static readonly NotificationStatus[] IGNORED_NOTIFICATION_STATUSES = new []
+        {
+            NotificationStatus.Closed,
+            NotificationStatus.Deleted,
+            NotificationStatus.Denotified
+        };
+
         public DataQualityRepository(NtbsContext context)
         {
             _context = context;
@@ -97,7 +103,8 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
         {
             return _context.Notification
-                .Include(n => n.HospitalDetails);
+                .Include(n => n.HospitalDetails)
+                .Where(n => IGNORED_NOTIFICATION_STATUSES.All(status => n.NotificationStatus != status));
         }
         
         private IQueryable<Notification> GetBaseNotificationQueryableWithTreatmentEventsForAlerts()
