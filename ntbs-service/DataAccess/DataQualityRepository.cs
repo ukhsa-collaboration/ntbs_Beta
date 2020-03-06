@@ -103,7 +103,8 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetBaseNotificationQueryableWithTreatmentEventsForAlerts()
         {
             return GetBaseNotificationQueryableForAlerts()
-                .Include(n => n.TreatmentEvents);
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome);
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts()
