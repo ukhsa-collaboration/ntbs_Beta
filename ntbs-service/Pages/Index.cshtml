@@ -70,6 +70,8 @@
                                 <a href="@item.ActionLink">
                                     @Html.DisplayFor(_ => item.AlertType)
                                 </a>
+                                <br/>
+                                @Html.DisplayFor(_ => item.Action)
                             </nhs-table-item>
                             <nhs-table-item>
                                 @if (!string.IsNullOrWhiteSpace(item.CaseManagerFullName))

@@ -4,7 +4,7 @@ namespace ntbs_service.Models.Enums
 {
     public enum AlertType
     {
-        [Display(Name = "Enhanced surveillance - MDR")]
+        [Display(Name = "Enhanced surveillance - RR/MDR/XDR-TB")]
         EnhancedSurveillanceMDR,
         [Display(Name = "Enhanced surveillance - M. bovis")]
         EnhancedSurveillanceMBovis,
@@ -23,11 +23,11 @@ namespace ntbs_service.Models.Enums
         DataQualityClinicalDates,
         [Display(Name = "Data quality issue - cluster")]
         DataQualityCluster,
-        [Display(Name = "Data quality issue - treatment outcome at 12 months missing")]
+        [Display(Name = "Data quality issue - missing 12 month treatment outcome")]
         DataQualityTreatmentOutcome12,
-        [Display(Name = "Data quality issue - treatment outcome at 24 months missing")]
+        [Display(Name = "Data quality issue - missing 24 month treatment outcome")]
         DataQualityTreatmentOutcome24,
-        [Display(Name = "Data quality issue - treatment outcome at 36 months missing")]
+        [Display(Name = "Data quality issue - missing 36 month treatment outcome")]
         DataQualityTreatmentOutcome36,
         SocialContext,
         [Display(Name = "Test Alert")]

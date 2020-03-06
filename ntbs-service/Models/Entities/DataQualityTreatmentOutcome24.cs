@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Entities
             NotificationInQualifyingDateRangeExpression.Compile()(n) && NotificationInRangeQualifies(n);
 
         public override string Action => 
-            "No treatment outcome at 24 months can be found, please provide treatment outcome with appropriate date";
+            "Please provide treatment outcome with appropriate date";
 
         public override string ActionLink =>
             RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
