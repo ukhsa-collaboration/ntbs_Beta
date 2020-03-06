@@ -1,0 +1,24 @@
+﻿@page
+@model ntbs_service.Pages.Admin.Index
+
+@{
+    ViewData["Title"] = "Admin";
+    Layout = "Shared/_Layout";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Admin</title>
+</head>
+<body>
+<nhs-width-container container-width="Standard">
+    <ul>
+        <li><a href="/Health">Health page</a></li>
+        <li><a href="/Admin/Migration">Migration</a></li>
+        <li><a href="/Hangfire">Hangfire</a></li>
+    </ul>
+</nhs-width-container>    
+</body>
+</html>
