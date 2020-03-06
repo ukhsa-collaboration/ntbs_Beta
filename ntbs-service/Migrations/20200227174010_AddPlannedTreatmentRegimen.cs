@@ -6,14 +6,6 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsMDRTreatment",
-                table: "ClinicalDetails");
-
-            migrationBuilder.DropColumn(
-                name: "IsShortCourseTreatment",
-                table: "ClinicalDetails");
-
             migrationBuilder.AddColumn<string>(
                 name: "TreatmentRegimen",
                 table: "ClinicalDetails",
@@ -36,16 +28,6 @@ namespace ntbs_service.Migrations
             migrationBuilder.DropColumn(
                 name: "TreatmentRegimenOtherDescription",
                 table: "ClinicalDetails");
-
-            migrationBuilder.AddColumn<bool>(
-                name: "IsMDRTreatment",
-                table: "ClinicalDetails",
-                nullable: true);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "IsShortCourseTreatment",
-                table: "ClinicalDetails",
-                nullable: true);
         }
     }
 }
