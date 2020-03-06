@@ -19,11 +19,11 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages.Admin
 {
     [Authorize(Policy = "AdminOnly")]
-    public class IndexModel : PageModel
+    public class MigrationModel : PageModel
     {
         private readonly MigrationConfig _config;
 
-        public IndexModel(IOptions<MigrationConfig> config)
+        public MigrationModel(IOptions<MigrationConfig> config)
         {
             _config = config.Value;
             ValidationService = new ValidationService(this);
