@@ -15,7 +15,7 @@ function readAllJson(dir) {
     });
 }
 
-let results = readAllJson('raw');
+let results = readAllJson('raw2/2015-2016');
 
 let failedGroups = results.filter(v => !v.IsValid);
 let allErrors = failedGroups.flatMap(p => p.ValidationErrors).flatMap(ob => Object.values(ob)).flatMap(errors => errors);
@@ -45,6 +45,8 @@ let analysis = JSON.stringify(unique.map(issue => {
         });
     }
 ));
+
+fs.writeFile('analysis2-2015-2016.json', analysis, (err) => {if (err) throw err; console.log('done')});
 
 // Duplicates aren't even validated, so they have slightly different error message shapes:
 let duplicateGroups = failedGroups.filter(g => Object.values(g.ValidationErrors)
