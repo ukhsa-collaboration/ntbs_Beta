@@ -35,6 +35,13 @@ namespace ntbs_service.Services
                 {
                     continue;
                 }
+                
+                // If the last event was not a treatment outcome event a treatment outcome event is missing
+                if (!lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentEventTypeIsOutcome)
+                {
+                    return true;
+                }
+                
                 // If a previous year has a treatment outcome of not evaluated this is not an ending treatment outcome
                 // so a new treatment outcome will be needed for this 12 month period
                 if (i < yearsAfterTreatmentStartDate &&
@@ -43,6 +50,7 @@ namespace ntbs_service.Services
                 {
                     return true;
                 }
+                
                 // If a treatment outcome event exists then a new one is not needed
                 if (lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentEventTypeIsOutcome)
                 {
