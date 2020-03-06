@@ -41,7 +41,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsOk_ForNhsUserWithPermission()
+        public void Get_ReturnsOk_ForNhsUserWithPermission()
         {
             // Arrange
             using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
@@ -61,7 +61,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsRedirect_ForNhsUserWithoutPermission()
+        public void Get_ReturnsRedirect_ForNhsUserWithoutPermission()
         {
             // Arrange
             using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
@@ -81,7 +81,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsOk_ForPheUserWithMatchingServicePermission()
+        public void Get_ReturnsOk_ForPheUserWithMatchingServicePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
@@ -101,7 +101,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsRedirectToOverview_ForPheUserWithMatchingPostcodePermission()
+        public void Get_ReturnsRedirectToOverview_ForPheUserWithMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
@@ -110,7 +110,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 EditSubPaths.ForEach( subPath =>
                 {
-                    // Act
+                    // ActAccessToDisposedClosure
                     var response = client.GetAsync(GetPathForId(subPath, Utilities.DRAFT_ID)).Result;
 
                     _output.WriteLine("Testing subpath {0}", subPath);
@@ -123,7 +123,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission()
+        public void Get_ReturnsRedirect_ForPheUserWithoutMatchingServicePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
@@ -143,7 +143,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission()
+        public void Get_ReturnsRedirect_ForPheUserWithoutMatchingPostcodePermission()
         {
             // Arrange
             using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
