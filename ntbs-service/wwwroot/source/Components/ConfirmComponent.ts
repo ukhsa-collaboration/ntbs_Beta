@@ -31,12 +31,14 @@ export default Vue.extend({
     },
     methods: {
         resolveHandler() {
-            // this method will trigger `then` handler of a Promise
-            this.resolve()
+            // Resolve promise within vue-accessible-modal
+            // In this implementation triggers .Confirm().then() block in FormLeaveChecker
+            this.resolve();
         },
         rejectHandler() {
-            // this method will trigger `catch` handler of a Promise
-            this.reject()
+            // Reject promise within vue-accessible-modal
+            // In this implementation triggers .Confirm().catch() block in FormLeaveChecker 
+            this.reject();
         },
     },
 });

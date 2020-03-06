@@ -1,4 +1,4 @@
-﻿import Vue, {VNode} from "vue";
+﻿import Vue from "vue";
 import ConfirmComponent from "./ConfirmComponent";
 import 'formdata-polyfill';
 
@@ -24,7 +24,7 @@ const FormLeaveChecker = Vue.extend({
                         .then(() => {
                             window.location.href = eventTarget.href;
                         })
-                        .finally(() => {
+                        .catch(() => {
                             this.$modal.close()
                         });
                 }
