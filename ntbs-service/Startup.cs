@@ -175,6 +175,8 @@ namespace ntbs_service
                 })
                 .AddWsFederation(options =>
                 {
+                    options.CallbackPath = "/Index";
+                    options.SkipUnrecognizedRequests = true;
                     options.MetadataAddress =
                         adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                     options.Wtrealm = adfsConfig["Wtrealm"];

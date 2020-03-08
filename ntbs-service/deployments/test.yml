@@ -42,7 +42,7 @@ spec:
                 name: migration-connection-string
                 key: connectionString
           - name: AdfsOptions__Wtrealm
-            value: "https://ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io"
+            value: "https://ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io/"
           - name: LdapConnectionSettings__Password
             valueFrom:
               secretKeyRef:
