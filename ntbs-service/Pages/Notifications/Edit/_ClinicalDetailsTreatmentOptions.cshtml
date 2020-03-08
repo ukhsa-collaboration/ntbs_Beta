@@ -114,9 +114,15 @@
             </nhs-fieldset>
         </nhs-form-group>
 
-    <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset>
+    @{
+        var hasMdrError = !Model.IsValid("ClinicalDetails.IsMDRTreatment");
+        var mdrGroupState = hasMdrError ? Error : Standard;
+    }
+    <nhs-form-group nhs-form-group-type="@mdrGroupState" id="ClinicalDetails-IsMDRTreatment">
+        <nhs-fieldset aria-describedby="regimen-error">
             <nhs-fieldset-legend nhs-legend-size="Standard">Planned treatment regimen</nhs-fieldset-legend>
+            <span ref="errorField" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"	
+                                                                  has-error="@hasMdrError" id="regimen-error"></span>
             
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
@@ -125,6 +131,7 @@
                     <label class="nhsuk-label nhsuk-radios__label" for="regimen-standardTherapy">Standard Therapy</label>
                 </div>
             
+                    
                 <div class="nhsuk-radios__item">
                     <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-mdr" class="nhsuk-radios__input" type="radio" 
                         value="@TreatmentRegimen.MdrTreatment" data-aria-controls="conditional-mdr-conditional">

@@ -134,9 +134,9 @@ namespace ntbs_service.Models.Entities
             switch (ClinicalDetails.TreatmentRegimen)
             {
                 case TreatmentRegimen.MdrTreatment :
-                    return ClinicalDetails.TreatmentStartDate == null
+                    return ClinicalDetails.MDRTreatmentStartDate == null
                         ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
-                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.TreatmentStartDate.ConvertToString()}";
+                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.MDRTreatmentStartDate.ConvertToString()}";
                 case TreatmentRegimen.Other :
                     return ClinicalDetails.TreatmentRegimenOtherDescription == null
                         ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
