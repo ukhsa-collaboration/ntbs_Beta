@@ -94,24 +94,14 @@ namespace ntbs_service.Models.Entities
 
         #region Display and Formatting methods/fields
 
-        [Display(Name = "Name")]
-        public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
-        public string SexLabel => PatientDetails.Sex?.Label;
-        public string EthnicityLabel => PatientDetails.Ethnicity?.Label;
-        public string CountryName => PatientDetails.Country?.Name;
         [Display(Name = "TB Service")]
         public string TBServiceName => HospitalDetails.TBService?.Name;
         public string HospitalName => HospitalDetails.Hospital?.Name;
         public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
         public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
         public string PreviouslyHadTBYesNo => (PatientTBHistory.PreviouslyHadTB).FormatYesNo();
-        public string UkBornYesNo => PatientDetails.UkBorn.FormatYesNo();
         public string HasRecentVisitor => VisitorDetails.HasVisitor.FormatYesNo();
         public string HasRecentTravel => TravelDetails.HasTravel.FormatYesNo();
-        public string FormattedNhsNumber => FormatNhsNumberString();
-        public IList<string> FormattedAddress => (PatientDetails.Address ?? string.Empty).Split(Environment.NewLine);
-        public string FormattedNoAbodeOrPostcodeString => PatientDetails.NoFixedAbode ? "No fixed abode" : PatientDetails.Postcode?.Trim();
-        public string FormattedOccupationString => PatientDetails?.FormatOccupationString();
         public string SitesOfDiseaseList => CreateSitesOfDiseaseString();
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
@@ -159,14 +149,11 @@ namespace ntbs_service.Models.Entities
         public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
         public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
-        public string FormattedDob => PatientDetails.Dob.ConvertToString();
         [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "Date notified")]
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
         public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
-        public string LocalAuthorityName => PatientDetails?.PostcodeLookup?.LocalAuthority?.Name;
-        public string ResidencePHECName => PatientDetails?.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHEC?.Name;
         public string TreatmentPHECName => HospitalDetails.TBService?.PHEC?.Name;
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
         public string MDRCaseCountryName => MDRDetails.Country?.Name;
@@ -216,17 +203,7 @@ namespace ntbs_service.Models.Entities
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
         }
-
-        private string FormatNhsNumberString()
-        {
-            if (PatientDetails.NhsNumberNotKnown)
-            {
-                return "Not known";
-            }
-
-            return NotificationFieldFormattingHelper.FormatNHSNumber(PatientDetails.NhsNumber);
-        }
-
+        
         private static string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
             var timeStrings = new List<string>();

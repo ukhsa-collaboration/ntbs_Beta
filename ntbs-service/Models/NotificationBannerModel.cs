@@ -28,7 +28,7 @@ namespace ntbs_service.Models
         public string Source;
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
-        public bool ShowLink = false;
+        public bool ShowLink;
         public bool ShowPadlock;
         public string RedirectPath;
 
@@ -44,12 +44,12 @@ namespace ntbs_service.Models
             TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.HospitalDetails.CaseManagerName;
-            NhsNumber = notification.FormattedNhsNumber;
-            DateOfBirth = notification.FormattedDob;
-            CountryOfBirth = notification.CountryName;
-            Postcode = notification.FormattedNoAbodeOrPostcodeString;
-            Name = notification.FullName;
-            Sex = notification.SexLabel;
+            NhsNumber = notification.PatientDetails.FormattedNhsNumber;
+            DateOfBirth = notification.PatientDetails.FormattedDob;
+            CountryOfBirth = notification.PatientDetails.CountryName;
+            Postcode = notification.PatientDetails.FormattedNoAbodeOrPostcodeString;
+            Name = notification.PatientDetails.FullName;
+            Sex = notification.PatientDetails.SexLabel;
             NotificationStatus = notification.NotificationStatus;
             NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.FormattedNotificationDate;

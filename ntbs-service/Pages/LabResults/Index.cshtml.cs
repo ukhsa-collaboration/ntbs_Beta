@@ -227,8 +227,8 @@ namespace ntbs_service.Pages.LabResults
                     $"{notification.PatientDetails.FamilyName.ToUpper()}, {notification.PatientDetails.GivenName}",
                 NtbsPostcode = notification.PatientDetails.Postcode,
                 NtbsBirthDate = notification.PatientDetails.Dob,
-                NtbsNhsNumber = notification.FormattedNhsNumber,
-                NtbsSex = notification.SexLabel,
+                NtbsNhsNumber = notification.PatientDetails.FormattedNhsNumber,
+                NtbsSex = notification.PatientDetails.SexLabel,
                 TbServiceName = notification.TBServiceName
             };
         }
