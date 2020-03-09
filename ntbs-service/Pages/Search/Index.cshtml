@@ -10,7 +10,7 @@
 <nhs-width-container container-width="Standard">
     <h1 class="search-header"> Search </h1>
     <div class="search-page">
-        <form method="get">
+        <form method="get" autocomplete="off">
             @{
                 var searchParametersError = !Model.ValidationService.IsValid("SearchParameters");
                 var searchParametersGroupState = searchParametersError ? Error : Standard;

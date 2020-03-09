@@ -1,8 +1,7 @@
 @page "/Notifications/{notificationId:int}/Edit/PatientDetails/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.PatientDetailsModel
-@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
-@using ntbs_service.Helpers
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
@@ -97,7 +96,7 @@
             <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error"
                   asp-validation-for="PatientDetails.GivenName" has-error="@hasGivenNameError"></span>
             <input ref="inputField" v-on:blur="validate" is-error-input=@hasGivenNameError
-                   nhs-input-type="Standard" asp-for="PatientDetails.GivenName" fixed-width="Ten">
+                   nhs-input-type="Standard" asp-for="PatientDetails.GivenName" fixed-width="Ten" autocomplete="PatientDetails.GivenName">
         </nhs-form-group>
     </validate-input>
 
@@ -113,7 +112,7 @@
             <span ref="errorField" nhs-span-type="ErrorMessage" id="family-name-error"
                   asp-validation-for="PatientDetails.FamilyName" has-error="@hasFamilyNameError"></span>
             <input ref="inputField" v-on:blur="validate" is-error-input=@hasFamilyNameError
-                   nhs-input-type="Standard" asp-for="PatientDetails.FamilyName" fixed-width="Ten" />
+                   nhs-input-type="Standard" asp-for="PatientDetails.FamilyName" fixed-width="Ten" autocomplete="PatientDetails.FamilyName" />
         </nhs-form-group>
     </validate-input>
     <br />
@@ -286,7 +285,7 @@
             </label>
             <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField" asp-validation-for="PatientDetails.Address" has-error="@hasAddressError"></span>
             <textarea asp-for="PatientDetails.Address" nhs-textarea-type="@addressTextAreaType" rows="2" aria-describedby="address-error"
-                      autocomplete="street-address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                      autocomplete="PatientDetails.Address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
         </nhs-form-group>
     </validate-input>
 

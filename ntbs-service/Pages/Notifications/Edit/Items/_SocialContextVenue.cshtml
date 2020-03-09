@@ -1,8 +1,8 @@
 @model SocialContextVenueModel
-@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @using NHSUK.FrontEndLibrary.TagHelpers
 @using ntbs_service.Helpers
 @using ntbs_service.Models.Enums
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 <div id="social-context-venue-form" class="table-row-form">
     <nhs-width-container container-width="Standard">
@@ -65,7 +65,7 @@
                             </label>
                             <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField" asp-validation-for="Venue.Address" has-error="@hasAddressError"></span>
                             <textarea asp-for="Venue.Address" nhs-textarea-type="@addressTextAreaType" rows="2" aria-describedby="address-error"
-                                      autocomplete="street-address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                                      autocomplete="Venue.Address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
                         </nhs-form-group>
                     </validate-input>
                 </nhs-grid-column>
