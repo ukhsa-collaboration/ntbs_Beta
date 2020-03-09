@@ -50,69 +50,50 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
-            <nhs-radios nhs-radios-type="Standard">
-                <nhs-radios-item>
-                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-yes" type="radio" value="Yes" />
-                    <label nhs-label-type="Radios" for="enhanced-case-management-yes">Yes</label>
-                </nhs-radios-item>
-                <nhs-radios-item>
-                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-no" type="radio" value="No" />
-                    <label nhs-label-type="Radios" for="enhanced-case-management-no">No</label>
-                </nhs-radios-item>
-                <nhs-radios-item>
-                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-unknown" type="radio" value="Unknown">
-                    <label nhs-label-type="Radios" for="enhanced-case-management-unknown"> Unknown </label>
-                </nhs-radios-item>
-            </nhs-radios>
+
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-yes" class="nhsuk-radios__input" type="radio" value="Yes" data-aria-controls="conditional-ecm-level">
+                    <label class="nhsuk-label nhsuk-radios__label" for="enhanced-case-management-yes">
+                        Yes
+                    </label>
+                </div>
+
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-ecm-level">
+                    <nhs-radios nhs-radios-type="Standard">
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementLevel" id="ecm-1" type="radio" value="1"/>
+                            <label nhs-label-type="Radios" for="ecm-1">Level 1</label>
+                            <nhs-hint nhs-hint-type="Radios">For example, fortnightly visits, children with TB, dual diagnosis taking antiretroviral treatment</nhs-hint>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementLevel" id="ecm-2" type="radio" value="2"/>
+                            <label nhs-label-type="Radios" for="ecm-2">Level 2</label>
+                            <nhs-hint nhs-hint-type="Radios">For example, weekly visits, complex side effects, DNA clinic/home visits, single drug resistance</nhs-hint>
+                        </nhs-radios-item>
+                        <nhs-radios-item>
+                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementLevel" id="ecm-3" type="radio" value="3"/>
+                            <label nhs-label-type="Radios" for="ecm-3">Level 3</label>
+                            <nhs-hint nhs-hint-type="Radios">For example, requires DOT, homeless issues, more than one drug resistance, complex contact tracing, children who require social service involvement</nhs-hint>
+                        </nhs-radios-item>
+                    </nhs-radios>
+                </div>
+
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-no" class="nhsuk-radios__input" type="radio" value="No">
+                    <label class="nhsuk-label nhsuk-radios__label" for="enhanced-case-management-no">
+                        No
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-unknown" class="nhsuk-radios__input" type="radio" value="Unknown">
+                    <label class="nhsuk-label nhsuk-radios__label" for="enhanced-case-management-unknown">
+                        Unknown
+                    </label>
+                </div>
+            </div>
         </nhs-fieldset>
     </nhs-form-group>
-        <nhs-form-group nhs-form-group-type="Standard">
-            <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
-
-                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-yes" class="nhsuk-radios__input" type="radio" value="Yes" data-aria-controls="conditional-ecm-level">
-                        <label class="nhsuk-label nhsuk-radios__label" for="enhanced-case-management-yes">
-                            Yes
-                        </label>
-                    </div>
-
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-ecm-level">
-                        <nhs-radios nhs-radios-type="Standard">
-                            <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementLevel" id="ecm-1" type="radio" value="1"/>
-                                <label nhs-label-type="Radios" for="ecm-1">Level 1</label>
-                                <nhs-hint nhs-hint-type="Radios">For example, fortnightly visits, children with TB, dual diagnosis taking antiretroviral treatment</nhs-hint>
-                            </nhs-radios-item>
-                            <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementLevel" id="ecm-2" type="radio" value="2"/>
-                                <label nhs-label-type="Radios" for="ecm-2">Level 2</label>
-                                <nhs-hint nhs-hint-type="Radios">For example, weekly visits, complex side effects, DNA clinic/home visits, single drug resistance</nhs-hint>
-                            </nhs-radios-item>
-                            <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementLevel" id="ecm-3" type="radio" value="3"/>
-                                <label nhs-label-type="Radios" for="ecm-3">Level 3</label>
-                                <nhs-hint nhs-hint-type="Radios">For example, requires DOT, homeless issues, more than one drug resistance, complex contact tracing, children who require social service involvement</nhs-hint>
-                            </nhs-radios-item>
-                        </nhs-radios>
-                    </div>
-
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-no" class="nhsuk-radios__input" type="radio" value="No">
-                        <label class="nhsuk-label nhsuk-radios__label" for="enhanced-case-management-no">
-                            No
-                        </label>
-                    </div>
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-unknown" class="nhsuk-radios__input" type="radio" value="Unknown">
-                        <label class="nhsuk-label nhsuk-radios__label" for="enhanced-case-management-unknown">
-                            Unknown
-                        </label>
-                    </div>
-                </div>
-            </nhs-fieldset>
-        </nhs-form-group>
 
     @{
         var hasMdrError = !Model.IsValid("ClinicalDetails.IsMDRTreatment");

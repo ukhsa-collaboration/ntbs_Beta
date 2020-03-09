@@ -256,9 +256,11 @@
         <h2> Social Context Venues </h2>
 
         <partial name="_SocialContextVenuesTable" for="Notification.SocialContextVenues" />
-
-        <a href="@RouteHelper.GetNotificationPath( Model.NotificationId, NotificationSubPaths.EditSocialContextVenues)">
-            Back to social context venues
-        </a>
     </nhs-width-container>
 }
+
+<nhs-width-container container-width="Standard">
+    <a href="@RouteHelper.GetNotificationPath( Model.NotificationId, NotificationSubPaths.EditSocialContextVenues)">
+        Back to social context venues
+    </a>
+</nhs-width-container>

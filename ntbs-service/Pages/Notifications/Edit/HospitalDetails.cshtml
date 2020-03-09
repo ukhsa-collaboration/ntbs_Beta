@@ -122,7 +122,7 @@
                     var consultantGroupState = hasConsultantError ? Error : Standard;
                 }
                 <nhs-form-group nhs-form-group-type="@consultantGroupState" id="HospitalDetails-Consultant">
-                    <label nhs-label-type="Standard" asp-for="HospitalDetails.Consultant">Add details of consultant</label>
+                    <label nhs-label-type="Standard" asp-for="HospitalDetails.Consultant">Consultant</label>
                     <span ref="errorField" nhs-span-type="ErrorMessage" id="consultant-error" asp-validation-for="HospitalDetails.Consultant"
                           has-error="@hasConsultantError"></span>
                     <input ref="inputField" v-on:blur="validate" is-error-input="@hasConsultantError" nhs-input-type="Standard" aria-describedby="consultant-error"
@@ -139,7 +139,7 @@
                 }
                 <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="HospitalDetails-CaseManagerUsername">
                     <label nhs-label-type="Standard" asp-for="HospitalDetails.CaseManagerUsername">
-                        Add details of case manager
+                        Case manager
                     </label>
                     <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
                           ref="errorField" asp-validation-for="HospitalDetails.CaseManagerUsername"></span>

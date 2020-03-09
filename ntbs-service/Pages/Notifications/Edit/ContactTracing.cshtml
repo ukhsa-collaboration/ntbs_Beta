@@ -18,6 +18,7 @@
     <validate-contact-tracing name="Contact Tracing" model="ContactTracing" property="ContactTracing"
                               rank="0" inline-template>
         <div>
+            <h3> Identified </h3>
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts identified for screening </nhs-fieldset-legend>
                 <div class="flex-container">
@@ -87,9 +88,11 @@
                 </div>
             </nhs-fieldset>
             <br />
+            
+            <h3> Active TB</h3>
 
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened with active TB </nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened and found to have active TB </nhs-fieldset-legend>
                 <div class="flex-container">
                     @{
                         var hasAdultsActiveTbError = !Model.IsValid("ContactTracing.AdultsActiveTB");
@@ -122,9 +125,11 @@
                 </div>
             </nhs-fieldset>
             <br />
+            
+            <h3> Latent TB</h3>
 
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened with latent TB </nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard"> Number of contacts screened and found to have latent TB </nhs-fieldset-legend>
                 <div class="flex-container">
                     @{
                         var hasAdultsLatentTbError = !Model.IsValid("ContactTracing.AdultsLatentTB");

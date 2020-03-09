@@ -219,11 +219,16 @@
         </form>
     </nhs-width-container>
 </div>
+@if (Model.Notification.TreatmentEvents.Count > 0)
+{
+    <nhs-width-container container-width="Standard">
+        <h2> Treatment events </h2>
+
+        <partial name="_TreatmentEventTable" for="Notification.TreatmentEvents"/>
+    </nhs-width-container>
+}
+
 <nhs-width-container container-width="Standard">
-    <h2> Treatment events </h2>
-
-    <partial name="_TreatmentEventTable" for="Notification.TreatmentEvents" />
-
     <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditTreatmentEvents)">
         Back to treatment events
     </a>
