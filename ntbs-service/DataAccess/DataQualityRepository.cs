@@ -24,13 +24,6 @@ namespace ntbs_service.DataAccess
         private readonly NtbsContext _context;
         private const int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
 
-        private static readonly NotificationStatus[] IGNORED_NOTIFICATION_STATUSES = new []
-        {
-            NotificationStatus.Closed,
-            NotificationStatus.Deleted,
-            NotificationStatus.Denotified
-        };
-
         public DataQualityRepository(NtbsContext context)
         {
             _context = context;
@@ -104,7 +97,9 @@ namespace ntbs_service.DataAccess
         {
             return _context.Notification
                 .Include(n => n.HospitalDetails)
-                .Where(n => IGNORED_NOTIFICATION_STATUSES.All(status => n.NotificationStatus != status));
+                .Where(n => n.NotificationStatus != NotificationStatus.Closed
+                            && n.NotificationStatus != NotificationStatus.Deleted
+                            && n.NotificationStatus != NotificationStatus.Denotified);
         }
         
         private IQueryable<Notification> GetBaseNotificationQueryableWithTreatmentEventsForAlerts()
