@@ -12,8 +12,10 @@ namespace ntbs_service.Services
 {
     public interface ISearchService
     {
-        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryableAsync(INtbsSearchBuilder firstQueryable,
-            PaginationParameters paginationParameters, ClaimsPrincipal user);
+        Task<(IList<int> notificationIds, int count)> OrderAndPaginateQueryableAsync(
+            INtbsSearchBuilder firstQueryable,
+            PaginationParameters paginationParameters, 
+            ClaimsPrincipal user);
     }
 
     public class SearchService : ISearchService

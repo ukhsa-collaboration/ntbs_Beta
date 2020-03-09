@@ -57,13 +57,19 @@ namespace ntbs_service.Services
             {
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
+
+            if (notification.NotificationStatus == NotificationStatus.Closed &&
+                _userPermissionsFilter.Type != UserType.NationalTeam)
+            {
+                return PermissionLevel.ReadOnly;
+            }
             
             if (UserHasDirectRelationToNotification(notification) || _userPermissionsFilter.Type == UserType.NationalTeam)
             {
                 return PermissionLevel.Edit;
             }
 
-            if (UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
+            if (UserBelongsToResidencePhecOfNotification(notification) || UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
             {
                 return PermissionLevel.ReadOnly;
             }
@@ -104,8 +110,7 @@ namespace ntbs_service.Services
 
         private bool UserHasDirectRelationToNotification(Notification notification)
         {
-            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification) ||
-                UserBelongsToResidencePhecOfNotification(notification);
+            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification);
         }
 
         private bool UserBelongsToTbServiceOfNotification(Notification notification)

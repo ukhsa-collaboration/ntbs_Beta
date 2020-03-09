@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -34,10 +33,11 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public PatientDetailsModel(
             INotificationService service,
-            IPostcodeService postcodeService,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
+            IAlertRepository alertRepository,
+            IPostcodeService postcodeService,
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _postcodeService = postcodeService;
             _referenceDataRepository = referenceDataRepository;
@@ -142,7 +142,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (TryValidateModel(PatientDetails, "PatientDetails"))
             {
-                await Service.UpdatePatientAsync(Notification, PatientDetails);
+                await Service.UpdatePatientDetailsAsync(Notification, PatientDetails);
             }
         }
 

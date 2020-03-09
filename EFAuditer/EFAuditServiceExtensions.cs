@@ -55,15 +55,18 @@ namespace EFAuditer
             audit.AuditDateTime = DateTime.Now;
             audit.AuditUser = GetCustomKey(ev, CustomFields.AppUser) ?? ev.Environment.UserName;
 
+            var serializerSettings = Audit.Core.Configuration.JsonSettings;
+            serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            
             switch (audit.EventType)
             {
                 case "Insert":
                     audit.AuditData =
-                        JsonConvert.SerializeObject(entry.ColumnValues, Audit.Core.Configuration.JsonSettings);
+                        JsonConvert.SerializeObject(entry.ColumnValues, serializerSettings);
                     break;
                 case "Update":
                     audit.AuditData =
-                        JsonConvert.SerializeObject(entry.Changes, Audit.Core.Configuration.JsonSettings);
+                        JsonConvert.SerializeObject(entry.Changes, serializerSettings);
                     break;
             }
 

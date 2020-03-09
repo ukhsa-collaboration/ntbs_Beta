@@ -11,7 +11,7 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        IQueryable<Notification> GetBannerReadyNotificationsIQueryable();
+        IQueryable<Notification> GetBaseNotificationsIQueryable();
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
@@ -31,6 +31,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
         Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
+        Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync();
         Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
         Task<NotificationGroup> GetNotificationGroupAsync(int notificationId);
         Task<bool> NotificationWithLegacyIdExistsAsync(string id);
@@ -50,7 +51,7 @@ namespace ntbs_service.DataAccess
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified || n.NotificationStatus == NotificationStatus.Closed)
                 .OrderByDescending(n => n.SubmissionDate);
         }
 
@@ -157,8 +158,6 @@ namespace ntbs_service.DataAccess
         public async Task<Notification> GetNotificationWithTreatmentEventsAsync(int notificationId)
         {
             return await GetBannerReadyNotificationsIQueryable()
-                .Include(n => n.TreatmentEvents)
-                    .ThenInclude(n => n.TreatmentOutcome)
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
@@ -219,8 +218,6 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialContextVenues).ThenInclude(s => s.VenueType)
                 .Include(n => n.Alerts)
                 .Include(n => n.TreatmentEvents)
-                    .ThenInclude(t => t.TreatmentOutcome)
-                .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TbService)
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.CaseManager)
@@ -247,6 +244,27 @@ namespace ntbs_service.DataAccess
                 .Select(n => new NotificationBannerModel(n, showLink: true));
         }
 
+        public async Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync()
+        {
+            return (await _context.Notification
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome)
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.TreatmentEvents.Any(t => t.TreatmentOutcome != null))
+                .ToListAsync())
+                .Where(n =>
+                {
+                    var lastTreatmentEvent = n.TreatmentEvents.OrderByDescending(t => t.EventDate).FirstOrDefault();
+                    if (lastTreatmentEvent != null)
+                    {
+                        return lastTreatmentEvent.TreatmentEventTypeIsOutcome
+                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
+                               && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
+                    }
+                    return false;
+                });
+        }
+
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)
         {
             return await _context.Notification
@@ -265,7 +283,7 @@ namespace ntbs_service.DataAccess
 
         // Adds enough information to display notification banner, which makes it a good
         // base for most notification queries. Can be expanded upon for further pages as needed.
-        public IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
+        private IQueryable<Notification> GetBannerReadyNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
                 .Include(n => n.PatientDetails.Country)
@@ -288,7 +306,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.HospitalDetails.CaseManager);
         }
 
-        private IQueryable<Notification> GetBaseNotificationsIQueryable()
+        public IQueryable<Notification> GetBaseNotificationsIQueryable()
         {
             return _context.Notification
                 .Where(n => n.NotificationStatus != NotificationStatus.Deleted);

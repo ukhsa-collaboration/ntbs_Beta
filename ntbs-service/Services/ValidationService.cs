@@ -34,7 +34,16 @@ namespace ntbs_service.Services
 
         public ContentResult GetPropertyValidationResult(object model, string key, object value)
         {
-            SetProperty(model, key, value);
+            try
+            {
+                SetProperty(model, key, value);
+            }
+            catch (Exception)
+            {
+                var propertyDisplayName = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                ModelState.AddModelError(key, ValidationMessages.ValueInvalid(propertyDisplayName));
+            }
+            
             return GetValidationResult(model, key);
         }
 
@@ -49,14 +58,24 @@ namespace ntbs_service.Services
             model.IsLegacy = isLegacy;
 
             var keys = new List<string>();
-            foreach (var tuple in propertyValueTuples)
+            foreach (var (key, value) in propertyValueTuples)
             {
-                SetProperty(model, tuple.Item1, tuple.Item2);
-                keys.Add(tuple.Item1);
+                keys.Add(key);
+                
+                try
+                {
+                    SetProperty(model, key, value);
+                }
+                catch (Exception)
+                {
+                    var propertyDisplayName = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name ?? key;
+                    ModelState.AddModelError(key, ValidationMessages.ValueInvalid(propertyDisplayName));
+                }
             }
             return GetValidationResult(model, keys);
         }
-
+        
+        /// <exception cref="Exception">Throws a range of exceptions corresponding to invalid conversions to the property type</exception>
         private static void SetProperty(object model, string key, object value)
         {
             if (value == null)
@@ -69,21 +88,15 @@ namespace ntbs_service.Services
 
             try
             {
-                /*
-                 This will convert strings to boolean and numeric types if appropriate ...
-                */
                 value = converter.ConvertFrom(value);
             }
             catch (NotSupportedException)
             {
                 /*
-                 ... but it will throw an error for complex object types (e.g.: List<T>)
-                 If that's the case, then we're safe to ignore that error, as `value` is already of the correct type.
-
-                 Any type discrepancies that still exist will cause `SetValue` to throw errors anyways.
+                     Ignore conversion issues when attempting to convert to a non-supported type e.g. List.
                 */
-
             }
+            
             property.SetValue(model, value);
         }
 
@@ -106,7 +119,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name ?? key;
                 return _pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }

@@ -37,11 +37,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         public HospitalDetailsModel(
             INotificationService notificationService,
             INotificationRepository notificationRepository,
+            IAlertRepository alertRepository,
             IReferenceDataRepository referenceDataRepository,
             IAuthorizationService authorizationService,
             IUserService userService,
             IItemRepository<TreatmentEvent> treatmentEventRepository,
-            NtbsContext context) : base(notificationService, authorizationService, notificationRepository)
+            NtbsContext context) : base(notificationService, authorizationService, notificationRepository, alertRepository)
         {
             _context = context;
             _userService = userService;

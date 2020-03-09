@@ -55,6 +55,15 @@ namespace ntbs_integration_tests.NotificationPages
                     {
                         TBServiceCode = Utilities.TBSERVICE_ROYAL_FREE_LONDON_TB_SERVICE_ID
                     }
+                },
+                new Notification
+                {
+                    NotificationId = Utilities.CLOSED_NOTIFICATION_IN_ABINGDON,
+                    NotificationStatus = NotificationStatus.Closed,
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+                    }
                 }
             };
         }
@@ -121,6 +130,19 @@ namespace ntbs_integration_tests.NotificationPages
         }
         
         [Fact]
+        public async Task OverviewPageReturnsEditVersion_ForUserWithEditPermission()
+        {
+            // Arrange
+            // Act
+            var url = GetPathForId(NotificationSubPaths.Overview, Utilities.DRAFT_ID);
+            var document = await GetDocumentForUrlAsync(url);
+            
+            // Assert
+            Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
+            Assert.Null(document.QuerySelector("#patient-details-edit-link"));
+        }
+        
+        [Fact]
         public async Task Get_ReturnsOverviewPageReadOnlyVersion_ForUserWithReadOnlyPermission()
         {
             // Arrange
@@ -129,10 +151,47 @@ namespace ntbs_integration_tests.NotificationPages
             using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
                 .CreateClientWithoutRedirects())
             {
-                
-                
                 // Act
                 var url = GetCurrentPathForId(Utilities.LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE);
+                var response = await client.GetAsync(url);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
+                Assert.Null(document.QuerySelector("#patient-details-edit-link"));
+            }
+        }
+        
+        [Fact]
+        public async Task OverviewPageReturnsReadOnlyVersion_ForPheUserWithMatchingPostcodePermission()
+        {
+            // Arrange
+            using (var client = Factory.WithUser<PheUserWithPermittedPhecCode>()
+                .WithNotificationAndPostcodeConnected(Utilities.NOTIFIED_ID, Utilities.PERMITTED_POSTCODE)
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
+                var response = await client.GetAsync(url);
+                var document = await GetDocumentAsync(response);
+
+                // Assert
+                Assert.NotNull(document.QuerySelectorAll("#patient-details-overview-header"));
+                Assert.Null(document.QuerySelector("patient-details-edit-link"));
+            }
+        }
+        
+        [Fact]
+        public async Task GetOnClosedNotification_ReturnsOverviewPageReadOnlyVersion_ForUserWithEditPermission()
+        {
+            // Arrange
+            // NhsUserForAbingdonAndPermitted has been set up to have access to Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID
+            // which belong to the same Notification group as LINK_NOTIFICATION_ROYAL_FREE_LONDON_TB_SERVICE
+            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
+                .CreateClientWithoutRedirects())
+            {
+                // Act
+                var url = GetCurrentPathForId(Utilities.CLOSED_NOTIFICATION_IN_ABINGDON);
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
 
@@ -148,7 +207,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Arrange
             var url = GetCurrentPathForId(Utilities.NOTIFIED_ID);
             var document = await GetDocumentForUrlAsync(url);
-            var dismissPageRoute = "/Alerts/20001/Dismiss?Page=Overview";
+            const string dismissPageRoute = "/Alerts/20001/Dismiss?Page=Overview";
             Assert.NotNull(document.QuerySelector("#alert-20001"));
 
             // Act
@@ -210,7 +269,7 @@ namespace ntbs_integration_tests.NotificationPages
             var document = await GetDocumentForUrlAsync(url);
             Assert.Null(document.QuerySelector("#overview-denotification-reason"));
         }
-        
+
         [Fact]
         public async Task OverviewPageContainsAnchorId_ForNotificationSubPath()
         {

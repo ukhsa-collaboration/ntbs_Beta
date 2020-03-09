@@ -4,23 +4,9 @@
 @{
     var showEditLinks = (bool) (ViewData["ShowMBovisAnimalExposureEditLinks"] ?? false);
     var orderedResults = Model.OrderByDescending(r => r.YearOfExposure).ToList();
-    var currentPage = (string) ViewData["CurrentPage"];
 }
 
-@if (!orderedResults.Any())
-{
-    if (currentPage == NotificationSubPaths.Overview)
-    {
-        <dl>
-            No recorded occupation exposures
-        </dl>
-    }
-    else
-    {
-        return;
-    }
-}
-else
+@if (orderedResults.Any())
 {
     <div id="mbovis-animal-exposure-table">
         @foreach (var result in orderedResults)
@@ -46,7 +32,7 @@ else
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureDuration) </dt>
                         <dd class="cell-min-height"> @result.ExposureDuration </dd>
                     </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="OneQuarter">
+                    <nhs-grid-column grid-column-width="OneHalf">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.CountryId) </dt>
                         <dd class="cell-min-height"> @result.Country.Name </dd>
                     </nhs-grid-column>

@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
 <header role="banner" data-module="govuk-header">
     <div class="govuk-phase-banner">
         <div class="govuk-width-container">
@@ -54,6 +57,14 @@
                             Help
                         </a>
                     </li>
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "AdminOnly")).Succeeded)
+                    {
+                        <li class="govuk-header__navigation-item" class="header-navigation-link">
+                            <a class="govuk-header__link header-navigation-list-item" href="/Admin">
+                                Admin
+                            </a>
+                        </li>
+                    }
                     <li class="govuk-header__navigation-item" class="header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/Logout">
                             @(User.Identity.Name) (Logout)

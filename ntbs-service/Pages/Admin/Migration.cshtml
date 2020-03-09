@@ -1,0 +1,103 @@
+@page
+@model ntbs_service.Pages.Admin.MigrationModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    ViewData["Title"] = "Migration";
+    Layout = "Shared/_Layout";
+}
+
+<nhs-width-container container-width="Standard">
+    <h1>Import Legacy Notifications</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        <input nhs-input-type="Standard" asp-for="NotificationIds">
+        <br/>
+
+        <div>
+            <nhs-form-group>
+                <label asp-for="UploadedFile">Upload File</label>
+                <input type="file" asp-for="UploadedFile"/>
+            </nhs-form-group>
+        </div>
+        <br/>
+
+        <div>
+            @{
+                var notificationDateStartError = !Model.ValidationService.IsValid(nameof(Model.NotificationDateRangeStart));
+                var notificationDateStartGroupState = notificationDateStartError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@notificationDateStartGroupState classes="nhs-form-group--import-by-date">
+                <span nhs-span-type="ErrorMessage" id="notification-start-date-error" classes="import-error"
+                    asp-validation-for="NotificationDateRangeStart" has-error="@notificationDateStartError"></span>
+                <label nhs-label-type="Standard" for="notification-start-date"> Start Notification Date Range </label>
+                <nhs-date-input id="notification-start-date">
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Day">Day</label>
+                            <input nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@notificationDateStartError asp-for="NotificationDateRangeStart.Day" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Month">Month</label>
+                            <input nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@notificationDateStartError asp-for="NotificationDateRangeStart.Month" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Year">Year</label>
+                            <input nhs-input-type="Date" fixed-width="Four"
+                                is-error-input=@notificationDateStartError asp-for="NotificationDateRangeStart.Year" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
+            </nhs-form-group>
+        </div>
+
+        <div>
+            @{
+                var notificationDateEndError = !Model.ValidationService.IsValid(nameof(Model.NotificationDateRangeEnd));
+                var notificationDateEndGroupState = notificationDateEndError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@notificationDateEndGroupState classes="nhs-form-group--import-by-date">
+                <span nhs-span-type="ErrorMessage" id="notification-end-date-error" classes="import-error"
+                    asp-validation-for="NotificationDateRangeEnd" has-error="@notificationDateEndError"></span>
+                <label nhs-label-type="Standard" for="notification-end-date"> End Notification Date Range </label>
+                <nhs-date-input id="notification-end-date">
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Day">Day</label>
+                            <input nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@notificationDateEndError asp-for="NotificationDateRangeEnd.Day" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Month">Month</label>
+                            <input nhs-input-type="Date" fixed-width="Two"
+                                is-error-input=@notificationDateEndError asp-for="NotificationDateRangeEnd.Month" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                    <nhs-date-input-item>
+                        <nhs-form-group nhs-form-group-type="Standard">
+                            <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Year">Year</label>
+                            <input nhs-input-type="Date" fixed-width="Four"
+                                is-error-input=@notificationDateEndError asp-for="NotificationDateRangeEnd.Year" />
+                        </nhs-form-group>
+                    </nhs-date-input-item>
+                </nhs-date-input>
+            </nhs-form-group>
+        </div>
+
+        <div>
+            <button nhs-button-type="Standard" type="submit" value="Import" classes="ntbsuk-button--primary submit-search-button" id="search-button">
+                Import
+            </button>
+        </div>
+    </form>
+
+    <br/>
+</nhs-width-container>

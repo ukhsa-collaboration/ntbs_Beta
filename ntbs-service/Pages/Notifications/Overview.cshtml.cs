@@ -16,26 +16,26 @@ namespace ntbs_service.Pages.Notifications
     {
         private readonly IAlertService _alertService;
         private readonly ICultureAndResistanceService _cultureAndResistanceService;
-        private readonly ITreatmentOutcomeService _treatmentOutcomeService;
         
         public CultureAndResistance CultureAndResistance { get; set; }
         public Dictionary<int, List<TreatmentEvent>> GroupedTreatmentEvents { get; set; }
-        
-        public TreatmentOutcome OutcomeAt12Month { get; set; }
-        public TreatmentOutcome OutcomeAt24Month { get; set; }
-        public TreatmentOutcome OutcomeAt36Month { get; set; }
+
+        public bool Should12MonthOutcomeBeDisplayed { get; set; }
+        public bool Should24MonthOutcomeBeDisplayed { get; set; }
+        public bool Should36MonthOutcomeBeDisplayed { get; set; }
+        public TreatmentOutcome OutcomeAt12Months { get; set; }
+        public TreatmentOutcome OutcomeAt24Months { get; set; }
+        public TreatmentOutcome OutcomeAt36Months { get; set; }
         
         public OverviewModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             IAlertService alertService,
             INotificationRepository notificationRepository,
-            ICultureAndResistanceService cultureAndResistanceService,
-            ITreatmentOutcomeService treatmentOutcomeService) : base(service, authorizationService, notificationRepository)
+            ICultureAndResistanceService cultureAndResistanceService) : base(service, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _cultureAndResistanceService = cultureAndResistanceService;
-            _treatmentOutcomeService = treatmentOutcomeService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -70,9 +70,21 @@ namespace ntbs_service.Pages.Notifications
 
         private void CalculateTreatmentOutcomes()
         {
-            OutcomeAt12Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 1);
-            OutcomeAt24Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 2);
-            OutcomeAt36Month = _treatmentOutcomeService.GetTreatmentOutcomeAtXYears(Notification, 3);
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 1))
+            {
+                Should12MonthOutcomeBeDisplayed = true;
+                OutcomeAt12Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 1);
+            }
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 2))
+            {
+                Should24MonthOutcomeBeDisplayed = true;
+                OutcomeAt24Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 2);
+            }
+            if (TreatmentOutcomesHelper.IsTreatmentOutcomeExpectedAtXYears(Notification, 3))
+            {
+                Should36MonthOutcomeBeDisplayed = true;
+                OutcomeAt36Months = TreatmentOutcomesHelper.GetTreatmentOutcomeAtXYears(Notification, 3);
+            }
         }
 
         public async Task<IActionResult> OnPostCreateLinkAsync()

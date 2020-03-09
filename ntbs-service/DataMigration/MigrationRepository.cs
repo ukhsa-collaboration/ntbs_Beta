@@ -13,8 +13,11 @@ namespace ntbs_service.DataMigration
     public interface IMigrationRepository
     {
         Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications);
+
+        /// <returns>Groups of notifications, indexed by group id, or notification id for singletons</returns>
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds);
 
+        /// <returns>Groups of notifications, indexed by group id, or notification id for singletons</returns>
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsByDate(DateTime rangeStartDate,
             DateTime endStartDate);
 
@@ -31,20 +34,15 @@ namespace ntbs_service.DataMigration
 
     public class MigrationRepository : IMigrationRepository
     {
-        const string NotificationIdsWithGroupIdsQuery = @"
-            SELECT n.OldNotificationId, n.GroupId
+        const string NotificationIdsWithGroupIdsByIdQuery =
+            @"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
-            WHERE GroupId IN (
-                SELECT GroupId
-                FROM MigrationNotificationsView n 
-                {0}
-            )";
+            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids";
 
-        readonly string NotificationIdsWithGroupIdsByIdQuery = string.Format(NotificationIdsWithGroupIdsQuery,
-            "WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids");
-
-        readonly string NotificationsIdsWithGroupIdsByDateQuery = string.Format(NotificationIdsWithGroupIdsQuery,
-            @"WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate");
+        const string NotificationsIdsWithGroupIdsByDateQuery = 
+            @"SELECT n.OldNotificationId, n.GroupId 
+            FROM MigrationNotificationsView n
+            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate";
 
         const string NotificationsByIdQuery = @"
             SELECT *
@@ -129,7 +127,7 @@ namespace ntbs_service.DataMigration
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationIdsWithGroupIdsByIdQuery, new {Ids = legacyIds}))
-                    .GroupBy(t => t.groupId, t => t.notificationId);
+                    .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
             }
         }
 
@@ -143,7 +141,7 @@ namespace ntbs_service.DataMigration
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationsIdsWithGroupIdsByDateQuery,
                         new {StartDate = rangeStartDate.ToString("s"), EndDate = endStartDate.ToString("s")}))
-                    .GroupBy(t => t.groupId, t => t.notificationId);
+                    .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
             }
         }
 

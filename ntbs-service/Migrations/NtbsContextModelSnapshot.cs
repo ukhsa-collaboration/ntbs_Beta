@@ -8030,6 +8030,14 @@ namespace ntbs_service.Migrations
                         },
                         new
                         {
+                            HospitalId = new Guid("b93a5546-6c26-4a4b-a2fa-427b2711b861"),
+                            CountryCode = "E92000001",
+                            IsLegacy = false,
+                            Name = "SOUTH WEST ACUTE HOSPITAL",
+                            TBServiceCode = "TBS0123"
+                        },
+                        new
+                        {
                             HospitalId = new Guid("1200824a-cce6-491d-bd93-33e44f0b383b"),
                             CountryCode = "E92000001",
                             IsLegacy = true,
@@ -12635,6 +12643,22 @@ namespace ntbs_service.Migrations
                             IsLegacy = true,
                             Name = "ZACHARY MERTON HOSPITAL",
                             TBServiceCode = "TBS0982"
+                        },
+                        new
+                        {
+                            HospitalId = new Guid("fefd7cdd-bdaa-4be8-b839-780a7bb0d7ff"),
+                            CountryCode = "E92000001",
+                            IsLegacy = true,
+                            Name = "BROMLEY HOSPITAL",
+                            TBServiceCode = "TBS0029"
+                        },
+                        new
+                        {
+                            HospitalId = new Guid("6fd71037-5957-4a18-97e7-65efdd524cf7"),
+                            CountryCode = "E92000001",
+                            IsLegacy = true,
+                            Name = "TB SERVICE NCL - SOUTH HUB",
+                            TBServiceCode = "TBS0239"
                         });
                 });
 

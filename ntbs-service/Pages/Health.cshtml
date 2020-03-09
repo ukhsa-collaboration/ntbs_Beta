@@ -13,13 +13,58 @@
 </head>
 <body>
 <div>
-<h1>Release</h1>
-Release: @Model.Release
-<h2>Optional modules</h2>
-<div>Audit: @(Model.AuditEnabled ? "enabled" : "disabled")</div>
-<div>Cluster matching: @(Model.ClusterMatchingEnabled ? "enabled" : "disabled")</div>
-<div>Reference lab restults: @(Model.ReferenceLabResultsEnabled ? "enabled" : "disabled")</div>
-<div>Reporing services: @(Model.ReportingServicesEnabled ? "enabled" : "disabled")</div>
+    <div>
+        <h1>Release</h1>
+        Release: @Model.Release
+    </div>
+
+    <div>
+        <h2>Optional modules</h2>
+        <div>Audit: @(Model.AuditEnabled ? "enabled" : "disabled")</div>
+        <div>Cluster matching: @(Model.ClusterMatchingEnabled ? "enabled" : "disabled")</div>
+        <div>Reference lab restults: @(Model.ReferenceLabResultsEnabled ? "enabled" : "disabled")</div>
+        <div>Reporing services: @(Model.ReportingServicesEnabled ? "enabled" : "disabled")</div>
+    </div>
+
+    <div>
+        <h2>Scheduled Jobs Configuration</h2>
+
+        <div>User sync job: @(Model.ScheduledJobsConfig.UserSyncEnabled ? "enabled" : "disabled") </div>
+        @if (Model.ScheduledJobsConfig.UserSyncEnabled)
+        {
+            <div>User sync timing: @Model.ScheduledJobsConfig.UserSyncCron</div>
+        }
+
+        <div>Close inactive notifications job: @(Model.ScheduledJobsConfig.CloseInactiveNotificationsEnabled ? "enabled" : "disabled") </div>
+        @if (Model.ScheduledJobsConfig.CloseInactiveNotificationsEnabled)
+        {
+            <div>Close inactive notifications timing: @Model.ScheduledJobsConfig.CloseInactiveNotificationsCron</div>
+        }
+
+        <div>Drug resistance profile update job: @(Model.ScheduledJobsConfig.DrugResistanceProfileUpdateEnabled ? "enabled" : "disabled") </div>
+        @if (Model.ScheduledJobsConfig.DrugResistanceProfileUpdateEnabled)
+        {
+            <div>Drug resistance profile update timing: @Model.ScheduledJobsConfig.DrugResistanceProfileUpdateCron</div>
+        }
+
+        <div>Unmatched lab result alerts job: @(Model.ScheduledJobsConfig.UnmatchedLabResultAlertsEnabled ? "enabled" : "disabled") </div>
+        @if (Model.ScheduledJobsConfig.UnmatchedLabResultAlertsEnabled)
+        {
+            <div>Unmatched lab result alerts timing: @Model.ScheduledJobsConfig.UnmatchedLabResultAlertsCron</div>
+        }
+
+        <div>Data quality alerts job: @(Model.ScheduledJobsConfig.DataQualityAlertsEnabled ? "enabled" : "disabled") </div>
+        @if (Model.ScheduledJobsConfig.DataQualityAlertsEnabled)
+        {
+            <div>Data quality alerts timing: @Model.ScheduledJobsConfig.DataQualityAlertsCron</div>
+        }
+
+        <div>Notification cluster update job: @(Model.ScheduledJobsConfig.NotificationClusterUpdateEnabled ? "enabled" : "disabled") </div>
+        @if (Model.ScheduledJobsConfig.NotificationClusterUpdateEnabled)
+        {
+            <div>Notification cluster update timing: @Model.ScheduledJobsConfig.NotificationClusterUpdateCron</div>
+        }
+    </div>
 
 </div>
 </body>

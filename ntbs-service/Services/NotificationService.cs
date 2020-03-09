@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EFAuditer;
+using MoreLinq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -16,7 +18,7 @@ namespace ntbs_service.Services
     public interface INotificationService
     {
         Task AddNotificationAsync(Notification notification);
-        Task UpdatePatientAsync(Notification notification, PatientDetails patientDetails);
+        Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patientDetails);
         Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
         Task UpdateTestDataAsync(Notification notification, TestData testData);
@@ -42,6 +44,7 @@ namespace ntbs_service.Services
         Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails);
+        Task CloseInactiveNotifications();
 
     }
 
@@ -53,6 +56,7 @@ namespace ntbs_service.Services
         private readonly NtbsContext _context;
         private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
         private readonly ISpecimenService _specimenService;
+        private readonly IAlertService _alertService;
 
 
         public NotificationService(
@@ -61,7 +65,8 @@ namespace ntbs_service.Services
             IUserService userService,
             IItemRepository<TreatmentEvent> treatmentEventRepository,
             NtbsContext context, 
-            ISpecimenService specimenService)
+            ISpecimenService specimenService, 
+            IAlertService alertService)
         {
             _notificationRepository = notificationRepository;
             _referenceDataRepository = referenceDataRepository;
@@ -69,6 +74,7 @@ namespace ntbs_service.Services
             _treatmentEventRepository = treatmentEventRepository;
             _context = context;
             _specimenService = specimenService;
+            _alertService = alertService;
         }
 
         public async Task AddNotificationAsync(Notification notification)
@@ -77,12 +83,13 @@ namespace ntbs_service.Services
             await UpdateDatabaseAsync(NotificationAuditType.Added);
         }
 
-        public async Task UpdatePatientAsync(Notification notification, PatientDetails patient)
+        public async Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patient)
         {
             await UpdatePatientFlagsAsync(patient);
             _context.SetValues(notification.PatientDetails, patient);
 
             await UpdateDatabaseAsync();
+            await _alertService.AutoDismissAlertAsync<DataQualityBirthCountryAlert>(notification);
         }
 
         public async Task UpdatePatientFlagsAsync(PatientDetails patientDetails)
@@ -162,6 +169,7 @@ namespace ntbs_service.Services
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
 
             await UpdateDatabaseAsync();
+            await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
         }
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
@@ -297,7 +305,7 @@ namespace ntbs_service.Services
 
         public async Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites)
         {
-            var currentSites = _context.NotificationSite.Where(ns => ns.NotificationId == notificationId);
+            var currentSites = await _context.NotificationSite.Where(ns => ns.NotificationId == notificationId).ToListAsync();
 
             foreach (var newSite in notificationSites)
             {
@@ -325,7 +333,11 @@ namespace ntbs_service.Services
             notification.SubmissionDate = DateTime.UtcNow;
 
             await UpdateDatabaseAsync(NotificationAuditType.Notified);
-            await CreateTreatmentEventNotificationStart(notification);
+            if (notification.ClinicalDetails.IsPostMortem != true)
+            {
+                await CreateTreatmentEventNotificationStart(notification);
+            }
+            await _alertService.AutoDismissAlertAsync<DataQualityDraftAlert>(notification);
         }
 
         private async Task CreateTreatmentEventNotificationStart(Notification notification)
@@ -492,6 +504,16 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Deleted;
 
             await UpdateDatabaseAsync(NotificationAuditType.Deleted);
+        }
+
+        public async Task CloseInactiveNotifications()
+        {
+            var notificationsToSetClosed = await _notificationRepository.GetInactiveNotificationsToCloseAsync();
+            foreach (var notification in notificationsToSetClosed)
+            {
+                notification.NotificationStatus = NotificationStatus.Closed;
+            }
+            await UpdateDatabaseAsync(NotificationAuditType.Closed);
         }
     }
 }

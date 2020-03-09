@@ -17,5 +17,20 @@
     }
 </div>
 <div class="notification-overview-details-container">
-    <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
+    @if (Model.Notification.MBovisDetails.HasUnpasteurisedMilkConsumption != null)
+    {
+        <nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.HasUnpasteurisedMilkConsumption) </div>
+                <div class="cell-min-height"> @Model.Notification.MBovisDetails.HasUnpasteurisedMilkConsumption.FormatYesNo() </div>
+            </nhs-grid-column>
+        </nhs-grid-row>
+        <br/>
+
+        <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
+    }
+    else
+    {
+        <dl>No recorded consumption of unpasteurised milk products</dl>
+    }
 </div>

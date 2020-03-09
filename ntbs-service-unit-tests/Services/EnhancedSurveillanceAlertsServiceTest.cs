@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
@@ -48,9 +47,11 @@ namespace ntbs_service_unit_tests.Services
             // Assert
             var numberOfCallsToCreate = shouldCreateAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(x =>x.AddUniqueAlertAsync(It.IsAny<MdrAlert>()), numberOfCallsToCreate);
-            
+
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
-            mockAlertService.Verify(x => x.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMDR), numberOfCallsToDismiss);
+            mockAlertService.Verify(
+                x => x.DismissMatchingAlertAsync<MdrAlert>(notification.NotificationId, "System"),
+                numberOfCallsToDismiss);
         }
         
         [Theory]
@@ -78,7 +79,9 @@ namespace ntbs_service_unit_tests.Services
             mockAlertService.Verify(x =>x.AddUniqueAlertAsync(It.IsAny<MBovisAlert>()), numberOfCallsToCreate);
             
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
-            mockAlertService.Verify(x => x.DismissMatchingAlertAsync(notification.NotificationId, AlertType.EnhancedSurveillanceMBovis), numberOfCallsToDismiss);
+            mockAlertService.Verify(
+                x => x.DismissMatchingAlertAsync<MBovisAlert>(notification.NotificationId, "System"),
+                numberOfCallsToDismiss);
         }
     }
 }

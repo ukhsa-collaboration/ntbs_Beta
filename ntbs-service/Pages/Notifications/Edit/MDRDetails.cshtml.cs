@@ -18,7 +18,8 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository)
+            IReferenceDataRepository referenceDataRepository,
+            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
             { 
                 NotUKCountries = new SelectList(
                     referenceDataRepository.GetAllCountriesApartFromUkAsync().Result,

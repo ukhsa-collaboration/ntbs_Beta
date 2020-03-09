@@ -65,7 +65,7 @@ namespace ntbs_service.DataMigration
             foreach (var group in groupedIds)
             {
                 var legacyIds = group.ToList();
-                _logger.LogInformation(context, requestId, $"Getting ids {string.Join(", ", legacyIds)}");
+                _logger.LogInformation(context, requestId, $"Fetching data for legacy notifications {string.Join(", ", legacyIds)}");
                 var legacyNotifications = _migrationRepository.GetNotificationsById(legacyIds);
                 var sitesOfDisease = _migrationRepository.GetNotificationSites(legacyIds);
                 var manualTestResults = _migrationRepository.GetManualTestResults(legacyIds);
@@ -182,18 +182,11 @@ namespace ntbs_service.DataMigration
                     details.TBServiceCode = tbService.Code;
                 }
             }
-
-            // ReSharper disable once InvertIf
-            if (!string.IsNullOrEmpty(details.CaseManagerUsername))
-            {
-                var tbService =
-                    await _referenceDataRepository.GetCaseManagerByUsernameAsync(details.CaseManagerUsername);
-                if (tbService == null)
-                {
-                    Log.Error($"No case manager exists with username {details.CaseManagerUsername}");
-                }
-            }
             
+            // we are not doing the same check to case manager here, because leaving it empty would make it pass
+            // validation - it is not a mandatory field. we don't want to lose it where it exists, so that check
+            // is explicitly done during the validation step
+
             return details;
         }
 
@@ -374,6 +367,8 @@ namespace ntbs_service.DataMigration
 
         private static string RemoveCharactersNotIn(string matchingRegex, string input)
         {
+            if (input == null) { return null; }
+
             // We assume the matching regex to be of the format "[someLettersHere]+"
             // and we are aiming to turn it into "[^someLettersHere]"
             var notMatchingRegex = matchingRegex
@@ -476,7 +471,7 @@ namespace ntbs_service.DataMigration
             var ev = new TreatmentEvent();
             ev.EventDate = rawEvent.EventDate;
             ev.TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
-            ev.CaseManager = rawEvent.CaseManager;
+            ev.CaseManagerUsername = rawEvent.CaseManager;
 
             // ReSharper disable once InvertIf
             if (rawEvent.HospitalId is Guid guid)

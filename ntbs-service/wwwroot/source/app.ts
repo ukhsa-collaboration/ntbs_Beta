@@ -4,17 +4,15 @@
 
 // Root styles import - other global styles are imported from this sass file
 import "../css/site.scss"
-
 // @ts-ignore
 import config from "./config/config-APP_TARGET";
 import Vue from "vue";
-import { initAll as govUkJsInitAll } from "govuk-frontend";
+import {initAll as govUkJsInitAll} from "govuk-frontend";
 import * as Sentry from '@sentry/browser';
 import * as SentryIntegrations from '@sentry/integrations';
 import '../../node_modules/nhsuk-frontend/packages/components/details/details.polyfill';
 import VueAccessibleModal from 'vue-accessible-modal'
 import cssVars from 'css-vars-ponyfill';
-
 // Components
 import ValidateInput from "./Components/ValidateInput";
 import ValidateDate from "./Components/ValidateDate";
@@ -41,8 +39,9 @@ import PrintButton from "./Components/PrintButton";
 import FormLeaveChecker from "./Components/FormLeaveChecker";
 import ConfirmComponent from "./Components/ConfirmComponent";
 
-// For compatibility with IE11
+// For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
+require("./Polyfills/ArrayFromPolyfill");
 
 if (config.env === "production") {
     Sentry.init({

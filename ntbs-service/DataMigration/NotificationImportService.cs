@@ -7,16 +7,20 @@ using Hangfire.Server;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
+using ntbs_service.Jobs;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 using Sentry;
+using Serilog;
 
 namespace ntbs_service.DataMigration
 {
 
     public interface INotificationImportService
     {
+        [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds);
+        [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
     }
 
@@ -30,6 +34,7 @@ namespace ntbs_service.DataMigration
         private readonly IImportLogger _logger;
         private readonly IMigrationRepository _migrationRepository;
         private readonly ISpecimenService _specimenService;
+        private readonly IReferenceDataRepository _referenceDataRepository;
 
         public NotificationImportService(INotificationMapper notificationMapper,
                              INotificationRepository notificationRepository,
@@ -38,7 +43,8 @@ namespace ntbs_service.DataMigration
                              IImportLogger logger,
                              IHub sentryHub,
                              IMigrationRepository migrationRepository,
-                             ISpecimenService specimenService)
+                             ISpecimenService specimenService,
+                             IReferenceDataRepository referenceDataRepository)
         {
             sentryHub.ConfigureScope(s =>
             {
@@ -52,32 +58,31 @@ namespace ntbs_service.DataMigration
             _logger = logger;
             _migrationRepository = migrationRepository;
             _specimenService = specimenService;
+            _referenceDataRepository = referenceDataRepository;
         }
-
 
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
         {
-            _logger.LogInformation(context, requestId, $"Request to import by Date started");
+            _logger.LogInformation(context, requestId, "Request to import by Date started");
             _logger.LogInformation(context, requestId, $"Importing notifications in range from {rangeStartDate.Date} to {rangeEndDate.Date}");
 
             var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(context, requestId, rangeStartDate, rangeEndDate);
 
             var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroupsToImport);
 
-            _logger.LogInformation(context, requestId, $"Request to import by Date finished");
+            _logger.LogInformation(context, requestId, "Request to import by Date finished");
             return importResults;
         }
 
-
         public async Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds)
         {
-            _logger.LogInformation(context, requestId, $"Request to import by Id started");
+            _logger.LogInformation(context, requestId, "Request to import by Id started");
 
             var notificationsGroupsToImport = await _notificationMapper.GetNotificationsGroupedByPatient(context, requestId, legacyIds);
 
             var importResults = await ImportNotificationGroupsAsync(context, requestId, notificationsGroupsToImport);
 
-            _logger.LogInformation(context, requestId, $"Request to import by Id finished");
+            _logger.LogInformation(context, requestId, "Request to import by Id finished");
             return importResults;
         }
 
@@ -89,13 +94,13 @@ namespace ntbs_service.DataMigration
             {
                 var legacyIds = notificationsGroup.Select(x => x.LegacyId).ToList();
                 var legacyIdsToImport = await FilterOutImportedIdsAsync(context, requestId, legacyIds);
-                if (legacyIdsToImport.Count() == notificationsGroup.Count())
+                if (legacyIdsToImport.Count == notificationsGroup.Count)
                 {
                     notificationsGroupsToImport.Add(notificationsGroup.ToList());
                 }
-                else if (legacyIdsToImport.Count() != 0)
+                else if (legacyIdsToImport.Count != 0)
                 {
-                    _logger.LogFailure(context, requestId, $"Invalid state. Some notifications already exist in NTBS database. Manual intervention needed");
+                    _logger.LogFailure(context, requestId, "Invalid state. Some notifications already exist in NTBS database. Manual intervention needed");
                 }
             }
 
@@ -111,6 +116,7 @@ namespace ntbs_service.DataMigration
 
             return importResults;
         }
+        
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
             var patientName = notifications.First().FullName;
@@ -122,7 +128,7 @@ namespace ntbs_service.DataMigration
             
             // Verify that no repeated NotificationIds have returned
             var ids = notifications.Select(n => n.LegacyId).ToList();
-            if (ids.Distinct().Count() != ids.Count())
+            if (ids.Distinct().Count() != ids.Count)
             {
                 var errorMessage = $"Duplicate records found ({String.Join(',', ids)}) - aborting import for {patientName}";
                 importResult.AddGroupError(errorMessage);
@@ -136,17 +142,17 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
-                var validationErrors = GetValidationErrors(notification).ToList();
+                var validationErrors = (await GetValidationErrors(notification)).ToList();
                 if (!validationErrors.Any())
                 {
-                    _logger.LogInformation(context, requestId, $"No validation errors found");
+                    _logger.LogInformation(context, requestId, "No validation errors found");
                     importResult.AddValidNotification(linkedNotificationId);
                 }
                 else
                 {
                     isAnyNotificationInvalid = true;
                     importResult.AddValidationErrorsMessages(linkedNotificationId, validationErrors);
-                    _logger.LogWarning(context, requestId, $"{validationErrors.Count()} validation errors found for notification with Id={linkedNotificationId}:");
+                    _logger.LogWarning(context, requestId, $"{validationErrors.Count} validation errors found for notification with Id={linkedNotificationId}:");
                     foreach (var validationError in validationErrors)
                     {
                         _logger.LogWarning(context, requestId, validationError.ErrorMessage);
@@ -160,7 +166,7 @@ namespace ntbs_service.DataMigration
                 return importResult;
             }
 
-            _logger.LogSuccess(context, requestId, $"Importing {notifications.Count()} valid notifications");
+            _logger.LogSuccess(context, requestId, $"Importing {notifications.Count} valid notifications");
             try
             {
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
@@ -175,11 +181,13 @@ namespace ntbs_service.DataMigration
             }
             catch (MarkingNotificationsAsImportedFailedException e)
             {
+                Log.Error(e, e.Message);
                 _logger.LogWarning(context, requestId, message: e.Message);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             catch (Exception e)
             {
+                Log.Error(e, e.Message);
                 _logger.LogFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
@@ -196,7 +204,7 @@ namespace ntbs_service.DataMigration
             var matches = await _migrationRepository.GetReferenceLaboratoryMatches(legacyIds);
             foreach (var (legacyId, referenceLaboratoryNumber) in matches)
             {
-                var notificationId = notifications.Single(n => n.LegacyId == legacyId).NotificationId;
+                var notificationId = notifications.Single(n => n.ETSID == legacyId).NotificationId;
                 var success = await _specimenService.MatchSpecimenAsync(notificationId, referenceLaboratoryNumber, "SYSTEM");
                 if (!success)
                 {
@@ -219,8 +227,7 @@ namespace ntbs_service.DataMigration
                 {
                     legacyIdsToImport.Add(legacyId);
                 }
-            };
-
+            }
             return legacyIdsToImport;
         }
 
@@ -236,7 +243,7 @@ namespace ntbs_service.DataMigration
             });
         }
 
-        private IEnumerable<ValidationResult> GetValidationErrors(Notification notification)
+        private async Task<IEnumerable<ValidationResult>> GetValidationErrors(Notification notification)
         {
             var validationsResults = new List<ValidationResult>();
 
@@ -247,6 +254,20 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(ValidateObject(notification.ClinicalDetails));
             validationsResults.AddRange(ValidateObject(notification.TravelDetails));
             validationsResults.AddRange(ValidateObject(notification.VisitorDetails));
+            validationsResults.AddRange(ValidateObject(notification.ComorbidityDetails));
+            validationsResults.AddRange(ValidateObject(notification.ImmunosuppressionDetails));
+            validationsResults.AddRange(ValidateObject(notification.SocialRiskFactors));
+            validationsResults.AddRange(ValidateObject(notification.HospitalDetails));
+            validationsResults.AddRange(ValidateObject(notification.ContactTracing));
+            validationsResults.AddRange(ValidateObject(notification.PatientTBHistory));
+            validationsResults.AddRange(ValidateObject(notification.TestData));
+            validationsResults.AddRange(notification.TestData.ManualTestResults.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.SocialContextAddresses.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.SocialContextVenues.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.TreatmentEvents.SelectMany(ValidateObject));
+            // TODO add outcomes
+
+            validationsResults.AddRange(await ValidateAndSetCaseManager(notification.HospitalDetails));
 
             return validationsResults;
         }
@@ -257,6 +278,28 @@ namespace ntbs_service.DataMigration
             var validationsResults = new List<ValidationResult>();
 
             Validator.TryValidateObject(objectToValidate, validationContext, validationsResults, true);
+
+            return validationsResults;
+        }
+
+        private async Task<IEnumerable<ValidationResult>> ValidateAndSetCaseManager(HospitalDetails details)
+        {
+            var validationsResults = new List<ValidationResult>();
+
+            if (string.IsNullOrEmpty(details.CaseManagerUsername))
+            {
+                return validationsResults;
+            }
+
+            var caseManager =
+                await _referenceDataRepository.GetCaseManagerByUsernameAsync(details.CaseManagerUsername);
+            if (caseManager != null)
+            {
+                return validationsResults;
+            }
+
+            var message = $"Case manager {details.CaseManagerUsername} is not present in NTBS database";
+            validationsResults.Add(new ValidationResult(message, new[] {nameof(details.CaseManagerUsername)}));
 
             return validationsResults;
         }

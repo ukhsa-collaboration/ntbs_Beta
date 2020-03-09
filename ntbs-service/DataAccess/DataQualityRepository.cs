@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Services;
 
 namespace ntbs_service.DataAccess
 {
@@ -25,48 +22,45 @@ namespace ntbs_service.DataAccess
     public class DataQualityRepository : IDataQualityRepository
     {
         private readonly NtbsContext _context;
-        private readonly ITreatmentOutcomeService _treatmentOutcomeService;
-        private int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
-        private int MIN_NUMBER_DAYS_DRAFT_FOR_ALERT = 90;
-        
-        public DataQualityRepository(NtbsContext context, ITreatmentOutcomeService treatmentOutcomeService)
+        private const int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
+
+        private static readonly NotificationStatus[] IGNORED_NOTIFICATION_STATUSES = new []
+        {
+            NotificationStatus.Closed,
+            NotificationStatus.Deleted,
+            NotificationStatus.Denotified
+        };
+
+        public DataQualityRepository(NtbsContext context)
         {
             _context = context;
-            _treatmentOutcomeService = treatmentOutcomeService;
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityDraftAlerts()
         {
             return await GetBaseNotificationQueryableForAlerts()
-                .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .Where(n => n.CreationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_DRAFT_FOR_ALERT))
+                .Where(DataQualityDraftAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts()
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
-                .Where(n => n.PatientDetails.CountryId == Countries.UnknownId)
+                .Where(DataQualityBirthCountryAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts()
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
-                .Where(n => n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.TreatmentStartDate
-                            || n.ClinicalDetails.SymptomStartDate > n.ClinicalDetails.FirstPresentationDate
-                            || n.ClinicalDetails.FirstPresentationDate > n.ClinicalDetails.TBServicePresentationDate
-                            || n.ClinicalDetails.TBServicePresentationDate > n.ClinicalDetails.DiagnosisDate
-                            || n.ClinicalDetails.DiagnosisDate > n.ClinicalDetails.TreatmentStartDate)
+                .Where(DataQualityClinicalDatesAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
         
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts()
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
-                .Where(n => n.ClusterId != null 
-                            && !n.SocialContextAddresses.Any()
-                            && !n.SocialContextVenues.Any())
+                .Where(DataQualityClusterAlert.NotificationQualifiesExpression)
                 .ToListAsync();
         }
 
@@ -74,11 +68,11 @@ namespace ntbs_service.DataAccess
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                    .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) <
-                                DateTime.Today.AddYears(-1))
-                    .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 1))
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
+                .Where(DataQualityTreatmentOutcome12.NotificationInQualifyingDateRangeExpression)
+                .ToListAsync();
+            return notificationsInDateRange
+                .Where(DataQualityTreatmentOutcome12.NotificationInRangeQualifies)
                 .ToList();
         }
 
@@ -86,11 +80,11 @@ namespace ntbs_service.DataAccess
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                    .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) <
-                                DateTime.Today.AddYears(-2))
-                    .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 2))
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
+                .Where(DataQualityTreatmentOutcome24.NotificationInQualifyingDateRangeExpression)
+                .ToListAsync();
+            return notificationsInDateRange
+                .Where(DataQualityTreatmentOutcome24.NotificationInRangeQualifies)
                 .ToList();
         }
 
@@ -98,23 +92,26 @@ namespace ntbs_service.DataAccess
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            return (await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
-                    .Where(n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-3))
-                    .ToListAsync())
-                .Where(n => _treatmentOutcomeService.IsTreatmentOutcomeMissingAtXYears(n, 3))
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts()
+                .Where(DataQualityTreatmentOutcome36.NotificationInQualifyingDateRangeExpression)
+                .ToListAsync();
+            return notificationsInDateRange
+                .Where(DataQualityTreatmentOutcome36.NotificationInRangeQualifies)
                 .ToList();
         }
 
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
         {
             return _context.Notification
-                .Include(n => n.HospitalDetails);
+                .Include(n => n.HospitalDetails)
+                .Where(n => IGNORED_NOTIFICATION_STATUSES.All(status => n.NotificationStatus != status));
         }
         
         private IQueryable<Notification> GetBaseNotificationQueryableWithTreatmentEventsForAlerts()
         {
             return GetBaseNotificationQueryableForAlerts()
-                .Include(n => n.TreatmentEvents);
+                .Include(n => n.TreatmentEvents)
+                    .ThenInclude(t => t.TreatmentOutcome);
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts()

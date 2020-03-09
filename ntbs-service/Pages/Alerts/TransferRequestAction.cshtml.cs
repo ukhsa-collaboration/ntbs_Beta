@@ -1,18 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using ntbs_service.Pages.Notifications;
@@ -69,7 +64,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnGetAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
+            TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             await AuthorizeAndSetBannerAsync();
             
             // Check edit permission of user and redirect if not allowed
@@ -100,7 +95,7 @@ namespace ntbs_service.Pages.Alerts
         public async Task<IActionResult> OnPostAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            TransferAlert = (TransferAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId, AlertType.TransferRequest);
+            TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             await AuthorizeAndSetBannerAsync();
             if(!ModelState.IsValid)
             {
@@ -161,8 +156,8 @@ namespace ntbs_service.Pages.Alerts
             };
 
             // Dismiss any existing transfer rejected alert so that the new one can be created
-            var pendingTransferRejectedAlert = (TransferRejectedAlert)await _alertRepository.GetOpenAlertByNotificationIdAndTypeAsync(NotificationId,
-                                                                                                                                      AlertType.TransferRejected);
+            var pendingTransferRejectedAlert = 
+                await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             if (pendingTransferRejectedAlert != null)
             {
                 await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));

@@ -181,27 +181,7 @@ namespace ntbs_service.Models.Entities
         
         private string GetNotificationStatusString()
         {
-            if (NotificationStatus == NotificationStatus.Draft)
-            {
-                return "Draft";
-            }
-
-            if (NotificationStatus == NotificationStatus.Notified)
-            {
-                return "Notification";
-            }
-
-            if (NotificationStatus == NotificationStatus.Denotified)
-            {
-                return "Denotified";
-            }
-
-            if (NotificationStatus == NotificationStatus.Legacy)
-            {
-                return "Legacy";
-            }
-
-            throw new InvalidOperationException("Notification status is not currently set");
+            return NotificationStatus.GetDisplayName();
         }
 
         private static string FormatStateAndYear(Status? state, int? year)
@@ -330,8 +310,8 @@ namespace ntbs_service.Models.Entities
         #endregion
         [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
         public bool HasDeathEventForPostMortemCase =>
-            ClinicalDetails.IsPostMortem != true || TreatmentEvents.Any(x =>
-                x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died);
+            ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>
+                x.TreatmentEventTypeIsOutcome && x.TreatmentOutcome.TreatmentOutcomeType == TreatmentOutcomeType.Died));
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }
