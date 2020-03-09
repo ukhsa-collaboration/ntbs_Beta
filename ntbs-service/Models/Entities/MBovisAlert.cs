@@ -5,7 +5,7 @@ namespace ntbs_service.Models.Entities
 {
     public class MBovisAlert : Alert
     {
-        public override string Action => "M. bovis identified. Please complete enhanced surveillance questionnaire";
+        public override string Action => "Please complete enhanced surveillance questionnaire";
         public override string ActionLink => RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
             NotificationId.GetValueOrDefault(),
             NotificationSubPaths.EditMBovisExposureToKnownCases);
