@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
@@ -13,6 +14,7 @@ namespace ntbs_service.Models.Entities
 {
     public class Notification : ModelBase, IOwnedEntityForAuditing
     {
+        [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
         public Notification()
         {
             NotificationStatus = NotificationStatus.Draft;
@@ -187,11 +189,6 @@ namespace ntbs_service.Models.Entities
         private static string FormatStateAndYear(Status? state, int? year)
         {
             return state?.ToString() + (year != null ? " - " + year : string.Empty);
-        }
-
-        private static string FormatBooleanStateAndDate(bool? booleanState, DateTime? date)
-        {
-            return booleanState.FormatYesNo() + (date != null ? " - " + date.ConvertToString() : string.Empty);
         }
 
         private string FormatNullableDateDifference(DateTime? date1, DateTime? date2)
