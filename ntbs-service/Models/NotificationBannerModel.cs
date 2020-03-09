@@ -2,8 +2,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore.Internal;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models
@@ -53,7 +51,7 @@ namespace ntbs_service.Models
             Name = notification.FullName;
             Sex = notification.SexLabel;
             NotificationStatus = notification.NotificationStatus;
-            NotificationStatusString = notification.NotificationStatusString;
+            NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
             TreatmentOutcome = CalculateOutcome(notification);

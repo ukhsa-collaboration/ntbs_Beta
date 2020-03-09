@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -94,7 +94,6 @@ namespace ntbs_service.Models.Entities
 
         #region Display and Formatting methods/fields
 
-        public string NotificationStatusString => GetNotificationStatusString();
         [Display(Name = "Name")]
         public string FullName => string.Join(", ", new[] { PatientDetails.FamilyName?.ToUpper(), PatientDetails.GivenName }.Where(s => !String.IsNullOrEmpty(s)));
         public string SexLabel => PatientDetails.Sex?.Label;
@@ -180,11 +179,6 @@ namespace ntbs_service.Models.Entities
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
-        
-        private string GetNotificationStatusString()
-        {
-            return NotificationStatus.GetDisplayName();
-        }
 
         private static string FormatStateAndYear(Status? state, int? year)
         {
