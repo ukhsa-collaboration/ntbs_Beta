@@ -9,68 +9,63 @@
 
 <h2>Treatment Options</h2>
 
-<validate-multiple model="ClinicalDetails" :properties="['IsShortCourseTreatment', 'IsMDRTreatment']" inline-template>
-    <div>
-        @{
-            var hasShortCourseError = !Model.IsValid("ClinicalDetails.IsShortCourseTreatment");
-            var shortCourseGroupState = hasShortCourseError ? Error : Standard;
-        }
-        <nhs-form-group nhs-form-group-type="@shortCourseGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}"
-                        id="ClinicalDetails-IsShortCourseTreatment">
-            <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Has started standard therapy?</nhs-fieldset-legend>
-                <span ref="errorField[0]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsShortCourseTreatment"
-                      has-error="@hasShortCourseError" id="short-course-error"></span>
-                <nhs-radios nhs-radios-type="Standard">
-                    <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-yes" type="radio" value="true" ref="input[0]" v-on:change="validate"/>
-                        <label nhs-label-type="Radios" for="short-course-yes">Yes</label>
-                    </nhs-radios-item>
-                    <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="ClinicalDetails.IsShortCourseTreatment" id="short-course-no" type="radio" value="false" v-on:change="validate"/>
-                        <label nhs-label-type="Radios" for="short-course-no">No</label>
-                    </nhs-radios-item>
-                </nhs-radios>
-            </nhs-fieldset>
-        </nhs-form-group>
-
-        <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DotOffered">
-            <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">DOT offered?</nhs-fieldset-legend>
-                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="true"
-                               data-aria-controls="conditional-dot-offered-conditional">
-                        <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-yes">
-                            Yes
-                        </label>
-                    </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-dot-offered-conditional">
-                        <nhs-form-group nhs-form-group-type="Standard">
-                            <nhs-fieldset>
-                                <nhs-fieldset-legend classes="govuk-visually-hidden" nhs-legend-size="Standard">DOT Status</nhs-fieldset-legend>
-                                <nhs-radios nhs-radios-type="Standard">
-                                    @foreach (var status in dotStatuses)
-                                    {
-                                        <nhs-radios-item>
-                                            <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-status-@status" type="radio" value="@status"/>
-                                            <label nhs-label-type="Radios" for="dot-status-@status">@status.GetDisplayName()</label>
-                                        </nhs-radios-item>
-                                    }
-                                </nhs-radios>
-                            </nhs-fieldset>
-                        </nhs-form-group>
-                    </div>
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-no" class="nhsuk-radios__input" type="radio" value="false">
-                        <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-no">
-                            No
-                        </label>
-                    </div>
+<div>
+    <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-DotOffered">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">DOT offered?</nhs-fieldset-legend>
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="true" 
+                        data-aria-controls="conditional-dot-offered-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-yes">
+                        Yes
+                    </label>
                 </div>
-            </nhs-fieldset>
-        </nhs-form-group>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-dot-offered-conditional">
+                    <nhs-form-group nhs-form-group-type="Standard">
+                        <nhs-fieldset>
+                            <nhs-fieldset-legend classes="govuk-visually-hidden" nhs-legend-size="Standard">DOT Status</nhs-fieldset-legend>
+                            <nhs-radios nhs-radios-type="Standard">
+                                @foreach (var status in dotStatuses)
+                                {
+                                    <nhs-radios-item>
+                                        <input nhs-input-type="Radios" asp-for="ClinicalDetails.DotStatus" id="dot-status-@status" type="radio" value="@status" />
+                                        <label nhs-label-type="Radios" for="dot-status-@status">@status.GetDisplayName()</label>
+                                    </nhs-radios-item> 
+                                }
+                            </nhs-radios>
+                        </nhs-fieldset>
+                    </nhs-form-group>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-no" class="nhsuk-radios__input" type="radio" value="false">
+                    <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-no">
+                        No
+                    </label>
+                </div>
+            </div>
+        </nhs-fieldset>
+    </nhs-form-group>
 
+    <nhs-form-group nhs-form-group-type="Standard">
+        <nhs-fieldset>
+            <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
+            <nhs-radios nhs-radios-type="Standard">
+                <nhs-radios-item>
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-yes" type="radio" value="Yes" />
+                    <label nhs-label-type="Radios" for="enhanced-case-management-yes">Yes</label>
+                </nhs-radios-item>
+                <nhs-radios-item>
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-no" type="radio" value="No" />
+                    <label nhs-label-type="Radios" for="enhanced-case-management-no">No</label>
+                </nhs-radios-item>
+                <nhs-radios-item>
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.EnhancedCaseManagementStatus" id="enhanced-case-management-unknown" type="radio" value="Unknown">
+                    <label nhs-label-type="Radios" for="enhanced-case-management-unknown"> Unknown </label>
+                </nhs-radios-item>
+            </nhs-radios>
+        </nhs-fieldset>
+    </nhs-form-group>
         <nhs-form-group nhs-form-group-type="Standard">
             <nhs-fieldset>
                 <nhs-fieldset-legend nhs-legend-size="Standard">Enhanced Case Management?</nhs-fieldset-legend>
@@ -119,69 +114,98 @@
             </nhs-fieldset>
         </nhs-form-group>
 
-        @{
-            var hasMdrError = !Model.IsValid("ClinicalDetails.IsMDRTreatment");
-            var mdrGroupState = hasMdrError ? Error : Standard;
-        }
-        <nhs-form-group nhs-form-group-type="@mdrGroupState" v-bind:class="{ 'nhsuk-form-group--error': hasError}" id="ClinicalDetails-IsMDRTreatment">
-            <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">RR/MDR/XDR Treatment Planned?</nhs-fieldset-legend>
-                <span ref="errorField[1]" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"
-                      has-error="@hasMdrError" id="mdr-error"></span>
-                <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.IsMDRTreatment" id="mdr-yes" class="nhsuk-radios__input" type="radio" value="true" data-aria-controls="conditional-mdr-conditional" ref="input[1]" v-on:change="validate">
-                        <label class="nhsuk-label nhsuk-radios__label" for="mdr-yes">
-                            Yes
-                        </label>
-                    </div>
-
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-mdr-conditional">
-                        <validate-date model="ClinicalDetails" property="MDRTreatmentStartDate" inline-template>
-                            @{
-                                var hasMdrTreatmentDateError = !Model.IsValid("ClinicalDetails.MDRTreatmentStartDate");
-                                var mdrTreatmentGroupState = hasMdrTreatmentDateError ? Error : Standard;
-                            }
-                            <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState id="ClinicalDetails-MDRTreatmentStartDate">
-                                <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
-                                    <nhs-fieldset-legend nhs-legend-size="Standard">Treatment date</nhs-fieldset-legend>
-                                    <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.MDRTreatmentStartDate"
-                                          has-error="@hasMdrTreatmentDateError" id="mdr-treatment-date-error"></span>
-                                    <nhs-date-input id="mdr-treatment-date">
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Day">Day</label>
-                                                <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
-                                                       is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Day"/>
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Month">Month</label>
-                                                <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
-                                                       is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Month"/>
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                        <nhs-date-input-item>
-                                            <nhs-form-group nhs-form-group-type="Standard">
-                                                <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Year">Year</label>
-                                                <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
-                                                       is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Year"/>
-                                            </nhs-form-group>
-                                        </nhs-date-input-item>
-                                    </nhs-date-input>
-                                </nhs-fieldset>
-                            </nhs-form-group>
-                        </validate-date>
-                    </div>
-                    <div class="nhsuk-radios__item">
-                        <input asp-for="ClinicalDetails.IsMDRTreatment" id="mdr-no" class="nhsuk-radios__input" type="radio" value="false" v-on:change="validate">
-                        <label class="nhsuk-label nhsuk-radios__label" for="mdr-no">
-                            No
-                        </label>
-                    </div>
+    @{
+        var hasMdrError = !Model.IsValid("ClinicalDetails.IsMDRTreatment");
+        var mdrGroupState = hasMdrError ? Error : Standard;
+    }
+    <nhs-form-group nhs-form-group-type="@mdrGroupState" id="ClinicalDetails-IsMDRTreatment">
+        <nhs-fieldset aria-describedby="regimen-error">
+            <nhs-fieldset-legend nhs-legend-size="Standard">Planned treatment regimen</nhs-fieldset-legend>
+            <span ref="errorField" nhs-span-type="ErrorMessage" asp-validation-for="ClinicalDetails.IsMDRTreatment"	
+                                                                  has-error="@hasMdrError" id="regimen-error"></span>
+            
+            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-standardTherapy" class="nhsuk-radios__input" type="radio" 
+                        value="@TreatmentRegimen.StandardTherapy">
+                    <label class="nhsuk-label nhsuk-radios__label" for="regimen-standardTherapy">Standard Therapy</label>
                 </div>
-            </nhs-fieldset>
-        </nhs-form-group>
-    </div>
-</validate-multiple>
+            
+                    
+                <div class="nhsuk-radios__item">
+                    <input nhs-input-type="Radios" asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-mdr" class="nhsuk-radios__input" type="radio" 
+                        value="@TreatmentRegimen.MdrTreatment" data-aria-controls="conditional-mdr-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" for="regimen-mdr">RR/MDR/XDR treatment</label>
+                </div>
+
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-mdr-conditional">
+                    <validate-date model="ClinicalDetails" property="MDRTreatmentStartDate" inline-template>
+                        @{
+                            var hasMdrTreatmentDateError = !Model.IsValid("ClinicalDetails.MDRTreatmentStartDate");
+                            var mdrTreatmentGroupState = hasMdrTreatmentDateError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type=@mdrTreatmentGroupState id="ClinicalDetails-MDRTreatmentStartDate">
+                            <nhs-fieldset aria-describedby="mdr-treatment-date-error" role="group">
+                                <nhs-fieldset-legend nhs-legend-size="Standard">Treatment date</nhs-fieldset-legend>
+                                <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.MDRTreatmentStartDate"
+                                      has-error="@hasMdrTreatmentDateError" id="mdr-treatment-date-error"></span>
+                                <nhs-date-input id="mdr-treatment-date">
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Day">Day</label>
+                                            <input v-on:blur="validate" ref="dayInput" nhs-input-type="Date" fixed-width="Two"
+                                                   is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Day" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Month">Month</label>
+                                            <input v-on:blur="validate" ref="monthInput" nhs-input-type="Date" fixed-width="Two"
+                                                   is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Month" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard">
+                                            <label nhs-label-type="Date" asp-for="FormattedMdrTreatmentDate.Year">Year</label>
+                                            <input v-on:blur="validate" ref="yearInput" nhs-input-type="Date" fixed-width="Four"
+                                                   is-error-input=@hasMdrTreatmentDateError asp-for="FormattedMdrTreatmentDate.Year" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                </nhs-date-input>
+                            </nhs-fieldset>
+                        </nhs-form-group>
+                    </validate-date>
+                </div>
+                
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.TreatmentRegimen" id="regimen-other" class="nhsuk-radios__input" type="radio" value="@TreatmentRegimen.Other" 
+                        data-aria-controls="conditional-regimen-other-conditional">
+                    <label class="nhsuk-label nhsuk-radios__label" for="regimen-other">
+                        Other
+                    </label>
+                </div>
+                 
+                
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-regimen-other-conditional">
+                    <validate-input model="ClinicalDetails" property="TreatmentRegimenOtherDescription" inline-template>
+                        @{
+                            var hasTreatmentRegimenOtherDescriptionError = !Model.IsValid("ClinicalDetails.TreatmentRegimenOtherDescription");
+                            var TreatmentRegimenOtherDescriptionGroupState = hasTreatmentRegimenOtherDescriptionError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type=@TreatmentRegimenOtherDescriptionGroupState aria-describedby="relationship-description-error">
+                            <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasTreatmentRegimenOtherDescriptionError"
+                                asp-validation-for="ClinicalDetails.TreatmentRegimenOtherDescription" id="other-regimen-text-error">
+                            </span>
+                            <label nhs-label-type="Standard" asp-for="ClinicalDetails.TreatmentRegimenOtherDescription">
+                               Description
+                            </label>
+                            <input ref="inputField" v-on:blur="validate" asp-for="ClinicalDetails.TreatmentRegimenOtherDescription"
+                                is-error-input=@hasTreatmentRegimenOtherDescriptionError nhs-input-type="Standard" fixed-width="Twenty">
+                        </nhs-form-group>
+
+                    </validate-input>
+                </div>
+            </div>
+        </nhs-fieldset>
+    </nhs-form-group>
+</div>

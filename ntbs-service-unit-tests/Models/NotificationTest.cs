@@ -101,19 +101,19 @@ namespace ntbs_service_unit_tests.Models
         }
 
         [Theory]
-        [InlineData(true, 2019, 1, 1, "Yes - 01 Jan 2019")]
-        [InlineData(false, 2019, 1, 1, "No - 01 Jan 2019")]
-        [InlineData(false, null, null, null, "No")]
-        public void CreatesMDRTreatmentStringCorrectly(bool state, int? year, int? month, int? day, string expectedResult) {
+        [InlineData(2019, 1, 1, "RR/MDR/XDR treatment - 01 Jan 2019")]
+        [InlineData(null, null, null, "RR/MDR/XDR treatment")]
+        public void CreatesMDRTreatmentStringCorrectly(int? year, int? month, int? day, string expectedResult) {
             // Arrange
             if (year != null && month != null && day != null) {
                 var dateTime = new DateTime((int)year, (int)month, (int)day);
                 TestNotification.ClinicalDetails.MDRTreatmentStartDate = dateTime;
             }
-            TestNotification.ClinicalDetails.IsMDRTreatment = state;
+
+            TestNotification.ClinicalDetails.TreatmentRegimen = TreatmentRegimen.MdrTreatment;
 
             // Act
-            var stateAndDate = TestNotification.MDRTreatmentStateAndDate;
+            var stateAndDate = TestNotification.FormattedTreatmentRegimen;
 
             // Assert
             Assert.Equal(expectedResult, stateAndDate);

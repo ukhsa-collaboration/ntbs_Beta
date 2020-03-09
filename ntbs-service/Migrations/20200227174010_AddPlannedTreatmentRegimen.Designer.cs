@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200227174010_AddPlannedTreatmentRegimen")]
+    partial class AddPlannedTreatmentRegimen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -8030,14 +8032,6 @@ namespace ntbs_service.Migrations
                         },
                         new
                         {
-                            HospitalId = new Guid("b93a5546-6c26-4a4b-a2fa-427b2711b861"),
-                            CountryCode = "E92000001",
-                            IsLegacy = false,
-                            Name = "SOUTH WEST ACUTE HOSPITAL",
-                            TBServiceCode = "TBS0123"
-                        },
-                        new
-                        {
                             HospitalId = new Guid("1200824a-cce6-491d-bd93-33e44f0b383b"),
                             CountryCode = "E92000001",
                             IsLegacy = true,
@@ -12643,22 +12637,6 @@ namespace ntbs_service.Migrations
                             IsLegacy = true,
                             Name = "ZACHARY MERTON HOSPITAL",
                             TBServiceCode = "TBS0982"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("fefd7cdd-bdaa-4be8-b839-780a7bb0d7ff"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "BROMLEY HOSPITAL",
-                            TBServiceCode = "TBS0029"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("6fd71037-5957-4a18-97e7-65efdd524cf7"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "TB SERVICE NCL - SOUTH HUB",
-                            TBServiceCode = "TBS0239"
                         });
                 });
 
@@ -23789,16 +23767,14 @@ namespace ntbs_service.Migrations
 
                             b1.Property<int?>("BCGVaccinationYear");
 
+                            b1.Property<DateTime?>("DeathDate");
+
                             b1.Property<DateTime?>("DiagnosisDate");
 
                             b1.Property<bool?>("DidNotStartTreatment");
 
                             b1.Property<string>("DotStatus")
                                 .HasMaxLength(30);
-
-                            b1.Property<byte>("EnhancedCaseManagementLevel")
-                                .ValueGeneratedOnAdd()
-                                .HasDefaultValue((byte)0);
 
                             b1.Property<string>("EnhancedCaseManagementStatus")
                                 .HasMaxLength(30);

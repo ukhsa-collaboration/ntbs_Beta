@@ -105,7 +105,6 @@ namespace ntbs_service.Models.Entities
         public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
         public string PreviouslyHadTBYesNo => (PatientTBHistory.PreviouslyHadTB).FormatYesNo();
         public string UkBornYesNo => PatientDetails.UkBorn.FormatYesNo();
-        public string IsShortCourseYesNo => ClinicalDetails.IsShortCourseTreatment.FormatYesNo();
         public string HasRecentVisitor => VisitorDetails.HasVisitor.FormatYesNo();
         public string HasRecentTravel => TravelDetails.HasTravel.FormatYesNo();
         public string FormattedNhsNumber => FormatNhsNumberString();
@@ -122,7 +121,31 @@ namespace ntbs_service.Models.Entities
         public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
-        public string MDRTreatmentStateAndDate => FormatBooleanStateAndDate(ClinicalDetails.IsMDRTreatment, ClinicalDetails.MDRTreatmentStartDate);
+        public string MDRTreatmentStateAndDate => ClinicalDetails.MDRTreatmentStartDate.ConvertToString();
+        public string FormattedTreatmentRegimen => GetFormattedTreatmentRegimen();
+
+        private string GetFormattedTreatmentRegimen()
+        {
+            if (ClinicalDetails.TreatmentRegimen == null)
+            {
+                return "";
+            }
+            
+            switch (ClinicalDetails.TreatmentRegimen)
+            {
+                case TreatmentRegimen.MdrTreatment :
+                    return ClinicalDetails.MDRTreatmentStartDate == null
+                        ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
+                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.MDRTreatmentStartDate.ConvertToString()}";
+                case TreatmentRegimen.Other :
+                    return ClinicalDetails.TreatmentRegimenOtherDescription == null
+                        ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
+                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.TreatmentRegimenOtherDescription}";
+                default:
+                    return ClinicalDetails.TreatmentRegimen.GetDisplayName();
+            }
+        }
+
         public string FormattedCaseManagementStatus => ClinicalDetails.EnhancedCaseManagementStatus != Status.Yes
             ? ClinicalDetails.EnhancedCaseManagementStatus.ToString()
             : $"{ClinicalDetails.EnhancedCaseManagementStatus} - Level {ClinicalDetails.EnhancedCaseManagementLevel}"; 
@@ -153,7 +176,7 @@ namespace ntbs_service.Models.Entities
         public string FormattedDenotificationDate => DenotificationDetails?.DateOfDenotification.ConvertToString();
         public string DenotificationReasonString => DenotificationDetails?.Reason.GetDisplayName() + 
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
-        public bool IsMdr => ClinicalDetails.IsMDRTreatment == true || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
+        public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
         
         private string GetNotificationStatusString()

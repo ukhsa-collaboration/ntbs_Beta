@@ -50,16 +50,20 @@ namespace ntbs_service.Models.Entities
         public int? BCGVaccinationYear { get; set; }
         public HIVTestStatus? HIVTestState { get; set; }
 
-        [OnlyOneTrue("IsMDRTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
-        public bool? IsShortCourseTreatment { get; set; }
+        public TreatmentRegimen? TreatmentRegimen { get; set; }
+        public bool IsMDRTreatment => TreatmentRegimen == Enums.TreatmentRegimen.MdrTreatment;
 
-        [OnlyOneTrue("IsShortCourseTreatment", ErrorMessage = ValidationMessages.ValidTreatmentOptions)]
-        public bool? IsMDRTreatment { get; set; }
-
-        [Display(Name = "RR/MDR/XDR treatment date")]
         [ValidClinicalDate]
+        [Display(Name ="RR/MDR/XDR treatment date")]
+        [RequiredIf(@"IsMDRTreatment", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? MDRTreatmentStartDate { get; set; }
+        
+        [MaxLength(100)]
+        [Display(Name = "Treatment regimen other description")]
+        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [Column]
+        public string TreatmentRegimenOtherDescription { get; set; }
         
         [Display(Name="Notes")]
         [MaxLength(1000)]

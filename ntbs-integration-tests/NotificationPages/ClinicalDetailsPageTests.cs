@@ -76,8 +76,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Year"] = "2050",
                 ["ClinicalDetails.DidNotStartTreatment"] = "false",
                 ["FormattedTreatmentDate.Day"] = "1",
-                ["ClinicalDetails.IsShortCourseTreatment"] = "true",
-                ["ClinicalDetails.IsMDRTreatment"] = "true",
             };
 
             // Act
@@ -94,8 +92,6 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TBServicePresentationDate", "tb-service-presentation", "Presentation to TB service must be today or earlier");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-DiagnosisDate", "diagnosis", "Diagnosis date must be today or earlier");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-TreatmentStartDate", "treatment", "Treatment start date does not have a valid date selection");
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsShortCourseTreatment", "short-course", "Short course and MDR treatment cannot both be true");
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr", "Short course and MDR treatment cannot both be true");
         }
 
         [Fact]
@@ -303,10 +299,9 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Month"] = "4",
                 ["FormattedDiagnosisDate.Year"] = "2014",
                 ["ClinicalDetails.IsPostMortem"] = "false",
-                ["ClinicalDetails.IsShortCourseTreatment"] = "true",
-                ["ClinicalDetails.IsMDRTreatment"] = "false",
                 ["ClinicalDetails.IsDotOffered"] = "true",
-                ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
+                ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No",
+                ["ClinicalDetails.TreatmentRegimen"] = TreatmentRegimen.StandardTherapy.ToString()
             };
 
             // Act
@@ -336,8 +331,7 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal("4", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Month")).Value);
             Assert.Equal("2014", ((IHtmlInputElement)reloadedDocument.GetElementById("FormattedDiagnosisDate_Year")).Value);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("postmortem-no")).IsChecked);
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("short-course-yes")).IsChecked);
-            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("mdr-no")).IsChecked);
+            Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("regimen-standardTherapy")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("dot-offered-yes")).IsChecked);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("enhanced-case-management-no")).IsChecked);
         }
@@ -495,27 +489,6 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Fact]
-        public async Task ValidateClinicalDetailsProperties_ReturnsErrorIfBothTreatmentsSetToTrue()
-        {
-            // Arrange
-            var keyValuePairs = new []
-            {
-                "keyValuePairs[0][key]=IsShortCourseTreatment",
-                "keyValuePairs[0][value]=true",
-                "keyValuePairs[1][key]=IsMDRTreatment",
-                "keyValuePairs[1][value]=true"
-            };
-
-            // Act
-            var defaultUrl = GetCurrentPathForId(0);
-            var response = await Client.GetAsync($"{defaultUrl}/ValidateClinicalDetailsProperties?{string.Join("&", keyValuePairs)}");
-
-            // Assert check just response.Content
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("Short course and MDR treatment cannot both be true", result);
-        }
-
-        [Fact]
         public async Task ValidateClinicalDetails_ReturnsModelError_WhenMDRTreatmentSetToNoWhenMdrDetailsFilledIn()
         {
             // Arrange
@@ -526,7 +499,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.MDR_DETAILS_EXIST.ToString(),
                 ["NotificationSiteMap[PULMONARY]"] = "true",
-                ["ClinicalDetails.IsMDRTreatment"] = "false"
+                ["ClinicalDetails.TreatmentRegimen"] = TreatmentRegimen.StandardTherapy.ToString()
             };
 
             // Act
@@ -536,7 +509,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "mdr",
+            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-IsMDRTreatment", "regimen",
                 "You cannot change the value of this field because an MDR Enhanced Surveillance Questionnaire exists. Please contact NTBS@phe.gov.uk");
         }
         
@@ -570,8 +543,6 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Month"] = "4",
                 ["FormattedDiagnosisDate.Year"] = "2014",
                 ["ClinicalDetails.IsPostMortem"] = "false",
-                ["ClinicalDetails.IsShortCourseTreatment"] = "true",
-                ["ClinicalDetails.IsMDRTreatment"] = "false",
                 ["ClinicalDetails.IsDotOffered"] = "true",
                 ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
             };

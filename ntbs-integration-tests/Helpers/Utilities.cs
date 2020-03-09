@@ -226,7 +226,7 @@ namespace ntbs_integration_tests.Helpers
                     },
                     ClinicalDetails = new ClinicalDetails
                     {
-                        IsMDRTreatment = true
+                        TreatmentRegimen = TreatmentRegimen.MdrTreatment
                     }
                 },
                 new Notification
@@ -249,7 +249,7 @@ namespace ntbs_integration_tests.Helpers
                     {
                         Dob = new DateTime(1970, 1, 1)
                     },
-                    ClinicalDetails = new ClinicalDetails {IsMDRTreatment = true},
+                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment },
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
                 },
                 new Notification
@@ -273,7 +273,7 @@ namespace ntbs_integration_tests.Helpers
                     },
                     ClinicalDetails = new ClinicalDetails
                     {
-                        IsMDRTreatment = true
+                        TreatmentRegimen = TreatmentRegimen.MdrTreatment
                     }
                 },
                 new Notification
@@ -290,7 +290,7 @@ namespace ntbs_integration_tests.Helpers
                             }
                         },
                     MDRDetails = new MDRDetails {ExposureToKnownCaseStatus = Status.Yes, RelationshipToCase = "test"},
-                    ClinicalDetails = new ClinicalDetails {IsMDRTreatment = true}
+                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment }
                 }
             };
         }

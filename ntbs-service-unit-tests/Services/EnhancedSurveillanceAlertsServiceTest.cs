@@ -37,7 +37,7 @@ namespace ntbs_service_unit_tests.Services
                 },
                 ClinicalDetails = new ClinicalDetails
                 {
-                    IsMDRTreatment = isMdrPlanned
+                    TreatmentRegimen = isMdrPlanned ? TreatmentRegimen.MdrTreatment : TreatmentRegimen.StandardTherapy
                 }
             };
             

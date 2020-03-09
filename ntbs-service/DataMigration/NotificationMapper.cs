@@ -251,15 +251,14 @@ namespace ntbs_service.DataMigration
             details.DidNotStartTreatment = Converter.GetNullableBoolValue(notification.DidNotStartTreatment);
             details.TreatmentStartDate = notification.StartOfTreatmentDate;
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
-            details.IsMDRTreatment = notification.IsMDRTreatment;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
-            details.IsShortCourseTreatment = Converter.GetNullableBoolValue(notification.IsShortCourseTreatment);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
             details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
             details.DotStatus = Converter.GetEnumValue<DotStatus>((string) notification.DotStatus);
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
             details.BCGVaccinationState = notification.BCGVaccination;
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
+            details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string) notification.TreatmentRegimen);
             return details;
         }
 
