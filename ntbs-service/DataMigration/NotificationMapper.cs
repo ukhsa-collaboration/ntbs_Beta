@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Hangfire.Server;
+using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
+using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
-using ntbs_service.Helpers;
-using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
@@ -223,10 +223,30 @@ namespace ntbs_service.DataMigration
         {
             var details = new ImmunosuppressionDetails();
             details.Status = Converter.GetStatusFromString(notification.ImmunosuppressionStatus);
+            if (details.Status != Status.Yes)
+            {
+                return details;
+            }
+
             details.HasBioTherapy = Converter.GetBoolValue(notification.HasBioTherapy);
             details.HasTransplantation = Converter.GetBoolValue(notification.HasTransplantation);
             details.HasOther = Converter.GetBoolValue(notification.HasOther);
-            details.OtherDescription = notification.OtherDescription;
+
+            if (details.HasBioTherapy == null && details.HasTransplantation == null && details.HasOther == null)
+            {
+                details.HasOther = true;
+                details.OtherDescription = "No immunosuppression type was provided in the legacy record";
+            }
+            else
+            {
+                if (details.HasOther == true)
+                {
+                    details.OtherDescription = !string.IsNullOrWhiteSpace(notification.OtherDescription)
+                        ? notification.OtherDescription
+                        : "No description provided in the legacy system";
+                }
+            }
+
             return details;
         }
 
