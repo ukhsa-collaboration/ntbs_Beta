@@ -80,7 +80,8 @@ namespace ntbs_service.Services
             return notification.TreatmentEvents?.Where(t =>
                     t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
                     && t.EventDate >= (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
-                .OrderBy(t => t.EventDate);
+                .OrderBy(t => t.EventDate)
+                .ThenByDescending(t => t.TreatmentEventTypeIsOutcome);
         }
     }
 }
