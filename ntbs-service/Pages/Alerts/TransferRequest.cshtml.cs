@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ExpressiveAnnotations.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -10,6 +12,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
 
@@ -22,8 +25,10 @@ namespace ntbs_service.Pages.Alerts
         private readonly IReferenceDataRepository _referenceDataRepository;
         public ValidationService ValidationService;
 
-        [BindProperty]
         public TransferAlert TransferAlert { get; set; }
+
+        [BindProperty]
+        public TransferRequest TransferRequest { get; set; }
 
         [BindProperty]
         public int AlertId { get; set; }
@@ -33,11 +38,12 @@ namespace ntbs_service.Pages.Alerts
 
         public TransferRequestModel(
             INotificationService notificationService,
-            IAlertService alertService, 
+            IAlertService alertService,
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) : base(notificationService, authorizationService, notificationRepository)
+            IReferenceDataRepository referenceDataRepository) 
+            : base(notificationService, authorizationService, notificationRepository)
         {
             _alertService = alertService;
             _alertRepository = alertRepository;
@@ -52,22 +58,19 @@ namespace ntbs_service.Pages.Alerts
             // Check edit permission and redirect if not allowed
             if (PermissionLevel != PermissionLevel.Edit)
             {
-                return RedirectToPage("/Notifications/Overview", new { NotificationId });
+                return RedirectToPage("/Notifications/Overview", new {NotificationId});
             }
-            
-            var pendingTransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
+
+            var pendingTransferAlert =
+                await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
             if (pendingTransferAlert != null)
             {
                 TransferAlert = pendingTransferAlert;
                 return Partial("_TransferPendingPartial", this);
             }
-            else
-            {
-                TransferAlert = new TransferAlert();
-            }
 
+            TransferRequest = new TransferRequest();
             await SetDropdownsAsync();
-
             return Page();
         }
 
@@ -76,29 +79,42 @@ namespace ntbs_service.Pages.Alerts
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             await GetRelatedEntities();
             ModelState.Clear();
-            TryValidateModel(TransferAlert, nameof(TransferAlert));
-            if(!ModelState.IsValid)
+            TryValidateModel(TransferRequest, nameof(TransferRequest));
+            if (!ModelState.IsValid)
             {
                 await SetDropdownsAsync();
                 await AuthorizeAndSetBannerAsync();
                 return Page();
             }
-            await _alertService.AddUniqueOpenAlertAsync(TransferAlert);
 
-            return RedirectToPage("/Notifications/Overview", new { NotificationId });
+            var transferAlert = new TransferAlert
+            {
+                 TbServiceCode = TransferRequest.TbServiceCode,
+                 CaseManagerUsername = TransferRequest.CaseManagerUsername,
+                 TransferReason = TransferRequest.TransferReason,
+                 OtherReasonDescription = TransferRequest.OtherReasonDescription,
+                 TransferRequestNote = TransferRequest.TransferRequestNote
+            };
+            await _alertService.AddUniqueOpenAlertAsync(transferAlert);
+
+            return RedirectToPage("/Notifications/Overview", new {NotificationId});
         }
 
         private async Task GetRelatedEntities()
         {
-            if (TransferAlert.TbServiceCode != null)
+            if (TransferRequest.TbServiceCode != null)
             {
-                TransferAlert.TbService = await _referenceDataRepository.GetTbServiceByCodeAsync(TransferAlert.TbServiceCode);
+                TransferRequest.TbService =
+                    await _referenceDataRepository.GetTbServiceByCodeAsync(TransferRequest.TbServiceCode);
             }
-            if (TransferAlert.CaseManagerUsername != null)
+
+            if (TransferRequest.CaseManagerUsername != null)
             {
-                TransferAlert.CaseManager = await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferAlert.CaseManagerUsername);
+                TransferRequest.CaseManager =
+                    await _referenceDataRepository.GetCaseManagerByUsernameAsync(TransferRequest.CaseManagerUsername);
             }
-            TransferAlert.NotificationTbServiceCode = Notification.HospitalDetails.TBServiceCode;
+
+            TransferRequest.NotificationTbServiceCode = Notification.HospitalDetails.TBServiceCode;
         }
 
         private async Task SetDropdownsAsync()
@@ -106,7 +122,9 @@ namespace ntbs_service.Pages.Alerts
             var tbServices = await _referenceDataRepository.GetAllTbServicesAsync();
             TbServices = new SelectList(tbServices, nameof(TBService.Code), nameof(TBService.Name));
             var caseManagers = await _referenceDataRepository.GetAllCaseManagers();
-            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.FullName));
+            CaseManagers = new SelectList(caseManagers,
+                nameof(Models.Entities.User.Username),
+                nameof(Models.Entities.User.FullName));
             var phecs = await _referenceDataRepository.GetAllPhecs();
             Phecs = new SelectList(phecs, nameof(PHEC.Code), nameof(PHEC.Name));
         }
@@ -139,7 +157,8 @@ namespace ntbs_service.Pages.Alerts
 
         public async Task<JsonResult> OnGetFilteredCaseManagersListByTbServiceCode(string value)
         {
-            var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> {value});
+            var filteredCaseManagers =
+                await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> {value});
 
             return new JsonResult(
                 new FilteredCaseManagerList
@@ -151,6 +170,69 @@ namespace ntbs_service.Pages.Alerts
                     })
                 });
         }
+    }
 
+    public class TransferRequest
+    {
+        [BindProperty]
+        [Display(Name = "TB Service")]
+        [Required(ErrorMessage = ValidationMessages.FieldRequired)]
+        [AssertThat(nameof(TransferDestinationNotCurrentTbService),
+            ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
+        public string TbServiceCode { get; set; }
+
+        public virtual TBService TbService { get; set; }
+
+        [BindProperty]
+        [Display(Name = "Case Manager")]
+        [AssertThat(nameof(CaseManagerAllowedForTbService),
+            ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
+        public string CaseManagerUsername { get; set; }
+
+        public virtual User CaseManager { get; set; }
+
+        [BindProperty]
+        public TransferReason TransferReason { get; set; }
+
+        [BindProperty]
+        [Display(Name = "Other description")]
+        [MaxLength(200)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
+            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+        public string OtherReasonDescription { get; set; }
+
+        [BindProperty]
+        [Display(Name = "Optional note")]
+        [MaxLength(200)]
+        [RegularExpression(
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
+            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+        public string TransferRequestNote { get; set; }
+
+
+        public bool CaseManagerAllowedForTbService
+        {
+            // ReSharper disable once UnusedMember.Global - used in the validation
+            get
+            {
+                // If email not set, or TBService missing (ergo navigation properties not yet retrieved) pass validation
+                if (string.IsNullOrEmpty(CaseManagerUsername) || TbServiceCode == null)
+                {
+                    return true;
+                }
+
+                if (CaseManager?.CaseManagerTbServices == null || CaseManager.CaseManagerTbServices.Count == 0)
+                {
+                    return false;
+                }
+
+                return CaseManager.CaseManagerTbServices.Any(c => c.TbServiceCode == TbServiceCode);
+            }
+        }
+
+        public string NotificationTbServiceCode { get; set; }
+
+        public bool TransferDestinationNotCurrentTbService => TbServiceCode != NotificationTbServiceCode;
     }
 }
