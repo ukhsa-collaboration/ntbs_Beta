@@ -93,12 +93,6 @@ namespace ntbs_service.Models.Entities
         #endregion
 
         #region Display and Formatting methods/fields
-
-        [Display(Name = "TB Service")]
-        public string TBServiceName => HospitalDetails.TBService?.Name;
-        public string HospitalName => HospitalDetails.Hospital?.Name;
-        public string IsPostMortemYesNo => ClinicalDetails.IsPostMortem.FormatYesNo();
-        public string IsSymptomatic => ClinicalDetails.IsSymptomatic.FormatYesNo();
         public string PreviouslyHadTBYesNo => (PatientTBHistory.PreviouslyHadTB).FormatYesNo();
         public string HasRecentVisitor => VisitorDetails.HasVisitor.FormatYesNo();
         public string HasRecentTravel => TravelDetails.HasTravel.FormatYesNo();
@@ -106,55 +100,10 @@ namespace ntbs_service.Models.Entities
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorHomelessness);
         public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(SocialRiskFactors.RiskFactorImprisonment);
-        public string DaysFromOnsetToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.SymptomStartDate);
-        public string DaysFromOnsetToFirstPresentation => FormatNullableDateDifference(ClinicalDetails.FirstPresentationDate, ClinicalDetails.SymptomStartDate);
-        public string DaysFromFirstPresentationToTBServicePresentation => FormatNullableDateDifference(ClinicalDetails.TBServicePresentationDate, ClinicalDetails.FirstPresentationDate);
-        public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(ClinicalDetails.DiagnosisDate, ClinicalDetails.TBServicePresentationDate);
-        public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(ClinicalDetails.TreatmentStartDate, ClinicalDetails.DiagnosisDate);
-        public string BCGVaccinationStateAndYear => FormatStateAndYear(ClinicalDetails.BCGVaccinationState, ClinicalDetails.BCGVaccinationYear);
-        public string MDRTreatmentStateAndDate => ClinicalDetails.MDRTreatmentStartDate.ConvertToString();
-        public string FormattedTreatmentRegimen => GetFormattedTreatmentRegimen();
-
-        private string GetFormattedTreatmentRegimen()
-        {
-            if (ClinicalDetails.TreatmentRegimen == null)
-            {
-                return "";
-            }
-            
-            switch (ClinicalDetails.TreatmentRegimen)
-            {
-                case TreatmentRegimen.MdrTreatment :
-                    return ClinicalDetails.MDRTreatmentStartDate == null
-                        ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
-                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.MDRTreatmentStartDate.ConvertToString()}";
-                case TreatmentRegimen.Other :
-                    return ClinicalDetails.TreatmentRegimenOtherDescription == null
-                        ? ClinicalDetails.TreatmentRegimen.GetDisplayName()
-                        : $"{ClinicalDetails.TreatmentRegimen.GetDisplayName()} - {ClinicalDetails.TreatmentRegimenOtherDescription}";
-                default:
-                    return ClinicalDetails.TreatmentRegimen.GetDisplayName();
-            }
-        }
-
-        public string FormattedCaseManagementStatus => ClinicalDetails.EnhancedCaseManagementStatus != Status.Yes
-            ? ClinicalDetails.EnhancedCaseManagementStatus.ToString()
-            : $"{ClinicalDetails.EnhancedCaseManagementStatus} - Level {ClinicalDetails.EnhancedCaseManagementLevel}"; 
-        public string FormattedSymptomStartDate => ClinicalDetails.SymptomStartDate.ConvertToString();
-        public string FormattedPresentationToAnyHealthServiceDate => ClinicalDetails.FirstPresentationDate.ConvertToString();
-        public string FormattedPresentationToTBServiceDate => ClinicalDetails.TBServicePresentationDate.ConvertToString();
-        public string FormattedDiagnosisDate => ClinicalDetails.DiagnosisDate.ConvertToString();
-        public string FormattedHomeVisitDate => ClinicalDetails.FirstHomeVisitDate.ConvertToString();
-        public string FormattedDotOfferedState => GetFormattedDotOfferedState();
-        public string FormattedHealthcareSettingState => GetFormattedHealthcareSettingState();
-        public string FormattedHomeVisitState => GetFormattedHomeVisitState();
-        public string FormattedTreatmentStartDate => ClinicalDetails.TreatmentStartDate.ConvertToString();
         [Display(Name = "Date created")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "Date notified")]
         public string FormattedNotificationDate => NotificationDate.ConvertToString();
-        public string HIVTestState => ClinicalDetails.HIVTestState?.GetDisplayName() ?? string.Empty;
-        public string TreatmentPHECName => HospitalDetails.TBService?.PHEC?.Name;
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
         public string MDRCaseCountryName => MDRDetails.Country?.Name;
         public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
@@ -166,30 +115,6 @@ namespace ntbs_service.Models.Entities
                                                     (DenotificationDetails?.Reason == DenotificationReason.Other ? $" - {DenotificationDetails?.OtherDescription}" : "");
         public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
-
-        private static string FormatStateAndYear(Status? state, int? year)
-        {
-            return state?.ToString() + (year != null ? " - " + year : string.Empty);
-        }
-
-        private string FormatNullableDateDifference(DateTime? date1, DateTime? date2)
-        {
-            var days = CalculateDaysBetweenNullableDates(date1, date2);
-            switch (days)
-            {
-                case null:
-                    return null;
-                case 1:
-                    return days + " day";
-                default:
-                    return days + " days";
-            }
-        }
-
-        private static int? CalculateDaysBetweenNullableDates(DateTime? date1, DateTime? date2)
-        {
-            return (date1?.Date - date2?.Date)?.Days;
-        }
 
         private string CreateSitesOfDiseaseString()
         {
@@ -239,43 +164,9 @@ namespace ntbs_service.Models.Entities
             }
             return yearDiff;
         }
-
-        private string GetFormattedDotOfferedState()
-        {
-            if (ClinicalDetails.IsDotOffered == null)
-            {
-                return null;
-            }
-
-            var prefix = (bool)ClinicalDetails.IsDotOffered ? "Yes" : "No";
-            return ClinicalDetails.DotStatus != null
-                ? $"{prefix} - {ClinicalDetails.DotStatus.GetDisplayName()}"
-                : prefix;
-        }
         
-        private string GetFormattedHomeVisitState()
-        {
-            if (ClinicalDetails.HomeVisitCarriedOut == null)
-            {
-                return null;
-            }
-
-            var prefix = ClinicalDetails.HomeVisitCarriedOut.GetDisplayName();
-            return ClinicalDetails.FirstHomeVisitDate != null
-                ? $"{prefix} - {FormattedHomeVisitDate}"
-                : prefix;
-        }
-
-        private string GetFormattedHealthcareSettingState()
-        {
-            var healthcareState = ClinicalDetails.HealthcareSetting?.GetDisplayName();
-            return ClinicalDetails.HealthcareDescription != null
-                ? $"{healthcareState} - {ClinicalDetails.HealthcareDescription}"
-                : healthcareState;
-        }
-        
-
         #endregion
+        
         [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
         public bool HasDeathEventForPostMortemCase =>
             ClinicalDetails.IsPostMortem != true || (TreatmentEvents != null && TreatmentEvents.Any(x =>

@@ -5,12 +5,13 @@ using Xunit;
 
 namespace ntbs_service_unit_tests.Models
 {
+    // TODO NTBS-960 revisit this and split up as necessary
     public class NotificationTest
     {
         readonly Notification TestNotification = new Notification {
-            PatientDetails = new PatientDetails {},
-            ClinicalDetails = new ClinicalDetails {},
-            SocialRiskFactors = new SocialRiskFactors {}
+            PatientDetails = new PatientDetails(),
+            ClinicalDetails = new ClinicalDetails(),
+            SocialRiskFactors = new SocialRiskFactors()
         };
 
         [Fact]
@@ -21,7 +22,7 @@ namespace ntbs_service_unit_tests.Models
             TestNotification.PatientDetails.GivenName = "name";
 
             // Act
-            var fullName = TestNotification.FullName;
+            var fullName = TestNotification.PatientDetails.FullName;
 
             // Assert
             Assert.Equal("EXAMPLE, name", fullName);
@@ -35,7 +36,7 @@ namespace ntbs_service_unit_tests.Models
             TestNotification.PatientDetails.Postcode = " NW12 3RT   ";
 
             // Act
-            var postcode = TestNotification.FormattedNoAbodeOrPostcodeString;
+            var postcode = TestNotification.PatientDetails.FormattedNoAbodeOrPostcodeString;
 
             // Assert
             Assert.Equal("NW12 3RT", postcode);
@@ -48,7 +49,7 @@ namespace ntbs_service_unit_tests.Models
             TestNotification.ClinicalDetails.SymptomStartDate = new DateTime(2000, 1, 1);
             
             // Act
-            var formattedDate = TestNotification.FormattedSymptomStartDate;
+            var formattedDate = TestNotification.ClinicalDetails.FormattedSymptomStartDate;
 
             // Assert
             Assert.Equal("01 Jan 2000", formattedDate);
@@ -62,7 +63,7 @@ namespace ntbs_service_unit_tests.Models
             TestNotification.ClinicalDetails.FirstPresentationDate = new DateTime(2000, 1, 4);
             
             // Act
-            var days = TestNotification.DaysFromOnsetToFirstPresentation;
+            var days = TestNotification.ClinicalDetails.DaysFromOnsetToFirstPresentation;
 
             // Assert
             Assert.Equal("3 days", days);
@@ -94,7 +95,7 @@ namespace ntbs_service_unit_tests.Models
             TestNotification.ClinicalDetails.BCGVaccinationYear = 2000;
             
             // Act
-            var stateAndYear = TestNotification.BCGVaccinationStateAndYear;
+            var stateAndYear = TestNotification.ClinicalDetails.BCGVaccinationStateAndYear;
 
             // Assert
             Assert.Equal("Yes - 2000", stateAndYear);
@@ -103,7 +104,7 @@ namespace ntbs_service_unit_tests.Models
         [Theory]
         [InlineData(2019, 1, 1, "RR/MDR/XDR treatment - 01 Jan 2019")]
         [InlineData(null, null, null, "RR/MDR/XDR treatment")]
-        public void CreatesMDRTreatmentStringCorrectly(int? year, int? month, int? day, string expectedResult) {
+        public void CreatesMdrTreatmentStringCorrectly(int? year, int? month, int? day, string expectedResult) {
             // Arrange
             if (year != null && month != null && day != null) {
                 var dateTime = new DateTime((int)year, (int)month, (int)day);
@@ -113,7 +114,7 @@ namespace ntbs_service_unit_tests.Models
             TestNotification.ClinicalDetails.TreatmentRegimen = TreatmentRegimen.MdrTreatment;
 
             // Act
-            var stateAndDate = TestNotification.FormattedTreatmentRegimen;
+            var stateAndDate = TestNotification.ClinicalDetails.FormattedTreatmentRegimen;
 
             // Assert
             Assert.Equal(expectedResult, stateAndDate);

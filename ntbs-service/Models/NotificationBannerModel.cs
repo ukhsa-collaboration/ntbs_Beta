@@ -39,7 +39,7 @@ namespace ntbs_service.Models
         {
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
-            TbService = notification.TBServiceName;
+            TbService = notification.HospitalDetails.TBServiceName;
             TbServiceCode = notification.HospitalDetails.TBServiceCode;
             TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;

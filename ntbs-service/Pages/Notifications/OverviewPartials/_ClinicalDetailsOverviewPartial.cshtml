@@ -27,73 +27,73 @@
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Patient has symptoms </div>
-            <div class="cell-min-height"> @Model.Notification.IsSymptomatic </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.IsSymptomatic </div>
         </nhs-grid-column>
     </nhs-grid-row>
     
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Symptom onset date </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedSymptomStartDate </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedSymptomStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Symptom onset to treatment start </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToTreatment </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DaysFromOnsetToTreatment </div>
         </nhs-grid-column>
     </nhs-grid-row>
     
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Presentation to any health service date </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedPresentationToAnyHealthServiceDate </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedPresentationToAnyHealthServiceDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Symptom onset to health service presentation </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromOnsetToFirstPresentation </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DaysFromOnsetToFirstPresentation </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Healthcare setting </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedHealthcareSettingState </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedHealthcareSettingState </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Presentation to TB service date </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedPresentationToTBServiceDate </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedPresentationToTBServiceDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Health service to TB service presentation </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromFirstPresentationToTBServicePresentation </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DaysFromFirstPresentationToTBServicePresentation </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Diagnosis date </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedDiagnosisDate </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedDiagnosisDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> TB service presentation to diagnosis </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromTBServicePresentationToDiagnosis </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DaysFromTBServicePresentationToDiagnosis </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Treatment date </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedTreatmentStartDate </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedTreatmentStartDate </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Diagnosis to treatment start </div>
-            <div class="cell-min-height"> @Model.Notification.DaysFromDiagnosisToTreatment </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.DaysFromDiagnosisToTreatment </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Postmortem diagnosis </div>
-            <div class="cell-min-height"> @Model.Notification.IsPostMortemYesNo </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.IsPostMortemYesNo </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
@@ -102,19 +102,19 @@
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Home visit </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedHomeVisitState </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedHomeVisitState </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> HIV test offered </div>
-            <div class="cell-min-height"> @Model.Notification.HIVTestState </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.GetHIVTestState </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> DOT offered </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedDotOfferedState </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedDotOfferedState </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> BCG vaccination </div>
-            <div class="cell-min-height"> @Model.Notification.BCGVaccinationStateAndYear </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.BCGVaccinationStateAndYear </div>
         </nhs-grid-column>
     </nhs-grid-row>
 
@@ -125,11 +125,11 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Enhanced Case Management </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedCaseManagementStatus </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedCaseManagementStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Planned treatment regimen </div>
-            <div class="cell-min-height"> @Model.Notification.FormattedTreatmentRegimen </div>
+            <div class="cell-min-height"> @Model.Notification.ClinicalDetails.FormattedTreatmentRegimen </div>
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>

@@ -229,7 +229,7 @@ namespace ntbs_service.Pages.LabResults
                 NtbsBirthDate = notification.PatientDetails.Dob,
                 NtbsNhsNumber = notification.PatientDetails.FormattedNhsNumber,
                 NtbsSex = notification.PatientDetails.SexLabel,
-                TbServiceName = notification.TBServiceName
+                TbServiceName = notification.HospitalDetails.TBServiceName
             };
         }
     }
