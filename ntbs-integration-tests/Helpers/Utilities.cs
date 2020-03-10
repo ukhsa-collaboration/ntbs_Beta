@@ -190,6 +190,15 @@ namespace ntbs_integration_tests.Helpers
                     AdGroups = "Global.NIS.NTBS.Service_Abingdon",
                     IsActive = true,
                     IsCaseManager = true
+                },
+                new User
+                {
+                    Username = "Developer@ntbs.phe.com",
+                    GivenName = "BaseTestCase",
+                    FamilyName = "BaseTestManager",
+                    AdGroups = "Global.NIS.NTBS.NTA",
+                    IsActive = true,
+                    IsCaseManager = true
                 }
             };
         }
