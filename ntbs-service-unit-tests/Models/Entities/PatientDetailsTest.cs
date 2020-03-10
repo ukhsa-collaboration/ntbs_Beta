@@ -81,5 +81,35 @@ namespace ntbs_service_unit_tests.Models.Entities
                 Assert.Equal("Postcode is not valid", result.ErrorMessage));
             
         }
+        
+        [Fact]
+        public void FormatsFullNameCorrectly()
+        {
+            // Arrange
+            var patientDetails = new PatientDetails {FamilyName = "example", GivenName = "name"};
+
+            // Act
+            var fullName = patientDetails.FullName;
+
+            // Assert
+            Assert.Equal("EXAMPLE, name", fullName);
+        }
+
+        [Fact]
+        public void FormatsPostcodeCorrectly()
+        {
+            // Arrange
+            var patientDetails = new PatientDetails
+            {
+                NoFixedAbode = false,
+                Postcode = " NW12 3RT   "
+            };
+
+            // Act
+            var postcode = patientDetails.FormattedNoAbodeOrPostcodeString;
+
+            // Assert
+            Assert.Equal("NW12 3RT", postcode);
+        }
     }
 }

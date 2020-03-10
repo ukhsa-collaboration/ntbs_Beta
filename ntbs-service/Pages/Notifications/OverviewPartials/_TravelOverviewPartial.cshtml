@@ -23,7 +23,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneHalf">
                 <div class="notification-details-label"> Patient has travelled to one or more high incidence countries </div>
-                <div class="cell-min-height"> @Model.Notification.HasRecentTravel </div>
+                <div class="cell-min-height"> @Model.Notification.TravelDetails.HasRecentTravel </div>
             </nhs-grid-column>
         </nhs-grid-row>
     }
@@ -32,7 +32,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Patient has travelled to one or more high incidence countries </div>
-                <div class="cell-min-height"> @Model.Notification.HasRecentTravel </div>
+                <div class="cell-min-height"> @Model.Notification.TravelDetails.HasRecentTravel </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total countries travelled to </div>
@@ -65,7 +65,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneHalf">
                 <div class="notification-details-label"> Patient has had visitors from one or more high incidence countries </div>
-                <div class="cell-min-height"> @Model.Notification.HasRecentVisitor </div>
+                <div class="cell-min-height"> @Model.Notification.VisitorDetails.HasRecentVisitor </div>
             </nhs-grid-column>
         </nhs-grid-row>
     }
@@ -74,7 +74,7 @@
         <nhs-grid-row>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Patient has had visitors from one or more high incidence countries </div>
-                <div class="cell-min-height"> @Model.Notification.HasRecentVisitor </div>
+                <div class="cell-min-height"> @Model.Notification.VisitorDetails.HasRecentVisitor </div>
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <div class="notification-details-label"> Total visitor countries </div>

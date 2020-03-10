@@ -2,8 +2,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ntbs_service.Helpers;
 using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore.Internal;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models
@@ -30,7 +28,7 @@ namespace ntbs_service.Models
         public string Source;
         public NotificationStatus NotificationStatus;
         public string NotificationStatusString;
-        public bool ShowLink = false;
+        public bool ShowLink;
         public bool ShowPadlock;
         public string RedirectPath;
 
@@ -41,19 +39,19 @@ namespace ntbs_service.Models
         {
             NotificationId = notification.NotificationId.ToString();
             SortByDate = notification.NotificationDate ?? notification.CreationDate;
-            TbService = notification.TBServiceName;
+            TbService = notification.HospitalDetails.TBServiceName;
             TbServiceCode = notification.HospitalDetails.TBServiceCode;
             TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.HospitalDetails.CaseManagerName;
-            NhsNumber = notification.FormattedNhsNumber;
-            DateOfBirth = notification.FormattedDob;
-            CountryOfBirth = notification.CountryName;
-            Postcode = notification.FormattedNoAbodeOrPostcodeString;
-            Name = notification.FullName;
-            Sex = notification.SexLabel;
+            NhsNumber = notification.PatientDetails.FormattedNhsNumber;
+            DateOfBirth = notification.PatientDetails.FormattedDob;
+            CountryOfBirth = notification.PatientDetails.CountryName;
+            Postcode = notification.PatientDetails.FormattedNoAbodeOrPostcodeString;
+            Name = notification.PatientDetails.FullName;
+            Sex = notification.PatientDetails.SexLabel;
             NotificationStatus = notification.NotificationStatus;
-            NotificationStatusString = notification.NotificationStatusString;
+            NotificationStatusString = notification.NotificationStatus.GetDisplayName();
             NotificationDate = notification.FormattedNotificationDate;
             DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString;
             TreatmentOutcome = CalculateOutcome(notification);

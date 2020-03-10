@@ -11,7 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class HospitalDetails : ModelBase, IOwnedEntityForAuditing
+    public partial class HospitalDetails : ModelBase, IOwnedEntityForAuditing
     {
         [MaxLength(200)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]

@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
+    public partial class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
     {
         #region DB Mapped Fields
         public bool? IsSymptomatic { get; set; }

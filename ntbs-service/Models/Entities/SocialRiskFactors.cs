@@ -1,11 +1,13 @@
-﻿using EFAuditer;
+﻿using System.Diagnostics.CodeAnalysis;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class SocialRiskFactors : ModelBase, IOwnedEntityForAuditing
+    [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+    public partial class SocialRiskFactors : ModelBase, IOwnedEntityForAuditing
     {
         public SocialRiskFactors()
         {

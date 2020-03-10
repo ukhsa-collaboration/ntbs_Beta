@@ -119,7 +119,7 @@ namespace ntbs_service.DataMigration
         
         private async Task<ImportResult> ValidateAndImportNotificationGroupAsync(PerformContext context, string requestId, List<Notification> notifications)
         {
-            var patientName = notifications.First().FullName;
+            var patientName = notifications.First().PatientDetails.FullName;
             var importResult = new ImportResult(patientName);
 
             LookupAndAssignPostcode(notifications);
