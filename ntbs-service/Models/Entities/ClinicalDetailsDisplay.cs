@@ -12,14 +12,13 @@ namespace ntbs_service.Models.Entities
         public string FormattedHomeVisitState => GetFormattedHomeVisitState();
         
         public string IsPostMortemYesNo => IsPostMortem.FormatYesNo();
-        public string GetIsSymptomatic => IsSymptomatic.FormatYesNo();
+        public string IsSymptomaticYesNo => IsSymptomatic.FormatYesNo();
         public string DaysFromOnsetToTreatment => FormatNullableDateDifference(TreatmentStartDate, SymptomStartDate);
         public string DaysFromOnsetToFirstPresentation => FormatNullableDateDifference(FirstPresentationDate, SymptomStartDate);
         public string DaysFromFirstPresentationToTBServicePresentation => FormatNullableDateDifference(TBServicePresentationDate, FirstPresentationDate);
         public string DaysFromTBServicePresentationToDiagnosis => FormatNullableDateDifference(DiagnosisDate, TBServicePresentationDate);
         public string DaysFromDiagnosisToTreatment => FormatNullableDateDifference(TreatmentStartDate, DiagnosisDate);
         public string BCGVaccinationStateAndYear => FormatStateAndYear(BCGVaccinationState, BCGVaccinationYear);
-        public string MDRTreatmentStateAndDate => MDRTreatmentStartDate.ConvertToString();
 
         private string GetFormattedTreatmentRegimen()
         {
