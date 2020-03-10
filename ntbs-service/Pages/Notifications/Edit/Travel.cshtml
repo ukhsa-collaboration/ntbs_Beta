@@ -11,8 +11,13 @@
 
 <h2>Travel and visitor history</h2>
 
+
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
+        Please enter durations to the nearest month
+    </nhs-hint>
 
     <partial name="_TravelDetailsPartial" />
     <partial name="_VisitorDetailsPartial" />

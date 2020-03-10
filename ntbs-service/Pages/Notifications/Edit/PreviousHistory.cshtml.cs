@@ -37,20 +37,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            string nextPage;
-            if (Notification.IsMdr)
-            {
-                nextPage = "./MDRDetails";
-            }
-            else if (Notification.IsMBovis)
-            {
-                nextPage = "./MBovisExposureToKnownCases";
-            }
-            else
-            {
-                nextPage = "./PreviousHistory";
-            }
-            return RedirectToPage(nextPage, new { NotificationId, isBeingSubmitted });
+            return RedirectToPage("./TreatmentEvents", new { NotificationId, isBeingSubmitted });
         }
 
         protected override async Task ValidateAndSave()

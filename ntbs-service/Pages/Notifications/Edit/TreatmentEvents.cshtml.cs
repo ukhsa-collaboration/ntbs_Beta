@@ -51,8 +51,20 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
-            // Page is not accessible in draft state
-            throw new NotImplementedException();
+            string nextPage;
+            if (Notification.IsMdr)
+            {
+                nextPage = "./MDRDetails";
+            }
+            else if (Notification.IsMBovis)
+            {
+                nextPage = "./MBovisExposureToKnownCases";
+            }
+            else
+            {
+                nextPage = "./TreatmentEvents";
+            }
+            return RedirectToPage(nextPage, new { NotificationId, isBeingSubmitted });
         }
     }
 }

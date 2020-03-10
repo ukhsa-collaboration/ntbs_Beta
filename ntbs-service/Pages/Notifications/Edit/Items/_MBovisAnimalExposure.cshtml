@@ -258,11 +258,15 @@
     </nhs-width-container>
 </div>
 
+@if (Model.Notification.MBovisDetails.MBovisAnimalExposures.Count > 0)
+{
+    <nhs-width-container container-width="Standard">
+        <h2> Exposure to known cases </h2>
+        <partial name="Shared/_MBovisAnimalExposureTable" for="Notification.MBovisDetails.MBovisAnimalExposures"/>
+    </nhs-width-container>
+}
+
 <nhs-width-container container-width="Standard">
-    <h2> Exposure to known cases </h2>
-
-    <partial name="Shared/_MBovisAnimalExposureTable" for="Notification.MBovisDetails.MBovisAnimalExposures"/>
-
     <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisAnimalExposures)">
         Back to M. bovis occupation exposures
     </a>

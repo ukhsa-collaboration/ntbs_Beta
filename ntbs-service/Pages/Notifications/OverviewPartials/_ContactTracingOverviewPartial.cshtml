@@ -37,6 +37,23 @@
             </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> Number of contacts with latent TB </div>
+            <div>
+                <div class="contact-tracing-row">
+                    <span class="contact-tracing-label"> Adults </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsLatentTB)</span>
+                </div>
+                <div class="contact-tracing-row">
+                    <span class="contact-tracing-label"> Children </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenLatentTB)</span>
+                </div>
+                <div class="contact-tracing-row">
+                    <span class="contact-tracing-label"> Total </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsLatentTB) </span>
+                </div>
+            </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Number of contacts screened for TB </div>
             <div>
                 <div class="contact-tracing-row">
@@ -54,45 +71,6 @@
                 </div>
             </div>
         </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneHalf">
-            <div class="notification-details-label"> Number of contacts with active TB </div>
-            <div>
-                <div class="contact-tracing-row">
-                    <span class="contact-tracing-label"> Adults </span>
-                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsActiveTB)</span>
-                </div>
-                <div class="contact-tracing-row">
-                    <span class="contact-tracing-label"> Children </span>
-                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenActiveTB)</span>
-
-                </div>
-                <div class="contact-tracing-row">
-                    <span class="contact-tracing-label"> Total </span>
-                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsActiveTB) </span>
-                </div>
-            </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneHalf">
-            <div class="notification-details-label"> Number of contacts with latent TB </div>
-            <div>
-                <div class="contact-tracing-row">
-                    <span class="contact-tracing-label"> Adults </span>
-                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsLatentTB)</span>
-                </div>
-                <div class="contact-tracing-row">
-                    <span class="contact-tracing-label"> Children </span>
-                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenLatentTB)</span>
-                </div>
-                <div class="contact-tracing-row">
-                    <span class="contact-tracing-label"> Total </span>
-                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsLatentTB) </span>
-                </div>
-            </div>
-        </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row>
-        @* Empty space to 'right-align' following column *@
-        <nhs-grid-column grid-column-width="OneHalf">&nbsp;</nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Number of contacts that have started treatment for latent TB </div>
             <div>
@@ -113,8 +91,24 @@
         </nhs-grid-column>
     </nhs-grid-row>
     <nhs-grid-row>
-        @* Empty space to 'right-align' following column *@
-        <nhs-grid-column grid-column-width="OneHalf">&nbsp;</nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> Number of contacts with active TB </div>
+            <div>
+                <div class="contact-tracing-row">
+                    <span class="contact-tracing-label"> Adults </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.AdultsActiveTB)</span>
+                </div>
+                <div class="contact-tracing-row">
+                    <span class="contact-tracing-label"> Children </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.ChildrenActiveTB)</span>
+
+                </div>
+                <div class="contact-tracing-row">
+                    <span class="contact-tracing-label"> Total </span>
+                    <span class="contact-tracing-value"> @(Model.Notification.ContactTracing.TotalContactsActiveTB) </span>
+                </div>
+            </div>
+        </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
             <div class="notification-details-label"> Number of contacts that have completed treatment for latent TB </div>
             <div>
