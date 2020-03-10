@@ -85,8 +85,12 @@ Feature: Notification creation
         Then I should be on the PreviousHistory page
         When I click on the 'save-button' button
 
-        # Previous History again + submission
-        Then I should be on the PreviousHistory page
+        # Treatment Events page
+        Then I should be on the TreatmentEvents page
+        When I click on the 'save-button' button
+
+        # Treatment Events page again + submission
+        Then I should be on the TreatmentEvents page
         When I click on the 'submit-button' button
         Then I should see the Notification
 
