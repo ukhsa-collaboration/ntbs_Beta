@@ -6,7 +6,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class ContactTracing : ModelBase, IOwnedEntityForAuditing
+    public partial class ContactTracing : ModelBase, IOwnedEntityForAuditing
     {
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]
         public int? AdultsIdentified { get; set; }
@@ -43,26 +43,6 @@ namespace ntbs_service.Models.Entities
 
         [PositiveIntegerSmallerThanValue("ChildrenStartedTreatment", ErrorMessage = ValidationMessages.ContactTracingChildrenFinishedTreatment)]
         public int? ChildrenFinishedTreatment { get; set; }
-
-
-        public int? TotalContactsIdentified => CalculateSum(AdultsIdentified, ChildrenIdentified);
-
-        public int? TotalContactsScreened => CalculateSum(AdultsScreened, ChildrenScreened);
-
-        public int? TotalContactsActiveTB => CalculateSum(AdultsActiveTB, ChildrenActiveTB);
-
-        public int? TotalContactsLatentTB => CalculateSum(AdultsLatentTB, ChildrenLatentTB);
-
-        public int? TotalContactsStartedTreatment => CalculateSum(AdultsStartedTreatment, ChildrenStartedTreatment);
-
-        public int? TotalContactsFinishedTreatment => CalculateSum(AdultsFinishedTreatment, ChildrenFinishedTreatment);
-
-        private int? CalculateSum(int? x, int? y) {
-            if (x == null && y == null) {
-                return null;
-            }
-            return (x ?? 0) + (y ?? 0);
-        }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

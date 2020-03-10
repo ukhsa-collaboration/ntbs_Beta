@@ -69,24 +69,24 @@ namespace ntbs_service_unit_tests.Models
             Assert.Equal("3 days", days);
         }
 
-        [Fact]
-        public void CreatesSocialRiskTimePeriodsStringCorrectly() 
-        {
-            // Arrange
-            TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs)
-            {
-                Status = Status.Yes,
-                IsCurrent = true,
-                InPastFiveYears = false,
-                MoreThanFiveYearsAgo = true
-            };
-            
-            // Act
-            var timePeriods = TestNotification.DrugRiskFactorTimePeriods;
-
-            // Assert
-            Assert.Equal("current, more than 5 years ago", timePeriods);
-        }
+        // [Fact]
+        // public void CreatesSocialRiskTimePeriodsStringCorrectly() 
+        // {
+        //     // Arrange
+        //     TestNotification.SocialRiskFactors.RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs)
+        //     {
+        //         Status = Status.Yes,
+        //         IsCurrent = true,
+        //         InPastFiveYears = false,
+        //         MoreThanFiveYearsAgo = true
+        //     };
+        //     
+        //     // Act
+        //     var timePeriods = TestNotification.DrugRiskFactorTimePeriods;
+        //
+        //     // Assert
+        //     Assert.Equal("current, more than 5 years ago", timePeriods);
+        // }
 
         [Fact]
         public void CreatesVaccinationStateStringCorrectly() {

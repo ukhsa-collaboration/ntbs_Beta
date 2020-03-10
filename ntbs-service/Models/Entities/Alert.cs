@@ -19,11 +19,11 @@ namespace ntbs_service.Models.Entities
         public DateTime CreationDate { get; set; }
         
         [Required(ErrorMessage = ValidationMessages.FieldRequired)]
-        [AssertThat("TransferDestinationNotCurrentTbService", ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
+        [AssertThat(nameof(TransferDestinationNotCurrentTbService), ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
         [Display(Name = "TB Service")]
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
-        [AssertThat("CaseManagerAllowedForTbService", ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
+        [AssertThat(nameof(CaseManagerAllowedForTbService), ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
         public string CaseManagerUsername { get; set; }
         public virtual User CaseManager { get; set; }
