@@ -30,10 +30,14 @@
                     <partial name="_NotificationUnderBannerNav"/>
                 </div>
             </nhs-grid-column>
-
+            
             <partial name="./_SideMenu" model="@Model"/>
-
-            <nhs-grid-column grid-column-width="@mainGridWidth">
+            
+            @section SkipLink {
+                <a nhs-anchor-type="SkipLink" href="#form-content">Skip to form</a>
+            }
+            
+            <nhs-grid-column grid-column-width="@mainGridWidth" id="form-content">
                 <input type="hidden" asp-for="NotificationId"/>
                 @RenderBody()
             </nhs-grid-column>
