@@ -45,8 +45,8 @@ namespace ntbs_service.Services
                 // If a previous year has a treatment outcome of not evaluated this is not an ending treatment outcome
                 // so a new treatment outcome will be needed for this 12 month period
                 if (i < yearsAfterTreatmentStartDate &&
-                    lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentOutcome?.TreatmentOutcomeType ==
-                    TreatmentOutcomeType.NotEvaluated)
+                    lastTreatmentEventsBetweenIAndIMinusOneYears.TreatmentOutcome?.TreatmentOutcomeSubType ==
+                    TreatmentOutcomeSubType.StillOnTreatment)
                 {
                     return true;
                 }
@@ -80,7 +80,8 @@ namespace ntbs_service.Services
             return notification.TreatmentEvents?.Where(t =>
                     t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
                     && t.EventDate >= (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
-                .OrderBy(t => t.EventDate);
+                .OrderBy(t => t.EventDate)
+                .ThenByDescending(t => t.TreatmentEventTypeIsOutcome);
         }
     }
 }

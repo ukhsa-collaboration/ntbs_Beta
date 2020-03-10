@@ -254,11 +254,13 @@ namespace ntbs_service.DataAccess
                 .ToListAsync())
                 .Where(n =>
                 {
-                    var lastTreatmentEvent = n.TreatmentEvents.OrderByDescending(t => t.EventDate).FirstOrDefault();
+                    var lastTreatmentEvent = n.TreatmentEvents.OrderByDescending(t => t.EventDate)
+                        .ThenBy(t => t.TreatmentEventTypeIsOutcome).FirstOrDefault();
                     if (lastTreatmentEvent != null)
                     {
                         return lastTreatmentEvent.TreatmentEventTypeIsOutcome
-                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeType != TreatmentOutcomeType.NotEvaluated
+                               && lastTreatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType !=
+                               TreatmentOutcomeSubType.StillOnTreatment
                                && lastTreatmentEvent.EventDate < DateTime.Today.AddYears(-1);
                     }
                     return false;
