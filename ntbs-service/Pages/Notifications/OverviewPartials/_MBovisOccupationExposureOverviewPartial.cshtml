@@ -17,20 +17,12 @@
     }
 </div>
 <div class="notification-overview-details-container">
-    @if (Model.Notification.MBovisDetails.HasOccupationExposure != null)
-    {
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneQuarter">
-                <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.HasOccupationExposure) </div>
-                <div class="cell-min-height"> @Model.Notification.MBovisDetails.HasOccupationExposure.FormatYesNo() </div>
-            </nhs-grid-column>
-        </nhs-grid-row>
-        <br/>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.HasOccupationExposure) </div>
+            <div class="cell-min-height"> @Model.Notification.MBovisDetails.HasOccupationExposure.FormatYesNo() </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
 
-        <partial name="Shared/_MBovisOccupationExposureTable" for="Notification.MBovisDetails.MBovisOccupationExposures"/>
-    }
-    else
-    {
-        <dl>No recorded occupation exposures</dl>
-    }
+    <partial name="Shared/_MBovisOccupationExposureTable" for="Notification.MBovisDetails.MBovisOccupationExposures"/>
 </div>

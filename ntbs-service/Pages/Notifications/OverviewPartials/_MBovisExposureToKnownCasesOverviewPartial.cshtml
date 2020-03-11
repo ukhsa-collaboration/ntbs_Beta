@@ -17,19 +17,12 @@
     }
 </div>
 <div class="notification-overview-details-container">
-    @if (Model.Notification.MBovisDetails.HasExposureToKnownCases != null)
-    {
-        <nhs-grid-row>
-            <nhs-grid-column grid-column-width="OneQuarter">
-                <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.HasExposureToKnownCases) </div>
-                <div class="cell-min-height"> @Model.Notification.MBovisDetails.HasExposureToKnownCases.FormatYesNo() </div>
-            </nhs-grid-column>
-        </nhs-grid-row>
-        <br/>
-        <partial name="Shared/_MBovisExposureToKnownCaseTable" for="Notification.MBovisDetails.MBovisExposureToKnownCases"/>
-    }
-    else
-    {
-        <dl>No recorded exposures to known cases</dl>
-    }
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> @Html.DisplayNameFor(m => m.Notification.MBovisDetails.HasExposureToKnownCases) </div>
+            <div class="cell-min-height"> @Model.Notification.MBovisDetails.HasExposureToKnownCases.FormatYesNo() </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
+    
+    <partial name="Shared/_MBovisExposureToKnownCaseTable" for="Notification.MBovisDetails.MBovisExposureToKnownCases"/>
 </div>
