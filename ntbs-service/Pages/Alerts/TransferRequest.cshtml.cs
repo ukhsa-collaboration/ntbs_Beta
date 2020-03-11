@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ExpressiveAnnotations.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -12,7 +10,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;
-using ntbs_service.Models.Validations;
+using ntbs_service.Models.ViewModels;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
 
@@ -28,7 +26,7 @@ namespace ntbs_service.Pages.Alerts
         public TransferAlert TransferAlert { get; set; }
 
         [BindProperty]
-        public TransferRequest TransferRequest { get; set; }
+        public TransferRequestViewModel TransferRequest { get; set; }
 
         [BindProperty]
         public int AlertId { get; set; }
@@ -70,7 +68,7 @@ namespace ntbs_service.Pages.Alerts
                 return Partial("_TransferPendingPartial", this);
             }
 
-            TransferRequest = new TransferRequest();
+            TransferRequest = new TransferRequestViewModel();
             await SetDropdownsAsync();
             return Page();
         }
@@ -172,69 +170,5 @@ namespace ntbs_service.Pages.Alerts
                     })
                 });
         }
-    }
-
-    public class TransferRequest
-    {
-        [BindProperty]
-        [Display(Name = "TB Service")]
-        [Required(ErrorMessage = ValidationMessages.FieldRequired)]
-        [AssertThat(nameof(TransferDestinationNotCurrentTbService),
-            ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
-        public string TbServiceCode { get; set; }
-
-        public virtual TBService TbService { get; set; }
-
-        [BindProperty]
-        [Display(Name = "Case Manager")]
-        [AssertThat(nameof(CaseManagerAllowedForTbService),
-            ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
-        public string CaseManagerUsername { get; set; }
-
-        public virtual User CaseManager { get; set; }
-
-        [BindProperty]
-        public TransferReason TransferReason { get; set; }
-
-        [BindProperty]
-        [Display(Name = "Other description")]
-        [MaxLength(200)]
-        [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
-        public string OtherReasonDescription { get; set; }
-
-        [BindProperty]
-        [Display(Name = "Optional note")]
-        [MaxLength(200)]
-        [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
-        public string TransferRequestNote { get; set; }
-
-
-        public bool CaseManagerAllowedForTbService
-        {
-            // ReSharper disable once UnusedMember.Global - used in the validation
-            get
-            {
-                // If email not set, or TBService missing (ergo navigation properties not yet retrieved) pass validation
-                if (string.IsNullOrEmpty(CaseManagerUsername) || TbServiceCode == null)
-                {
-                    return true;
-                }
-
-                if (CaseManager?.CaseManagerTbServices == null || CaseManager.CaseManagerTbServices.Count == 0)
-                {
-                    return false;
-                }
-
-                return CaseManager.CaseManagerTbServices.Any(c => c.TbServiceCode == TbServiceCode);
-            }
-        }
-
-        public string NotificationTbServiceCode { get; set; }
-
-        public bool TransferDestinationNotCurrentTbService => TbServiceCode != NotificationTbServiceCode;
     }
 }
