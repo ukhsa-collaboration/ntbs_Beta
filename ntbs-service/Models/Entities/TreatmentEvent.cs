@@ -19,8 +19,8 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Event Date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [ValidClinicalDate]
-        [AssertThat(@"EventDateAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
-        [AssertThat(@"EventDateAfterNotificationDate", ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
+        [AssertThat(nameof(EventDateAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
+        [AssertThat(nameof(AfterNotificationDateUnlessPostMortem), ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
         public DateTime? EventDate { get; set; }
 
         [Display(Name = "Event")]
@@ -51,9 +51,13 @@ namespace ntbs_service.Models.Entities
         public DateTime? Dob { get; set; }
         [NotMapped]
         public DateTime? DateOfNotification { get; set; }
+        [NotMapped]
+        public bool IsNotificationPostMortem { get; set; }
         
         public bool TreatmentEventTypeIsOutcome => TreatmentEventType == Enums.TreatmentEventType.TreatmentOutcome;
         public bool TreatmentEventTypeIsNotRestart => TreatmentEventType != Enums.TreatmentEventType.TreatmentRestart;
+        public bool TreatmentEventIsDeathEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died;
+        public bool AfterNotificationDateUnlessPostMortem => EventDateAfterNotificationDate || (IsNotificationPostMortem && TreatmentEventIsDeathEvent);
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
         public bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
         public string FormattedEventDate => EventDate.ConvertToString();

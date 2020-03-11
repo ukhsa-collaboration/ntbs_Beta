@@ -20,7 +20,9 @@ namespace ntbs_service.Helpers
         
         public static Dictionary<int, List<TreatmentEvent>> GroupByEpisode(this IEnumerable<TreatmentEvent> treatmentEvents)
         {
-            var orderedTreatmentEvents = treatmentEvents.OrderBy(t => t.EventDate).ThenBy(t => t.TreatmentEventTypeIsOutcome);
+            var orderedTreatmentEvents = treatmentEvents
+                .OrderBy(t => t.EventDate)
+                .ThenByDescending(t => t.TreatmentEventTypeIsOutcome);
             var groupedEpisodes = new Dictionary<int, List<TreatmentEvent>>();
             var episodeCount = 1;
             
