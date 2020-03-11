@@ -4,7 +4,7 @@
 @{
     var header = Model.FirstOrDefault();
     var showEditLinks = (bool)(ViewData["ShowTreatmentEventEditLinks"] ?? false);
-    var orderedResults = Model.OrderByDescending(r => r.EventDate);
+    var orderedResults = Model.OrderByDescending(t => t.EventDate).ThenBy(t => t.TreatmentEventTypeIsOutcome);
 }
 
 @if (Model.Count != 0)

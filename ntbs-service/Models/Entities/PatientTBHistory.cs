@@ -9,7 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientTBHistory : ModelBase, IOwnedEntityForAuditing
+    public partial class PatientTBHistory : ModelBase, IOwnedEntityForAuditing
     {
         public bool? PreviouslyHadTB { get; set; }
         

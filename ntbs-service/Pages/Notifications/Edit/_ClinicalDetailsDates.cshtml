@@ -22,7 +22,7 @@
         </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-SymptomStartDate">
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Patient is symptomatic</nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard">Patient has symptoms</nhs-fieldset-legend>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
                         <input ref="checkbox0" asp-for="ClinicalDetails.IsSymptomatic" id="symptomatic-yes" class="nhsuk-radios__input"
@@ -40,7 +40,7 @@
                                        property="SymptomStartDate" rank="0" v-model="dates[0]" inline-template>
                             <nhs-form-group nhs-form-group-type=@symptomGroupState>
                                 <nhs-fieldset aria-describedby="symptom-error" role="group">
-                                    <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+                                    <nhs-fieldset-legend nhs-legend-size="Standard">
                                         @Html.DisplayNameFor(model => model.ClinicalDetails.SymptomStartDate)
                                     </nhs-fieldset-legend>
                                     <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.SymptomStartDate"
@@ -299,7 +299,7 @@
                         <validate-date ref="date4" name="@Html.DisplayNameFor(m => m.ClinicalDetails.TreatmentStartDate)" model="ClinicalDetails" property="TreatmentStartDate" rank="4" v-model="dates[4]" inline-template>
                             <nhs-form-group nhs-form-group-type=@treatmentGroupState>
                                 <nhs-fieldset aria-describedby="treatment-error" role="group">
-                                    <nhs-fieldset-legend nhs-legend-size="Standard" classes="govuk-visually-hidden">
+                                    <nhs-fieldset-legend nhs-legend-size="Standard">
                                         @Html.DisplayNameFor(m => m.ClinicalDetails.TreatmentStartDate)
                                     </nhs-fieldset-legend>
                                     <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="ClinicalDetails.TreatmentStartDate"

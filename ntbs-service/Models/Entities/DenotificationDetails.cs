@@ -10,10 +10,10 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class DenotificationDetails : IOwnedEntityForAuditing
+    public partial class DenotificationDetails : IOwnedEntityForAuditing
     {
-        [AssertThat("DenotificationAfterNotification == true", ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
-        [AssertThat("DenotificationNotAfterToday == true", ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
+        [AssertThat(nameof(DenotificationAfterNotification), ErrorMessage = ValidationMessages.DateShouldBeLaterThanNotification)]
+        [AssertThat(nameof(DenotificationNotAfterToday), ErrorMessage = ValidationMessages.DenotificationDateLatestToday)]
         [Display(Name = "Denotification date")]
         public DateTime DateOfDenotification { get; set; }
 

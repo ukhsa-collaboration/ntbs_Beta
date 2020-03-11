@@ -156,11 +156,17 @@
         </form>
     </nhs-width-container>
 </div>
+
+@if (Model.Notification.MBovisDetails.MBovisExposureToKnownCases.Count > 0)
+{
+    <nhs-width-container container-width="Standard">
+        <h2> Exposure to known cases </h2>
+
+        <partial name="Shared/_MBovisExposureToKnownCaseTable" for="Notification.MBovisDetails.MBovisExposureToKnownCases"/>
+    </nhs-width-container>
+}
+
 <nhs-width-container container-width="Standard">
-    <h2> Exposure to known cases </h2>
-
-    <partial name="Shared/_MBovisExposureToKnownCaseTable" for="Notification.MBovisDetails.MBovisExposureToKnownCases"/>
-
     <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisExposureToKnownCases)">
         Back to M. bovis exposure to known cases
     </a>

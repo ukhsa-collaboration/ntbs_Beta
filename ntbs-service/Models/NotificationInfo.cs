@@ -17,12 +17,12 @@ namespace ntbs_service.Models
         {
             return new NotificationInfo
             {
-                Name = notification.FullName,
-                Dob = notification.FormattedDob,
-                NhsNumber = notification.FormattedNhsNumber,
+                Name = notification.PatientDetails.FullName,
+                Dob = notification.PatientDetails.FormattedDob,
+                NhsNumber = notification.PatientDetails.FormattedNhsNumber,
                 DrugResistance = notification.DrugResistanceProfile.DrugResistanceProfileString,
-                Sex = notification.SexLabel,
-                Postcode = notification.FormattedNoAbodeOrPostcodeString
+                Sex = notification.PatientDetails.SexLabel,
+                Postcode = notification.PatientDetails.FormattedNoAbodeOrPostcodeString
             };
         }
     }

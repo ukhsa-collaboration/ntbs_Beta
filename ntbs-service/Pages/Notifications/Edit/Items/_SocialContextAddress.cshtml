@@ -197,11 +197,12 @@
 {
     <nhs-width-container container-width="Standard">
     <h2> Social Context Addresses </h2>
-
     <partial name="_SocialContextAddressesTable" for="Notification.SocialContextAddresses" />
+    </nhs-width-container>
+}
 
+<nhs-width-container container-width="Standard">
     <a href="@RouteHelper.GetNotificationPath( Model.NotificationId, NotificationSubPaths.EditSocialContextAddresses)">
         Back to social context addresses
     </a>
 </nhs-width-container>
-}

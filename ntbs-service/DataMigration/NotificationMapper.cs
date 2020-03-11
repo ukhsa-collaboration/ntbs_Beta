@@ -129,7 +129,10 @@ namespace ntbs_service.DataMigration
                 };
                 notification.SocialContextAddresses = notificationSocialContextAddresses;
                 notification.SocialContextVenues = notificationSocialContextVenues;
-                notification.TreatmentEvents = notificationTransferEvents; //TODO combine with outcome events
+                foreach (var notificationTransferEvent in notificationTransferEvents)
+                {
+                    notification.TreatmentEvents.Add(notificationTransferEvent);
+                }
                 return notification;
             }));
         }

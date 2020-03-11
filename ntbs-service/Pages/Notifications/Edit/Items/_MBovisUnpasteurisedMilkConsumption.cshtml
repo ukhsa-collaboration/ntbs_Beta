@@ -193,11 +193,16 @@
         </form>
     </nhs-width-container>
 </div>
+
+@if (Model.Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.Count > 0)
+{
+    <nhs-width-container container-width="Standard">
+        <h2> Exposure to known cases </h2>
+        <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
+    </nhs-width-container>
+}
+
 <nhs-width-container container-width="Standard">
-    <h2> Exposure to known cases </h2>
-
-    <partial name="Shared/_MBovisUnpasteurisedMilkConsumptionTable" for="Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions"/>
-
     <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.EditMBovisUnpasteurisedMilkConsumptions)">
         Back to M. bovis exposure to known cases
     </a>

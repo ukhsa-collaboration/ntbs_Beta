@@ -86,6 +86,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             TreatmentEvent.NotificationId = NotificationId;
             TreatmentEvent.CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername;
             TreatmentEvent.TbServiceCode = Notification.HospitalDetails.TBServiceCode;
+            TreatmentEvent.IsNotificationPostMortem = Notification.ClinicalDetails.IsPostMortem ?? false;
 
             // The required date will be marked as missing on the model, since we are setting it manually, rather than binding it
             ModelState.Remove("TreatmentEvent.EventDate");
@@ -178,6 +179,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             }
 
             TreatmentEvent.TreatmentOutcomeId = treatmentOutcome.TreatmentOutcomeId;
+            TreatmentEvent.TreatmentOutcome = treatmentOutcome;
         }
 
 

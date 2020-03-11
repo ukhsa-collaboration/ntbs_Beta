@@ -10,7 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public class PatientDetails : ModelBase, IHasPostcode, IOwnedEntityForAuditing
+    public partial class PatientDetails : ModelBase, IHasPostcode, IOwnedEntityForAuditing
     {
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]
         [StringLength(35)]
@@ -91,21 +91,6 @@ namespace ntbs_service.Models.Entities
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [Display(Name = "Occupation")]
         public string OccupationOther { get; set; }
-
-        public string FormatOccupationString()
-        {
-            if (Occupation == null)
-            {
-                return string.Empty;
-            }
-
-            if (Occupation.HasFreeTextField && !string.IsNullOrEmpty(OccupationOther))
-            {
-                return $"{Occupation.Sector} - {OccupationOther}";
-            }
-
-            return Occupation.Sector == "Other" ? Occupation.Role : $"{Occupation.Sector} - {Occupation.Role}";
-        }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

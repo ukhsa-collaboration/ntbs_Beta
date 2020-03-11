@@ -153,22 +153,29 @@ namespace ntbs_integration_tests.TransferPage
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID_WITH_TRANSFER_REQUEST_TO_REJECT;
+
+            var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
+            var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
+            Assert.NotNull(overviewPage.QuerySelector("#alert-20004"));
+            
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             var formData = new Dictionary<string, string>
             {
                 ["AcceptTransfer"] = "false",
-                ["DeclineTransferReason"] = "nah",
+                ["DeclineTransferReason"] = "nah"
             };
 
             // Act
-            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+            await Client.SendPostFormWithData(initialDocument, formData, url);
 
             // Assert
-            var overviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
-            var overviewPage = await GetDocumentForUrlAsync(overviewUrl);
-            Assert.NotNull(overviewPage.QuerySelector(".overview-alerts-container"));
+            var reloadedOverviewUrl = RouteHelper.GetNotificationPath(id, NotificationSubPaths.Overview);
+            var reloadedOverviewPage = await GetDocumentForUrlAsync(reloadedOverviewUrl);
+            var alertsContainer = reloadedOverviewPage.QuerySelector(".overview-alerts-container");
+            Assert.Null(alertsContainer.QuerySelector("#alert-20004"));
+            Assert.Contains("Transfer request rejected", alertsContainer.InnerHtml);
         }
     }
 }
