@@ -32,6 +32,7 @@ namespace ntbs_service.Pages.Alerts
 
         [BindProperty]
         public int AlertId { get; set; }
+
         public SelectList TbServices { get; set; }
         public SelectList CaseManagers { get; set; }
         public SelectList Phecs { get; set; }
@@ -42,7 +43,7 @@ namespace ntbs_service.Pages.Alerts
             IAlertRepository alertRepository,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IReferenceDataRepository referenceDataRepository) 
+            IReferenceDataRepository referenceDataRepository)
             : base(notificationService, authorizationService, notificationRepository)
         {
             _alertService = alertService;
@@ -89,11 +90,12 @@ namespace ntbs_service.Pages.Alerts
 
             var transferAlert = new TransferAlert
             {
-                 TbServiceCode = TransferRequest.TbServiceCode,
-                 CaseManagerUsername = TransferRequest.CaseManagerUsername,
-                 TransferReason = TransferRequest.TransferReason,
-                 OtherReasonDescription = TransferRequest.OtherReasonDescription,
-                 TransferRequestNote = TransferRequest.TransferRequestNote
+                NotificationId = NotificationId,
+                TbServiceCode = TransferRequest.TbServiceCode,
+                CaseManagerUsername = TransferRequest.CaseManagerUsername,
+                TransferReason = TransferRequest.TransferReason,
+                OtherReasonDescription = TransferRequest.OtherReasonDescription,
+                TransferRequestNote = TransferRequest.TransferRequestNote
             };
             await _alertService.AddUniqueOpenAlertAsync(transferAlert);
 

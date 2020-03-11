@@ -13,7 +13,6 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
         <h2> You are about to transfer this notification </h2>
         <div>
             <cascading-dropdown filter-first-handler-path="FilteredTbServiceListsByPhecCode" 
@@ -32,11 +31,11 @@
                     </nhs-form-group>
 
                     @{
-                        var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferAlert.TbServiceCode");
+                        var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferRequest.TbServiceCode");
                         var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
                         var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferAlert-TbServiceCode" ref="tbServices">
+                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferRequest-TbServiceCode" ref="tbServices">
                         <label nhs-label-type="Standard" asp-for="TransferRequest.TbServiceCode">
                             @Html.DisplayNameFor(model => model.TransferRequest.TbServiceCode)
                         </label>
@@ -48,11 +47,11 @@
                         </select>
                     </nhs-form-group>
                     @{
-                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.CaseManagerUsername");
+                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferRequest.CaseManagerUsername");
                         var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                         var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerUsername" ref="caseManagers">
+                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferRequest-CaseManagerUsername" ref="caseManagers">
                         <label nhs-label-type="Standard" asp-for="TransferRequest.CaseManagerUsername">
                             @Html.DisplayNameFor(model => model.TransferRequest.CaseManagerUsername)
                         </label>
@@ -68,7 +67,7 @@
         </div>
 
         @{
-            var hasReasonError = !Model.ValidationService.IsValid("TransferAlert.TransferReason");
+            var hasReasonError = !Model.ValidationService.IsValid("TransferRequest.TransferReason");
             var reasonFormGroupType = hasReasonError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
@@ -108,7 +107,7 @@
                     }
 
                     @{
-                        var hasReasonDescriptionError = !Model.ValidationService.IsValid("TransferAlert.OtherReasonDescription");
+                        var hasReasonDescriptionError = !Model.ValidationService.IsValid("TransferRequest.OtherReasonDescription");
                         var reasonDescriptionFormGroupType = hasReasonDescriptionError ? Error : Standard;
                     }
 
@@ -126,7 +125,7 @@
         </nhs-form-group>
 
         @{
-            var hasRequestNoteError = !Model.ValidationService.IsValid("TransferAlert.TransferRequestNote");
+            var hasRequestNoteError = !Model.ValidationService.IsValid("TransferRequest.TransferRequestNote");
             var requestNoteFormGroupType = hasRequestNoteError ? Error : Standard;
         }
 
