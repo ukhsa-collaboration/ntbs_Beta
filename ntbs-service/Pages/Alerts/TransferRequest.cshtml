@@ -21,10 +21,10 @@
                 :filtering-refs="['tbServices', 'caseManagers']" inline-template>
                 <div>
                     <nhs-form-group nhs-form-group-type="Standard" ref="firstFilterContainer" classes="hidden">
-                        <label nhs-label-type="Standard" asp-for="TransferRequest.TbServiceCode">
+                        <label nhs-label-type="Standard" for="PhecCode">
                             PHEC
                         </label>
-                        <select ref="selectField" nhs-select-type="@SelectType.Standard"
+                        <select id="PhecCode" ref="selectField" nhs-select-type="@SelectType.Standard"
                                 asp-items="Model.Phecs" v-on:change="firstFilteringChanged">
                             <option value="" selected>Please select</option>
                         </select>

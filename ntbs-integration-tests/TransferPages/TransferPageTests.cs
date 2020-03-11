@@ -6,7 +6,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using Xunit;
 
-namespace ntbs_integration_tests.TransferPage
+namespace ntbs_integration_tests.TransferPages
 {
     public class TransferPageTests : TestRunnerNotificationBase
     {
@@ -23,11 +23,10 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["TransferAlert.NotificationId"] = id.ToString(),
-                ["TransferAlert.TbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                ["TransferAlert.TransferReason"] = nameof(TransferReason.Relocation),
-                ["TransferAlert.OtherReasonDescription"] = "|||",
-                ["TransferAlert.TransferRequestNote"] = "|||"
+                ["TransferRequest.TbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["TransferRequest.TransferReason"] = nameof(TransferReason.Relocation),
+                ["TransferRequest.OtherReasonDescription"] = "|||",
+                ["TransferRequest.TransferRequestNote"] = "|||"
             };
 
             // Act
@@ -49,9 +48,8 @@ namespace ntbs_integration_tests.TransferPage
 
             var formData = new Dictionary<string, string>
             {
-                ["TransferAlert.NotificationId"] = id.ToString(),
-                ["TransferAlert.TbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
-                ["TransferAlert.TransferReason"] = nameof(TransferReason.Relocation)
+                ["TransferRequest.TbServiceCode"] = Utilities.TBSERVICE_ABINGDON_COMMUNITY_HOSPITAL_ID,
+                ["TransferRequest.TransferReason"] = nameof(TransferReason.Relocation)
             };
 
             // Act
