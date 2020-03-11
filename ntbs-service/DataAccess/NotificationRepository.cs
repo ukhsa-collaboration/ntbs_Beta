@@ -278,6 +278,9 @@ namespace ntbs_service.DataAccess
                             .ThenInclude(l => l.LocalAuthority)
                                 .ThenInclude(la => la.LocalAuthorityToPHEC)
                 .Include(g => g.Notifications)
+                    .ThenInclude(n => n.TreatmentEvents)
+                        .ThenInclude(t => t.TreatmentOutcome)
+                .Include(g => g.Notifications)
                     .ThenInclude(n => n.HospitalDetails)
                         .ThenInclude(e => e.TBService)
                 .SingleOrDefaultAsync();
