@@ -42,7 +42,7 @@ namespace ntbs_integration_tests.TransferPages
         public async Task CreateTransferAlert_RedirectsToOverviewPage_IfAlertValid()
         {
             // Arrange
-            const int id = Utilities.NOTIFIED_WITH_TBSERVICE;
+            const int id = Utilities.NOTIFIED_ID_2;
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 

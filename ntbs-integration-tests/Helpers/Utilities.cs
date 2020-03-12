@@ -18,6 +18,7 @@ namespace ntbs_integration_tests.Helpers
         public const int DENOTIFIED_ID = 10003;
         public const int NOTIFIED_ID_WITH_NOTIFICATION_DATE = 10004;
         public const int NEW_ID = 10005;
+        public const int NOTIFIED_ID_2 = 10006;
 
         public const int DENOTIFY_WITH_DESCRIPTION = 10010;
         public const int DENOTIFY_NO_DESCRIPTION = 10011;
@@ -260,6 +261,27 @@ namespace ntbs_integration_tests.Helpers
                     },
                     ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment },
                     DrugResistanceProfile = new DrugResistanceProfile {Species = "M. bovis"}
+                },
+                new Notification
+                {
+                    NotificationId = NOTIFIED_ID_2,
+                    NotificationStatus = NotificationStatus.Notified,
+                    NotificationSites =
+                        new List<NotificationSite>
+                        {
+                            new NotificationSite {NotificationId = NOTIFIED_ID_2, SiteId = (int)SiteId.PULMONARY}
+                        },
+                    HospitalDetails = new HospitalDetails
+                    {
+                        TBServiceCode = PERMITTED_SERVICE_CODE,
+                        HospitalId = Guid.Parse(HOSPITAL_ABINGDON_COMMUNITY_HOSPITAL_ID),
+                        CaseManagerUsername = CASEMANAGER_ABINGDON_EMAIL
+                    },
+                    PatientDetails = new PatientDetails
+                    {
+                        Dob = new DateTime(1970, 1, 1)
+                    },
+                    ClinicalDetails = new ClinicalDetails { TreatmentRegimen = TreatmentRegimen.MdrTreatment },
                 },
                 new Notification
                 {
