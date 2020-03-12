@@ -155,7 +155,7 @@ namespace ntbs_service.DataMigration
             notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
             notification.PatientTBHistory = ExtractPatientTBHistory(rawNotification);
-            notification.TreatmentEvents = ExtractTreatmentEvents(rawNotification);
+            notification.TreatmentEvents = await ExtractTreatmentEventsAsync(rawNotification);
             notification.NotificationStatus = rawNotification.DenotificationDate == null
                 ? NotificationStatus.Notified
                 : NotificationStatus.Denotified;
@@ -473,19 +473,23 @@ namespace ntbs_service.DataMigration
             return address;
         }
         
-        private static List<TreatmentEvent> ExtractTreatmentEvents(dynamic notification)
+        private async Task<List<TreatmentEvent>> ExtractTreatmentEventsAsync(dynamic notification)
         {
-            var treatmentEvents = new List<TreatmentEvent> {new TreatmentEvent
+            var treatmentEvents = new List<TreatmentEvent>();
+            if (notification.IsPostMortem == 1)
             {
-                EventDate = notification.DeathDate,
-                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                TreatmentOutcome = new TreatmentOutcome
-                {
-                    TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
-                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
-                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
-                }
-            }};
+                var deathEventTreatmentOutcome = await _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
+                    TreatmentOutcomeType.Died,
+                    TreatmentOutcomeSubType.Unknown);
+                treatmentEvents.Add(
+                    new TreatmentEvent
+                    {
+                        EventDate = notification.DeathDate,
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = deathEventTreatmentOutcome.TreatmentOutcomeId,
+                        TreatmentOutcome = deathEventTreatmentOutcome
+                    });
+            }
             return treatmentEvents;
         }
 
