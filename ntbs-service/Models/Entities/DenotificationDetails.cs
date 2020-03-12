@@ -39,8 +39,8 @@ namespace ntbs_service.Models.Entities
         [RequiredIf("Reason == DenotificationReason.Other", ErrorMessage = ValidationMessages.DenotificationReasonOtherRequired)]
         [MaxLength(150)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlash,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Description")]
         public string OtherDescription { get; set; }
 

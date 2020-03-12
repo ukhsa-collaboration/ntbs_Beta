@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
         [RequiredIf("Status == Enums.Status.Yes && HasOther == true",
             ErrorMessage = ValidationMessages.ImmunosuppressionDetailRequired)]
         [MaxLength(100)]
-        [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
+        [RegularExpression(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Immunosuppression type description")]
         public string OtherDescription { get; set; }
         
