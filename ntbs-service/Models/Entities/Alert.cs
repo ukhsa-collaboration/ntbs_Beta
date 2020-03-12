@@ -18,12 +18,9 @@ namespace ntbs_service.Models.Entities
         public virtual Notification Notification { get; set; }
         public DateTime CreationDate { get; set; }
         
-        [Required(ErrorMessage = ValidationMessages.FieldRequired)]
-        [AssertThat(nameof(TransferDestinationNotCurrentTbService), ErrorMessage = ValidationMessages.TransferDestinationCannotBeCurrentTbService)]
         [Display(Name = "TB Service")]
         public string TbServiceCode { get; set; }
         public virtual TBService TbService { get; set; }
-        [AssertThat(nameof(CaseManagerAllowedForTbService), ErrorMessage = ValidationMessages.CaseManagerMustBeAllowedForSelectedTbService)]
         [Display(Name = "Case Manager")]
         public string CaseManagerUsername { get; set; }
         public virtual User CaseManager { get; set; }
@@ -41,30 +38,6 @@ namespace ntbs_service.Models.Entities
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "TB Service")]
         public string TbServiceName => TbService?.Name;
-
-        [NotMapped]
-        public bool CaseManagerAllowedForTbService
-        {
-            get
-            {
-                // If email not set, or TBService missing (ergo navigation properties not yet retrieved) pass validation
-                if (string.IsNullOrEmpty(CaseManagerUsername) || TbServiceCode == null)
-                {
-                    return true;
-                }
-
-                if (CaseManager?.CaseManagerTbServices == null || CaseManager.CaseManagerTbServices.Count == 0)
-                {
-                    return false;
-                }
-
-                return CaseManager.CaseManagerTbServices.Any(c => c.TbServiceCode == TbServiceCode);
-            }
-        }
-
-        [NotMapped]
-        public string NotificationTbServiceCode { get; set; }
-        public bool TransferDestinationNotCurrentTbService => AlertType != AlertType.TransferRequest || TbServiceCode != NotificationTbServiceCode;
     }
 
 }

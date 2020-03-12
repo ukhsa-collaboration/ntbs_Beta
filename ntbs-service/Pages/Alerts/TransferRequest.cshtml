@@ -13,7 +13,6 @@
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">
-        <input type="hidden" asp-for="TransferAlert.NotificationId" value="@Model.NotificationId" />
         <h2> You are about to transfer this notification </h2>
         <div>
             <cascading-dropdown filter-first-handler-path="FilteredTbServiceListsByPhecCode" 
@@ -22,43 +21,43 @@
                 :filtering-refs="['tbServices', 'caseManagers']" inline-template>
                 <div>
                     <nhs-form-group nhs-form-group-type="Standard" ref="firstFilterContainer" classes="hidden">
-                        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
+                        <label nhs-label-type="Standard" for="PhecCode">
                             PHEC
                         </label>
-                        <select ref="selectField" nhs-select-type="@SelectType.Standard"
+                        <select id="PhecCode" ref="selectField" nhs-select-type="@SelectType.Standard"
                                 asp-items="Model.Phecs" v-on:change="firstFilteringChanged">
                             <option value="" selected>Please select</option>
                         </select>
                     </nhs-form-group>
 
                     @{
-                        var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferAlert.TbServiceCode");
+                        var hasTbServiceCodeError = !Model.ValidationService.IsValid("TransferRequest.TbServiceCode");
                         var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
                         var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferAlert-TbServiceCode" ref="tbServices">
-                        <label nhs-label-type="Standard" asp-for="TransferAlert.TbServiceCode">
-                            @Html.DisplayNameFor(model => model.TransferAlert.TbServiceCode)
+                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TransferRequest-TbServiceCode" ref="tbServices">
+                        <label nhs-label-type="Standard" asp-for="TransferRequest.TbServiceCode">
+                            @Html.DisplayNameFor(model => model.TransferRequest.TbServiceCode)
                         </label>
                         <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
-                                ref="errorField" asp-validation-for="TransferAlert.TbServiceCode"></span>
-                        <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferAlert.TbServiceCode"
+                                ref="errorField" asp-validation-for="TransferRequest.TbServiceCode"></span>
+                        <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TransferRequest.TbServiceCode"
                                 asp-items="Model.TbServices" v-on:change="secondFilteringChanged">
                             <option value="" selected>Please select</option>
                         </select>
                     </nhs-form-group>
                     @{
-                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferAlert.CaseManagerUsername");
+                        var hasCaseManagerError = !Model.ValidationService.IsValid("TransferRequest.CaseManagerUsername");
                         var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
                         var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
                     }
-                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferAlert-CaseManagerUsername" ref="caseManagers">
-                        <label nhs-label-type="Standard" asp-for="TransferAlert.CaseManagerUsername">
-                            @Html.DisplayNameFor(model => model.TransferAlert.CaseManagerUsername)
+                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="TransferRequest-CaseManagerUsername" ref="caseManagers">
+                        <label nhs-label-type="Standard" asp-for="TransferRequest.CaseManagerUsername">
+                            @Html.DisplayNameFor(model => model.TransferRequest.CaseManagerUsername)
                         </label>
                         <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
-                            ref="errorField" asp-validation-for="TransferAlert.CaseManagerUsername"></span>
-                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferAlert.CaseManagerUsername"
+                            ref="errorField" asp-validation-for="TransferRequest.CaseManagerUsername"></span>
+                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="TransferRequest.CaseManagerUsername"
                                 asp-items="Model.CaseManagers">
                             <option value="" selected>Please select</option>
                         </select>
@@ -68,7 +67,7 @@
         </div>
 
         @{
-            var hasReasonError = !Model.ValidationService.IsValid("TransferAlert.TransferReason");
+            var hasReasonError = !Model.ValidationService.IsValid("TransferRequest.TransferReason");
             var reasonFormGroupType = hasReasonError ? Error : Standard;
         }
         <nhs-form-group nhs-form-group-type="@reasonFormGroupType">
@@ -77,7 +76,7 @@
                     Reason for transfer (required)
                 </nhs-fieldset-legend>
 
-                <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferReason" has-error="@hasReasonError"></span>
+                <span id="reason-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.TransferReason" has-error="@hasReasonError"></span>
 
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     @foreach (TransferReason reason in Enum.GetValues(typeof(TransferReason)))
@@ -88,7 +87,7 @@
                         if (reason != TransferReason.Other)
                         {
                             <div class="nhsuk-radios__item">
-                                <input asp-for="TransferAlert.TransferReason" nhs-input-type="Radios" type="radio"
+                                <input asp-for="TransferRequest.TransferReason" nhs-input-type="Radios" type="radio"
                                     value="@reason" id="@id" aria-describedby="reason-error">
                                 <label nhs-label-type="Radios" for="@id">
                                     @displayText
@@ -98,7 +97,7 @@
                         else
                         {
                             <div class="nhsuk-radios__item">
-                                <input asp-for="TransferAlert.TransferReason" nhs-input-type="Radios" type="radio"
+                                <input asp-for="TransferRequest.TransferReason" nhs-input-type="Radios" type="radio"
                                     value="@reason" id="@id" data-aria-controls="conditional-radio" aria-describedby="reason-error">
                                 <label nhs-label-type="Radios" for="@id">
                                     @displayText
@@ -108,17 +107,17 @@
                     }
 
                     @{
-                        var hasReasonDescriptionError = !Model.ValidationService.IsValid("TransferAlert.OtherReasonDescription");
+                        var hasReasonDescriptionError = !Model.ValidationService.IsValid("TransferRequest.OtherReasonDescription");
                         var reasonDescriptionFormGroupType = hasReasonDescriptionError ? Error : Standard;
                     }
 
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-radio">
                         <nhs-form-group nhs-form-group-type="@reasonDescriptionFormGroupType">
-                            <label asp-for="TransferAlert.OtherReasonDescription" nhs-label-type="Standard">
+                            <label asp-for="TransferRequest.OtherReasonDescription" nhs-label-type="Standard">
                                 Provide reason
                             </label>
-                            <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.OtherReasonDescription" has-error="@hasReasonDescriptionError"></span>
-                            <input asp-for="TransferAlert.OtherReasonDescription" nhs-input-type="Standard" is-error-input="@hasReasonDescriptionError" aria-describedby="description-error" />
+                            <span id="description-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.OtherReasonDescription" has-error="@hasReasonDescriptionError"></span>
+                            <input asp-for="TransferRequest.OtherReasonDescription" nhs-input-type="Standard" is-error-input="@hasReasonDescriptionError" aria-describedby="description-error" />
                         </nhs-form-group>
                     </div>
                 </div>
@@ -126,16 +125,16 @@
         </nhs-form-group>
 
         @{
-            var hasRequestNoteError = !Model.ValidationService.IsValid("TransferAlert.TransferRequestNote");
+            var hasRequestNoteError = !Model.ValidationService.IsValid("TransferRequest.TransferRequestNote");
             var requestNoteFormGroupType = hasRequestNoteError ? Error : Standard;
         }
 
         <nhs-form-group nhs-form-group-type="@requestNoteFormGroupType">
-            <label asp-for="TransferAlert.TransferRequestNote" nhs-label-type="Standard">
+            <label asp-for="TransferRequest.TransferRequestNote" nhs-label-type="Standard">
                 Add optional note to display to receiving case manager
             </label>
-            <span id="optional-note-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferAlert.TransferRequestNote" has-error="@hasRequestNoteError"></span>
-            <input asp-for="TransferAlert.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="note-error" />
+            <span id="optional-note-error" nhs-span-type="ErrorMessage" asp-validation-for="TransferRequest.TransferRequestNote" has-error="@hasRequestNoteError"></span>
+            <input asp-for="TransferRequest.TransferRequestNote" nhs-input-type="Standard" is-error-input="@hasRequestNoteError" aria-describedby="note-error" />
         </nhs-form-group>
 
         <div class="flex-container">
