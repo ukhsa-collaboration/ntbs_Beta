@@ -475,17 +475,23 @@ namespace ntbs_service.DataMigration
         
         private static List<TreatmentEvent> ExtractTreatmentEvents(dynamic notification)
         {
-            var treatmentEvents = new List<TreatmentEvent> {new TreatmentEvent
+            var treatmentEvents = new List<TreatmentEvent>();
+            if (notification.IsPostMortem)
             {
-                EventDate = notification.DeathDate,
-                TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                TreatmentOutcome = new TreatmentOutcome
-                {
-                    TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
-                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
-                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
-                }
-            }};
+                treatmentEvents.Append(
+                    new TreatmentEvent
+                    {
+                        EventDate = notification.DeathDate,
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
+                        TreatmentOutcome = new TreatmentOutcome
+                        {
+                            TreatmentOutcomeId = TreatmentOutcomes.UnknownDeathEventOutcomeId,
+                            TreatmentOutcomeType = TreatmentOutcomeType.Died,
+                            TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                        }
+                    });
+            }
             return treatmentEvents;
         }
 
