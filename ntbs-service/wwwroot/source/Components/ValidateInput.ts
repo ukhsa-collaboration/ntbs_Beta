@@ -20,7 +20,8 @@ const ValidateInput = Vue.extend({
                 params: {
                     "value": newValue,
                     "shouldValidateFull": this.$props.shouldvalidatefull || false,
-                    "key": this.$props.property
+                    "key": this.$props.property,
+                    [this.$props.property]: newValue
                 }
             };
             axios.request(requestConfig)

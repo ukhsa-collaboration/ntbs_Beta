@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -97,32 +96,6 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return RedirectToPage("/Notifications/Edit/MBovisExposureToKnownCases", new { NotificationId });
         }
         
-        public async Task<ContentResult> OnGetValidateMBovisExposureToKnownCaseRelatedNotificationAsync(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return ValidationService.ValidContent();
-            }
-            
-            if (int.TryParse(value, out var notificationId))
-            {
-                if (notificationId == NotificationId)
-                {
-                    return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId });
-                }
-                
-                var relatedNotification = await GetNotificationAsync(notificationId);
-                if (relatedNotification == null) 
-                {
-                    return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdInvalid });
-                }
-                var info = NotificationInfo.CreateFromNotification(relatedNotification);
-                return CreateJsonResponse(new { relatedNotification = info });
-            }
-            
-            return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdMustBeInteger });
-        }
-        
         public ContentResult OnGetValidateMBovisExposureToKnownCaseProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(key, value, shouldValidateFull);
@@ -145,7 +118,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 {
                     ModelState.AddModelError(
                         $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
-                        ValidationMessages.RelatedNotificationIdInvalid);
+                        ValidationMessages.IdDoesNotMatchNtbsRecord);
                 }
             }
         }
