@@ -1,6 +1,6 @@
 using System;
-using Hangfire.Server;
 using Hangfire.Console;
+using Hangfire.Server;
 using Serilog;
 
 namespace ntbs_service.DataMigration
@@ -45,7 +45,7 @@ namespace ntbs_service.DataMigration
 
         public void LogWarning(PerformContext context, string requestId, string message)
         {
-            Log.Warning($"NOTIFICATION IMPORT - {requestId} - {message}");
+            Log.Information($"NOTIFICATION IMPORT - {requestId} - {message}");
             
             context.SetTextColor(ConsoleTextColor.Yellow);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
