@@ -47,6 +47,16 @@
             <div> @Model.Notification.SocialRiskFactors.ImprisonmentRiskFactorTimePeriods </div>
         </nhs-grid-column>
     </nhs-grid-row>
+    <nhs-grid-row>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> History of smoking </div>
+            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorSmoking?.Status </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneHalf">
+            <div class="notification-details-label"> Time periods </div>
+            <div> @Model.Notification.SocialRiskFactors.SmokingRiskFactorTimePeriods </div>
+        </nhs-grid-column>
+    </nhs-grid-row>
 
     <br/>
     <nhs-grid-row>
@@ -55,15 +65,9 @@
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.AlcoholMisuseStatus </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Smoker </div>
-            <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.SmokingStatus </div>
-        </nhs-grid-column>
-        <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Mental health issues </div>
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.MentalHealthStatus </div>
         </nhs-grid-column>
-    </nhs-grid-row>
-    <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Asylum Seeker </div>
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.AsylumSeekerStatus </div>

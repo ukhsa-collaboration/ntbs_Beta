@@ -14,13 +14,14 @@ namespace ntbs_service.Models.Entities
             RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness);
             RiskFactorDrugs = new RiskFactorDetails(RiskFactorType.Drugs);
             RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment);
+            RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking);
         }
 
         public Status? AlcoholMisuseStatus { get; set; }
-        public Status? SmokingStatus { get; set; }
         public Status? MentalHealthStatus { get; set; }
         public Status? AsylumSeekerStatus { get; set; }
         public Status? ImmigrationDetaineeStatus { get; set; }
+        public virtual RiskFactorDetails RiskFactorSmoking { get; set; }
         public virtual RiskFactorDetails RiskFactorDrugs { get; set; }
         public virtual RiskFactorDetails RiskFactorHomelessness { get; set; }
         public virtual RiskFactorDetails RiskFactorImprisonment { get; set; }

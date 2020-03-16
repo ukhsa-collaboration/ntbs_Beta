@@ -7,6 +7,7 @@ namespace ntbs_service.Models.Entities
         public string DrugRiskFactorTimePeriods => CreateTimePeriodsString(RiskFactorDrugs);
         public string HomelessRiskFactorTimePeriods => CreateTimePeriodsString(RiskFactorHomelessness);
         public string ImprisonmentRiskFactorTimePeriods => CreateTimePeriodsString(RiskFactorImprisonment);
+        public string SmokingRiskFactorTimePeriods => CreateTimePeriodsString(RiskFactorSmoking);
         
         private static string CreateTimePeriodsString(RiskFactorDetails riskFactor)
         {
