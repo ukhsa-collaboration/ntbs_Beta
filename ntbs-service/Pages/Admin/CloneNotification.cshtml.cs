@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
@@ -14,18 +15,26 @@ using ntbs_service.Services;
 namespace ntbs_service.Pages.Admin
 {
     [Authorize(Policy = "AdminOnly")]
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class CloneNotification : PageModel
     {
         private readonly ValidationService _validationService;
         private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly INotificationCloningService _cloningService;
 
         public SelectList TbServices { get; }
         public SelectList Hospitals { get; }
         public SelectList CaseManagers { get; }
 
-        public CloneNotification(IReferenceDataRepository referenceDataRepository)
+        public CloneNotification(
+            IReferenceDataRepository referenceDataRepository,
+            INotificationRepository notificationRepository,
+            INotificationCloningService cloningService)
         {
             _referenceDataRepository = referenceDataRepository;
+            _notificationRepository = notificationRepository;
+            _cloningService = cloningService;
             _validationService = new ValidationService(this);
 
             var services = referenceDataRepository.GetAllTbServicesAsync().Result;
@@ -50,7 +59,7 @@ namespace ntbs_service.Pages.Admin
         public string TBServiceCode { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public Guid HospitalId { get; set; }
+        public Guid? HospitalId { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string CaseManagerUsername { get; set; }
@@ -75,8 +84,54 @@ namespace ntbs_service.Pages.Admin
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void OnPostAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
+            if (NotificationId == null)
+            {
+                ModelState.AddModelError(nameof(NotificationId), "Notification Id is required");
+                return Page();
+            }
+
+            var notificationToClone = await _notificationRepository.GetNotificationWithAllInfoAsync(NotificationId.Value);
+            if (notificationToClone == null)
+            {
+                ModelState.AddModelError(nameof(NotificationId), "Notification not found");
+                return Page();
+            }
+
+            var clone = _cloningService.Clone(notificationToClone);
+            OverrideValues(clone);
+
+            await _notificationRepository.AddNotificationAsync(notificationToClone);
+            return RedirectToPage("/Notifications/Overview", new { notificationToClone.NotificationId });
+        }
+
+        private void OverrideValues(Notification clone)
+        {
+            if (TBServiceCode != null)
+            {
+                clone.HospitalDetails.TBServiceCode = TBServiceCode;
+            }
+
+            if (HospitalId != null)
+            {
+                clone.HospitalDetails.HospitalId = HospitalId;
+            }
+
+            if (CaseManagerUsername != null)
+            {
+                clone.HospitalDetails.CaseManagerUsername = CaseManagerUsername;
+            }
+
+            if (GivenName != null)
+            {
+                clone.PatientDetails.GivenName = GivenName;
+            }
+
+            if (FamilyName != null)
+            {
+                clone.PatientDetails.FamilyName = FamilyName;
+            }
         }
 
         // ReSharper disable once UnusedMember.Global

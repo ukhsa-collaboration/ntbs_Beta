@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -11,11 +12,12 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
+        Task SaveChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
+        Task AddNotificationAsync(Notification notification);
         IQueryable<Notification> GetBaseNotificationsIQueryable();
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
         IQueryable<Notification> GetRecentNotificationsIQueryable();
         IQueryable<Notification> GetDraftNotificationsIQueryable();
-
         Task<Notification> GetNotificationWithNotificationSitesAsync(int notificationId);
         Task<Notification> GetNotificationWithCaseManagerTbServicesAsync(int notificationId);
         Task<Notification> GetNotificationWithTestsAsync(int notificationId);
@@ -46,6 +48,19 @@ namespace ntbs_service.DataAccess
         public NotificationRepository(NtbsContext context)
         {
             _context = context;
+        }
+
+        public async Task SaveChangesAsync(NotificationAuditType auditType)
+        {
+            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+
+            await _context.SaveChangesAsync();
+        }
+        
+        public async Task AddNotificationAsync(Notification notification)
+        {
+            _context.Notification.Add(notification);
+            await SaveChangesAsync(NotificationAuditType.Added);
         }
 
         public IQueryable<Notification> GetRecentNotificationsIQueryable()

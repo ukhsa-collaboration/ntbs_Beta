@@ -102,6 +102,7 @@
                         </span>
                         <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TBServiceCode"
                                 asp-items="Model.TbServices" v-on:change="validate">
+                            <option value="" selected>Please select</option>
                         </select>
                     </nhs-form-group>
                 </validate-input>
