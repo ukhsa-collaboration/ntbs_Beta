@@ -38,6 +38,8 @@ import FilteredHomepageKpiDetails from "./Components/FilteredHomepageKpiDetails"
 import PrintButton from "./Components/PrintButton";
 import FormLeaveChecker from "./Components/FormLeaveChecker";
 import ConfirmComponent from "./Components/ConfirmComponent";
+import InactivityChecker from "./Components/InactivityChecker";
+import InactivityLeaveComponent from "./Components/InactivityLeaveComponent";
 
 // For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
@@ -76,6 +78,8 @@ Vue.component("filtered-homepage-kpi", FilteredHomepageKpiDetails);
 Vue.component("print-button", PrintButton);
 Vue.component("form-leave-checker", FormLeaveChecker);
 Vue.component("confirm-component", ConfirmComponent);
+Vue.component("inactivity-checker", InactivityChecker);
+Vue.component("inactivity-component", InactivityLeaveComponent);
 
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!

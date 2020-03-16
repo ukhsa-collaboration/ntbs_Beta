@@ -1,6 +1,7 @@
 var getHeaders = function() {
+    let token = (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]'));
     return {
-        "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
+        "RequestVerificationToken": token == null ? token : token.value
     }
 }
 
@@ -14,6 +15,10 @@ var buildPath = function(actionPath: string) {
     return `${pathWithNoTrailingSlash}/${actionPath}`;
 }
 
+var buildPathRelativeToOrigin = function(actionPath: string) {
+    return `${window.location.origin}/${actionPath}`;
+}
+
 type FormattedDate = { day: any, month: any, year: any };
 
 var convertFormattedDateToDate = function(date: FormattedDate) {
@@ -21,5 +26,5 @@ var convertFormattedDateToDate = function(date: FormattedDate) {
 }
 
 export { 
-    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath
+    getHeaders, getValidationPath, FormattedDate, convertFormattedDateToDate, buildPath, buildPathRelativeToOrigin
 };
