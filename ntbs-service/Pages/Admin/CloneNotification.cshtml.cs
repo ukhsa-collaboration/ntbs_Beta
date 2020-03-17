@@ -96,8 +96,9 @@ namespace ntbs_service.Pages.Admin
             if (notificationToClone == null)
             {
                 ModelState.AddModelError(nameof(NotificationId), "Notification not found");
-                return Page();
             }
+
+            if (!ModelState.IsValid) return Page();
 
             var clone = _cloningService.Clone(notificationToClone);
             OverrideValues(clone);
