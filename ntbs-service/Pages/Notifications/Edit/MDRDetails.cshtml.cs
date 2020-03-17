@@ -85,7 +85,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 var relatedNotification =
                     await NotificationRepository.GetNotificationAsync(MDRDetails.RelatedNotificationId.Value);
-                if (relatedNotification != null && relatedNotification.HasBeenNotified)
+                if (relatedNotification == null || !relatedNotification.HasBeenNotified)
                 {
                     ModelState.AddModelError("MDRDetails.RelatedNotificationId",
                         ValidationMessages.IdDoesNotMatchNtbsRecord);
