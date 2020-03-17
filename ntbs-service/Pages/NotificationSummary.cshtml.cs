@@ -22,14 +22,14 @@ namespace ntbs_service.Pages
         }
 
         // ReSharper disable once UnusedMember.Global
-        public async Task<ContentResult> OnGetAsync(string NotificationId, bool allowDraft = false)
+        public async Task<ContentResult> OnGetAsync(string notificationId, bool allowDraft = false)
         {
-            if (string.IsNullOrEmpty(NotificationId))
+            if (string.IsNullOrEmpty(notificationId))
             {
                 return _validationService.ValidContent();
             }
 
-            if (!int.TryParse(NotificationId, out var notificationId))
+            if (!int.TryParse(notificationId, out var parsedId))
             {
                 return CreateJsonResponse(new
                 {
@@ -37,12 +37,12 @@ namespace ntbs_service.Pages
                 });
             }
 
-            var relatedNotification = await _notificationRepository.GetNotificationAsync(notificationId);
-            if (!(relatedNotification != null && (allowDraft || relatedNotification.HasBeenNotified)))
+            var notification = await _notificationRepository.GetNotificationAsync(parsedId);
+            if (notification == null || (!allowDraft && !notification.HasBeenNotified))
             {
                 return CreateJsonResponse(new { validationMessage = ValidationMessages.IdDoesNotMatchNtbsRecord });
             }
-            var info = NotificationInfo.CreateFromNotification(relatedNotification);
+            var info = NotificationInfo.CreateFromNotification(notification);
             return CreateJsonResponse(new { relatedNotification = info });
         }
 

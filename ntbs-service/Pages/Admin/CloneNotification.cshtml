@@ -23,7 +23,7 @@
             var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.NotificationId)}");
             var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
         }
-        <validate-related-notification allowDraft="true" inline-template>
+        <validate-related-notification allow-draft="true" inline-template>
             <nhs-form-group
                 id="@($"{nameof(Model.NotificationId)}")"
                 nhs-form-group-type="@relatedNotificationGroupState"
