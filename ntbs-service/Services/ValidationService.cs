@@ -124,7 +124,7 @@ namespace ntbs_service.Services
             }
         }
 
-        private ContentResult GetValidationResult(object model, string key)
+        public ContentResult GetValidationResult(object model, string key)
         {
             _pageModel.TryValidateModel(model);
 

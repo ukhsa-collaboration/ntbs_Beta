@@ -4,8 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using EFAuditer;
-using MoreLinq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -17,7 +15,6 @@ namespace ntbs_service.Services
 {
     public interface INotificationService
     {
-        Task AddNotificationAsync(Notification notification);
         Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patientDetails);
         Task UpdatePatientFlagsAsync(PatientDetails patientDetails);
         Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails timeline);
@@ -77,18 +74,12 @@ namespace ntbs_service.Services
             _alertService = alertService;
         }
 
-        public async Task AddNotificationAsync(Notification notification)
-        {
-            _context.Notification.Add(notification);
-            await UpdateDatabaseAsync(NotificationAuditType.Added);
-        }
-
         public async Task UpdatePatientDetailsAsync(Notification notification, PatientDetails patient)
         {
             await UpdatePatientFlagsAsync(patient);
             _context.SetValues(notification.PatientDetails, patient);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityBirthCountryAlert>(notification);
         }
 
@@ -168,7 +159,7 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
         }
 
@@ -177,21 +168,21 @@ namespace ntbs_service.Services
             testData.NotificationId = notification.NotificationId;
             _context.SetValues(notification.TestData, testData);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateHospitalDetailsAsync(Notification notification, HospitalDetails hospitalDetails)
         {
             _context.SetValues(notification.HospitalDetails, hospitalDetails);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing)
         {
             _context.SetValues(notification.ContactTracing, contactTracing);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails)
@@ -199,7 +190,7 @@ namespace ntbs_service.Services
             UpdateTravelDetails(notification, travelDetails);
             UpdateVisitorDetails(notification, visitorDetails);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         private void UpdateTravelDetails(Notification notification, TravelDetails travelDetails)
@@ -238,7 +229,7 @@ namespace ntbs_service.Services
         {
             _context.SetValues(notification.PatientTBHistory, tBHistory);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors socialRiskFactors)
@@ -252,7 +243,7 @@ namespace ntbs_service.Services
 
             _context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment, socialRiskFactors.RiskFactorImprisonment);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         private static void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors)
@@ -294,13 +285,13 @@ namespace ntbs_service.Services
             }
 
             _context.SetValues(notification.ImmunosuppressionDetails, immunosuppressionDetails);
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMDRDetailsAsync(Notification notification, MDRDetails details)
         {
             _context.SetValues(notification.MDRDetails, details);
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateSitesAsync(int notificationId, IEnumerable<NotificationSite> notificationSites)
@@ -323,7 +314,7 @@ namespace ntbs_service.Services
             var sitesToRemove = currentSites.Where(s => !notificationSites.Select(ns => ns.SiteId).Contains(s.SiteId));
             _context.NotificationSite.RemoveRange(sitesToRemove);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task SubmitNotificationAsync(Notification notification)
@@ -332,7 +323,7 @@ namespace ntbs_service.Services
             notification.NotificationStatus = NotificationStatus.Notified;
             notification.SubmissionDate = DateTime.UtcNow;
 
-            await UpdateDatabaseAsync(NotificationAuditType.Notified);
+            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Notified);
             if (notification.ClinicalDetails.IsPostMortem != true)
             {
                 await CreateTreatmentEventNotificationStart(notification);
@@ -357,24 +348,24 @@ namespace ntbs_service.Services
             var linkedNotification = await CreateNewNotificationForUserAsync(user);
             _context.Attach(linkedNotification);
             _context.SetValues(linkedNotification.PatientDetails, notification.PatientDetails);
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
 
             if (notification.GroupId != null)
             {
                 linkedNotification.GroupId = notification.GroupId;
-                await UpdateDatabaseAsync();
+                await _notificationRepository.SaveChangesAsync();
             }
             else
             {
                 var group = new NotificationGroup();
                 _context.NotificationGroup.Add(group);
-                await UpdateDatabaseAsync(NotificationAuditType.Added);
+                await _notificationRepository.SaveChangesAsync(NotificationAuditType.Added);
 
                 linkedNotification.GroupId = group.NotificationGroupId;
-                await UpdateDatabaseAsync();
+                await _notificationRepository.SaveChangesAsync();
 
                 notification.GroupId = group.NotificationGroupId;
-                await UpdateDatabaseAsync();
+                await _notificationRepository.SaveChangesAsync();
             }
 
             return linkedNotification;
@@ -395,7 +386,7 @@ namespace ntbs_service.Services
                 }
             };
 
-            await AddNotificationAsync(notification);
+            await _notificationRepository.AddNotificationAsync(notification);
             return notification;
         }
 
@@ -419,31 +410,31 @@ namespace ntbs_service.Services
         public async Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile)
         {
             _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasExposureToKnownCases});
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasUnpasteurisedMilkConsumption});
-            await UpdateDatabaseAsync();        
+            await _notificationRepository.SaveChangesAsync();        
         }
 
         public async Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasOccupationExposure});
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task UpdateMBovisDetailsAnimalExposureAsync(Notification notification, MBovisDetails mBovisDetails)
         {
             _context.SetValues(notification.MBovisDetails, new {mBovisDetails.HasAnimalExposure});
-            await UpdateDatabaseAsync();            
+            await _notificationRepository.SaveChangesAsync();            
         }
 
         private async Task<string> GetDefaultCaseManagerEmail(ClaimsPrincipal user, string tbServiceCode)
@@ -456,18 +447,11 @@ namespace ntbs_service.Services
             return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
         }
 
-        private async Task UpdateDatabaseAsync(NotificationAuditType auditType = NotificationAuditType.Edited)
-        {
-            _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)
         {
             _context.SetValues(notification.ComorbidityDetails, comorbidityDetails);
 
-            await UpdateDatabaseAsync();
+            await _notificationRepository.SaveChangesAsync();
         }
 
         public async Task DenotifyNotificationAsync(int notificationId, DenotificationDetails denotificationDetails,
@@ -486,7 +470,7 @@ namespace ntbs_service.Services
 
             notification.NotificationStatus = NotificationStatus.Denotified;
 
-            await UpdateDatabaseAsync(NotificationAuditType.Denotified);
+            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Denotified);
             
             Log.Debug($"{notificationId} denotified, removing lab result matches");
             var success = await _specimenService.UnmatchAllSpecimensForNotification(notificationId, auditUsername);
@@ -503,7 +487,7 @@ namespace ntbs_service.Services
             notification.GroupId = null;
             notification.NotificationStatus = NotificationStatus.Deleted;
 
-            await UpdateDatabaseAsync(NotificationAuditType.Deleted);
+            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Deleted);
         }
 
         public async Task CloseInactiveNotifications()
@@ -513,7 +497,7 @@ namespace ntbs_service.Services
             {
                 notification.NotificationStatus = NotificationStatus.Closed;
             }
-            await UpdateDatabaseAsync(NotificationAuditType.Closed);
+            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed);
         }
     }
 }
