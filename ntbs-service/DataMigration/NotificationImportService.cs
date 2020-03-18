@@ -203,24 +203,31 @@ namespace ntbs_service.DataMigration
         /// As this is a data-lossy action, we want to perform it here (rather than at sql script level), to ensure that
         /// it is recorded in the migration log
         /// </summary>
-        private void CleanData(Notification notification, string notificationId, PerformContext context, string requestId)
+        private void CleanData(Notification notification,
+            string notificationId,
+            PerformContext context,
+            string requestId)
         {
-            notification.TestData.ManualTestResults.ForEach(result =>
+            var missingDateResults = notification.TestData.ManualTestResults
+                .Where(result => !result.TestDate.HasValue)
+                .ToList();
+            missingDateResults.ForEach(result =>
             {
-                if (!result.TestDate.HasValue)
-                {
-                    var message =
-                        $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
-                    _logger.LogWarning(context, requestId, message);
-                    notification.TestData.ManualTestResults.Remove(result);
-                }
-                else if (result.TestDate > DateTime.Today)
-                {
-                    var message =
-                        $"Notification {notificationId} had test results dated in the future. The notification will be imported without this test record.";
-                    _logger.LogWarning(context, requestId, message);
-                    notification.TestData.ManualTestResults.Remove(result);
-                }
+                var missingDateMessage =
+                    $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
+                _logger.LogWarning(context, requestId, missingDateMessage);
+                notification.TestData.ManualTestResults.Remove(result);
+            });
+
+            var dateInFutureResults = notification.TestData.ManualTestResults
+                .Where(result => result.TestDate > DateTime.Today)
+                .ToList();
+            dateInFutureResults.ForEach(result =>
+            {
+                var dateInFutureMessage =
+                    $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
+                _logger.LogWarning(context, requestId, dateInFutureMessage);
+                notification.TestData.ManualTestResults.Remove(result);
             });
 
             if (ValidateObject(notification.ContactTracing).Any())
