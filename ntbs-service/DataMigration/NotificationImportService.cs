@@ -230,6 +230,12 @@ namespace ntbs_service.DataMigration
                 notification.TestData.ManualTestResults.Remove(result);
             });
 
+            // After filtering out invalid tests, we might have none left
+            if (!notification.TestData.ManualTestResults.Any())
+            {
+                notification.TestData.HasTestCarriedOut = false;
+            }
+
             if (ValidateObject(notification.ContactTracing).Any())
             {
                 var message =
