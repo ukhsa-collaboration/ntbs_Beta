@@ -3,10 +3,12 @@ import InactivityLeaveComponent from "./InactivityLeaveComponent";
 import { getHeaders, buildPathRelativeToOrigin } from "../helpers";
 import axios from "axios"; 
 
+const OneMinuteInMilliseconds = 60000;
+
 const InactivityChecker = Vue.extend({
     render(): any { return null },
     mounted: function() {
-        this.interval = setInterval(this.checkActivity, 60000);
+        this.interval = setInterval(this.checkActivity, OneMinuteInMilliseconds);
     },
     
     methods: {
@@ -27,7 +29,7 @@ const InactivityChecker = Vue.extend({
             };
             axios.request(requestConfig)
                 .then((response: any) => {
-                    if (response.data == "True") {
+                    if (response.data.isActive) {
                         this.$modal.close();
                     } else {
                         this.checkLeave();

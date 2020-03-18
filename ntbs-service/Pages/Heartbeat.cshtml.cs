@@ -1,7 +1,5 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ntbs_service.Helpers;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages
@@ -14,26 +12,20 @@ namespace ntbs_service.Pages
         {
             _sessionStateService = sessionStateService;
         }
-
-        public IActionResult OnGet()
-        {
-            return Page();
-            
-        }
         
-        public ContentResult OnGetIsActive()
-        { 
-            var cookie = CookieHelper.GetUserCookie(HttpContext.Request);
-            return new ContentResult
+        public JsonResult OnGetIsActive()
+        {
+            var isActive = _sessionStateService.IsUpdatedRecently(HttpContext.Session);
+
+            return new JsonResult(new 
             {
-                Content = _sessionStateService.IsUpdatedRecently(cookie).ToString()
-            };
+                IsActive = isActive
+            });
         }
 
         public void OnGetUpdateActivity()
         {
-            var cookie = CookieHelper.GetUserCookie(HttpContext.Request);
-            _sessionStateService.UpdateSessionStateService(cookie);
+            _sessionStateService.UpdateSessionActivity(HttpContext.Session);
         }
     }
 }

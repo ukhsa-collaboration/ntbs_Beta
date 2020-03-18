@@ -62,13 +62,22 @@ namespace ntbs_service
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
             // Plugin services
-            services.AddDistributedSqlServerCache(options =>
+            if (!Env.IsEnvironment("CI"))
             {
-                options.ConnectionString = Configuration.GetConnectionString("ntbsContext");
-                options.SchemaName = "dbo";
-                options.TableName = "SessionState";
-            });
-            
+                services.AddDistributedSqlServerCache(options =>
+                {
+                    options.ConnectionString = Configuration.GetConnectionString("ntbsContext");
+                    options.SchemaName = "dbo";
+                    options.TableName = "SessionState";
+                });
+                
+                services.AddSession(options =>
+                {
+                    options.Cookie.Name = ".AspNetCore.Cookies";
+                    options.Cookie.IsEssential = true;
+                });
+            }
+
             SetupAuthentication(services, adfsConfig);
 
             services.AddMvc(options =>
@@ -328,12 +337,17 @@ namespace ntbs_service
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseCookiePolicy();
-            
-            app.UseMiddleware<SessionStateRequestMiddleware>();
-            
-            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+
+            if (!Env.IsEnvironment("CI"))
             {
-                app.UseMiddleware<AuditGetRequestMiddleWare>();
+                app.UseSession();
+
+                app.UseMiddleware<SessionStateRequestMiddleware>();
+                
+                if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+                {
+                    app.UseMiddleware<AuditGetRequestMiddleWare>();
+                }
             }
 
             app.UseMvc();

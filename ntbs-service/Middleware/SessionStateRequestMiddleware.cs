@@ -18,8 +18,7 @@ namespace ntbs_service.Middleware
         {
             if (!context.Request.Path.Value.Contains("Heartbeat"))
             {
-                var cookie = CookieHelper.GetUserCookie(context.Request);
-                sessionStateService.UpdateSessionStateService(cookie);
+                sessionStateService.UpdateSessionActivity(context.Session);
             }
             
             // Call the MVC middleware so we know HTTP status code

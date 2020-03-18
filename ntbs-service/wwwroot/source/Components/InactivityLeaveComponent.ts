@@ -6,7 +6,7 @@ const timerTemplate = `
             <h3 class="dialog-box-message">{{ message }}</h3>
             <h5>You will be automatically logged out of NTBS in {{ Math.floor(timer/60) }}m {{timer%60}}s due to inactivity.</h5>
             <div class="dialog-box-button-container">
-                <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="rejectHandler">Stay</button>
+                <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="rejectHandler">Kepp me logged in</button>
                 <button class="nhsuk-button nhsuk-button--secondary dialog-box-button" type="button" @click="resolveHandler">Logout</button>
             </div>
         </section>
@@ -30,7 +30,6 @@ export default Vue.extend({
     data: function () {
         return {
             timer: 120,
-            counter: false,
             interval: null
         }
     },
@@ -49,15 +48,10 @@ export default Vue.extend({
             this.reject();
         },
         countDown() {
-            var n = this.timer;
-            if (!this.counter) {
-                this.counter = true;
-            } else if (n > 0) {
-                n = n - 1;
-                this.timer = n;
+            if (this.timer > 0) {
+                this.timer--;
             } else {
                 clearInterval(this.interval);
-                this.counter = false;
                 this.resolveHandler();
             }
         },

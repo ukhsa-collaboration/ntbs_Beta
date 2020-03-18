@@ -1,35 +1,31 @@
 ﻿using System;
-using Microsoft.Extensions.Caching.Distributed;
-using ntbs_service.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ntbs_service.Services
 {
     public interface ISessionStateService
     {
-        void UpdateSessionStateService(string cookie, string value = null);
-        bool IsUpdatedRecently(string cookie);
+        void UpdateSessionActivity(ISession session);
+        bool IsUpdatedRecently(ISession session);
     }
     
     public class SessionStateService : ISessionStateService
     {
-        private IDistributedCache _cache;
-
-        public SessionStateService(IDistributedCache cache)
+        public void UpdateSessionActivity(ISession session)
         {
-            _cache = cache;
+            session.SetString("LastActivityTimestamp", DateTime.Now.ToString());
         }
 
-        public void UpdateSessionStateService(string cookie, string value = null)
+        public bool IsUpdatedRecently(ISession session)
         {
-            DistributedCacheEntryOptions options = new DistributedCacheEntryOptions();
-            options.AbsoluteExpiration = DateTime.Now.AddMinutes(13);
-            
-            _cache.SetString(cookie, value, options);
-        }
+            var dateString = session.GetString("LastActivityTimestamp");
+            var isActive = true;
+            if (DateTime.TryParse(dateString, out var date))
+            {
+                isActive = date.AddMinutes(13) > DateTime.Now;
+            }
 
-        public bool IsUpdatedRecently(string cookie)
-        {
-            return _cache.GetString(cookie) != null;
+            return isActive;
         }
     }
 }
