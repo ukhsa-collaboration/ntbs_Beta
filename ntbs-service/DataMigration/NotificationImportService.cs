@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
@@ -142,6 +143,8 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
+                CleanData(notification, linkedNotificationId, context, requestId);
+
                 var validationErrors = (await GetValidationErrors(notification)).ToList();
                 if (!validationErrors.Any())
                 {
@@ -192,6 +195,33 @@ namespace ntbs_service.DataMigration
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             return importResult;
+        }
+
+        /// <summary>
+        /// There are instances of validation issues in the legacy data where we've resolved to remove the offending
+        /// data points.
+        /// As this is a data-lossy action, we want to perform it here (rather than at sql script level), to ensure that
+        /// it is recorded in the migration log
+        /// </summary>
+        private void CleanData(Notification notification, string notificationId, PerformContext context, string requestId)
+        {
+            notification.TestData.ManualTestResults.ForEach(result =>
+            {
+                if (!result.TestDate.HasValue)
+                {
+                    var message =
+                        $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
+                    _logger.LogWarning(context, requestId, message);
+                    notification.TestData.ManualTestResults.Remove(result);
+                }
+                else if (result.TestDate > DateTime.Today)
+                {
+                    var message =
+                        $"Notification {notificationId} had test results dated in the future. The notification will be imported without this test record.";
+                    _logger.LogWarning(context, requestId, message);
+                    notification.TestData.ManualTestResults.Remove(result);
+                }
+            });
         }
 
         /// <summary>
