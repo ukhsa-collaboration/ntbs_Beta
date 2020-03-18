@@ -222,6 +222,14 @@ namespace ntbs_service.DataMigration
                     notification.TestData.ManualTestResults.Remove(result);
                 }
             });
+
+            if (ValidateObject(notification.ContactTracing).Any())
+            {
+                var message =
+                    $"Notification {notificationId} invalid contact tracing figures. The notification will be imported without contact tracing data.";
+                _logger.LogWarning(context, requestId, message);
+                notification.ContactTracing = new ContactTracing();
+            };
         }
 
         /// <summary>
