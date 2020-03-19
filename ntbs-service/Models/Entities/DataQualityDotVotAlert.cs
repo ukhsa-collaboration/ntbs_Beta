@@ -20,16 +20,16 @@ namespace ntbs_service.Models.Entities
                     n.SocialRiskFactors.AsylumSeekerStatus == Status.Yes ||
                     n.SocialRiskFactors.ImmigrationDetaineeStatus == Status.Yes
                 ) && n.ClinicalDetails.IsDotOffered == false)
-                || // OR - record has DOT set to Yes but no social risk factors
-                ((
-                    n.SocialRiskFactors.AlcoholMisuseStatus != Status.Yes ||
-                    n.SocialRiskFactors.RiskFactorDrugs.Status != Status.Yes ||
-                    n.SocialRiskFactors.RiskFactorHomelessness.Status != Status.Yes ||
-                    n.SocialRiskFactors.RiskFactorImprisonment.Status != Status.Yes ||
-                    n.SocialRiskFactors.MentalHealthStatus != Status.Yes ||
-                    n.SocialRiskFactors.SmokingStatus != Status.Yes ||
-                    n.SocialRiskFactors.AsylumSeekerStatus != Status.Yes ||
-                    n.SocialRiskFactors.ImmigrationDetaineeStatus != Status.Yes
+                || // OR - record has no social risk factors but DOT set to Yes
+                (!(
+                    n.SocialRiskFactors.AlcoholMisuseStatus == Status.Yes ||
+                    n.SocialRiskFactors.RiskFactorDrugs.Status == Status.Yes ||
+                    n.SocialRiskFactors.RiskFactorHomelessness.Status == Status.Yes ||
+                    n.SocialRiskFactors.RiskFactorImprisonment.Status == Status.Yes ||
+                    n.SocialRiskFactors.MentalHealthStatus == Status.Yes ||
+                    n.SocialRiskFactors.SmokingStatus == Status.Yes ||
+                    n.SocialRiskFactors.AsylumSeekerStatus == Status.Yes ||
+                    n.SocialRiskFactors.ImmigrationDetaineeStatus == Status.Yes
                 ) && n.ClinicalDetails.IsDotOffered == true);
 
         public static readonly Func<Notification, bool> NotificationQualifies =
