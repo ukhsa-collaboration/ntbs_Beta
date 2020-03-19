@@ -1,6 +1,6 @@
 ﻿import Vue from "vue";
 import InactivityLeaveComponent from "./InactivityLeaveComponent";
-import { getHeaders, buildPathRelativeToOrigin } from "../helpers";
+import { buildPathRelativeToOrigin } from "../helpers";
 import axios from "axios"; 
 
 const OneMinuteInMilliseconds = 60000;
@@ -14,8 +14,7 @@ const InactivityChecker = Vue.extend({
     methods: {
         checkActivity() {
             const requestConfig = {
-                url: buildPathRelativeToOrigin("Heartbeat/IsActive"),
-                headers: getHeaders(),
+                url: buildPathRelativeToOrigin("Heartbeat/IsActive")
             };
             axios.request(requestConfig)
                 .then((response: any) => {
@@ -38,8 +37,7 @@ const InactivityChecker = Vue.extend({
         },
         updateActivity() {
             const requestConfig = {
-                url: buildPathRelativeToOrigin("Heartbeat/UpdateActivity"),
-                headers: getHeaders(),
+                url: buildPathRelativeToOrigin("Heartbeat/UpdateActivity")
             };
             axios.request(requestConfig)
                 .catch(function (error) {

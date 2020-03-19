@@ -1,7 +1,6 @@
 var getHeaders = function() {
-    let token = (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]'));
     return {
-        "RequestVerificationToken": token == null ? token : token.value
+        "RequestVerificationToken": (<HTMLInputElement>document.querySelector('[name="__RequestVerificationToken"]')).value
     }
 }
 
