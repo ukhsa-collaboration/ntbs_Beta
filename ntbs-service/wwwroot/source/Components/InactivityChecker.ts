@@ -12,16 +12,6 @@ const InactivityChecker = Vue.extend({
     },
     
     methods: {
-        checkLeave: function () {
-            this.$modal.confirm(InactivityLeaveComponent, "You have been inactive")
-                .then(() => {
-                    window.location.href = buildPathRelativeToOrigin("Logout")
-                })
-                .catch(() => {
-                    this.updateActivity();
-                    this.$modal.close()
-                });
-        },
         checkActivity() {
             const requestConfig = {
                 url: buildPathRelativeToOrigin("Heartbeat/IsActive"),
@@ -32,8 +22,18 @@ const InactivityChecker = Vue.extend({
                     if (response.data.isActive) {
                         this.$modal.close();
                     } else {
-                        this.checkLeave();
+                        this.promptLogoutModal();
                     }
+                });
+        },
+        promptLogoutModal: function () {
+            this.$modal.confirm(InactivityLeaveComponent, "You have been inactive")
+                .then(() => {
+                    window.location.href = buildPathRelativeToOrigin("Logout")
+                })
+                .catch(() => {
+                    this.updateActivity();
+                    this.$modal.close()
                 });
         },
         updateActivity() {
