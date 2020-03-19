@@ -6,10 +6,6 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "SmokingStatus",
-                table: "SocialRiskFactors");
-            
             migrationBuilder.CreateTable(
                 name: "RiskFactorSmoking",
                 columns: table => new
@@ -31,18 +27,33 @@ namespace ntbs_service.Migrations
                         principalColumn: "NotificationId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.Sql(@"
+                UPDATE [RiskFactorSmoking] SET RiskFactorSmoking.Status = rf.SmokingStatus
+                FROM RiskFactorSmoking smoking
+                JOIN SocialRiskFactors rf
+                ON rf.NotificationId = smoking.SocialRiskFactorsNotificationId");
+            
+            migrationBuilder.DropColumn(
+                name: "SmokingStatus",
+                table: "SocialRiskFactors");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "RiskFactorSmoking");
-
             migrationBuilder.AddColumn<string>(
                 name: "SmokingStatus",
                 table: "SocialRiskFactors",
                 maxLength: 30,
                 nullable: true);
+
+            migrationBuilder.Sql(@"UPDATE SocialRiskFactors SET SmokingStatus = smoking.Status
+                FROM SocialRiskFactors rf
+                JOIN RiskFactorSmoking smoking
+                ON rf.NotificationId = smoking.SocialRiskFactorsNotificationId");
+            
+            migrationBuilder.DropTable(
+                name: "RiskFactorSmoking");
         }
     }
 }

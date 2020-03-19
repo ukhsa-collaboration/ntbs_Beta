@@ -19,7 +19,7 @@
 <div class="notification-overview-details-container">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> History of drug misuse </div>
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorDrugs) </div>
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorDrugs?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
@@ -29,7 +29,7 @@
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> History of homelessness </div>
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorHomelessness) </div>
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorHomelessness?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
@@ -39,7 +39,7 @@
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> History of imprisonment </div>
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorImprisonment) </div>
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorImprisonment?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
@@ -49,7 +49,7 @@
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> History of smoking </div>
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.SocialRiskFactors.RiskFactorSmoking) </div>
             <div class="cell-min-height"> @Model.Notification.SocialRiskFactors.RiskFactorSmoking?.Status </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneHalf">
