@@ -84,6 +84,31 @@
                        nhs-input-type="Standard" asp-for="FamilyName" fixed-width="Ten" autocomplete="FamilyName"/>
             </nhs-form-group>
         </validate-input>
+        
+    @{
+        var hasSexError = !Model.IsValid("SexId");
+        var sexErrorGroupState = hasSexError ? Error : Standard;
+    }
+    <validate-input property="SexId" inline-template>
+        <nhs-form-group nhs-form-group-type="@sexErrorGroupState" id="SexId">
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Sex (required)
+                </nhs-fieldset-legend>
+                <span nhs-span-type="ErrorMessage" id="sex-error" ref="errorField" asp-validation-for="SexId" has-error="@hasSexError"></span>
+                <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
+                    @foreach (var sex in Model.Sexes)
+                    {
+                        <nhs-radios-item>
+                            <input is-error-input=@hasSexError nhs-input-type="Radios" asp-for="SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId" />
+                            <label nhs-label-type="Radios" asp-for="SexId" for="sexId-@sex.SexId">@sex.Label</label>
+                        </nhs-radios-item>
+                    }
+                </nhs-radios>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-input>
+    
         <filtered-dropdown filter-handler-path="GetFilteredListsByTbService" :filtering-refs="['caseManagers', 'hospitals']" inline-template>
             <div>
                 <validate-input property="TBServiceCode" ref="filterContainer"

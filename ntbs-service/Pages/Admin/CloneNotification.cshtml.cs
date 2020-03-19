@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace ntbs_service.Pages.Admin
         public SelectList TbServices { get; }
         public SelectList Hospitals { get; }
         public SelectList CaseManagers { get; }
+        public List<Sex> Sexes { get; }
 
         public CloneNotification(
             IReferenceDataRepository referenceDataRepository,
@@ -48,6 +50,8 @@ namespace ntbs_service.Pages.Admin
             CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Username),
                 nameof(Models.Entities.User.FullName));
+            
+            Sexes = _referenceDataRepository.GetAllSexesAsync().Result.ToList();
         }
 
         [BindProperty(SupportsGet = true)]
@@ -77,6 +81,10 @@ namespace ntbs_service.Pages.Admin
             ErrorMessage = ValidationMessages.StandardStringFormat)]
         [Display(Name = "Family name")]
         public string FamilyName { get; set; }
+        
+        [BindProperty(SupportsGet = true)]
+        [Display(Name = "Sex")]
+        public int? SexId { get; set; }
 
         // ReSharper disable once UnusedMember.Global
         public void OnGet()
@@ -96,6 +104,7 @@ namespace ntbs_service.Pages.Admin
             if (notificationToClone == null)
             {
                 ModelState.AddModelError(nameof(NotificationId), "Notification not found");
+                return Page();
             }
 
             if (!ModelState.IsValid) return Page();
@@ -132,6 +141,11 @@ namespace ntbs_service.Pages.Admin
             if (FamilyName != null)
             {
                 clone.PatientDetails.FamilyName = FamilyName;
+            }
+
+            if (SexId != null)
+            {
+                clone.PatientDetails.SexId = SexId;
             }
         }
 
