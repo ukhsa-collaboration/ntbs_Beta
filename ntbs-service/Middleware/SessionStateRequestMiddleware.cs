@@ -14,11 +14,11 @@ namespace ntbs_service.Middleware
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, ISessionStateService sessionStateService)
+        public async Task InvokeAsync(HttpContext context)
         {
             if (!context.Request.Path.Value.Contains("Heartbeat"))
             {
-                sessionStateService.UpdateSessionActivity(context.Session);
+                SessionStateHelper.UpdateSessionActivity(context.Session);
             }
             
             // Call the MVC middleware so we know HTTP status code
