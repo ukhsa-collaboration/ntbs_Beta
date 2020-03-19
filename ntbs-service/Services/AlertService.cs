@@ -80,6 +80,9 @@ namespace ntbs_service.Services
                 case DataQualityTreatmentOutcome36 _:
                     notificationQualifiesCheck = DataQualityTreatmentOutcome36.NotificationQualifies;
                     break;
+                case DataQualityDotVotAlert _:
+                    notificationQualifiesCheck = DataQualityDotVotAlert.NotificationQualifies;
+                    break;
                 default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
             }
             

@@ -82,6 +82,14 @@ namespace ntbs_service.Jobs
                 await _alertService.AddUniqueAlertAsync(alert);
             }
 
+            var notificationsForDotVotAlerts =
+                await _dataQualityRepository.GetNotificationsEligibleForDotVotAlerts();
+            foreach (var notification in notificationsForDotVotAlerts) 
+            {
+                var alert = new DataQualityDotVotAlert {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
+            }
+
             Log.Information($"Finished data quality alerts job");
         }
     }

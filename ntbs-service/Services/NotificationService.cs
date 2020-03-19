@@ -161,6 +161,7 @@ namespace ntbs_service.Services
 
             await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
+            await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
@@ -244,6 +245,7 @@ namespace ntbs_service.Services
             _context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment, socialRiskFactors.RiskFactorImprisonment);
 
             await _notificationRepository.SaveChangesAsync();
+            await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }
 
         private static void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors)

@@ -29,6 +29,8 @@ namespace ntbs_service.Models.Enums
         DataQualityTreatmentOutcome24,
         [Display(Name = "Data quality issue - missing 36 month treatment outcome")]
         DataQualityTreatmentOutcome36,
+        [Display(Name = "Data quality issue - inconsistent values for social risk factors and DOT")]
+        DataQualityDotVotAlert,
         SocialContext,
         [Display(Name = "Test Alert")]
         Test
