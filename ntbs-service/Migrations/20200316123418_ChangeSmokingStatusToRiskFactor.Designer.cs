@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200316123418_ChangeSmokingStatusToRiskFactor")]
+    partial class ChangeSmokingStatusToRiskFactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,6 @@ namespace ntbs_service.Migrations
                     b.Property<int?>("NotificationId");
 
                     b.Property<string>("TbServiceCode")
-                        .IsRequired()
                         .HasMaxLength(16);
 
                     b.HasKey("AlertId");
@@ -23685,8 +23686,7 @@ namespace ntbs_service.Migrations
 
                     b.HasOne("ntbs_service.Models.ReferenceEntities.TBService", "TbService")
                         .WithMany()
-                        .HasForeignKey("TbServiceCode")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TbServiceCode");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.CaseManagerTbService", b =>

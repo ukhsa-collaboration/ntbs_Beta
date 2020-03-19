@@ -59,7 +59,7 @@
                                     </label>
                                 </div>
                                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-uk-conditional">
-                                    <validate-related-notification model="MDRDetails" inline-template>
+                                    <validate-related-notification inline-template>
                                         @{
                                             var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
                                             var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;

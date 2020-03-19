@@ -3,7 +3,7 @@ import { getHeaders, getValidationPath } from "../helpers";
 import axios from "axios";
 
 const ValidateRelatedNotification = Vue.extend({
-    props: ["model"],
+    props: ["model", "allowDraft"],
     data: function() {
         return {
             relatedNotification: {},
@@ -25,10 +25,10 @@ const ValidateRelatedNotification = Vue.extend({
         },
         tryGetNotification: function (id: string) {
             const requestConfig = {
-                url: `${getValidationPath(this.$props.model)}RelatedNotification`,
+                url: `/NotificationSummary/${id}`,
                 headers: getHeaders(),
                 params: {
-                    "value": id,
+                    "allowDraft": this.$props.allowDraft
                 }
             };
             axios.request(requestConfig)

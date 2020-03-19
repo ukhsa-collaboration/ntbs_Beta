@@ -416,10 +416,11 @@ namespace ntbs_service.DataMigration
         {
             var factors = new SocialRiskFactors();
             factors.AlcoholMisuseStatus = Converter.GetStatusFromString(notification.AlcoholMisuseStatus);
-            factors.SmokingStatus = Converter.GetStatusFromString(notification.SmokingStatus);
             factors.MentalHealthStatus = Converter.GetStatusFromString(notification.MentalHealthStatus);
             factors.AsylumSeekerStatus = Converter.GetStatusFromString(notification.AsylumSeekerStatus);
             factors.ImmigrationDetaineeStatus = Converter.GetStatusFromString(notification.ImmigrationDetaineeStatus);
+            
+            factors.RiskFactorSmoking.Status = Converter.GetStatusFromString(notification.SmokingStatus);
             
             factors.RiskFactorDrugs.Status = Converter.GetStatusFromString(notification.riskFactorDrugs_Status);
             factors.RiskFactorDrugs.IsCurrent = Converter.GetBoolValue(notification.riskFactorDrugs_IsCurrent);

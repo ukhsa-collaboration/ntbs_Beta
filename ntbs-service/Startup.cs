@@ -150,6 +150,7 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
+            services.AddScoped<INotificationCloningService, NotificationCloningService>();
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);

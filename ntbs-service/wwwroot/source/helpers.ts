@@ -5,7 +5,7 @@ var getHeaders = function() {
 }
 
 var getValidationPath = function(modelName: string) {
-    return buildPath(`Validate${modelName}`);
+    return buildPath(`Validate${modelName || ''}`);
 }
 
 var buildPath = function(actionPath: string) {

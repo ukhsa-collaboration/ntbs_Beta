@@ -87,21 +87,19 @@
             </nhs-radios>
         </nhs-fieldset>
     </nhs-form-group>
+    
+    <div>
+        @{
+            var SmokingModelIsValid = !Model.IsValid("SocialRiskFactors.RiskFactorSmoking");
+            var SmokingViewData = new ViewDataDictionary(this.ViewData) {
+                { "propertyName", "RiskFactorSmoking" },
+                { "errorState", SmokingModelIsValid },
+                { "questionText", "Patient has a history of smoking" }
+            };
+        }
+        <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorSmoking" view-data="@SmokingViewData" />
 
-    <nhs-form-group nhs-form-group-type="Standard">
-        <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">Patient is a current smoker</nhs-fieldset-legend>
-            <nhs-radios nhs-radios-type="Standard">
-                @foreach (var status in statuses)
-                {
-                    <nhs-radios-item>
-                        <input nhs-input-type="Radios" asp-for="SocialRiskFactors.SmokingStatus" id="smoking-radio-button-@status" type="radio" value="@status" />
-                        <label nhs-label-type="Radios" for="smoking-radio-button-@status">@status</label>
-                    </nhs-radios-item>
-                }
-            </nhs-radios>
-        </nhs-fieldset>
-    </nhs-form-group>
+    </div>
 
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>

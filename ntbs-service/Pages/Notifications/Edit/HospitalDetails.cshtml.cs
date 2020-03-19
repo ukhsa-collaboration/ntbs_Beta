@@ -201,24 +201,9 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         public async Task<JsonResult> OnGetGetFilteredListsByTbService(string value)
         {
-            var tbServiceCodeAsList = new List<string> { value };
-            var filteredHospitals = await _referenceDataRepository.GetHospitalsByTbServiceCodesAsync(tbServiceCodeAsList);
-            var filteredCaseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodeAsList);
-
-            return new JsonResult(
-                new FilteredHospitalDetailsPageSelectLists
-                {
-                    Hospitals = filteredHospitals.Select(n => new OptionValue
-                    {
-                        Value = n.HospitalId.ToString(),
-                        Text = n.Name
-                    }),
-                    CaseManagers = filteredCaseManagers.Select(n => new OptionValue
-                    {
-                        Value = n.Username,
-                        Text = n.FullName
-                    })
-                });
+            var filteredHospitalDetailsPageSelectLists = 
+                await _referenceDataRepository.GetFilteredHospitalDetailsPageSelectListsByTbService(value);
+            return new JsonResult(filteredHospitalDetailsPageSelectLists);
         }
     }
 }
