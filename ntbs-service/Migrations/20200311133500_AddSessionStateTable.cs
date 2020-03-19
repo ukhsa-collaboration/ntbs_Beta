@@ -6,6 +6,8 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // https://www.c-sharpcorner.com/article/configure-sql-server-session-state-in-asp-net-core/
+            // This sql script is an alternative to 'dotnet sql-cache create'
             migrationBuilder.Sql(@"
                 CREATE TABLE [dbo].[SessionState](
                     [Id] [nvarchar](449) NOT NULL,
