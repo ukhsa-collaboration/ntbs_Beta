@@ -343,11 +343,11 @@ namespace ntbs_service
                 app.UseSession();
 
                 app.UseMiddleware<SessionStateRequestMiddleware>();
-                
-                if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
-                {
-                    app.UseMiddleware<AuditGetRequestMiddleWare>();
-                }
+            }
+            
+            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            {
+                app.UseMiddleware<AuditGetRequestMiddleWare>();
             }
 
             app.UseMvc();
