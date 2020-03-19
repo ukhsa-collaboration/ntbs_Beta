@@ -217,6 +217,7 @@ namespace ntbs_service.DataAccess
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorDrugs)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorHomelessness)
                 .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorImprisonment)
+                .Include(n => n.SocialRiskFactors).ThenInclude(x => x.RiskFactorSmoking)
                 .Include(n => n.NotificationSites).ThenInclude(x => x.Site)
                 .Include(n => n.TestData.ManualTestResults)
                     .ThenInclude(r => r.ManualTestType.ManualTestTypeSampleTypes)

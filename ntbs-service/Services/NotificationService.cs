@@ -242,6 +242,7 @@ namespace ntbs_service.Services
             _context.SetValues(notification.SocialRiskFactors.RiskFactorHomelessness, socialRiskFactors.RiskFactorHomelessness);
 
             _context.SetValues(notification.SocialRiskFactors.RiskFactorImprisonment, socialRiskFactors.RiskFactorImprisonment);
+            _context.SetValues(notification.SocialRiskFactors.RiskFactorSmoking, socialRiskFactors.RiskFactorSmoking);
 
             await _notificationRepository.SaveChangesAsync();
         }
@@ -251,6 +252,7 @@ namespace ntbs_service.Services
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorDrugs);
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorHomelessness);
             UpdateRiskFactorFlags(socialRiskFactors.RiskFactorImprisonment);
+            UpdateRiskFactorFlags(socialRiskFactors.RiskFactorSmoking);
         }
 
         private static void UpdateRiskFactorFlags(RiskFactorDetails riskFactor)

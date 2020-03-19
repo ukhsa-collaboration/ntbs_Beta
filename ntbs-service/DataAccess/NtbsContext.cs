@@ -300,10 +300,19 @@ namespace ntbs_service.DataAccess
                         rh.ToTable("RiskFactorImprisonment");
                     });
 
+                    x.OwnsOne(c => c.RiskFactorSmoking, rf =>
+                    {
+                        rf.Property(e => e.Status)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
+                        rf.Property(e => e.Type)
+                            .HasConversion(riskFactorEnumConverter)
+                            .HasMaxLength(EnumMaxLength)
+                            .HasDefaultValue(RiskFactorType.Smoking);
+                        rf.ToTable("RiskFactorSmoking");
+                    });
+
                     x.Property(e => e.AlcoholMisuseStatus)
-                        .HasConversion(statusEnumConverter)
-                        .HasMaxLength(EnumMaxLength);
-                    x.Property(e => e.SmokingStatus)
                         .HasConversion(statusEnumConverter)
                         .HasMaxLength(EnumMaxLength);
                     x.Property(e => e.MentalHealthStatus)
