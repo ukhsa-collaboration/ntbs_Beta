@@ -5,6 +5,7 @@ using ntbs_integration_tests.NotificationPages;
 using ntbs_integration_tests.TransferPage;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;

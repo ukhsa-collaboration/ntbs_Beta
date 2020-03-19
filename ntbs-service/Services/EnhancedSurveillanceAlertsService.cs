@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
+using ntbs_service.Models.Entities.Alerts;
 
 namespace ntbs_service.Services
 {

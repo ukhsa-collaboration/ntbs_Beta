@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using ntbs_service.Helpers;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
