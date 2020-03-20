@@ -73,7 +73,6 @@ namespace ntbs_service
                 
                 services.AddSession(options =>
                 {
-                    options.Cookie.Name = ".AspNetCore.Cookies";
                     options.Cookie.IsEssential = true;
                 });
             }
