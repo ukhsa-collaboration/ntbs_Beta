@@ -9,11 +9,11 @@ using Xunit;
 
 namespace ntbs_integration_tests.NotificationPages
 {
-    public class MDRDetailsPageTests : TestRunnerNotificationBase
+    public class MdrDetailsPageTests : TestRunnerNotificationBase
     {
         protected override string NotificationSubPath => NotificationSubPaths.EditMDRDetails;
 
-        public MDRDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
+        public MdrDetailsPageTests(NtbsWebApplicationFactory<Startup> factory) : base(factory) { }
 
         [Fact]
         public async Task Post_ReturnsPageWithFieldsRequiredErrors_IfExposureYesSelected()
@@ -216,61 +216,6 @@ namespace ntbs_integration_tests.NotificationPages
             Assert.Equal("Relationship of the current case to the contact can only contain letters and the symbols ' - . ,", result);
         }
 
-        [Theory]
-        [InlineData(Utilities.DRAFT_ID)]
-        [InlineData(Utilities.DENOTIFIED_ID)]
-        [InlineData(Utilities.NEW_ID)]
-        public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfInvalidId(int attemptedId)
-        {
-            // Arrange
-            var formData = new Dictionary<string, string>
-            {
-                ["value"] = $"{attemptedId}"
-            };
-
-            // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateMDRDetailsRelatedNotification"));
-
-             // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The NTBS ID does not match an existing ID in the system", result);
-        }
-
-        [Fact]
-        public async Task ValidateMDRDetailsRelatedNotification_ReturnsErrorIfIdNotInteger()
-        {
-            // Arrange
-            var formData = new Dictionary<string, string>
-            {
-                ["value"] = "1e1"
-            };
-
-            // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateMDRDetailsRelatedNotification"));
-
-             // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The NTBS ID must be an integer", result);
-        }
-
-        [Fact]
-        public async Task ValidateMDRDetailsRelatedNotification_ReturnsNotificationInfoIfValidId()
-        {
-            // Arrange
-            var formData = new Dictionary<string, string>
-            {
-                ["value"] = $"{Utilities.NOTIFIED_ID}"
-            };
-
-            // Act
-            var response = await Client.GetAsync(GetHandlerPath(formData, "ValidateMDRDetailsRelatedNotification"));
-
-             // Assert
-            var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("Name", result);
-            Assert.Contains("Dob", result);
-        }
-        
         [Fact]
         public async Task RedirectsToOverviewWithCorrectAnchorFragment_ForNotified()
         {

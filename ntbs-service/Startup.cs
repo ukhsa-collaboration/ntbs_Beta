@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
@@ -61,6 +62,22 @@ namespace ntbs_service
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
             // Plugin services
+            if (!Env.IsEnvironment("CI"))
+            {
+                services.AddDistributedSqlServerCache(options =>
+                {
+                    options.ConnectionString = Configuration.GetConnectionString("ntbsContext");
+                    options.SchemaName = "dbo";
+                    options.TableName = "SessionState";
+                });
+                
+                services.AddSession(options =>
+                {
+                    options.Cookie.Name = ".AspNetCore.Cookies";
+                    options.Cookie.IsEssential = true;
+                });
+            }
+
             SetupAuthentication(services, adfsConfig);
 
             services.AddMvc(options =>
@@ -133,6 +150,7 @@ namespace ntbs_service
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
+            services.AddScoped<INotificationCloningService, NotificationCloningService>();
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);
@@ -319,6 +337,14 @@ namespace ntbs_service
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseCookiePolicy();
+
+            if (!Env.IsEnvironment("CI"))
+            {
+                app.UseSession();
+
+                app.UseMiddleware<SessionStateRequestMiddleware>();
+            }
+            
             if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
             {
                 app.UseMiddleware<AuditGetRequestMiddleWare>();

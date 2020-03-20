@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200311133500_AddSessionStateTable")]
+    partial class AddSessionStateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24180,6 +24182,9 @@ namespace ntbs_service.Migrations
                             b1.Property<string>("MentalHealthStatus")
                                 .HasMaxLength(30);
 
+                            b1.Property<string>("SmokingStatus")
+                                .HasMaxLength(30);
+
                             b1.HasKey("NotificationId");
 
                             b1.ToTable("SocialRiskFactors");
@@ -24272,35 +24277,6 @@ namespace ntbs_service.Migrations
 
                                     b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
                                         .WithOne("RiskFactorImprisonment")
-                                        .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
-                                        .OnDelete(DeleteBehavior.Cascade);
-                                });
-
-                            b1.OwnsOne("ntbs_service.Models.Entities.RiskFactorDetails", "RiskFactorSmoking", b2 =>
-                                {
-                                    b2.Property<int>("SocialRiskFactorsNotificationId");
-
-                                    b2.Property<bool?>("InPastFiveYears");
-
-                                    b2.Property<bool?>("IsCurrent");
-
-                                    b2.Property<bool?>("MoreThanFiveYearsAgo");
-
-                                    b2.Property<string>("Status")
-                                        .HasMaxLength(30);
-
-                                    b2.Property<string>("Type")
-                                        .IsRequired()
-                                        .ValueGeneratedOnAdd()
-                                        .HasMaxLength(30)
-                                        .HasDefaultValue("Smoking");
-
-                                    b2.HasKey("SocialRiskFactorsNotificationId");
-
-                                    b2.ToTable("RiskFactorSmoking");
-
-                                    b2.HasOne("ntbs_service.Models.Entities.SocialRiskFactors")
-                                        .WithOne("RiskFactorSmoking")
                                         .HasForeignKey("ntbs_service.Models.Entities.RiskFactorDetails", "SocialRiskFactorsNotificationId")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
