@@ -20,9 +20,9 @@
           "ntbs-bulk-insert.dll": {}
         }
       },
-      "Audit.EntityFramework.Core/15.0.4": {
+      "Audit.EntityFramework.Core/15.0.5": {
         "dependencies": {
-          "Audit.NET": "15.0.4",
+          "Audit.NET": "15.0.5",
           "Microsoft.CSharp": "4.5.0",
           "Microsoft.EntityFrameworkCore": "2.2.6",
           "Microsoft.EntityFrameworkCore.Relational": "2.2.6",
@@ -30,19 +30,19 @@
         },
         "runtime": {
           "lib/netstandard2.0/Audit.EntityFramework.Core.dll": {
-            "assemblyVersion": "15.0.4.0",
-            "fileVersion": "15.0.4.0"
+            "assemblyVersion": "15.0.5.0",
+            "fileVersion": "15.0.5.0"
           }
         }
       },
-      "Audit.NET/15.0.4": {
+      "Audit.NET/15.0.5": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         },
         "runtime": {
           "lib/netstandard2.0/Audit.NET.dll": {
-            "assemblyVersion": "15.0.4.0",
-            "fileVersion": "15.0.4.0"
+            "assemblyVersion": "15.0.5.0",
+            "fileVersion": "15.0.5.0"
           }
         }
       },
@@ -651,6 +651,21 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Routing.Abstractions.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.18316"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Session/2.2.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.DataProtection": "2.2.0",
+          "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
+          "Microsoft.Extensions.Caching.Abstractions": "2.2.0",
+          "Microsoft.Extensions.Logging.Abstractions": "2.2.0",
+          "Microsoft.Extensions.Options": "2.2.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Session.dll": {
             "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.0.18316"
           }
@@ -1757,45 +1772,45 @@
           }
         }
       },
-      "Sentry/2.1.0": {
+      "Sentry/2.1.1": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
           "Sentry.PlatformAbstractions": "1.1.0",
-          "Sentry.Protocol": "2.1.0",
+          "Sentry.Protocol": "2.1.1",
           "System.Collections.Immutable": "1.5.0"
         },
         "runtime": {
           "lib/netstandard2.0/Sentry.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
+            "assemblyVersion": "2.1.1.0",
+            "fileVersion": "2.1.1.0"
           }
         }
       },
-      "Sentry.AspNetCore/2.1.0": {
+      "Sentry.AspNetCore/2.1.1": {
         "dependencies": {
           "Microsoft.AspNetCore.Diagnostics.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.Hosting": "2.1.0",
           "Microsoft.Extensions.Configuration.Binder": "2.2.0",
           "Microsoft.Extensions.DependencyInjection": "2.2.0",
-          "Sentry.Extensions.Logging": "2.1.0",
+          "Sentry.Extensions.Logging": "2.1.1",
           "System.Diagnostics.DiagnosticSource": "4.5.0"
         },
         "runtime": {
           "lib/netstandard2.0/Sentry.AspNetCore.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
+            "assemblyVersion": "2.1.1.0",
+            "fileVersion": "2.1.1.0"
           }
         }
       },
-      "Sentry.Extensions.Logging/2.1.0": {
+      "Sentry.Extensions.Logging/2.1.1": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Configuration": "2.1.0",
-          "Sentry": "2.1.0"
+          "Sentry": "2.1.1"
         },
         "runtime": {
           "lib/netstandard2.0/Sentry.Extensions.Logging.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
+            "assemblyVersion": "2.1.1.0",
+            "fileVersion": "2.1.1.0"
           }
         }
       },
@@ -1807,23 +1822,23 @@
           }
         }
       },
-      "Sentry.Protocol/2.1.0": {
+      "Sentry.Protocol/2.1.1": {
         "runtime": {
           "lib/netstandard2.0/Sentry.Protocol.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
+            "assemblyVersion": "2.1.1.0",
+            "fileVersion": "2.1.1.0"
           }
         }
       },
-      "Sentry.Serilog/2.1.0": {
+      "Sentry.Serilog/2.1.1": {
         "dependencies": {
-          "Sentry": "2.1.0",
+          "Sentry": "2.1.1",
           "Serilog": "2.8.0"
         },
         "runtime": {
           "lib/netstandard2.0/Sentry.Serilog.dll": {
-            "assemblyVersion": "2.1.0.0",
-            "fileVersion": "2.1.0.0"
+            "assemblyVersion": "2.1.1.0",
+            "fileVersion": "2.1.1.0"
           }
         }
       },
@@ -3018,7 +3033,7 @@
       },
       "EFAuditer/1.0.0": {
         "dependencies": {
-          "Audit.EntityFramework.Core": "15.0.4",
+          "Audit.EntityFramework.Core": "15.0.5",
           "Microsoft.EntityFrameworkCore": "2.2.6",
           "Microsoft.EntityFrameworkCore.Design": "2.2.6",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.2.6",
@@ -3042,7 +3057,7 @@
       },
       "ntbs-service/1.0.0": {
         "dependencies": {
-          "Audit.EntityFramework.Core": "15.0.4",
+          "Audit.EntityFramework.Core": "15.0.5",
           "CsvHelper": "15.0.1",
           "Dapper": "2.0.30",
           "EFAuditer": "1.0.0",
@@ -3053,13 +3068,14 @@
           "Hangfire.SqlServer": "1.7.9",
           "Markdig": "0.18.3",
           "Microsoft.AspNetCore.Mvc.RazorPages": "2.2.5",
+          "Microsoft.AspNetCore.Session": "2.2.0",
           "Microsoft.EntityFrameworkCore.Proxies": "2.2.6",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.4",
           "NHSUK.FrontEndLibrary.TagHelpers-fork": "1.1.4-alpha",
           "Newtonsoft.Json": "12.0.3",
           "Novell.Directory.Ldap.NETStandard2_0": "3.1.0",
-          "Sentry.AspNetCore": "2.1.0",
-          "Sentry.Serilog": "2.1.0",
+          "Sentry.AspNetCore": "2.1.1",
+          "Sentry.Serilog": "2.1.1",
           "Serilog.AspNetCore": "3.2.0",
           "morelinq": "3.3.2"
         },
@@ -3075,19 +3091,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Audit.EntityFramework.Core/15.0.4": {
+    "Audit.EntityFramework.Core/15.0.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-fmQLcURwZyi0UNthEBs3SlwpbGr5HqCFFF9EXMbCLCRRkNbY3VND52Ob0ZJ6yDuLJeQ2GLAxlxzqr+wWMuC7KQ==",
-      "path": "audit.entityframework.core/15.0.4",
-      "hashPath": "audit.entityframework.core.15.0.4.nupkg.sha512"
+      "sha512": "sha512-xtKC69vJEgWpcEQd5gqSVKmmhwn4pKhPLmhFvVaumSdTlIE/xCWl6/uzgH6OxKIp4fYJqio1v+v5yeDPdkrjAA==",
+      "path": "audit.entityframework.core/15.0.5",
+      "hashPath": "audit.entityframework.core.15.0.5.nupkg.sha512"
     },
-    "Audit.NET/15.0.4": {
+    "Audit.NET/15.0.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GM41ZEIferCIheGDNh2ZGGWyRhKCajPL+dQFR0o3NyEFB2xb3OoYd2rhcST7RzrimvzQA63ZnCQBZ3lUQIbauw==",
-      "path": "audit.net/15.0.4",
-      "hashPath": "audit.net.15.0.4.nupkg.sha512"
+      "sha512": "sha512-cqNO9jGJVRdKeDRfa+WLL0vxLrNajsMyPIXO4Jj7MB8Hd2ys0YZpx6RGKpc4KhxLHCKFTU19tG7qLdwxKFD63g==",
+      "path": "audit.net/15.0.5",
+      "hashPath": "audit.net.15.0.5.nupkg.sha512"
     },
     "Castle.Core/4.4.0": {
       "type": "package",
@@ -3410,6 +3426,13 @@
       "sha512": "sha512-lRRaPN7jDlUCVCp9i0W+PB0trFaKB0bgMJD7hEJS9Uo4R9MXaMC8X2tJhPLmeVE3SGDdYI4QNKdVmhNvMJGgPQ==",
       "path": "microsoft.aspnetcore.routing.abstractions/2.2.0",
       "hashPath": "microsoft.aspnetcore.routing.abstractions.2.2.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Session/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lOjJVh293AKaOEPi1MIC1/G9gOVZMrve2a05o56oslK6bo0PMgMB17rmPomvqrJAjMdlWZ/MGdN2y78Z9wzWTw==",
+      "path": "microsoft.aspnetcore.session/2.2.0",
+      "hashPath": "microsoft.aspnetcore.session.2.2.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.WebUtilities/2.2.0": {
       "type": "package",
@@ -4041,26 +4064,26 @@
       "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0",
       "hashPath": "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
     },
-    "Sentry/2.1.0": {
+    "Sentry/2.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/KK8HaTyxgUGDltJHLeU/33ntYupY/3ZkmtXQ9Tu8wVP6H6Exkqe3ZbV39EMM9BWu/8eb+epeVe+C8zEJftKLw==",
-      "path": "sentry/2.1.0",
-      "hashPath": "sentry.2.1.0.nupkg.sha512"
+      "sha512": "sha512-meRjG2zD1rh7bL6TJffXRUY4eRZx6oRcKXa9UY3hj1YnflErUJ4Nc1z/9G6kWtq88x8Di8O/iwy/FpaN/8lu3w==",
+      "path": "sentry/2.1.1",
+      "hashPath": "sentry.2.1.1.nupkg.sha512"
     },
-    "Sentry.AspNetCore/2.1.0": {
+    "Sentry.AspNetCore/2.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-sg7tqZlmy5Umlx6konKTyZqmRWlHX9npsfHQVEaQbuzeKrQP/vUNoC4Nnmwv7qpxSbgN6TI5EHNp4gktJLorvA==",
-      "path": "sentry.aspnetcore/2.1.0",
-      "hashPath": "sentry.aspnetcore.2.1.0.nupkg.sha512"
+      "sha512": "sha512-akRgNGS+l8QybeMue0D/ZOqNDXfH/5jlVjixSycPoxUH1dcKzUjN0zfMZvzfGjGO0ve9GmMmX7N1CjvVEvWnng==",
+      "path": "sentry.aspnetcore/2.1.1",
+      "hashPath": "sentry.aspnetcore.2.1.1.nupkg.sha512"
     },
-    "Sentry.Extensions.Logging/2.1.0": {
+    "Sentry.Extensions.Logging/2.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+EUEDoWgk/j3N6FKu9UPHxm4WNGxlCPnvCipiv3+n+0fkjg5JU9Xv5nON5E0fXgIw6yaAa85MsnXeS+l/yD8LQ==",
-      "path": "sentry.extensions.logging/2.1.0",
-      "hashPath": "sentry.extensions.logging.2.1.0.nupkg.sha512"
+      "sha512": "sha512-LNf70XhfSaOMjuGLxnbtCiqLZzh7NhQKNG8LChOmcIhUVSffNTpTxJSwtHsF7rwP88KiRGTois0ESzCre1gVng==",
+      "path": "sentry.extensions.logging/2.1.1",
+      "hashPath": "sentry.extensions.logging.2.1.1.nupkg.sha512"
     },
     "Sentry.PlatformAbstractions/1.1.0": {
       "type": "package",
@@ -4069,19 +4092,19 @@
       "path": "sentry.platformabstractions/1.1.0",
       "hashPath": "sentry.platformabstractions.1.1.0.nupkg.sha512"
     },
-    "Sentry.Protocol/2.1.0": {
+    "Sentry.Protocol/2.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-k4870NfpTm8FeDt7IgPjkjkRueDKPhmVpwWERLOu2bq2h3qAk1pyjSG8KnhPP+LqgoNnTRnF3Hw2Qk7Vmd+88g==",
-      "path": "sentry.protocol/2.1.0",
-      "hashPath": "sentry.protocol.2.1.0.nupkg.sha512"
+      "sha512": "sha512-w9Es1Ylj+GmuFhPhNae062weYzYGBDlkv93+Bsz9I88Q5zWz5oKq53W92nON54wS8uk7JPNu8c5r0un6a0MnQg==",
+      "path": "sentry.protocol/2.1.1",
+      "hashPath": "sentry.protocol.2.1.1.nupkg.sha512"
     },
-    "Sentry.Serilog/2.1.0": {
+    "Sentry.Serilog/2.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oTgi0GFqxFs445O+BXaNZFo0KttXkCT+coGDwR0JCmNyKgGrdktYNaB0ZC7zGC2a1gNtyFGwJckQEfmwY5B9oQ==",
-      "path": "sentry.serilog/2.1.0",
-      "hashPath": "sentry.serilog.2.1.0.nupkg.sha512"
+      "sha512": "sha512-vltTgNl126gaBPeG3AYEVwgETZZoBXOIQqM495mZS6rVcQiwsdgAfB+VCIDJIZHSLvZc+w9+Go2okkiBA2taaQ==",
+      "path": "sentry.serilog/2.1.1",
+      "hashPath": "sentry.serilog.2.1.1.nupkg.sha512"
     },
     "Serilog/2.8.0": {
       "type": "package",

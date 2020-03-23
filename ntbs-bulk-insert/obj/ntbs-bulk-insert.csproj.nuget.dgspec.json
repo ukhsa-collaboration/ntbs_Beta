@@ -121,7 +121,7 @@
           "dependencies": {
             "Audit.EntityFramework.Core": {
               "target": "Package",
-              "version": "[15.0.4, )"
+              "version": "[15.0.5, )"
             },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
@@ -300,7 +300,7 @@
           "dependencies": {
             "Audit.EntityFramework.Core": {
               "target": "Package",
-              "version": "[15.0.4, )"
+              "version": "[15.0.5, )"
             },
             "CsvHelper": {
               "target": "Package",
@@ -352,6 +352,10 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
+            "Microsoft.AspNetCore.Session": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Proxies": {
               "target": "Package",
               "version": "[2.2.6, )"
@@ -380,11 +384,11 @@
             },
             "Sentry.AspNetCore": {
               "target": "Package",
-              "version": "[2.1.0, )"
+              "version": "[2.1.1, )"
             },
             "Sentry.Serilog": {
               "target": "Package",
-              "version": "[2.1.0, )"
+              "version": "[2.1.1, )"
             },
             "Serilog.AspNetCore": {
               "target": "Package",

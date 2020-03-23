@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using FizzWare.NBuilder;
@@ -16,22 +17,22 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-            // generate some of dat csv shit
-            // insert of some dat csv shit
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
 
             var configuration = builder.Build();
             var connectionString = configuration.GetConnectionString("ntbsContext");
-
+            
             var options = new DbContextOptionsBuilder<NtbsContext>()
-                .UseSqlServer("data source=localhost;initial catalog=ntbsDev;trusted_connection=true;MultipleActiveResultSets=true")
+                .UseSqlServer(connectionString)
                 .Options;
             
             using (var context = new NtbsContext(options))
             {
+                context.Database.Migrate();
                 Console.WriteLine("Hello World!");
                 Console.ReadLine();
                 await generateNotifications(context);
@@ -42,17 +43,27 @@ namespace ConsoleApp2
 
         static async Task generateNotifications(NtbsContext context)
         {
-            var notificationsOperable = Builder<Notification>.CreateListOfSize(100)
+            var notificationTest = new List<Notification>
+            {
+                new Notification()
+                {
+                    NotificationDate = new DateTime(2015, 2, 2)
+                }
+            };
+            var numberOfNotifications = 1000;
+            var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
                 .All()
+                .With(n => n.NotificationId = 0)
                 .With(n => n.PatientDetails.GivenName = Faker.Name.First())
                 .With(n => n.PatientDetails.FamilyName = Faker.Name.Last())
                 .With(n => n.PatientDetails.NhsNumberNotKnown = true)
                 .With(n => n.HospitalDetails.TBServiceCode = "TBS0008")
-                .With(n => n.HospitalDetails.Consultant == "UniqueBulkInsert")
-                .With(n => n.NotificationDate = new DateTime(2017, 1, 1));
+                .With(n => n.HospitalDetails.Consultant = "UniqueBulkInsert")
+                .With(n => n.NotificationDate = new DateTime(2017, 1, 1))
+                .With(n => n.GroupId = null);
 
             var notifications= notificationsOperable.Build();
-            context.BulkInsert(notifications);
+            context.AddRange(notifications);
             await context.SaveChangesAsync();
         }
 
