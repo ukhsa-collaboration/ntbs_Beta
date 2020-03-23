@@ -34,7 +34,7 @@ namespace ntbs_service_unit_tests.Models.Entities.Alerts
                     RiskFactorHomelessness = new RiskFactorDetails(RiskFactorType.Homelessness) {Status = allStatuses},
                     RiskFactorImprisonment = new RiskFactorDetails(RiskFactorType.Imprisonment) {Status = allStatuses},
                     MentalHealthStatus = allStatuses,
-                    SmokingStatus = allStatuses,
+                    RiskFactorSmoking =   new RiskFactorDetails(RiskFactorType.Smoking) {Status = allStatuses},
                     AsylumSeekerStatus = allStatuses,
                     ImmigrationDetaineeStatus = allStatuses
                 }
