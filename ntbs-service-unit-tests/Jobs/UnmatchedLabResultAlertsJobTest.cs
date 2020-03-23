@@ -7,6 +7,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Jobs;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Services;
 using Xunit;
 

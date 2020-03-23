@@ -4,8 +4,8 @@ using Hangfire;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Jobs;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Services;
 using Xunit;
 
@@ -51,6 +51,8 @@ namespace ntbs_service_unit_tests.Jobs
                 .Returns(testNotificationList);
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts())
                 .Returns(testNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDotVotAlerts())
+                .Returns(testNotificationList);
             
             // Act
             await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
@@ -63,6 +65,7 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome12>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()));
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDotVotAlert>()));
         }
         
         [Fact]
@@ -85,6 +88,8 @@ namespace ntbs_service_unit_tests.Jobs
                 .Returns(emptyNotificationList);
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts())
                 .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDotVotAlerts())
+                .Returns(emptyNotificationList);
             
             // Act
             await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
@@ -97,6 +102,7 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome12>()), Times.Never);
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()), Times.Never);
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDotVotAlert>()), Times.Never);
         }
     }
 }

@@ -3,7 +3,8 @@ using System.Linq.Expressions;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.Entities.Alerts
+
 {
     public class DataQualityDraftAlert : Alert
     {

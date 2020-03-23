@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
@@ -79,6 +80,9 @@ namespace ntbs_service.Services
                     break;
                 case DataQualityTreatmentOutcome36 _:
                     notificationQualifiesCheck = DataQualityTreatmentOutcome36.NotificationQualifies;
+                    break;
+                case DataQualityDotVotAlert _:
+                    notificationQualifiesCheck = DataQualityDotVotAlert.NotificationQualifies;
                     break;
                 default: throw new ArgumentException("Unexpected alert type passed for automatic closing");
             }

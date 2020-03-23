@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
-using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.FilteredSelectLists;
 using ntbs_service.Models.ReferenceEntities;

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using Serilog;
 
@@ -161,6 +162,7 @@ namespace ntbs_service.Services
 
             await _notificationRepository.SaveChangesAsync();
             await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
+            await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }
 
         public async Task UpdateTestDataAsync(Notification notification, TestData testData)
@@ -245,6 +247,7 @@ namespace ntbs_service.Services
             _context.SetValues(notification.SocialRiskFactors.RiskFactorSmoking, socialRiskFactors.RiskFactorSmoking);
 
             await _notificationRepository.SaveChangesAsync();
+            await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }
 
         private static void UpdateSocialRiskFactorsFlags(SocialRiskFactors socialRiskFactors)

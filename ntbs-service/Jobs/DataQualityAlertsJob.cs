@@ -4,6 +4,7 @@ using Hangfire;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Services;
 using Serilog;
 
@@ -79,6 +80,14 @@ namespace ntbs_service.Jobs
             foreach (var notification in notificationsForTreatmentOutcome36Alerts)
             {
                 var alert = new DataQualityTreatmentOutcome36 {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
+            }
+
+            var notificationsForDotVotAlerts =
+                await _dataQualityRepository.GetNotificationsEligibleForDotVotAlerts();
+            foreach (var notification in notificationsForDotVotAlerts) 
+            {
+                var alert = new DataQualityDotVotAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
 

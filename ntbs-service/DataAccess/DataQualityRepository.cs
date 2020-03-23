@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.DataAccess
@@ -17,6 +18,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
+        Task<IList<Notification>> GetNotificationsEligibleForDotVotAlerts();
     }
 
     public class DataQualityRepository : IDataQualityRepository
@@ -91,6 +93,13 @@ namespace ntbs_service.DataAccess
             return notificationsInDateRange
                 .Where(DataQualityTreatmentOutcome36.NotificationInRangeQualifies)
                 .ToList();
+        }
+
+        public async Task<IList<Notification>> GetNotificationsEligibleForDotVotAlerts()
+        {
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
+                .Where(DataQualityDotVotAlert.NotificationQualifiesExpression)
+                .ToListAsync();
         }
 
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()

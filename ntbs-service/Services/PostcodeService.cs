@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models;
 using System.Linq;
 using ntbs_service.DataAccess;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services

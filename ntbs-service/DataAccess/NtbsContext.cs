@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 
@@ -595,7 +596,8 @@ namespace ntbs_service.DataAccess
                     .HasValue<DataQualityClusterAlert>(AlertType.DataQualityCluster)
                     .HasValue<DataQualityTreatmentOutcome12>(AlertType.DataQualityTreatmentOutcome12)
                     .HasValue<DataQualityTreatmentOutcome24>(AlertType.DataQualityTreatmentOutcome24)
-                    .HasValue<DataQualityTreatmentOutcome36>(AlertType.DataQualityTreatmentOutcome36);
+                    .HasValue<DataQualityTreatmentOutcome36>(AlertType.DataQualityTreatmentOutcome36)
+                    .HasValue<DataQualityDotVotAlert>(AlertType.DataQualityDotVotAlert);
 
                 entity.HasIndex(e => new { e.AlertStatus, e.AlertType, e.TbServiceCode });
             });

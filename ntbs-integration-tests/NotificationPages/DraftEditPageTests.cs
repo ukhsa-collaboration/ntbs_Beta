@@ -5,6 +5,7 @@ using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using Xunit;
 
