@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
@@ -142,6 +143,8 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
+                CleanData(notification, linkedNotificationId, context, requestId);
+
                 var validationErrors = (await GetValidationErrors(notification)).ToList();
                 if (!validationErrors.Any())
                 {
@@ -192,6 +195,54 @@ namespace ntbs_service.DataMigration
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             return importResult;
+        }
+
+        /// <summary>
+        /// There are instances of validation issues in the legacy data where we've resolved to remove the offending
+        /// data points.
+        /// As this is a data-lossy action, we want to perform it here (rather than at sql script level), to ensure that
+        /// it is recorded in the migration log
+        /// </summary>
+        private void CleanData(Notification notification,
+            string notificationId,
+            PerformContext context,
+            string requestId)
+        {
+            var missingDateResults = notification.TestData.ManualTestResults
+                .Where(result => !result.TestDate.HasValue)
+                .ToList();
+            missingDateResults.ForEach(result =>
+            {
+                var missingDateMessage =
+                    $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
+                _logger.LogWarning(context, requestId, missingDateMessage);
+                notification.TestData.ManualTestResults.Remove(result);
+            });
+
+            var dateInFutureResults = notification.TestData.ManualTestResults
+                .Where(result => result.TestDate > DateTime.Today)
+                .ToList();
+            dateInFutureResults.ForEach(result =>
+            {
+                var dateInFutureMessage =
+                    $"Notification {notificationId} had test results with date set in future. The notification will be imported without this test record.";
+                _logger.LogWarning(context, requestId, dateInFutureMessage);
+                notification.TestData.ManualTestResults.Remove(result);
+            });
+
+            // After filtering out invalid tests, we might have none left
+            if (!notification.TestData.ManualTestResults.Any())
+            {
+                notification.TestData.HasTestCarriedOut = false;
+            }
+
+            if (ValidateObject(notification.ContactTracing).Any())
+            {
+                var message =
+                    $"Notification {notificationId} invalid contact tracing figures. The notification will be imported without contact tracing data.";
+                _logger.LogWarning(context, requestId, message);
+                notification.ContactTracing = new ContactTracing();
+            };
         }
 
         /// <summary>

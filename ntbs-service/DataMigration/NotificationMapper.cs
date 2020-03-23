@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Hangfire.Server;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -207,7 +208,13 @@ namespace ntbs_service.DataMigration
                     var canonicalSite = clashingSites.First();
                     canonicalSite.SiteDescription = combinedDescription;
                     return canonicalSite;
-                }).ToList();
+                })
+                .FallbackIfEmpty(new NotificationSite
+                {
+                    SiteId = (int)SiteId.OTHER,
+                    SiteDescription = "Unknown, no site specified in legacy system"
+                })
+                .ToList();
         }
 
         private static NotificationSite AsNotificationSite(dynamic result)
