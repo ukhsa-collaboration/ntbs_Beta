@@ -33,27 +33,20 @@ namespace ConsoleApp2
             using (var context = new NtbsContext(options))
             {
                 context.Database.Migrate();
-                Console.WriteLine("Hello World!");
-                Console.ReadLine();
+                Console.WriteLine("Starting generation of notifications");
                 await generateNotifications(context);
-                Console.WriteLine("Cya");
+                Console.WriteLine("Finished generation of notifications");
             }
         }
 
 
         static async Task generateNotifications(NtbsContext context)
         {
-            var notificationTest = new List<Notification>
-            {
-                new Notification()
-                {
-                    NotificationDate = new DateTime(2015, 2, 2)
-                }
-            };
-            var numberOfNotifications = 1000;
+            var numberOfNotifications = 30000;
             var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
                 .All()
                 .With(n => n.NotificationId = 0)
+                .With(n => n.NotificationStatus = NotificationStatus.Notified)
                 .With(n => n.PatientDetails.GivenName = Faker.Name.First())
                 .With(n => n.PatientDetails.FamilyName = Faker.Name.Last())
                 .With(n => n.PatientDetails.NhsNumberNotKnown = true)
@@ -62,23 +55,32 @@ namespace ConsoleApp2
                 .With(n => n.NotificationDate = new DateTime(2017, 1, 1))
                 .With(n => n.GroupId = null);
 
+            // Comment out line below to not add the Treatment event which trigger Treatment Outcome DQ alerts
+            notificationsOperable = AddDataQualityTreatmentEvents(notificationsOperable);
+
             var notifications= notificationsOperable.Build();
             context.AddRange(notifications);
             await context.SaveChangesAsync();
         }
 
-        private IOperable<Notification> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable)
+        private static IOperable<Notification> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable)
         {
-            var notificationsOperableWithTreatmentEvents = notificationsOperable
-                .With(n => n.TreatmentEvents = new List<TreatmentEvent>
-                {
-                    new TreatmentEvent
+            var x = new Random().Next(1, 6);
+            if (x == 1)
+            {
+                var notificationsOperableWithTreatmentEvents = notificationsOperable
+                    .With(n => n.TreatmentEvents = new List<TreatmentEvent>
                     {
-                        TreatmentEventType = TreatmentEventType.TreatmentStart,
-                        EventDate = new DateTime(2017, 1, 1)
-                    }
-                });
-            return notificationsOperableWithTreatmentEvents;
+                        new TreatmentEvent
+                        {
+                            TreatmentEventType = TreatmentEventType.TreatmentStart,
+                            EventDate = new DateTime(2017, 1, 1)
+                        }
+                    });
+                return notificationsOperableWithTreatmentEvents;
+            }
+
+            return notificationsOperable;
         }
         
     }
