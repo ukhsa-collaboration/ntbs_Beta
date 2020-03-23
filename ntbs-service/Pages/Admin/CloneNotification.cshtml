@@ -1,0 +1,180 @@
+﻿@page "{handler?}"
+@using NHSUK.FrontEndLibrary.TagHelpers
+@model ntbs_service.Pages.Admin.CloneNotification
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    ViewData["Title"] = "Admin";
+    Layout = "Shared/_Layout";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Clone notification</title>
+</head>
+<body>
+<nhs-width-container container-width="Standard">
+    <form method="post">
+        <h1>Clone notification</h1>
+
+        @{
+            var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.NotificationId)}");
+            var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+        }
+        <validate-related-notification allow-draft="true" inline-template>
+            <nhs-form-group
+                id="@($"{nameof(Model.NotificationId)}")"
+                nhs-form-group-type="@relatedNotificationGroupState"
+                aria-describedby="related-notification-error">
+                <label nhs-label-type="Standard" asp-for="NotificationId">
+                    @Html.DisplayNameFor(m => m.NotificationId)
+                </label>
+                <span
+                    id="related-notification-error"
+                    nhs-span-type="ErrorMessage"
+                    ref="errorField"
+                    has-error="@hasRelatedNotificationError"
+                    asp-validation-for="NotificationId">
+                </span>
+                <input
+                    nhs-input-type="Number"
+                    ref="inputField"
+                    v-on:blur="validate"
+                    is-error-input="@hasRelatedNotificationError"
+                    fixed-width="Ten"
+                    asp-for="NotificationId">
+                <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+            </nhs-form-group>
+        </validate-related-notification>
+        
+        <h2>Alter values (leave blank to clone from source notification)</h2>
+
+        <validate-input property="GivenName" inline-template>
+            @{
+                var hasGivenNameError = !Model.IsValid("GivenName");
+                var givenNameGroupState = hasGivenNameError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@givenNameGroupState id="GivenName">
+                <label nhs-label-type="Standard" asp-for="GivenName">
+                    Given name
+                </label>
+                <span ref="errorField" nhs-span-type="ErrorMessage" id="given-name-error"
+                      asp-validation-for="GivenName" has-error="@hasGivenNameError">
+                </span>
+                <input ref="inputField" v-on:blur="validate" is-error-input=@hasGivenNameError
+                       nhs-input-type="Standard" asp-for="GivenName" fixed-width="Ten" autocomplete="GivenName">
+            </nhs-form-group>
+        </validate-input>
+
+        <validate-input property="FamilyName" inline-template>
+            @{
+                var hasFamilyNameError = !Model.IsValid("FamilyName");
+                var familyNameGroupState = hasFamilyNameError ? Error : Standard;
+            }
+            <nhs-form-group nhs-form-group-type=@familyNameGroupState id="FamilyName">
+                <label nhs-label-type="Standard" asp-for="FamilyName">
+                    Family name
+                </label>
+                <span ref="errorField" nhs-span-type="ErrorMessage" id="family-name-error"
+                      asp-validation-for="FamilyName" has-error="@hasFamilyNameError">
+                </span>
+                <input ref="inputField" v-on:blur="validate" is-error-input=@hasFamilyNameError
+                       nhs-input-type="Standard" asp-for="FamilyName" fixed-width="Ten" autocomplete="FamilyName"/>
+            </nhs-form-group>
+        </validate-input>
+        
+    @{
+        var hasSexError = !Model.IsValid("SexId");
+        var sexErrorGroupState = hasSexError ? Error : Standard;
+    }
+    <validate-input property="SexId" inline-template>
+        <nhs-form-group nhs-form-group-type="@sexErrorGroupState" id="SexId">
+            <nhs-fieldset>
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    Sex (required)
+                </nhs-fieldset-legend>
+                <span nhs-span-type="ErrorMessage" id="sex-error" ref="errorField" asp-validation-for="SexId" has-error="@hasSexError"></span>
+                <nhs-radios v-on:change="validate" nhs-radios-type="Standard">
+                    @foreach (var sex in Model.Sexes)
+                    {
+                        <nhs-radios-item>
+                            <input is-error-input=@hasSexError nhs-input-type="Radios" asp-for="SexId" type="radio" value="@sex.SexId" id="sexId-@sex.SexId" />
+                            <label nhs-label-type="Radios" asp-for="SexId" for="sexId-@sex.SexId">@sex.Label</label>
+                        </nhs-radios-item>
+                    }
+                </nhs-radios>
+            </nhs-fieldset>
+        </nhs-form-group>
+    </validate-input>
+    
+        <filtered-dropdown filter-handler-path="GetFilteredListsByTbService" :filtering-refs="['caseManagers', 'hospitals']" inline-template>
+            <div>
+                <validate-input property="TBServiceCode" ref="filterContainer"
+                                v-on:mounted="filteringMounted" v-on:valid="filteringChanged" inline-template>
+                    @{
+                        var hasTbServiceCodeError = !Model.IsValid("TBServiceCode");
+                        var tbServiceCodeGroupState = hasTbServiceCodeError ? Error : Standard;
+                        var tbServiceCodeSelectErrorState = hasTbServiceCodeError ? SelectType.Error : SelectType.Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="TBServiceCode">
+                        <label nhs-label-type="Standard" asp-for="TBServiceCode">
+                            Notifying TB service
+                        </label>
+                        <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
+                              ref="errorField" asp-validation-for="TBServiceCode">
+                        </span>
+                        <select ref="selectField" nhs-select-type="@tbServiceCodeSelectErrorState" asp-for="TBServiceCode"
+                                asp-items="Model.TbServices" v-on:change="validate">
+                            <option value="" selected>Please select</option>
+                        </select>
+                    </nhs-form-group>
+                </validate-input>
+
+                <validate-input property="HospitalId" ref="hospitals" inline-template>
+                    @{
+                        var hasHospitalError = !Model.IsValid("HospitalId");
+                        var hospitalGroupState = hasHospitalError ? Error : Standard;
+                        var hospitalSelectErrorState = hasHospitalError ? SelectType.Error : SelectType.Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type="@hospitalGroupState" id="HospitalId">
+                        <label nhs-label-type="Standard" asp-for="HospitalId">
+                            Hospital
+                        </label>
+                        <span nhs-span-type="ErrorMessage" id="hospital-error" has-error="@hasHospitalError"
+                              ref="errorField" asp-validation-for="HospitalId">
+                        </span>
+                        <select ref="selectField" nhs-select-type="@hospitalSelectErrorState" asp-for="HospitalId"
+                                asp-items="Model.Hospitals" v-on:change="validate">
+                            <option value="" selected>Please select</option>
+                        </select>
+                    </nhs-form-group>
+                </validate-input>
+
+                <validate-input property="CaseManagerUsername" ref="caseManagers" inline-template>
+                    @{
+                        var hasCaseManagerError = !Model.IsValid("CaseManagerUsername");
+                        var caseManagerGroupState = hasCaseManagerError ? Error : Standard;
+                        var caseManagerSelectErrorState = hasCaseManagerError ? SelectType.Error : SelectType.Standard;
+                    }
+                    <nhs-form-group nhs-form-group-type="@caseManagerGroupState" id="CaseManagerUsername">
+                        <label nhs-label-type="Standard" asp-for="CaseManagerUsername">
+                            Case manager
+                        </label>
+                        <span nhs-span-type="ErrorMessage" id="case-manager-error" has-error="@hasCaseManagerError"
+                              ref="errorField" asp-validation-for="CaseManagerUsername">
+                        </span>
+                        <select ref="selectField" nhs-select-type="@caseManagerSelectErrorState" asp-for="CaseManagerUsername"
+                                asp-items="Model.CaseManagers" v-on:change="validate">
+                            <option value="" selected>Please select</option>
+                        </select>
+                    </nhs-form-group>
+                </validate-input>
+            </div>
+        </filtered-dropdown>
+        <button nhs-button-type="Standard" classes="ntbsuk-button--primary">Clone</button>
+    </form>
+</nhs-width-container>
+</body>
+</html>

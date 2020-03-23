@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -19,16 +18,19 @@ namespace ntbs_service.Pages.Notifications.Edit
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
-            { 
-                NotUKCountries = new SelectList(
-                    referenceDataRepository.GetAllCountriesApartFromUkAsync().Result,
-                    nameof(Country.CountryId),
-                    nameof(Country.Name)
-                );
+            IAlertRepository alertRepository) : base(service,
+            authorizationService,
+            notificationRepository,
+            alertRepository)
+        {
+            NotUKCountries = new SelectList(
+                referenceDataRepository.GetAllCountriesApartFromUkAsync().Result,
+                nameof(Country.CountryId),
+                nameof(Country.Name)
+            );
 
-                CurrentPage = NotificationSubPaths.EditMDRDetails;
-            }
+            CurrentPage = NotificationSubPaths.EditMDRDetails;
+        }
 
         [BindProperty]
         public MDRDetails MDRDetails { get; set; }
@@ -42,7 +44,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
-            
+
             MDRDetails = Notification.MDRDetails;
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
 
@@ -57,7 +59,12 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)
         {
             var nextPage = Notification.IsMBovis ? "./MBovisExposureToKnownCases" : "./MDRDetails";
-            return RedirectToPage(nextPage, new { NotificationId, isBeingSubmitted });
+            return RedirectToPage(nextPage,
+            new
+            {
+                NotificationId,
+                isBeingSubmitted
+            });
         }
 
         protected override async Task ValidateAndSave()
@@ -76,17 +83,14 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (MDRDetails.RelatedNotificationId != null)
             {
-                var relatedNotification = await GetRelatedNotification(MDRDetails.RelatedNotificationId.Value);
-                if (!CanLinkToNotification(relatedNotification))
+                var relatedNotification =
+                    await NotificationRepository.GetNotificationAsync(MDRDetails.RelatedNotificationId.Value);
+                if (relatedNotification == null || !relatedNotification.HasBeenNotified)
                 {
-                    ModelState.AddModelError("MDRDetails.RelatedNotificationId", ValidationMessages.RelatedNotificationIdInvalid);
+                    ModelState.AddModelError("MDRDetails.RelatedNotificationId",
+                        ValidationMessages.IdDoesNotMatchNtbsRecord);
                 }
             }
-        }
-
-        private async Task<Notification> GetRelatedNotification(int notificationId)
-        {
-            return await NotificationRepository.GetNotificationAsync(notificationId);
         }
 
         private void UpdateFlags()
@@ -96,6 +100,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 MDRDetails.RelatedNotificationId = null;
                 ModelState.Remove("MDRDetails.RelatedNotificationId");
             }
+
             if (MDRDetails.ExposureToKnownCaseStatus != Status.Yes || MDRDetails.CaseInUKStatus != Status.No)
             {
                 MDRDetails.CountryId = null;
@@ -114,30 +119,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         public ContentResult OnGetValidateMDRDetailsProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<MDRDetails>(key, value, shouldValidateFull);
-        }
-
-        public async Task<ContentResult> OnGetValidateMDRDetailsRelatedNotificationAsync(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return ValidationService.ValidContent();
-            }
-            if (int.TryParse(value, out var notificationId))
-            {
-                var relatedNotification = await GetRelatedNotification(notificationId);
-                if (!CanLinkToNotification(relatedNotification))
-                {
-                    return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdInvalid });
-                }
-                var info = NotificationInfo.CreateFromNotification(relatedNotification);
-                return CreateJsonResponse(new { relatedNotification = info });
-            }
-            return CreateJsonResponse(new { validationMessage = ValidationMessages.RelatedNotificationIdMustBeInteger });
-        }
-
-        private static bool CanLinkToNotification(Notification notification)
-        {
-            return notification != null && notification.HasBeenNotified;
         }
     }
 }

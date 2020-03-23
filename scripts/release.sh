@@ -14,7 +14,7 @@ echo "Setting image to build $build"
 kubectl set image deployment/ntbs-$env ntbs-$env=ntbscontainerregistry.azurecr.io/ntbs-service:$build --record=true
 
 attempts=0
-maxAttempts=20
+maxAttempts=30
 
 while [[ $attempts -lt $maxAttempts ]]; do
   ((attempts=attempts+1))

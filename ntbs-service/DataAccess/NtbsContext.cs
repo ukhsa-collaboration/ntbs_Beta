@@ -56,6 +56,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
+        public virtual DbSet<SessionState> SessionState { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -300,10 +301,19 @@ namespace ntbs_service.DataAccess
                         rh.ToTable("RiskFactorImprisonment");
                     });
 
+                    x.OwnsOne(c => c.RiskFactorSmoking, rf =>
+                    {
+                        rf.Property(e => e.Status)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
+                        rf.Property(e => e.Type)
+                            .HasConversion(riskFactorEnumConverter)
+                            .HasMaxLength(EnumMaxLength)
+                            .HasDefaultValue(RiskFactorType.Smoking);
+                        rf.ToTable("RiskFactorSmoking");
+                    });
+
                     x.Property(e => e.AlcoholMisuseStatus)
-                        .HasConversion(statusEnumConverter)
-                        .HasMaxLength(EnumMaxLength);
-                    x.Property(e => e.SmokingStatus)
                         .HasConversion(statusEnumConverter)
                         .HasMaxLength(EnumMaxLength);
                     x.Property(e => e.MentalHealthStatus)
@@ -567,7 +577,7 @@ namespace ntbs_service.DataAccess
                     .HasConversion(alertStatusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
                 entity.Property(e => e.CaseManagerUsername).HasMaxLength(64);
-                entity.Property(e => e.TbServiceCode).HasMaxLength(16);
+                entity.Property(e => e.TbServiceCode).IsRequired().HasMaxLength(16);
                 entity.Property(e => e.ClosingUserId).HasMaxLength(64);
                 entity.HasIndex(p => new { p.NotificationId, p.AlertType });
                 entity.Property(e => e.AlertType)

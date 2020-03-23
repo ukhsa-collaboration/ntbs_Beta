@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using ntbs_service.Services;
 using Hangfire.Server;
 using Sentry;
+using Serilog;
 
 namespace ntbs_migration_tests
 {
@@ -26,6 +27,7 @@ namespace ntbs_migration_tests
         private readonly Mock<IImportLogger> _mockLogger;
         private readonly Mock<IPostcodeService> _mockPostcodeService;
         private readonly Mock<IHub> _mockSentryHub;
+        private readonly Mock<IImportLogger> _mockImportLogger;
         private readonly NotificationImportService _notifcationImportService;
         private readonly PerformContext _performContext = null;
         private readonly string _connectionString = Environment.GetEnvironmentVariable("migrationDbUnitTest");
@@ -41,8 +43,9 @@ namespace ntbs_migration_tests
             _mockReferenceDataRepository
                 .Setup(x => x.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
                 .Returns(Task.FromResult(new TBService { Code = "TBS0002", Name = "Addenbrooke's Hospital" }));
+            _mockImportLogger = new Mock<IImportLogger>(); 
 
-            _notificationMapper = new NotificationMapper(_mockMigrationRepository.Object, _mockReferenceDataRepository.Object);
+            _notificationMapper = new NotificationMapper(_mockMigrationRepository.Object, _mockReferenceDataRepository.Object, _mockImportLogger.Object);
 
             _mockNotificationRepository = new Mock<INotificationRepository>();
             _mockNotificationImportRepository = new Mock<INotificationImportRepository>();
@@ -57,7 +60,9 @@ namespace ntbs_migration_tests
                                                                     _mockLogger.Object,
                                                                     _mockSentryHub.Object,
                                                                     _mockMigrationRepository.Object,
-                                                                    _mockSpecimenService.Object);
+                                                                    _mockSpecimenService.Object,
+                                                                    _mockReferenceDataRepository.Object
+                                                                    );
         }
 
         [Fact]
