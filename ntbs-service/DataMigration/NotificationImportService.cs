@@ -225,7 +225,7 @@ namespace ntbs_service.DataMigration
             dateInFutureResults.ForEach(result =>
             {
                 var dateInFutureMessage =
-                    $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
+                    $"Notification {notificationId} had test results with date set in future. The notification will be imported without this test record.";
                 _logger.LogWarning(context, requestId, dateInFutureMessage);
                 notification.TestData.ManualTestResults.Remove(result);
             });
