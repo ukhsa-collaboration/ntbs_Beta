@@ -168,7 +168,8 @@ namespace ntbs_service.DataMigration
             var details = new HospitalDetails();
             details.HospitalId = rawNotification.NtbsHospitalId;
             details.CaseManagerUsername = rawNotification.CaseManager;
-            details.Consultant = rawNotification.Consultant;
+            var consultant = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawNotification.Consultant);
+            details.Consultant = consultant;
             // details.TBServiceCode is set below, based on the hospital
 
             if (details.HospitalId is Guid guid)
@@ -244,9 +245,17 @@ namespace ntbs_service.DataMigration
             {
                 if (details.HasOther == true)
                 {
-                    details.OtherDescription = !string.IsNullOrWhiteSpace(notification.OtherDescription)
-                        ? notification.OtherDescription
-                        : "No description provided in the legacy system";
+                    if (!string.IsNullOrWhiteSpace(notification.OtherDescription))
+                    {
+                        var otherDescription = RemoveCharactersNotIn(
+                            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                            notification.OtherDescription);
+                        details.OtherDescription = otherDescription;
+                    }
+                    else
+                    {
+                        details.OtherDescription = "No description provided in the legacy system";
+                    }
                 }
             }
 
@@ -459,7 +468,8 @@ namespace ntbs_service.DataMigration
             venue.Frequency = Converter.GetEnumValue<Frequency>(rawVenue.Frequency);
             venue.DateFrom = rawVenue.DateFrom;
             venue.DateTo = rawVenue.DateTo;
-            venue.Details = rawVenue.Details;
+            var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawVenue.Details);
+            venue.Details = details;
             return venue;
         }
 
@@ -470,7 +480,8 @@ namespace ntbs_service.DataMigration
              address.Postcode = rawAddress.Postcode;
              address.DateFrom = rawAddress.DateFrom;
              address.DateTo = rawAddress.DateTo;
-             address.Details = rawAddress.Details;
+             var details = RemoveCharactersNotIn(ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended, rawAddress.Details);
+             address.Details = details;
             return address;
         }
         

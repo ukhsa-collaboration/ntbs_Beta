@@ -165,7 +165,6 @@
     {
         public const string CharacterValidation = @"[a-zA-Z \-,.']+";
         public const string CharacterValidationWithNumbers = @"[0-9a-zA-z \-,.']+";
-        public const string CharacterValidationWithNumbersForwardSlash = @"[0-9a-zA-Z \/\-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
         public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?]+";
         public const string CharacterValidationWithNumbersForwardSlashExtendedWithNewLine = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?\n\r]+";

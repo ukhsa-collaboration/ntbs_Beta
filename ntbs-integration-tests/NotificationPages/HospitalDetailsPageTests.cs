@@ -194,7 +194,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
-                ["HospitalDetails.Consultant"] = "Name-1"
+                ["HospitalDetails.Consultant"] = "Name-1|"
             };
 
             // Act
@@ -203,7 +203,7 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             var resultDocument = await GetDocumentAsync(result);
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("HospitalDetails-Consultant", "consultant", "Consultant can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("HospitalDetails-Consultant", "consultant", "Invalid character found in Consultant");
         }
 
         [Fact]
