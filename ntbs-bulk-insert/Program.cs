@@ -65,22 +65,16 @@ namespace ConsoleApp2
 
         private static IOperable<Notification> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable)
         {
-            var x = new Random().Next(1, 6);
-            if (x == 1)
-            {
-                var notificationsOperableWithTreatmentEvents = notificationsOperable
-                    .With(n => n.TreatmentEvents = new List<TreatmentEvent>
+            var notificationsOperableWithTreatmentEvents = notificationsOperable
+                .With(n => n.TreatmentEvents = new List<TreatmentEvent>
+                {
+                    new TreatmentEvent
                     {
-                        new TreatmentEvent
-                        {
-                            TreatmentEventType = TreatmentEventType.TreatmentStart,
-                            EventDate = new DateTime(2017, 1, 1)
-                        }
-                    });
-                return notificationsOperableWithTreatmentEvents;
-            }
-
-            return notificationsOperable;
+                        TreatmentEventType = TreatmentEventType.TreatmentStart,
+                        EventDate = new DateTime(2017, 1, 1)
+                    }
+                });
+            return notificationsOperableWithTreatmentEvents;
         }
         
     }
