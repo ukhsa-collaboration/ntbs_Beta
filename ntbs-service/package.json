@@ -40,7 +40,7 @@
     "sass-loader": "8.0.2",
     "ts-loader": "6.2.2",
     "typescript": "3.8.3",
-    "webpack": "4.42.0",
+    "webpack": "4.42.1",
     "webpack-cli": "3.3.11",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0",
