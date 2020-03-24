@@ -11,6 +11,14 @@
     var endClass = $"notification-page-end notification-page-end{classSuffix}";
 }
 
+<nav class="nhsuk-breadcrumb" aria-label="Breadcrumb">
+  <div class="nhsuk-width-container">
+    <ol class="nhsuk-breadcrumb__list">
+      <li class="nhsuk-breadcrumb__item"><a class="nhsuk-breadcrumb__link" href="@Model.PreviousPageUrl"> @Model.PreviousPageLabel </a></li>
+    </ol>
+  </div>
+</nav>
+
 <nhs-width-container container-width="Standard">
     @if (isOverviewPage)
     {

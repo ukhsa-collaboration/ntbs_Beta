@@ -40,6 +40,8 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
+            PrepareBreadcrumbs();
+
             Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);
             if (Notification == null)
             {

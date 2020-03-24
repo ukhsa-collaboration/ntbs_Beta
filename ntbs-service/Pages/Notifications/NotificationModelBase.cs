@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
@@ -37,7 +38,10 @@ namespace ntbs_service.Pages.Notifications
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
-
+        public string PreviousPageUrl { get; set; }
+        public string PreviousPageLabel { get; set; }
+        public string NotificationUrl { get; set; }
+        
         protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationAsync(notificationId);
@@ -62,6 +66,13 @@ namespace ntbs_service.Pages.Notifications
                 Notification.Group = await GetNotificationGroupAsync();
                 NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
+        }
+
+        protected void PrepareBreadcrumbs()
+        {
+            PreviousPageUrl = HttpContext.Session.GetString("LastVisitedPageUrl");
+            PreviousPageLabel = HttpContext.Session.GetString("LastVisitedPageTitle");
+            NotificationUrl = $@"/Notifications/{NotificationId}";
         }
 
         protected IActionResult ForbiddenResult()

@@ -48,6 +48,7 @@ namespace ntbs_service.Pages.Notifications
 
         public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
+            PrepareBreadcrumbs();
             Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {

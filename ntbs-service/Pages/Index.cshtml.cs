@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -41,6 +42,8 @@ namespace ntbs_service.Pages
         
         public async Task OnGetAsync()
         {
+            HttpContext.Session.SetString("LastVisitedPageTitle", "Index");
+            HttpContext.Session.SetString("LastVisitedPageUrl", "/Index");
             await SetUserNotificationsAsync();
             await SetUserAlertsAndTbServicesAsync();
             await SetHomepageKpiDetails();

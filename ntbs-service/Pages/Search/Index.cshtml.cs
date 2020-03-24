@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using MoreLinq.Extensions;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
@@ -12,6 +14,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
+using Serilog;
 
 namespace ntbs_service.Pages.Search
 {
@@ -68,6 +71,9 @@ namespace ntbs_service.Pages.Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? legacyOffset = null, int? ntbsOffset = null, int? previousLegacyOffset = null, int? previousNtbsOffset = null)
         {
+            HttpContext.Session.SetString("LastVisitedPageTitle", "Search");
+            HttpContext.Session.SetString("LastVisitedPageUrl", HttpContext.Request.Path.ToString() + HttpContext.Request.QueryString);
+            
             if (!ModelState.IsValid)
             {
                 return Page();
