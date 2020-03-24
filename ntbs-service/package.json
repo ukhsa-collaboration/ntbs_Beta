@@ -24,7 +24,7 @@
     "formdata-polyfill": "3.0.19",
     "govuk-frontend": "3.6.0",
     "nhsuk-frontend": "2.3.0",
-    "qs": "6.9.1",
+    "qs": "6.9.2",
     "url-loader": "4.0.0",
     "vue": "2.6.11",
     "vue-accessible-modal": "0.4.0"
