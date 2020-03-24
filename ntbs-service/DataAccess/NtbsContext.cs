@@ -58,6 +58,7 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
         public virtual DbSet<SessionState> SessionState { get; set; }
+        public virtual DbSet<PreviousTbService> PreviousTbService { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
@@ -387,6 +388,9 @@ namespace ntbs_service.DataAccess
                 entity.OwnsOne(e => e.DrugResistanceProfile)
                     .ToTable("DrugResistanceProfile");
 
+                entity.OwnsMany(e => e.PreviousTbServices)
+                    .ToTable("PreviousTbService");
+
 
                 entity.HasIndex(e => e.NotificationStatus);
 
@@ -668,6 +672,11 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.SystemName)
                     .IsRequired()
                     .HasMaxLength(64);
+            });
+
+            modelBuilder.Entity<PreviousTbService>(entity =>
+            {
+                entity.HasKey(e => e.PreviousTbServiceId);
             });
         }
 
