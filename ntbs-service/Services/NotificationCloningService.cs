@@ -41,6 +41,7 @@ namespace ntbs_service.Services
             _context.Entry(notification.SocialRiskFactors.RiskFactorDrugs).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorHomelessness).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorImprisonment).State = EntityState.Detached;
+            _context.Entry(notification.SocialRiskFactors.RiskFactorSmoking).State = EntityState.Detached;
             _context.Entry(notification.TravelDetails).State = EntityState.Detached;
             _context.Entry(notification.VisitorDetails).State = EntityState.Detached;
             notification.NotificationId = 0;
