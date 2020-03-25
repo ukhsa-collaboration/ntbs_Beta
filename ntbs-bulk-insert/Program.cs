@@ -48,7 +48,7 @@ namespace ConsoleApp2
 
         static async Task generateNotifications(NtbsContext context)
         {
-            var numberOfNotifications = 30000;
+            var numberOfNotifications = 15000;
             var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
                 .All()
                 .With(n => n.NotificationId = 0)
@@ -57,20 +57,21 @@ namespace ConsoleApp2
                 .With(n => n.PatientDetails.FamilyName = Faker.Name.Last())
                 .With(n => n.PatientDetails.NhsNumberNotKnown = true)
                 .With(n => n.HospitalDetails.TBServiceCode = "TBS0008")
-                .With(n => n.HospitalDetails.Consultant = "UniqueBulkInsert")
+                .With(n => n.ClinicalDetails.Notes = "UniqueBulkInsert")
                 .With(n => n.NotificationDate = new DateTime(2017, 1, 1))
                 .With(n => n.GroupId = null);
 
-            // Comment out line below to not add the Treatment event which trigger Treatment Outcome DQ alerts
-            notificationsOperable = AddDataQualityTreatmentEvents(notificationsOperable);
-
+            // Comment out the line below to cause Treatment Outcome Alerts to be generated
+            notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
+            
             var notifications= notificationsOperable.Build();
             context.AddRange(notifications);
             await context.SaveChangesAsync();
         }
 
-        private static IOperable<Notification> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable)
+        private static async Task<IOperable<Notification>> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable, NtbsContext context)
         {
+            var completedOutcome = await context.TreatmentOutcome.Where(t => t.TreatmentOutcomeId == 1).FirstOrDefaultAsync();
             var notificationsOperableWithTreatmentEvents = notificationsOperable
                 .With(n => n.TreatmentEvents = new List<TreatmentEvent>
                 {
@@ -78,6 +79,13 @@ namespace ConsoleApp2
                     {
                         TreatmentEventType = TreatmentEventType.TreatmentStart,
                         EventDate = new DateTime(2017, 1, 1)
+                    },
+                    new TreatmentEvent
+                    {
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        EventDate = new DateTime(2017, 2, 1),
+                        TreatmentOutcomeId = completedOutcome.TreatmentOutcomeId,
+                        TreatmentOutcome = completedOutcome
                     }
                 });
             return notificationsOperableWithTreatmentEvents;
