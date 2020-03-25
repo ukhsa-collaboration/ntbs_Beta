@@ -197,7 +197,8 @@ namespace ntbs_service
                     options.MetadataAddress =
                         adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                     options.Wtrealm = adfsConfig["Wtrealm"];
-
+                    options.CorrelationCookie.SameSite = SameSiteMode.None;
+                    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     /*
                      * Below event handler is to prevent stale logins from showing a 500 error screen, instead to force
                      * back to the landing page - and cause a re-challenge or continue if already authenticated.
