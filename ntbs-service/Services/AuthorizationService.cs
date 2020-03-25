@@ -58,16 +58,16 @@ namespace ntbs_service.Services
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
 
-            if ((UserHasDirectRelationToNotification(notification) && notification.NotificationStatus != NotificationStatus.Closed) 
-                || _userPermissionsFilter.Type == UserType.NationalTeam)
+            if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
                 return PermissionLevel.Edit;
             }
 
-            if (UserHasDirectRelationToNotification(notification) &&
-                notification.NotificationStatus == NotificationStatus.Closed)
+            if (UserHasDirectRelationToNotification(notification)) 
             {
-                return PermissionLevel.ReadOnly;
+                return notification.NotificationStatus != NotificationStatus.Closed
+                    ? PermissionLevel.Edit
+                    : PermissionLevel.ReadOnly;
             }
 
             if (UserBelongsToResidencePhecOfNotification(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode) 
