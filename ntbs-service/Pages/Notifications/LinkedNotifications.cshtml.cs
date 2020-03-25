@@ -42,6 +42,8 @@ namespace ntbs_service.Pages.Notifications
                 .Where(n => n.NotificationId != NotificationId)
                 .CreateNotificationBanners(User, AuthorizationService).ToList();
 
+            NotificationBannerModel.ShowLink = true;
+
             return Page();
         }
     }
