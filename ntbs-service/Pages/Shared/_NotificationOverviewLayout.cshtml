@@ -1,5 +1,6 @@
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 @using ntbs_service.Helpers
+@using ntbs_service.Models
 
 @{
     Layout = "./_NotificationLayout.cshtml";
@@ -9,15 +10,10 @@
     var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
     var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
     var endClass = $"notification-page-end notification-page-end{classSuffix}";
+    var breadcrumbs = ViewData["Breadcrumbs"];
 }
 
-<nav class="nhsuk-breadcrumb" aria-label="Breadcrumb">
-  <div class="nhsuk-width-container">
-    <ol class="nhsuk-breadcrumb__list">
-      <li class="nhsuk-breadcrumb__item"><a class="nhsuk-breadcrumb__link" href="@Model.PreviousPageUrl"> @Model.PreviousPageLabel </a></li>
-    </ol>
-  </div>
-</nav>
+<partial name="_Breadcrumbs" model=@breadcrumbs/>
 
 <nhs-width-container container-width="Standard">
     @if (isOverviewPage)

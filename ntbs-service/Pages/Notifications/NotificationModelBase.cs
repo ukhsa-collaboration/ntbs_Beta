@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -38,8 +39,8 @@ namespace ntbs_service.Pages.Notifications
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
-        public string PreviousPageUrl { get; set; }
-        public string PreviousPageLabel { get; set; }
+        public string TopLevelBreadcrumbUrl { get; set; }
+        public string TopLevelBreadcrumbLabel { get; set; }
         public string NotificationUrl { get; set; }
         
         protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
@@ -70,9 +71,11 @@ namespace ntbs_service.Pages.Notifications
 
         protected void PrepareBreadcrumbs()
         {
-            PreviousPageUrl = HttpContext.Session.GetString("LastVisitedPageUrl");
-            PreviousPageLabel = HttpContext.Session.GetString("LastVisitedPageTitle");
-            NotificationUrl = $@"/Notifications/{NotificationId}";
+            var breadcrumbs = new List<Breadcrumb>();
+            breadcrumbs.Add(BreadcrumbsHelper.GetTopLevelBreadcrumb(HttpContext.Session));
+            breadcrumbs.Add(new Breadcrumb {Label = "Notification", Url = $@"/Notifications/{NotificationId}"});
+
+            ViewData["Breadcrumbs"] = breadcrumbs;
         }
 
         protected IActionResult ForbiddenResult()

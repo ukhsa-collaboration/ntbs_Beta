@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -71,8 +72,12 @@ namespace ntbs_service.Pages.Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? legacyOffset = null, int? ntbsOffset = null, int? previousLegacyOffset = null, int? previousNtbsOffset = null)
         {
-            HttpContext.Session.SetString("LastVisitedPageTitle", "Search");
-            HttpContext.Session.SetString("LastVisitedPageUrl", HttpContext.Request.Path.ToString() + HttpContext.Request.QueryString);
+            BreadcrumbsHelper.SetTopLevelBreadcrumb(
+                HttpContext.Session, 
+                "Search", 
+                HttpContext.Request.GetEncodedPathAndQuery());
+
+            Log.Logger.Information(HttpContext.Request.GetEncodedPathAndQuery());
             
             if (!ModelState.IsValid)
             {

@@ -1,0 +1,16 @@
+﻿@using ntbs_service.Models
+@model List<Breadcrumb>
+
+
+@if (@Model != null)
+{
+    <nhs-breadcrumb>
+        <nhs-breadcrumb-list>
+            @foreach (var breadcrumb in Model)
+            {
+                <nhs-breadcrumb-item href=@breadcrumb.Url>@breadcrumb.Label</nhs-breadcrumb-item>
+            }
+        </nhs-breadcrumb-list>
+    </nhs-breadcrumb>
+
+}

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -42,8 +43,7 @@ namespace ntbs_service.Pages
         
         public async Task OnGetAsync()
         {
-            HttpContext.Session.SetString("LastVisitedPageTitle", "Index");
-            HttpContext.Session.SetString("LastVisitedPageUrl", "/Index");
+            BreadcrumbsHelper.SetTopLevelBreadcrumb(HttpContext.Session, "Index", "/Index");
             await SetUserNotificationsAsync();
             await SetUserAlertsAndTbServicesAsync();
             await SetHomepageKpiDetails();
