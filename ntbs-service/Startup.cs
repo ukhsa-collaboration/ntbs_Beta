@@ -307,6 +307,11 @@ namespace ntbs_service
                 {
                     HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
                 });
+                // We only need to turn this on in development, as in production this
+                // This behaviour is by default provided by the nginx ingress
+                // (see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#server-side-https-enforcement-through-redirect)
+                // (also see  HSTS setting below)
+                app.UseHttpsRedirection();
             }
             else
             {
@@ -334,7 +339,6 @@ namespace ntbs_service
                 });
             }
 
-            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseCookiePolicy();
 
