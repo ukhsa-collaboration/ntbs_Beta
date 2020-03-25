@@ -57,7 +57,6 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
-        public virtual DbSet<SessionState> SessionState { get; set; }
         public virtual DbSet<PreviousTbService> PreviousTbService { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)

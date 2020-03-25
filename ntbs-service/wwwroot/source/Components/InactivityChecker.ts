@@ -14,7 +14,11 @@ const InactivityChecker = Vue.extend({
     methods: {
         checkActivity() {
             const requestConfig = {
-                url: buildPathRelativeToOrigin("Heartbeat/IsActive")
+                url: buildPathRelativeToOrigin("Heartbeat/IsActive"),
+                headers: { 
+                    'Cache-Control' : 'no-cache, no-store', 
+                    'Pragma' : 'no-cache'
+                }
             };
             axios.request(requestConfig)
                 .then((response: any) => {

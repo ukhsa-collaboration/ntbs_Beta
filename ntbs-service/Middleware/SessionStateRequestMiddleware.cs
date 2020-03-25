@@ -21,7 +21,6 @@ namespace ntbs_service.Middleware
                 SessionStateHelper.UpdateSessionActivity(context.Session);
             }
             
-            // Call the MVC middleware so we know HTTP status code
             await _next(context);
         }
     }
