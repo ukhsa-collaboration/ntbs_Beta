@@ -86,6 +86,7 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<SocialContextAddress> SocialContextAddresses { get; set; }
         public virtual ICollection<TreatmentEvent> TreatmentEvents { get; set; }
         public virtual DrugResistanceProfile DrugResistanceProfile { get; set; }
+        public virtual ICollection<PreviousTbService> PreviousTbServices { get; set; }
 
         #endregion
         

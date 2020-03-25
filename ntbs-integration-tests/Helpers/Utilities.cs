@@ -74,6 +74,8 @@ namespace ntbs_integration_tests.Helpers
         public const int CLOSED_NOTIFICATION_IN_ABINGDON = 10140;
         public const int DRAFT_NOTIFICATION_WITH_DRAFT_ALERT = 10150;
 
+        public const int NOTIFICATION_WITH_PREVIOUS_TB_SERVICE_OF_ABINGDON = 10160;
+
         public const int ALERT_ID = 20001;
         public const int TRANSFER_ALERT_ID = 20002;
         public const int TRANSFER_ALERT_ID_TO_ACCEPT = 20003;

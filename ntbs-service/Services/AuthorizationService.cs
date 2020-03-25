@@ -58,18 +58,21 @@ namespace ntbs_service.Services
                 _userPermissionsFilter = await GetUserPermissionsFilterAsync(user);
             }
 
-            if (notification.NotificationStatus == NotificationStatus.Closed &&
-                _userPermissionsFilter.Type != UserType.NationalTeam)
-            {
-                return PermissionLevel.ReadOnly;
-            }
-            
-            if (UserHasDirectRelationToNotification(notification) || _userPermissionsFilter.Type == UserType.NationalTeam)
+            if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
                 return PermissionLevel.Edit;
             }
 
-            if (UserBelongsToResidencePhecOfNotification(notification) || UserHasDirectRelationToLinkedNotification(notification?.Group?.Notifications))
+            if (UserHasDirectRelationToNotification(notification)) 
+            {
+                return notification.NotificationStatus != NotificationStatus.Closed
+                    ? PermissionLevel.Edit
+                    : PermissionLevel.ReadOnly;
+            }
+
+            if (UserBelongsToResidencePhecOfNotification(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode) 
+                || UserHasDirectRelationToLinkedNotification(notification.Group?.Notifications)
+                || UserPreviouslyHadDirectionRelationToNotification(notification))
             {
                 return PermissionLevel.ReadOnly;
             }
@@ -108,24 +111,36 @@ namespace ntbs_service.Services
             return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x);
         }
 
-        private bool UserHasDirectRelationToNotification(Notification notification)
+        private bool UserPreviouslyHadDirectionRelationToNotification(Notification notification)
         {
-            return UserBelongsToTbServiceOfNotification(notification) || UserBelongsToTreatmentPhecOfNotification(notification);
+            foreach (var previousTbService in notification.PreviousTbServices)
+            {
+                if (UserBelongsToTbServiceOfNotification(previousTbService.TbServiceCode) || UserBelongsToTreatmentPhecOfNotification(previousTbService.PhecCode))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
-        private bool UserBelongsToTbServiceOfNotification(Notification notification)
+        private bool UserHasDirectRelationToNotification(Notification notification)
         {
-            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(notification.HospitalDetails.TBServiceCode);
+            return UserBelongsToTbServiceOfNotification(notification.HospitalDetails.TBServiceCode) || UserBelongsToTreatmentPhecOfNotification(notification.HospitalDetails.TBService?.PHECCode);
+        }
+
+        private bool UserBelongsToTbServiceOfNotification(string tbServiceCode)
+        {
+            return _userPermissionsFilter.Type == UserType.NhsUser && _userPermissionsFilter.IncludedTBServiceCodes.Contains(tbServiceCode);
         }
         
-        private bool UserBelongsToTreatmentPhecOfNotification(Notification notification)
+        private bool UserBelongsToTreatmentPhecOfNotification(string treatmentPhecCode)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(notification.HospitalDetails.TBService?.PHECCode);
+            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(treatmentPhecCode);
         }
         
-        private bool UserBelongsToResidencePhecOfNotification(Notification notification)
+        private bool UserBelongsToResidencePhecOfNotification(string residencePhecCode)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode);
+            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(residencePhecCode);
         }
 
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)

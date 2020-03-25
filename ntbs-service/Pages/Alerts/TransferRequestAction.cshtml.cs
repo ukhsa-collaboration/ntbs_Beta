@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -134,7 +135,15 @@ namespace ntbs_service.Pages.Alerts
                 TbServiceCode = TransferAlert.TbServiceCode,
                 Note = TransferAlert.TransferRequestNote
             };
-            
+
+            var previousTbService = new PreviousTbService()
+            {
+                TransferDate = currentTime,
+                TbServiceCode = Notification.HospitalDetails.TBServiceCode,
+                PhecCode = Notification.HospitalDetails?.TBService?.PHECCode
+            };
+
+            Notification.PreviousTbServices.Add(previousTbService);
             Notification.HospitalDetails.TBServiceCode = TransferAlert.TbServiceCode;
             Notification.HospitalDetails.HospitalId = TargetHospitalId;
             Notification.HospitalDetails.CaseManagerUsername = TargetCaseManagerUsername;
