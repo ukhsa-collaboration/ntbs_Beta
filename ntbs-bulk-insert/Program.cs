@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
@@ -18,12 +20,12 @@ namespace ConsoleApp2
         static async Task Main(string[] args)
         {
 
-            var builder = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
+                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true)
+                .Build();
 
-            var configuration = builder.Build();
             var connectionString = configuration.GetConnectionString("ntbsContext");
             
             var options = new DbContextOptionsBuilder<NtbsContext>()
@@ -32,7 +34,11 @@ namespace ConsoleApp2
             
             using (var context = new NtbsContext(options))
             {
-                context.Database.Migrate();
+                if (!context.Database.GetService<IRelationalDatabaseCreator>().Exists())
+                {
+                    Console.WriteLine("Database does not exist, aborting bulk insert");
+                    return;
+                }
                 Console.WriteLine("Starting generation of notifications");
                 await generateNotifications(context);
                 Console.WriteLine("Finished generation of notifications");
