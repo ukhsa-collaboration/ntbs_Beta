@@ -161,7 +161,7 @@ namespace ntbs_service.Pages.Notifications
         protected async Task SetNotificationProperties(bool isBeingSubmitted)
         {
             Notification.SetValidationContext(Notification, isBeingSubmitted);
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
         }
 
         private async Task<bool> TryValidateAndSave()

@@ -29,7 +29,7 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
-            var hasLinkedNotifications = await TryGetLinkedNotifications();
+            var hasLinkedNotifications = await TryGetLinkedNotificationsAsync();
             if (!hasLinkedNotifications)
             {
                 return NotFound();

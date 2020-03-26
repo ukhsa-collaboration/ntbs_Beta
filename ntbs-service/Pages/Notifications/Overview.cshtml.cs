@@ -47,7 +47,7 @@ namespace ntbs_service.Pages.Notifications
             }
             NotificationId = Notification.NotificationId;
 
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
             await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
             if (PermissionLevel == PermissionLevel.None)
