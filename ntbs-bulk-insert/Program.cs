@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using EFCore.BulkExtensions;
 using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -40,31 +39,47 @@ namespace ConsoleApp2
                     return;
                 }
                 Console.WriteLine("Starting generation of notifications");
-                await generateNotifications(context);
+                await GenerateNotifications(context);
                 Console.WriteLine("Finished generation of notifications");
             }
         }
 
 
-        static async Task generateNotifications(NtbsContext context)
+        static async Task GenerateNotifications(NtbsContext context)
         {
-            var numberOfNotifications = 15000;
+            var numberOfNotifications = 3000;
             var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
                 .All()
                 .With(n => n.NotificationId = 0)
                 .With(n => n.NotificationStatus = NotificationStatus.Notified)
                 .With(n => n.PatientDetails.GivenName = Faker.Name.First())
                 .With(n => n.PatientDetails.FamilyName = Faker.Name.Last())
-                .With(n => n.PatientDetails.NhsNumberNotKnown = true)
-                .With(n => n.HospitalDetails.TBServiceCode = "TBS0008")
                 .With(n => n.ClinicalDetails.Notes = "UniqueBulkInsert")
-                .With(n => n.NotificationDate = new DateTime(2017, 1, 1))
                 .With(n => n.GroupId = null);
 
             // Comment out the line below to cause Treatment Outcome Alerts to be generated
-            notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
+            // notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
             
             var notifications= notificationsOperable.Build();
+            
+            // Add random fields that Faker is not capable of
+            foreach (var notification in notifications)
+            {
+                var rand = new Random();
+                var days = rand.Next(1, 1000);
+                notification.NotificationDate = new DateTime(2014, 1, 1).AddDays(days);
+                var tbServices = (await context.TbService.ToListAsync()).Select(t => t.Code).ToList();
+                var tbServiceIndex = rand.Next(0, tbServices.Count() - 1);
+                notification.HospitalDetails.TBServiceCode = tbServices[tbServiceIndex];
+                var nhsNumberString = "9";
+                for (var i = 0; i < 9; i++)
+                {
+                    nhsNumberString = String.Concat(nhsNumberString, rand.Next(1, 9).ToString());
+                }
+                notification.PatientDetails.NhsNumber = nhsNumberString;
+
+            }
+            
             context.AddRange(notifications);
             await context.SaveChangesAsync();
         }
