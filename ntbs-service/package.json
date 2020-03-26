@@ -23,7 +23,7 @@
     "es6-promise": "4.2.8",
     "formdata-polyfill": "3.0.19",
     "govuk-frontend": "3.6.0",
-    "nhsuk-frontend": "2.3.0",
+    "nhsuk-frontend": "3.0.4",
     "qs": "6.9.3",
     "url-loader": "4.0.0",
     "vue": "2.6.11",
