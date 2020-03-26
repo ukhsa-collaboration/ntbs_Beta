@@ -18,9 +18,13 @@
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.SpecimenTypeCode) </dt>
                             <dd class="cell-min-height"> @specimen.SpecimenTypeCode </dd>
                         </nhs-grid-column>
-                        <nhs-grid-column grid-column-width="OneHalf">
+                        <nhs-grid-column grid-column-width="OneQuarter">
                             <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.Species) </dt>
                             <dd class="cell-min-height"> @specimen.Species </dd>
+                        </nhs-grid-column>
+                        <nhs-grid-column grid-column-width="OneQuarter">
+                            <dt class="notification-test-results-label"> @Html.DisplayNameFor(m => m.LaboratoryName) </dt>
+                            <dd class="cell-min-height"> @specimen.LaboratoryName </dd>
                         </nhs-grid-column>
                     </nhs-grid-row>
                     <nhs-grid-row>
