@@ -222,8 +222,8 @@ namespace ntbs_service.DataAccess
                 entity.OwnsOne(e => e.PatientDetails, x =>
                 {
                     x.HasOne(pd => pd.PostcodeLookup)
-                    .WithOne()
-                    .HasForeignKey<PatientDetails>(ns => ns.PostcodeToLookup);
+                    .WithMany()
+                    .HasForeignKey(ns => ns.PostcodeToLookup);
 
                     x.ToTable("Patients");
                 });
