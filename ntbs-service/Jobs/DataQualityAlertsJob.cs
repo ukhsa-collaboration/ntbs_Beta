@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using ntbs_service.DataAccess;
@@ -51,14 +52,30 @@ namespace ntbs_service.Jobs
                 await _alertService.AddUniqueAlertAsync(alert);
             }
 
-            var notificationsForClusterAlerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityClusterAlerts();
-            foreach (var notification in notificationsForClusterAlerts)
+            var notificationsForClusterAlertsCount = await _dataQualityRepository.GetNotificationsEligibleForDataQualityClusterAlertsCount();
+            var x = 0;
+            while (x < notificationsForClusterAlertsCount)
             {
-                var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
+                var alertsToAdd = new List<Alert>();
+                var notificationsForClusterAlerts =
+                    await _dataQualityRepository.GetUpTo500NotificationsEligibleForDataQualityClusterAlertsWithOffset(x);
+                foreach (var notification in notificationsForClusterAlerts)
+                {
+                    
+                    var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
+                    var populatedAlert = await _alertService.CheckIfAlertExistsAndPopulateIfItDoesNot(alert);
 
+                    if (populatedAlert != null)
+                    {
+                        alertsToAdd.Add(await _alertService.CheckIfAlertExistsAndPopulateIfItDoesNot(alert));   
+                    }
+                    
+                }
+
+                await _alertService.AddRangeAlerts(alertsToAdd);
+                x += 500;
+            }
+            
             var notificationsForTreatmentOutcome12Alerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
             foreach (var notification in notificationsForTreatmentOutcome12Alerts)

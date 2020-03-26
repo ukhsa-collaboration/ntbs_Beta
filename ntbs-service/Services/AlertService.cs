@@ -14,6 +14,8 @@ namespace ntbs_service.Services
     public interface IAlertService
     {
         Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
+        Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert) where T : Alert;
+        Task AddRangeAlerts(List<Alert> alerts);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
@@ -108,6 +110,27 @@ namespace ntbs_service.Services
             await PopulateAndAddAlertAsync(alert);
             return true;
         }
+        
+        public async Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert) where T : Alert
+        {
+            if (alert.NotificationId.HasValue)
+            {
+                var matchingAlert =
+                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(alert.NotificationId.Value);
+                if (matchingAlert != null)
+                {
+                    return null;
+                }
+            }
+
+            var populatedAlert = await PopulateAndAddAlertAsync(alert);
+            return populatedAlert;
+        }
+
+        public async Task AddRangeAlerts(List<Alert> alerts)
+        {
+            await _alertRepository.AddAlertRangeAsync(alerts);
+        }
 
         public async Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert
         {
@@ -169,7 +192,7 @@ namespace ntbs_service.Services
             await _alertRepository.AddAlertRangeAsync(alerts);
         }
         
-        private async Task PopulateAndAddAlertAsync(Alert alert)
+        private async Task<Alert> PopulateAndAddAlertAsync(Alert alert)
         {
             if (alert.NotificationId != null)
             {
@@ -185,6 +208,8 @@ namespace ntbs_service.Services
                     alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
                 }
             }
+
+            return alert;
 
             await _alertRepository.AddAlertAsync(alert);
         }

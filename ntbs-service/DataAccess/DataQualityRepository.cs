@@ -15,6 +15,11 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityBirthCountryAlerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityClinicalDatesAlerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityClusterAlerts();
+
+        Task<IList<Notification>> GetUpTo500NotificationsEligibleForDataQualityClusterAlertsWithOffset(
+            int offset);
+
+        Task<int> GetNotificationsEligibleForDataQualityClusterAlertsCount();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
@@ -57,6 +62,23 @@ namespace ntbs_service.DataAccess
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
                 .Where(DataQualityClusterAlert.NotificationQualifiesExpression)
                 .ToListAsync();
+        }
+
+        public async Task<IList<Notification>> GetUpTo500NotificationsEligibleForDataQualityClusterAlertsWithOffset(
+            int offset)
+        {
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts()
+                .Where(DataQualityClusterAlert.NotificationQualifiesExpression)
+                .Skip(offset)
+                .Take(500)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetNotificationsEligibleForDataQualityClusterAlertsCount()
+        {
+            return await _context.Notification
+                .Where(DataQualityClusterAlert.NotificationQualifiesExpression)
+                .CountAsync();
         }
 
         public async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts()
