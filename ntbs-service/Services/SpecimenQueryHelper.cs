@@ -42,7 +42,7 @@ namespace ntbs_service.Services
         public static readonly string GetMatchedSpecimensForNotificationQuery = $@"
             SELECT 
                 [{nameof(MatchedSpecimen.NotificationId)}]
-                ,[{nameof(UnmatchedSpecimen.LaboratoryName)}]
+                ,[{nameof(MatchedSpecimen.LaboratoryName)}]
                 ,[{nameof(MatchedSpecimen.ReferenceLaboratoryNumber)}]
                 ,[{nameof(MatchedSpecimen.SpecimenTypeCode)}]
                 ,[{nameof(MatchedSpecimen.SpecimenDate)}]
