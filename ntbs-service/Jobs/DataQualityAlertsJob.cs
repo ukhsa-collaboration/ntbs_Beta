@@ -91,6 +91,14 @@ namespace ntbs_service.Jobs
                 await _alertService.AddUniqueAlertAsync(alert);
             }
 
+            var possibleDuplicateNotifications =
+                await _dataQualityRepository.GetNotificationsEligibleForPotentialDuplicateAlerts();
+            foreach (var notificationTuple in possibleDuplicateNotifications)
+            {
+                var alert = new DataQualityPotentialDuplicateAlert {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
+            }
+
             Log.Information($"Finished data quality alerts job");
         }
     }

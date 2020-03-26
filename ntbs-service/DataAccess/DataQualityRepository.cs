@@ -19,6 +19,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDotVotAlerts();
+        Task<IList<(Notification, Notification)>> GetNotificationsEligibleForPotentialDuplicateAlerts();
     }
 
     public class DataQualityRepository : IDataQualityRepository
@@ -100,6 +101,11 @@ namespace ntbs_service.DataAccess
             return await GetNotificationQueryableForNotifiedDataQualityAlerts()
                 .Where(DataQualityDotVotAlert.NotificationQualifiesExpression)
                 .ToListAsync();
+        }
+
+        public async Task<IList<(Notification, Notification)>> GetNotificationsEligibleForPotentialDuplicateAlerts()
+        {
+            return await 
         }
 
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()
