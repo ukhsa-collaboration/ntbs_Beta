@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
@@ -113,6 +113,11 @@ namespace ntbs_service
             services.AddDbContext<AuditDatabaseContext>(options =>
                 options.UseSqlServer(auditDbConnectionString)
             );
+            
+            // Add a DbContext for Data Protection key storage
+            services.AddDbContext<KeysContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("keysContext")));
+            services.AddDataProtection().PersistKeysToDbContext<KeysContext>();
 
             // Repositories
             services.AddScoped<INotificationRepository, NotificationRepository>();
