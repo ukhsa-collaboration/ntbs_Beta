@@ -1,8 +1,11 @@
 import Vue from "vue";
 import { getHeaders, getValidationPath as getValidationPath, FormattedDate, convertFormattedDateToDate } from "../helpers";
+import DateInput from "./DateInput";
 const axios = require("axios");
 
-const ValidateDate = Vue.extend({
+// This component mixes in `DateInput` to apply its focus-shifting behaviour whilst sharing the `ref` references
+export default Vue.extend({
+    mixins: [DateInput],
     props: ["model", "property", "notification_id", "name", "rank"],
     mounted: function () {
         if (this.rank) {
@@ -89,5 +92,3 @@ const ValidateDate = Vue.extend({
         }
     }
 });
-
-export default ValidateDate;
