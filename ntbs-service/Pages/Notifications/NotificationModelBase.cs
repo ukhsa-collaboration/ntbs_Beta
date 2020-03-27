@@ -50,13 +50,13 @@ namespace ntbs_service.Pages.Notifications
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);
         }
 
-        protected async Task<bool> TryGetLinkedNotifications()
+        protected async Task<bool> TryGetLinkedNotificationsAsync()
         {
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
             return Notification.Group != null;
         }
 
-        protected async Task GetLinkedNotifications()
+        protected async Task GetLinkedNotificationsAsync()
         {
             if (Notification.Group == null)
             {

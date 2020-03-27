@@ -53,7 +53,7 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
 
             return Page();
         }
