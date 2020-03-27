@@ -21,6 +21,11 @@ spec:
               secretKeyRef:
                 name: int-db-connection-string
                 key: connectionString
+          - name: ConnectionStrings__keysContext
+            valueFrom:
+              secretKeyRef:
+                name: int-db-connection-string
+                key: connectionString
           - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:

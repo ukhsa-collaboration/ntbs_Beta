@@ -26,6 +26,7 @@ namespace ntbs_service
                     var services = scope.ServiceProvider;
                     MigrateAppDb(services);
                     MigrateAuditDb(services);
+                    MigrateKeysDb(services);
                     await CreateMigrationDbTablesAsync(services);
                 }
 
@@ -78,7 +79,7 @@ namespace ntbs_service
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occurred migrating the DB.");
+                Log.Error(ex, "An error occurred migrating the db.");
                 throw;
             }
         }
@@ -93,7 +94,22 @@ namespace ntbs_service
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occurred migrating the Audit DB.");
+                Log.Error(ex, "An error occurred migrating the Audit db.");
+                throw;
+            }
+        }
+
+        private static void MigrateKeysDb(IServiceProvider services)
+        {
+            try
+            {
+                Log.Information("Starting keys db migration");
+                var context = services.GetRequiredService<KeysContext>();
+                context.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred migrating the keys db.");
                 throw;
             }
         }

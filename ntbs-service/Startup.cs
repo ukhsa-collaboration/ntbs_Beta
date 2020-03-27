@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
@@ -113,6 +113,11 @@ namespace ntbs_service
             services.AddDbContext<AuditDatabaseContext>(options =>
                 options.UseSqlServer(auditDbConnectionString)
             );
+            
+            // Add a DbContext for Data Protection key storage
+            services.AddDbContext<KeysContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("keysContext")));
+            services.AddDataProtection().PersistKeysToDbContext<KeysContext>();
 
             // Repositories
             services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -334,8 +339,13 @@ namespace ntbs_service
                 {
                     options.MessageTemplate =
                         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
-                    // Set Logging Level of Request logging to Information - prevents duplicated exceptions in sentry. 
-                    options.GetLevel = (_, __, ___) => LogEventLevel.Information;
+                    // 400s get thrown e.g. on antiforgery token validation failures. In those cases we don't have
+                    // an exception logged in Sentry, so we want to log at Warning level to make sure we are able to
+                    // identify and cure false positives.
+                    // Otherwise setting to Information to prevent duplicated exceptions in sentry. 
+                    options.GetLevel = (context, _, __) => context.Response.StatusCode == StatusCodes.Status400BadRequest
+                        ? LogEventLevel.Warning 
+                        : LogEventLevel.Information;
                 });
             }
 
