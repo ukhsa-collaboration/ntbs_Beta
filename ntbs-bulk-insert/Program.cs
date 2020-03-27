@@ -48,6 +48,8 @@ namespace ConsoleApp2
         static async Task GenerateNotifications(NtbsContext context)
         {
             var numberOfNotifications = 3000;
+            var rand = new Random();
+            var tbServices = (await context.TbService.ToListAsync()).Select(t => t.Code).ToList();
             var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
                 .All()
                 .With(n => n.NotificationId = 0)
@@ -55,33 +57,41 @@ namespace ConsoleApp2
                 .With(n => n.PatientDetails.GivenName = Faker.Name.First())
                 .With(n => n.PatientDetails.FamilyName = Faker.Name.Last())
                 .With(n => n.ClinicalDetails.Notes = "UniqueBulkInsert")
-                .With(n => n.GroupId = null);
+                .With(n => n.GroupId = null)
+                // Add randomised fields that Faker cannot generate
+                .With(n => n.NotificationDate = AddRandomDateTimeBetween2014And2017(rand))
+                .With(n => n.HospitalDetails.TBServiceCode = AddRandomTbService(rand, tbServices))
+                .With(n => n.PatientDetails.NhsNumber = AddRandomTestNhsNumber(rand));
 
             // Comment out the line below to cause Treatment Outcome Alerts to be generated
             // notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
             
             var notifications= notificationsOperable.Build();
-            
-            // Add random fields that Faker is not capable of
-            foreach (var notification in notifications)
-            {
-                var rand = new Random();
-                var days = rand.Next(1, 1000);
-                notification.NotificationDate = new DateTime(2014, 1, 1).AddDays(days);
-                var tbServices = (await context.TbService.ToListAsync()).Select(t => t.Code).ToList();
-                var tbServiceIndex = rand.Next(0, tbServices.Count() - 1);
-                notification.HospitalDetails.TBServiceCode = tbServices[tbServiceIndex];
-                var nhsNumberString = "9";
-                for (var i = 0; i < 9; i++)
-                {
-                    nhsNumberString = String.Concat(nhsNumberString, rand.Next(1, 9).ToString());
-                }
-                notification.PatientDetails.NhsNumber = nhsNumberString;
 
-            }
-            
             context.AddRange(notifications);
             await context.SaveChangesAsync();
+        }
+
+        private static DateTime AddRandomDateTimeBetween2014And2017(Random rand)
+        {
+            var days = rand.Next(1, 1000);
+            return new DateTime(2014, 1, 1).AddDays(days);
+        }
+
+        private static string AddRandomTbService(Random rand, IList<string> tbServices)
+        {
+            var tbServiceIndex = rand.Next(0, tbServices.Count - 1);
+            return tbServices[tbServiceIndex];
+        }
+
+        private static string AddRandomTestNhsNumber(Random rand)
+        {
+            var nhsNumberString = "9";
+            for (var i = 0; i < 9; i++)
+            {
+                nhsNumberString = String.Concat(nhsNumberString, rand.Next(1, 9).ToString());
+            }
+            return nhsNumberString;
         }
 
         private static async Task<IOperable<Notification>> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable, NtbsContext context)
