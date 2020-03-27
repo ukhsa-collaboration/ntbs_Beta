@@ -8,13 +8,13 @@ namespace ntbs_service.Helpers
         private const string LabelKey = "TopLevelLocationLabel";
         private const string UrlKey = "TopLevelLocationUrl";
 
-        public static void SetTopLevelBreadcrumb(ISession session, string label, string url)
+        public static void SetTopLevelBreadcrumb(this ISession session, string label, string url)
         {
             session.SetString(LabelKey, label);
             session.SetString(UrlKey, url);
         }
         
-        public static Breadcrumb GetTopLevelBreadcrumb(ISession session)
+        public static Breadcrumb GetTopLevelBreadcrumb(this ISession session)
         {
             return new Breadcrumb
             {

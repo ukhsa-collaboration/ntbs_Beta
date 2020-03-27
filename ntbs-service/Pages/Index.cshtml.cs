@@ -43,7 +43,7 @@ namespace ntbs_service.Pages
         
         public async Task OnGetAsync()
         {
-            BreadcrumbsHelper.SetTopLevelBreadcrumb(HttpContext.Session, "Index", "/Index");
+            HttpContext.Session.SetTopLevelBreadcrumb("Index", "/Index");
             await SetUserNotificationsAsync();
             await SetUserAlertsAndTbServicesAsync();
             await SetHomepageKpiDetails();

@@ -72,13 +72,8 @@ namespace ntbs_service.Pages.Search
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? legacyOffset = null, int? ntbsOffset = null, int? previousLegacyOffset = null, int? previousNtbsOffset = null)
         {
-            BreadcrumbsHelper.SetTopLevelBreadcrumb(
-                HttpContext.Session, 
-                "Search", 
-                HttpContext.Request.GetEncodedPathAndQuery());
+            HttpContext.Session.SetTopLevelBreadcrumb("Search", HttpContext.Request.GetEncodedPathAndQuery());
 
-            Log.Logger.Information(HttpContext.Request.GetEncodedPathAndQuery());
-            
             if (!ModelState.IsValid)
             {
                 return Page();

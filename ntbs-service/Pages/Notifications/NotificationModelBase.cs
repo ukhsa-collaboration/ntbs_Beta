@@ -71,9 +71,11 @@ namespace ntbs_service.Pages.Notifications
 
         protected void PrepareBreadcrumbs()
         {
-            var breadcrumbs = new List<Breadcrumb>();
-            breadcrumbs.Add(BreadcrumbsHelper.GetTopLevelBreadcrumb(HttpContext.Session));
-            breadcrumbs.Add(new Breadcrumb {Label = "Notification", Url = $@"/Notifications/{NotificationId}"});
+            var breadcrumbs = new List<Breadcrumb>
+            {
+                HttpContext.Session.GetTopLevelBreadcrumb(),
+                new Breadcrumb {Label = "Notification", Url = $@"/Notifications/{NotificationId}"}
+            };
 
             ViewData["Breadcrumbs"] = breadcrumbs;
         }
