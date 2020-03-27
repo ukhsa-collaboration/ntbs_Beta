@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Audit.Core;
 using FizzWare.NBuilder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -19,12 +21,21 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-
-            var configuration = new ConfigurationBuilder()
+            var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true)
-                .Build();
+                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
+                
+            // if (string.IsNullOrEmpty(builder.GetSetting(WebHostDefaults.ContentRootKey)))
+            // {
+                Directory.SetCurrentDirectory("./bin/debug/netcoreapp2.2");
+                builder.SetBasePath(Directory.GetCurrentDirectory());
+            // }
+            // if (args != null)
+            // {
+            //     builder.AddCommandLine(args);
+            // }
+            var configuration = builder.Build();
 
             var connectionString = configuration.GetConnectionString("ntbsContext");
             
