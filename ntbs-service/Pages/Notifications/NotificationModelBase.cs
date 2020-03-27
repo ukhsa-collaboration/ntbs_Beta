@@ -39,9 +39,6 @@ namespace ntbs_service.Pages.Notifications
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
-        public string TopLevelBreadcrumbUrl { get; set; }
-        public string TopLevelBreadcrumbLabel { get; set; }
-        public string NotificationUrl { get; set; }
         
         protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
         {
