@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
@@ -39,13 +40,13 @@ namespace ConsoleApp2
                     return;
                 }
                 Console.WriteLine("Starting generation of notifications");
-                await GenerateNotifications(context);
+                await GenerateNotifications(context, true);
                 Console.WriteLine("Finished generation of notifications");
             }
         }
 
 
-        static async Task GenerateNotifications(NtbsContext context)
+        static async Task GenerateNotifications(NtbsContext context, bool addTreatmentEvents = false)
         {
             var numberOfNotifications = 3000;
             var rand = new Random();
@@ -63,8 +64,10 @@ namespace ConsoleApp2
                 .With(n => n.HospitalDetails.TBServiceCode = AddRandomTbService(rand, tbServices))
                 .With(n => n.PatientDetails.NhsNumber = AddRandomTestNhsNumber(rand));
 
-            // Comment out the line below to cause Treatment Outcome Alerts to be generated
-            // notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
+            if (addTreatmentEvents)
+            {
+                notificationsOperable = await AddDataQualityTreatmentEvents(notificationsOperable, context);
+            }
             
             var notifications= notificationsOperable.Build();
 
@@ -86,12 +89,12 @@ namespace ConsoleApp2
 
         private static string AddRandomTestNhsNumber(Random rand)
         {
-            var nhsNumberString = "9";
+            var nhsNumberString = new StringBuilder("9", 10);
             for (var i = 0; i < 9; i++)
             {
-                nhsNumberString = String.Concat(nhsNumberString, rand.Next(1, 9).ToString());
+                nhsNumberString.Append(rand.Next(1, 9).ToString());
             }
-            return nhsNumberString;
+            return nhsNumberString.ToString();
         }
 
         private static async Task<IOperable<Notification>> AddDataQualityTreatmentEvents(IOperable<Notification> notificationsOperable, NtbsContext context)
