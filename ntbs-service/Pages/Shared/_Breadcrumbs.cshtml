@@ -4,13 +4,14 @@
 
 @if (@Model != null)
 {
-    <nhs-breadcrumb>
-        <nhs-breadcrumb-list>
+    <nav class="nhsuk-breadcrumb breadcrumb-trail-background" aria-label="Breadcrumb">
+        <div class="nhsuk-width-container">
+            <ol class="nhsuk-breadcrumb__list">
             @foreach (var breadcrumb in Model)
             {
-                <nhs-breadcrumb-item href=@breadcrumb.Url>@breadcrumb.Label</nhs-breadcrumb-item>
+                <li class="nhsuk-breadcrumb__item"><a class="nhsuk-breadcrumb__link" href="@breadcrumb.Url">@breadcrumb.Label</a></li>
             }
-        </nhs-breadcrumb-list>
-    </nhs-breadcrumb>
-
+            </ol>
+        </div>
+    </nav>
 }

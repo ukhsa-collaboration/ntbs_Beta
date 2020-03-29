@@ -15,10 +15,7 @@
     var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
     var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
     var endClass = $"notification-page-end notification-page-end{classSuffix}";
-    var breadcrumbs = ViewData["Breadcrumbs"];
 }
-
-<partial name="_Breadcrumbs" model=@breadcrumbs/>
 
 <nhs-width-container container-width="Standard">
     <form method="post" autocomplete="off">

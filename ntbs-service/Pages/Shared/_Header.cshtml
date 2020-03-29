@@ -1,6 +1,9 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 
+@{
+    var breadcrumbs = ViewData["Breadcrumbs"];
+}
 <header role="banner" data-module="govuk-header">
     <div class="govuk-phase-banner">
         <div class="govuk-width-container">
@@ -76,5 +79,6 @@
         </div>
     </div>
     <div class="breadcrumb-trail">
+        <partial name="_Breadcrumbs" model=@breadcrumbs/>  
     </div>
 </header>
