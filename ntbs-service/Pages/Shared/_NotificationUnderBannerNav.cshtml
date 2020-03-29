@@ -7,7 +7,7 @@
 
     var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
     var requiresSeparator = false;
-    var isOnLinkedNotificationsPage = (bool?) TempData["OnLinkedNotificationsPage"] ?? false;
+    var isOnLinkedNotificationsPage = (bool?) ViewData["OnLinkedNotificationsPage"] ?? false;
 }
 
 @if (!isDraft ||  isOnLinkedNotificationsPage)
