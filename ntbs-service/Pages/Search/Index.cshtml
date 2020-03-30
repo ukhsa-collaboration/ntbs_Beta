@@ -51,41 +51,43 @@
                         </nhs-hint>
                     </nhs-form-group>
 
-                    @{
-                        var dobError = !Model.ValidationService.IsValid("SearchParameters.PartialDob");
-                        var dobGroupState = dobError ? Error : Standard;
-                    }
-                    <nhs-form-group nhs-form-group-type=@dobGroupState classes="nhs-form-group--search-date">
-                        <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error" classes="search-error"
-                            asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
-                        <label nhs-label-type="Standard" classes="search-label--standard" for="dob"> Date of birth </label>
-                        <nhs-date-input id="dob" classes="date-input--search">
-                            <nhs-date-input-item>
-                                <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
-                                    <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day" classes="search-date-input-label">Day</label>
-                                    <input nhs-input-type="Date" fixed-width="Two"
-                                            is-error-input=@dobError asp-for="SearchParameters.PartialDob.Day" />
-                                </nhs-form-group>
-                            </nhs-date-input-item>
-                            <nhs-date-input-item>
-                                <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
-                                    <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month" classes="search-date-input-label">Month</label>
-                                    <input nhs-input-type="Date" fixed-width="Two"
-                                            is-error-input=@dobError asp-for="SearchParameters.PartialDob.Month" />
-                                </nhs-form-group>
-                            </nhs-date-input-item>
-                            <nhs-date-input-item>
-                                <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
-                                    <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year" classes="search-date-input-label">Year</label>
-                                    <input nhs-input-type="Date" fixed-width="Four"
-                                            is-error-input=@dobError asp-for="SearchParameters.PartialDob.Year" />
-                                </nhs-form-group>
-                            </nhs-date-input-item>
-                        </nhs-date-input>
-                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
-                            Dates can be partial
-                        </nhs-hint>
-                    </nhs-form-group>
+                    <date-input inline-template>
+                        @{
+                            var dobError = !Model.ValidationService.IsValid("SearchParameters.PartialDob");
+                            var dobGroupState = dobError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type=@dobGroupState classes="nhs-form-group--search-date">
+                            <span ref="errorField" nhs-span-type="ErrorMessage" id="dob-error" classes="search-error"
+                                asp-validation-for="SearchParameters.PartialDob" has-error="@dobError"></span>
+                            <label nhs-label-type="Standard" classes="search-label--standard" for="dob"> Date of birth </label>
+                            <nhs-date-input id="dob" classes="date-input--search">
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Day" classes="search-date-input-label">Day</label>
+                                        <input nhs-input-type="Date" fixed-width="Two" ref="dayInput"
+                                                is-error-input=@dobError asp-for="SearchParameters.PartialDob.Day" />
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
+                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Month" classes="search-date-input-label">Month</label>
+                                        <input nhs-input-type="Date" fixed-width="Two" ref="monthInput"
+                                                is-error-input=@dobError asp-for="SearchParameters.PartialDob.Month" />
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                                <nhs-date-input-item>
+                                    <nhs-form-group nhs-form-group-type="Standard"  classes="search-date-input">
+                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialDob.Year" classes="search-date-input-label">Year</label>
+                                        <input nhs-input-type="Date" fixed-width="Four" ref="yearInput"
+                                                is-error-input=@dobError asp-for="SearchParameters.PartialDob.Year" />
+                                    </nhs-form-group>
+                                </nhs-date-input-item>
+                            </nhs-date-input>
+                            <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
+                                Dates can be partial
+                            </nhs-hint>
+                        </nhs-form-group>
+                    </date-input>
 
                     @{
                         var postcodeError = !Model.ValidationService.IsValid("SearchParameters.Postcode");
@@ -106,41 +108,43 @@
             </nhs-form-group>
             <nhs-details display-text="Advanced options" nhs-details-type="Standard">
                 <div>
-                    @{
-                        var notificationDateError = !Model.ValidationService.IsValid("SearchParameters.PartialNotificationDate");
-                        var notificationDateGroupState = notificationDateError ? Error : Standard;
-                    }
-                    <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--search-date">
-                        <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="search-error"
-                            asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
-                            <label nhs-label-type="Standard" classes="search-label--long" for="notification-date"> Notification Date </label>
-                            <nhs-date-input id="notification-date" classes="date-input--search">
-                                <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Day"  classes="search-date-input-label">Day</label>
-                                        <input nhs-input-type="Date" fixed-width="Two"
-                                            is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Day" />
-                                    </nhs-form-group>
-                                </nhs-date-input-item>
-                                <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Month"  classes="search-date-input-label">Month</label>
-                                        <input nhs-input-type="Date" fixed-width="Two"
-                                            is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Month" />
-                                    </nhs-form-group>
-                                </nhs-date-input-item>
-                                <nhs-date-input-item>
-                                    <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
-                                        <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Year"  classes="search-date-input-label">Year</label>
-                                        <input nhs-input-type="Date" fixed-width="Four"
-                                            is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Year" />
-                                    </nhs-form-group>
-                                </nhs-date-input-item>
-                            </nhs-date-input>
-                        <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
-                            Dates can be partial
-                        </nhs-hint>
-                    </nhs-form-group>
+                    <date-input inline-template>
+                        @{
+                            var notificationDateError = !Model.ValidationService.IsValid("SearchParameters.PartialNotificationDate");
+                            var notificationDateGroupState = notificationDateError ? Error : Standard;
+                        }
+                        <nhs-form-group nhs-form-group-type=@notificationDateGroupState classes="nhs-form-group--search-date">
+                            <span ref="errorField" nhs-span-type="ErrorMessage" id="notification-date-error" classes="search-error"
+                                asp-validation-for="SearchParameters.PartialNotificationDate" has-error="@notificationDateError"></span>
+                                <label nhs-label-type="Standard" classes="search-label--long" for="notification-date"> Notification Date </label>
+                                <nhs-date-input id="notification-date" classes="date-input--search">
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Day"  classes="search-date-input-label">Day</label>
+                                            <input nhs-input-type="Date" fixed-width="Two" ref="dayInput"
+                                                is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Day" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Month"  classes="search-date-input-label">Month</label>
+                                            <input nhs-input-type="Date" fixed-width="Two" ref="monthInput"
+                                                is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Month" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                    <nhs-date-input-item>
+                                        <nhs-form-group nhs-form-group-type="Standard" classes="search-date-input">
+                                            <label nhs-label-type="Date" asp-for="SearchParameters.PartialNotificationDate.Year"  classes="search-date-input-label">Year</label>
+                                            <input nhs-input-type="Date" fixed-width="Four" ref="yearInput"
+                                                is-error-input=@notificationDateError asp-for="SearchParameters.PartialNotificationDate.Year" />
+                                        </nhs-form-group>
+                                    </nhs-date-input-item>
+                                </nhs-date-input>
+                            <nhs-hint nhs-hint-type="Standard" id="partial-dates-allowed-hint" classes="search-hint">
+                                Dates can be partial
+                            </nhs-hint>
+                        </nhs-form-group>
+                    </date-input>
 
                     @{
                         var givenNameError = !Model.ValidationService.IsValid("SearchParameters.GivenName");

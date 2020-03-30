@@ -41,6 +41,7 @@ import FormLeaveChecker from "./Components/FormLeaveChecker";
 import ConfirmComponent from "./Components/ConfirmComponent";
 import InactivityChecker from "./Components/InactivityChecker";
 import InactivityLeaveComponent from "./Components/InactivityLeaveComponent";
+import DateInput from "./Components/DateInput";
 
 // For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
@@ -55,6 +56,7 @@ if (config.env === "production") {
 
 Vue.use(VueAccessibleModal, { transition: "fade" });
 // register Vue components
+Vue.component("date-input", DateInput);
 Vue.component("validate-input", ValidateInput);
 Vue.component("validate-date", ValidateDate);
 Vue.component("date-comparison", DateComparison);

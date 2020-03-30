@@ -15,14 +15,14 @@
         <br/>
 
         <div>
-            <nhs-form-group>
+            <nhs-form-group nhs-form-group-type="Standard">
                 <label asp-for="UploadedFile">Upload File</label>
                 <input type="file" asp-for="UploadedFile"/>
             </nhs-form-group>
         </div>
         <br/>
 
-        <div>
+        <date-input inline-template>
             @{
                 var notificationDateStartError = !Model.ValidationService.IsValid(nameof(Model.NotificationDateRangeStart));
                 var notificationDateStartGroupState = notificationDateStartError ? Error : Standard;
@@ -35,29 +35,29 @@
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Day">Day</label>
-                            <input nhs-input-type="Date" fixed-width="Two"
+                            <input ref="dayInput" nhs-input-type="Date" fixed-width="Two"
                                 is-error-input=@notificationDateStartError asp-for="NotificationDateRangeStart.Day" />
                         </nhs-form-group>
                     </nhs-date-input-item>
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Month">Month</label>
-                            <input nhs-input-type="Date" fixed-width="Two"
+                            <input ref="monthInput" nhs-input-type="Date" fixed-width="Two"
                                 is-error-input=@notificationDateStartError asp-for="NotificationDateRangeStart.Month" />
                         </nhs-form-group>
                     </nhs-date-input-item>
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeStart.Year">Year</label>
-                            <input nhs-input-type="Date" fixed-width="Four"
+                            <input ref="yearInput" nhs-input-type="Date" fixed-width="Four"
                                 is-error-input=@notificationDateStartError asp-for="NotificationDateRangeStart.Year" />
                         </nhs-form-group>
                     </nhs-date-input-item>
                 </nhs-date-input>
             </nhs-form-group>
-        </div>
+        </date-input>
 
-        <div>
+        <date-input inline-template>
             @{
                 var notificationDateEndError = !Model.ValidationService.IsValid(nameof(Model.NotificationDateRangeEnd));
                 var notificationDateEndGroupState = notificationDateEndError ? Error : Standard;
@@ -70,27 +70,27 @@
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Day">Day</label>
-                            <input nhs-input-type="Date" fixed-width="Two"
+                            <input nhs-input-type="Date" fixed-width="Two" ref="dayInput"
                                 is-error-input=@notificationDateEndError asp-for="NotificationDateRangeEnd.Day" />
                         </nhs-form-group>
                     </nhs-date-input-item>
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Month">Month</label>
-                            <input nhs-input-type="Date" fixed-width="Two"
+                            <input nhs-input-type="Date" fixed-width="Two" ref="monthInput"
                                 is-error-input=@notificationDateEndError asp-for="NotificationDateRangeEnd.Month" />
                         </nhs-form-group>
                     </nhs-date-input-item>
                     <nhs-date-input-item>
                         <nhs-form-group nhs-form-group-type="Standard">
                             <label nhs-label-type="Date" asp-for="NotificationDateRangeEnd.Year">Year</label>
-                            <input nhs-input-type="Date" fixed-width="Four"
+                            <input nhs-input-type="Date" fixed-width="Four" ref="yearInput"
                                 is-error-input=@notificationDateEndError asp-for="NotificationDateRangeEnd.Year" />
                         </nhs-form-group>
                     </nhs-date-input-item>
                 </nhs-date-input>
             </nhs-form-group>
-        </div>
+        </date-input>
 
         <div>
             <button nhs-button-type="Standard" type="submit" value="Import" classes="ntbsuk-button--primary submit-search-button" id="search-button">
