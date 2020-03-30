@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -42,6 +44,7 @@ namespace ntbs_service.Pages
         
         public async Task OnGetAsync()
         {
+            HttpContext.Session.SetTopLevelBreadcrumb("Index", "/Index");
             await SetUserNotificationsAsync();
             await SetUserAlertsAndTbServicesAsync();
             await SetHomepageKpiDetails();

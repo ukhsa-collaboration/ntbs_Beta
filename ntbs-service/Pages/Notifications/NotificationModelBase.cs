@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -38,7 +40,7 @@ namespace ntbs_service.Pages.Notifications
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
-
+        
         protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationAsync(notificationId);
@@ -63,6 +65,17 @@ namespace ntbs_service.Pages.Notifications
                 Notification.Group = await GetNotificationGroupAsync();
                 NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
+        }
+
+        protected void PrepareBreadcrumbs()
+        {
+            var breadcrumbs = new List<Breadcrumb>
+            {
+                HttpContext.Session.GetTopLevelBreadcrumb(),
+                new Breadcrumb {Label = "Notification", Url = $@"/Notifications/{NotificationId}"}
+            };
+
+            ViewData["Breadcrumbs"] = breadcrumbs;
         }
 
         protected IActionResult ForbiddenResult()

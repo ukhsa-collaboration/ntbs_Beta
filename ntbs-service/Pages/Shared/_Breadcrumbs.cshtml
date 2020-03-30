@@ -1,0 +1,17 @@
+﻿@using ntbs_service.Models
+@model List<Breadcrumb>
+
+
+@if (@Model != null)
+{
+    <nav class="nhsuk-breadcrumb breadcrumb-trail-background" aria-label="Breadcrumb">
+        <div class="nhsuk-width-container">
+            <ol class="nhsuk-breadcrumb__list">
+            @foreach (var breadcrumb in Model)
+            {
+                <li class="nhsuk-breadcrumb__item"><a class="nhsuk-breadcrumb__link" href="@breadcrumb.Url">@breadcrumb.Label</a></li>
+            }
+            </ol>
+        </div>
+    </nav>
+}
