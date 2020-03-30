@@ -6,3 +6,11 @@
     width: 100%;
     margin-bottom: 20px;
 }
+
+// NHS UK tables have changed their internal padding.
+// See https://nhsuk.github.io/nhsuk-frontend/components/tables/tables-panel.html
+// Overall it's an improvement, but the lack of LHS space looks odd in the first column - this hack alleviates that.
+.nhsuk-table__header:first-child,
+.nhsuk-table__cell:first-child {
+  padding-left: 8px;
+}
