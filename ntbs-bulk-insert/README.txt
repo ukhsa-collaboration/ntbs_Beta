@@ -21,9 +21,7 @@ a different database change the connection string here.
 ## Running the bulk insert console app
 
 To run the bulk insert console app navigate to the ntbs-bulk-insert app directory and run:
-- dotnet build
-- navigate to ntbs-bulk-insert/bin/debug/netcoreapp2.2
-- dotnet ntbs-bulk-insert.dll
+- dotnet run
 
 The optional treatment events can be toggled on and off using the boolean flag "addTreatmentEvents" by 
 passing true to GenerateNotifications in Main().
