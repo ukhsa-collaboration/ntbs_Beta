@@ -15,6 +15,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages.Search;
 using ntbs_service.Services;
+using ntbs_service_unit_tests.Helpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.Pages
@@ -92,6 +93,7 @@ namespace ntbs_service_unit_tests.Pages
                 SearchParameters = new SearchParameters(),
                 PageContext = pageContext
             };
+            pageModel.MockOutSession(httpContext);
 
             // Act
             await pageModel.OnGetAsync(1);

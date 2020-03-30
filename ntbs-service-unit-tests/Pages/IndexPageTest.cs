@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Hangfire.Dashboard.Resources;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using ntbs_service.DataAccess;
@@ -11,6 +10,7 @@ using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Pages;
 using ntbs_service.Services;
+using ntbs_service_unit_tests.Helpers;
 using Xunit;
 
 namespace ntbs_service_unit_tests.Pages
@@ -78,6 +78,7 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAuthorizationService.Object, 
                 _mockUserService.Object, 
                 _mockHomepageKpiService.Object);
+            pageModel.MockOutSession();
 
             // Act
             await pageModel.OnGetAsync();
@@ -104,6 +105,7 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAuthorizationService.Object, 
                 _mockUserService.Object, 
                 _mockHomepageKpiService.Object);
+            pageModel.MockOutSession();
 
             // Act
             await pageModel.OnGetAsync();
@@ -129,6 +131,7 @@ namespace ntbs_service_unit_tests.Pages
                 _mockAuthorizationService.Object, 
                 _mockUserService.Object, 
                 _mockHomepageKpiService.Object);
+            pageModel.MockOutSession();
 
             // Act
             await pageModel.OnGetAsync();
