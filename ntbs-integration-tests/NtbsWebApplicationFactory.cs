@@ -33,6 +33,12 @@ namespace ntbs_integration_tests
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
+                services.AddDbContext<KeysContext>(options =>
+                {
+                    options.UseInMemoryDatabase("Ntbs_Keys_Db");
+                    options.UseInternalServiceProvider(serviceProvider);
+                });
+
                 services.AddDbContext<AuditDatabaseContext>(options =>
                 {
                     options.UseInMemoryDatabase("Ntbs_Audit_Test_Db");
