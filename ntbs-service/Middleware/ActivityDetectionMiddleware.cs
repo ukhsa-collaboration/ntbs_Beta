@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ntbs_service.Helpers;
-using ntbs_service.Services;
 
 namespace ntbs_service.Middleware
 {
-    public class SessionStateRequestMiddleware
+    public class ActivityDetectionMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public SessionStateRequestMiddleware(RequestDelegate next)
+        public ActivityDetectionMiddleware(RequestDelegate next)
         {
             _next = next;
         }

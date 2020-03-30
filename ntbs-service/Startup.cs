@@ -62,7 +62,11 @@ namespace ntbs_service
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
             // Plugin services
-            if (!Env.IsEnvironment("CI"))
+            if (Env.IsEnvironment("CI"))
+            {
+                services.AddDistributedMemoryCache();
+            }
+            else
             {
                 services.AddDistributedSqlServerCache(options =>
                 {
@@ -70,12 +74,12 @@ namespace ntbs_service
                     options.SchemaName = "dbo";
                     options.TableName = "SessionState";
                 });
-                
-                services.AddSession(options =>
-                {
-                    options.Cookie.IsEssential = true;
-                });
             }
+
+            services.AddSession(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
 
             SetupAuthentication(services, adfsConfig);
 
@@ -351,12 +355,11 @@ namespace ntbs_service
 
             app.UseAuthentication();
             app.UseCookiePolicy();
-
+            app.UseSession();
+            
             if (!Env.IsEnvironment("CI"))
             {
-                app.UseSession();
-
-                app.UseMiddleware<SessionStateRequestMiddleware>();
+                app.UseMiddleware<ActivityDetectionMiddleware>();
             }
             
             if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
