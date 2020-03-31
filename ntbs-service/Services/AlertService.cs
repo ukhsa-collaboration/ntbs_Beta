@@ -100,10 +100,7 @@ namespace ntbs_service.Services
             {
                 var matchingAlert =
                     await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(alert.NotificationId.Value);
-                if (matchingAlert != null)
-                {
-                    return false;
-                }
+                if (matchingAlert != null) return false;
             }
 
             await PopulateAndAddAlertAsync(alert);
@@ -115,10 +112,7 @@ namespace ntbs_service.Services
             if (alert.NotificationId.HasValue)
             {
                 var matchingAlert = await _alertRepository.GetOpenAlertByNotificationId<T>(alert.NotificationId.Value);
-                if (matchingAlert != null)
-                {
-                    return false;
-                }
+                if (matchingAlert != null) return false;
             }
 
             await PopulateAndAddAlertAsync(alert);
@@ -130,10 +124,7 @@ namespace ntbs_service.Services
             if (alert.NotificationId.HasValue)
             {
                 var matchingAlert = await _alertRepository.GetDuplicateAlertByNotificationIdAndDuplicateId(alert.NotificationId.Value, alert.DuplicateId);
-                if (matchingAlert != null)
-                {
-                    return;
-                }
+                if (matchingAlert != null) return;
             }
 
             await PopulateAndAddAlertAsync(alert);

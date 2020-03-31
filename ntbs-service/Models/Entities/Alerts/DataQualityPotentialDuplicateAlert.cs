@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public override string Action => $"This record may be a duplicate of {DuplicateId}. Please contact the case manager to discuss.";
 
         public override string ActionLink => RouteHelper.GetNotificationPath(
-            NotificationId.GetValueOrDefault(),
+            NotificationId.Value,
             NotificationSubPaths.Overview);
 
         public DataQualityPotentialDuplicateAlert()

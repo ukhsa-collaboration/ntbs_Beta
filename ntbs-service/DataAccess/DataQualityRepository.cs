@@ -106,24 +106,31 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<NotificationAndDuplicateIds>> GetNotificationIdsEligibleForPotentialDuplicateAlerts()
         {
-            return await GetBaseNotificationQueryableForAlerts()
-                .SelectMany(a => _context.Notification, 
+            return await _context.Notification
+                .SelectMany(_ => _context.Notification, 
                     (notification, duplicate) => new {notification, duplicate})
                 .Where(t =>
-                    (t.notification.PatientDetails.GivenName == t.duplicate.PatientDetails.FamilyName &&
-                     t.notification.PatientDetails.FamilyName == t.duplicate.PatientDetails.GivenName &&
-                     t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
-                     t.notification.PatientDetails.NhsNumber != null &&
-                     t.notification.PatientDetails.GivenName != null &&
-                     t.notification.PatientDetails.GivenName != null) 
+                    // Check that one of the following cases are true:
+                    // The notification's names match directly (and it is not matching on itself)
+                    (t.notification.PatientDetails.GivenName == t.duplicate.PatientDetails.GivenName &&
+                     t.notification.PatientDetails.FamilyName == t.duplicate.PatientDetails.FamilyName &&
+                     t.notification.NotificationId != t.duplicate.NotificationId)
                     ||
-                    (t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
-                     t.notification.PatientDetails.Dob == t.duplicate.PatientDetails.Dob && 
-                     t.notification.PatientDetails.NhsNumber != null &&
-                     t.notification.PatientDetails.Dob != null)
+                    // The notification's given and family names match but are reversed
+                    (t.notification.PatientDetails.GivenName == t.duplicate.PatientDetails.FamilyName &&
+                     t.notification.PatientDetails.FamilyName == t.duplicate.PatientDetails.GivenName)
+                    ||
+                    // The notification's date of births match
+                    (t.notification.PatientDetails.Dob == t.duplicate.PatientDetails.Dob)
                     &&
+                    // Then check that the notification's nhs numbers match, the notification is notified and the notifications
+                    // have been notified for at least the minimum amount of time specified
+                    t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
                     t.notification.NotificationDate < DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert) &&
-                    t.duplicate.NotificationDate < DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert))
+                    t.duplicate.NotificationDate < DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert) &&
+                    t.notification.NotificationStatus == NotificationStatus.Notified &&
+                    t.duplicate.NotificationStatus == NotificationStatus.Notified &&
+                    t.notification.GroupId != t.duplicate.GroupId)
                 .Select(t => new NotificationAndDuplicateIds
                 {
                     NotificationId = t.notification.NotificationId,
