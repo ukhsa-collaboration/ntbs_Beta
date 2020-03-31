@@ -91,9 +91,9 @@ namespace ntbs_service.Jobs
                 await _alertService.AddUniqueAlertAsync(alert);
             }
 
-            var possibleDuplicateNotifications =
+            var possibleDuplicateNotificationIds =
                 await _dataQualityRepository.GetNotificationIdsEligibleForPotentialDuplicateAlerts();
-            foreach (var notification in possibleDuplicateNotifications)
+            foreach (var notification in possibleDuplicateNotificationIds)
             {
                 var alert = new DataQualityPotentialDuplicateAlert {NotificationId = notification.NotificationId, DuplicateId = notification.DuplicateId};
                 await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
