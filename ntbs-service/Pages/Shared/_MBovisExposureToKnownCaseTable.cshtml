@@ -13,15 +13,13 @@
         @foreach (var result in orderedResults)
         {
             <div class="notification-overview-type-and-edit-container">
-                @{
-                    var exposingNotificationOverviewPath = RouteHelper.GetNotificationPath(result.ExposureNotificationId.Value, NotificationSubPaths.Overview);
-                }
                 <h5 class="notification-details-type">
-                    Exposure to
-                    <a href="@exposingNotificationOverviewPath" class="no-print">
-                        #@result.ExposureNotificationId
-                    </a>
-                    <span class="no-screen"> #@result.ExposureNotificationId </span>
+                
+                    @if (result.YearOfExposure != null)
+                    {
+                        @result.YearOfExposure @:- 
+                    }
+                    @result.ExposureSetting.GetDisplayName()
                 </h5>
                 @if (showEditLinks)
                 {
@@ -37,8 +35,8 @@
                         <dd class="cell-min-height"> @result.YearOfExposure </dd>
                     </nhs-grid-column>
                     <nhs-grid-column grid-column-width="ThreeQuarters">
-                        <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureSetting) </dt>
-                        <dd class="cell-min-height"> @result.ExposureSetting.GetDisplayName() </dd>
+                        <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureNotificationId) </dt>
+                        <dd class="cell-min-height"> @result.ExposureNotificationId </dd>
                     </nhs-grid-column>
                 </nhs-grid-row>
                 

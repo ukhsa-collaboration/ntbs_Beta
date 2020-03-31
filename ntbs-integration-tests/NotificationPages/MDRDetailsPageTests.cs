@@ -36,7 +36,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Please supply details of the relationship to case");
-            resultDocument.AssertErrorSummaryMessage("MDRDetails-CaseInUKStatus", "case-in-uk", "Please specify whether the contact was a case in the UK");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-CountryId", "exposure-country", "Please specify country of exposure");
         }
 
         [Fact]
@@ -51,8 +51,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "123",
-                ["MDRDetails.CaseInUKStatus"] = "Yes",
-                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.DRAFT_ID}",
+                ["MDRDetails.CountryId"] = "1",
             };
 
             // Act
@@ -63,7 +62,6 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Relationship of the current case to the contact can only contain letters and the symbols ' - . ,");
-            resultDocument.AssertErrorSummaryMessage("MDRDetails-RelatedNotificationId", "related-notification", "The NTBS ID does not match an existing ID in the system");
         }
 
         [Fact]
@@ -79,7 +77,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
-                ["MDRDetails.CaseInUKStatus"] = "Yes",
+                ["MDRDetails.NotifiedToPheStatus"] = "Yes",
+                ["MDRDetails.CountryId"] = "235",
                 ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NOTIFIED_ID}",
             };
 
@@ -93,7 +92,6 @@ namespace ntbs_integration_tests.NotificationPages
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             reloadedDocument.AssertInputRadioValue("exposure-yes", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");
-            reloadedDocument.AssertInputRadioValue("uk-yes", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelatedNotificationId", $"{Utilities.NOTIFIED_ID}");
         }
 
@@ -110,7 +108,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Unknown",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
-                ["MDRDetails.CaseInUKStatus"] = "Unknown",
+                ["MDRDetails.NotifiedToPheStatus"] = "Unknown",
                 ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NOTIFIED_ID}",
             };
 
@@ -124,11 +122,9 @@ namespace ntbs_integration_tests.NotificationPages
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             Assert.True(((IHtmlInputElement)reloadedDocument.GetElementById("exposure-unknown")).IsChecked);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("MDRDetails_RelationshipToCase")).Value);
-            Assert.False(((IHtmlInputElement)reloadedDocument.GetElementById("uk-unknown")).IsChecked);
             Assert.Equal("", ((IHtmlInputElement)reloadedDocument.GetElementById("MDRDetails_RelatedNotificationId")).Value);
             reloadedDocument.AssertInputRadioValue("exposure-unknown", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "");
-            reloadedDocument.AssertInputRadioValue("uk-unknown", false);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelatedNotificationId", "");
         }
 
@@ -145,7 +141,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
-                ["MDRDetails.CaseInUKStatus"] = "No",
+                ["MDRDetails.NotifiedToPheStatus"] = "No",
                 ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NOTIFIED_ID}",
                 ["MDRDetails.CountryId"] = "1",
             };
@@ -160,42 +156,9 @@ namespace ntbs_integration_tests.NotificationPages
             var reloadedDocument = await GetDocumentAsync(reloadedPage);
             reloadedDocument.AssertInputRadioValue("exposure-yes", true);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");
-            reloadedDocument.AssertInputRadioValue("uk-no", true);
+            reloadedDocument.AssertInputRadioValue("notified-no", false);
             reloadedDocument.AssertInputTextValue("MDRDetails_RelatedNotificationId", "");
             reloadedDocument.AssertInputSelectValue("MDRDetails_CountryId", "1");
-        }
-
-        [Fact]
-        public async Task Post_ClearsCountry_IfContactInUK()
-        {
-            // Arrange
-            const int id = Utilities.DRAFT_ID;
-            var url = GetCurrentPathForId(id);
-            var initialDocument = await GetDocumentForUrlAsync(url);
-
-            var formData = new Dictionary<string, string>
-            {
-                ["NotificationId"] = id.ToString(),
-                ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
-                ["MDRDetails.RelationshipToCase"] = "Cousins",
-                ["MDRDetails.CaseInUKStatus"] = "Yes",
-                ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NOTIFIED_ID}",
-                ["MDRDetails.CountryId"] = "1",
-            };
-
-            // Act
-            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
-
-            // Assert
-            result.AssertRedirectTo(GetPathForId(NotificationSubPaths.EditMBovisExposureToKnownCases, id));
-
-            var reloadedPage = await Client.GetAsync(GetCurrentPathForId(id));
-            var reloadedDocument = await GetDocumentAsync(reloadedPage);
-            reloadedDocument.AssertInputRadioValue("exposure-yes", true);
-            reloadedDocument.AssertInputTextValue("MDRDetails_RelationshipToCase", "Cousins");
-            reloadedDocument.AssertInputRadioValue("uk-yes", true);
-            reloadedDocument.AssertInputTextValue("MDRDetails_RelatedNotificationId", $"{Utilities.NOTIFIED_ID}");
-            reloadedDocument.AssertInputSelectValue("MDRDetails_CountryId", null);
         }
 
         [Fact]
@@ -229,7 +192,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["NotificationId"] = id.ToString(),
                 ["MDRDetails.ExposureToKnownCaseStatus"] = "Yes",
                 ["MDRDetails.RelationshipToCase"] = "Cousins",
-                ["MDRDetails.CaseInUKStatus"] = "Yes",
+                ["MDRDetails.NotifiedToPheStatus"] = "No",
+                ["MDRDetails.CountryId"] = "235",
                 ["MDRDetails.RelatedNotificationId"] = $"{Utilities.NOTIFIED_ID}",
             };
 

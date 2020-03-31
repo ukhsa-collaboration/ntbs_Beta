@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200331001758_ChangeCaseInUkStatusToNotifiedToPHEStatus")]
+    partial class ChangeCaseInUkStatusToNotifiedToPHEStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,7 +165,8 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ExposureNotificationId");
+                    b.Property<int?>("ExposureNotificationId")
+                        .IsRequired();
 
                     b.Property<string>("ExposureSetting")
                         .IsRequired()
@@ -171,14 +174,11 @@ namespace ntbs_service.Migrations
 
                     b.Property<int>("NotificationId");
 
-                    b.Property<string>("NotifiedToPheStatus")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
                     b.Property<string>("OtherDetails")
                         .HasMaxLength(150);
 
-                    b.Property<int?>("YearOfExposure");
+                    b.Property<int?>("YearOfExposure")
+                        .IsRequired();
 
                     b.HasKey("MBovisExposureToKnownCaseId");
 

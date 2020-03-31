@@ -13,7 +13,6 @@ namespace ntbs_service.Models.Entities
         public int MBovisExposureToKnownCaseId { get; set; }
         public int NotificationId { get; set; }
         
-        [Required]
         [AssertThat(nameof(YearOfExposureAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
         [AssertThat(nameof(YearOfExposureNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
@@ -27,11 +26,15 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Exposure setting")]
         public ExposureSetting? ExposureSetting { get; set; }
         
-        [Required]
+        [RequiredIf(@"NotifiedToPheStatus == Enums.Status.Yes", ErrorMessage = "This field is required")]
         [AssertThat(nameof(ExposureNotificationIdIsDifferentToNotificationId),
             ErrorMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId)]
         [Display(Name = "NTBS ID")]
         public int? ExposureNotificationId { get; set; }
+        
+        [Required(ErrorMessage = ValidationMessages.FieldRequired)]
+        [Display(Name = "Was contact notified to PHE?")]
+        public Status NotifiedToPheStatus { get; set; }
 
         public bool ExposureNotificationIdIsDifferentToNotificationId => 
             !ExposureNotificationId.HasValue 
