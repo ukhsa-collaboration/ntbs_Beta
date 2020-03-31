@@ -19,12 +19,13 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
+            bool addTreatmentEvents = args[0] != "--withDqAlerts";
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
+                .AddJsonFile($"appsettings.Development.json", optional: false, reloadOnChange: true);
 
-                Directory.SetCurrentDirectory("./bin/debug/netcoreapp2.2");
-                builder.SetBasePath(Directory.GetCurrentDirectory());
+            Directory.SetCurrentDirectory("./bin/debug/netcoreapp2.2");
+            builder.SetBasePath(Directory.GetCurrentDirectory());
                 
             var configuration = builder.Build();
 
@@ -42,7 +43,7 @@ namespace ConsoleApp2
                     return;
                 }
                 Console.WriteLine("Starting generation of notifications");
-                await GenerateNotifications(context, true);
+                await GenerateNotifications(context, addTreatmentEvents);
                 Console.WriteLine("Finished generation of notifications");
             }
         }
