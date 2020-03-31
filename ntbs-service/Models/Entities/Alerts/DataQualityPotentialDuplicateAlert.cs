@@ -8,20 +8,15 @@ namespace ntbs_service.Models.Entities.Alerts
 {
     public class DataQualityPotentialDuplicateAlert : Alert
     {
-        private const int MinNumberDaysDraftForAlert = 90;
-
-        public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression = 
-            n => n.NotificationStatus == NotificationStatus.Draft && 
-                 n.CreationDate < DateTime.Now.AddDays(-MinNumberDaysDraftForAlert);
-
-        public static readonly Func<Notification, bool> NotificationQualifies =
-            NotificationQualifiesExpression.Compile();
+        public int DuplicateId { get; set; }
         
-        public override string Action => "Draft record has been open for more than 90 days, please review and action.";
+        public const int MinNumberDaysNotifiedForAlert = 45;
+        
+        public override string Action => $"This record may be a duplicate of {DuplicateId}. Please contact the case manager to discuss.";
 
         public override string ActionLink => RouteHelper.GetNotificationPath(
             NotificationId.GetValueOrDefault(),
-            NotificationSubPaths.EditPatientDetails);
+            NotificationSubPaths.Overview);
 
         public DataQualityPotentialDuplicateAlert()
         {

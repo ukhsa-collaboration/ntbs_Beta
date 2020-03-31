@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -19,7 +20,7 @@ namespace ntbs_service.DataAccess
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
         Task<IList<Notification>> GetNotificationsEligibleForDotVotAlerts();
-        Task<IList<(Notification, Notification)>> GetNotificationsEligibleForPotentialDuplicateAlerts();
+        Task<IList<DataQualityRepository.NotificationAndDuplicateIds>> GetNotificationIdsEligibleForPotentialDuplicateAlerts();
     }
 
     public class DataQualityRepository : IDataQualityRepository
@@ -103,9 +104,37 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public async Task<IList<(Notification, Notification)>> GetNotificationsEligibleForPotentialDuplicateAlerts()
+        public async Task<IList<NotificationAndDuplicateIds>> GetNotificationIdsEligibleForPotentialDuplicateAlerts()
         {
-            return await 
+            return await GetBaseNotificationQueryableForAlerts()
+                .SelectMany(a => _context.Notification, 
+                    (notification, duplicate) => new {notification, duplicate})
+                .Where(t =>
+                    (t.notification.PatientDetails.GivenName == t.duplicate.PatientDetails.FamilyName &&
+                     t.notification.PatientDetails.FamilyName == t.duplicate.PatientDetails.GivenName &&
+                     t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
+                     t.notification.PatientDetails.NhsNumber != null &&
+                     t.notification.PatientDetails.GivenName != null &&
+                     t.notification.PatientDetails.GivenName != null) 
+                    ||
+                    (t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
+                     t.notification.PatientDetails.Dob == t.duplicate.PatientDetails.Dob && 
+                     t.notification.PatientDetails.NhsNumber != null &&
+                     t.notification.PatientDetails.Dob != null)
+                    &&
+                    t.notification.NotificationDate < DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert) &&
+                    t.duplicate.NotificationDate < DateTime.Now.AddDays(-DataQualityPotentialDuplicateAlert.MinNumberDaysNotifiedForAlert))
+                .Select(t => new NotificationAndDuplicateIds
+                {
+                    NotificationId = t.notification.NotificationId,
+                    DuplicateId = t.duplicate.NotificationId
+                }).ToListAsync();
+        }
+
+        public class NotificationAndDuplicateIds
+        {
+            public int NotificationId { get; set; }
+            public int DuplicateId { get; set; }
         }
 
         private IQueryable<Notification> GetBaseNotificationQueryableForAlerts()

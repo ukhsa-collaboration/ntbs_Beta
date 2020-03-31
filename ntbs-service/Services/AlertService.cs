@@ -14,6 +14,7 @@ namespace ntbs_service.Services
     public interface IAlertService
     {
         Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
+        Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
@@ -122,6 +123,20 @@ namespace ntbs_service.Services
 
             await PopulateAndAddAlertAsync(alert);
             return true;
+        }
+
+        public async Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert)
+        {
+            if (alert.NotificationId.HasValue)
+            {
+                var matchingAlert = await _alertRepository.GetDuplicateAlertByNotificationIdAndDuplicateId(alert.NotificationId.Value, alert.DuplicateId);
+                if (matchingAlert != null)
+                {
+                    return;
+                }
+            }
+
+            await PopulateAndAddAlertAsync(alert);
         }
 
         public async Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername) where T : Alert
