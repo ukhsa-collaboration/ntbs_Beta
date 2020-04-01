@@ -20,7 +20,11 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-            bool addTreatmentEvents = args[0] != "--withDqAlerts";
+            bool addTreatmentEvents = true;
+            if (args.Length > 0)
+            {
+                 addTreatmentEvents = args[0] != "--withDqAlerts";
+            }
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.Development.json", optional: false, reloadOnChange: true);
@@ -54,7 +58,6 @@ namespace ConsoleApp2
         {
             var numberOfNotifications = 3000;
             var rand = new Random();
-            var tbServices = (await context.TbService.ToListAsync()).Select(t => t.Code).ToList();
             var hospitals = (await context.Hospital.ToListAsync());
             
             var notificationsOperable = Builder<Notification>.CreateListOfSize(numberOfNotifications)
@@ -70,10 +73,17 @@ namespace ConsoleApp2
                 // Add randomised fields that Faker cannot generate
                 .With(n => n.PatientDetails.Dob = AddRandomDateTimeBetween1950And2000(rand))
                 .With(n => n.PatientDetails.SexId = rand.Next(1, 3))
-                .With(n => n.PatientDetails.EthnicityId = rand.Next(1, 10))
-                .With(n => n.PatientDetails.CountryId = rand.Next(1, 200))
+                .With(n => n.PatientDetails.EthnicityId = 4)
+                .With(n => n.PatientDetails.CountryId = 235)
                 .With(n => n.NotificationDate = AddRandomDateTimeBetween2014And2017(rand))
-                .With(n => n.HospitalDetails.TBServiceCode = AddRandomTbService(rand, tbServices))
+                .With(n =>
+                {
+                    var hospital = GetRandomHospital(rand, hospitals);
+                    n.HospitalDetails.TBServiceCode = hospital.TBServiceCode;
+                    n.HospitalDetails.HospitalId = hospital.HospitalId;
+                    return true;
+                }
+                )
                 .With(n => n.HospitalDetails.HospitalId = hospitals.FirstOrDefault(h => h.TBServiceCode == n.HospitalDetails.TBServiceCode)?.HospitalId)
                 .With(n => n.PatientDetails.NhsNumber = AddRandomTestNhsNumber(rand))
                 .With(n => n.NotificationSites = new List<NotificationSite>
@@ -84,7 +94,8 @@ namespace ConsoleApp2
                         
                     }
                 })
-                .With(n => n.ClinicalDetails.DiagnosisDate = new DateTime(2014, 1, 1));
+                .With(n => n.ClinicalDetails.DiagnosisDate = new DateTime(2014, 1, 1))
+                .With(n => n.DeletionReason = null);
             
 
             if (addTreatmentEvents)
@@ -98,6 +109,12 @@ namespace ConsoleApp2
             await context.SaveChangesAsync();
         }
 
+        private static Hospital GetRandomHospital(Random rand, List<Hospital> hospitals)
+        {
+            var tbServiceIndex = rand.Next(0, hospitals.Count - 1);
+            return hospitals[tbServiceIndex];
+        }
+
         private static DateTime AddRandomDateTimeBetween2014And2017(Random rand)
         {
             var days = rand.Next(1, 1000);
@@ -108,12 +125,6 @@ namespace ConsoleApp2
         {
             var days = rand.Next(1, 18262);
             return new DateTime(1950, 1, 1).AddDays(days);
-        }
-
-        private static string AddRandomTbService(Random rand, IList<string> tbServices)
-        {
-            var tbServiceIndex = rand.Next(0, tbServices.Count - 1);
-            return tbServices[tbServiceIndex];
         }
 
         private static string AddRandomTestNhsNumber(Random rand)
