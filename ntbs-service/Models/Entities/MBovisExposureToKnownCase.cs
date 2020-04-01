@@ -26,7 +26,7 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Exposure setting")]
         public ExposureSetting? ExposureSetting { get; set; }
         
-        [RequiredIf(@"NotifiedToPheStatus == Enums.Status.Yes", ErrorMessage = "This field is required")]
+        [RequiredIf(@"NotifiedToPheStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(nameof(ExposureNotificationIdIsDifferentToNotificationId),
             ErrorMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId)]
         [Display(Name = "NTBS ID")]

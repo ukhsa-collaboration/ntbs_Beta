@@ -85,63 +85,67 @@
                                     var pheNotifiedError = !Model.IsValid("MDRDetails.NotifiedToPheStatus");
                                     var pheNotifiedGroupState = pheNotifiedError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type="@pheNotifiedGroupState" ref="formGroup">
-                                    <label nhs-label-type="Standard" asp-for="MDRDetails.NotifiedToPheStatus">
-                                        @Html.DisplayNameFor(x => x.MDRDetails.NotifiedToPheStatus)
-                                    </label>
-                                    <span nhs-span-type="ErrorMessage" id="notified-to-phe-error"
-                                        ref="errorField" asp-validation-for="MDRDetails.NotifiedToPheStatus" has-error="@pheNotifiedError">
-                                    </span>
-                                    <div class="nhsuk-radios__item">
-                                        <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-related-notification">
-                                        <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
-                                            Yes
+                                <validate-input model="MDRDetails" property="NotifiedToPheStatus" inline-template>
+                                    <nhs-form-group nhs-form-group-type="@pheNotifiedGroupState" ref="formGroup">
+                                        <label nhs-label-type="Standard" asp-for="MDRDetails.NotifiedToPheStatus">
+                                            @Html.DisplayNameFor(x => x.MDRDetails.NotifiedToPheStatus)
                                         </label>
-                                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-related-notification">
-                                            @{
-                                                var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.MDRDetails.RelatedNotificationId)}");
-                                                var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
-                                            }
-                                            <validate-related-notification allow-draft="true" inline-template>
-                                                <nhs-form-group
-                                                    id="@($"{nameof(Model.MDRDetails.RelatedNotificationId)}")"
-                                                    nhs-form-group-type="@relatedNotificationGroupState"
-                                                    aria-describedby="related-notification-error">
-                                                    <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
-                                                        @Html.DisplayNameFor(m => m.MDRDetails.RelatedNotificationId)
-                                                    </label>
-                                                    <span
-                                                        id="related-notification-error"
-                                                        nhs-span-type="ErrorMessage"
-                                                        ref="errorField"
-                                                        has-error="@hasRelatedNotificationError"
-                                                        asp-validation-for="MDRDetails.RelatedNotificationId">
-                                                    </span>
-                                                    <input
-                                                        nhs-input-type="Number"
-                                                        ref="inputField"
-                                                        v-on:blur="validate"
-                                                        is-error-input="@hasRelatedNotificationError"
-                                                        fixed-width="Ten"
-                                                        asp-for="MDRDetails.RelatedNotificationId">
-                                                    <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
-                                                </nhs-form-group>
-                                            </validate-related-notification>
+                                        <span nhs-span-type="ErrorMessage" id="notified-to-phe-error"
+                                            ref="errorField" asp-validation-for="MDRDetails.NotifiedToPheStatus" has-error="@pheNotifiedError">
+                                        </span>
+                                        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
+                                            <div class="nhsuk-radios__item">
+                                                <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-related-notification">
+                                                <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
+                                                    Yes
+                                                </label>
+                                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-related-notification">
+                                                    @{
+                                                        var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
+                                                        var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+                                                    }
+                                                    <validate-related-notification allow-draft="true" inline-template>
+                                                        <nhs-form-group
+                                                            id="@($"{nameof(Model.MDRDetails.RelatedNotificationId)}")"
+                                                            nhs-form-group-type="@relatedNotificationGroupState"
+                                                            aria-describedby="related-notification-error">
+                                                            <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
+                                                                @Html.DisplayNameFor(m => m.MDRDetails.RelatedNotificationId)
+                                                            </label>
+                                                            <span
+                                                                id="related-notification-error"
+                                                                nhs-span-type="ErrorMessage"
+                                                                ref="errorField"
+                                                                has-error="@hasRelatedNotificationError"
+                                                                asp-validation-for="MDRDetails.RelatedNotificationId">
+                                                            </span>
+                                                            <input
+                                                                nhs-input-type="Number"
+                                                                ref="inputField"
+                                                                v-on:blur="validate"
+                                                                is-error-input="@hasRelatedNotificationError"
+                                                                fixed-width="Ten"
+                                                                asp-for="MDRDetails.RelatedNotificationId">
+                                                            <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                                        </nhs-form-group>
+                                                    </validate-related-notification>
+                                                </div>
+                                            </div>
+                                            <div class="nhsuk-radios__item">
+                                                <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                                                <label class="nhsuk-label nhsuk-radios__label" for="notified-no">
+                                                    No
+                                                </label>
+                                            </div>
+                                            <div class="nhsuk-radios__item">
+                                                <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                                                <label class="nhsuk-label nhsuk-radios__label" for="notified-unknown">
+                                                    Unknown
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
-                                        <label class="nhsuk-label nhsuk-radios__label" for="notified-no">
-                                            No
-                                        </label>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
-                                        <label class="nhsuk-label nhsuk-radios__label" for="notified-unknown">
-                                            Unknown
-                                        </label>
-                                    </div>
-                                </nhs-form-group>
+                                    </nhs-form-group>
+                                </validate-input>
                             </div>
                         </nhs-fieldset>
                     </conditional-select-wrapper>

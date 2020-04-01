@@ -46,10 +46,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             
             var countries = await _referenceDataRepository.GetAllCountriesAsync();
-            Countries = new SelectList(countries,
-            nameof(Country.CountryId),
-            nameof(Country.Name)
-                );
+            Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
             
             MDRDetails = Notification.MDRDetails;
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
@@ -89,7 +86,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             await ValidateRelatedNotification();
             MDRDetails.SetValidationContext(Notification);
 
-            if (TryValidateModel(MDRDetails.GetType().Name))
+            if (TryValidateModel(MDRDetails, nameof(MDRDetails)))
             {
                 await Service.UpdateMDRDetailsAsync(Notification, MDRDetails);
             }
