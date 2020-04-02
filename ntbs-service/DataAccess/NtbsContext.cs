@@ -11,7 +11,7 @@ using ntbs_service.Models.ReferenceEntities;
 
 // Note: we've adopted a convention where reference data lives in a separate schema to the main tables.
 // This allows us to set different permissions easily, to avoid accidental reference data interference.
-// We define reference data as data not directly manipulatable by the application. It wants to be authored by the
+// We define reference data as data not directly manipulated by the application. It wants to be authored by the
 // business rules, rather than by the users.
 // In practice it mainly correlates with tables for which we seed code-first values through the HasData mechanism
 namespace ntbs_service.DataAccess
