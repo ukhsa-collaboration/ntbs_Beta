@@ -37,7 +37,6 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<NotificationSite> NotificationSite { get; set; }
         public virtual DbSet<NotificationGroup> NotificationGroup { get; set; }
         public virtual DbSet<Site> Site { get; set; }
-        public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Sex> Sex { get; set; }
         public virtual DbSet<PHEC> PHEC { get; set; }
         public virtual DbSet<PostcodeLookup> PostcodeLookup { get; set; }
@@ -440,12 +439,6 @@ namespace ntbs_service.DataAccess
                 entity.HasIndex(e => e.ETSID);
                 entity.HasIndex(e => e.LTBRPatientId);
                 entity.HasIndex(e => e.ClusterId);
-            });
-
-            // TODO NTBS-1066 Remove this - it's not used anywhere!
-            modelBuilder.Entity<Region>(entity =>
-            {
-                entity.Property(e => e.Label).HasMaxLength(200);
             });
 
             modelBuilder.Entity<Sex>(entity =>
