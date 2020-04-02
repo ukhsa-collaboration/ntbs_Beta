@@ -111,6 +111,8 @@ namespace ntbs_service
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
+            
+            services.AddSingleton<NtbsContextDesignTimeFactory>();
 
             var auditDbConnectionString = Configuration.GetConnectionString("auditContext");
 
