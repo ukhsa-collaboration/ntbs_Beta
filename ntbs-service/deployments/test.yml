@@ -30,7 +30,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: test-connection-strings
-                key: keysDb
+                key: appDb
           - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:
