@@ -21,7 +21,7 @@ namespace ntbs_service.Models.Entities
         public string RelationshipToCase { get; set; }
         
         public bool IsCountryUK => Country?.IsoCode == Countries.UkCode;
-        [RequiredIf(@"IsCountryUK", ErrorMessage = ValidationMessages.NotifiedToPheStatusIsRequired)]
+        [RequiredIf(nameof(IsCountryUK), ErrorMessage = ValidationMessages.NotifiedToPheStatusIsRequired)]
         [Display(Name = "Was the case notified to PHE?")]
         public Status? NotifiedToPheStatus { get; set; }
 
