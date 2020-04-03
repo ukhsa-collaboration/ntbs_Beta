@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200331083437_MakeRelatedNotificationIdOptional")]
+    partial class MakeRelatedNotificationIdOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,7 +174,6 @@ namespace ntbs_service.Migrations
                     b.Property<int>("NotificationId");
 
                     b.Property<string>("NotifiedToPheStatus")
-                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<string>("OtherDetails")
@@ -23600,15 +23601,6 @@ namespace ntbs_service.Migrations
                     b.HasDiscriminator().HasValue("DataQualityDraft");
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityPotentialDuplicateAlert", b =>
-                {
-                    b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
-
-                    b.Property<int>("DuplicateId");
-
-                    b.HasDiscriminator().HasValue("DataQualityPotientialDuplicate");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.MBovisAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
@@ -24130,7 +24122,9 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("OccupationId");
 
-                            b1.HasIndex("PostcodeToLookup");
+                            b1.HasIndex("PostcodeToLookup")
+                                .IsUnique()
+                                .HasFilter("[PatientDetails_PostcodeToLookup] IS NOT NULL");
 
                             b1.HasIndex("SexId");
 
@@ -24154,8 +24148,8 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("OccupationId");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.PostcodeLookup", "PostcodeLookup")
-                                .WithMany()
-                                .HasForeignKey("PostcodeToLookup");
+                                .WithOne()
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "PostcodeToLookup");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.Sex", "Sex")
                                 .WithMany()

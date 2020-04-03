@@ -19,17 +19,20 @@ namespace ntbs_service.Models.Entities
         [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RelationshipToCaseIsRequired)]
         [Display(Name = "Relationship of the current case to the contact")]
         public string RelationshipToCase { get; set; }
-
-        [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.CaseInUKStatusIsRequired)]
-        [Display(Name = "Was the contact a case in the UK?")]
-        public Status? CaseInUKStatus { get; set; }
+        
+        public bool IsCountryUK => Country?.IsoCode == Countries.UkCode;
+        [RequiredIf(nameof(IsCountryUK), ErrorMessage = ValidationMessages.NotifiedToPheStatusIsRequired)]
+        [Display(Name = "Was the case notified to PHE?")]
+        public Status? NotifiedToPheStatus { get; set; }
 
         // This should be a FK to Notification, but adding this results in EF deleting the FK to the owner, which is also Notification.
         // Probably some weirdness with owned relationships... not quite sure how to fix, so leaving as normal property for now.
-        [Display(Name = "Contact's notification id")]
+        [Display(Name = "Contact's Notification ID")]
+        [RequiredIf(@"NotifiedToPheStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         public int? RelatedNotificationId { get; set; }
-
-        [Display(Name = "Country in which contact occurred")]
+        
+        [RequiredIf(@"ExposureToKnownCaseStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.RequiredSelect)]
+        [Display(Name = "Country of exposure")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
         public bool MDRDetailsEntered => ExposureToKnownCaseStatus != null;

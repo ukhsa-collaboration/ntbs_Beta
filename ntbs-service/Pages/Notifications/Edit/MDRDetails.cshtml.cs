@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
@@ -13,6 +15,9 @@ namespace ntbs_service.Pages.Notifications.Edit
 {
     public class MDRDetailsModel : NotificationEditModelBase
     {
+        private IReferenceDataRepository _referenceDataRepository;
+        public List<string> RenderConditionalCountryFieldIds;
+
         public MDRDetailsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
@@ -23,19 +28,14 @@ namespace ntbs_service.Pages.Notifications.Edit
             notificationRepository,
             alertRepository)
         {
-            NotUKCountries = new SelectList(
-                referenceDataRepository.GetAllCountriesApartFromUkAsync().Result,
-                nameof(Country.CountryId),
-                nameof(Country.Name)
-            );
-
             CurrentPage = NotificationSubPaths.EditMDRDetails;
+            _referenceDataRepository = referenceDataRepository;
         }
 
         [BindProperty]
         public MDRDetails MDRDetails { get; set; }
 
-        public SelectList NotUKCountries { get; set; }
+        public SelectList Countries { get; set; }
 
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
@@ -44,7 +44,10 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 return NotFound();
             }
-
+            
+            var countries = await _referenceDataRepository.GetAllCountriesAsync();
+            Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
+            
             MDRDetails = Notification.MDRDetails;
             await SetNotificationProperties(isBeingSubmitted, MDRDetails);
 
@@ -52,6 +55,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 TryValidateModel(MDRDetails, MDRDetails.GetType().Name);
             }
+            
+            RenderConditionalCountryFieldIds = countries
+                .Where(c => c.IsoCode == Models.Countries.UkCode)
+                .Select(c => c.CountryId.ToString())
+                .ToList();
 
             return Page();
         }
@@ -69,11 +77,16 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
+            if (MDRDetails.CountryId != null)
+            {
+                MDRDetails.Country = await _referenceDataRepository.GetCountryByIdAsync((int) MDRDetails.CountryId);
+            }
+            
             UpdateFlags();
             await ValidateRelatedNotification();
             MDRDetails.SetValidationContext(Notification);
 
-            if (TryValidateModel(MDRDetails.GetType().Name))
+            if (TryValidateModel(MDRDetails, nameof(MDRDetails)))
             {
                 await Service.UpdateMDRDetailsAsync(Notification, MDRDetails);
             }
@@ -95,24 +108,25 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void UpdateFlags()
         {
-            if (MDRDetails.ExposureToKnownCaseStatus != Status.Yes || MDRDetails.CaseInUKStatus != Status.Yes)
+            if (MDRDetails.ExposureToKnownCaseStatus != Status.Yes)
+            {
+                MDRDetails.CountryId = null;
+                MDRDetails.Country = null;
+                ModelState.Remove("MDRDetails.CountryId");
+                MDRDetails.RelationshipToCase = null;
+                ModelState.Remove("MDRDetails.RelationshipToCase");
+            }
+
+            if (!MDRDetails.IsCountryUK)
+            {
+                MDRDetails.NotifiedToPheStatus = null;
+                ModelState.Remove("MDRDetails.NotifiedToPheStatus");
+            }
+
+            if (MDRDetails.NotifiedToPheStatus != Status.Yes)
             {
                 MDRDetails.RelatedNotificationId = null;
                 ModelState.Remove("MDRDetails.RelatedNotificationId");
-            }
-
-            if (MDRDetails.ExposureToKnownCaseStatus != Status.Yes || MDRDetails.CaseInUKStatus != Status.No)
-            {
-                MDRDetails.CountryId = null;
-                ModelState.Remove("MDRDetails.CountryId");
-            }
-
-            if (MDRDetails.ExposureToKnownCaseStatus != Status.Yes)
-            {
-                MDRDetails.RelationshipToCase = null;
-                MDRDetails.CaseInUKStatus = null;
-                ModelState.Remove("MDRDetails.RelationshipToCase");
-                ModelState.Remove("MDRDetails.CaseInUKStatus");
             }
         }
 

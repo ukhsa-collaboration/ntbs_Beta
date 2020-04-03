@@ -112,7 +112,8 @@
 
         #region MDR Details
         public const string RelationshipToCaseIsRequired = "Please supply details of the relationship to case";
-        public const string CaseInUKStatusIsRequired = "Please specify whether the contact was a case in the UK";
+        public const string NotifiedToPheStatusIsRequired = "Please specify whether case was notified to PHE";
+        public const string CountryIsRequired = "Please specify country of exposure";
         public const string RelatedNotificationIdCannotBeSameAsNotificationId = "The NTBS ID cannot be the same as the current notification";
         public const string RelatedNotificationIdMustBeInteger = "The NTBS ID must be an integer";
         #endregion
