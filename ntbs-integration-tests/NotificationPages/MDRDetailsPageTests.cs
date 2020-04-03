@@ -36,7 +36,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorSummaryMessage("MDRDetails-RelationshipToCase", "relationship-description", "Please supply details of the relationship to case");
-            resultDocument.AssertErrorSummaryMessage("MDRDetails-CountryId", "exposure-country", "Please specify country of exposure");
+            resultDocument.AssertErrorSummaryMessage("MDRDetails-CountryId", "exposure-country", "Please select Country of exposure");
         }
 
         [Fact]
