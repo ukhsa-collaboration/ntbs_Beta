@@ -6,10 +6,6 @@ namespace ntbs_service.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Patients_PostcodeToLookup",
-                table: "Patients");
-
             migrationBuilder.EnsureSchema(
                 name: "ReferenceData");
 
@@ -92,19 +88,10 @@ namespace ntbs_service.Migrations
                 name: "Country",
                 newName: "Country",
                 newSchema: "ReferenceData");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Patients_PostcodeToLookup",
-                table: "Patients",
-                column: "PostcodeToLookup");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Patients_PostcodeToLookup",
-                table: "Patients");
-
             migrationBuilder.RenameTable(
                 name: "VenueType",
                 schema: "ReferenceData",
@@ -184,13 +171,6 @@ namespace ntbs_service.Migrations
                 name: "Country",
                 schema: "ReferenceData",
                 newName: "Country");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Patients_PostcodeToLookup",
-                table: "Patients",
-                column: "PostcodeToLookup",
-                unique: true,
-                filter: "[PatientDetails_PostcodeToLookup] IS NOT NULL");
         }
     }
 }
