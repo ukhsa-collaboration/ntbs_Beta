@@ -25,7 +25,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: int-connection-strings
-                key: appDbMigration
+                key: appDbMigrator
           - name: ConnectionStrings__keysContext
             valueFrom:
               secretKeyRef:
