@@ -24,6 +24,11 @@ namespace ntbs_service.DataAccess
         private const int EnumMaxLength = 30;
         private const string ReferenceDataSchemaName = "ReferenceData";
 
+        // Parameterless constructor needed for mocking out
+        public NtbsContext()
+        {
+        }
+
         public NtbsContext(DbContextOptions<NtbsContext> options)
             : base(options)
         {
