@@ -10,15 +10,17 @@ namespace ntbs_service.DataAccess
     {
         public NtbsContext CreateDbContext(string[] args)
         {
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile("appsettings.Development.json")
+                .AddJsonFile($"appsettings.{environment}.json", optional: false)
+                .AddEnvironmentVariables()
                 .Build();
             
             var optionsBuilder = new DbContextOptionsBuilder<NtbsContext>();
             var connectionString = configuration.GetConnectionString("ntbsMigratorContext");
-            Console.WriteLine(connectionString);
             optionsBuilder.UseSqlServer(connectionString);
 
             return new NtbsContext(optionsBuilder.Options);
