@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -56,6 +57,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task ValidateAndSave()
         {
+            UpdateFlags();
             MBovisExposureToKnownCase.SetValidationContext(Notification);
             MBovisExposureToKnownCase.NotificationId = NotificationId;
             MBovisExposureToKnownCase.DobYear = Notification.PatientDetails.Dob?.Year;
@@ -75,7 +77,16 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 }
             }
         }
-        
+
+        private void UpdateFlags()
+        {
+            if (MBovisExposureToKnownCase.NotifiedToPheStatus != Status.Yes)
+            {
+                MBovisExposureToKnownCase.ExposureNotificationId = null;
+                ModelState.Remove("MBovisExposureToKnownCase.ExposureNotificationId");
+            }
+        }
+
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             Notification = await GetNotificationAsync(NotificationId);

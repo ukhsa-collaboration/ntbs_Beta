@@ -28,24 +28,22 @@
         </nhs-grid-column>
         
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Contact case in UK </div>
-            <div class="cell-min-height"> @Model.Notification.MDRDetails.CaseInUKStatus </div>
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.MDRDetails.CountryId) </div>
+            <div class="cell-min-height"> @Model.Notification.MDRDetails.MDRCaseCountryName </div>
         </nhs-grid-column>
         
-        @switch (Model.Notification.MDRDetails.CaseInUKStatus)
-        {
-            case Status.Yes:
-                <nhs-grid-column grid-column-width="OneQuarter">
-                    <div class="notification-details-label"> NTBS ID </div>
-                    <div class="cell-min-height"> @Model.Notification.MDRDetails.RelatedNotificationId </div>
-                </nhs-grid-column>
-                break;
-            case Status.No:
-                <nhs-grid-column grid-column-width="OneQuarter">
-                    <div class="notification-details-label"> Country of contact </div>
-                    <div class="cell-min-height"> @Model.Notification.MDRDetails.MDRCaseCountryName </div>
-                </nhs-grid-column>
-                break;
-        }
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> NTBS ID </div>
+            <div class="cell-min-height">
+                @if (Model.Notification.MDRDetails.IsCountryUK && Model.Notification.MDRDetails.NotifiedToPheStatus == Status.Yes)
+                {
+                     @Model.Notification.MDRDetails.RelatedNotificationId
+                }
+                else
+                {
+                    @:Case not notified to PHE
+                }
+            </div>
+        </nhs-grid-column>
     </nhs-grid-row>
 </div>

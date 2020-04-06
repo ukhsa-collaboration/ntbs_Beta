@@ -36,6 +36,11 @@ namespace ntbs_service_unit_tests.Jobs
             {
                 new Notification {NotificationId = 1}
             });
+            var testDuplicateNotificationIdsList = Task.FromResult(
+                (IList<DataQualityRepository.NotificationAndDuplicateIds>)new List<DataQualityRepository.NotificationAndDuplicateIds>
+                {
+                    new DataQualityRepository.NotificationAndDuplicateIds {NotificationId = 1, DuplicateId = 2}
+                });
 
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityDraftAlerts())
                 .Returns(testNotificationList);
@@ -53,6 +58,8 @@ namespace ntbs_service_unit_tests.Jobs
                 .Returns(testNotificationList);
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDotVotAlerts())
                 .Returns(testNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationIdsEligibleForPotentialDuplicateAlerts())
+                .Returns(testDuplicateNotificationIdsList);
             
             // Act
             await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
@@ -66,6 +73,7 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()));
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDotVotAlert>()));
+            _mockAlertService.Verify(s => s.AddUniquePotentialDuplicateAlertAsync(It.IsAny<DataQualityPotentialDuplicateAlert>()));
         }
         
         [Fact]
@@ -73,6 +81,8 @@ namespace ntbs_service_unit_tests.Jobs
         {
             // Arrange
             var emptyNotificationList = Task.FromResult((IList<Notification>)new List<Notification>());
+            var emptyDuplicateNotificationIdsList = 
+                Task.FromResult((IList<DataQualityRepository.NotificationAndDuplicateIds>)new List<DataQualityRepository.NotificationAndDuplicateIds>());
 
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityDraftAlerts())
                 .Returns(emptyNotificationList);
@@ -90,6 +100,8 @@ namespace ntbs_service_unit_tests.Jobs
                 .Returns(emptyNotificationList);
             _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDotVotAlerts())
                 .Returns(emptyNotificationList);
+            _mockDataQualityRepository.Setup(r => r.GetNotificationIdsEligibleForPotentialDuplicateAlerts())
+                .Returns(emptyDuplicateNotificationIdsList);
             
             // Act
             await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
@@ -103,6 +115,7 @@ namespace ntbs_service_unit_tests.Jobs
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()), Times.Never);
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()), Times.Never);
             _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDotVotAlert>()), Times.Never);
+            _mockAlertService.Verify(s => s.AddUniquePotentialDuplicateAlertAsync(It.IsAny<DataQualityPotentialDuplicateAlert>()), Times.Never);
         }
     }
 }

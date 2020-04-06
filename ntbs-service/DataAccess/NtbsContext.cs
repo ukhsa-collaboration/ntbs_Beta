@@ -419,12 +419,11 @@ namespace ntbs_service.DataAccess
                         i.Property(e => e.ExposureToKnownCaseStatus)
                             .HasConversion(statusEnumConverter)
                             .HasMaxLength(EnumMaxLength);
-                        i.Property(e => e.CaseInUKStatus)
+                        i.Property(e => e.NotifiedToPheStatus)
                             .HasConversion(statusEnumConverter)
                             .HasMaxLength(EnumMaxLength);
                         i.ToTable("MDRDetails");
                     });
-
                 entity.OwnsOne(e => e.DrugResistanceProfile)
                     .ToTable("DrugResistanceProfile");
 
@@ -591,6 +590,9 @@ namespace ntbs_service.DataAccess
             {
                 entity.Property(e => e.ExposureSetting)
                     .HasConversion(exposureSettingEnumConverter)
+                    .HasMaxLength(EnumMaxLength);
+                entity.Property(e => e.NotifiedToPheStatus)
+                    .HasConversion(statusEnumConverter)
                     .HasMaxLength(EnumMaxLength);
             });
 
