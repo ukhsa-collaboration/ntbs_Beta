@@ -10,7 +10,7 @@ namespace ntbs_service.DataAccess
     {
         public NtbsContext CreateDbContext(string[] args)
         {
-            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
