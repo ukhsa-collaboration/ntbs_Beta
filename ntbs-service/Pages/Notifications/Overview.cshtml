@@ -9,13 +9,6 @@
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
 
-@if (!string.IsNullOrEmpty(Model.PermissionReason))
-{
-    <div class="notification-overview-details-container no-print" >
-        <nhs-inset-text classes="nhs-inset-text--ntbs">@Model.PermissionReason</nhs-inset-text>
-    </div>
-}
-
 <partial name="./OverviewPartials/_ClusterInformationOverviewPartial" for="Notification"/>
 
 <partial name="./OverviewPartials/_PatientOverviewPartial"/>

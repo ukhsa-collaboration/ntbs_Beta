@@ -1,5 +1,4 @@
 @model NotificationModelBase
-@using ntbs_service.Pages
 @using ntbs_service.Helpers
 
 @{
@@ -7,9 +6,3 @@
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
     ViewData["Title"] = "Unauthorised";
 }
-
-<nhs-width-container container-width="Standard">
-    <div id="unauthorized-warning">
-        <p>@(Messages.UnauthorizedWarning)</p>
-    </div>
-</nhs-width-container>

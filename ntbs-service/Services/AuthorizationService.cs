@@ -6,6 +6,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages;
 
 namespace ntbs_service.Services
 {
@@ -66,16 +67,13 @@ namespace ntbs_service.Services
                 return (PermissionLevel.Edit,
                         // National team members are allowed to modify even closed notifications, but it is useful
                         // for them to be able to tell when they are closed.
-                        notification.NotificationStatus == NotificationStatus.Closed
-                            ? "This notification is closed"
-                            : null
-                    );
+                        notification.NotificationStatus == NotificationStatus.Closed ? Messages.Closed : null);
             }
 
             if (UserHasDirectRelationToNotification(notification)) 
             {
                 return notification.NotificationStatus == NotificationStatus.Closed
-                    ? (PermissionLevel.ReadOnly, "You cannot edit this notification because it is closed")
+                    ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
                     : (PermissionLevel.Edit, null);
             }
 
@@ -83,10 +81,10 @@ namespace ntbs_service.Services
                 || UserHasDirectRelationToLinkedNotification(notification)
                 || UserPreviouslyHadDirectionRelationToNotification(notification))
             {
-                return (PermissionLevel.ReadOnly, "You do not have permission to edit this notification");
+                return (PermissionLevel.ReadOnly, Messages.NoEditPermission);
             }
 
-            return (PermissionLevel.None, null);
+            return (PermissionLevel.None, Messages.UnauthorizedWarning);
         }
         
         private async Task<bool> CanEditBannerModelAsync(

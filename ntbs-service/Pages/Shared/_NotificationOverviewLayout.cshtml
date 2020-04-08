@@ -28,6 +28,12 @@
         </nhs-grid-column>
 
         <nhs-grid-column grid-column-width="Full">
+            @if (!string.IsNullOrEmpty(Model.PermissionReason))
+            {
+                <div class="notification-overview-details-container no-print" >
+                    <nhs-inset-text classes="nhs-inset-text--ntbs">@Model.PermissionReason</nhs-inset-text>
+                </div>
+            }
             @RenderBody()
         </nhs-grid-column>
 
