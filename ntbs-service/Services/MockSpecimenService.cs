@@ -161,7 +161,7 @@ namespace ntbs_service.Services
             return Task.FromResult(true);
         }
 
-        public Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
+        public Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool isMigrating)
         {
             return Task.FromResult(true);
         }
