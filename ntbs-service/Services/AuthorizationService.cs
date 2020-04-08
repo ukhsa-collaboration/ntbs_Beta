@@ -63,18 +63,24 @@ namespace ntbs_service.Services
 
             if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                return (PermissionLevel.Edit, null);
+                return (PermissionLevel.Edit,
+                        // National team members are allowed to modify even closed notifications, but it is useful
+                        // for them to be able to tell when they are closed.
+                        notification.NotificationStatus == NotificationStatus.Closed
+                            ? "This notification is closed"
+                            : null
+                    );
             }
 
             if (UserHasDirectRelationToNotification(notification)) 
             {
-                return notification.NotificationStatus != NotificationStatus.Closed
-                    ? (PermissionLevel.Edit, null)
-                    : (PermissionLevel.ReadOnly, "You cannot edit this notification because it is closed");
+                return notification.NotificationStatus == NotificationStatus.Closed
+                    ? (PermissionLevel.ReadOnly, "You cannot edit this notification because it is closed")
+                    : (PermissionLevel.Edit, null);
             }
 
-            if (UserBelongsToResidencePhecOfNotification(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode) 
-                || UserHasDirectRelationToLinkedNotification(notification.Group?.Notifications)
+            if (UserBelongsToResidencePhecOfNotification(notification) 
+                || UserHasDirectRelationToLinkedNotification(notification)
                 || UserPreviouslyHadDirectionRelationToNotification(notification))
             {
                 return (PermissionLevel.ReadOnly, "You do not have permission to edit this notification");
@@ -109,8 +115,9 @@ namespace ntbs_service.Services
             }
         }
         
-        private bool UserHasDirectRelationToLinkedNotification(IEnumerable<Notification> linkedNotifications)
+        private bool UserHasDirectRelationToLinkedNotification(Notification notification)
         {
+            var linkedNotifications = notification.Group?.Notifications;
             return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x);
         }
 
@@ -141,9 +148,11 @@ namespace ntbs_service.Services
             return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(treatmentPhecCode);
         }
         
-        private bool UserBelongsToResidencePhecOfNotification(string residencePhecCode)
+        private bool UserBelongsToResidencePhecOfNotification(Notification notification)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(residencePhecCode);
+            var phecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
+            return _userPermissionsFilter.Type == UserType.PheUser 
+                   && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)
