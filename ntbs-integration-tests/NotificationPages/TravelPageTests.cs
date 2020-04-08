@@ -109,6 +109,32 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorMessage("visitor-length3", "Total duration of visits must not exceed 24 months");
         }
 
+        [Fact]
+        public async Task PostNotified_WithLeftOverDataInHiddenInputs_IsValid()
+        {
+            // Arrange
+            const int id = Utilities.NOTIFIED_ID;
+            var url = GetCurrentPathForId(id);
+            var initialDocument = await GetDocumentForUrlAsync(url);
+
+            var formData = new Dictionary<string, string>
+            {
+                ["NotificationId"] = id.ToString(),
+                // These would normally make the models invalid...
+                ["TravelDetails.StayLengthInMonths1"] = "30", 
+                ["VisitorDetails.StayLengthInMonths1"] = "30", 
+                // ... but the user says they are not providing these details
+                ["TravelDetails.HasTravel"] = "false", 
+                ["VisitorDetails.HasVisitor"] = "false"
+            };
+
+            // Act
+            var result = await Client.SendPostFormWithData(initialDocument, formData, url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Redirect, result.StatusCode);
+        }
+
         [Theory]
         [InlineData("HasTravel")]
         [InlineData("HasVisitor")]
