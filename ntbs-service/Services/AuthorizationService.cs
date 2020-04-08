@@ -11,7 +11,9 @@ namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification);
+        Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(
+            ClaimsPrincipal user,
+            Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
@@ -50,7 +52,8 @@ namespace ntbs_service.Services
                     .Select(n => SetPadlockForBannerAsync(user, n)));
         }
 
-        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
+        public async Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(
+            ClaimsPrincipal user,
             Notification notification)
         {
             if (_userPermissionsFilter == null)
@@ -60,24 +63,24 @@ namespace ntbs_service.Services
 
             if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                return PermissionLevel.Edit;
+                return (PermissionLevel.Edit, null);
             }
 
             if (UserHasDirectRelationToNotification(notification)) 
             {
                 return notification.NotificationStatus != NotificationStatus.Closed
-                    ? PermissionLevel.Edit
-                    : PermissionLevel.ReadOnly;
+                    ? (PermissionLevel.Edit, null)
+                    : (PermissionLevel.ReadOnly, "You cannot edit this notification because it is closed");
             }
 
             if (UserBelongsToResidencePhecOfNotification(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode) 
                 || UserHasDirectRelationToLinkedNotification(notification.Group?.Notifications)
                 || UserPreviouslyHadDirectionRelationToNotification(notification))
             {
-                return PermissionLevel.ReadOnly;
+                return (PermissionLevel.ReadOnly, "You do not have permission to edit this notification");
             }
 
-            return PermissionLevel.None;
+            return (PermissionLevel.None, null);
         }
         
         private async Task<bool> CanEditBannerModelAsync(
