@@ -45,6 +45,7 @@ namespace ntbs_service.Services
             _context.Entry(notification.TravelDetails).State = EntityState.Detached;
             _context.Entry(notification.VisitorDetails).State = EntityState.Detached;
             notification.NotificationId = 0;
+            notification.GroupId = null;
             
             notification.NotificationSites.ForEach(site => _context.Entry(site).State = EntityState.Detached);
             
