@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -62,7 +63,11 @@ namespace ntbs_service.Pages.Notifications
         {
             if (Notification.Group == null)
             {
-                Notification.Group = await GetNotificationGroupAsync();
+                var notificationGroup = await GetNotificationGroupAsync();
+                notificationGroup.Notifications = notificationGroup.Notifications
+                    .OrderBy(n => n.CreationDate)
+                    .ToList();
+                Notification.Group = notificationGroup;
                 NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
         }

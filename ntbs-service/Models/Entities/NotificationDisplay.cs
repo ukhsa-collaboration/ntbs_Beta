@@ -16,7 +16,7 @@ namespace ntbs_service.Models.Entities
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
         public string LegacyId => LTBRID ?? ETSID;
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
-        public bool IsOverOneYearOld => NotificationDate != null && DateTime.Now > NotificationDate.Value.AddYears(1);
+        public bool IsLastLinkedNotificationOverOneYearOld => DateTime.Now > Group.Notifications.DefaultIfEmpty(this).Last().CreationDate.AddYears(1);
         public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
         
