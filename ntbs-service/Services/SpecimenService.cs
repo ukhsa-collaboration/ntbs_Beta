@@ -39,9 +39,9 @@ namespace ntbs_service.Services
         /// <param name="notificationId">NTBS ID of the notification to match</param>
         /// <param name="labReferenceNumber">identifier of the specimen</param>
         /// <param name="userName">username to record in the audit trail</param>
-        /// <param name="IsMigrating">whether currently migrating legacy notification</param>
+        /// <param name="isMigrating">whether currently migrating legacy notification</param>
         /// <returns>boolean that's true when the proc returned a success flag</returns>
-        Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool IsMigrating = false);
+        Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool isMigrating = false);
 
         Task<bool> UnmatchAllSpecimensForNotification(int notificationId, string auditUsername);
     }
