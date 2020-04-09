@@ -230,6 +230,17 @@ namespace ntbs_service.DataMigration
                 notification.TestData.ManualTestResults.Remove(result);
             });
 
+            var missingResults = notification.TestData.ManualTestResults
+                .Where(result => result.Result == null)
+                .ToList();
+            missingResults.ForEach(result =>
+            {
+                var missingResultMessage =
+                    $"Notification {notificationId} had test results without a result recorded. The notification will be imported without this test record.";
+                _logger.LogWarning(context, requestId, missingResultMessage);
+                notification.TestData.ManualTestResults.Remove(result);
+            });
+
             // After filtering out invalid tests, we might have none left
             if (!notification.TestData.ManualTestResults.Any())
             {
