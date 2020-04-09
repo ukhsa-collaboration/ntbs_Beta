@@ -59,12 +59,9 @@
                 }
                 else if (Model.Notification.Group?.Notifications != null)
                 {
-                    <form method="post">
-                        <input type="hidden" value="@Model.Notification.Group.Notifications.LastOrDefault()?.NotificationId" name="NotificationId"/>
-                        <button nhs-button-type="Standard" classes="ntbsuk-button--secondary" asp-page-handler="NavigateToLatestLinkedNotification" id="new-linked-notification-button">
-                            Navigate to latest linked notification
-                        </button>
-                    </form>
+                    <a id='new-linked-notification-button' class="nhsuk-button ntbsuk-button--secondary" role="button" href="/Notifications/@Model.Notification.Group.Notifications.LastOrDefault()?.NotificationId/Overview">
+                        Navigate to latest linked notification
+                    </a>
                 }
 
                 @if (Model.Notification.NotificationStatus != NotificationStatus.Draft)

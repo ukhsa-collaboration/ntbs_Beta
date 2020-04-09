@@ -97,11 +97,6 @@ namespace ntbs_service.Pages.Notifications
             return RedirectToPage("/Notifications/Edit/PatientDetails", new { linkedNotification.NotificationId });
         }
 
-        public async Task<IActionResult> OnPostNavigateToLatestLinkedNotification()
-        {
-            return RedirectToPage("/Notifications/Overview", new {NotificationId});
-        }
-
         public async Task GetAlertsAsync()
         {
             Alerts = await _alertService.GetAlertsForNotificationAsync(NotificationId, User);

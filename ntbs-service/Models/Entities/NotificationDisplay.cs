@@ -16,7 +16,8 @@ namespace ntbs_service.Models.Entities
         public int? AgeAtNotification => GetAgeAtTimeOfNotification();
         public string LegacyId => LTBRID ?? ETSID;
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
-        public bool IsLastLinkedNotificationOverOneYearOld => DateTime.Now > Group.Notifications.DefaultIfEmpty(this).Last().CreationDate.AddYears(1);
+        public bool IsLastLinkedNotificationOverOneYearOld => GetIsLastLinkedNotificationOverOneYearOld();
+
         public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
         public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
         
@@ -33,6 +34,14 @@ namespace ntbs_service.Models.Entities
                 .Where(ns => ns != null)
                 .Select(s => s.Description);
             return string.Join(", ", siteNames);
+        }
+        
+        private bool GetIsLastLinkedNotificationOverOneYearOld()
+        {
+            var latestNotification = Group?.Notifications?.Last() ?? this; 
+            var latestNotificationDate = latestNotification.NotificationDate ?? latestNotification.CreationDate;
+            
+            return DateTime.Now > latestNotificationDate.AddYears(1);
         }
 
         private int? GetAgeAtTimeOfNotification()

@@ -64,10 +64,13 @@ namespace ntbs_service.Pages.Notifications
             if (Notification.Group == null)
             {
                 var notificationGroup = await GetNotificationGroupAsync();
-                notificationGroup.Notifications = notificationGroup.Notifications
-                    .OrderBy(n => n.CreationDate)
-                    .ToList();
-                Notification.Group = notificationGroup;
+                if (notificationGroup != null)
+                {
+                    notificationGroup.Notifications = notificationGroup.Notifications
+                        .OrderBy(n => n.NotificationDate ?? n.CreationDate)
+                        .ToList();
+                    Notification.Group = notificationGroup;
+                }
                 NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
         }
