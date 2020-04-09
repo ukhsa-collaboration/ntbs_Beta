@@ -24,12 +24,6 @@ namespace ntbs_service.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                schema: "ReferenceData",
-                table: "TbService",
-                keyColumn: "Code",
-                keyValue: "TBS1000");
-
             migrationBuilder.UpdateData(
                 schema: "ReferenceData",
                 table: "Hospital",
@@ -37,6 +31,12 @@ namespace ntbs_service.Migrations
                 keyValue: new Guid("b93a5546-6c26-4a4b-a2fa-427b2711b861"),
                 columns: new[] { "CountryCode", "TBServiceCode" },
                 values: new object[] { "E92000001", "TBS0123" });
+         
+            migrationBuilder.DeleteData(
+                schema: "ReferenceData",
+                table: "TbService",
+                keyColumn: "Code",
+                keyValue: "TBS1000");
         }
     }
 }
