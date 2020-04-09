@@ -12,7 +12,6 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
-using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
 using Serilog;
 using Countries = ntbs_service.Models.Countries;
@@ -298,6 +297,7 @@ namespace ntbs_service.DataMigration
             details.BCGVaccinationState = notification.BCGVaccination;
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
             details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string) notification.TreatmentRegimen);
+            details.Notes = notification.Notes;
             return details;
         }
 
