@@ -42,6 +42,7 @@ import ConfirmComponent from "./Components/ConfirmComponent";
 import InactivityChecker from "./Components/InactivityChecker";
 import InactivityLeaveComponent from "./Components/InactivityLeaveComponent";
 import DateInput from "./Components/DateInput";
+import NotificationWarning from "./Components/NotificationWarning";
 
 // For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
@@ -75,6 +76,7 @@ Vue.component("cascading-dropdown", CascadingDropdown);
 Vue.component("tb-service-filtered-alerts", TbServiceFilteredAlerts);
 Vue.component("validate-related-notification", ValidateRelatedNotification);
 Vue.component("notification-info", NotificationInfo);
+Vue.component("notification-warning", NotificationWarning);
 Vue.component("hide-section-if-false", HideSectionIfFalse);
 Vue.component("fetch-specimen-potential-match", FetchSpecimenPotentialMatch);
 Vue.component("filtered-homepage-kpi", FilteredHomepageKpiDetails);

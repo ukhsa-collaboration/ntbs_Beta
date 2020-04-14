@@ -114,7 +114,7 @@
         public const string RelationshipToCaseIsRequired = "Please supply details of the relationship to case";
         public const string NotifiedToPheStatusIsRequired = "Please specify whether case was notified to PHE";
         public const string RelatedNotificationIdCannotBeSameAsNotificationId = "The NTBS ID cannot be the same as the current notification";
-        public const string RelatedNotificationIdMustBeInteger = "The NTBS ID must be an integer";
+        public const string RelatedNotificationIdMustBeInteger = "Notification Id must be an integer";
         #endregion
 
         #region TreatmentEvent

@@ -22,7 +22,7 @@ namespace ntbs_service.Pages
         }
 
         // ReSharper disable once UnusedMember.Global
-        public async Task<ContentResult> OnGetAsync(string notificationId, bool allowDraft = false)
+        public async Task<ContentResult> OnGetAsync(string notificationId, bool allowDraft = false, bool allowLegacyNotifications = false)
         {
             if (string.IsNullOrEmpty(notificationId))
             {
@@ -38,9 +38,12 @@ namespace ntbs_service.Pages
             }
 
             var notification = await _notificationRepository.GetNotificationAsync(parsedId);
+
             if (notification == null || (!allowDraft && !notification.HasBeenNotified))
             {
-                return CreateJsonResponse(new { validationMessage = ValidationMessages.IdDoesNotMatchNtbsRecord });
+                return allowLegacyNotifications 
+                    ? CreateJsonResponse(new { warningMessage = "Details not available in NTBS" }) 
+                    : CreateJsonResponse(new { validationMessage = ValidationMessages.IdDoesNotMatchNtbsRecord });
             }
             var info = NotificationInfo.CreateFromNotification(notification);
             return CreateJsonResponse(new { relatedNotification = info });
