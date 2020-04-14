@@ -42,7 +42,7 @@ namespace ntbs_service.Pages
             if (notification == null || (!allowDraft && !notification.HasBeenNotified))
             {
                 return allowLegacyNotifications 
-                    ? CreateJsonResponse(new { warningMessage = "Details not available in NTBS" }) 
+                    ? CreateJsonResponse(new { warningMessage = ValidationMessages.IdNotAvailableInNtbs }) 
                     : CreateJsonResponse(new { validationMessage = ValidationMessages.IdDoesNotMatchNtbsRecord });
             }
             var info = NotificationInfo.CreateFromNotification(notification);

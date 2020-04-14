@@ -37,7 +37,7 @@ namespace ntbs_integration_tests.NotificationPages
 
             // Assert
             var result = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The NTBS ID must be an integer", result);
+            Assert.Contains("Notification Id must be an integer", result);
         }
 
         [Fact]
