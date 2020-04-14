@@ -209,14 +209,16 @@ namespace ntbs_service.Pages.LabResults
                 ModelState.AddModelError(manualMatchModelStateKey,
                     ValidationMessages.LabResultNotificationDoesNotExist);
             }
-            
-            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
-            if (permissionLevel != PermissionLevel.Edit)
+            else
             {
-                ModelState.AddModelError(manualMatchModelStateKey,
-                    ValidationMessages.LabResultNotificationMatchNoPermission);
+                var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+                if (permissionLevel != PermissionLevel.Edit)
+                {
+                    ModelState.AddModelError(manualMatchModelStateKey,
+                        ValidationMessages.LabResultNotificationMatchNoPermission);
+                }
             }
-
+            
             return notificationId;
         }
 
