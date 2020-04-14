@@ -138,7 +138,7 @@ namespace ntbs_integration_tests.NotificationPages
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var document = await GetDocumentAsync(response);
-                Assert.Contains(Messages.UnauthorizedWarning, document.GetElementById("unauthorized-warning").TextContent);
+                Assert.Contains(Messages.UnauthorizedWarning, document.Body.InnerHtml);
             }
         }
         
