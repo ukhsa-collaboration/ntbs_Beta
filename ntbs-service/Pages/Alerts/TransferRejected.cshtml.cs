@@ -52,7 +52,7 @@ namespace ntbs_service.Pages.Alerts
         {
             TransferRejectedAlert = 
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
-            await _alertService.DismissAlertAsync(TransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            await _alertService.DismissAlertAsync(TransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
             return RedirectToPage("/Notifications/Overview", new { NotificationId });
         }
     }

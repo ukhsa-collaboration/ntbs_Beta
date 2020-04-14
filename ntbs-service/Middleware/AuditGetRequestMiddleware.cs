@@ -39,7 +39,7 @@ namespace ntbs_service.Middleware
 
                 if (shouldAudit && int.TryParse(pathArray[notificationIndex + 1], out var id))
                 {
-                    var userName = context.User.FindFirstValue(ClaimTypes.Email);
+                    var userName = context.User.FindFirstValue(ClaimTypes.Upn);
                     // Fallback if user doesn't have an email associated with them - as is the case with our test users
                     if (string.IsNullOrEmpty(userName))
                     {

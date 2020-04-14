@@ -150,12 +150,12 @@ namespace ntbs_service.Pages.Alerts
             await Service.UpdateHospitalDetailsAsync(Notification, Notification.HospitalDetails);
             await _treatmentEventRepository.AddAsync(transferOutEvent);
             await _treatmentEventRepository.AddAsync(transferInEvent);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
         }
 
         public async Task RejectTransferAndDismissAlertAsync()
         {
-            var user = await _referenceDataRepository.GetUserByUsernameAsync(User.FindFirstValue(ClaimTypes.Email));
+            var user = await _referenceDataRepository.GetUserByUsernameAsync(User.FindFirstValue(ClaimTypes.Upn));
             var transferRejectedAlert = new TransferRejectedAlert
             {
                 CaseManagerUsername = Notification.HospitalDetails.CaseManagerUsername,
@@ -170,10 +170,10 @@ namespace ntbs_service.Pages.Alerts
                 await _alertRepository.GetOpenAlertByNotificationId<TransferRejectedAlert>(NotificationId);
             if (pendingTransferRejectedAlert != null)
             {
-                await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+                await _alertService.DismissAlertAsync(pendingTransferRejectedAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
             }
             await _alertService.AddUniqueOpenAlertAsync(transferRejectedAlert);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
         }
     }
 }

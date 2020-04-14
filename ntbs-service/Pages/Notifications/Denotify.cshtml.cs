@@ -83,7 +83,7 @@ namespace ntbs_service.Pages.Notifications
                 await Service.DenotifyNotificationAsync(
                     NotificationId, 
                     DenotificationDetails,
-                    User.FindFirstValue(ClaimTypes.Email));
+                    User.FindFirstValue(ClaimTypes.Upn));
             }
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });

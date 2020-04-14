@@ -133,7 +133,7 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Email));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             return Partial("_CancelTransferConfirmation", this);
