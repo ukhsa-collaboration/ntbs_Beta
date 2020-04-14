@@ -40,7 +40,8 @@ namespace ntbs_service.Pages.Alerts
             await AuthorizeAndSetBannerAsync();
             
             // Check edit permission of user and redirect if they don't have permission or the alert does not exist
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit || TransferRejectedAlert == null)
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            if (permissionLevel != PermissionLevel.Edit || TransferRejectedAlert == null)
             {
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }

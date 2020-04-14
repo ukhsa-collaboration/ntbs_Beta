@@ -17,7 +17,7 @@ namespace ntbs_service.Pages.Notifications
     public abstract class NotificationModelBase : PageModel, IWithNotificationBanner
     {
         protected INotificationService Service;
-        protected IAuthorizationService AuthorizationService;
+        protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
 
         protected NotificationModelBase(
@@ -26,7 +26,7 @@ namespace ntbs_service.Pages.Notifications
             INotificationRepository notificationRepository = null)
         {
             Service = service;
-            AuthorizationService = authorizationService;
+            _authorizationService = authorizationService;
             NotificationRepository = notificationRepository;
         }
         public int NumberOfLinkedNotifications { get; set; }
@@ -35,8 +35,8 @@ namespace ntbs_service.Pages.Notifications
         public NotificationBannerModel NotificationBannerModel { get; set; }
         public IList<Alert> Alerts { get; set; }
         public DataQualityDraftAlert DraftAlert { get; set; }
-
         public PermissionLevel PermissionLevel { get; set; }
+        public string PermissionReason { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
@@ -48,7 +48,9 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification);
+            var (permissionLevel,  reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            PermissionLevel = permissionLevel;
+            PermissionReason = reason;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);
         }
 

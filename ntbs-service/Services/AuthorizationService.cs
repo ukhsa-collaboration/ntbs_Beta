@@ -6,12 +6,15 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Pages;
 
 namespace ntbs_service.Services
 {
     public interface IAuthorizationService
     {
-        Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user, Notification notification);
+        Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(
+            ClaimsPrincipal user,
+            Notification notification);
         Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications);
         Task<bool> IsUserAuthorizedToManageAlert(ClaimsPrincipal user, Alert alert);
         Task<IList<Alert>> FilterAlertsForUserAsync(ClaimsPrincipal user, IList<Alert> alerts);
@@ -50,7 +53,8 @@ namespace ntbs_service.Services
                     .Select(n => SetPadlockForBannerAsync(user, n)));
         }
 
-        public async Task<PermissionLevel> GetPermissionLevelForNotificationAsync(ClaimsPrincipal user,
+        public async Task<(PermissionLevel permissionLevel, string reason)> GetPermissionLevelAsync(
+            ClaimsPrincipal user,
             Notification notification)
         {
             if (_userPermissionsFilter == null)
@@ -60,24 +64,27 @@ namespace ntbs_service.Services
 
             if (_userPermissionsFilter.Type == UserType.NationalTeam)
             {
-                return PermissionLevel.Edit;
+                return (PermissionLevel.Edit,
+                        // National team members are allowed to modify even closed notifications, but it is useful
+                        // for them to be able to tell when they are closed.
+                        notification.NotificationStatus == NotificationStatus.Closed ? Messages.Closed : null);
             }
 
             if (UserHasDirectRelationToNotification(notification)) 
             {
-                return notification.NotificationStatus != NotificationStatus.Closed
-                    ? PermissionLevel.Edit
-                    : PermissionLevel.ReadOnly;
+                return notification.NotificationStatus == NotificationStatus.Closed
+                    ? (PermissionLevel.ReadOnly, Messages.ClosedNoEdit)
+                    : (PermissionLevel.Edit, null);
             }
 
-            if (UserBelongsToResidencePhecOfNotification(notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode) 
-                || UserHasDirectRelationToLinkedNotification(notification.Group?.Notifications)
+            if (UserBelongsToResidencePhecOfNotification(notification) 
+                || UserHasDirectRelationToLinkedNotification(notification)
                 || UserPreviouslyHadDirectionRelationToNotification(notification))
             {
-                return PermissionLevel.ReadOnly;
+                return (PermissionLevel.ReadOnly, Messages.NoEditPermission);
             }
 
-            return PermissionLevel.None;
+            return (PermissionLevel.None, Messages.UnauthorizedWarning);
         }
         
         private async Task<bool> CanEditBannerModelAsync(
@@ -106,8 +113,9 @@ namespace ntbs_service.Services
             }
         }
         
-        private bool UserHasDirectRelationToLinkedNotification(IEnumerable<Notification> linkedNotifications)
+        private bool UserHasDirectRelationToLinkedNotification(Notification notification)
         {
+            var linkedNotifications = notification.Group?.Notifications;
             return linkedNotifications != null && linkedNotifications.Select(UserHasDirectRelationToNotification).Any(x => x);
         }
 
@@ -138,9 +146,11 @@ namespace ntbs_service.Services
             return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(treatmentPhecCode);
         }
         
-        private bool UserBelongsToResidencePhecOfNotification(string residencePhecCode)
+        private bool UserBelongsToResidencePhecOfNotification(Notification notification)
         {
-            return _userPermissionsFilter.Type == UserType.PheUser && _userPermissionsFilter.IncludedPHECCodes.Contains(residencePhecCode);
+            var phecCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
+            return _userPermissionsFilter.Type == UserType.PheUser 
+                   && _userPermissionsFilter.IncludedPHECCodes.Contains(phecCode);
         }
 
         public async Task<IQueryable<Notification>> FilterNotificationsByUserAsync(ClaimsPrincipal user, IQueryable<Notification> notifications)

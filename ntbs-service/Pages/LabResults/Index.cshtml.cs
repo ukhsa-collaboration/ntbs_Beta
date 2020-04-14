@@ -116,7 +116,8 @@ namespace ntbs_service.Pages.LabResults
                 return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationDoesNotExist});
             }
 
-            if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationMatchNoPermission});
             }
@@ -184,7 +185,8 @@ namespace ntbs_service.Pages.LabResults
                     "When performing a specimen match via `/LabResults`, a candidate match was not found in the ntbs database.");
             }
 
-            if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 ModelState.AddModelError(candidateMatchModelStateKey,
                     ValidationMessages.LabResultNotificationMatchNoPermission);
@@ -207,7 +209,9 @@ namespace ntbs_service.Pages.LabResults
                 ModelState.AddModelError(manualMatchModelStateKey,
                     ValidationMessages.LabResultNotificationDoesNotExist);
             }
-            else if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
+            
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 ModelState.AddModelError(manualMatchModelStateKey,
                     ValidationMessages.LabResultNotificationMatchNoPermission);

@@ -1,6 +1,5 @@
 @page "/Notifications/{NotificationId:int}/{handler?}"
 @using ntbs_service.Helpers
-@using ntbs_service.Models.Enums
 @model OverviewModel
 
 @{
@@ -8,13 +7,6 @@
     ViewData["NotificationId"] = Model.NotificationId;
     ViewData["Title"] = $"Notification #{Model.NotificationId} overview";
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
-}
-
-@if (Model.Notification.NotificationStatus == NotificationStatus.Closed)
-{
-    <div class="notification-overview-details-container">
-        <p>This notification is closed</p>
-    </div>
 }
 
 <partial name="./OverviewPartials/_ClusterInformationOverviewPartial" for="Notification"/>

@@ -78,7 +78,9 @@ namespace ntbs_service.Pages.Notifications
             {
                 return NotFound();
             }
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
+
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }
