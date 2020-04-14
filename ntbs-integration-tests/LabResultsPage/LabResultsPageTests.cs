@@ -29,7 +29,7 @@ namespace ntbs_integration_tests.LabResultsPage
                 new Notification
                 {
                     NotificationId = Utilities.SPECIMEN_MATCHING_NOTIFICATION_ID2,
-                    NotificationStatus = NotificationStatus.Notified
+                    NotificationStatus = NotificationStatus.Closed
                 },
                 new Notification
                 {
@@ -177,23 +177,24 @@ namespace ntbs_integration_tests.LabResultsPage
                 }
             }
         }
+        public static IEnumerable<object[]> TbServiceCandidateMatchNotificationIds =>
+            MockSpecimenService.MockUnmatchedSpecimenForTbService.PotentialMatches
+                .Select(candidateMatch => new object[] {candidateMatch.NotificationId});
 
-        [Fact]
-        public async Task NationalTeam_CanMatchSpecimenFromCandidatePotentialMatch()
+        [Theory]
+        [MemberData(nameof(TbServiceCandidateMatchNotificationIds))]
+        public async Task NationalTeam_CanMatchSpecimenFromCandidatePotentialMatch(int candidateMatchNotificationId)
         {
             using (var client = Factory.WithUser<NationalTeamUser>()
                 .CreateClientWithoutRedirects())
             {
                 // Arrange
-                var expectedUnmatchedSpecimen =
-                    MockSpecimenService.MockUnmatchedSpecimenForTbService;
-                var specimenNumber = expectedUnmatchedSpecimen.ReferenceLaboratoryNumber;
-                var candidateMatchNotificationId = expectedUnmatchedSpecimen.PotentialMatches.First().NotificationId;
+                var specimenNumber = MockSpecimenService.MockUnmatchedSpecimenForTbService.ReferenceLaboratoryNumber;
 
                 const string url = "/LabResults";
                 var response = await client.GetAsync(url);
                 var document = await GetDocumentAsync(response);
-
+                
                 var formData = new Dictionary<string, string>
                 {
                     [$"PotentialMatchSelections[{specimenNumber}].NotificationId"] =

@@ -168,14 +168,14 @@ namespace ntbs_service.Pages.LabResults
             TempData["MatchedNotificationId"] = notificationId;
         }
 
-        private async Task<int> ValidateCandidateMatch(SpecimenPotentialMatchSelection value)
+        private async Task<int> ValidateCandidateMatch(SpecimenPotentialMatchSelection selection)
         {
             // Prefix ModelState endsWith substring with '.' to avoid catching x.ManualNotificationId
             var candidateMatchModelStateKey =
                 ModelState.Keys.SingleOrDefault(key =>
                     key.EndsWith("." + nameof(SpecimenPotentialMatchSelection.NotificationId)));
 
-            var notificationId = value.NotificationId.GetValueOrDefault();
+            var notificationId = selection.NotificationId.GetValueOrDefault();
             var notification = await _notificationRepository.GetNotifiedNotificationAsync(notificationId);
 
             if (notification == null)

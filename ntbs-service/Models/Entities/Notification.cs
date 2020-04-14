@@ -90,7 +90,9 @@ namespace ntbs_service.Models.Entities
 
         #endregion
         
-        public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified || NotificationStatus == NotificationStatus.Legacy;
+        public bool HasBeenNotified => NotificationStatus == NotificationStatus.Notified 
+                                       || NotificationStatus == NotificationStatus.Closed 
+                                       || NotificationStatus == NotificationStatus.Legacy;
         
         [AssertThat(@"ShouldValidateFull && HasDeathEventForPostMortemCase", ErrorMessage = ValidationMessages.DeathEventRequiredForPostMortemCase)]
         public bool HasDeathEventForPostMortemCase =>
