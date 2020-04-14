@@ -74,11 +74,25 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (TravelDetails.HasTravel != true)
             {
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.TotalDurationOfTravel)}");
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country1Id)}");
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country2Id)}");
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country3Id)}");
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.StayLengthInMonths1)}");
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.StayLengthInMonths2)}");
+                ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.StayLengthInMonths3)}");
                 Service.ClearTravelOrVisitorFields(TravelDetails);
             }
 
             if (VisitorDetails.HasVisitor != true)
             {
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.TotalDurationOfVisit)}");
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.Country1Id)}");
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.Country2Id)}");
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.Country3Id)}");
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.StayLengthInMonths1)}");
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.StayLengthInMonths2)}");
+                ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.StayLengthInMonths3)}");
                 Service.ClearTravelOrVisitorFields(VisitorDetails);
             }
         }
