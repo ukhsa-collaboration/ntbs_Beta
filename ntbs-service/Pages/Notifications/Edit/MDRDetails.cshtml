@@ -93,7 +93,7 @@
                                         <span nhs-span-type="ErrorMessage" id="notified-to-phe-error"
                                             ref="errorField" asp-validation-for="MDRDetails.NotifiedToPheStatus" has-error="@pheNotifiedError">
                                         </span>
-                                        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
+                                        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:change="validate">
                                             <div class="nhsuk-radios__item">
                                                 <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-related-notification">
                                                 <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
@@ -104,7 +104,7 @@
                                                         var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
                                                         var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
                                                     }
-                                                    <validate-related-notification allow-draft="true" inline-template>
+                                                    <validate-related-notification allow-draft="true" allow-legacy-notifications="true" inline-template>
                                                         <nhs-form-group
                                                             id="@($"{nameof(Model.MDRDetails.RelatedNotificationId)}")"
                                                             nhs-form-group-type="@relatedNotificationGroupState"
@@ -120,13 +120,16 @@
                                                                 asp-validation-for="MDRDetails.RelatedNotificationId">
                                                             </span>
                                                             <input
-                                                                nhs-input-type="Number"
+                                                                nhs-input-type="Standard"
                                                                 ref="inputField"
                                                                 v-on:blur="validate"
+                                                                pattern="[0-9]*"
+                                                                title="Must contain only digits"
                                                                 is-error-input="@hasRelatedNotificationError"
                                                                 fixed-width="Ten"
                                                                 asp-for="MDRDetails.RelatedNotificationId">
                                                             <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                                            <notification-warning v-if="hasWarningMessage" v-bind:warning-message="warningMessage"></notification-warning>
                                                         </nhs-form-group>
                                                     </validate-related-notification>
                                                 </div>

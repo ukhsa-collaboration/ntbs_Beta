@@ -99,7 +99,7 @@
                                         var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureNotificationId)}");
                                         var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
                                     }
-                                    <validate-related-notification model="@nameof(Model.MBovisExposureToKnownCase)" inline-template>
+                                    <validate-related-notification model="@nameof(Model.MBovisExposureToKnownCase)" allow-draft="false" allow-legacy-notifications="true" inline-template>
                                         <nhs-form-group
                                             id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}")"
                                             nhs-form-group-type="@relatedNotificationGroupState"
@@ -115,13 +115,16 @@
                                                 asp-validation-for="MBovisExposureToKnownCase.ExposureNotificationId">
                                             </span>
                                             <input
-                                                nhs-input-type="Number"
+                                                nhs-input-type="Standard"
                                                 ref="inputField"
                                                 v-on:blur="validate"
+                                                pattern="[0-9]*"
+                                                title="Must contain only digits"
                                                 is-error-input="@hasRelatedNotificationError"
                                                 fixed-width="Ten"
                                                 asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
                                             <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                            <notification-warning v-if="hasWarningMessage" v-bind:warning-message="warningMessage"></notification-warning>
                                         </nhs-form-group>
                                     </validate-related-notification>
                                 </div>

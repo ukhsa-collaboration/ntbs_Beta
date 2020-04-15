@@ -3,11 +3,13 @@ import { getHeaders, getValidationPath } from "../helpers";
 import axios from "axios";
 
 const ValidateRelatedNotification = Vue.extend({
-    props: ["model", "allowDraft"],
+    props: ["model", "allowDraft", "allowLegacyNotifications"],
     data: function() {
         return {
             relatedNotification: {},
-            isValid: false
+            warningMessage: "",
+            isValid: false,
+            hasWarningMessage: false
         }
     },
     mounted: function() {
@@ -28,7 +30,8 @@ const ValidateRelatedNotification = Vue.extend({
                 url: `/NotificationSummary/${id}`,
                 headers: getHeaders(),
                 params: {
-                    "allowDraft": this.$props.allowDraft
+                    "allowDraft": this.$props.allowDraft,
+                    "allowLegacyNotifications": this.$props.allowLegacyNotifications
                 }
             };
             axios.request(requestConfig)
@@ -42,14 +45,23 @@ const ValidateRelatedNotification = Vue.extend({
                         this.$refs["errorField"].textContent = responseContent.validationMessage;
                         this.relatedNotification = {};
                         this.isValid = false;
+                        this.warningMessage = "";
+                        this.hasWarningMessage = false;
                     } else {
                         // either blank or valid
                         this.$el.classList.remove("nhsuk-form-group--error");
                         this.$refs["errorField"].classList.add("hidden");
                         this.$refs["inputField"].classList.remove("nhsuk-input--error");
                         this.$refs["errorField"].textContent = '';
-                        this.isValid = responseContent.hasOwnProperty('relatedNotification');;
-                        this.relatedNotification = this.isValid ? responseContent.relatedNotification : {};
+                        this.isValid = responseContent.hasOwnProperty('relatedNotification');
+                        this.hasWarningMessage = responseContent.hasOwnProperty('warningMessage');
+                        
+                        if (this.hasWarningMessage) {
+                            this.warningMessage = responseContent.warningMessage;
+                        } else {
+                            this.relatedNotification = this.isValid ? responseContent.relatedNotification : {};
+                        }
+
                     }
                 })
                 .catch((error: any) => {

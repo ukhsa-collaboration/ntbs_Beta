@@ -33,7 +33,7 @@
         </nhs-grid-column>
         
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> NTBS ID </div>
+            <div class="notification-details-label"> @Html.DisplayNameFor(x => x.Notification.MDRDetails.RelatedNotificationId) </div>
             <div class="cell-min-height">
                 @if (Model.Notification.MDRDetails.IsCountryUK && Model.Notification.MDRDetails.NotifiedToPheStatus == Status.Yes)
                 {
