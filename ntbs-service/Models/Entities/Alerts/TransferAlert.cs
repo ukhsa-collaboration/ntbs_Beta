@@ -1,12 +1,13 @@
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using ntbs_service.Helpers;
 
 namespace ntbs_service.Models.Entities.Alerts
 
 {
-    public class TransferAlert : Alert
+    public class TransferAlert : Alert, IHasRootEntityForAuditing
     {
         public TransferAlert()
         {
@@ -33,5 +34,8 @@ namespace ntbs_service.Models.Entities.Alerts
         public override bool NotDismissable => true;
         public string TransferReasonString => TransferReason.GetDisplayName() + 
             (TransferReason == TransferReason.Other ? $" - {OtherReasonDescription}" : "");
+
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
     }
 }
