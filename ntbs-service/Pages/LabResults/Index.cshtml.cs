@@ -85,7 +85,7 @@ namespace ntbs_service.Pages.LabResults
                     "number was either previously matched, or unavailable to the user.");
             }
 
-            var userName = User.FindFirstValue(ClaimTypes.Email);
+            var userName = User.FindFirstValue(ClaimTypes.Upn);
             await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, userName);
             AddTempDataForSuccessfulMessage(notificationId, laboratoryReferenceNumber);
 

@@ -228,7 +228,7 @@ namespace ntbs_service
 
                     options.Events.OnSecurityTokenValidated += async context =>
                     {
-                        var username = context.Principal.FindFirstValue(ClaimTypes.Email);
+                        var username = context.Principal.FindFirstValue(ClaimTypes.Upn);
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();

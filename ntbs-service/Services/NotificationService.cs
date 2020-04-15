@@ -446,10 +446,10 @@ namespace ntbs_service.Services
         {
             var caseManagersForTbService =
                 await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
-            var userEmail = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var upperUserEmail = userEmail?.ToUpperInvariant();
+            var username = user.FindFirstValue(ClaimTypes.Upn);
+            var upperUserEmail = username?.ToUpperInvariant();
 
-            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? userEmail : null;
+            return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? username : null;
         }
 
         public async Task UpdateComorbidityAsync(Notification notification, ComorbidityDetails comorbidityDetails)

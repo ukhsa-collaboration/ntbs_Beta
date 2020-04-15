@@ -36,7 +36,7 @@ namespace ntbs_service.Authentication
             string groupAdmin = adfsOptions.AdminUserGroup;
             id.AddClaim(new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String));
 
-            id.AddClaim(new Claim(ClaimTypes.Email, "Developer@ntbs.phe.com", ClaimValueTypes.String));
+            id.AddClaim(new Claim(ClaimTypes.Upn, "Developer@ntbs.phe.com", ClaimValueTypes.String));
             this.id = new ClaimsPrincipal(id);
         }
 
