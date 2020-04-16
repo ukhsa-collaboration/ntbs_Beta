@@ -11,6 +11,12 @@ const ValidateInput = Vue.extend({
         validate: function (event: FocusEvent) {
             // Our onBlur validate events happen on input fields
             const inputField = event.target as HTMLInputElement;
+            const namesArray = inputField.name.split('.');
+            
+            if (this.$props.property !== namesArray[namesArray.length-1]) {
+                return;
+            }
+            
             const newValue = inputField.value;
             this.$emit("validate", event);
 
