@@ -83,7 +83,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             
             UpdateFlags();
-            await ValidateRelatedNotification();
+            await ValidateRelatedNotificationId();
             MDRDetails.SetValidationContext(Notification);
 
             if (TryValidateModel(MDRDetails, nameof(MDRDetails)))
@@ -92,16 +92,15 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        private async Task ValidateRelatedNotification()
+        private async Task ValidateRelatedNotificationId()
         {
             if (MDRDetails.RelatedNotificationId != null)
             {
-                var relatedNotification =
-                    await NotificationRepository.GetNotificationAsync(MDRDetails.RelatedNotificationId.Value);
-                if (relatedNotification == null || !relatedNotification.HasBeenNotified)
+                if (MDRDetails.RelatedNotificationId == NotificationId)
                 {
-                    ModelState.AddModelError("MDRDetails.RelatedNotificationId",
-                        ValidationMessages.IdDoesNotMatchNtbsRecord);
+                    ModelState.AddModelError(
+                        $"MDRDetails.RelatedNotificationId",
+                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);
                 }
             }
         }
