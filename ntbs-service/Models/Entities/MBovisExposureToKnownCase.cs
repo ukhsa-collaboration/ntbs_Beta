@@ -29,7 +29,7 @@ namespace ntbs_service.Models.Entities
         [RequiredIf(@"NotifiedToPheStatus == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(nameof(ExposureNotificationIdIsDifferentToNotificationId),
             ErrorMessage = ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId)]
-        [Display(Name = "NTBS ID")]
+        [Display(Name = "Contact's Notification ID")]
         public int? ExposureNotificationId { get; set; }
         
         [Required(ErrorMessage = ValidationMessages.FieldRequired)]

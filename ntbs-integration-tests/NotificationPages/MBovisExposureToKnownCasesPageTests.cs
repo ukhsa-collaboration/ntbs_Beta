@@ -149,10 +149,6 @@ namespace ntbs_integration_tests.NotificationPages
                 "exposure-setting",
                 "Please select Exposure setting");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisExposureToKnownCase-ExposureNotificationId",
-                "related-notification",
-                "The NTBS ID does not match an existing ID in the system");
-            resultDocument.AssertErrorSummaryMessage(
                 "MBovisExposureToKnownCase-OtherDetails",
                 "other-details",
                 "Other details can only contain letters, numbers and the symbols ' - . , /");

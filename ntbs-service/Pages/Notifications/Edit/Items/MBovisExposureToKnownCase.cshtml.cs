@@ -112,7 +112,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         {
             return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(key, value, shouldValidateFull);
         }
-        
+
         private async Task ValidateExposureNotification()
         {
             if (MBovisExposureToKnownCase.ExposureNotificationId != null)
@@ -121,16 +121,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 {
                     ModelState.AddModelError(
                         $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
-                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);   
-                }
-
-                var exposureNotification = await NotificationRepository.GetNotificationAsync(
-                    MBovisExposureToKnownCase.ExposureNotificationId.Value);
-                if (exposureNotification == null)
-                {
-                    ModelState.AddModelError(
-                        $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
-                        ValidationMessages.IdDoesNotMatchNtbsRecord);
+                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);
                 }
             }
         }
