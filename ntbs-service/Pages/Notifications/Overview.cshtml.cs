@@ -40,6 +40,8 @@ namespace ntbs_service.Pages.Notifications
 
         public async Task<IActionResult> OnGetAsync()
         {
+            PrepareBreadcrumbs();
+
             Notification = await NotificationRepository.GetNotificationWithAllInfoAsync(NotificationId);
             if (Notification == null)
             {
@@ -47,7 +49,7 @@ namespace ntbs_service.Pages.Notifications
             }
             NotificationId = Notification.NotificationId;
 
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
             await GetAlertsAsync();
             await AuthorizeAndSetBannerAsync();
             if (PermissionLevel == PermissionLevel.None)

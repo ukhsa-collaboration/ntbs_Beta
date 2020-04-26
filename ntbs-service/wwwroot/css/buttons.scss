@@ -5,8 +5,7 @@
     box-shadow: 0 4px 0 $button-drop-shadow;
     margin-bottom: 24px;
 
-    &:hover,
-    &:focus {
+    &:hover {
         background-color: $phe-red-focus;
     }
 }
@@ -16,8 +15,7 @@
     box-shadow: 0 4px 0 $button-drop-shadow;
     margin-bottom: 24px;
 
-    &:hover,
-    &:focus {
+    &:hover {
         background-color: $secondary-button-focus;
     }
 }
@@ -26,8 +24,7 @@
     background-color: #d4351c;
     box-shadow: 0 4px 0 $button-drop-shadow;
 
-    &:hover,
-    &:focus {
+    &:hover {
         background-color: #aa2a16;
     }
 }

@@ -30,7 +30,7 @@ namespace ntbs_service.Pages.Alerts
             
             if(await authorizationService.IsUserAuthorizedToManageAlert(User, alertToDismiss))
             {
-                await alertService.DismissAlertAsync(AlertId, User.FindFirstValue(ClaimTypes.Email));
+                await alertService.DismissAlertAsync(AlertId, User.FindFirstValue(ClaimTypes.Upn));
             }
 
             if (Request.Query["page"] == "Overview")

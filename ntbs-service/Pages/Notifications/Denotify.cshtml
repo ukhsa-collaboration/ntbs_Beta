@@ -19,37 +19,42 @@
             </p>
         </nhs-warning-callout>
 
-            @{
-                var hasDateError = !Model.ValidationService.IsValid("DenotificationDetails.DateOfDenotification");
-                var dateFormGroupType = hasDateError ? Error : Standard;
-            }
+            <date-input inline-template>
+                @{
+                    var hasDateError = !Model.ValidationService.IsValid("DenotificationDetails.DateOfDenotification");
+                    var dateFormGroupType = hasDateError ? Error : Standard;
+                }
 
-            <nhs-form-group nhs-form-group-type="@dateFormGroupType">
-                <nhs-fieldset aria-describedby="date-error" role="group">
-                    <nhs-fieldset-legend nhs-legend-size="Standard">Date of denotification</nhs-fieldset-legend>
-                    <span id="date-error" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.DateOfDenotification" has-error="@hasDateError"></span>
-                    <nhs-date-input>
-                        <nhs-date-input-item>
-                            <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Day">Day</label>
-                                <input nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDenotificationDate.Day" is-error-input="@hasDateError" />
-                            </nhs-form-group>
-                        </nhs-date-input-item>
-                        <nhs-date-input-item>
-                            <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Month">Month</label>
-                                <input nhs-input-type="Date" fixed-width="Two" asp-for="FormattedDenotificationDate.Month" is-error-input="@hasDateError" />
-                            </nhs-form-group>
-                        </nhs-date-input-item>
-                        <nhs-date-input-item>
-                            <nhs-form-group nhs-form-group-type="Standard">
-                                <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Year">Year</label>
-                                <input nhs-input-type="Date" fixed-width="Four" asp-for="FormattedDenotificationDate.Year" is-error-input="@hasDateError" />
-                            </nhs-form-group>
-                        </nhs-date-input-item>
-                    </nhs-date-input>
-                </nhs-fieldset>
-            </nhs-form-group>
+                <nhs-form-group nhs-form-group-type="@dateFormGroupType">
+                    <nhs-fieldset aria-describedby="date-error" role="group">
+                        <nhs-fieldset-legend nhs-legend-size="Standard">Date of denotification</nhs-fieldset-legend>
+                        <span id="date-error" nhs-span-type="ErrorMessage" asp-validation-for="DenotificationDetails.DateOfDenotification" has-error="@hasDateError"></span>
+                        <nhs-date-input>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Day">Day</label>
+                                    <input nhs-input-type="Date" fixed-width="Two" ref="dayInput"
+                                        asp-for="FormattedDenotificationDate.Day" is-error-input="@hasDateError" />
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Month">Month</label>
+                                    <input nhs-input-type="Date" fixed-width="Two" ref="monthInput"
+                                        asp-for="FormattedDenotificationDate.Month" is-error-input="@hasDateError" />
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                            <nhs-date-input-item>
+                                <nhs-form-group nhs-form-group-type="Standard">
+                                    <label nhs-label-type="Date" asp-for="FormattedDenotificationDate.Year">Year</label>
+                                    <input nhs-input-type="Date" fixed-width="Four" ref="yearInput"
+                                        asp-for="FormattedDenotificationDate.Year" is-error-input="@hasDateError" />
+                                </nhs-form-group>
+                            </nhs-date-input-item>
+                        </nhs-date-input>
+                    </nhs-fieldset>
+                </nhs-form-group>
+            </date-input>
 
             @{
                 var hasReasonError = !Model.ValidationService.IsValid("DenotificationDetails.Reason");

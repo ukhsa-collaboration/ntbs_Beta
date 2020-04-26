@@ -78,34 +78,69 @@
 
                 <nhs-grid-column grid-column-width="OneHalf">
                     @{
-                        var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureNotificationId)}");
-                        var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+                        var pheNotifiedError = !Model.IsValid("MBovisExposureToKnownCase.NotifiedToPheStatus");
+                        var pheNotifiedGroupState = pheNotifiedError ? Error : Standard;
                     }
-                    <validate-related-notification model="@nameof(Model.MBovisExposureToKnownCase)" inline-template>
-                        <nhs-form-group
-                            id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}")"
-                            nhs-form-group-type="@relatedNotificationGroupState"
-                            aria-describedby="related-notification-error">
-                            <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
-                                @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.ExposureNotificationId)
-                            </label>
-                            <span
-                                id="related-notification-error"
-                                nhs-span-type="ErrorMessage"
-                                ref="errorField"
-                                has-error="@hasRelatedNotificationError"
-                                asp-validation-for="MBovisExposureToKnownCase.ExposureNotificationId">
-                            </span>
-                            <input
-                                nhs-input-type="Number"
-                                ref="inputField"
-                                v-on:blur="validate"
-                                is-error-input="@hasRelatedNotificationError"
-                                fixed-width="Ten"
-                                asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
-                            <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
-                        </nhs-form-group>
-                    </validate-related-notification>
+                    <nhs-form-group nhs-form-group-type="@pheNotifiedGroupState" ref="formGroup">
+                        <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus">
+                            @Html.DisplayNameFor(x => x.MBovisExposureToKnownCase.NotifiedToPheStatus)
+                        </label>
+                        <span nhs-span-type="ErrorMessage" id="notified-error"
+                            ref="errorField" asp-validation-for="MBovisExposureToKnownCase.NotifiedToPheStatus" has-error="@pheNotifiedError">
+                        </span>
+                        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-notified-to-phe">
+                                <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
+                                    Yes
+                                </label>
+                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-notified-to-phe">
+                                    @{
+                                        var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.MBovisExposureToKnownCase)}.{nameof(Model.MBovisExposureToKnownCase.ExposureNotificationId)}");
+                                        var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+                                    }
+                                    <validate-related-notification model="@nameof(Model.MBovisExposureToKnownCase)" allow-draft="false" allow-legacy-notifications="true" inline-template>
+                                        <nhs-form-group
+                                            id="@($"{nameof(MBovisExposureToKnownCase)}-{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}")"
+                                            nhs-form-group-type="@relatedNotificationGroupState"
+                                            aria-describedby="related-notification-error">
+                                            <label nhs-label-type="Standard" asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
+                                                @Html.DisplayNameFor(m => m.MBovisExposureToKnownCase.ExposureNotificationId)
+                                            </label>
+                                            <span
+                                                id="related-notification-error"
+                                                nhs-span-type="ErrorMessage"
+                                                ref="errorField"
+                                                has-error="@hasRelatedNotificationError"
+                                                asp-validation-for="MBovisExposureToKnownCase.ExposureNotificationId">
+                                            </span>
+                                            <input
+                                                nhs-input-type="Standard"
+                                                ref="inputField"
+                                                v-on:blur="validate"
+                                                is-error-input="@hasRelatedNotificationError"
+                                                fixed-width="Ten"
+                                                asp-for="MBovisExposureToKnownCase.ExposureNotificationId">
+                                            <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                            <notification-warning v-if="hasWarningMessage" v-bind:warning-message="warningMessage"></notification-warning>
+                                        </nhs-form-group>
+                                    </validate-related-notification>
+                                </div>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                                <label class="nhsuk-label nhsuk-radios__label" for="notified-no">
+                                    No
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="MBovisExposureToKnownCase.NotifiedToPheStatus" id="notified-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                                <label class="nhsuk-label nhsuk-radios__label" for="notified-unknown">
+                                    Unknown
+                                </label>
+                            </div>
+                        </div>
+                    </nhs-form-group>
                 </nhs-grid-column>
 
                 <nhs-grid-column grid-column-width="Full">

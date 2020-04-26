@@ -2,150 +2,159 @@
 @import "./colors.scss";
 
 .search-notifications-button {
-    font-size: medium;
+  font-size: medium;
 }
 
 .notifications-table {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .delete-notification-button {
-    display: block;
-    width: 100px;
+  display: block;
+  width: 100px;
 }
 
 .delete-reason-text-area-container {
-    width: 750px;
+  width: 750px;
 }
 
 .manage-notification {
-    border-top-width: 10px;
-    border-top-style: solid;
-    padding-top: 16px;
+  border-top-width: 10px;
+  border-top-style: solid;
+  padding-top: 16px;
 
-    &.manage-notification--draft {
-        border-top-color: $banner-header--draft;
+  &.manage-notification--draft {
+    border-top-color: $banner-header--draft;
+  }
+
+  &.manage-notification--notified {
+    border-top-color: $banner-header--notified
+  }
+
+  &.manage-notification--denotified {
+    border-top-color: $banner-header--denotified;
+  }
+
+  &.manage-notification--legacy {
+    border-top-color: $banner-header--legacy;
+  }
+
+  // We're overriding some of the nhs-uk expander styling here to achieve the desired effect.
+  // This allows us to free-ride off of the summary-details polyfill this nhs component provides.
+  .nhsuk-expander,
+  .nhsuk-expander[open] {
+    margin-bottom: 0;
+
+    .nhsuk-details__summary {
+      padding: 0;
+      border-width: 2px;
+      border-color: black;
+      border-style: solid;
+      border-radius: 4px;
+      background-color: $dull-red;
+
+      &:focus .nhsuk-details__summary-text {
+        box-shadow: none;
+      }
     }
 
-    &.manage-notification--notified {
-        border-top-color: $banner-header--notified
+    .nhsuk-details__summary-text {
+      margin-left: 16px;
+      color: black;
+      text-decoration: none;
+      // Taken from nhs expander, but with colour swapped for phe-red
+      background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__plus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237f0029'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M12 8v8M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
     }
-
-    &.manage-notification--denotified {
-        border-top-color: $banner-header--denotified;
+    .nhsuk-details__text {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 12px;
     }
+  }
 
-    &.manage-notification--legacy {
-        border-top-color: $banner-header--legacy;
-    }
-
-    // We're overriding some of the nhs-uk expander styling here to achieve the desired effect.
-    // This allows us to free-ride off of the summary-details polyfill this nhs component provides.
-    .nhsuk-expander,
-    .nhsuk-expander[open] {
-        margin-bottom: 0;
-
-        .nhsuk-details__summary {
-            padding: 0;
-            border-width: 2px;
-            border-color: black;
-            border-style: solid;
-            border-radius: 4px;
-            background-color: $dull-red;
-        }
-
-        .nhsuk-details__summary-text {
-            margin-left: 16px;
-            color: black;
-            text-decoration: none;
-            // Taken from nhs expander, but with colour swapped for phe-red
-            background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__plus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237f0029'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M12 8v8M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
-        }
-
-        .nhsuk-details__text {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            padding: 12px;
-        }
-    }
-
-    .nhsuk-expander[open] .nhsuk-details__summary-text {
-        // Taken from nhs expander, but with colour swapped for phe-red
-        background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__minus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237f0029'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
-    }
+  .nhsuk-expander[open] .nhsuk-details__summary-text {
+    // Taken from nhs expander, but with colour swapped for phe-red
+    background: url("data:image/svg+xml,%3Csvg class='nhsuk-icon nhsuk-icon__minus' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='32' aria-hidden='true'%3E%3Ccircle cx='12' cy='12' r='10' fill='%237f0029'%3E%3C/circle%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M8 12h8'%3E%3C/path%3E%3C/svg%3E%0A") left -2px center no-repeat;
+  }
 }
 
 .action-link {
-    text-align: center;
+  text-align: center;
 }
 
 .manage-notification--no-expander {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .notification-banner-links {
-    padding: 5px 10px;
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  padding: 5px 10px;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
-    border-top-width: 10px;
-    border-top-style: solid;
+  border-top-width: 10px;
+  border-top-style: solid;
 
-    &.notification-banner-links--draft {
-        border-top-color: $banner-header--draft;
-    }
+  &.notification-banner-links--draft {
+    border-top-color: $banner-header--draft;
+  }
 
-    &.notification-banner-links--notified {
-        border-top-color: $banner-header--notified
-    }
+  &.notification-banner-links--notified {
+    border-top-color: $banner-header--notified
+  }
 
-    &.notification-banner-links--denotified {
-        border-top-color: $banner-header--denotified;
-    }
+  &.notification-banner-links--denotified {
+    border-top-color: $banner-header--denotified;
+  }
 
-    &.notification-banner-links--legacy {
-        border-top-color: $banner-header--legacy;
-    }
+  &.notification-banner-links--legacy {
+    border-top-color: $banner-header--legacy;
+  }
 
-    border-bottom: 1px solid $grey;
+  border-bottom: 1px solid $grey;
 }
 
 .notification-banner-link {
-    font-size: 18px;
+  font-size: 18px;
 
-    &.notification-banner-link--current {
-        font-weight: bold;
-    }
+  &.notification-banner-link--current {
+    font-weight: bold;
+  }
 }
 
 .notification-banner-link-separator {
-    margin: 2px 10px;
-    border-right: 2px solid black;
+  margin: 2px 10px;
+  border-right: 2px solid black;
 }
 
 .notification-page-end {
-    border-top-width: 10px;
-    border-top-style: solid;
-    margin-top: 24px;
+  border-top-width: 10px;
+  border-top-style: solid;
+  margin-top: 24px;
 
-    &.notification-page-end--draft {
-        border-top-color: $banner-header--draft;
-    }
+  &.notification-page-end--draft {
+    border-top-color: $banner-header--draft;
+  }
 
-    &.notification-page-end--notified {
-        border-top-color: $banner-header--notified
-    }
+  &.notification-page-end--notified {
+    border-top-color: $banner-header--notified
+  }
 
-    &.notification-page-end--denotified {
-        border-top-color: $banner-header--denotified;
-    }
+  &.notification-page-end--denotified {
+    border-top-color: $banner-header--denotified;
+  }
 
-    &.notification-page-end--legacy {
-        border-top-color: $banner-header--legacy;
-    }
+  &.notification-page-end--legacy {
+    border-top-color: $banner-header--legacy;
+  }
 
+}
+
+.nhs-inset-text--ntbs {
+  border-color: $phe-red;
+  margin-top: 0;
+  margin-bottom: 0;
 }

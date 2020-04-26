@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
@@ -56,6 +57,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
 
         protected override async Task ValidateAndSave()
         {
+            UpdateFlags();
             MBovisExposureToKnownCase.SetValidationContext(Notification);
             MBovisExposureToKnownCase.NotificationId = NotificationId;
             MBovisExposureToKnownCase.DobYear = Notification.PatientDetails.Dob?.Year;
@@ -75,11 +77,21 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 }
             }
         }
-        
+
+        private void UpdateFlags()
+        {
+            if (MBovisExposureToKnownCase.NotifiedToPheStatus != Status.Yes)
+            {
+                MBovisExposureToKnownCase.ExposureNotificationId = null;
+                ModelState.Remove("MBovisExposureToKnownCase.ExposureNotificationId");
+            }
+        }
+
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             Notification = await GetNotificationAsync(NotificationId);
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != Models.Enums.PermissionLevel.Edit)
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }
@@ -100,7 +112,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
         {
             return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(key, value, shouldValidateFull);
         }
-        
+
         private async Task ValidateExposureNotification()
         {
             if (MBovisExposureToKnownCase.ExposureNotificationId != null)
@@ -109,16 +121,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                 {
                     ModelState.AddModelError(
                         $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
-                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);   
-                }
-
-                var exposureNotification = await NotificationRepository.GetNotificationAsync(
-                    MBovisExposureToKnownCase.ExposureNotificationId.Value);
-                if (exposureNotification == null)
-                {
-                    ModelState.AddModelError(
-                        $"{nameof(MBovisExposureToKnownCase)}.{nameof(MBovisExposureToKnownCase.ExposureNotificationId)}",
-                        ValidationMessages.IdDoesNotMatchNtbsRecord);
+                        ValidationMessages.RelatedNotificationIdCannotBeSameAsNotificationId);
                 }
             }
         }

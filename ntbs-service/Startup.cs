@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ntbs_service.Authentication;
@@ -62,7 +62,11 @@ namespace ntbs_service
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
             // Plugin services
-            if (!Env.IsEnvironment("CI"))
+            if (Env.IsEnvironment("CI"))
+            {
+                services.AddDistributedMemoryCache();
+            }
+            else
             {
                 services.AddDistributedSqlServerCache(options =>
                 {
@@ -70,12 +74,12 @@ namespace ntbs_service
                     options.SchemaName = "dbo";
                     options.TableName = "SessionState";
                 });
-                
-                services.AddSession(options =>
-                {
-                    options.Cookie.IsEssential = true;
-                });
             }
+
+            services.AddSession(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
 
             SetupAuthentication(services, adfsConfig);
 
@@ -107,12 +111,19 @@ namespace ntbs_service
             services.AddDbContext<NtbsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ntbsContext"))
             );
+            
+            services.AddSingleton<NtbsContextDesignTimeFactory>();
 
             var auditDbConnectionString = Configuration.GetConnectionString("auditContext");
 
             services.AddDbContext<AuditDatabaseContext>(options =>
                 options.UseSqlServer(auditDbConnectionString)
             );
+            
+            // Add a DbContext for Data Protection key storage
+            services.AddDbContext<KeysContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("keysContext")));
+            services.AddDataProtection().PersistKeysToDbContext<KeysContext>();
 
             // Repositories
             services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -217,7 +228,7 @@ namespace ntbs_service
 
                     options.Events.OnSecurityTokenValidated += async context =>
                     {
-                        var username = context.Principal.FindFirstValue(ClaimTypes.Email);
+                        var username = context.Principal.FindFirstValue(ClaimTypes.Upn);
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
@@ -307,6 +318,11 @@ namespace ntbs_service
                 {
                     HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
                 });
+                // We only need to turn this on in development, as in production this
+                // This behaviour is by default provided by the nginx ingress
+                // (see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#server-side-https-enforcement-through-redirect)
+                // (also see  HSTS setting below)
+                app.UseHttpsRedirection();
             }
             else
             {
@@ -329,20 +345,23 @@ namespace ntbs_service
                 {
                     options.MessageTemplate =
                         "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms ({RequestId})";
-                    // Set Logging Level of Request logging to Information - prevents duplicated exceptions in sentry. 
-                    options.GetLevel = (_, __, ___) => LogEventLevel.Information;
+                    // 400s get thrown e.g. on antiforgery token validation failures. In those cases we don't have
+                    // an exception logged in Sentry, so we want to log at Warning level to make sure we are able to
+                    // identify and cure false positives.
+                    // Otherwise setting to Information to prevent duplicated exceptions in sentry. 
+                    options.GetLevel = (context, _, __) => context.Response.StatusCode == StatusCodes.Status400BadRequest
+                        ? LogEventLevel.Warning 
+                        : LogEventLevel.Information;
                 });
             }
 
-            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseCookiePolicy();
-
+            app.UseSession();
+            
             if (!Env.IsEnvironment("CI"))
             {
-                app.UseSession();
-
-                app.UseMiddleware<SessionStateRequestMiddleware>();
+                app.UseMiddleware<ActivityDetectionMiddleware>();
             }
             
             if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))

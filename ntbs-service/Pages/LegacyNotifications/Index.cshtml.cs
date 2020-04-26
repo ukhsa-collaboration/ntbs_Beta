@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Pages.Notifications;
 using ntbs_service.Services;
@@ -36,6 +37,11 @@ namespace ntbs_service.Pages.LegacyNotifications
         
         public async Task<IActionResult> OnGetAsync()
         {
+            ViewData["Breadcrumbs"] = new List<Breadcrumb>
+            {
+                HttpContext.Session.GetTopLevelBreadcrumb(),
+            };
+            
             return await GetPageAsync();
         }
 

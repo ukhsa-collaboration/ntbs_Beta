@@ -85,7 +85,7 @@ namespace ntbs_service.Pages.LabResults
                     "number was either previously matched, or unavailable to the user.");
             }
 
-            var userName = User.FindFirstValue(ClaimTypes.Email);
+            var userName = User.FindFirstValue(ClaimTypes.Upn);
             await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, userName);
             AddTempDataForSuccessfulMessage(notificationId, laboratoryReferenceNumber);
 
@@ -116,7 +116,8 @@ namespace ntbs_service.Pages.LabResults
                 return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationDoesNotExist});
             }
 
-            if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 return new JsonResult(new {errorMessage = ValidationMessages.LabResultNotificationMatchNoPermission});
             }
@@ -168,14 +169,14 @@ namespace ntbs_service.Pages.LabResults
             TempData["MatchedNotificationId"] = notificationId;
         }
 
-        private async Task<int> ValidateCandidateMatch(SpecimenPotentialMatchSelection value)
+        private async Task<int> ValidateCandidateMatch(SpecimenPotentialMatchSelection selection)
         {
             // Prefix ModelState endsWith substring with '.' to avoid catching x.ManualNotificationId
             var candidateMatchModelStateKey =
                 ModelState.Keys.SingleOrDefault(key =>
                     key.EndsWith("." + nameof(SpecimenPotentialMatchSelection.NotificationId)));
 
-            var notificationId = value.NotificationId.GetValueOrDefault();
+            var notificationId = selection.NotificationId.GetValueOrDefault();
             var notification = await _notificationRepository.GetNotifiedNotificationAsync(notificationId);
 
             if (notification == null)
@@ -184,7 +185,8 @@ namespace ntbs_service.Pages.LabResults
                     "When performing a specimen match via `/LabResults`, a candidate match was not found in the ntbs database.");
             }
 
-            if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 ModelState.AddModelError(candidateMatchModelStateKey,
                     ValidationMessages.LabResultNotificationMatchNoPermission);
@@ -207,12 +209,16 @@ namespace ntbs_service.Pages.LabResults
                 ModelState.AddModelError(manualMatchModelStateKey,
                     ValidationMessages.LabResultNotificationDoesNotExist);
             }
-            else if (await _authorizationService.GetPermissionLevelForNotificationAsync(User, notification) != PermissionLevel.Edit)
+            else
             {
-                ModelState.AddModelError(manualMatchModelStateKey,
-                    ValidationMessages.LabResultNotificationMatchNoPermission);
+                var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, notification);
+                if (permissionLevel != PermissionLevel.Edit)
+                {
+                    ModelState.AddModelError(manualMatchModelStateKey,
+                        ValidationMessages.LabResultNotificationMatchNoPermission);
+                }
             }
-
+            
             return notificationId;
         }
 

@@ -10,7 +10,8 @@ import Vue from "vue";
 import {initAll as govUkJsInitAll} from "govuk-frontend";
 import * as Sentry from '@sentry/browser';
 import * as SentryIntegrations from '@sentry/integrations';
-import '../../node_modules/nhsuk-frontend/packages/components/details/details.polyfill';
+// @ts-ignore
+import Details from '../../node_modules/nhsuk-frontend/packages/components/details/details';
 import VueAccessibleModal from 'vue-accessible-modal'
 import cssVars from 'css-vars-ponyfill';
 // Components
@@ -40,6 +41,8 @@ import FormLeaveChecker from "./Components/FormLeaveChecker";
 import ConfirmComponent from "./Components/ConfirmComponent";
 import InactivityChecker from "./Components/InactivityChecker";
 import InactivityLeaveComponent from "./Components/InactivityLeaveComponent";
+import DateInput from "./Components/DateInput";
+import NotificationWarning from "./Components/NotificationWarning";
 
 // For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
@@ -54,6 +57,7 @@ if (config.env === "production") {
 
 Vue.use(VueAccessibleModal, { transition: "fade" });
 // register Vue components
+Vue.component("date-input", DateInput);
 Vue.component("validate-input", ValidateInput);
 Vue.component("validate-date", ValidateDate);
 Vue.component("date-comparison", DateComparison);
@@ -72,6 +76,7 @@ Vue.component("cascading-dropdown", CascadingDropdown);
 Vue.component("tb-service-filtered-alerts", TbServiceFilteredAlerts);
 Vue.component("validate-related-notification", ValidateRelatedNotification);
 Vue.component("notification-info", NotificationInfo);
+Vue.component("notification-warning", NotificationWarning);
 Vue.component("hide-section-if-false", HideSectionIfFalse);
 Vue.component("fetch-specimen-potential-match", FetchSpecimenPotentialMatch);
 Vue.component("filtered-homepage-kpi", FilteredHomepageKpiDetails);
@@ -95,3 +100,7 @@ if (config.env === "development") {
 cssVars();
 govUkJsInitAll();
 
+// Initialize NHS components
+document.addEventListener('DOMContentLoaded', () => {
+    Details();
+});

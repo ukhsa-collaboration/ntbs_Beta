@@ -1,5 +1,6 @@
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 @using ntbs_service.Helpers
+@using ntbs_service.Models
 
 @{
     Layout = "./_NotificationLayout.cshtml";
@@ -9,6 +10,7 @@
     var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
     var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
     var endClass = $"notification-page-end notification-page-end{classSuffix}";
+    var breadcrumbs = ViewData["Breadcrumbs"];
 }
 
 <nhs-width-container container-width="Standard">
@@ -26,6 +28,12 @@
         </nhs-grid-column>
 
         <nhs-grid-column grid-column-width="Full">
+            @if (!string.IsNullOrEmpty(Model.PermissionReason))
+            {
+                <div class="notification-overview-details-container no-print" >
+                    <nhs-inset-text classes="nhs-inset-text--ntbs">@Model.PermissionReason</nhs-inset-text>
+                </div>
+            }
             @RenderBody()
         </nhs-grid-column>
 

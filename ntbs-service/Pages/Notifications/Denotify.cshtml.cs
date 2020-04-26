@@ -53,7 +53,7 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectToPage("/Notifications/Overview", new { NotificationId });
             }
 
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
 
             return Page();
         }
@@ -61,7 +61,9 @@ namespace ntbs_service.Pages.Notifications
         public async Task<IActionResult> OnPostConfirmAsync()
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
+            
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }
@@ -83,7 +85,7 @@ namespace ntbs_service.Pages.Notifications
                 await Service.DenotifyNotificationAsync(
                     NotificationId, 
                     DenotificationDetails,
-                    User.FindFirstValue(ClaimTypes.Email));
+                    User.FindFirstValue(ClaimTypes.Upn));
             }
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });

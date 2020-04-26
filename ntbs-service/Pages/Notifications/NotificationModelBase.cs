@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -15,7 +18,7 @@ namespace ntbs_service.Pages.Notifications
     public abstract class NotificationModelBase : PageModel, IWithNotificationBanner
     {
         protected INotificationService Service;
-        protected IAuthorizationService AuthorizationService;
+        protected IAuthorizationService _authorizationService;
         protected INotificationRepository NotificationRepository;
 
         protected NotificationModelBase(
@@ -24,7 +27,7 @@ namespace ntbs_service.Pages.Notifications
             INotificationRepository notificationRepository = null)
         {
             Service = service;
-            AuthorizationService = authorizationService;
+            _authorizationService = authorizationService;
             NotificationRepository = notificationRepository;
         }
         public int NumberOfLinkedNotifications { get; set; }
@@ -33,12 +36,12 @@ namespace ntbs_service.Pages.Notifications
         public NotificationBannerModel NotificationBannerModel { get; set; }
         public IList<Alert> Alerts { get; set; }
         public DataQualityDraftAlert DraftAlert { get; set; }
-
         public PermissionLevel PermissionLevel { get; set; }
+        public string PermissionReason { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int NotificationId { get; set; }
-
+        
         protected virtual async Task<Notification> GetNotificationAsync(int notificationId)
         {
             return await NotificationRepository.GetNotificationAsync(notificationId);
@@ -46,23 +49,43 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task AuthorizeAndSetBannerAsync()
         {
-            PermissionLevel = await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification);
+            var (permissionLevel,  reason) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            PermissionLevel = permissionLevel;
+            PermissionReason = reason;
             NotificationBannerModel = new NotificationBannerModel(Notification, PermissionLevel != PermissionLevel.Edit);
         }
 
-        protected async Task<bool> TryGetLinkedNotifications()
+        protected async Task<bool> TryGetLinkedNotificationsAsync()
         {
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
             return Notification.Group != null;
         }
 
-        protected async Task GetLinkedNotifications()
+        protected async Task GetLinkedNotificationsAsync()
         {
             if (Notification.Group == null)
             {
-                Notification.Group = await GetNotificationGroupAsync();
+                var notificationGroup = await GetNotificationGroupAsync();
+                if (notificationGroup != null)
+                {
+                    notificationGroup.Notifications = notificationGroup.Notifications
+                        .OrderBy(n => n.NotificationDate ?? n.CreationDate)
+                        .ToList();
+                    Notification.Group = notificationGroup;
+                }
                 NumberOfLinkedNotifications = Notification.Group?.Notifications.Count - 1 ?? 0;
             }
+        }
+
+        protected void PrepareBreadcrumbs()
+        {
+            var breadcrumbs = new List<Breadcrumb>
+            {
+                HttpContext.Session.GetTopLevelBreadcrumb(),
+                new Breadcrumb {Label = "Notification", Url = $@"/Notifications/{NotificationId}"}
+            };
+
+            ViewData["Breadcrumbs"] = breadcrumbs;
         }
 
         protected IActionResult ForbiddenResult()

@@ -49,6 +49,7 @@ namespace ntbs_service.Pages.Notifications
 
         public virtual async Task<IActionResult> OnGetAsync(bool isBeingSubmitted = false)
         {
+            PrepareBreadcrumbs();
             Notification = await GetNotificationAsync(NotificationId);
             if (Notification == null)
             {
@@ -77,7 +78,9 @@ namespace ntbs_service.Pages.Notifications
             {
                 return NotFound();
             }
-            if (await AuthorizationService.GetPermissionLevelForNotificationAsync(User, Notification) != PermissionLevel.Edit)
+
+            var (permissionLevel, _) = await _authorizationService.GetPermissionLevelAsync(User, Notification);
+            if (permissionLevel != PermissionLevel.Edit)
             {
                 return ForbiddenResult();
             }
@@ -161,7 +164,7 @@ namespace ntbs_service.Pages.Notifications
         protected async Task SetNotificationProperties(bool isBeingSubmitted)
         {
             Notification.SetValidationContext(Notification, isBeingSubmitted);
-            await GetLinkedNotifications();
+            await GetLinkedNotificationsAsync();
         }
 
         private async Task<bool> TryValidateAndSave()

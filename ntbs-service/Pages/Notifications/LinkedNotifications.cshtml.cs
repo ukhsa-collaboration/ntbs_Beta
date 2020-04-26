@@ -29,7 +29,7 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
 
-            var hasLinkedNotifications = await TryGetLinkedNotifications();
+            var hasLinkedNotifications = await TryGetLinkedNotificationsAsync();
             if (!hasLinkedNotifications)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ namespace ntbs_service.Pages.Notifications
             // Deleted notifications should have their group ID removed so they should not appear here
             LinkedNotifications = Notification.Group.Notifications
                 .Where(n => n.NotificationId != NotificationId)
-                .CreateNotificationBanners(User, AuthorizationService).ToList();
+                .CreateNotificationBanners(User, _authorizationService).ToList();
 
             return Page();
         }

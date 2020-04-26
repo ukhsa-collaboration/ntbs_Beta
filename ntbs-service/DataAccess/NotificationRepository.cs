@@ -66,7 +66,8 @@ namespace ntbs_service.DataAccess
         public IQueryable<Notification> GetRecentNotificationsIQueryable()
         {
             return GetNotificationsWithBasicInformationIQueryable()
-                .Where(n => n.NotificationStatus == NotificationStatus.Notified || n.NotificationStatus == NotificationStatus.Closed)
+                .Where(n => n.NotificationStatus == NotificationStatus.Notified 
+                            || n.NotificationStatus == NotificationStatus.Closed)
                 .OrderByDescending(n => n.SubmissionDate);
         }
 
@@ -88,7 +89,8 @@ namespace ntbs_service.DataAccess
             return await GetBannerReadyNotificationsIQueryable()
                 .SingleOrDefaultAsync(
                     n => n.NotificationId == notificationId
-                         && n.NotificationStatus == NotificationStatus.Notified);
+                         && (n.NotificationStatus == NotificationStatus.Notified 
+                             || n.NotificationStatus == NotificationStatus.Closed));
         }
 
         public async Task<Notification> GetNotificationForAlertCreationAsync(int notificationId)
@@ -123,8 +125,9 @@ namespace ntbs_service.DataAccess
         public async Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber)
         {
             return await _context.Notification
-                .Where(n => (n.NotificationStatus == NotificationStatus.Notified ||
-                             n.NotificationStatus == NotificationStatus.Denotified)
+                .Where(n => (n.NotificationStatus == NotificationStatus.Notified 
+                             || n.NotificationStatus == NotificationStatus.Closed
+                             || n.NotificationStatus == NotificationStatus.Denotified)
                             && n.PatientDetails.NhsNumber == nhsNumber)
                 .Select(n => n.NotificationId)
                 .ToListAsync();

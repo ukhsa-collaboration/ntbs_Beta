@@ -163,8 +163,7 @@ namespace ntbs_service.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ExposureNotificationId")
-                        .IsRequired();
+                    b.Property<int?>("ExposureNotificationId");
 
                     b.Property<string>("ExposureSetting")
                         .IsRequired()
@@ -172,11 +171,14 @@ namespace ntbs_service.Migrations
 
                     b.Property<int>("NotificationId");
 
+                    b.Property<string>("NotifiedToPheStatus")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
                     b.Property<string>("OtherDetails")
                         .HasMaxLength(150);
 
-                    b.Property<int?>("YearOfExposure")
-                        .IsRequired();
+                    b.Property<int?>("YearOfExposure");
 
                     b.HasKey("MBovisExposureToKnownCaseId");
 
@@ -537,7 +539,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("VenueTypeId");
 
-                    b.ToTable("VenueType");
+                    b.ToTable("VenueType","ReferenceData");
 
                     b.HasData(
                         new
@@ -1107,7 +1109,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("IsLegacy", "Name");
 
-                    b.ToTable("Country");
+                    b.ToTable("Country","ReferenceData");
 
                     b.HasData(
                         new
@@ -3152,7 +3154,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("EthnicityId");
 
-                    b.ToTable("Ethnicity");
+                    b.ToTable("Ethnicity","ReferenceData");
 
                     b.HasData(
                         new
@@ -3281,7 +3283,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("TBServiceCode");
 
-                    b.ToTable("Hospital");
+                    b.ToTable("Hospital","ReferenceData");
 
                     b.HasData(
                         new
@@ -8031,10 +8033,10 @@ namespace ntbs_service.Migrations
                         new
                         {
                             HospitalId = new Guid("b93a5546-6c26-4a4b-a2fa-427b2711b861"),
-                            CountryCode = "E92000001",
+                            CountryCode = "N92000002",
                             IsLegacy = false,
                             Name = "SOUTH WEST ACUTE HOSPITAL",
-                            TBServiceCode = "TBS0123"
+                            TBServiceCode = "TBS1000"
                         },
                         new
                         {
@@ -12673,7 +12675,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("LocalAuthority");
+                    b.ToTable("LocalAuthority","ReferenceData");
 
                     b.HasData(
                         new
@@ -13784,7 +13786,7 @@ namespace ntbs_service.Migrations
                     b.HasIndex("PHECCode")
                         .IsUnique();
 
-                    b.ToTable("LocalAuthorityToPHEC");
+                    b.ToTable("LocalAuthorityToPHEC","ReferenceData");
 
                     b.HasData(
                         new
@@ -14890,7 +14892,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("ManualTestTypeId");
 
-                    b.ToTable("ManualTestType");
+                    b.ToTable("ManualTestType","ReferenceData");
 
                     b.HasData(
                         new
@@ -14935,7 +14937,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("SampleTypeId");
 
-                    b.ToTable("ManualTestTypeSampleType");
+                    b.ToTable("ManualTestTypeSampleType","ReferenceData");
 
                     b.HasData(
                         new
@@ -15371,7 +15373,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("OccupationId");
 
-                    b.ToTable("Occupation");
+                    b.ToTable("Occupation","ReferenceData");
 
                     b.HasData(
                         new
@@ -15586,7 +15588,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("PHEC");
+                    b.ToTable("PHEC","ReferenceData");
 
                     b.HasData(
                         new
@@ -15677,21 +15679,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("LocalAuthorityCode");
 
-                    b.ToTable("PostcodeLookup");
-                });
-
-            modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.Region", b =>
-                {
-                    b.Property<int>("RegionId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Label")
-                        .HasMaxLength(200);
-
-                    b.HasKey("RegionId");
-
-                    b.ToTable("Region");
+                    b.ToTable("PostcodeLookup","ReferenceData");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.ReferenceEntities.SampleType", b =>
@@ -15708,7 +15696,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("SampleTypeId");
 
-                    b.ToTable("SampleType");
+                    b.ToTable("SampleType","ReferenceData");
 
                     b.HasData(
                         new
@@ -15862,7 +15850,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("SexId");
 
-                    b.ToTable("Sex");
+                    b.ToTable("Sex","ReferenceData");
 
                     b.HasData(
                         new
@@ -15892,7 +15880,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("SiteId");
 
-                    b.ToTable("Site");
+                    b.ToTable("Site","ReferenceData");
 
                     b.HasData(
                         new
@@ -16011,7 +15999,7 @@ namespace ntbs_service.Migrations
 
                     b.HasIndex("IsLegacy", "Name");
 
-                    b.ToTable("TbService");
+                    b.ToTable("TbService","ReferenceData");
 
                     b.HasData(
                         new
@@ -23415,6 +23403,13 @@ namespace ntbs_service.Migrations
                             IsLegacy = true,
                             Name = "Zachary Merton Hospital",
                             PHECCode = "E45000019"
+                        },
+                        new
+                        {
+                            Code = "TBS1000",
+                            IsLegacy = false,
+                            Name = "SOUTH WEST ACUTE HOSPITAL",
+                            PHECCode = "PHECNI"
                         });
                 });
 
@@ -23433,7 +23428,7 @@ namespace ntbs_service.Migrations
 
                     b.HasKey("TreatmentOutcomeId");
 
-                    b.ToTable("TreatmentOutcome");
+                    b.ToTable("TreatmentOutcome","ReferenceData");
 
                     b.HasData(
                         new
@@ -23563,24 +23558,6 @@ namespace ntbs_service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ntbs_service.Models.SessionState", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset?>("AbsoluteExpiration");
-
-                    b.Property<DateTimeOffset>("ExpiresAtTime");
-
-                    b.Property<long?>("SlidingExpirationInSeconds");
-
-                    b.Property<byte[]>("Value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SessionState");
-                });
-
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityBirthCountryAlert", b =>
                 {
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
@@ -23614,6 +23591,15 @@ namespace ntbs_service.Migrations
                     b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
 
                     b.HasDiscriminator().HasValue("DataQualityDraft");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.DataQualityPotentialDuplicateAlert", b =>
+                {
+                    b.HasBaseType("ntbs_service.Models.Entities.Alerts.Alert");
+
+                    b.Property<int>("DuplicateId");
+
+                    b.HasDiscriminator().HasValue("DataQualityPotientialDuplicate");
                 });
 
             modelBuilder.Entity("ntbs_service.Models.Entities.Alerts.MBovisAlert", b =>
@@ -24057,12 +24043,12 @@ namespace ntbs_service.Migrations
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<string>("CaseInUKStatus")
-                                .HasMaxLength(30);
-
                             b1.Property<int?>("CountryId");
 
                             b1.Property<string>("ExposureToKnownCaseStatus")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("NotifiedToPheStatus")
                                 .HasMaxLength(30);
 
                             b1.Property<int?>("RelatedNotificationId");
@@ -24137,9 +24123,7 @@ namespace ntbs_service.Migrations
 
                             b1.HasIndex("OccupationId");
 
-                            b1.HasIndex("PostcodeToLookup")
-                                .IsUnique()
-                                .HasFilter("[PatientDetails_PostcodeToLookup] IS NOT NULL");
+                            b1.HasIndex("PostcodeToLookup");
 
                             b1.HasIndex("SexId");
 
@@ -24163,8 +24147,8 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("OccupationId");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.PostcodeLookup", "PostcodeLookup")
-                                .WithOne()
-                                .HasForeignKey("ntbs_service.Models.Entities.PatientDetails", "PostcodeToLookup");
+                                .WithMany()
+                                .HasForeignKey("PostcodeToLookup");
 
                             b1.HasOne("ntbs_service.Models.ReferenceEntities.Sex", "Sex")
                                 .WithMany()

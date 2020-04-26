@@ -8,7 +8,6 @@ namespace ntbs_service.Models.Enums
         EnhancedSurveillanceMDR,
         [Display(Name = "Enhanced surveillance - M. bovis")]
         EnhancedSurveillanceMBovis,
-        MissingTreatmentOutcome,
         [Display(Name = "Unmatched lab result")]
         UnmatchedLabResult,
         [Display(Name = "Transfer request")]
@@ -31,7 +30,8 @@ namespace ntbs_service.Models.Enums
         DataQualityTreatmentOutcome36,
         [Display(Name = "Data quality issue - inconsistent values for social risk factors and DOT")]
         DataQualityDotVotAlert,
-        SocialContext,
+        [Display(Name = "Data quality issue - potential duplicate notification")]
+        DataQualityPotientialDuplicate,
         [Display(Name = "Test Alert")]
         Test
     }

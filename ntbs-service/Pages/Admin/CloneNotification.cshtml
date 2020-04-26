@@ -23,7 +23,7 @@
             var hasRelatedNotificationError = !Model.IsValid($"{nameof(Model.NotificationId)}");
             var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
         }
-        <validate-related-notification allow-draft="true" inline-template>
+        <validate-related-notification allow-draft="true" allow-legacy-notifications="false" inline-template>
             <nhs-form-group
                 id="@($"{nameof(Model.NotificationId)}")"
                 nhs-form-group-type="@relatedNotificationGroupState"
@@ -39,9 +39,11 @@
                     asp-validation-for="NotificationId">
                 </span>
                 <input
-                    nhs-input-type="Number"
+                    nhs-input-type="Standard"
                     ref="inputField"
                     v-on:blur="validate"
+                    pattern="[0-9]*"
+                    title="Must contain only digits"
                     is-error-input="@hasRelatedNotificationError"
                     fixed-width="Ten"
                     asp-for="NotificationId">

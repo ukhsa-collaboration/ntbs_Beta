@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using ntbs_service.DataAccess;
@@ -35,7 +34,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityDraftAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-
+            
             var notificationsForBirthCountryAlerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityBirthCountryAlerts();
             foreach (var notification in notificationsForBirthCountryAlerts)
@@ -43,7 +42,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityBirthCountryAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-
+            
             var notificationsForClinicalDatesAlerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityClinicalDatesAlerts();
             foreach (var notification in notificationsForClinicalDatesAlerts)
@@ -51,29 +50,13 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityClinicalDatesAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-
-            var notificationsForClusterAlertsCount = await _dataQualityRepository.GetNotificationsEligibleForDataQualityClusterAlertsCount();
-            var x = 0;
-            while (x < notificationsForClusterAlertsCount)
+            
+            var notificationsForClusterAlerts =
+                await _dataQualityRepository.GetNotificationsEligibleForDataQualityClusterAlerts();
+            foreach (var notification in notificationsForClusterAlerts)
             {
-                var alertsToAdd = new List<Alert>();
-                var notificationsForClusterAlerts =
-                    await _dataQualityRepository.GetUpTo500NotificationsEligibleForDataQualityClusterAlertsWithOffset(x);
-                foreach (var notification in notificationsForClusterAlerts)
-                {
-                    
-                    var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
-                    var populatedAlert = await _alertService.CheckIfAlertExistsAndPopulateIfItDoesNot(alert);
-
-                    if (populatedAlert != null)
-                    {
-                        alertsToAdd.Add(await _alertService.CheckIfAlertExistsAndPopulateIfItDoesNot(alert));   
-                    }
-                    
-                }
-
-                await _alertService.AddRangeAlerts(alertsToAdd);
-                x += 500;
+                var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
+                await _alertService.AddUniqueAlertAsync(alert);
             }
             
             var notificationsForTreatmentOutcome12Alerts =
@@ -83,7 +66,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityTreatmentOutcome12 {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-
+            
             var notificationsForTreatmentOutcome24Alerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
             foreach (var notification in notificationsForTreatmentOutcome24Alerts)
@@ -91,7 +74,7 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityTreatmentOutcome24 {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-
+            
             var notificationsForTreatmentOutcome36Alerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
             foreach (var notification in notificationsForTreatmentOutcome36Alerts)
@@ -99,13 +82,21 @@ namespace ntbs_service.Jobs
                 var alert = new DataQualityTreatmentOutcome36 {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
             }
-
+            
             var notificationsForDotVotAlerts =
                 await _dataQualityRepository.GetNotificationsEligibleForDotVotAlerts();
-            foreach (var notification in notificationsForDotVotAlerts) 
+            foreach (var notification in notificationsForDotVotAlerts)
             {
                 var alert = new DataQualityDotVotAlert {NotificationId = notification.NotificationId};
                 await _alertService.AddUniqueAlertAsync(alert);
+            }
+
+            var possibleDuplicateNotificationIds =
+                await _dataQualityRepository.GetNotificationIdsEligibleForPotentialDuplicateAlerts();
+            foreach (var notification in possibleDuplicateNotificationIds)
+            {
+                var alert = new DataQualityPotentialDuplicateAlert {NotificationId = notification.NotificationId, DuplicateId = notification.DuplicateId};
+                await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
             }
 
             Log.Information($"Finished data quality alerts job");

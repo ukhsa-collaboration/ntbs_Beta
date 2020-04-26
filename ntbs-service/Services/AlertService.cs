@@ -16,6 +16,7 @@ namespace ntbs_service.Services
         Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
         Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert) where T : Alert;
         Task AddRangeAlerts(List<Alert> alerts);
+        Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
@@ -101,10 +102,7 @@ namespace ntbs_service.Services
             {
                 var matchingAlert =
                     await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(alert.NotificationId.Value);
-                if (matchingAlert != null)
-                {
-                    return false;
-                }
+                if (matchingAlert != null) return false;
             }
 
             await PopulateAndAddAlertAsync(alert);
@@ -137,14 +135,22 @@ namespace ntbs_service.Services
             if (alert.NotificationId.HasValue)
             {
                 var matchingAlert = await _alertRepository.GetOpenAlertByNotificationId<T>(alert.NotificationId.Value);
-                if (matchingAlert != null)
-                {
-                    return false;
-                }
+                if (matchingAlert != null) return false;
             }
 
             await PopulateAndAddAlertAsync(alert);
             return true;
+        }
+
+        public async Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert)
+        {
+            if (alert.NotificationId.HasValue)
+            {
+                var matchingAlert = await _alertRepository.GetDuplicateAlertByNotificationIdAndDuplicateId(alert.NotificationId.Value, alert.DuplicateId);
+                if (matchingAlert != null) return;
+            }
+
+            await PopulateAndAddAlertAsync(alert);
         }
 
         public async Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername) where T : Alert
@@ -192,7 +198,7 @@ namespace ntbs_service.Services
             await _alertRepository.AddAlertRangeAsync(alerts);
         }
         
-        private async Task<Alert> PopulateAndAddAlertAsync(Alert alert)
+        private async Task PopulateAndAddAlertAsync(Alert alert)
         {
             if (alert.NotificationId != null)
             {
@@ -208,8 +214,6 @@ namespace ntbs_service.Services
                     alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
                 }
             }
-
-            return alert;
 
             await _alertRepository.AddAlertAsync(alert);
         }

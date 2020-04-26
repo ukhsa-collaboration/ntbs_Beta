@@ -7,14 +7,16 @@
 
     var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
     var requiresSeparator = false;
+    var isOnLinkedNotificationsPage = (bool?) ViewData["OnLinkedNotificationsPage"] ?? false;
 }
 
-@if (!isDraft)
+@if (!isDraft ||  isOnLinkedNotificationsPage)
 {
     var linkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.Overview ? " notification-banner-link--current" : "");
     <div class="@linkClass">
         <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">
-            Notification details
+            @{ var notificationEditLinkText = isOnLinkedNotificationsPage && isDraft ? "Edit draft" : "Notification details"; }
+            @notificationEditLinkText
         </a>
     </div>
     

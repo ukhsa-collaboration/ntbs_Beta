@@ -19,23 +19,33 @@ spec:
           - name: ConnectionStrings__ntbsContext
             valueFrom:
               secretKeyRef:
-                name: int-db-connection-string
-                key: connectionString
+                name: int-connection-strings
+                key: appDb
+          - name: ConnectionStrings__ntbsMigratorContext
+            valueFrom:
+              secretKeyRef:
+                name: int-connection-strings
+                key: appDbMigrator
+          - name: ConnectionStrings__keysContext
+            valueFrom:
+              secretKeyRef:
+                name: int-connection-strings
+                key: appDb
           - name: ConnectionStrings__auditContext
             valueFrom:
               secretKeyRef:
-                name: int-audit-db-connection-string
-                key: connectionString
+                name: int-connection-strings
+                key: auditDb
           - name: ConnectionStrings__reporting
             valueFrom:
               secretKeyRef:
-                name: int-reporting-db-connection-string
-                key: connectionString
+                name: int-connection-strings
+                key: reportingDb
           - name: ConnectionStrings__specimenMatching
             valueFrom:
               secretKeyRef:
-                name: int-specimen-matching-connection-string
-                key: connectionString
+                name: int-connection-strings
+                key: specimenMatchingDb
           - name: ConnectionStrings__migration
             valueFrom:
               secretKeyRef:

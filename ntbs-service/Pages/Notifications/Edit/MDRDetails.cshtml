@@ -18,92 +18,138 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.ExposureToKnownCaseStatus)</nhs-fieldset-legend>
+
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-exposure-conditional">
+                    <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-yes" class="nhsuk-radios__input" type="radio"
+                           value="@Status.Yes" data-aria-controls="conditional-exposure-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="exposure-yes">
                         Yes
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-exposure-conditional">
+                    @{
+                        var countryConditionalValues = Json.Serialize(Model.RenderConditionalCountryFieldIds);
+                        var countryConditionFunctionString = $"function(value) {{ return value && {countryConditionalValues}.indexOf(value) !== -1 }}";
+                    }
                     <validate-input model="MDRDetails" property="RelationshipToCase" shouldvalidatefull="@fullValidation" inline-template>
                         @{
                             var hasRelationshipDescriptionError = !Model.IsValid("MDRDetails.RelationshipToCase");
                             var relationshipDescriptionGroupState = hasRelationshipDescriptionError ? Error : Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@relationshipDescriptionGroupState" aria-describedby="relationship-description-error"
-                            id="MDRDetails-RelationshipToCase">
+                                        id="MDRDetails-RelationshipToCase">
                             <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelationshipDescriptionError"
-                                    asp-validation-for="MDRDetails.RelationshipToCase" id="relationship-description-error"></span>
+                                  asp-validation-for="MDRDetails.RelationshipToCase" id="relationship-description-error">
+                            </span>
                             <label nhs-label-type="Standard" asp-for="MDRDetails.RelationshipToCase">
                                 @Html.DisplayNameFor(model => model.MDRDetails.RelationshipToCase)
                             </label>
                             <input ref="inputField" v-on:blur="validate" is-error-input="@hasRelationshipDescriptionError" nhs-input-type="Standard"
-                                    fixed-width="Ten" asp-for="MDRDetails.RelationshipToCase" type="text">
+                                   fixed-width="Ten" asp-for="MDRDetails.RelationshipToCase" type="text">
                         </nhs-form-group>
                     </validate-input>
-                     @{
-                        var hasCaseInUKError = !Model.IsValid("MDRDetails.CaseInUKStatus");
-                        var caseInUKGroupState = hasCaseInUKError ? Error : Standard;
-                    }
-                    <nhs-form-group nhs-form-group-type="@caseInUKGroupState" aria-describedby="case-in-uk-error" id="MDRDetails-CaseInUKStatus">
+                    <br/>
+                    
+                    <conditional-select-wrapper :value-condition-function='@countryConditionFunctionString' inline-template>
                         <nhs-fieldset>
-                            <nhs-fieldset-legend nhs-legend-size="Standard">@Html.DisplayNameFor(model => model.MDRDetails.CaseInUKStatus)</nhs-fieldset-legend>
-                            <span id="case-in-uk-error" nhs-span-type="ErrorMessage"
-                                        asp-validation-for="MDRDetails.CaseInUKStatus" has-error="@hasCaseInUKError"></span>
-                            <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MDRDetails.CaseInUKStatus" id="uk-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-uk-conditional">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="uk-yes">
-                                        Yes
+                            <nhs-fieldset-legend nhs-legend-size="Standard">
+                                @Html.DisplayNameFor(x => x.MDRDetails.CountryId)
+                            </nhs-fieldset-legend>
+                            @{
+                                var hasCountryError = !Model.IsValid("MDRDetails.CountryId");
+                                var countryGroupState = hasCountryError ? Error : Standard;
+                                var countrySelectErrorClass = hasCountryError ? "nhsuk-select--error" : "";
+                            }
+                            <validate-input model="MDRDetails" property="CountryId" shouldvalidatefull="@fullValidation"
+                                            v-on:validate="handleChange" v-on:mounted="innerValidateMounted" ref="inner-validate" inline-template>
+                                <nhs-form-group nhs-form-group-type="@countryGroupState" id="MDRDetails-CountryId" aria-describedby="exposure-country-error">
+                                    <label nhs-label-type="Standard" asp-for="MDRDetails.CountryId" classes="govuk-visually-hidden">
+                                        @Html.DisplayNameFor(x => x.MDRDetails.CountryId)
                                     </label>
-                                </div>
-                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-uk-conditional">
-                                    <validate-related-notification inline-template>
-                                        @{
-                                            var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
-                                            var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
-                                        }
-                                        <nhs-form-group nhs-form-group-type="@relatedNotificationGroupState" aria-describedby="related-notification-error"
-                                            id="MDRDetails-RelatedNotificationId">
-                                            <span nhs-span-type="ErrorMessage" ref="errorField" has-error="@hasRelatedNotificationError"
-                                                    asp-validation-for="MDRDetails.RelatedNotificationId" id="related-notification-error"></span>
-                                            <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
-                                                @Html.DisplayNameFor(model => model.MDRDetails.RelatedNotificationId)
-                                            </label>
-                                            <input ref="inputField" v-on:blur="validate" is-error-input="@hasRelatedNotificationError" nhs-input-type="Number"
-                                                    fixed-width="Ten" asp-for="MDRDetails.RelatedNotificationId">
-                                            <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
-                                        </nhs-form-group>
-                                    </validate-related-notification>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MDRDetails.CaseInUKStatus" id="uk-no" class="nhsuk-radios__input" type="radio" value="@Status.No" data-aria-controls="conditional-country-conditional">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="uk-no">
-                                        No
-                                    </label>
-                                </div>
-                                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-country-conditional">
-                                    <nhs-form-group nhs-form-group-type="Standard">
-                                        <label nhs-label-type="Standard" asp-for="MDRDetails.CountryId">
-                                            @Html.DisplayNameFor(model => model.MDRDetails.CountryId)
-                                        </label>
-                                        <autocomplete-select placeholder="Specify country" inline-template>
-                                            <select asp-for="MDRDetails.CountryId" asp-items="Model.NotUKCountries" ref="selectElement">
+                                    <span nhs-span-type="ErrorMessage" id="exposure-country-error"
+                                        ref="errorField" asp-validation-for="MDRDetails.CountryId" has-error="@hasCountryError">
+                                    </span>
+                                    <div ref="selectField" data-aria-controls="notified-to-phe-conditional" class=@countrySelectErrorClass>
+                                        <autocomplete-select v-on:validate-input="validate" placeholder="Select Country" validate="true" inline-template>
+                                            <select asp-for="MDRDetails.CountryId" asp-items="Model.Countries" ref="selectElement">
                                                 <option value=""></option>
                                             </select>
                                         </autocomplete-select>
+                                    </div>
+                                </nhs-form-group>
+                            </validate-input>
+
+                            <div ref="conditional-control" id="notified-to-phe-conditional" class="govuk-radios__conditional">
+                                @{
+                                    var pheNotifiedError = !Model.IsValid("MDRDetails.NotifiedToPheStatus");
+                                    var pheNotifiedGroupState = pheNotifiedError ? Error : Standard;
+                                }
+                                <validate-input model="MDRDetails" property="NotifiedToPheStatus" inline-template>
+                                    <nhs-form-group nhs-form-group-type="@pheNotifiedGroupState" ref="formGroup">
+                                        <label nhs-label-type="Standard" asp-for="MDRDetails.NotifiedToPheStatus">
+                                            @Html.DisplayNameFor(x => x.MDRDetails.NotifiedToPheStatus)
+                                        </label>
+                                        <span nhs-span-type="ErrorMessage" id="notified-to-phe-error"
+                                            ref="errorField" asp-validation-for="MDRDetails.NotifiedToPheStatus" has-error="@pheNotifiedError">
+                                        </span>
+                                        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:change="validate">
+                                            <div class="nhsuk-radios__item">
+                                                <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-related-notification">
+                                                <label class="nhsuk-label nhsuk-radios__label" for="notified-yes">
+                                                    Yes
+                                                </label>
+                                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-related-notification">
+                                                    @{
+                                                        var hasRelatedNotificationError = !Model.IsValid("MDRDetails.RelatedNotificationId");
+                                                        var relatedNotificationGroupState = hasRelatedNotificationError ? Error : Standard;
+                                                    }
+                                                    <validate-related-notification allow-draft="true" allow-legacy-notifications="true" inline-template>
+                                                        <nhs-form-group
+                                                            id="@($"{nameof(Model.MDRDetails.RelatedNotificationId)}")"
+                                                            nhs-form-group-type="@relatedNotificationGroupState"
+                                                            aria-describedby="related-notification-error">
+                                                            <label nhs-label-type="Standard" asp-for="MDRDetails.RelatedNotificationId">
+                                                                @Html.DisplayNameFor(m => m.MDRDetails.RelatedNotificationId)
+                                                            </label>
+                                                            <span
+                                                                id="related-notification-error"
+                                                                nhs-span-type="ErrorMessage"
+                                                                ref="errorField"
+                                                                has-error="@hasRelatedNotificationError"
+                                                                asp-validation-for="MDRDetails.RelatedNotificationId">
+                                                            </span>
+                                                            <input
+                                                                nhs-input-type="Standard"
+                                                                ref="inputField"
+                                                                v-on:blur="validate"
+                                                                is-error-input="@hasRelatedNotificationError"
+                                                                fixed-width="Ten"
+                                                                asp-for="MDRDetails.RelatedNotificationId">
+                                                            <notification-info v-if="isValid" v-bind:notification-info="relatedNotification"></notification-info>
+                                                            <notification-warning v-if="hasWarningMessage" v-bind:warning-message="warningMessage"></notification-warning>
+                                                        </nhs-form-group>
+                                                    </validate-related-notification>
+                                                </div>
+                                            </div>
+                                            <div class="nhsuk-radios__item">
+                                                <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
+                                                <label class="nhsuk-label nhsuk-radios__label" for="notified-no">
+                                                    No
+                                                </label>
+                                            </div>
+                                            <div class="nhsuk-radios__item">
+                                                <input asp-for="MDRDetails.NotifiedToPheStatus" id="notified-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                                                <label class="nhsuk-label nhsuk-radios__label" for="notified-unknown">
+                                                    Unknown
+                                                </label>
+                                            </div>
+                                        </div>
                                     </nhs-form-group>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input asp-for="MDRDetails.CaseInUKStatus" id="uk-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
-                                    <label class="nhsuk-label nhsuk-radios__label" for="uk-unknown">
-                                        Unknown
-                                    </label>
-                                </div>
+                                </validate-input>
                             </div>
                         </nhs-fieldset>
-                    </nhs-form-group>
+                    </conditional-select-wrapper>
                 </div>
                 <div class="nhsuk-radios__item">
                     <input asp-for="MDRDetails.ExposureToKnownCaseStatus" id="exposure-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
@@ -120,6 +166,4 @@
             </div>
         </nhs-fieldset>
     </nhs-form-group>
-
-    
 </div>

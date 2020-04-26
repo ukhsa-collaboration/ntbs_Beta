@@ -17,7 +17,8 @@ namespace ntbs_service.Helpers
         {
             return notifications.Select(async n =>
                 {
-                    var fullAccess = await authorizationService.GetPermissionLevelForNotificationAsync(user, n) == PermissionLevel.Edit;
+                    var (permissionLevel, _) = await authorizationService.GetPermissionLevelAsync(user, n);
+                    var fullAccess = permissionLevel == PermissionLevel.Edit;
                     return new NotificationBannerModel(
                         n,
                         showPadlock: !fullAccess,

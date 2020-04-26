@@ -39,8 +39,9 @@ namespace ntbs_service.Services
         /// <param name="notificationId">NTBS ID of the notification to match</param>
         /// <param name="labReferenceNumber">identifier of the specimen</param>
         /// <param name="userName">username to record in the audit trail</param>
+        /// <param name="isMigrating">whether currently migrating legacy notification</param>
         /// <returns>boolean that's true when the proc returned a success flag</returns>
-        Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName);
+        Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool isMigrating = false);
 
         Task<bool> UnmatchAllSpecimensForNotification(int notificationId, string auditUsername);
     }
@@ -179,16 +180,16 @@ namespace ntbs_service.Services
             }
         }
 
-        public async Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName)
+        public async Task<bool> MatchSpecimenAsync(int notificationId, string labReferenceNumber, string userName, bool isMigrating = false)
         {
             using (var connection = new SqlConnection(_specimenMatchingDbConnectionString))
             {
                 connection.Open();
                 var returnValue = await connection.QuerySingleAsync<int>(
                     @"DECLARE @result int;  
-                    exec @result = uspMatchSpecimen @referenceLaboratoryNumber, @notificationId;
+                    exec @result = uspMatchSpecimen @referenceLaboratoryNumber, @notificationId, @isMigrating;
                     SELECT @result",
-                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId});
+                    new {referenceLaboratoryNumber = labReferenceNumber, notificationId, isMigrating});
 
                 var success = returnValue == 0;
 
