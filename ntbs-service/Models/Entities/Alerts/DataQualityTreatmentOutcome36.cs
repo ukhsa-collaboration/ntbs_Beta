@@ -5,7 +5,7 @@ using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.Entities.Alerts
 {
     public class DataQualityTreatmentOutcome36 : Alert
     {

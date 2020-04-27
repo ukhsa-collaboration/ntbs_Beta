@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Claims;
@@ -197,24 +197,38 @@ namespace ntbs_service.Services
 
             await _alertRepository.AddAlertRangeAsync(alerts);
         }
-        
-        private async Task PopulateAndAddAlertAsync(Alert alert)
+
+        private async Task PopulateAlertAsync(Alert alert)
         {
             if (alert.NotificationId != null)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
-                alert.CreationDate = DateTime.Today;
-                if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
-                {
-                    alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
-                }
-
-                if (alert.TbServiceCode == null)
-                {
-                    alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
-                }
+                PopulateAlertAsync(alert, notification);
+            }
+        }
+        
+        private void PopulateAlertAsync(Alert alert, Notification notification)
+        {
+            if (alert.NotificationId == null)
+            {
+                return;
             }
 
+            alert.CreationDate = DateTime.Today;
+            if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
+            {
+                alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
+            }
+
+            if (alert.TbServiceCode == null)
+            {
+                alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
+            }
+        }
+
+        private async Task PopulateAndAddAlertAsync(Alert alert)
+        {
+            await PopulateAlertAsync(alert);
             await _alertRepository.AddAlertAsync(alert);
         }
     }

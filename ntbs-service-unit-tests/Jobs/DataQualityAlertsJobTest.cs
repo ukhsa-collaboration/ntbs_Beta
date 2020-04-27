@@ -29,54 +29,6 @@ namespace ntbs_service_unit_tests.Jobs
         }
 
         [Fact]
-        public async Task OnRun_WithEligibleNotifications_CallsExpectedMethodWithEligibleNotifications()
-        {
-            // Arrange
-            var testNotificationList = Task.FromResult((IList<Notification>)new List<Notification>
-            {
-                new Notification {NotificationId = 1}
-            });
-            var testDuplicateNotificationIdsList = Task.FromResult(
-                (IList<DataQualityRepository.NotificationAndDuplicateIds>)new List<DataQualityRepository.NotificationAndDuplicateIds>
-                {
-                    new DataQualityRepository.NotificationAndDuplicateIds {NotificationId = 1, DuplicateId = 2}
-                });
-
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityDraftAlerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityBirthCountryAlerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClinicalDatesAlerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClusterAlerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDotVotAlerts())
-                .Returns(testNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationIdsEligibleForPotentialDuplicateAlerts())
-                .Returns(testDuplicateNotificationIdsList);
-            
-            // Act
-            await _dataQualityAlertsJob.Run(JobCancellationToken.Null);
-
-            // Assert
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDraftAlert>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityBirthCountryAlert>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClinicalDatesAlert>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityClusterAlert>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome12>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome24>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityTreatmentOutcome36>()));
-            _mockAlertService.Verify(s => s.AddUniqueAlertAsync(It.IsAny<DataQualityDotVotAlert>()));
-            _mockAlertService.Verify(s => s.AddUniquePotentialDuplicateAlertAsync(It.IsAny<DataQualityPotentialDuplicateAlert>()));
-        }
-        
-        [Fact]
         public async Task OnRun_WithNoEligibleNotifications_DoesNotCallAlertCreationMethod()
         {
             // Arrange

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFAuditer;
 using Microsoft.EntityFrameworkCore;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 
@@ -13,6 +12,7 @@ namespace ntbs_service.DataAccess
     {
         Task<Alert> GetOpenAlertByIdAsync(int? alertId);
         Task<T> GetAlertByNotificationIdAndTypeAsync<T>(int notificationId) where T : Alert;
+        Task<bool> AlertWithNotificationIdAndTypeExists<T>(int notificationId) where T : Alert;
         Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert;
 
         Task<DataQualityPotentialDuplicateAlert> GetDuplicateAlertByNotificationIdAndDuplicateId(int notificationId,
@@ -49,6 +49,13 @@ namespace ntbs_service.DataAccess
             return await _context.Alert
                 .OfType<T>()
                 .SingleOrDefaultAsync(m => m.NotificationId == notificationId);
+        }
+
+        public Task<bool> AlertWithNotificationIdAndTypeExists<T>(int notificationId) where T : Alert
+        {
+            return _context.Alert
+                .OfType<T>()
+                .AnyAsync(m => m.NotificationId == notificationId);
         }
 
         public async Task<T> GetOpenAlertByNotificationId<T>(int notificationId) where T : Alert
