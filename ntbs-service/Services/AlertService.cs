@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Claims;
@@ -14,7 +14,7 @@ namespace ntbs_service.Services
     public interface IAlertService
     {
         Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
-        Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert) where T : Alert;
+        Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert, Notification notification) where T : Alert;
         Task AddRangeAlerts(List<Alert> alerts);
         Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
@@ -109,22 +109,19 @@ namespace ntbs_service.Services
             return true;
         }
         
-        public async Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert) where T : Alert
+        public async Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert, Notification notification) where T : Alert
         {
             if (alert.NotificationId.HasValue)
             {
-                var matchingAlert =
-                    await _alertRepository.GetAlertByNotificationIdAndTypeAsync<T>(alert.NotificationId.Value);
-                if (matchingAlert != null)
+                if (await _alertRepository.AlertWithNotificationIdAndTypeExists<T>(alert.NotificationId.Value))
                 {
                     return null;
                 }
             }
-
-            var populatedAlert = await PopulateAndAddAlertAsync(alert);
-            return populatedAlert;
-        }
-
+            PopulateAlertAsync(alert, notification);
+            return alert;
+        } 
+        
         public async Task AddRangeAlerts(List<Alert> alerts)
         {
             await _alertRepository.AddAlertRangeAsync(alerts);
