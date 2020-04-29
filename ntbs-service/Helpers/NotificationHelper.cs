@@ -1,4 +1,5 @@
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Helpers
 {
@@ -16,6 +17,18 @@ namespace ntbs_service.Helpers
                 }
             }
             notification.NotificationSites?.ForEach(site => site.ShouldValidateFull = notification.ShouldValidateFull);
+        }
+
+        public static TreatmentEvent CreateTreatmentStartEvent(Notification notification)
+        {
+            return new TreatmentEvent
+            {
+                NotificationId = notification.NotificationId,
+                TreatmentEventType = TreatmentEventType.TreatmentStart,
+                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate,
+                CaseManager = notification.HospitalDetails.CaseManager,
+                TbService = notification.HospitalDetails.TBService
+            };
         }
     }
 }

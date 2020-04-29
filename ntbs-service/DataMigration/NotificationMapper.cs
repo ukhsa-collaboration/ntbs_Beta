@@ -72,7 +72,7 @@ namespace ntbs_service.DataMigration
                 var socialContextVenues = _migrationRepository.GetSocialContextVenues(legacyIds);
                 var socialContextAddresses = _migrationRepository.GetSocialContextAddresses(legacyIds);
                 var transferEvents =  _migrationRepository.GetTransferEvents(legacyIds);
-                // TODO outcome events
+                var outcomeEvents = _migrationRepository.GetOutcomeEvents(legacyIds);
 
                 var notificationsForGroup = await CombineDataForGroup(
                     legacyIds,
@@ -81,21 +81,22 @@ namespace ntbs_service.DataMigration
                     (await manualTestResults).ToList(),
                     (await socialContextVenues).ToList(),
                     (await socialContextAddresses).ToList(),
-                    (await transferEvents).ToList()
+                    (await transferEvents).ToList(),
+                    (await outcomeEvents).ToList()
                 );
                 resultList.Add(notificationsForGroup);
             }
             return resultList;
         }
 
-        private async Task<IList<Notification>> CombineDataForGroup(
-            IEnumerable<string> legacyIds,
+        private async Task<IList<Notification>> CombineDataForGroup(IEnumerable<string> legacyIds,
             IList<dynamic> notifications,
             IList<dynamic> sitesOfDisease,
             IList<dynamic> manualTestResults,
             IList<dynamic> socialContextVenues,
-            IList<dynamic> socialContextAddresses, 
-            IList<dynamic> transferEvents)
+            IList<dynamic> socialContextAddresses,
+            IList<dynamic> transferEvents,
+            IList<dynamic> outcomeEvents)
         {
             return await Task.WhenAll(legacyIds.Select(async id =>
             {
@@ -120,6 +121,11 @@ namespace ntbs_service.DataMigration
                     .Select(AsTransferEvent)
                     .ToList()
                 );
+                var notificationOutcomeEvents = await Task.WhenAll(outcomeEvents
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsOutcomeEvent)
+                    .ToList()
+                );
 
                 Notification notification = await AsNotificationAsync(rawNotification);
                 notification.NotificationSites = notificationSites;
@@ -129,10 +135,12 @@ namespace ntbs_service.DataMigration
                 };
                 notification.SocialContextAddresses = notificationSocialContextAddresses;
                 notification.SocialContextVenues = notificationSocialContextVenues;
-                foreach (var notificationTransferEvent in notificationTransferEvents)
+                if (notification.NotificationStatus != NotificationStatus.Draft)
                 {
-                    notification.TreatmentEvents.Add(notificationTransferEvent);
+                    notification.TreatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(notification));
                 }
+                notificationTransferEvents.ForEach(notification.TreatmentEvents.Add);
+                notificationOutcomeEvents.ForEach(notification.TreatmentEvents.Add);
                 return notification;
             }));
         }
@@ -518,6 +526,33 @@ namespace ntbs_service.DataMigration
             ev.EventDate = rawEvent.EventDate;
             ev.TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
             ev.CaseManagerUsername = rawEvent.CaseManager;
+
+            // ReSharper disable once InvertIf
+            if (rawEvent.HospitalId is Guid guid)
+            {
+                var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
+                if (tbService == null)
+                {
+                    Log.Warning(
+                        $"No TB service exists for hospital with guid {guid} - treatment event recorded without a service");
+                }
+                else
+                {
+                    ev.TbServiceCode = tbService.Code;
+                }
+            }
+
+            return ev;
+        }
+
+        private async Task<TreatmentEvent> AsOutcomeEvent(dynamic rawEvent)
+        {
+            var ev = new TreatmentEvent();
+            ev.EventDate = rawEvent.EventDate;
+            ev.TreatmentEventType = Converter.GetEnumValue<TreatmentEventType>(rawEvent.TreatmentEventType);
+            ev.TreatmentOutcomeId = rawEvent.TreatmentOutcomeId;
+            ev.CaseManagerUsername = rawEvent.CaseManager;
+            ev.Note = rawEvent.Note;
 
             // ReSharper disable once InvertIf
             if (rawEvent.HospitalId is Guid guid)

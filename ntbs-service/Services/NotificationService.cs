@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
@@ -338,14 +339,7 @@ namespace ntbs_service.Services
 
         private async Task CreateTreatmentEventNotificationStart(Notification notification)
         {
-            await _treatmentEventRepository.AddAsync(new TreatmentEvent
-            {
-                NotificationId = notification.NotificationId,
-                TreatmentEventType = TreatmentEventType.TreatmentStart,
-                EventDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate,
-                CaseManager = notification.HospitalDetails.CaseManager,
-                TbService = notification.HospitalDetails.TBService
-            });
+            await _treatmentEventRepository.AddAsync(NotificationHelper.CreateTreatmentStartEvent(notification));
         }
 
         public async Task<Notification> CreateLinkedNotificationAsync(Notification notification, ClaimsPrincipal user)

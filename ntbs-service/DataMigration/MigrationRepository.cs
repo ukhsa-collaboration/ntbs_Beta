@@ -27,6 +27,7 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<dynamic>> GetSocialContextVenues(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds);
+        Task<IEnumerable<dynamic>> GetOutcomeEvents(List<string> legacyIds);
 
         Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
             IEnumerable<string> legacyIds);
@@ -76,6 +77,12 @@ namespace ntbs_service.DataMigration
         const string TransferEventsQuery = @"
             SELECT *
             FROM MigrationTransferEventsView
+            WHERE OldNotificationId IN @Ids
+        ";
+
+        const string OutcomeEventsQuery = @"
+            SELECT *
+            FROM MigrationTreatmentOutcomeEventsView
             WHERE OldNotificationId IN @Ids
         ";
 
@@ -196,6 +203,15 @@ namespace ntbs_service.DataMigration
             {
                 connection.Open();
                 return await connection.QueryAsync(TransferEventsQuery, new {Ids = legacyIds});
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> GetOutcomeEvents(List<string> legacyIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync(OutcomeEventsQuery, new {Ids = legacyIds});
             }
         }
 
