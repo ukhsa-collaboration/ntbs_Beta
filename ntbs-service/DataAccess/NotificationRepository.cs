@@ -302,6 +302,9 @@ namespace ntbs_service.DataAccess
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.HospitalDetails)
                         .ThenInclude(e => e.TBService)
+                .Include(g => g.Notifications)
+                    .ThenInclude(n => n.HospitalDetails)
+                        .ThenInclude(e => e.CaseManager)
                 .SingleOrDefaultAsync();
         }
 
