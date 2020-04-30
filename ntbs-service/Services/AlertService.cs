@@ -14,8 +14,7 @@ namespace ntbs_service.Services
     public interface IAlertService
     {
         Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
-        Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert, Notification notification) where T : Alert;
-        Task AddRangeAlerts(List<Alert> alerts);
+        Task AddAlertsRangeAsync(List<Alert> alerts);
         Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
@@ -109,20 +108,7 @@ namespace ntbs_service.Services
             return true;
         }
         
-        public async Task<Alert> CheckIfAlertExistsAndPopulateIfItDoesNot<T>(T alert, Notification notification) where T : Alert
-        {
-            if (alert.NotificationId.HasValue)
-            {
-                if (await _alertRepository.AlertWithNotificationIdAndTypeExists<T>(alert.NotificationId.Value))
-                {
-                    return null;
-                }
-            }
-            PopulateAlertAsync(alert, notification);
-            return alert;
-        } 
-        
-        public async Task AddRangeAlerts(List<Alert> alerts)
+        public async Task AddAlertsRangeAsync(List<Alert> alerts)
         {
             await _alertRepository.AddAlertRangeAsync(alerts);
         }
@@ -194,39 +180,30 @@ namespace ntbs_service.Services
 
             await _alertRepository.AddAlertRangeAsync(alerts);
         }
+        
+        private async Task PopulateAndAddAlertAsync(Alert alert)
+        {
+            await PopulateAlertAsync(alert);
+            await _alertRepository.AddAlertAsync(alert);
+        }
 
         private async Task PopulateAlertAsync(Alert alert)
         {
             if (alert.NotificationId != null)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
-                PopulateAlertAsync(alert, notification);
-            }
-        }
-        
-        private void PopulateAlertAsync(Alert alert, Notification notification)
-        {
-            if (alert.NotificationId == null)
-            {
-                return;
-            }
+                
+                alert.CreationDate = DateTime.Today;
+                if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
+                {
+                    alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
+                }
 
-            alert.CreationDate = DateTime.Today;
-            if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
-            {
-                alert.CaseManagerUsername = notification?.HospitalDetails?.CaseManagerUsername;
+                if (alert.TbServiceCode == null)
+                {
+                    alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
+                }
             }
-
-            if (alert.TbServiceCode == null)
-            {
-                alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
-            }
-        }
-
-        private async Task PopulateAndAddAlertAsync(Alert alert)
-        {
-            await PopulateAlertAsync(alert);
-            await _alertRepository.AddAlertAsync(alert);
         }
     }
 }

@@ -6,6 +6,7 @@ using ntbs_service.DataAccess;
 using ntbs_service.Jobs;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using Xunit;
 
@@ -36,23 +37,23 @@ namespace ntbs_service_unit_tests.Jobs
             var emptyDuplicateNotificationIdsList = 
                 Task.FromResult((IList<DataQualityRepository.NotificationAndDuplicateIds>)new List<DataQualityRepository.NotificationAndDuplicateIds>());
 
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityDraftAlerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqDraftAlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityBirthCountryAlerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqBirthCountryAlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClinicalDatesAlerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqClinicalDatesAlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityClusterAlerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqClusterAlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqTreatmentOutcome12AlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqTreatmentOutcome24AlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqTreatmentOutcome36AlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDotVotAlerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationsEligibleForDqDotVotAlertsAsync())
                 .Returns(emptyNotificationList);
-            _mockDataQualityRepository.Setup(r => r.GetNotificationIdsEligibleForPotentialDuplicateAlerts())
+            _mockDataQualityRepository.Setup(r => r.GetNotificationIdsEligibleForDqPotentialDuplicateAlertsAsync())
                 .Returns(emptyDuplicateNotificationIdsList);
             
             // Act
