@@ -246,9 +246,9 @@ namespace ntbs_service.DataMigration
                 return details;
             }
 
-            details.HasBioTherapy = Converter.GetBoolValue(notification.HasBioTherapy);
-            details.HasTransplantation = Converter.GetBoolValue(notification.HasTransplantation);
-            details.HasOther = Converter.GetBoolValue(notification.HasOther);
+            details.HasBioTherapy = Converter.GetNullableBoolValue((int?) notification.HasBioTherapy);
+            details.HasTransplantation = Converter.GetNullableBoolValue((int?) notification.HasTransplantation);
+            details.HasOther = Converter.GetNullableBoolValue((int?) notification.HasOther);
 
             if (details.HasBioTherapy == null && details.HasTransplantation == null && details.HasOther == null)
             {
@@ -299,10 +299,10 @@ namespace ntbs_service.DataMigration
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
-            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HIVTestStatus);
+            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HivTestStatus);
             details.DotStatus = Converter.GetEnumValue<DotStatus>((string) notification.DotStatus);
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
-            details.BCGVaccinationState = notification.BCGVaccination;
+            details.BCGVaccinationState = Converter.GetStatusFromString(notification.BCGVaccinationState);
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
             details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string) notification.TreatmentRegimen);
             details.Notes = notification.Notes;
@@ -447,19 +447,19 @@ namespace ntbs_service.DataMigration
             factors.RiskFactorSmoking.Status = Converter.GetStatusFromString(notification.SmokingStatus);
             
             factors.RiskFactorDrugs.Status = Converter.GetStatusFromString(notification.riskFactorDrugs_Status);
-            factors.RiskFactorDrugs.IsCurrent = Converter.GetBoolValue(notification.riskFactorDrugs_IsCurrent);
-            factors.RiskFactorDrugs.InPastFiveYears = Converter.GetBoolValue(notification.riskFactorDrugs_InPastFiveYears);
-            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = Converter.GetBoolValue(notification.riskFactorDrugs_MoreThanFiveYearsAgo);
+            factors.RiskFactorDrugs.IsCurrent = Converter.GetNullableBoolValue((int?) notification.riskFactorDrugs_IsCurrent);
+            factors.RiskFactorDrugs.InPastFiveYears = Converter.GetNullableBoolValue((int?) notification.riskFactorDrugs_InPastFiveYears);
+            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue((int?) notification.riskFactorDrugs_MoreThanFiveYearsAgo);
             
             factors.RiskFactorHomelessness.Status = Converter.GetStatusFromString(notification.riskFactorHomelessness_Status);
-            factors.RiskFactorHomelessness.IsCurrent = Converter.GetBoolValue(notification.riskFactorHomelessness_IsCurrent);
-            factors.RiskFactorHomelessness.InPastFiveYears = Converter.GetBoolValue(notification.riskFactorHomelessness_InPastFiveYears);
-            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = Converter.GetBoolValue(notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
+            factors.RiskFactorHomelessness.IsCurrent = Converter.GetNullableBoolValue((int?) notification.riskFactorHomelessness_IsCurrent);
+            factors.RiskFactorHomelessness.InPastFiveYears = Converter.GetNullableBoolValue((int?) notification.riskFactorHomelessness_InPastFiveYears);
+            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue((int?) notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
             
             factors.RiskFactorImprisonment.Status = Converter.GetStatusFromString(notification.riskFactorImprisonment_Status);
-            factors.RiskFactorImprisonment.IsCurrent = Converter.GetBoolValue(notification.riskFactorImprisonment_IsCurrent);
-            factors.RiskFactorImprisonment.InPastFiveYears = Converter.GetBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
-            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = Converter.GetBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
+            factors.RiskFactorImprisonment.IsCurrent = Converter.GetNullableBoolValue((int?) notification.riskFactorImprisonment_IsCurrent);
+            factors.RiskFactorImprisonment.InPastFiveYears = Converter.GetNullableBoolValue((int?) notification.riskFactorImprisonment_InPastFiveYears);
+            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue((int?) notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
             return factors;
         }
 

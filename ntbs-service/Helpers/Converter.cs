@@ -10,18 +10,9 @@ namespace ntbs_service.Helpers
             return GetEnumValue<Status>(status);
         }
 
-        public static bool GetBoolValue(int? value)
-        {
-            return value == 1;
-        }
-
         public static bool? GetNullableBoolValue(int? value)
         {
-            if (value == null)
-            {
-                return null;
-            }
-            return GetBoolValue(value);
+            return value == null ? (bool?)null : value == 1;
         }
 
         public static int? ToNullableInt(string stringValue)
