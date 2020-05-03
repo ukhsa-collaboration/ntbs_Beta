@@ -69,16 +69,12 @@ namespace ntbs_service.DataAccess
 
         #region Draft Alerts
         public Task<IList<Notification>> GetNotificationsEligibleForDqDraftAlertsAsync() =>
-            GetNotificationsEligibleForAlerts(DataQualityDraftAlert.NotificationQualifiesExpression, AlertType.DataQualityDraft);
+            GetNotificationsEligibleForAlerts<DataQualityDraftAlert>(DataQualityDraftAlert.NotificationQualifiesExpression);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqDraftAlertsAsync(
-            int count, 
-            int offset) =>
-                GetMultipleNotificationsEligibleForAlertsWithOffset(
-                    DataQualityDraftAlert.NotificationQualifiesExpression,
-                    AlertType.DataQualityDraft,
-                    count, 
-                    offset);
+            int count, int offset) =>
+                GetMultipleNotificationsEligibleForAlertsWithOffset<DataQualityDraftAlert>(
+                    DataQualityDraftAlert.NotificationQualifiesExpression, count, offset);
 
         public Task<int> GetNotificationsEligibleForDqDraftAlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityDraftAlert.NotificationQualifiesExpression);
@@ -87,16 +83,13 @@ namespace ntbs_service.DataAccess
         
         #region Birth Country Alerts
         public Task<IList<Notification>> GetNotificationsEligibleForDqBirthCountryAlertsAsync() =>
-            GetNotificationsEligibleForAlerts(DataQualityBirthCountryAlert.NotificationQualifiesExpression, AlertType.DataQualityBirthCountry);
+            GetNotificationsEligibleForAlerts<DataQualityBirthCountryAlert>(
+                DataQualityBirthCountryAlert.NotificationQualifiesExpression);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqBirthCountryAlertsAsync(
-            int count, 
-            int offset) =>
-                GetMultipleNotificationsEligibleForAlertsWithOffset(
-                    DataQualityBirthCountryAlert.NotificationQualifiesExpression,
-                    AlertType.DataQualityBirthCountry,
-                    count, 
-                    offset);
+            int count, int offset) =>
+                GetMultipleNotificationsEligibleForAlertsWithOffset<DataQualityBirthCountryAlert>(
+                    DataQualityBirthCountryAlert.NotificationQualifiesExpression, count, offset);
 
         public Task<int> GetNotificationsEligibleForDqBirthCountryAlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityBirthCountryAlert.NotificationQualifiesExpression);
@@ -105,16 +98,12 @@ namespace ntbs_service.DataAccess
         
         #region Clinical Dates Alerts
         public Task<IList<Notification>> GetNotificationsEligibleForDqClinicalDatesAlertsAsync() =>
-            GetNotificationsEligibleForAlerts(DataQualityClinicalDatesAlert.NotificationQualifiesExpression, AlertType.DataQualityClinicalDates);
+            GetNotificationsEligibleForAlerts<DataQualityClinicalDatesAlert>(DataQualityClinicalDatesAlert.NotificationQualifiesExpression);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqClinicalDatesAlertsAsync(
-            int count, 
-            int offset) =>
-                GetMultipleNotificationsEligibleForAlertsWithOffset(
-                    DataQualityClinicalDatesAlert.NotificationQualifiesExpression,
-                    AlertType.DataQualityClinicalDates,
-                    count, 
-                    offset);
+            int count, int offset) =>
+                GetMultipleNotificationsEligibleForAlertsWithOffset<DataQualityClinicalDatesAlert>(
+                    DataQualityClinicalDatesAlert.NotificationQualifiesExpression, count, offset);
 
         public Task<int> GetNotificationsEligibleForDqClinicalDatesAlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityClinicalDatesAlert.NotificationQualifiesExpression);
@@ -123,14 +112,11 @@ namespace ntbs_service.DataAccess
         
         #region Cluster Alerts
         public Task<IList<Notification>> GetNotificationsEligibleForDqClusterAlertsAsync() => 
-            GetNotificationsEligibleForAlerts(DataQualityClusterAlert.NotificationQualifiesExpression, AlertType.DataQualityCluster);
+            GetNotificationsEligibleForAlerts<DataQualityClusterAlert>(DataQualityClusterAlert.NotificationQualifiesExpression);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqClusterAlertsAsync(int count, int offset) =>
-                GetMultipleNotificationsEligibleForAlertsWithOffset(
-                    DataQualityClusterAlert.NotificationQualifiesExpression,
-                    AlertType.DataQualityCluster,
-                    count, 
-                    offset);
+                GetMultipleNotificationsEligibleForAlertsWithOffset<DataQualityClusterAlert>(
+                    DataQualityClusterAlert.NotificationQualifiesExpression, count, offset);
 
         public Task<int> GetNotificationsEligibleForDqClusterAlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityClusterAlert.NotificationQualifiesExpression);
@@ -140,14 +126,11 @@ namespace ntbs_service.DataAccess
         #region Dot/Vot Alerts
 
         public Task<IList<Notification>> GetNotificationsEligibleForDqDotVotAlertsAsync() =>
-            GetNotificationsEligibleForAlerts(DataQualityDotVotAlert.NotificationQualifiesExpression, AlertType.DataQualityDotVotAlert);
+            GetNotificationsEligibleForAlerts<DataQualityDotVotAlert>(DataQualityDotVotAlert.NotificationQualifiesExpression);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqDotVotAlertsAsync(int count, int offset) =>
-                GetMultipleNotificationsEligibleForAlertsWithOffset(
-                    DataQualityDotVotAlert.NotificationQualifiesExpression,
-                    AlertType.DataQualityDotVotAlert,
-                    count, 
-                    offset);
+                GetMultipleNotificationsEligibleForAlertsWithOffset<DataQualityDotVotAlert>(
+                    DataQualityDotVotAlert.NotificationQualifiesExpression, count, offset);
 
         public Task<int> GetNotificationsEligibleForDqDotVotAlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityDotVotAlert.NotificationQualifiesExpression);
@@ -156,17 +139,15 @@ namespace ntbs_service.DataAccess
         
         #region Treatment Outcomes 12 Months
         public Task<IList<Notification>> GetNotificationsEligibleForDqTreatmentOutcome12AlertsAsync() =>
-            GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+            GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome12>(
                 DataQualityTreatmentOutcome12.NotificationInQualifyingDateRangeExpression,
-                DataQualityTreatmentOutcome12.NotificationInRangeQualifies,
-                AlertType.DataQualityTreatmentOutcome12);
+                DataQualityTreatmentOutcome12.NotificationInRangeQualifies);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqTreatmentOutcome12AlertsAsync(
-            int count, 
-            int offset) => GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+            int count, int offset) => 
+            GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome12>(
                 DataQualityTreatmentOutcome12.NotificationInQualifyingDateRangeExpression,
                 DataQualityTreatmentOutcome12.NotificationInRangeQualifies,
-                AlertType.DataQualityTreatmentOutcome12,
                 count, 
                 offset);
 
@@ -177,17 +158,15 @@ namespace ntbs_service.DataAccess
         
         #region Treatment Outcomes 24 Months
         public Task<IList<Notification>> GetNotificationsEligibleForDqTreatmentOutcome24AlertsAsync() =>
-            GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+            GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome24>(
                 DataQualityTreatmentOutcome24.NotificationInQualifyingDateRangeExpression,
-                DataQualityTreatmentOutcome24.NotificationInRangeQualifies,
-                AlertType.DataQualityTreatmentOutcome24);
+                DataQualityTreatmentOutcome24.NotificationInRangeQualifies);
 
         public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqTreatmentOutcome24AlertsAsync(
-            int count,
-            int offset) => GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+            int count, int offset) => 
+            GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome24>(
                 DataQualityTreatmentOutcome24.NotificationInQualifyingDateRangeExpression,
                 DataQualityTreatmentOutcome24.NotificationInRangeQualifies,
-                AlertType.DataQualityTreatmentOutcome24,
                 count, 
                 offset);
 
@@ -198,37 +177,33 @@ namespace ntbs_service.DataAccess
         
         #region Treatment Outcomes 36 Months
         public Task<IList<Notification>> GetNotificationsEligibleForDqTreatmentOutcome36AlertsAsync() =>
-            GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+            GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome36>(
                 DataQualityTreatmentOutcome36.NotificationInQualifyingDateRangeExpression,
-                DataQualityTreatmentOutcome36.NotificationInRangeQualifies,
-                AlertType.DataQualityTreatmentOutcome36);
+                DataQualityTreatmentOutcome36.NotificationInRangeQualifies);
 
-        public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqTreatmentOutcome36AlertsAsync(
-            int count, 
-            int offset) => GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+        public Task<IList<Notification>> GetMultipleNotificationsEligibleForDqTreatmentOutcome36AlertsAsync(int count, int offset) => 
+            GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<DataQualityTreatmentOutcome36>(
                 DataQualityTreatmentOutcome36.NotificationInQualifyingDateRangeExpression,
                 DataQualityTreatmentOutcome36.NotificationInRangeQualifies,
-                AlertType.DataQualityTreatmentOutcome36,
                 count, 
                 offset);
 
         public Task<int> GetNotificationsEligibleForDqTreatmentOutcome36AlertsCountAsync() =>
             GetNotificationsEligibleForAlertsCount(DataQualityTreatmentOutcome36.NotificationInQualifyingDateRangeExpression);
         #endregion
-        
-        private async Task<IList<Notification>> GetNotificationsEligibleForAlerts(
-            Expression<Func<Notification, bool>> expression,
-            AlertType alertType)
+
+        private async Task<IList<Notification>> GetNotificationsEligibleForAlerts<T>(
+            Expression<Func<Notification, bool>> expression) where T : Alert
         {
-            return await GetBaseNotificationQueryableForAlerts(alertType)
+            return await GetBaseNotificationQueryableWithoutAlertWithType<T>()
                 .Where(expression)
                 .ToListAsync();
         }
         
-        private async Task<IList<Notification>> GetMultipleNotificationsEligibleForAlertsWithOffset(
-            Expression<Func<Notification, bool>> expression, AlertType alertType, int count, int offset)
+        private async Task<IList<Notification>> GetMultipleNotificationsEligibleForAlertsWithOffset<T>(
+            Expression<Func<Notification, bool>> expression, int count, int offset) where T : Alert
         {
-            return await GetNotificationQueryableForNotifiedDataQualityAlerts(alertType)
+            return await GetNotificationQueryableForNotifiedDataQualityAlerts<T>()
                 .Where(expression)
                 .OrderBy(n => n.NotificationId)
                 .Skip(offset)
@@ -243,33 +218,29 @@ namespace ntbs_service.DataAccess
                 .CountAsync();
         }
         
-        private async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+        private async Task<IList<Notification>> GetNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<T>(
             Expression<Func<Notification, bool>> notificationInQualifyingDateRangeExpression,
-            Func<Notification, bool> notificationInRangeQualifies,
-            AlertType alertType
-        )
+            Func<Notification, bool> notificationInRangeQualifies) where T : Alert
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts(alertType)
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts<T>()
                 .Where(notificationInQualifyingDateRangeExpression)
                 .ToListAsync();
             return notificationsInDateRange
                 .Where(notificationInRangeQualifies)
                 .ToList();    
         }
-        
-        private async Task<IList<Notification>> GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts(
+
+        private async Task<IList<Notification>> GetMultipleNotificationsEligibleForDataQualityTreatmentOutcomeAlerts<T>(
             Expression<Func<Notification, bool>> notificationInQualifyingDateRangeExpression,
-            Func<Notification, bool> notificationInRangeQualifies,
-            AlertType alertType,
+            Func<Notification, bool> notificationInRangeQualifies, 
             int count,
-            int offset
-        )
+            int offset) where T : Alert
         {
             // IsTreatmentOutcomeMissingAtXYears cannot be translated to SQL so will be calculated in memory so the
             // method has been split up into a DB query and an in memory where statement separated by the ToListAsync call
-            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts(alertType)
+            var notificationsInDateRange = await GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts<T>()
                 .Where(notificationInQualifyingDateRangeExpression)
                 .OrderBy(n => n.NotificationId)
                 .Skip(offset)
@@ -322,7 +293,8 @@ namespace ntbs_service.DataAccess
             public int DuplicateId { get; set; }
         }
 
-        private IQueryable<Notification> GetBaseNotificationQueryableForAlerts(AlertType alertType)
+        // Get notifications which doesn't have any alerts with certain alert type
+        private IQueryable<Notification> GetBaseNotificationQueryableWithoutAlertWithType<T>() where T : Alert
         {
             return _context.Notification
                 .Include(n => n.HospitalDetails)
@@ -330,26 +302,26 @@ namespace ntbs_service.DataAccess
                 .Where(n => n.NotificationStatus != NotificationStatus.Closed
                             && n.NotificationStatus != NotificationStatus.Deleted
                             && n.NotificationStatus != NotificationStatus.Denotified
-                            && n.Alerts.All(a => a.AlertType != alertType));
+                            && n.Alerts.All(a => a is T));
         }
         
-        private IQueryable<Notification> GetBaseNotificationQueryableWithTreatmentEventsForAlerts(AlertType alertType)
+        private IQueryable<Notification> GetBaseNotificationQueryableWithTreatmentEventsForAlerts<T>() where T : Alert
         {
-            return GetBaseNotificationQueryableForAlerts(alertType)
+            return GetBaseNotificationQueryableWithoutAlertWithType<T>()
                 .Include(n => n.TreatmentEvents)
                     .ThenInclude(t => t.TreatmentOutcome);
         }
 
-        private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts(AlertType alertType)
+        private IQueryable<Notification> GetNotificationQueryableForNotifiedDataQualityAlerts<T>() where T : Alert
         {
-            return GetBaseNotificationQueryableForAlerts(alertType)
+            return GetBaseNotificationQueryableWithoutAlertWithType<T>()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
                 .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT));
         }
         
-        private IQueryable<Notification> GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts(AlertType alertType)
+        private IQueryable<Notification> GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts<T>() where T : Alert
         {
-            return GetBaseNotificationQueryableWithTreatmentEventsForAlerts(alertType)
+            return GetBaseNotificationQueryableWithTreatmentEventsForAlerts<T>()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified);
         }
     }
