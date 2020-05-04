@@ -12,7 +12,7 @@ namespace ntbs_service.Migrations
         {
             migrationBuilder.Sql("ALTER TABLE [ReferenceData].PostcodeLookup ADD PCT varchar(10)");
             
-            var pathToFile = Path.Combine(Environment.CurrentDirectory, "Models/SeedData/PostcodePCT.csv");
+            var pathToFile = Path.Combine(Environment.CurrentDirectory, "Models/SeedData/Postcodes.csv");
             const int itemsPerUpdate = 1000;
 
             var postcodeArray = new string[itemsPerUpdate];
@@ -26,7 +26,7 @@ namespace ntbs_service.Migrations
                 csvReader.ReadHeader();
                 while (csvReader.Read())
                 {
-                    postcodeArray[index] = csvReader.GetField<string>("POSTCODE");
+                    postcodeArray[index] = csvReader.GetField<string>("Pcode");
                     pctArray[index] = csvReader.GetField<string>("PCT");
                     index++;
 
