@@ -153,6 +153,10 @@ namespace ntbs_service.DataMigration
             notification.LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null;
             notification.NotificationDate = rawNotification.NotificationDate;
             notification.CreationDate = DateTime.Now;
+            notification.NotificationStatus = rawNotification.DenotificationDate == null
+                ? NotificationStatus.Notified
+                : NotificationStatus.Denotified;
+            
             notification.PatientDetails = ExtractPatientDetails(rawNotification);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
@@ -164,9 +168,7 @@ namespace ntbs_service.DataMigration
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
             notification.PatientTBHistory = ExtractPatientTBHistory(rawNotification);
             notification.TreatmentEvents = await ExtractTreatmentEventsAsync(rawNotification);
-            notification.NotificationStatus = rawNotification.DenotificationDate == null
-                ? NotificationStatus.Notified
-                : NotificationStatus.Denotified;
+            notification.MDRDetails = ExtractMdrDetailsAsync(rawNotification);
 
             return notification;
         }
@@ -518,6 +520,22 @@ namespace ntbs_service.DataMigration
                     });
             }
             return treatmentEvents;
+        }
+
+        private MDRDetails ExtractMdrDetailsAsync(dynamic rawNotification)
+        {
+            var mdr = new MDRDetails();
+            mdr.ExposureToKnownCaseStatus = Converter.GetStatusFromString(rawNotification.mdr_ExposureToKnownTbCase);
+            mdr.RelationshipToCase = rawNotification.mdr_RelationshipToCase;
+            // Notification.mdr_CaseInUKStatus is not used, as in NTBS it's calculated on the fly
+            mdr.CountryId = rawNotification.mdr_CountryId;
+            if (rawNotification.mdr_RelatedNotificationId != null)
+            {
+                mdr.NotifiedToPheStatus = Status.Yes;
+                mdr.RelatedNotificationId = rawNotification.mdr_RelatedNotificationId;
+            }
+
+            return mdr;
         }
 
         private async Task<TreatmentEvent> AsTransferEvent(dynamic rawEvent)
