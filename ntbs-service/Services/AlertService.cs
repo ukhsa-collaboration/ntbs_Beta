@@ -14,6 +14,7 @@ namespace ntbs_service.Services
     public interface IAlertService
     {
         Task<bool> AddUniqueAlertAsync<T>(T alert) where T : Alert;
+        Task AddAlertsRangeAsync(List<Alert> alerts);
         Task AddUniquePotentialDuplicateAlertAsync(DataQualityPotentialDuplicateAlert alert);
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
@@ -106,6 +107,11 @@ namespace ntbs_service.Services
             await PopulateAndAddAlertAsync(alert);
             return true;
         }
+        
+        public async Task AddAlertsRangeAsync(List<Alert> alerts)
+        {
+            await _alertRepository.AddAlertRangeAsync(alerts);
+        }
 
         public async Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert
         {
@@ -177,9 +183,16 @@ namespace ntbs_service.Services
         
         private async Task PopulateAndAddAlertAsync(Alert alert)
         {
+            await PopulateAlertAsync(alert);
+            await _alertRepository.AddAlertAsync(alert);
+        }
+
+        private async Task PopulateAlertAsync(Alert alert)
+        {
             if (alert.NotificationId != null)
             {
                 var notification = await _notificationRepository.GetNotificationAsync(alert.NotificationId.Value);
+                
                 alert.CreationDate = DateTime.Today;
                 if (alert.CaseManagerUsername == null && alert.AlertType != AlertType.TransferRequest)
                 {
@@ -191,8 +204,6 @@ namespace ntbs_service.Services
                     alert.TbServiceCode = notification?.HospitalDetails?.TBServiceCode;
                 }
             }
-
-            await _alertRepository.AddAlertAsync(alert);
         }
     }
 }

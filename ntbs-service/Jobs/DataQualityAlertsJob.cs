@@ -1,10 +1,12 @@
-﻿using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using Serilog;
 
@@ -14,6 +16,7 @@ namespace ntbs_service.Jobs
     {
         private readonly IAlertService _alertService;
         private readonly IDataQualityRepository _dataQualityRepository;
+        private const int CountPerBatch = 500;
 
         public DataQualityAlertsJob(
             IAlertService alertService,
@@ -23,79 +26,101 @@ namespace ntbs_service.Jobs
             _dataQualityRepository = dataQualityRepository;
         }
 
+        private delegate Task<int> GetNotificationsEligibleForDqAlertsCount();
+        private delegate Task<IList<Notification>> GetMultipleNotificationsEligibleForDataQualityDraftAlerts(
+            int countPerBatch, 
+            int offset);
+
+        private async Task CreateDraftAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDraftAlert>(
+            _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqDraftAlertsAsync
+        );
+        
+        private async Task CreateBirthCountryAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityBirthCountryAlert>(
+            _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqBirthCountryAlertsAsync
+        );
+
+        private async Task CreateClinicalDatesAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClinicalDatesAlert>(
+            _dataQualityRepository.GetNotificationsEligibleForDqClinicalDatesAlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqClinicalDatesAlertsAsync
+        );
+
+        private async Task CreateClusterAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClusterAlert>(
+            _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqClusterAlertsAsync
+        );
+        
+        private async Task CreateDotVotAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDotVotAlert>(
+            _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqDotVotAlertsAsync
+        );
+
+        private async Task CreateTreatmentOutcome12MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome12>(
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome12AlertsAsync
+        );
+        
+        private async Task CreateTreatmentOutcome24MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome24>(
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome24AlertsAsync
+        );
+
+        private async Task CreateTreatmentOutcome36MonthAlertsInBulkAsync()  => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome36>(
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsCountAsync,
+            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome36AlertsAsync
+        );
+        
+        private async Task CreateAlertsInBulkAsync<T>(
+            GetNotificationsEligibleForDqAlertsCount getCount,
+            GetMultipleNotificationsEligibleForDataQualityDraftAlerts getNotifications) where T : Alert
+        {
+            var notificationsForAlertsCount = await getCount();
+            var offset = 0;
+            while (offset < notificationsForAlertsCount)
+            {
+                var notificationsForAlerts = await getNotifications(CountPerBatch, offset);
+                
+                List<Alert> dqAlerts = notificationsForAlerts
+                    .Select(n => {
+                        T alert = (T)Activator.CreateInstance(typeof(T));
+                        alert.NotificationId = n.NotificationId;
+                        alert.TbServiceCode = n?.HospitalDetails?.TBServiceCode;
+                        if (alert.AlertType != AlertType.TransferRequest)
+                        {
+                            alert.CaseManagerUsername = n?.HospitalDetails?.CaseManagerUsername;
+                        }
+
+                        return (Alert) alert;
+                    })
+                    .ToList();
+
+                await _alertService.AddAlertsRangeAsync(dqAlerts);
+                offset += CountPerBatch;
+            }
+        }
+        
         public async Task Run(IJobCancellationToken token)
         {
             Log.Information($"Starting data quality alerts job");
-
-            var notificationsForDraftAlerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityDraftAlerts();
-            foreach (var notification in notificationsForDraftAlerts)
-            {
-                var alert = new DataQualityDraftAlert {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
+            await CreateDraftAlertsInBulkAsync();
+            await CreateBirthCountryAlertsInBulkAsync();
+            await CreateClinicalDatesAlertsInBulkAsync();
+            await CreateClusterAlertsInBulkAsync();
+            await CreateDotVotAlertsInBulkAsync();
+            await CreateTreatmentOutcome12MonthAlertsInBulkAsync();
+            await CreateTreatmentOutcome24MonthAlertsInBulkAsync();
+            await CreateTreatmentOutcome36MonthAlertsInBulkAsync();
             
-            var notificationsForBirthCountryAlerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityBirthCountryAlerts();
-            foreach (var notification in notificationsForBirthCountryAlerts)
-            {
-                var alert = new DataQualityBirthCountryAlert {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-            
-            var notificationsForClinicalDatesAlerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityClinicalDatesAlerts();
-            foreach (var notification in notificationsForClinicalDatesAlerts)
-            {
-                var alert = new DataQualityClinicalDatesAlert {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-            
-            var notificationsForClusterAlerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityClusterAlerts();
-            foreach (var notification in notificationsForClusterAlerts)
-            {
-                var alert = new DataQualityClusterAlert {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-            
-            var notificationsForTreatmentOutcome12Alerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome12Alerts();
-            foreach (var notification in notificationsForTreatmentOutcome12Alerts)
-            {
-                var alert = new DataQualityTreatmentOutcome12 {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-            
-            var notificationsForTreatmentOutcome24Alerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome24Alerts();
-            foreach (var notification in notificationsForTreatmentOutcome24Alerts)
-            {
-                var alert = new DataQualityTreatmentOutcome24 {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-            
-            var notificationsForTreatmentOutcome36Alerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDataQualityTreatmentOutcome36Alerts();
-            foreach (var notification in notificationsForTreatmentOutcome36Alerts)
-            {
-                var alert = new DataQualityTreatmentOutcome36 {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-            
-            var notificationsForDotVotAlerts =
-                await _dataQualityRepository.GetNotificationsEligibleForDotVotAlerts();
-            foreach (var notification in notificationsForDotVotAlerts)
-            {
-                var alert = new DataQualityDotVotAlert {NotificationId = notification.NotificationId};
-                await _alertService.AddUniqueAlertAsync(alert);
-            }
-
             var possibleDuplicateNotificationIds =
-                await _dataQualityRepository.GetNotificationIdsEligibleForPotentialDuplicateAlerts();
+                await _dataQualityRepository.GetNotificationIdsEligibleForDqPotentialDuplicateAlertsAsync();
             foreach (var notification in possibleDuplicateNotificationIds)
             {
-                var alert = new DataQualityPotentialDuplicateAlert {NotificationId = notification.NotificationId, DuplicateId = notification.DuplicateId};
+                var alert = new DataQualityPotentialDuplicateAlert
+                {
+                    NotificationId = notification.NotificationId, 
+                    DuplicateId = notification.DuplicateId
+                };
                 await _alertService.AddUniquePotentialDuplicateAlertAsync(alert);
             }
 

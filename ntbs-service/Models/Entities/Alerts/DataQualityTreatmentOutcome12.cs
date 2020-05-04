@@ -5,20 +5,20 @@ using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
-namespace ntbs_service.Models.Entities
+namespace ntbs_service.Models.Entities.Alerts
 {
-    public class DataQualityTreatmentOutcome24 : Alert
+    public class DataQualityTreatmentOutcome12 : Alert
     {
         public static readonly Expression<Func<Notification, bool>> NotificationInQualifyingDateRangeExpression =
-            n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-2);
+            n => (n.ClinicalDetails.TreatmentStartDate ?? n.NotificationDate) < DateTime.Today.AddYears(-1);
 
         public static readonly Func<Notification, bool> NotificationInRangeQualifies =
-            n => TreatmentOutcomesHelper.IsTreatmentOutcomeMissingAtXYears(n, 2);
+            n => TreatmentOutcomesHelper.IsTreatmentOutcomeMissingAtXYears(n, 1);
 
-        public static readonly Func<Notification, bool> NotificationQualifies = n =>
-            NotificationInQualifyingDateRangeExpression.Compile()(n) && NotificationInRangeQualifies(n);
+        public static readonly Func<Notification, bool> NotificationQualifies = 
+            n => NotificationInQualifyingDateRangeExpression.Compile()(n) && NotificationInRangeQualifies(n);
 
-        public override string Action => 
+        public override string Action =>
             "Please provide treatment outcome with appropriate date";
 
         public override string ActionLink =>
@@ -27,9 +27,9 @@ namespace ntbs_service.Models.Entities
                 NotificationId.Value,
                 NotificationSubPaths.EditTreatmentEvents);
 
-        public DataQualityTreatmentOutcome24()
+        public DataQualityTreatmentOutcome12()
         {
-            AlertType = AlertType.DataQualityTreatmentOutcome24;
+            AlertType = AlertType.DataQualityTreatmentOutcome12;
         }
     }
 }
