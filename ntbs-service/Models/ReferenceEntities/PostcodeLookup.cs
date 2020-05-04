@@ -11,5 +11,7 @@ namespace ntbs_service.Models.ReferenceEntities
         public virtual LocalAuthority LocalAuthority { get; set; }
 
         public string CountryCode { get; set; }
+        
+        public string PCT { get; set; }
     }
 }
