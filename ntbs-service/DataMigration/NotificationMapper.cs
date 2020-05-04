@@ -314,7 +314,7 @@ namespace ntbs_service.DataMigration
             var details = new ContactTracing();
             details.AdultsIdentified = rawNotification.AdultsIdentified;
             details.ChildrenIdentified = rawNotification.ChildrenIdentified;
-            details.AdultsScreened = rawNotification.AdultsScreened;
+            details.AdultsScreened = rawNotification.AdultsSjcreened;
             details.ChildrenScreened = rawNotification.ChildrenScreened;
             details.AdultsActiveTB = rawNotification.AdultsActiveTB;
             details.ChildrenActiveTB = rawNotification.ChildrenActiveTB;
