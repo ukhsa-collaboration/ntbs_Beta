@@ -200,7 +200,7 @@ namespace ntbs_integration_tests.Helpers
                     Username = "Developer@ntbs.phe.com",
                     GivenName = "BaseTestCase",
                     FamilyName = "BaseTestManager",
-                    AdGroups = "Global.NIS.NTBS.NTA",
+                    AdGroups = "Global.NIS.NTBS.NTS",
                     IsActive = true,
                     IsCaseManager = true
                 }

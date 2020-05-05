@@ -18,7 +18,7 @@ namespace ntbs_service_unit_tests.Services
 {
     public class UserServiceTest
     {
-        private const string NationalTeam = "NTA";
+        private const string NationalTeam = "NTS";
         private const string ServicePrefix = "Service";
         private readonly IUserService _service;
         private readonly AdfsOptions _options = new AdfsOptions
