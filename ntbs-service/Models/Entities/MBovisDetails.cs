@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
@@ -12,6 +13,16 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public class MBovisDetails : ModelBase, IOwnedEntityForAuditing
     {
+        
+        [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+        public MBovisDetails()
+        {
+            MBovisAnimalExposures = new List<MBovisAnimalExposure>();
+            MBovisExposureToKnownCases = new List<MBovisExposureToKnownCase>();
+            MBovisOccupationExposures = new List<MBovisOccupationExposure>();
+            MBovisUnpasteurisedMilkConsumptions = new List<MBovisUnpasteurisedMilkConsumption>();
+        }
+
         public int NotificationId { get; set; }
 
         [AssertThat(nameof(ExposureToKnownCasesIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoExposureRecords)]

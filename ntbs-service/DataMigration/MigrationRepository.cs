@@ -28,6 +28,10 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds);
         Task<IEnumerable<dynamic>> GetOutcomeEvents(List<string> legacyIds);
+        Task<IEnumerable<dynamic>> GetMigrationMBovisAnimalExposure(List<string> legacyIds);
+        Task<IEnumerable<dynamic>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds);
+        Task<IEnumerable<dynamic>> GetMigrationMBovisOccupationExposures(List<string> legacyIds);
+        Task<IEnumerable<dynamic>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
 
         Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
             IEnumerable<string> legacyIds);
@@ -40,7 +44,7 @@ namespace ntbs_service.DataMigration
             FROM MigrationNotificationsView n
             WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids";
 
-        const string NotificationsIdsWithGroupIdsByDateQuery = 
+        const string NotificationsIdsWithGroupIdsByDateQuery =
             @"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
             WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate";
@@ -85,6 +89,31 @@ namespace ntbs_service.DataMigration
             FROM MigrationTreatmentOutcomeEventsView
             WHERE OldNotificationId IN @Ids
         ";
+
+        const string MigrationMBovisAnimalExposureQuery = @"
+            SELECT *
+            FROM MigrationMBovisAnimalExposureView
+            WHERE OldNotificationId IN @Ids
+        ";
+
+        const string MigrationMBovisExposureToKnownCaseQuery = @"
+            SELECT *
+            FROM MigrationMBovisExposureToKnownCaseView
+            WHERE OldNotificationId IN @Ids
+        ";
+
+        const string MigrationMBovisOccupationExposuresQuery = @"
+            SELECT *
+            FROM MigrationMBovisOccupationExposuresView
+            WHERE OldNotificationId IN @Ids
+        ";
+
+        const string MigrationMBovisUnpasteurisedMilkConsumptionQuery = @"
+            SELECT *
+            FROM MigrationMBovisUnpasteurisedMilkConsumptionView
+            WHERE OldNotificationId IN @Ids
+        ";
+
 
         const string ReferenceLaboratoryMatchesQuery = @"
             SELECT LegacyId, ReferenceLaboratoryNumber
@@ -133,7 +162,8 @@ namespace ntbs_service.DataMigration
             {
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
-                        NotificationIdsWithGroupIdsByIdQuery, new {Ids = legacyIds}))
+                        NotificationIdsWithGroupIdsByIdQuery,
+                        new {Ids = legacyIds}))
                     .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
             }
         }
@@ -215,6 +245,43 @@ namespace ntbs_service.DataMigration
             }
         }
 
+        public async Task<IEnumerable<dynamic>> GetMigrationMBovisAnimalExposure(List<string> legacyIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync(MigrationMBovisAnimalExposureQuery, new {Ids = legacyIds});
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync(MigrationMBovisExposureToKnownCaseQuery, new {Ids = legacyIds});
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> GetMigrationMBovisOccupationExposures(List<string> legacyIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync(MigrationMBovisOccupationExposuresQuery, new {Ids = legacyIds});
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync(MigrationMBovisUnpasteurisedMilkConsumptionQuery,
+                    new {Ids = legacyIds});
+            }
+        }
+
         public async Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
             GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
         {
@@ -228,7 +295,8 @@ namespace ntbs_service.DataMigration
             {
                 connection.Open();
                 return (await connection.QueryAsync<(int LegacyId, string ReferenceLaboratoryNumber)>(
-                        ReferenceLaboratoryMatchesQuery, new {Ids = intIds}))
+                        ReferenceLaboratoryMatchesQuery,
+                        new {Ids = intIds}))
                     .Select(tuple =>
                     {
                         string legacyId = tuple.LegacyId.ToString();

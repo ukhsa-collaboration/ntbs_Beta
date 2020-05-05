@@ -326,6 +326,11 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(notification.SocialContextAddresses.SelectMany(ValidateObject));
             validationsResults.AddRange(notification.SocialContextVenues.SelectMany(ValidateObject));
             validationsResults.AddRange(notification.TreatmentEvents.SelectMany(ValidateObject));
+            validationsResults.AddRange(ValidateObject(notification.MBovisDetails));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisAnimalExposures.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisExposureToKnownCases.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisOccupationExposures.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.SelectMany(ValidateObject));
 
             validationsResults.AddRange(await ValidateAndSetCaseManager(notification.HospitalDetails));
 

@@ -73,6 +73,10 @@ namespace ntbs_service.DataMigration
                 var socialContextAddresses = _migrationRepository.GetSocialContextAddresses(legacyIds);
                 var transferEvents =  _migrationRepository.GetTransferEvents(legacyIds);
                 var outcomeEvents = _migrationRepository.GetOutcomeEvents(legacyIds);
+                var mbovisAnimalExposure = _migrationRepository.GetMigrationMBovisAnimalExposure(legacyIds);
+                var mbovisExposureToKnownCase = _migrationRepository.GetMigrationMBovisExposureToKnownCase(legacyIds);
+                var mbovisOccupationExposures = _migrationRepository.GetMigrationMBovisOccupationExposures(legacyIds);
+                var mbovisUnpasteurisedMilkConsumption = _migrationRepository.GetMigrationMBovisUnpasteurisedMilkConsumption(legacyIds);
 
                 var notificationsForGroup = await CombineDataForGroup(
                     legacyIds,
@@ -82,7 +86,11 @@ namespace ntbs_service.DataMigration
                     (await socialContextVenues).ToList(),
                     (await socialContextAddresses).ToList(),
                     (await transferEvents).ToList(),
-                    (await outcomeEvents).ToList()
+                    (await outcomeEvents).ToList(),
+                    (await mbovisAnimalExposure).ToList(),
+                    (await mbovisExposureToKnownCase).ToList(),
+                    (await mbovisOccupationExposures).ToList(),
+                    (await mbovisUnpasteurisedMilkConsumption).ToList()
                 );
                 resultList.Add(notificationsForGroup);
             }
@@ -96,7 +104,11 @@ namespace ntbs_service.DataMigration
             IList<dynamic> socialContextVenues,
             IList<dynamic> socialContextAddresses,
             IList<dynamic> transferEvents,
-            IList<dynamic> outcomeEvents)
+            IList<dynamic> outcomeEvents,
+            IList<dynamic> mbovisAnimalExposures,
+            IList<dynamic> mbovisExposureToKnownCase,
+            IList<dynamic> mbovisOccupationExposures,
+            IList<dynamic> mbovisUnpasteurisedMilkConsumption)
         {
             return await Task.WhenAll(legacyIds.Select(async id =>
             {
@@ -126,6 +138,22 @@ namespace ntbs_service.DataMigration
                     .Select(AsOutcomeEvent)
                     .ToList()
                 );
+                var notificationMBovisAnimalExposures = mbovisAnimalExposures
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsMBovisAnimalExposure)
+                    .ToList();
+                var notificationMBovisExposureToKnownCase = mbovisExposureToKnownCase
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsMBovisExposureToKnownCase)
+                    .ToList();
+                var notificationMBovisOccupationExposures = mbovisOccupationExposures
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsMBovisOccupationExposure)
+                    .ToList();
+                var notificationMBovisUnpasteurisedMilkConsumption = mbovisUnpasteurisedMilkConsumption
+                    .Where(sc => sc.OldNotificationId == id)
+                    .Select(AsMBovisUnpasteurisedMilkConsumption)
+                    .ToList();                
 
                 Notification notification = await AsNotificationAsync(rawNotification);
                 notification.NotificationSites = notificationSites;
@@ -141,6 +169,27 @@ namespace ntbs_service.DataMigration
                 }
                 notificationTransferEvents.ForEach(notification.TreatmentEvents.Add);
                 notificationOutcomeEvents.ForEach(notification.TreatmentEvents.Add);
+                
+                if (notificationMBovisAnimalExposures.Any())
+                {
+                    notification.MBovisDetails.HasAnimalExposure = true;
+                    notification.MBovisDetails.MBovisAnimalExposures = notificationMBovisAnimalExposures;
+                }
+                if (notificationMBovisExposureToKnownCase.Any())
+                {
+                    notification.MBovisDetails.HasExposureToKnownCases = true;
+                    notification.MBovisDetails.MBovisExposureToKnownCases = notificationMBovisExposureToKnownCase;
+                }
+                if (notificationMBovisOccupationExposures.Any())
+                {
+                    notification.MBovisDetails.HasOccupationExposure = true;
+                    notification.MBovisDetails.MBovisOccupationExposures = notificationMBovisOccupationExposures;
+                }
+                if (notificationMBovisUnpasteurisedMilkConsumption.Any())
+                {
+                    notification.MBovisDetails.HasUnpasteurisedMilkConsumption = true;
+                    notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions = notificationMBovisUnpasteurisedMilkConsumption;
+                }
                 return notification;
             }));
         }
@@ -212,7 +261,7 @@ namespace ntbs_service.DataMigration
                 .GroupBy(site => site.SiteId)
                 .Select(clashingSites =>
                 {
-                    // .. to avoid data loss, we collect the freetext entered in all the possible members of the clash
+                    // .. to avoid data loss, we collect the free text entered in all the possible members of the clash
                     var combinedDescription = String.Join(", ", clashingSites.Select(site => site.SiteDescription));
                     var canonicalSite = clashingSites.First();
                     canonicalSite.SiteDescription = combinedDescription;
@@ -501,7 +550,54 @@ namespace ntbs_service.DataMigration
              address.Details = details;
             return address;
         }
-        
+
+        private static MBovisAnimalExposure AsMBovisAnimalExposure(dynamic rawData)
+        {
+            var animalExposure = new MBovisAnimalExposure();
+            animalExposure.YearOfExposure = rawData.YearOfExposure;
+            animalExposure.AnimalType = Converter.GetEnumValue<AnimalType>(rawData.AnimalType);
+            animalExposure.Animal = rawData.Animal;
+            animalExposure.AnimalTbStatus = Converter.GetEnumValue<AnimalTbStatus>(rawData.AnimalTbStatus);
+            animalExposure.ExposureDuration = rawData.ExposureDuration;
+            animalExposure.CountryId = rawData.CountryId;
+            animalExposure.OtherDetails = rawData.OtherDetails;
+            return animalExposure;
+        }
+
+        private static MBovisExposureToKnownCase AsMBovisExposureToKnownCase(dynamic rawData)
+        {
+            var caseExposure = new MBovisExposureToKnownCase();
+            caseExposure.YearOfExposure = rawData.YearOfExposure;
+            caseExposure.ExposureSetting = Converter.GetEnumValue<ExposureSetting>(rawData.ExposureSetting);
+            caseExposure.ExposureNotificationId = rawData.ExposureNotificationId;
+            caseExposure.NotifiedToPheStatus = Converter.GetStatusFromString(rawData.NotifiedToPheStatus);
+            caseExposure.OtherDetails = rawData.OtherDetails;
+            return caseExposure;
+        }
+
+        private static MBovisOccupationExposure AsMBovisOccupationExposure(dynamic rawData)
+        {
+            var occupationExposure = new MBovisOccupationExposure();
+            occupationExposure.YearOfExposure = rawData.YearOfExposure;
+            occupationExposure.OccupationSetting = Converter.GetEnumValue<OccupationSetting>(rawData.OccupationSetting);
+            occupationExposure.OccupationDuration = rawData.OccupationDuration;
+            occupationExposure.CountryId = rawData.CountryId;
+            occupationExposure.OtherDetails = rawData.OtherDetails;
+            return occupationExposure;
+        }
+
+        private static MBovisUnpasteurisedMilkConsumption AsMBovisUnpasteurisedMilkConsumption(dynamic rawData)
+        {
+            var milkConsumption = new MBovisUnpasteurisedMilkConsumption();
+            milkConsumption.YearOfConsumption = rawData.YearOfConsumption;
+            milkConsumption.MilkProductType = Converter.GetEnumValue<MilkProductType>(rawData.MilkProductType);
+            milkConsumption.ConsumptionFrequency =
+                Converter.GetEnumValue<ConsumptionFrequency>(rawData.ConsumptionFrequency);
+            milkConsumption.CountryId = rawData.CountryId;
+            milkConsumption.OtherDetails = rawData.OtherDetails;
+            return milkConsumption;
+        }
+
         private async Task<List<TreatmentEvent>> ExtractTreatmentEventsAsync(dynamic notification)
         {
             var treatmentEvents = new List<TreatmentEvent>();
