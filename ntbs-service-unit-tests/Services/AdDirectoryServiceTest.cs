@@ -35,7 +35,7 @@ namespace ntbs_service_unit_tests.Services
                 new LdapAttribute("displayName", "Second surname"),
                 new LdapAttribute("userAccountControl", "510"),
                 new LdapAttribute("memberof",new[] {
-                    "CN=Global.NIS.NTBS.NTA,CN=Users,DC=ntbs,DC=phe,DC=com",
+                    "CN=Global.NIS.NTBS.NTS,CN=Users,DC=ntbs,DC=phe,DC=com",
                     "CN=RandomOtherGroup,CN=Users,DC=ntbs,DC=phe,DC=com"
                 })
             });
@@ -80,7 +80,7 @@ namespace ntbs_service_unit_tests.Services
             Assert.Equal("Second surname", savedInactiveUser.DisplayName);
             Assert.False(savedInactiveUser.IsActive);
             Assert.False(savedInactiveUser.IsCaseManager);
-            Assert.Contains("Global.NIS.NTBS.NTA", savedInactiveUser.AdGroups);
+            Assert.Contains("Global.NIS.NTBS.NTS", savedInactiveUser.AdGroups);
         }
     }
 }
