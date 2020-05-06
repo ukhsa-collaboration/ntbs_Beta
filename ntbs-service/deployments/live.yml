@@ -29,6 +29,16 @@ spec:
                 secretKeyRef:
                   name: live-connection-strings
                   key: db
+            - name: ConnectionStrings__ntbsMigratorContext
+              valueFrom:
+                secretKeyRef:
+                  name: live-connection-strings
+                  key: db
+            - name: ConnectionStrings__keysContext
+              valueFrom:
+                secretKeyRef:
+                  name: live-connection-strings
+                  key: db
             - name: ConnectionStrings__auditContext
               valueFrom:
                 secretKeyRef:
@@ -55,7 +65,7 @@ spec:
             - name: MigrationConfig__DateRangeJobIntervalInMonths
               value: "2"
             - name: MigrationConfig__TablePrefix
-              value: ""
+              value: "migrationTrial3"
             - name: AppConfig__AuditingEnabled
               value: "false"
             - name: ScheduledJobsConfig__UserSyncEnabled
