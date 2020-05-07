@@ -98,5 +98,15 @@ namespace ntbs_service.Models.Entities
         public bool ProceedingToAdd { get; set; }
         
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
+
+        public bool DataEntered =>
+            HasAnimalExposure != null
+            || MBovisAnimalExposures.Any()
+            || HasExposureToKnownCases != null
+            || MBovisExposureToKnownCases.Any()
+            || HasOccupationExposure != null
+            || MBovisOccupationExposures.Any()
+            || HasUnpasteurisedMilkConsumption != null
+            || MBovisUnpasteurisedMilkConsumptions.Any();
     }
 }
