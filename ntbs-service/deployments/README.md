@@ -6,7 +6,7 @@ We use Let's Encrpyt for free certificates for the test environments
 1. The environment will have to go down for a while - verify this being OK with its users
 1. Take note of the image tag currently deployed on the environment (`kubectl get deployments/ntbs-$env -o wide`) 
 1. Replace the application with a bare-bones nginx container, e.g. by
-    1. Replacing `spec.template.spec.containers[].image` with `"nginx:1.17.5" in the deployment yaml file
+    1. Replacing `spec.template.spec.containers[].image` with `"nginx:1.17.5"` in the deployment yaml file
     1. Remember the image uses port 80, so you might need to change the balancer's port to that, too:
         - in deployment: `spec.template.spec.containers[].ports[].containerPort` to 80
         - in service: `spec.ports[].targetPort` to 80
