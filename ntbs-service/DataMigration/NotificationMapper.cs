@@ -628,7 +628,7 @@ namespace ntbs_service.DataMigration
             if (rawNotification.mdr_RelatedNotificationId != null)
             {
                 mdr.NotifiedToPheStatus = Status.Yes;
-                mdr.RelatedNotificationId = rawNotification.mdr_RelatedNotificationId;
+                mdr.RelatedNotificationId = int.Parse(rawNotification.mdr_RelatedNotificationId);
             }
 
             return mdr;
