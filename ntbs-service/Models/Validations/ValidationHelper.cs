@@ -25,6 +25,7 @@
         public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
+        public const string SupplyAModelParameter = "Please supply at least one of {0} fields";
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
@@ -35,7 +36,7 @@
         public const string BeforeCurrentYear = "{0} must be the current year or earlier";
         public const string IdDoesNotMatchNtbsRecord = "The NTBS ID does not match an existing ID in the system";
         public const string IdNotAvailableInNtbs = "Details not available in NTBS";
-  
+
         #endregion
 
         #region Patient Details
