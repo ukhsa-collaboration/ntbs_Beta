@@ -14,8 +14,8 @@
   "dependencies": {
     "@babel/core": "7.9.0",
     "@babel/preset-env": "7.9.5",
-    "@sentry/browser": "5.15.4",
-    "@sentry/integrations": "5.15.4",
+    "@sentry/browser": "5.15.5",
+    "@sentry/integrations": "5.15.5",
     "accessible-autocomplete": "2.0.2",
     "axios": "0.19.2",
     "babel-loader": "8.1.0",
@@ -30,7 +30,7 @@
     "vue-accessible-modal": "0.4.0"
   },
   "devDependencies": {
-    "@sentry/webpack-plugin": "1.10.0",
+    "@sentry/webpack-plugin": "1.11.1",
     "@types/node": "13.11.1",
     "@types/webpack-env": "1.15.1",
     "aspnet-webpack": "3.0.0",
