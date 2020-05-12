@@ -184,102 +184,57 @@ namespace ntbs_service.DataMigration
 
         public async Task<IEnumerable<dynamic>> GetNotificationsById(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(NotificationsByIdQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(NotificationsByIdQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(NotificationSitesQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(NotificationSitesQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetManualTestResults(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(ManualTestResultsQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(ManualTestResultsQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetSocialContextVenues(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(SocialContextVenuesQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(SocialContextVenuesQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(SocialContextAddressesQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(SocialContextAddressesQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(TransferEventsQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(TransferEventsQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetOutcomeEvents(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(OutcomeEventsQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(OutcomeEventsQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetMigrationMBovisAnimalExposure(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(MigrationMBovisAnimalExposureQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(MigrationMBovisAnimalExposureQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(MigrationMBovisExposureToKnownCaseQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(MigrationMBovisExposureToKnownCaseQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetMigrationMBovisOccupationExposures(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(MigrationMBovisOccupationExposuresQuery, new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(MigrationMBovisOccupationExposuresQuery, legacyIds);
         }
 
         public async Task<IEnumerable<dynamic>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds)
         {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync(MigrationMBovisUnpasteurisedMilkConsumptionQuery,
-                    new {Ids = legacyIds});
-            }
+            return await ExecuteByIdQuery(MigrationMBovisUnpasteurisedMilkConsumptionQuery, legacyIds);
         }
 
         public async Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
@@ -302,6 +257,15 @@ namespace ntbs_service.DataMigration
                         string legacyId = tuple.LegacyId.ToString();
                         return (LegacyId: legacyId, tuple.ReferenceLaboratoryNumber);
                     });
+            }
+        }
+
+        private async Task<IEnumerable<dynamic>> ExecuteByIdQuery(string query, IEnumerable<string> legacyIds)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return await connection.QueryAsync(query, new {Ids = legacyIds});
             }
         }
     }
