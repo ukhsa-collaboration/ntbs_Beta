@@ -9,46 +9,50 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [AtLeastOneProperty(
+        nameof(YearOfExposure),
+        nameof(AnimalType),
+        nameof(Animal),
+        nameof(AnimalTbStatus),
+        nameof(ExposureDuration),
+        nameof(CountryId),
+        nameof(OtherDetails),
+        ErrorMessage = ValidationMessages.SupplyAModelParameter)]
+    [Display(Name = "animal exposure")]
     public class MBovisAnimalExposure : ModelBase, IHasRootEntityForAuditing
     {
         public int MBovisAnimalExposureId { get; set; }
         public int NotificationId { get; set; }
 
-        [Required]
         [AssertThat(nameof(YearOfExposureAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
         [AssertThat(nameof(YearOfExposureNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
         [Display(Name = "Year of exposure")]
         public int? YearOfExposure { get; set; }
 
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Animal type")]
         public AnimalType? AnimalType { get; set; }
         
-        [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         [MaxLength(35)]
         [Display(Name = "Animal")]
         public string Animal { get; set; }
         
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Animal TB status")]
         public AnimalTbStatus? AnimalTbStatus { get; set; }
 
-        [Required]
         [Range(1, 99)]
         [Display(Name = "Duration (years)")]
         public int? ExposureDuration { get; set; }
 
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Country")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
 
         [MaxLength(150)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Other details")]
         public string OtherDetails { get; set; }
 

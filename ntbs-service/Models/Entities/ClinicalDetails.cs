@@ -46,7 +46,6 @@ namespace ntbs_service.Models.Entities
 
         public Status? BCGVaccinationState { get; set; }
         [Display(Name = "BCG vaccination year")]
-        [RequiredIf(@"ShouldValidateFull && BCGVaccinationState == Enums.Status.Yes", ErrorMessage = ValidationMessages.FieldRequired)]
         public int? BCGVaccinationYear { get; set; }
         public HIVTestStatus? HIVTestState { get; set; }
 

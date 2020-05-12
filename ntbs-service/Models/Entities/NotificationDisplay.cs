@@ -18,8 +18,19 @@ namespace ntbs_service.Models.Entities
         public bool TransferRequestPending => Alerts?.Any(x => x.AlertType == AlertType.TransferRequest && x.AlertStatus == AlertStatus.Open) == true;
         public bool IsLastLinkedNotificationOverOneYearOld => GetIsLastLinkedNotificationOverOneYearOld();
 
-        public bool IsMdr => ClinicalDetails.IsMDRTreatment || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR";
-        public bool IsMBovis => string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
+        public bool IsMdr =>
+            // If user-set treatment ... 
+            ClinicalDetails.IsMDRTreatment 
+            // ... or lab results indicate MDR, ...
+            || DrugResistanceProfile.DrugResistanceProfileString == "RR/MDR/XDR"
+            // ... or if there is any data entered in the MDR pages - otherwise we could be hiding record data
+            || MDRDetails.MDRDetailsEntered;
+
+        public bool IsMBovis =>
+            // If the lab results point to M. bovis species ...
+            string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase)
+            // ... or if there is any data in the M. bovis pages - otherwise we could be hiding record data
+            || MBovisDetails.DataEntered;
         
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 

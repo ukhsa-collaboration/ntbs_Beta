@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
-using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
@@ -62,7 +61,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             MBovisExposureToKnownCase.NotificationId = NotificationId;
             MBovisExposureToKnownCase.DobYear = Notification.PatientDetails.Dob?.Year;
 
-            await ValidateExposureNotification();
+            ValidateExposureNotification();
 
             if (TryValidateModel(MBovisExposureToKnownCase, nameof(MBovisExposureToKnownCase)))
             {
@@ -113,7 +112,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             return ValidationService.GetPropertyValidationResult<MBovisExposureToKnownCase>(key, value, shouldValidateFull);
         }
 
-        private async Task ValidateExposureNotification()
+        private void ValidateExposureNotification()
         {
             if (MBovisExposureToKnownCase.ExposureNotificationId != null)
             {

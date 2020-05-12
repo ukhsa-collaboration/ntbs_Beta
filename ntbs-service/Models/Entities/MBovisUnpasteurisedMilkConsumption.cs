@@ -9,35 +9,40 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [AtLeastOneProperty(
+        nameof(YearOfConsumption),
+        nameof(MilkProductType),
+        nameof(ConsumptionFrequency),
+        nameof(CountryId),
+        nameof(OtherDetails),
+        ErrorMessage = ValidationMessages.SupplyAModelParameter)]
+    [Display(Name = "unpasteurised milk consumption")]
     public class MBovisUnpasteurisedMilkConsumption : ModelBase, IHasRootEntityForAuditing
     {
         public int MBovisUnpasteurisedMilkConsumptionId { get; set; }
         public int NotificationId { get; set; }
         
-        [Required]
         [AssertThat(nameof(YearOfConsumptionAfterBirth), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
         [AssertThat(nameof(YearOfConsumptionNotInFuture), ErrorMessage = ValidationMessages.BeforeCurrentYear)]
         [Range(1900, 2100, ErrorMessage = ValidationMessages.InvalidYearForAttribute)]
         [Display(Name = "Year of consumption")]
         public int? YearOfConsumption { get; set; }
 
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Product type")]
         public MilkProductType? MilkProductType { get; set; }
         
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Frequency")]
         public ConsumptionFrequency? ConsumptionFrequency { get; set; }
         
-        [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Country")]
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
         
         [MaxLength(150)]
+        
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
-            ErrorMessage = ValidationMessages.StringWithNumbersAndForwardSlashFormat)]
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
+            ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Other details")]
         public string OtherDetails { get; set; }
         

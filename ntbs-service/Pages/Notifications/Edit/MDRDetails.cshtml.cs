@@ -83,7 +83,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
             
             UpdateFlags();
-            await ValidateRelatedNotificationId();
+            ValidateRelatedNotificationId();
             MDRDetails.SetValidationContext(Notification);
 
             if (TryValidateModel(MDRDetails, nameof(MDRDetails)))
@@ -92,7 +92,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             }
         }
 
-        private async Task ValidateRelatedNotificationId()
+        private void ValidateRelatedNotificationId()
         {
             if (MDRDetails.RelatedNotificationId != null)
             {

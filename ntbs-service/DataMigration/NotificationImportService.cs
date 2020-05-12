@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
-using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
@@ -253,7 +252,7 @@ namespace ntbs_service.DataMigration
                     $"Notification {notificationId} invalid contact tracing figures. The notification will be imported without contact tracing data.";
                 _logger.LogWarning(context, requestId, message);
                 notification.ContactTracing = new ContactTracing();
-            };
+            }
         }
 
         /// <summary>
@@ -327,7 +326,11 @@ namespace ntbs_service.DataMigration
             validationsResults.AddRange(notification.SocialContextAddresses.SelectMany(ValidateObject));
             validationsResults.AddRange(notification.SocialContextVenues.SelectMany(ValidateObject));
             validationsResults.AddRange(notification.TreatmentEvents.SelectMany(ValidateObject));
-            // TODO add outcomes
+            validationsResults.AddRange(ValidateObject(notification.MBovisDetails));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisAnimalExposures.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisExposureToKnownCases.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisOccupationExposures.SelectMany(ValidateObject));
+            validationsResults.AddRange(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.SelectMany(ValidateObject));
 
             validationsResults.AddRange(await ValidateAndSetCaseManager(notification.HospitalDetails));
 
