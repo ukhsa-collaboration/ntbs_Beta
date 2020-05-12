@@ -119,7 +119,6 @@ namespace ntbs_integration_tests.NotificationPages
 
             result.EnsureSuccessStatusCode();
             resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name is a mandatory field");
-            resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year is a mandatory field");
         }
 
         [Fact]
