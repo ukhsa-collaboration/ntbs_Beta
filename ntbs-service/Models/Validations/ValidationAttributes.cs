@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Models.Validations
@@ -72,7 +73,7 @@ namespace ntbs_service.Models.Validations
     [AttributeUsage(AttributeTargets.Class)]
     public class AtLeastOnePropertyAttribute : ValidationAttribute
     {
-        private string[] PropertyList { get; set; }
+        private string[] PropertyList { get; }
 
         public AtLeastOnePropertyAttribute(params string[] propertyList)
         {
@@ -81,15 +82,13 @@ namespace ntbs_service.Models.Validations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            foreach (var propertyName in PropertyList)
-            {
-                var propertyInfo = value.GetType().GetProperty(propertyName);
-                if (propertyInfo != null && propertyInfo.GetValue(value, null) != null)
-                {
-                    return null;
-                }
-            }
-            return new ValidationResult(ErrorMessage);
+            var valueFound = PropertyList
+                .Select(propertyName => value.GetType().GetProperty(propertyName))
+                .Where(propertyInfo => propertyInfo != null)
+                .Any(propertyInfo => propertyInfo.GetValue(value, null) != null);
+            return valueFound
+                ? null
+                : new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
         }
     }
 
