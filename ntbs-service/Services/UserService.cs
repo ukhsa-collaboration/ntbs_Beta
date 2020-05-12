@@ -65,7 +65,7 @@ namespace ntbs_service.Services
 
         public async Task<TBService> GetDefaultTbService(ClaimsPrincipal user)
         {
-            return await GetTbServicesQuery(user).FirstAsync();
+            return await GetTbServicesQuery(user).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
