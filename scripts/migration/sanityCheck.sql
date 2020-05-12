@@ -2,14 +2,14 @@
 
 SELECT NotificationYear, MigrationCount, 
        -- AnnualReport2019EnglandCount, -- not as useful as its only for England  
-       annualDataSet.count asAnnualDataSetCount,
+       annualDataSet.count AS AnnualDataSetCount,
        -- (MigrationCount - AnnualReport2019EnglandCount) as MigrationToAnnualReportDifference,
-       (MigrationCount - annualDataSet.count) as MigrationToDatasetDifference
+       (MigrationCount - annualDataSet.count) AS MigrationToDatasetDifference
 FROM
     (
         SELECT
             DATEPART(YEAR, NotificationDate) AS NotificationYear,
-            COUNT(1) AS  [MigrationCount]
+            COUNT(1) AS [MigrationCount]
         FROM MigrationNotificationsView
         GROUP BY DATEPART(YEAR, NotificationDate)
     ) as MigrationData
