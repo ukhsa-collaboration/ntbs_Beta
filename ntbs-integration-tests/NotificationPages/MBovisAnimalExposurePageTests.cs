@@ -151,29 +151,13 @@ namespace ntbs_integration_tests.NotificationPages
                 "year-of-exposure",
                 "Year of exposure has an invalid year");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisAnimalExposure-CountryId",
-                "country",
-                "Please select Country");
-            resultDocument.AssertErrorSummaryMessage(
-                "MBovisAnimalExposure-AnimalType",
-                "animal-type",
-                "Please select Animal type");
-            resultDocument.AssertErrorSummaryMessage(
-                "MBovisAnimalExposure-Animal",
-                "animal",
-                "Please enter Animal");
-            resultDocument.AssertErrorSummaryMessage(
-                "MBovisAnimalExposure-AnimalTbStatus",
-                "animal-tb-status",
-                "Please select Animal TB status");
-            resultDocument.AssertErrorSummaryMessage(
                 "MBovisAnimalExposure-ExposureDuration",
                 "duration",
                 "The field Duration (years) must be between 1 and 99.");
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisAnimalExposure-OtherDetails",
                 "other-details",
-                "Other details can only contain letters, numbers and the symbols ' - . , /");
+                "Invalid character found in Other details");
         }
 
         [Fact]

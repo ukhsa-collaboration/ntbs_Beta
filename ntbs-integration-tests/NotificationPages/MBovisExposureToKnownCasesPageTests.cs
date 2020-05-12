@@ -151,7 +151,7 @@ namespace ntbs_integration_tests.NotificationPages
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisExposureToKnownCase-OtherDetails",
                 "other-details",
-                "Other details can only contain letters, numbers and the symbols ' - . , /");
+                "Invalid character found in Other details");
         }
 
         [Fact]

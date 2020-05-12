@@ -147,21 +147,13 @@ namespace ntbs_integration_tests.NotificationPages
                 "year-of-exposure",
                 "Year of exposure has an invalid year");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisOccupationExposure-CountryId",
-                "country",
-                "Please select Country");
-            resultDocument.AssertErrorSummaryMessage(
-                "MBovisOccupationExposure-OccupationSetting",
-                "occupation-setting",
-                "Please select Occupation setting");
-            resultDocument.AssertErrorSummaryMessage(
                 "MBovisOccupationExposure-OccupationDuration",
                 "duration",
                 "The field Duration (years) must be between 1 and 99.");
             resultDocument.AssertErrorSummaryMessage(
                 "MBovisOccupationExposure-OtherDetails",
                 "other-details",
-                "Other details can only contain letters, numbers and the symbols ' - . , /");
+                "Invalid character found in Other details");
         }
 
         [Fact]

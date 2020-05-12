@@ -147,21 +147,9 @@ namespace ntbs_integration_tests.NotificationPages
                 "year-of-consumption",
                 "Year of consumption has an invalid year");
             resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-CountryId",
-                "country",
-                "Please select Country");
-            resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-MilkProductType",
-                "milk-product",
-                "Please select Product type");
-            resultDocument.AssertErrorSummaryMessage(
-                "MBovisUnpasteurisedMilkConsumption-ConsumptionFrequency",
-                "frequency",
-                "Please select Frequency");
-            resultDocument.AssertErrorSummaryMessage(
                 "MBovisUnpasteurisedMilkConsumption-OtherDetails",
                 "other-details",
-                "Other details can only contain letters, numbers and the symbols ' - . , /");
+                "Invalid character found in Other details");
         }
 
         [Fact]
