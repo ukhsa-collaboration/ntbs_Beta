@@ -14,7 +14,7 @@
         {
             <div class="notification-overview-type-and-edit-container">
                 <h5 class="notification-details-type">
-                    @result.YearOfExposure - @result.AnimalType.GetDisplayName() - @result.Animal
+                    @result.YearOfExposure - @result.AnimalType?.GetDisplayName() - @result.Animal
                 </h5>
                 @if (showEditLinks)
                 {
@@ -35,7 +35,7 @@
                     </nhs-grid-column>
                     <nhs-grid-column grid-column-width="OneHalf">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.CountryId) </dt>
-                        <dd class="cell-min-height"> @result.Country.Name </dd>
+                        <dd class="cell-min-height"> @result.Country?.Name </dd>
                     </nhs-grid-column>
                 </nhs-grid-row>
 

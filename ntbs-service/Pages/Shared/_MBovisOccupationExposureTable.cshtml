@@ -31,7 +31,7 @@
                     </nhs-grid-column>
                     <nhs-grid-column grid-column-width="ThreeQuarters">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.CountryId) </dt>
-                        <dd class="cell-min-height"> @result.Country.Name </dd>
+                        <dd class="cell-min-height"> @result.Country?.Name </dd>
                     </nhs-grid-column>
                 </nhs-grid-row>
                     
