@@ -18,7 +18,7 @@ Feature: Notification creation
         And I enter 1 into 'FormattedDob_Month'
         And I enter 1970 into 'FormattedDob_Year'
         And I select radio value 'sexId-1'
-        And I select 1 for 'PatientDetails_EthnicityId'
+        And I select Mixed - White and Asian for 'PatientDetails_EthnicityId'
         And I select radio value 'nhs-number-unknown'
         And I enter Afghanistan into 'PatientDetails_CountryId'
         And I wait
@@ -30,10 +30,10 @@ Feature: Notification creation
         When I enter 1 into 'FormattedNotificationDate_Day'
         And I enter 1 into 'FormattedNotificationDate_Month'
         And I enter 2019 into 'FormattedNotificationDate_Year'
-        And I select TBS0008 for 'HospitalDetails_TBServiceCode'
+        And I select Ashford Hospital for 'HospitalDetails_TBServiceCode'
         # Wait until javascript has populated the hospital dropdown
         And I wait
-        And I select 868e426f-b11d-45a3-bf2c-e0c31bed2c44 for 'HospitalDetails_HospitalId'
+        And I select ASHFORD HOSPITAL for 'HospitalDetails_HospitalId'
         And I click on the 'save-button' button
 
         # Clinical details page

@@ -52,8 +52,16 @@ namespace ntbs_ui_tests.StepDefinitions
         [Given(@"I am on seeded '(.*)' notification overview page")]
         public void GivenIAmOnANotificationPage(string notificationIdName)
         {
-            var notificationId = notificationIdName == "TO_BE_DENOTIFIED" ? Utilities.TO_BE_DENOTIFIED_ID
-                : throw new ArgumentException($"Unexpected notification name {notificationIdName} given");
+            int notificationId;
+            switch (notificationIdName)
+            {
+                case "TO_BE_DENOTIFIED": notificationId = Utilities.TO_BE_DENOTIFIED_ID;
+                    break;
+                case "M_BOVIS": notificationId = Utilities.M_BOVIS_NOTIFICATION;
+                    break;
+                default:
+                    throw new ArgumentException($"Unexpected notification name {notificationIdName} given");  
+            } 
             Browser.Navigate().GoToUrl($"{Server.RootUri}/Notifications/{notificationId}");
             
             if (!Settings.IsHeadless)
@@ -98,9 +106,9 @@ namespace ntbs_ui_tests.StepDefinitions
         }
 
         [When(@"I select (.*) for '(.*)'")]
-        public void WhenISelectValueFromDropdown(string value, string selectId)
+        public void WhenISelectTextFromDropdown(string text, string selectId)
         {
-            new SelectElement(FindById(selectId)).SelectByValue(value);
+            new SelectElement(FindById(selectId)).SelectByText(text);
         }
 
         [When(@"I expand manage notification section")]
@@ -110,6 +118,14 @@ namespace ntbs_ui_tests.StepDefinitions
                 .FindElement(By.Id("manage-notification"))
                 .FindElement(By.TagName("summary"));
             button.Click();
+        }
+
+        [When(@"I go to edit the '(.*)' section")]
+        public void WhenIGoToEditTheSection(string overviewSectionId)
+        {
+            var link = Browser.FindElement(By.Id(overviewSectionId))
+                .FindElement(By.LinkText("Edit"));
+            link.Click();
         }
 
         [Then(@"I should see the Notification")]

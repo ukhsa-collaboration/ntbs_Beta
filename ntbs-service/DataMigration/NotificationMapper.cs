@@ -169,27 +169,17 @@ namespace ntbs_service.DataMigration
                 }
                 notificationTransferEvents.ForEach(notification.TreatmentEvents.Add);
                 notificationOutcomeEvents.ForEach(notification.TreatmentEvents.Add);
-                
-                if (notificationMBovisAnimalExposures.Any())
-                {
-                    notification.MBovisDetails.HasAnimalExposure = true;
-                    notification.MBovisDetails.MBovisAnimalExposures = notificationMBovisAnimalExposures;
-                }
-                if (notificationMBovisExposureToKnownCase.Any())
-                {
-                    notification.MBovisDetails.HasExposureToKnownCases = true;
-                    notification.MBovisDetails.MBovisExposureToKnownCases = notificationMBovisExposureToKnownCase;
-                }
-                if (notificationMBovisOccupationExposures.Any())
-                {
-                    notification.MBovisDetails.HasOccupationExposure = true;
-                    notification.MBovisDetails.MBovisOccupationExposures = notificationMBovisOccupationExposures;
-                }
-                if (notificationMBovisUnpasteurisedMilkConsumption.Any())
-                {
-                    notification.MBovisDetails.HasUnpasteurisedMilkConsumption = true;
-                    notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions = notificationMBovisUnpasteurisedMilkConsumption;
-                }
+
+                notification.MBovisDetails.HasAnimalExposure = notificationMBovisAnimalExposures.Any();
+                notification.MBovisDetails.MBovisAnimalExposures = notificationMBovisAnimalExposures;
+                notification.MBovisDetails.HasExposureToKnownCases = notificationMBovisExposureToKnownCase.Any();
+                notification.MBovisDetails.MBovisExposureToKnownCases = notificationMBovisExposureToKnownCase;
+                notification.MBovisDetails.HasOccupationExposure = notificationMBovisOccupationExposures.Any();
+                notification.MBovisDetails.MBovisOccupationExposures = notificationMBovisOccupationExposures;
+                notification.MBovisDetails.HasUnpasteurisedMilkConsumption =
+                    notificationMBovisUnpasteurisedMilkConsumption.Any();
+                notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions =
+                    notificationMBovisUnpasteurisedMilkConsumption;
                 return notification;
             }));
         }

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Castle.Core.Internal;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
@@ -13,16 +14,6 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public class MBovisDetails : ModelBase, IOwnedEntityForAuditing
     {
-        
-        [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-        public MBovisDetails()
-        {
-            MBovisAnimalExposures = new List<MBovisAnimalExposure>();
-            MBovisExposureToKnownCases = new List<MBovisExposureToKnownCase>();
-            MBovisOccupationExposures = new List<MBovisOccupationExposure>();
-            MBovisUnpasteurisedMilkConsumptions = new List<MBovisUnpasteurisedMilkConsumption>();
-        }
-
         public int NotificationId { get; set; }
 
         [AssertThat(nameof(ExposureToKnownCasesIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoExposureRecords)]
@@ -32,8 +23,10 @@ namespace ntbs_service.Models.Entities
 
         [NotMapped]
         public bool ExposureToKnownCasesIsPopulatedIfTrue =>
+            // Test only relevant if collection is loaded
+            MBovisExposureToKnownCases == null
             // Test only relevant if HasExposure is true
-            HasExposureToKnownCases == false 
+            || HasExposureToKnownCases == false 
             // Confirm collection is populated...
             || MBovisExposureToKnownCases.Any()
             // ...unless about to add entry, in which case that's fine too
@@ -47,8 +40,10 @@ namespace ntbs_service.Models.Entities
 
         [NotMapped]
         public bool UnpasteurisedMilkConsumptionsIsPopulatedIfTrue =>
+            // Test only relevant if collection is loaded
+            MBovisUnpasteurisedMilkConsumptions == null
             // Test only relevant if HasConsumption is true
-            HasUnpasteurisedMilkConsumption == false 
+            || HasUnpasteurisedMilkConsumption == false 
             // Confirm collection is populated...
             || MBovisUnpasteurisedMilkConsumptions.Any()
             // ...unless about to add entry, in which case that's fine too
@@ -62,8 +57,10 @@ namespace ntbs_service.Models.Entities
         
         [NotMapped]
         public bool OccupationExposuresIsPopulatedIfTrue =>
+            // Test only relevant if collection is loaded
+            MBovisOccupationExposures == null
             // Test only relevant if HasExposure is true
-            HasOccupationExposure == false 
+            || HasOccupationExposure == false 
             // Confirm collection is populated...
             || MBovisOccupationExposures.Any()
             // ...unless about to add entry, in which case that's fine too
@@ -77,8 +74,10 @@ namespace ntbs_service.Models.Entities
 
         [NotMapped]
         public bool AnimalExposuresIsPopulatedIfTrue =>
+            // Test only relevant if collection is loaded
+            MBovisAnimalExposures == null
             // Test only relevant if HasExposure is true
-            HasAnimalExposure == false 
+            || HasAnimalExposure == false 
             // Confirm collection is populated...
             || MBovisAnimalExposures.Any()
             // ...unless about to add entry, in which case that's fine too
@@ -93,12 +92,12 @@ namespace ntbs_service.Models.Entities
 
         public bool DataEntered =>
             HasAnimalExposure != null
-            || MBovisAnimalExposures.Any()
+            || !MBovisAnimalExposures.IsNullOrEmpty()
             || HasExposureToKnownCases != null
-            || MBovisExposureToKnownCases.Any()
+            || !MBovisExposureToKnownCases.IsNullOrEmpty()
             || HasOccupationExposure != null
-            || MBovisOccupationExposures.Any()
+            || !MBovisOccupationExposures.IsNullOrEmpty()
             || HasUnpasteurisedMilkConsumption != null
-            || MBovisUnpasteurisedMilkConsumptions.Any();
+            || !MBovisUnpasteurisedMilkConsumptions.IsNullOrEmpty();
     }
 }

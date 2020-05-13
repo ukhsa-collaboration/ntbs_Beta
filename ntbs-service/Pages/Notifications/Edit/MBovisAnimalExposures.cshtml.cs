@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -55,16 +54,6 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task ValidateAndSave()
         {
-            foreach (var property in  new List<string>
-            {
-                nameof(MBovisDetails.HasAnimalExposure),
-                nameof(MBovisDetails.HasExposureToKnownCases),
-                nameof(MBovisDetails.HasOccupationExposure),
-                nameof(MBovisDetails.HasUnpasteurisedMilkConsumption)
-            }) 
-            {
-                ModelState.ClearValidationState($"{nameof(MBovisDetails)}.{property}");
-            }
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisAnimalExposures = Notification.MBovisDetails.MBovisAnimalExposures;
             MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;
