@@ -27,7 +27,7 @@
                 <nhs-grid-row>
                     <nhs-grid-column grid-column-width="OneQuarter">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.AnimalTbStatus) </dt>
-                        <dd class="cell-min-height"> @result.AnimalTbStatus.GetDisplayName() </dd>
+                        <dd class="cell-min-height"> @result.AnimalTbStatus?.GetDisplayName() </dd>
                     </nhs-grid-column>
                     <nhs-grid-column grid-column-width="OneQuarter">
                         <dt class="notification-details-label"> @Html.DisplayNameFor(_ => result.ExposureDuration) </dt>
