@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200512165717_AddUnknownTbServices")]
+    partial class AddUnknownTbServices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -12647,110 +12649,6 @@ namespace ntbs_service.Migrations
                             IsLegacy = true,
                             Name = "TB SERVICE NCL - SOUTH HUB",
                             TBServiceCode = "TBS0239"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("41751ac7-1b68-4664-a59f-0e81855256d5"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1001"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("f0a1cf54-a92a-4264-9811-f9d6c6f4e8b3"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1002"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("8089c3c9-b6a6-4ada-a1e8-25cd232c535a"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1003"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("594f3942-ea11-4dfb-a5b5-4c3c644fed5e"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1004"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("1468f45e-5808-44e1-bdcc-fa4133e31f71"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1005"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("bee2702b-602a-48e0-8e86-d251ac3748db"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1006"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("d7fc290f-90e0-4251-b68d-3d22ba4f500c"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1007"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("7f554a3f-daec-4ca8-85b8-4ae968b7ad22"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1008"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("8d22e664-cfdd-48a1-861c-7cd15710282c"),
-                            CountryCode = "E92000001",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1009"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("7d6a40cf-97b6-4ee4-9e37-4735fdda5def"),
-                            CountryCode = "N92000002",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1010"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("c9fe3b5b-11f9-40ac-908b-2c8a43d908bd"),
-                            CountryCode = "S92000003",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1011"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("48fc350f-a167-42e2-8260-280c29a7553a"),
-                            CountryCode = "W92000004",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1012"
-                        },
-                        new
-                        {
-                            HospitalId = new Guid("d6adb6de-6f78-4998-a5d8-672c7ebfcd7c"),
-                            CountryCode = "",
-                            IsLegacy = true,
-                            Name = "UNKNOWN",
-                            TBServiceCode = "TBS1013"
                         });
                 });
 
