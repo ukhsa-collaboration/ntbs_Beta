@@ -6,17 +6,15 @@
     Layout = "./Shared/_Layout.cshtml";
 }
 
-@if (Model.KpiFilter.Any())
-{
-    <nhs-width-container container-width="Standard">
-        <partial name="_HomepageKpiDetails" model="@Model"/>
-    </nhs-width-container>
-}
-
 <nhs-width-container container-width="Standard">
     <a href="/Search" role="button" draggable="false" class="nhsuk-button ntbsuk-button--primary">
-        Search and create
+        Search and create notification
     </a>
+
+    @if (Model.KpiFilter.Any())
+    {
+        <partial name="_HomepageKpiDetails" model="@Model"/>
+    }
     <tb-service-filtered-alerts inline-template>
         <div>
             <div class="flex-container">
