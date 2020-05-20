@@ -32,6 +32,8 @@ using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
 using Serilog.Events;
+using ZNetCS.AspNetCore.Authentication.Basic;
+using ZNetCS.AspNetCore.Authentication.Basic.Events;
 
 namespace ntbs_service
 {
@@ -81,7 +83,11 @@ namespace ntbs_service
                 options.Cookie.IsEssential = true;
             });
 
-            SetupAuthentication(services, adfsConfig);
+            var httpBasicAuthConfig = Configuration.GetSection("HttpBasicAuth");
+            if (httpBasicAuthConfig.GetValue("Enabled", false))
+                SetupHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
+            else 
+                SetupAuthentication(services, adfsConfig);
 
             services.AddMvc(options =>
                 {
@@ -242,6 +248,60 @@ namespace ntbs_service
             {
                 authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
             }
+        }
+
+        private static void SetupHttpBasicAuth(IServiceCollection services,
+            IConfigurationSection httpBasicAuthConfig,
+            IConfigurationSection adfsConfig)
+        {
+            var adfsOptions = new AdfsOptions();
+            adfsConfig.Bind(adfsOptions);
+            services
+                .AddAuthentication(BasicAuthenticationDefaults.AuthenticationScheme)
+                .AddBasicAuthentication(
+                    options =>
+                    {
+                        options.Realm = "Basic Realm";
+                        options.Events = new BasicAuthenticationEvents
+                        {
+                            OnValidatePrincipal = context =>
+                            {
+                                if ((context.UserName.ToLower() == httpBasicAuthConfig["Username"].ToLower())
+                                    && (context.Password == httpBasicAuthConfig["Password"]))
+                                {
+                                    Log.Information("Match!");
+                                    string groupAdmin = adfsOptions.AdminUserGroup;
+                                    string groupDev = adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup;
+                                    var claims = new List<Claim>
+                                    {
+                                        new Claim(ClaimTypes.Name,
+                                            context.UserName,
+                                            context.Options.ClaimsIssuer),
+                                        new Claim(ClaimTypes.Role, adfsOptions.BaseUserGroup, ClaimValueTypes.String),
+                                        
+                                        new Claim(ClaimTypes.Role, groupAdmin, ClaimValueTypes.String),
+                                        new Claim(ClaimTypes.Role, groupDev, ClaimValueTypes.String)
+                                    };
+
+                                    var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(
+                                        claims,
+                                        BasicAuthenticationDefaults.AuthenticationScheme));
+                                    var ticket = new AuthenticationTicket(
+                                        claimsPrincipal,
+                                        new AuthenticationProperties(),
+                                        BasicAuthenticationDefaults.AuthenticationScheme);
+
+                                    context.Principal = claimsPrincipal;
+
+                                    // Returning the ticket, though it doesn't seem to be used (at least in the initial
+                                    // logic) - hence setting the Principal above, too.
+                                    return Task.FromResult(AuthenticateResult.Success(ticket));
+                                }
+
+                                return Task.FromResult(AuthenticateResult.Fail("Authentication  really failed."));
+                            }
+                        };
+                    });
         }
 
         private void AddAuditService(IServiceCollection services, string auditDbConnectionString)

@@ -49,8 +49,18 @@ spec:
                 secretKeyRef:
                   name: live-connection-strings
                   key: migration
-            - name: AdfsOptions__UseDummyAuth
+            - name: HttpBasicAuth__Enabled
               value: "true"
+            - name: HttpBasicAuth__Username
+              valueFrom:
+                secretKeyRef:
+                  name: live-http-basic-auth-credentials
+                  key: username
+            - name: HttpBasicAuth__Password
+              valueFrom:
+                secretKeyRef:
+                  name: live-http-basic-auth-credentials
+                  key: password
 #            - name: LdapConnectionSettings__Password
 #              valueFrom:
 #                secretKeyRef:
@@ -77,7 +87,7 @@ spec:
             - name: ScheduledJobsConfig__DataQualityAlertsEnabled
               value: "false"
             - name: ScheduledJobsConfig__NotificationClusterUpdateEnabled
-              value: "false"              
+              value: "false"
             - name: Sentry__Environment
               value: live
             - name: KRB5CCNAME
