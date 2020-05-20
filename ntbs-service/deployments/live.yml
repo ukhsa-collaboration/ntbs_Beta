@@ -116,3 +116,17 @@ spec:
       targetPort: 8080
   selector:
     app: ntbs-live
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ntbs-live	
+spec:
+  rules:
+    - host: ntbs-live.ocpappcol01.unix.phe.gov.uk
+      http:
+        paths:
+          - backend:
+              serviceName: ntbs-live
+              servicePort: 80
+            path: /
