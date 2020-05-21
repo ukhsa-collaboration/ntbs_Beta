@@ -291,28 +291,29 @@ namespace ntbs_service.DataMigration
             details.HasTransplantation = Converter.GetNullableBoolValue((int?) notification.HasTransplantation);
             details.HasOther = Converter.GetNullableBoolValue((int?) notification.HasOther);
 
-            if (details.HasBioTherapy == null && details.HasTransplantation == null && details.HasOther == null)
+            if (details.HasBioTherapy != true && details.HasTransplantation != true && details.HasOther != true)
             {
                 details.HasOther = true;
                 details.OtherDescription = "No immunosuppression type was provided in the legacy record";
             }
-            else
+            else if (details.HasOther == true)
             {
-                if (details.HasOther == true)
+                if (!string.IsNullOrWhiteSpace(notification.OtherDescription))
                 {
-                    if (!string.IsNullOrWhiteSpace(notification.OtherDescription))
-                    {
-                        var otherDescription = RemoveCharactersNotIn(
-                            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
-                            notification.OtherDescription);
-                        details.OtherDescription = otherDescription;
-                    }
-                    else
-                    {
-                        details.OtherDescription = "No description provided in the legacy system";
-                    }
+                    var otherDescription = RemoveCharactersNotIn(
+                        ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                        notification.OtherDescription);
+                    details.OtherDescription = otherDescription;
+                }
+                else
+                {
+                    details.OtherDescription = "No description provided in the legacy system";
                 }
             }
+
+            // Ensure that if a description exists, HasOther is ticked
+            if (details.HasOther != true && !string.IsNullOrWhiteSpace(details.OtherDescription))
+                details.HasOther = true;
 
             return details;
         }
