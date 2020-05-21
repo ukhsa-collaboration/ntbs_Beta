@@ -269,7 +269,6 @@ namespace ntbs_service
                                 if ((context.UserName.ToLower() == httpBasicAuthConfig["Username"].ToLower())
                                     && (context.Password == httpBasicAuthConfig["Password"]))
                                 {
-                                    Log.Information("Match!");
                                     string groupAdmin = adfsOptions.AdminUserGroup;
                                     string groupDev = adfsOptions.DevGroup ?? adfsOptions.NationalTeamAdGroup;
                                     var claims = new List<Claim>
