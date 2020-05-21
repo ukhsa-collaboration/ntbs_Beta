@@ -54,7 +54,7 @@ namespace ntbs_service.Models.Entities
 
         [ValidClinicalDate]
         [Display(Name ="RR/MDR/XDR treatment date")]
-        [RequiredIf(@"IsMDRTreatment", ErrorMessage = ValidationMessages.FieldRequired)]
+        [RequiredIf(@"IsMDRTreatment && IsLegacy != true", ErrorMessage = ValidationMessages.FieldRequired)]
         [AssertThat(@"AfterDob(MDRTreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? MDRTreatmentStartDate { get; set; }
         
