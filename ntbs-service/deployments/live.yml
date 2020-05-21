@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: live-connection-strings
                   key: migration
+            - name: ConnectionStrings__specimenMatching
+              valueFrom:
+                secretKeyRef:
+                  name: live-connection-strings
+                  key: specimen
             - name: HttpBasicAuth__Enabled
               value: "true"
             - name: HttpBasicAuth__Username
@@ -68,8 +73,6 @@ spec:
 #                  key: password
             - name: ExternalLinks__ReportingUri
               value: ""
-            - name: ReferenceLabResultsConfig__MockOutSpecimenMatching
-              value: "true"
             - name: ClusterMatchingConfig__MockOutClusterMatching
               value: "true"
             - name: MigrationConfig__DateRangeJobIntervalInMonths
