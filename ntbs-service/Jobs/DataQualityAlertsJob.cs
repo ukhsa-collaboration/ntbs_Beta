@@ -33,42 +33,42 @@ namespace ntbs_service.Jobs
 
         private async Task CreateDraftAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDraftAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqDraftAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsAsync
         );
         
         private async Task CreateBirthCountryAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityBirthCountryAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqBirthCountryAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsAsync
         );
 
         private async Task CreateClinicalDatesAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClinicalDatesAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqClinicalDatesAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqClinicalDatesAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqClinicalDatesAlertsAsync
         );
 
         private async Task CreateClusterAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClusterAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqClusterAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsAsync
         );
         
         private async Task CreateDotVotAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDotVotAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqDotVotAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsAsync
         );
 
         private async Task CreateTreatmentOutcome12MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome12>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome12AlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsAsync
         );
         
         private async Task CreateTreatmentOutcome24MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome24>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome24AlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsAsync
         );
 
         private async Task CreateTreatmentOutcome36MonthAlertsInBulkAsync()  => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome36>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome36AlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsAsync
         );
         
         private async Task CreateAlertsInBulkAsync<T>(
