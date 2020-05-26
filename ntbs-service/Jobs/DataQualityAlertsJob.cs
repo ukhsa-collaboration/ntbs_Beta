@@ -81,20 +81,24 @@ namespace ntbs_service.Jobs
             {
                 var notificationsForAlerts = await getNotifications(CountPerBatch, offset);
                 
+                var now = DateTime.Now;
                 List<Alert> dqAlerts = notificationsForAlerts
                     .Select(n => {
                         T alert = (T)Activator.CreateInstance(typeof(T));
                         alert.NotificationId = n.NotificationId;
-                        alert.TbServiceCode = n?.HospitalDetails?.TBServiceCode;
+                        alert.CreationDate = now;
+                        alert.TbServiceCode = n.HospitalDetails?.TBServiceCode;
                         if (alert.AlertType != AlertType.TransferRequest)
                         {
-                            alert.CaseManagerUsername = n?.HospitalDetails?.CaseManagerUsername;
+                            alert.CaseManagerUsername = n.HospitalDetails?.CaseManagerUsername;
                         }
 
                         return (Alert) alert;
                     })
                     .ToList();
 
+                // When sourcing the alerts, we made sure to only take ones where no duplicate alerts will be created.
+                // This means we are safe to just add them all and not have to ask _alertService to repeat that check
                 await _alertService.AddAlertsRangeAsync(dqAlerts);
                 offset += CountPerBatch;
             }

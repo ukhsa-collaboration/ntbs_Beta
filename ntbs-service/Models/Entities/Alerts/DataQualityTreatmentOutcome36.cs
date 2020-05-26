@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
 using ntbs_service.Helpers;
-using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Models.Entities.Alerts
 {
+    // ReSharper disable once ClassNeverInstantiated.Global - actually instantiated in DataQualityAlertsJob
     public class DataQualityTreatmentOutcome36 : Alert
     {
         public static readonly Expression<Func<Notification, bool>> NotificationInQualifyingDateRangeExpression =

@@ -53,7 +53,7 @@ namespace ntbs_service.DataAccess
     public class DataQualityRepository : IDataQualityRepository
     {
         private readonly NtbsContext _context;
-        private const int MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT = 45;
+        public const int MinNumberDaysNotifiedForAlert = 45;
 
         public DataQualityRepository(NtbsContext context)
         {
@@ -265,7 +265,7 @@ namespace ntbs_service.DataAccess
         {
             return GetBaseNotificationQueryableWithoutAlertWithType<T>()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
-                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MIN_NUMBER_DAYS_NOTIFIED_FOR_ALERT));
+                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MinNumberDaysNotifiedForAlert));
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts<T>()
@@ -288,10 +288,12 @@ namespace ntbs_service.DataAccess
             return _context.Notification
                 .Include(n => n.HospitalDetails)
                 .Include(n => n.Alerts)
+                // Only pick a notification which is allowed to have new alerts added
                 .Where(n => n.NotificationStatus != NotificationStatus.Closed
                             && n.NotificationStatus != NotificationStatus.Deleted
-                            && n.NotificationStatus != NotificationStatus.Denotified
-                            && n.Alerts.All(a => a is T));
+                            && n.NotificationStatus != NotificationStatus.Denotified)
+                // And make sure it doesn't have this type of alert already
+                .Where(n => !n.Alerts.Any(a => a is T));
         }
     }
 }
