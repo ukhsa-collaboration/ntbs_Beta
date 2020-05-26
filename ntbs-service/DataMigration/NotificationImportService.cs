@@ -332,7 +332,7 @@ namespace ntbs_service.DataMigration
                 notification.MBovisDetails.MBovisExposureToKnownCases as ICollection<ModelBase>,
                 notification.MBovisDetails.MBovisOccupationExposures as ICollection<ModelBase>,
                 notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions as ICollection<ModelBase>,
-            };
+            }.Where(collection => collection != null).ToList();
             
             // Set correct validation context everywhere
             NotificationHelper.SetShouldValidateFull(notification);
