@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
+using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
 using ntbs_service.Helpers;
@@ -306,38 +307,54 @@ namespace ntbs_service.DataMigration
 
         private async Task<IEnumerable<ValidationResult>> GetValidationErrors(Notification notification)
         {
-            var validationsResults = new List<ValidationResult>();
-
+            var singletonModels = new List<ModelBase>
+            {
+                notification.PatientDetails,
+                notification.ClinicalDetails,
+                notification.TravelDetails,
+                notification.VisitorDetails,
+                notification.ComorbidityDetails,
+                notification.ImmunosuppressionDetails,
+                notification.SocialRiskFactors,
+                notification.HospitalDetails,
+                notification.ContactTracing,
+                notification.PatientTBHistory,
+                notification.TestData,
+                notification.MBovisDetails
+            };
+            var modelCollections = new List<ICollection<ModelBase>>
+            {
+                notification.TestData.ManualTestResults as ICollection<ModelBase>,
+                notification.SocialContextAddresses as ICollection<ModelBase>,
+                notification.SocialContextVenues as ICollection<ModelBase>,
+                notification.TreatmentEvents as ICollection<ModelBase>,
+                notification.MBovisDetails.MBovisAnimalExposures as ICollection<ModelBase>,
+                notification.MBovisDetails.MBovisExposureToKnownCases as ICollection<ModelBase>,
+                notification.MBovisDetails.MBovisOccupationExposures as ICollection<ModelBase>,
+                notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions as ICollection<ModelBase>,
+            };
+            
+            // Set correct validation context everywhere
             NotificationHelper.SetShouldValidateFull(notification);
+            void SetValidationContext(ModelBase model) => model.SetValidationContext(notification);
+            singletonModels.ForEach(SetValidationContext);
+            // patient details has special treatment due to the await-ed results below 
+            notification.PatientDetails.SetValidationContext(notification); 
+            modelCollections.ForEach(collection => collection.ForEach(SetValidationContext));
 
+            // Validate all models
+            var validationsResults = new List<ValidationResult>();
             validationsResults.AddRange(ValidateObject(notification));
-            validationsResults.AddRange(ValidateObject(notification.PatientDetails));
-            validationsResults.AddRange(ValidateObject(notification.ClinicalDetails));
-            validationsResults.AddRange(ValidateObject(notification.TravelDetails));
-            validationsResults.AddRange(ValidateObject(notification.VisitorDetails));
-            validationsResults.AddRange(ValidateObject(notification.ComorbidityDetails));
-            validationsResults.AddRange(ValidateObject(notification.ImmunosuppressionDetails));
-            validationsResults.AddRange(ValidateObject(notification.SocialRiskFactors));
-            validationsResults.AddRange(ValidateObject(notification.HospitalDetails));
-            validationsResults.AddRange(ValidateObject(notification.ContactTracing));
-            validationsResults.AddRange(ValidateObject(notification.PatientTBHistory));
-            validationsResults.AddRange(ValidateObject(notification.TestData));
-            validationsResults.AddRange(notification.TestData.ManualTestResults.SelectMany(ValidateObject));
-            validationsResults.AddRange(notification.SocialContextAddresses.SelectMany(ValidateObject));
-            validationsResults.AddRange(notification.SocialContextVenues.SelectMany(ValidateObject));
-            validationsResults.AddRange(notification.TreatmentEvents.SelectMany(ValidateObject));
-            validationsResults.AddRange(ValidateObject(notification.MBovisDetails));
-            validationsResults.AddRange(notification.MBovisDetails.MBovisAnimalExposures.SelectMany(ValidateObject));
-            validationsResults.AddRange(notification.MBovisDetails.MBovisExposureToKnownCases.SelectMany(ValidateObject));
-            validationsResults.AddRange(notification.MBovisDetails.MBovisOccupationExposures.SelectMany(ValidateObject));
-            validationsResults.AddRange(notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions.SelectMany(ValidateObject));
-
+            singletonModels.Select(ValidateObject)
+                .ForEach(results => validationsResults.AddRange(results));
             validationsResults.AddRange(await ValidateAndSetCaseManager(notification.HospitalDetails));
+            validationsResults.AddRange(
+                modelCollections.SelectMany(collection => collection.SelectMany(ValidateObject)));
 
             return validationsResults;
         }
 
-        private IEnumerable<ValidationResult> ValidateObject<T>(T objectToValidate)
+        private IEnumerable<ValidationResult> ValidateObject<T>(T objectToValidate) where T : ModelBase
         {
             var validationContext = new ValidationContext(objectToValidate);
             var validationsResults = new List<ValidationResult>();
