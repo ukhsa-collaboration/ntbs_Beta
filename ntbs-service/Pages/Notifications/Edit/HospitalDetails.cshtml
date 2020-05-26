@@ -71,7 +71,7 @@
                     }
                     <nhs-form-group nhs-form-group-type="@tbServiceCodeGroupState" id="HospitalDetails-TBServiceCode">
                         <label nhs-label-type="Standard" asp-for="HospitalDetails.TBServiceCode">
-                            @("Notifying TB service (required)")
+                            @("TB service (required)")
                         </label>
                         <span nhs-span-type="ErrorMessage" id="tb-service-error" has-error="@hasTbServiceCodeError"
                               ref="errorField" asp-validation-for="HospitalDetails.TBServiceCode"></span>
@@ -85,9 +85,9 @@
             {
                 <div>
                     <input asp-for="HospitalDetails.TBServiceCode" type="hidden" />
-                    <p class="no-bottom-margin"> Notifying TB Service </p>
+                    <p class="no-bottom-margin"> TB Service </p>
                     <label for="disabled-hospital-select" class="govuk-visually-hidden">
-                        Notifying TB Service (Disabled)
+                        TB Service (Disabled)
                     </label>
                     <select nhs-select-type="Standard" id="disabled-hospital-select" title="TB Service cannot be changed after notification" disabled="disabled">
                         <option value="@Model.Notification.HospitalDetails?.TBService?.Code" selected="selected"> @Model.Notification.HospitalDetails?.TBService?.Name </option>

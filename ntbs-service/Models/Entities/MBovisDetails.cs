@@ -34,7 +34,7 @@ namespace ntbs_service.Models.Entities
         
         
         [AssertThat(nameof(UnpasteurisedMilkConsumptionsIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords)]
-        [Display(Name = "Has consumption of unpasteurised milk products")]
+        [Display(Name = "Has consumed unpasteurised milk products")]
         public bool? HasUnpasteurisedMilkConsumption { get; set; }
         public virtual ICollection<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumptions { get; set; }
 
