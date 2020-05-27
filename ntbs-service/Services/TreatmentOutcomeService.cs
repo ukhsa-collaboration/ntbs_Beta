@@ -7,6 +7,12 @@ using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Services
 {
+    /**
+     * The concept of outcomes at 12/24/36 months is important for the notification reporting.
+     * The conversion of the NTBS event-based system to those values is non-trivial and this class holds the majority
+     * of this knowledge.
+     * See https://airelogic-nis.atlassian.net/wiki/spaces/R2/pages/599687169/Outcomes+logic for more context on it.
+     */
     public static class TreatmentOutcomesHelper
     {
         public static TreatmentOutcome GetTreatmentOutcomeAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
@@ -75,13 +81,36 @@ namespace ntbs_service.Services
             return IsTreatmentOutcomeMissingAtXYears(notification, yearsAfterTreatmentStartDate);
         }
         
-        private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(Notification notification, int numberOfYears)
-        {
-            return notification.TreatmentEvents?.Where(t =>
-                    t.EventDate < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears)
-                    && t.EventDate >= (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate)?.AddYears(numberOfYears - 1))
-                .OrderBy(t => t.EventDate)
-                .ThenByDescending(t => t.TreatmentEventTypeIsOutcome);
+    private static IEnumerable<TreatmentEvent> GetOrderedTreatmentEventsInWindowXtoXMinus1Years(
+        Notification notification,
+        int numberOfYears)
+    {
+        return notification.TreatmentEvents?.Where(t =>
+            {
+                var startDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate;
+                return startDate?.AddYears(numberOfYears - 1) <= t.EventDate && t.EventDate < startDate?.AddYears(numberOfYears);
+            })
+            .OrderBy(t => t.EventDate)
+            .ThenBy(treatmentEvent =>
+            {
+                // We want the order of treatment events that happened on the same day
+                // to be interpreted deterministically and with "natural" results.
+                switch (treatmentEvent.TreatmentEventType)
+                {
+                    case TreatmentEventType.TreatmentStart:
+                        return 1;
+                    case TreatmentEventType.TransferOut:
+                        return 2;
+                    case TreatmentEventType.TransferIn:
+                        return 3;
+                    case TreatmentEventType.TreatmentRestart:
+                        return 4;
+                    case TreatmentEventType.TreatmentOutcome:
+                        return 5;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            });
         }
     }
 }
