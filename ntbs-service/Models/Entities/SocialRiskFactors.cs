@@ -18,18 +18,22 @@ namespace ntbs_service.Models.Entities
             RiskFactorSmoking = new RiskFactorDetails(RiskFactorType.Smoking);
         }
 
+        [Display(Name = "Alcohol misuse")]
         public Status? AlcoholMisuseStatus { get; set; }
+        [Display(Name = "Mental health issues")]
         public Status? MentalHealthStatus { get; set; }
+        [Display(Name = "Asylum Seeker")]
         public Status? AsylumSeekerStatus { get; set; }
+        [Display(Name = "Immigration Detainee")]
         public Status? ImmigrationDetaineeStatus { get; set; }
         
         [Display(Name = "History of smoking")]
         public virtual RiskFactorDetails RiskFactorSmoking { get; set; }
         [Display(Name = "History of drug misuse")]
         public virtual RiskFactorDetails RiskFactorDrugs { get; set; }
-        [Display(Name = "History of drugs")]
-        public virtual RiskFactorDetails RiskFactorHomelessness { get; set; }
         [Display(Name = "History of homelessness")]
+        public virtual RiskFactorDetails RiskFactorHomelessness { get; set; }
+        [Display(Name = "History of imprisonment")]
         public virtual RiskFactorDetails RiskFactorImprisonment { get; set; }
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
