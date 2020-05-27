@@ -70,7 +70,14 @@
                     {
                         <nhs-table-body-row>
                             <nhs-table-item>@treatmentEvent.FormattedEventDate</nhs-table-item>
-                            <nhs-table-item>@treatmentEvent.FormattedEventTypeAndOutcome</nhs-table-item>
+                            <nhs-table-item>
+                                @treatmentEvent.FormattedEventTypeAndOutcome
+                                @if (treatmentEvent.TreatmentOutcome?.TreatmentOutcomeSubType != null)
+                                {
+                                    <br/>
+                                    <span>@treatmentEvent.TreatmentOutcome.TreatmentOutcomeSubType.GetDisplayName()</span>
+                                }
+                            </nhs-table-item>
                             <nhs-table-item>@treatmentEvent.TbService?.Name</nhs-table-item>
                             <nhs-table-item>@treatmentEvent.CaseManager?.FullName</nhs-table-item>
                         </nhs-table-body-row>
