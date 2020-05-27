@@ -54,6 +54,11 @@ spec:
                 secretKeyRef:
                   name: live-connection-strings
                   key: specimen
+            - name: ConnectionStrings__reporting
+              valueFrom:
+                secretKeyRef:
+                  name: live-connection-strings
+                  key: reporting
             - name: HttpBasicAuth__Enabled
               value: "true"
             - name: HttpBasicAuth__Username
