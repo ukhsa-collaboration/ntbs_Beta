@@ -33,42 +33,42 @@ namespace ntbs_service.Jobs
 
         private async Task CreateDraftAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDraftAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqDraftAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqDraftAlertsAsync
         );
         
         private async Task CreateBirthCountryAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityBirthCountryAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqBirthCountryAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqBirthCountryAlertsAsync
         );
 
         private async Task CreateClinicalDatesAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClinicalDatesAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqClinicalDatesAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqClinicalDatesAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqClinicalDatesAlertsAsync
         );
 
         private async Task CreateClusterAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityClusterAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqClusterAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqClusterAlertsAsync
         );
         
         private async Task CreateDotVotAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityDotVotAlert>(
             _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqDotVotAlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqDotVotAlertsAsync
         );
 
         private async Task CreateTreatmentOutcome12MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome12>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome12AlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome12AlertsAsync
         );
         
         private async Task CreateTreatmentOutcome24MonthAlertsInBulkAsync() => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome24>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome24AlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome24AlertsAsync
         );
 
         private async Task CreateTreatmentOutcome36MonthAlertsInBulkAsync()  => await CreateAlertsInBulkAsync<DataQualityTreatmentOutcome36>(
             _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsCountAsync,
-            _dataQualityRepository.GetMultipleNotificationsEligibleForDqTreatmentOutcome36AlertsAsync
+            _dataQualityRepository.GetNotificationsEligibleForDqTreatmentOutcome36AlertsAsync
         );
         
         private async Task CreateAlertsInBulkAsync<T>(
@@ -81,20 +81,24 @@ namespace ntbs_service.Jobs
             {
                 var notificationsForAlerts = await getNotifications(CountPerBatch, offset);
                 
+                var now = DateTime.Now;
                 List<Alert> dqAlerts = notificationsForAlerts
                     .Select(n => {
                         T alert = (T)Activator.CreateInstance(typeof(T));
                         alert.NotificationId = n.NotificationId;
-                        alert.TbServiceCode = n?.HospitalDetails?.TBServiceCode;
+                        alert.CreationDate = now;
+                        alert.TbServiceCode = n.HospitalDetails?.TBServiceCode;
                         if (alert.AlertType != AlertType.TransferRequest)
                         {
-                            alert.CaseManagerUsername = n?.HospitalDetails?.CaseManagerUsername;
+                            alert.CaseManagerUsername = n.HospitalDetails?.CaseManagerUsername;
                         }
 
                         return (Alert) alert;
                     })
                     .ToList();
 
+                // When sourcing the alerts, we made sure to only take ones where no duplicate alerts will be created.
+                // This means we are safe to just add them all and not have to ask _alertService to repeat that check
                 await _alertService.AddAlertsRangeAsync(dqAlerts);
                 offset += CountPerBatch;
             }
