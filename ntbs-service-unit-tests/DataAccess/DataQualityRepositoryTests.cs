@@ -81,7 +81,7 @@ namespace ntbs_service_unit_tests.DataAccess
                 NotificationStatus = NotificationStatus.Notified,
                 NotificationDate = DateTime.Now
                     .AddDays(-DataQualityRepository.MinNumberDaysNotifiedForAlert)
-                    .AddDays(-1),
+                    .AddDays(-10), // Make sure we are well into the eligible time range
                 PatientDetails = new PatientDetails
                 {
                     FamilyName = name,
