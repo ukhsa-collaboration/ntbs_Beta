@@ -380,8 +380,16 @@ namespace ntbs_service.DataMigration
         private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
             bool? hasTravel = notification.HasTravel;
-            var totalNumberOfCountries = hasTravel ?? false ? Converter.ToNullableInt(notification.travel_TotalNumberOfCountries) : null;
-
+            int? numberOfCountries = Converter.ToNullableInt(notification.travel_TotalNumberOfCountries);
+            var countriesRecorded = new List<int?>
+                {
+                    notification.travel_Country1, notification.travel_Country2, notification.travel_Country3
+                }.Distinct()
+                .Count(c => c != null);
+            int? totalNumberOfCountries = (hasTravel ?? false) && numberOfCountries != null && numberOfCountries != 0 
+                ? Math.Max(numberOfCountries.Value, countriesRecorded) 
+                : (int?) null;
+            
             var details = new TravelDetails();
             details.HasTravel = hasTravel;
             details.TotalNumberOfCountries = totalNumberOfCountries;
@@ -391,13 +399,22 @@ namespace ntbs_service.DataMigration
             details.StayLengthInMonths1 = notification.travel_StayLengthInMonths1;
             details.StayLengthInMonths2 = notification.travel_StayLengthInMonths2;
             details.StayLengthInMonths3 = notification.travel_StayLengthInMonths3;
+            RemoveDuplicateCountries(details);
             return details;
         }
 
         private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
             bool? hasVisitor = notification.HasVisitor;
-            var totalNumberOfCountries = hasVisitor ?? false ? Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries) : null;
+            int? numberOfCountries = Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries);
+            var countriesRecorded = new List<int?>
+                    {
+                        notification.visitor_Country1, notification.visitor_Country2, notification.visitor_Country3
+                    }.Distinct()
+                    .Count(c => c != null);
+            int? totalNumberOfCountries = (hasVisitor ?? false) && numberOfCountries != null && numberOfCountries != 0 
+                ? Math.Max(numberOfCountries.Value, countriesRecorded) 
+                : (int?) null;
 
             var details = new VisitorDetails();
             details.HasVisitor = hasVisitor;
@@ -408,7 +425,47 @@ namespace ntbs_service.DataMigration
             details.StayLengthInMonths1 = notification.visitor_StayLengthInMonths1;
             details.StayLengthInMonths2 = notification.visitor_StayLengthInMonths2;
             details.StayLengthInMonths3 = notification.visitor_StayLengthInMonths3;
+            RemoveDuplicateCountries(details);
             return details;
+        }
+
+        private static void RemoveDuplicateCountries(ITravelOrVisitorDetails details)
+        {
+            if (details.Country1Id != null && details.Country1Id == details.Country2Id)
+            {
+                if (details.StayLengthInMonths1 != null && details.StayLengthInMonths2 != null)
+                {
+                    details.StayLengthInMonths1 = Math.Max(details.StayLengthInMonths1.Value,
+                        details.StayLengthInMonths2.Value);
+                }
+
+                details.Country2Id = null;
+                details.StayLengthInMonths2 = null;
+            }
+
+            if (details.Country1Id != null && details.Country1Id == details.Country3Id)
+            {
+                if (details.StayLengthInMonths1 != null && details.StayLengthInMonths3 != null)
+                {
+                    details.StayLengthInMonths1 = Math.Max(details.StayLengthInMonths1.Value,
+                        details.StayLengthInMonths3.Value);
+                }
+
+                details.Country3Id = null;
+                details.StayLengthInMonths3 = null;
+            }
+
+            if (details.Country2Id != null && details.Country2Id == details.Country3Id)
+            {
+                if (details.StayLengthInMonths2 != null && details.StayLengthInMonths3 != null)
+                {
+                    details.StayLengthInMonths2 = Math.Max(details.StayLengthInMonths2.Value,
+                        details.StayLengthInMonths3.Value);
+                }
+
+                details.Country3Id = null;
+                details.StayLengthInMonths3 = null;
+            }
         }
 
         private static PatientDetails ExtractPatientDetails(dynamic notification)
