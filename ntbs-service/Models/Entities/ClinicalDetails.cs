@@ -13,6 +13,7 @@ namespace ntbs_service.Models.Entities
     public partial class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
     {
         #region DB Mapped Fields
+        [Display(Name = "Does the patient have TB symptoms?")]
         public bool? IsSymptomatic { get; set; }
 
         [Display(Name = "Symptom onset date")]
@@ -41,10 +42,15 @@ namespace ntbs_service.Models.Entities
         [AssertThat(@"AfterDob(TreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TreatmentStartDate { get; set; }
         
+        [Display(Name = "Has the patient started treatment?")]
         public bool? DidNotStartTreatment { get; set; }
+        
+        [Display(Name = "Was the TB diagnosis made at post-mortem?")]
         public bool? IsPostMortem { get; set; }
 
+        [Display(Name = "Has the patient had a BCG vaccination?")]
         public Status? BCGVaccinationState { get; set; }
+        
         [Display(Name = "BCG vaccination year")]
         public int? BCGVaccinationYear { get; set; }
         public HIVTestStatus? HIVTestState { get; set; }

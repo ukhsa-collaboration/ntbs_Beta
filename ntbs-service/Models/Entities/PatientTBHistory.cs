@@ -11,6 +11,7 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public partial class PatientTBHistory : ModelBase, IOwnedEntityForAuditing
     {
+        [Display(Name = "Does the patient have a previous occurrence of TB (which has not been notified to PHE either through NTBS or the legacy systems ETS/LTBR)?")]
         public bool? PreviouslyHadTB { get; set; }
         
         [AssertThat(@"DobYear == null || PreviousTBDiagnosisYear >= DobYear", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]

@@ -19,7 +19,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Patient's ability to self-administer treatment is affected by alcohol misuse or abuse
+                @Html.DisplayNameFor(m => m.SocialRiskFactors.AlcoholMisuseStatus)
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
@@ -40,7 +40,7 @@
             var drugsViewData = new ViewDataDictionary(ViewData) {
                 { "propertyName", "RiskFactorDrugs" },
                 { "errorState", drugsModelIsValid },
-                { "questionText", "Patient has a history of drug misuse" }
+                { "questionText", "Does the patient have a history of drug misuse?" }
             };
         }
         <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorDrugs" view-data="@drugsViewData" />
@@ -53,7 +53,7 @@
             var HomelessnessViewData = new ViewDataDictionary(this.ViewData) {
                 { "propertyName", "RiskFactorHomelessness" },
                 { "errorState", HomelessnessModelIsValid },
-                { "questionText", "Patient has a history of homelessness" }
+                { "questionText", "Does the patient have a history of homelessness?" }
             };
         }
         <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorHomelessness" view-data="@HomelessnessViewData" />
@@ -66,7 +66,7 @@
             var ImprisonmentViewData = new ViewDataDictionary(this.ViewData) {
                 { "propertyName", "RiskFactorImprisonment" },
                 { "errorState", ImprisonmentModelIsValid },
-                { "questionText", "Patient has a history of imprisonment" }
+                { "questionText", "Does the patient have a history of imprisonment?" }
             };
         }
         <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorImprisonment" view-data="@ImprisonmentViewData" />
@@ -75,7 +75,9 @@
 
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">Patient has mental health problems</nhs-fieldset-legend>
+            <nhs-fieldset-legend nhs-legend-size="Standard">            
+                @Html.DisplayNameFor(m => m.SocialRiskFactors.MentalHealthStatus)
+            </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
                 {
@@ -94,7 +96,7 @@
             var SmokingViewData = new ViewDataDictionary(this.ViewData) {
                 { "propertyName", "RiskFactorSmoking" },
                 { "errorState", SmokingModelIsValid },
-                { "questionText", "Patient has a history of smoking" }
+                { "questionText", "Does the patient have a history of smoking?" }
             };
         }
         <partial name="./_RiskFactorPartial.cshtml" for="SocialRiskFactors.RiskFactorSmoking" view-data="@SmokingViewData" />
@@ -103,7 +105,9 @@
 
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">Patient is an asylum seeker</nhs-fieldset-legend>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                @Html.DisplayNameFor(m => m.SocialRiskFactors.AsylumSeekerStatus)
+            </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
                 {
@@ -118,7 +122,9 @@
 
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard">Patient is an immigration detainee</nhs-fieldset-legend>
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                @Html.DisplayNameFor(m => m.SocialRiskFactors.ImmigrationDetaineeStatus)
+            </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
                 {

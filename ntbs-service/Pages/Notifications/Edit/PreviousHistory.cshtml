@@ -19,7 +19,7 @@
     <nhs-form-group nhs-form-group-type="Standard" id="PatientTbHistory-PreviousTBDiagnosisYear">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard"> 
-                 Please record any previous occurrence of TB for this patient which has not been notified to PHE through NTBS (or the legacy systems ETS/LTBR)
+                 @Html.DisplayNameFor(m => m.PatientTbHistory.PreviouslyHadTB)
             </nhs-fieldset-legend>
             <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
                 For example: because the case was notified outside England, Wales or Northern Ireland, 

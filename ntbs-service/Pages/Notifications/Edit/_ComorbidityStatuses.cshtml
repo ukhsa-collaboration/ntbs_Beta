@@ -12,7 +12,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Diabetes
+                @Html.DisplayNameFor(m => m.ComorbidityDetails.DiabetesStatus)
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
@@ -29,7 +29,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Hepatitis B
+                @Html.DisplayNameFor(m => m.ComorbidityDetails.HepatitisBStatus)
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
@@ -46,7 +46,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Hepatitis C
+                @Html.DisplayNameFor(m => m.ComorbidityDetails.HepatitisCStatus)
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
@@ -63,7 +63,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Chronic liver disease
+                @Html.DisplayNameFor(m => m.ComorbidityDetails.LiverDiseaseStatus)
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)
@@ -80,7 +80,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Chronic renal disease
+                @Html.DisplayNameFor(m => m.ComorbidityDetails.RenalDiseaseStatus)
             </nhs-fieldset-legend>
             <nhs-radios nhs-radios-type="Standard">
                 @foreach (var status in statuses)

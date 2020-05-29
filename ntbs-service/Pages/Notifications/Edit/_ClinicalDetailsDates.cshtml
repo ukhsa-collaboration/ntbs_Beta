@@ -22,7 +22,9 @@
         </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-SymptomStartDate">
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Patient has symptoms</nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    @Html.DisplayNameFor(m => m.ClinicalDetails.IsSymptomatic)
+                </nhs-fieldset-legend>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
                         <input ref="checkbox0" asp-for="ClinicalDetails.IsSymptomatic" id="symptomatic-yes" class="nhsuk-radios__input"
@@ -283,7 +285,9 @@
         </div>
         <nhs-form-group nhs-form-group-type="Standard" id="ClinicalDetails-TreatmentStartDate">
             <nhs-fieldset>
-                <nhs-fieldset-legend nhs-legend-size="Standard">Patient started treatment</nhs-fieldset-legend>
+                <nhs-fieldset-legend nhs-legend-size="Standard">
+                    @Html.DisplayNameFor(m => m.Notification.ClinicalDetails.DidNotStartTreatment)
+                </nhs-fieldset-legend>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">
                         <input asp-for="ClinicalDetails.DidNotStartTreatment" id="treatment-yes" class="nhsuk-radios__input" type="radio" value="false" data-aria-controls="conditional-treatment-conditional">
@@ -416,7 +420,7 @@
             </nhs-fieldset>
         </nhs-form-group>
     
-        <h2>Post Mortem Diagnosis</h2>
+        <h2>@Html.DisplayNameFor(m => m.Notification.ClinicalDetails.IsPostMortem)</h2>
             <nhs-fieldset>
                 <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                     <div class="nhsuk-radios__item">

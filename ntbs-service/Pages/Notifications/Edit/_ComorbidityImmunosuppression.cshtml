@@ -7,7 +7,7 @@
     <validate-immunosuppression inline-template>
         <nhs-fieldset tab-index="" aria-describedby="status-error">
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Immunosuppression
+                @Html.DisplayNameFor(m => m.ImmunosuppressionDetails.Status)
             </nhs-fieldset-legend>
             <div v-on:focusout="validate">
                 <nhs-form-group nhs-form-group-type="Standard">
