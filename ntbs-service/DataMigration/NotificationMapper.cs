@@ -386,7 +386,7 @@ namespace ntbs_service.DataMigration
                     notification.travel_Country1, notification.travel_Country2, notification.travel_Country3
                 }.Distinct()
                 .Count(c => c != null);
-            int? totalNumberOfCountries = (hasTravel ?? false) && numberOfCountries != null && numberOfCountries != 0 
+            int? totalNumberOfCountries = (hasTravel ?? false) && numberOfCountries != null
                 ? Math.Max(numberOfCountries.Value, countriesRecorded) 
                 : (int?) null;
             
@@ -412,7 +412,7 @@ namespace ntbs_service.DataMigration
                         notification.visitor_Country1, notification.visitor_Country2, notification.visitor_Country3
                     }.Distinct()
                     .Count(c => c != null);
-            int? totalNumberOfCountries = (hasVisitor ?? false) && numberOfCountries != null && numberOfCountries != 0 
+            int? totalNumberOfCountries = (hasVisitor ?? false) && numberOfCountries != null 
                 ? Math.Max(numberOfCountries.Value, countriesRecorded) 
                 : (int?) null;
 
