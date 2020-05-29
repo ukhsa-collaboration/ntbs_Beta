@@ -78,14 +78,12 @@ spec:
 #                  key: password
             - name: ExternalLinks__ReportingUri
               value: ""
-            - name: ClusterMatchingConfig__MockOutClusterMatching
-              value: "true"
             - name: MigrationConfig__DateRangeJobIntervalInMonths
               value: "2"
             - name: MigrationConfig__TablePrefix
               value: "migrationTrial3"
             - name: AppConfig__AuditingEnabled
-              value: "false"
+              value: "true"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
             - name: ScheduledJobsConfig__DrugResistanceProfileUpdateEnabled
