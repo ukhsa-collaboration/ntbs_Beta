@@ -11,7 +11,9 @@
 
 <nhs-form-group nhs-form-group-type="Standard">
     <nhs-fieldset id="ClinicalDetails-BCGVaccinationYear">
-        <nhs-fieldset-legend nhs-legend-size="Standard">BCG Vaccination</nhs-fieldset-legend>
+        <nhs-fieldset-legend nhs-legend-size="Standard">
+            @Html.DisplayNameFor(m => m.ClinicalDetails.BCGVaccinationState)
+        </nhs-fieldset-legend>
         <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
             <div class="nhsuk-radios__item">
                 <input asp-for="ClinicalDetails.BCGVaccinationState" id="bcg-vaccination-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" data-aria-controls="conditional-bcg-vaccination-conditional">

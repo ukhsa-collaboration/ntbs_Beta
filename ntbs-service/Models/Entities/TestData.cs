@@ -15,7 +15,7 @@ namespace ntbs_service.Models.Entities
     {
         public int NotificationId { get; set; }
 
-        [Display(Name = "Test carried out")]
+        [Display(Name = "Has a TB test been carried out?")]
         [RequiredIf(nameof(ShouldValidateFull), ErrorMessage = ValidationMessages.Mandatory)]
         [AssertThat(nameof(ResultAddedIfTestCarriedOut), ErrorMessage = ValidationMessages.NoTestResult)]
         public bool? HasTestCarriedOut { get; set; }

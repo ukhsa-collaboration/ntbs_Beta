@@ -17,7 +17,7 @@ namespace ntbs_service.Models.Entities
         public int NotificationId { get; set; }
 
         [AssertThat(nameof(ExposureToKnownCasesIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoExposureRecords)]
-        [Display(Name = "Has exposure to known TB case")]
+        [Display(Name = "Has the patient been exposed to a known TB case?")]
         public bool? HasExposureToKnownCases { get; set; }
         public virtual ICollection<MBovisExposureToKnownCase> MBovisExposureToKnownCases { get; set; }
 
@@ -34,7 +34,7 @@ namespace ntbs_service.Models.Entities
         
         
         [AssertThat(nameof(UnpasteurisedMilkConsumptionsIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoUnpasteurisedMilkConsumptionRecords)]
-        [Display(Name = "Has consumption of unpasteurised milk products")]
+        [Display(Name = "Has the patient consumed unpasteurised milk products?")]
         public bool? HasUnpasteurisedMilkConsumption { get; set; }
         public virtual ICollection<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumptions { get; set; }
 
@@ -51,7 +51,7 @@ namespace ntbs_service.Models.Entities
         
         
         [AssertThat(nameof(OccupationExposuresIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoOccupationExposureRecords)]
-        [Display(Name = "Has occupation exposure")]
+        [Display(Name = "Is there a possible occupational exposure to M. bovis?")]
         public bool? HasOccupationExposure { get; set; }
         public virtual ICollection<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         
@@ -68,7 +68,7 @@ namespace ntbs_service.Models.Entities
         
         
         [AssertThat(nameof(AnimalExposuresIsPopulatedIfTrue), ErrorMessage = ValidationMessages.HasNoAnimalExposureRecords)]
-        [Display(Name = "Has animal exposure")]
+        [Display(Name = "Has the patient been exposed to animals?")]
         public bool? HasAnimalExposure { get; set; }
         public virtual ICollection<MBovisAnimalExposure> MBovisAnimalExposures { get; set; }
 

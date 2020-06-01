@@ -10,6 +10,7 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public partial class ImmunosuppressionDetails : ModelBase, IOwnedEntityForAuditing
     {
+        [Display(Name = "Is the patient immunosuppressed?")]
         [AssertThat(nameof(TestAtLeastOneSelectedWhenYes), 
             ErrorMessage = ValidationMessages.ImmunosuppressionTypeRequired)]
         public Status? Status { get; set; }

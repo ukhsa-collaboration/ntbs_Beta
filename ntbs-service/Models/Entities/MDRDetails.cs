@@ -11,7 +11,7 @@ namespace ntbs_service.Models.Entities
     [Owned]
     public partial class MDRDetails : ModelBase, IOwnedEntityForAuditing
     {
-        [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR-TB Case?")]
+        [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR case?")]
         public Status? ExposureToKnownCaseStatus { get; set; }
 
         [MaxLength(40)]

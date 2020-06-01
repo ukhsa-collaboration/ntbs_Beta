@@ -10,7 +10,7 @@
     <nhs-form-group nhs-form-group-type="Standard">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                Travel to one or more high TB incidence countries within last 24 months
+                @Html.DisplayNameFor(m => m.TravelDetails.HasTravel)
             </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
                 <div class="nhsuk-radios__item">
