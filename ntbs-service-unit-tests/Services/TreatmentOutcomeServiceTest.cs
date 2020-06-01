@@ -15,9 +15,9 @@ namespace ntbs_service_unit_tests.Services
         // GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAtXYear should return
         public static IEnumerable<object[]> NotificationsAndExpectedOutcome()
         {
-            // Example 1
             yield return new object[] 
             {
+                "Example 1",
                 CreateNotificationWithNotificationEvents(1, 
                     new List<TreatmentEvent>
                     {
@@ -40,9 +40,9 @@ namespace ntbs_service_unit_tests.Services
                     null,
                     null
                 };
-            // Example 2
             yield return new object[] 
             { 
+                "Example 2",
                 CreateNotificationWithNotificationEvents(2, 
                     new List<TreatmentEvent>
                     {
@@ -79,9 +79,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
-            // Example 3
             yield return new object[] 
             { 
+                "Example 3",
                 CreateNotificationWithNotificationEvents(3, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -118,9 +118,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
-            // Example 4
             yield return new object[] 
             { 
+                "Example 4",
                 CreateNotificationWithNotificationEvents(4, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -156,9 +156,9 @@ namespace ntbs_service_unit_tests.Services
                 TreatmentOutcomeType.Cured,
                 null
             };
-            // Example 5
             yield return new object[]
             {
+                "Example 5",
                 CreateNotificationWithNotificationEvents(5, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -171,9 +171,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
-            // Example 6
             yield return new object[]
             {
+                "Example 6",
                 CreateNotificationWithNotificationEvents(6, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -195,9 +195,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
-            // Example 7
             yield return new object[]
             {
+                "Example 7",
                 CreateNotificationWithNotificationEvents(7, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -233,9 +233,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 TreatmentOutcomeType.Cured
             };
-            // Example 8
             yield return new object[]
             {
+                "Example 8",
                 CreateNotificationWithNotificationEvents(8, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -275,9 +275,9 @@ namespace ntbs_service_unit_tests.Services
                 TreatmentOutcomeType.Died,
                 null
             };
-            // Example 9
             yield return new object[]
             {
+                "Example 9",
                 CreateNotificationWithNotificationEvents(9, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -304,9 +304,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
-            // Example 10
             yield return new object[]
             {
+                "Example 10",
                 CreateNotificationWithNotificationEvents(10, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -333,9 +333,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
-            // Example 11
             yield return new object[]
             {
+                "Example 11",
                 CreateNotificationWithNotificationEvents(11, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -366,9 +366,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 TreatmentOutcomeType.NotEvaluated
             };
-            // Example 12
             yield return new object[]
             {
+                "Example 12",
                 CreateNotificationWithNotificationEvents(12, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -399,9 +399,9 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 TreatmentOutcomeType.NotEvaluated
             };
-            // Example 13
             yield return new object[]
             {
+                "Example 13",
                 CreateNotificationWithNotificationEvents(13, new List<TreatmentEvent>
                     {
                         new TreatmentEvent
@@ -437,12 +437,53 @@ namespace ntbs_service_unit_tests.Services
                 TreatmentOutcomeType.Cured,
                 null
             };
+            yield return new object[]
+            {
+                "Example 14 (NTBS-1347)",
+                CreateNotificationWithNotificationEvents(14, new List<TreatmentEvent>
+                {
+                    new TreatmentEvent
+                    {
+                        EventDate = new DateTime(2010, 1, 1),
+                        TreatmentEventType = TreatmentEventType.TreatmentStart
+                    },
+                    new TreatmentEvent
+                    {
+                        EventDate = new DateTime(2010, 2, 1),
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcome = new TreatmentOutcome
+                        {
+                            TreatmentOutcomeType = TreatmentOutcomeType.Completed,
+                        }
+                    },
+                    new TreatmentEvent
+                    {
+                        EventDate = new DateTime(2010, 3, 1),
+                        TreatmentEventType = TreatmentEventType.TreatmentRestart
+                    },
+                    new TreatmentEvent
+                    {
+                        EventDate = new DateTime(2010, 3, 1),
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcome = new TreatmentOutcome
+                        {
+                            TreatmentOutcomeType = TreatmentOutcomeType.NotEvaluated,
+                            TreatmentOutcomeSubType = TreatmentOutcomeSubType.StillOnTreatment
+                        }
+                    }
+                }),
+                TreatmentOutcomeType.NotEvaluated,
+                null,
+                null
+            };
         }
 
         // MemberData contains the expected outcomes at 1, 2 and 3 years, for each test the unnecessary outcomes are
         // unused as "_" and "__"
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
-        public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt1Year(Notification notification, 
+        public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt1Year(
+            String exampleName, 
+            Notification notification, 
             TreatmentOutcomeType? expectedOutcomeAt1Year, 
             TreatmentOutcomeType? _, 
             TreatmentOutcomeType? __)
@@ -452,7 +493,9 @@ namespace ntbs_service_unit_tests.Services
         }
         
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
-        public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt2Years(Notification notification, 
+        public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt2Years(
+            String exampleName, 
+            Notification notification, 
             TreatmentOutcomeType? _, 
             TreatmentOutcomeType? expectedOutcomeAt2Years, 
             TreatmentOutcomeType? __)
@@ -462,7 +505,9 @@ namespace ntbs_service_unit_tests.Services
         }
         
         [Theory, MemberData(nameof(NotificationsAndExpectedOutcome))]
-        public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt3Years(Notification notification, 
+        public void GetTreatmentOutcomeAtXYears_ReturnsCorrectOutcomeAt3Years(
+            String exampleName, 
+            Notification notification, 
             TreatmentOutcomeType? _, 
             TreatmentOutcomeType? __,
             TreatmentOutcomeType? expectedOutcomeAt3Years)
