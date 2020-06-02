@@ -16,7 +16,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
         
-        public override string Action => "Notification is in a Cluster, please review social context information.";
+        public override string Action => "Please review social context information.";
 
         public override string ActionLink =>
             RouteHelper.GetNotificationOverviewPathWithSectionAnchor(

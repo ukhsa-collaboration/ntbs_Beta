@@ -4,33 +4,33 @@ namespace ntbs_service.Models.Enums
 {
     public enum AlertType
     {
-        [Display(Name = "Enhanced surveillance - RR/MDR/XDR-TB")]
+        [Display(Name = "RR/MDR/XDR-TB")]
         EnhancedSurveillanceMDR,
-        [Display(Name = "Enhanced surveillance - M. bovis")]
+        [Display(Name = "M. bovis")]
         EnhancedSurveillanceMBovis,
-        [Display(Name = "Unmatched lab result")]
+        [Display(Name = "Unmatched specimen")]
         UnmatchedLabResult,
         [Display(Name = "Transfer request")]
         TransferRequest,
         [Display(Name = "Transfer rejected")]
         TransferRejected,
-        [Display(Name = "Data quality issue - draft record")]
+        [Display(Name = "Draft record open for more than 90 days")]
         DataQualityDraft,
-        [Display(Name = "Data quality issue - unknown country of birth")]
+        [Display(Name = "Unknown country of birth")]
         DataQualityBirthCountry,
-        [Display(Name = "Data quality issue - clinical dates")]
+        [Display(Name = "Clinical dates out of sequence")]
         DataQualityClinicalDates,
-        [Display(Name = "Data quality issue - cluster")]
+        [Display(Name = "Notification is in a cluster")]
         DataQualityCluster,
-        [Display(Name = "Data quality issue - missing 12 month treatment outcome")]
+        [Display(Name = "Missing 12 month treatment outcome ")]
         DataQualityTreatmentOutcome12,
-        [Display(Name = "Data quality issue - missing 24 month treatment outcome")]
+        [Display(Name = "Missing 24 month treatment outcome")]
         DataQualityTreatmentOutcome24,
-        [Display(Name = "Data quality issue - missing 36 month treatment outcome")]
+        [Display(Name = "Missing 36 month treatment outcome")]
         DataQualityTreatmentOutcome36,
-        [Display(Name = "Data quality issue - inconsistent values for social risk factors and DOT")]
+        [Display(Name = "Inconsistent values for social risk factors and DOT")]
         DataQualityDotVotAlert,
-        [Display(Name = "Data quality issue - potential duplicate notification")]
+        [Display(Name = "Potential duplicate notification")]
         DataQualityPotientialDuplicate,
         [Display(Name = "Test Alert")]
         Test

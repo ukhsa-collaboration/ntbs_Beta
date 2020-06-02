@@ -17,7 +17,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
         
-        public override string Action => "Draft record has been open for more than 90 days, please review and action.";
+        public override string Action => "Please review and action.";
 
         public override string ActionLink => RouteHelper.GetNotificationPath(
             NotificationId.GetValueOrDefault(),

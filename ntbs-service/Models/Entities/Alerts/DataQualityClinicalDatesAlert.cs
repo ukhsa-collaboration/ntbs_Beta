@@ -17,8 +17,8 @@ namespace ntbs_service.Models.Entities.Alerts
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
 
-        public override string Action =>
-            "One or more of the clinical dates appears to be out of sequence, please review.";
+        public override string Action => 
+            "One or more of the dates appears to be out of sequence, please review.";
 
         public override string ActionLink =>
             RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
