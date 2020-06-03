@@ -51,11 +51,11 @@
                 <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4>
                 @if (treatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
-                    <span>@treatmentEvents.First().FormattedEventDate - @treatmentEvents.Last().FormattedEventDate</span>
+                    <span>@treatmentEvents.First().FormattedEventDate to @treatmentEvents.Last().FormattedEventDate</span>
                 }
                 else
                 {
-                    <span>@treatmentEvents.First().FormattedEventDate - to Present</span>
+                    <span>@treatmentEvents.First().FormattedEventDate to Present</span>
                 }
             </div>
             <nhs-table classes="nhsuk-table--reduced-font">
