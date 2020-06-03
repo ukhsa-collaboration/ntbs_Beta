@@ -322,16 +322,16 @@ namespace ntbs_service.DataMigration
                 notification.TestData,
                 notification.MBovisDetails
             };
-            var modelCollections = new List<ICollection<ModelBase>>
+            var modelCollections = new List<IEnumerable<ModelBase>>
             {
-                notification.TestData.ManualTestResults as ICollection<ModelBase>,
-                notification.SocialContextAddresses as ICollection<ModelBase>,
-                notification.SocialContextVenues as ICollection<ModelBase>,
-                notification.TreatmentEvents as ICollection<ModelBase>,
-                notification.MBovisDetails.MBovisAnimalExposures as ICollection<ModelBase>,
-                notification.MBovisDetails.MBovisExposureToKnownCases as ICollection<ModelBase>,
-                notification.MBovisDetails.MBovisOccupationExposures as ICollection<ModelBase>,
-                notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions as ICollection<ModelBase>,
+                notification.TestData.ManualTestResults,
+                notification.SocialContextAddresses,
+                notification.SocialContextVenues,
+                notification.TreatmentEvents,
+                notification.MBovisDetails.MBovisAnimalExposures,
+                notification.MBovisDetails.MBovisExposureToKnownCases,
+                notification.MBovisDetails.MBovisOccupationExposures,
+                notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions,
             }.Where(collection => collection != null).ToList();
             
             // Set correct validation context everywhere
