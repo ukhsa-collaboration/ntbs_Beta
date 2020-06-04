@@ -50,4 +50,12 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Update="wwwroot\Images\PHE_3268_DIGI_AW-100px.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
