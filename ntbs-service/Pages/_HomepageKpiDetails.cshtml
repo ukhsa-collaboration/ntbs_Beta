@@ -1,5 +1,11 @@
-﻿@model ntbs_service.Pages.IndexModel
+﻿@using System
+@using System.Linq
+@model ntbs_service.Pages.IndexModel
 
+@{
+    var oneMonthAgo = DateTime.Now.AddDays(-30).ToString("dd MMM yyyy");
+    var oneYearAndOneMonthAgo = DateTime.Now.AddDays(-395).ToString("dd MMM yyyy");
+}
 <div>
     @if (@Model.HomepageKpiDetails.Any())
     {
@@ -31,8 +37,10 @@
                             </div>
                         }
                     </div>
-                </div>      
+                </div>    
+                
+                <span> Based on records notified between @oneMonthAgo and @oneYearAndOneMonthAgo </span>  
             </div>
-        </filtered-homepage-kpi>   
+        </filtered-homepage-kpi>
     }
 </div>
