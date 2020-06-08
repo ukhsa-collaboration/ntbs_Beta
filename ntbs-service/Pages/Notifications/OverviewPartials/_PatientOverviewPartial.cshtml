@@ -97,8 +97,19 @@
     </nhs-grid-row>
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Legacy ID </div>
-            <div class="cell-min-height"> @Model.Notification.LegacyId </div>
+            <div class="notification-details-label"> Legacy IDs </div>
+            <div class="cell-min-height"> 
+                <span>
+                    @if (!String.IsNullOrEmpty(@Model.Notification.LTBRID))
+                    {
+                        <span>LTBS: @Model.Notification.LTBRID,</span> 
+                    } 
+                    @if (!String.IsNullOrEmpty(@Model.Notification.ETSID))
+                    {
+                        <span>ETS: @Model.Notification.ETSID</span>
+                    }
+                </span>
+            </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Local Patient ID </div>
