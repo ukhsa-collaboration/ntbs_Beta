@@ -29,7 +29,7 @@ namespace ntbs_service.DataMigration
         Task CreateTableIfNotExists();
         string InsertImportedNotificationQuery { get; }
         string BulkInsertImportedNotificationsQuery { get; }
-        string SelectImportedNotificationByIdQuery { get; }
+        string SelectImportedNotificationWhereIdEquals(string idSelector);
     }
 
     public class NotificationImportHelper : INotificationImportHelper
@@ -94,10 +94,10 @@ namespace ntbs_service.DataMigration
                 )
         ";
 
-        public string SelectImportedNotificationByIdQuery => $@"
+        public string SelectImportedNotificationWhereIdEquals(string idSelector) => $@"
             SELECT *
             FROM {_importedNotificationsTableName} impNtfc
-            WHERE impNtfc.LegacyId = n.PrimaryNotificationId";
+            WHERE impNtfc.LegacyId = {idSelector}";
 
 
         private string CreateTableQuery => $@"

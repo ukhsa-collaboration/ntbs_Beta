@@ -35,15 +35,17 @@ namespace ntbs_service.DataMigration
 
     public class MigrationRepository : IMigrationRepository
     {
-        const string NotificationIdsWithGroupIdsByIdQuery =
-            @"SELECT n.OldNotificationId, n.GroupId 
+        private string NotificationIdsWithGroupIdsByIdQuery =>
+            $@"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
-            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids";
+            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")}";
 
-        const string NotificationsIdsWithGroupIdsByDateQuery =
-            @"SELECT n.OldNotificationId, n.GroupId 
+        private string NotificationsIdsWithGroupIdsByDateQuery =>
+            $@"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
-            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate";
+            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
 
         const string NotificationsByIdQuery = @"
             SELECT *
@@ -145,7 +147,6 @@ namespace ntbs_service.DataMigration
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                // TODO NTBS-1440 Check against the already migrated table here - fetching already migrated notifications takes way too long! 
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationsIdsWithGroupIdsByDateQuery,
