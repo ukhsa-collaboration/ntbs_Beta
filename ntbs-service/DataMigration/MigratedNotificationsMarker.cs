@@ -57,12 +57,26 @@ namespace ntbs_service.DataMigration
 
                     var importedAt = DateTime.Now.ToString("s");
 
-                    foreach (var notification in notifications) // TODO NTBS-1440 mark both ETS and LTBR ids.
+                    foreach (var notification in notifications)
                     {
-                        await connection.ExecuteAsync(
-                            _importHelper.InsertImportedNotificationQuery,
-                            new {notification.LegacyId, ImportedAt = importedAt}
-                        );
+                        // For many notifications it will be overkill to create an imported record against both
+                        // its ETS id and its LTBR id, but since NTBS doesn't collect information about which of the
+                        // ids the migration code treated as the primary one, this is the safest way to do it.
+                        if (!String.IsNullOrEmpty(notification.ETSID))
+                        {
+                            await connection.ExecuteAsync(
+                                _importHelper.InsertImportedNotificationQuery,
+                                new {notification.ETSID, ImportedAt = importedAt}
+                            );
+                        }
+
+                        if (!String.IsNullOrEmpty(notification.LTBRID))
+                        {
+                            await connection.ExecuteAsync(
+                                _importHelper.InsertImportedNotificationQuery,
+                                new {notification.LTBRID, ImportedAt = importedAt}
+                            );
+                        }
                     }
                 }
                 catch (Exception exception)
