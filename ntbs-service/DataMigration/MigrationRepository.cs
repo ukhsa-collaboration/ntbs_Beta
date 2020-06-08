@@ -5,15 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using ntbs_service.DataMigration.Exceptions;
-using ntbs_service.Models.Entities;
 
 namespace ntbs_service.DataMigration
 {
     public interface IMigrationRepository
     {
-        Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications);
-
         /// <returns>Groups of notifications, indexed by group id, or notification id for singletons</returns>
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds);
 
@@ -130,31 +126,6 @@ namespace ntbs_service.DataMigration
             _importHelper = importHelper;
         }
 
-        public async Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications)
-        {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-
-                    var importedAt = DateTime.Now.ToString("s");
-
-                    foreach (var notification in notifications)
-                    {
-                        await connection.ExecuteAsync(
-                            _importHelper.InsertImportedNotificationQuery,
-                            new {notification.LegacyId, ImportedAt = importedAt}
-                        );
-                    }
-                }
-                catch (Exception exception)
-                {
-                    throw new MarkingNotificationsAsImportedFailedException(notifications, exception);
-                }
-            }
-        }
-
         public async Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(
             IEnumerable<string> legacyIds)
         {
@@ -174,6 +145,7 @@ namespace ntbs_service.DataMigration
         {
             using (var connection = new SqlConnection(connectionString))
             {
+                // TODO NTBS-1440 Check against the already migrated table here - fetching already migrated notifications takes way too long! 
                 connection.Open();
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationsIdsWithGroupIdsByDateQuery,

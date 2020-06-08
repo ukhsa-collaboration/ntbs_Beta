@@ -136,6 +136,7 @@ namespace ntbs_service
             services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
             services.AddScoped<IAlertRepository, AlertRepository>();
             services.AddScoped<INotificationImportRepository, NotificationImportRepository>();
+            services.AddScoped<IMigratedNotificationsMarker, MigratedNotificationsMarker>();
             services.AddScoped<INotificationImportHelper, NotificationImportHelper>();
             services.AddScoped<IMigrationRepository, MigrationRepository>();
             services.AddScoped<IItemRepository<ManualTestResult>, TestResultRepository>();

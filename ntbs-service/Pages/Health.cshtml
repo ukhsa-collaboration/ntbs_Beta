@@ -1,6 +1,11 @@
 ﻿@page
 @model ntbs_service.Pages.Health
 
+@functions {
+        private const string Tick = "\u2714\ufe0f";
+        private const string Cross = "\u274c\ufe0f";
+}
+
 @{
     Layout = null;
 }
@@ -20,50 +25,105 @@
 
     <div>
         <h2>Optional modules</h2>
-        <div>Audit: @(Model.AuditEnabled ? "enabled" : "disabled")</div>
-        <div>Cluster matching: @(Model.ClusterMatchingEnabled ? "enabled" : "disabled")</div>
-        <div>Reference lab restults: @(Model.ReferenceLabResultsEnabled ? "enabled" : "disabled")</div>
-        <div>Reporing services: @(Model.ReportingServicesEnabled ? "enabled" : "disabled")</div>
+        <div>Audit: @(Model.AuditEnabled ? Tick : Cross)</div>
+        <div>Cluster matching: @(Model.ClusterMatchingEnabled ? Tick : Cross)</div>
+        <div>Reference lab restults: @(Model.ReferenceLabResultsEnabled ? Tick : Cross)</div>
+        <div>Reporing services: @(Model.ReportingServicesEnabled ? Tick : Cross)</div>
     </div>
 
     <div>
         <h2>Scheduled Jobs Configuration</h2>
 
-        <div>User sync job: @(Model.ScheduledJobsConfig.UserSyncEnabled ? "enabled" : "disabled") </div>
-        @if (Model.ScheduledJobsConfig.UserSyncEnabled)
-        {
-            <div>User sync timing: @Model.ScheduledJobsConfig.UserSyncCron</div>
-        }
+        <div>
+            User sync job:
+            @if (Model.ScheduledJobsConfig.UserSyncEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.UserSyncCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
 
-        <div>Close inactive notifications job: @(Model.ScheduledJobsConfig.CloseInactiveNotificationsEnabled ? "enabled" : "disabled") </div>
-        @if (Model.ScheduledJobsConfig.CloseInactiveNotificationsEnabled)
-        {
-            <div>Close inactive notifications timing: @Model.ScheduledJobsConfig.CloseInactiveNotificationsCron</div>
-        }
+        <div>
+            Close inactive notifications job:
+            @if (Model.ScheduledJobsConfig.CloseInactiveNotificationsEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.CloseInactiveNotificationsCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
 
-        <div>Drug resistance profile update job: @(Model.ScheduledJobsConfig.DrugResistanceProfileUpdateEnabled ? "enabled" : "disabled") </div>
-        @if (Model.ScheduledJobsConfig.DrugResistanceProfileUpdateEnabled)
-        {
-            <div>Drug resistance profile update timing: @Model.ScheduledJobsConfig.DrugResistanceProfileUpdateCron</div>
-        }
+        <div>
+            Drug resistance profile update job:
+            @if (Model.ScheduledJobsConfig.DrugResistanceProfileUpdateEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.DrugResistanceProfileUpdateCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
 
-        <div>Unmatched lab result alerts job: @(Model.ScheduledJobsConfig.UnmatchedLabResultAlertsEnabled ? "enabled" : "disabled") </div>
-        @if (Model.ScheduledJobsConfig.UnmatchedLabResultAlertsEnabled)
-        {
-            <div>Unmatched lab result alerts timing: @Model.ScheduledJobsConfig.UnmatchedLabResultAlertsCron</div>
-        }
+        <div>
+            Unmatched lab result alerts job:
+            @if (Model.ScheduledJobsConfig.UnmatchedLabResultAlertsEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.UnmatchedLabResultAlertsCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
 
-        <div>Data quality alerts job: @(Model.ScheduledJobsConfig.DataQualityAlertsEnabled ? "enabled" : "disabled") </div>
-        @if (Model.ScheduledJobsConfig.DataQualityAlertsEnabled)
-        {
-            <div>Data quality alerts timing: @Model.ScheduledJobsConfig.DataQualityAlertsCron</div>
-        }
+        <div>
+            Data quality alerts job:
+            @if (Model.ScheduledJobsConfig.DataQualityAlertsEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.DataQualityAlertsCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
 
-        <div>Notification cluster update job: @(Model.ScheduledJobsConfig.NotificationClusterUpdateEnabled ? "enabled" : "disabled") </div>
-        @if (Model.ScheduledJobsConfig.NotificationClusterUpdateEnabled)
-        {
-            <div>Notification cluster update timing: @Model.ScheduledJobsConfig.NotificationClusterUpdateCron</div>
-        }
+        <div>
+            Notification cluster update job:
+            @if (Model.ScheduledJobsConfig.NotificationClusterUpdateEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.NotificationClusterUpdateCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
+
+        <div>
+            Mark migrated notifications as imported:
+            @if (Model.ScheduledJobsConfig.MarkImportedNotificationsAsImportedEnabled)
+            {
+                @Tick
+                <span>Cron: @Model.ScheduledJobsConfig.MarkImportedNotificationsAsImportedCron</span>
+            }
+            else
+            {
+                @Cross
+            }
+        </div>
     </div>
 
 </div>
