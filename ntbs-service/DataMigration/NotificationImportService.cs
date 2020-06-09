@@ -318,7 +318,7 @@ namespace ntbs_service.DataMigration
                 notification.SocialRiskFactors,
                 notification.HospitalDetails,
                 notification.ContactTracing,
-                notification.PatientTBHistory,
+                notification.PreviousTbHistory,
                 notification.TestData,
                 notification.MBovisDetails
             };

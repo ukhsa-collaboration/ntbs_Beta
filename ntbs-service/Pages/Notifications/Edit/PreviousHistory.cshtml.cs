@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
@@ -20,16 +20,16 @@ namespace ntbs_service.Pages.Notifications.Edit
         }
 
         [BindProperty]
-        public PatientTBHistory PatientTbHistory { get; set; }
+        public PreviousTbHistory PreviousTbHistory { get; set; }
 
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
-            PatientTbHistory = Notification.PatientTBHistory;
-            await SetNotificationProperties(isBeingSubmitted, PatientTbHistory);
+            PreviousTbHistory = Notification.PreviousTbHistory;
+            await SetNotificationProperties(isBeingSubmitted, PreviousTbHistory);
 
-            if (PatientTbHistory.ShouldValidateFull)
+            if (PreviousTbHistory.ShouldValidateFull)
             {
-                TryValidateModel(PatientTbHistory, PatientTbHistory.GetType().Name);
+                TryValidateModel(PreviousTbHistory, PreviousTbHistory.GetType().Name);
             }
 
             return Page();
@@ -43,29 +43,30 @@ namespace ntbs_service.Pages.Notifications.Edit
         protected override async Task ValidateAndSave()
         {
             UpdateFlags();
-            PatientTbHistory.SetValidationContext(Notification);
-            PatientTbHistory.DobYear = Notification.PatientDetails.Dob?.Year;
+            PreviousTbHistory.SetValidationContext(Notification);
+            PreviousTbHistory.DobYear = Notification.PatientDetails.Dob?.Year;
 
-            TryValidateModel(PatientTbHistory, nameof(PatientTbHistory));
+            TryValidateModel(PreviousTbHistory, nameof(PreviousTbHistory));
             
             if (ModelState.IsValid)
             {
-                await Service.UpdatePatientTbHistoryAsync(Notification, PatientTbHistory);
+                await Service.UpdatePreviousTbHistoryAsync(Notification, PreviousTbHistory);
             }
         }
 
         private void UpdateFlags()
         {
-            if (PatientTbHistory.PreviouslyHadTB == false)
+            if (PreviousTbHistory.PreviouslyHadTb != Status.Yes)
             {
-                PatientTbHistory.PreviousTBDiagnosisYear = null;
-                ModelState.Remove("PatientTBHistory.PreviousTBDiagnosisYear");
+                // TODO NTBS-1282 add rest of things to clear now 
+                PreviousTbHistory.PreviousTbDiagnosisYear = null;
+                ModelState.Remove("PreviousTbHistory.PreviousTbDiagnosisYear");
             }
         }
 
         public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
         {
-            return ValidationService.GetPropertyValidationResult<PatientTBHistory>(key, value, shouldValidateFull);
+            return ValidationService.GetPropertyValidationResult<PreviousTbHistory>(key, value, shouldValidateFull);
         }
     }
 }

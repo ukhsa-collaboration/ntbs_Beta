@@ -51,8 +51,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["PatientTbHistory.PreviouslyHadTB"] = "true",
-                ["PatientTbHistory.PreviousTBDiagnosisYear"] = tbDiagnosisYear.ToString()
+                ["PreviousTbHistory.PreviouslyHadTb"] = "true",
+                ["PreviousTbHistory.PreviousTbDiagnosisYear"] = tbDiagnosisYear.ToString()
             };
 
             // Act
@@ -60,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
-            resultDocument.AssertErrorSummaryMessage("PatientTbHistory-PreviousTBDiagnosisYear",
+            resultDocument.AssertErrorSummaryMessage("PreviousTbHistory-PreviousTbDiagnosisYear",
                 "previous-tb-diagnosis-year", errorMessage);
         }
         

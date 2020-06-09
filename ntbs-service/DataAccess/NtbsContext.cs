@@ -297,7 +297,17 @@ namespace ntbs_service.DataAccess
                         e.ToTable("ClinicalDetails");
                     });
 
-                entity.OwnsOne(e => e.PatientTBHistory).ToTable("PatientTBHistories");
+                entity.OwnsOne(e => e.PreviousTbHistory,
+                    e =>
+                    {
+                        e.Property(ph => ph.PreviouslyTreated)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
+                        e.Property(ph => ph.PreviouslyHadTb)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
+                        e.ToTable("PreviousTbHistory");
+                    });
 
                 entity.OwnsOne(e => e.ContactTracing).ToTable("ContactTracing");
 
