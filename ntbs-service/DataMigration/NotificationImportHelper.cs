@@ -41,7 +41,7 @@ namespace ntbs_service.DataMigration
         /// This is relatively safe as the parameter is passed from environment variable rather that user input
         /// </summary>
         private readonly string _importedNotificationsTableName;
-        private readonly string _appDb;
+        private readonly string _ntbsDb;
 
         public NotificationImportHelper(IConfiguration configuration, IOptions<MigrationConfig> migrationConfig, NtbsContext ntbsContext)
         {
@@ -49,9 +49,9 @@ namespace ntbs_service.DataMigration
             var tablePrefix = migrationConfig.Value.TablePrefix;
             _importedNotificationsTableName = $"{tablePrefix}ImportedNotifications";
             
-            // The BulkInsertImportedNotificationsQueryTemplate query needs the name of the app database
-            // - see its doc for more info
-            _appDb = ntbsContext.Database.GetDbConnection().Database;
+            // The BulkInsertImportedNotificationsQueryTemplate query needs the name of the app
+            // database - see its doc for more info
+            _ntbsDb = ntbsContext.Database.GetDbConnection().Database;
         }
 
         public async Task CreateTableIfNotExists()
@@ -79,11 +79,11 @@ namespace ntbs_service.DataMigration
         public string BulkInsertImportedNotificationsQuery => $@" 
             WITH ntbsNotifications AS (
 	            SELECT ETSID AS LegacyId
-	            FROM {_appDb}..Notification 
+	            FROM [{_ntbsDb}]..Notification 
 	            WHERE ETSID IS NOT NULL
 	            UNION
 	            SELECT DISTINCT LTBRID AS LegacyId
-	            FROM {_appDb}..Notification 
+	            FROM [{_ntbsDb}]..Notification 
 	            WHERE LTBRID IS NOT NULL
             )
             INSERT INTO {_importedNotificationsTableName}

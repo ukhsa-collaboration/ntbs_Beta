@@ -33,7 +33,7 @@ namespace ntbs_service.DataMigration
         ///
         /// Requires the NTBS and migration dbs to be hosted in a cross-queryable way.
         /// </summary>
-        Task BulkMarkNotificationsAsImported();
+        Task BulkMarkNotificationsAsImportedAsync();
     }
 
     public class MigratedNotificationsMarker : IMigratedNotificationsMarker
@@ -86,7 +86,7 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public async Task BulkMarkNotificationsAsImported()
+        public async Task BulkMarkNotificationsAsImportedAsync()
         {
             using (var connection = new SqlConnection(_connectionString))
             {

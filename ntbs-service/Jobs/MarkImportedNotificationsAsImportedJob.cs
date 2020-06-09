@@ -18,7 +18,7 @@ namespace ntbs_service.Jobs
         {
             Log.Information($"Starting mark imported notifications as imported job");
             
-            await _notificationsMarker.BulkMarkNotificationsAsImported();
+            await _notificationsMarker.BulkMarkNotificationsAsImportedAsync();
 
             Log.Information($"Finishing mark imported notifications as imported job");
         }
