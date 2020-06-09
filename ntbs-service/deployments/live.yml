@@ -86,14 +86,6 @@ spec:
               value: "true"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
-            - name: ScheduledJobsConfig__DrugResistanceProfileUpdateEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__UnmatchedLabResultAlertsEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__DataQualityAlertsEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__NotificationClusterUpdateEnabled
-              value: "false"
             - name: Sentry__Environment
               value: live
             - name: KRB5CCNAME
