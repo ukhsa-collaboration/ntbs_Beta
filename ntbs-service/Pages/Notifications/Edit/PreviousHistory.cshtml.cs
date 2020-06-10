@@ -1,29 +1,40 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications.Edit
 {
     public class PreviousHistoryModel : NotificationEditModelBase
     {
+        private readonly IReferenceDataRepository _referenceDataRepository;
+
         public PreviousHistoryModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
-            IAlertRepository alertRepository) : base(service, authorizationService, notificationRepository, alertRepository)
+            IAlertRepository alertRepository,
+            IReferenceDataRepository referenceDataRepository) : base(service, authorizationService, notificationRepository, alertRepository)
         {
+            _referenceDataRepository = referenceDataRepository;
             CurrentPage = NotificationSubPaths.EditPreviousHistory;
         }
 
         [BindProperty]
         public PreviousTbHistory PreviousTbHistory { get; set; }
 
+        public SelectList Countries { get; set; }
+
         protected override async Task<IActionResult> PrepareAndDisplayPageAsync(bool isBeingSubmitted)
         {
+            var countries = await _referenceDataRepository.GetAllCountriesAsync();
+            Countries = new SelectList(countries, nameof(Country.CountryId), nameof(Country.Name));
+            
             PreviousTbHistory = Notification.PreviousTbHistory;
             await SetNotificationProperties(isBeingSubmitted, PreviousTbHistory);
 
@@ -58,13 +69,21 @@ namespace ntbs_service.Pages.Notifications.Edit
         {
             if (PreviousTbHistory.PreviouslyHadTb != Status.Yes)
             {
-                // TODO NTBS-1282 add rest of things to clear now 
                 PreviousTbHistory.PreviousTbDiagnosisYear = null;
-                ModelState.Remove("PreviousTbHistory.PreviousTbDiagnosisYear");
+                ModelState.Remove($"{nameof(PreviousTbHistory)}.{nameof(PreviousTbHistory.PreviousTbDiagnosisYear)}");
+                PreviousTbHistory.PreviouslyTreated = null;
+                ModelState.Remove($"{nameof(PreviousTbHistory)}.{nameof(PreviousTbHistory.PreviouslyTreated)}");
+            }
+
+            if (PreviousTbHistory.PreviouslyTreated != Status.Yes)
+            {
+                PreviousTbHistory.PreviousTreatmentCountryId = null;
+                ModelState.Remove(
+                    $"{nameof(PreviousTbHistory)}.{nameof(PreviousTbHistory.PreviousTreatmentCountryId)}");
             }
         }
 
-        public ContentResult OnGetValidatePreviousHistoryProperty(string key, string value, bool shouldValidateFull)
+        public ContentResult OnGetValidateProperty(string key, string value, bool shouldValidateFull)
         {
             return ValidationService.GetPropertyValidationResult<PreviousTbHistory>(key, value, shouldValidateFull);
         }

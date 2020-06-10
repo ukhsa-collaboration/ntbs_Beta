@@ -22,11 +22,9 @@ namespace ntbs_service.Models.Entities
         public int? PreviousTbDiagnosisYear { get; set; }
         
         [Display(Name = "Previously treated?")]
-        [AssertThat("PreviouslyHadTb == Enums.Status.Yes")]
         public Status? PreviouslyTreated { get; set; }
         
         [Display(Name = "Country of treatment")]
-        [AssertThat("PreviouslyTreated == Enums.Status.Yes")]
         public int? PreviousTreatmentCountryId { get; set; }
         public virtual Country PreviousTreatmentCountry { get; set; }
 
