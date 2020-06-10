@@ -19,7 +19,7 @@
     <nhs-form-group nhs-form-group-type="Standard" id="PreviousTbHistory-PreviousTbDiagnosisYear">
         <nhs-fieldset>
             <nhs-fieldset-legend nhs-legend-size="Standard">
-                @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviouslyHadTb)
+                Has the patient had any previous occurrence of TB which has not been notified to PHE through NTBS (or the legacy systems ETS/LTBR)?
             </nhs-fieldset-legend>
             <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
                 For example: because the case was notified outside England, Wales or Northern Ireland,
@@ -41,7 +41,9 @@
                             var previousTbDiagnosisGroupState = hasPreviousTbDiagnosisError ? Error : Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@previousTbDiagnosisGroupState">
-                            <label nhs-label-type="Standard" asp-for="PreviousTbHistory.PreviousTbDiagnosisYear"> Year of diagnosis </label>
+                            <label nhs-label-type="Standard" asp-for="PreviousTbHistory.PreviousTbDiagnosisYear"> 
+                                @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviousTbDiagnosisYear)
+                            </label>
                             <span nhs-span-type="ErrorMessage" id="previous-tb-diagnosis-year-error" ref="errorField"
                                   asp-validation-for="PreviousTbHistory.PreviousTbDiagnosisYear" has-error="@hasPreviousTbDiagnosisError">
                             </span>
@@ -51,7 +53,7 @@
                     </validate-input>
                     <nhs-fieldset>
                         <nhs-fieldset-legend nhs-legend-size="Standard">
-                                @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviouslyTreated)
+                                @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviouslyTreated)?
                         </nhs-fieldset-legend>
                         <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                             <div class="nhsuk-radios__item">

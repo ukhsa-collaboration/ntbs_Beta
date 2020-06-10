@@ -1,10 +1,7 @@
-﻿using ntbs_service.Helpers;
-
-namespace ntbs_service.Models.Entities
+﻿﻿namespace ntbs_service.Models.Entities
 {
     public partial class PreviousTbHistory
     {
-        public string PreviouslyHadTbYesNo => PreviouslyHadTb.ToString();
-
+        public string PreviousTreatmentCountryName => PreviousTreatmentCountry?.Name;
     }
 }
