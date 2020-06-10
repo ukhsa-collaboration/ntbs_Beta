@@ -22,6 +22,7 @@ namespace ntbs_service.Services
         UserType GetUserType(ClaimsPrincipal user);
         Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
         Task RecordUserLoginAsync(string username);
+        Task<User> GetUser(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
@@ -71,6 +72,12 @@ namespace ntbs_service.Services
         public async Task<IEnumerable<TBService>> GetTbServicesAsync(ClaimsPrincipal user)
         {
             return await GetTbServicesQuery(user).ToListAsync();
+        }
+        
+        public async Task<User> GetUser(ClaimsPrincipal user)
+        {
+           var caseManager = await _userRepository.GetUserByEmail(user.FindFirstValue(ClaimTypes.Upn));
+           return caseManager;
         }
 
         public UserType GetUserType(ClaimsPrincipal user)

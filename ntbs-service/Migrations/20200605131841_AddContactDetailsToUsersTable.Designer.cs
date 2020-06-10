@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200605131841_AddContactDetailsToUsersTable")]
+    partial class AddContactDetailsToUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -474,11 +476,8 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("AdGroups");
 
-                    b.Property<string>("AlternateContactDetails")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("AlternateName")
-                        .HasMaxLength(200);
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500);
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(64);

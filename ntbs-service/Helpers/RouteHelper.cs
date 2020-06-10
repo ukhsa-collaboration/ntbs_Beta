@@ -41,6 +41,11 @@ namespace ntbs_service.Helpers
         {
             return $"/LabResults/#specimen-{specimenId}";
         }
+
+        public static string GetContactDetailsSubPath(string subPath)
+        {
+            return $"/ContactDetails/{subPath}";
+        }
     }
 
     public static class NotificationSubPaths
@@ -134,5 +139,10 @@ namespace ntbs_service.Helpers
     public static class AlertSubPaths
     {
         public static string Dismiss => "Dismiss";
+    }
+
+    public static class ContactDetailsSubPaths
+    {
+        public static string Edit => "Edit";
     }
 }

@@ -1,0 +1,37 @@
+﻿.contact-details-edit-container {
+    display: flex;
+    border-bottom: 1px solid #cccccc;
+    padding-top: 10px;
+    width: 60%;
+}
+
+.contact-details-container {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    width: 60%;
+}
+
+.contact-details-text {
+  margin-top: 10px;
+}
+
+.contact-details-label {
+  margin-top: 10px;
+  font-weight: 800;
+}
+
+.contact-details-fullname {
+  margin-bottom: 10px;
+}
+
+.contact-details-section-heading {
+  margin-bottom: 10px;
+}
+
+.contact-details-edit-link {
+  margin: auto 5px 14px auto;
+
+  @media print {
+    display: none;
+  }
+}
