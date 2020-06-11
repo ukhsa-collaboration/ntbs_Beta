@@ -76,8 +76,7 @@ namespace ntbs_service.Services
         
         public async Task<User> GetUser(ClaimsPrincipal user)
         {
-           var caseManager = await _userRepository.GetUserByEmail(user.FindFirstValue(ClaimTypes.Upn));
-           return caseManager;
+           return await _userRepository.GetUserByEmail(user.FindFirstValue(ClaimTypes.Upn));
         }
 
         public UserType GetUserType(ClaimsPrincipal user)

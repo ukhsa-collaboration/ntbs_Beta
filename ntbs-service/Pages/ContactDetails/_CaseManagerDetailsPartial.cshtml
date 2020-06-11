@@ -1,0 +1,98 @@
+﻿@using ntbs_service.Helpers
+@model ntbs_service.Models.Entities.User
+
+<nhs-width-container container-width="Standard">
+    <h2 class="contact-details-fullname"> @Model.FullName </h2>
+    <div class="contact-details-edit-container">
+        <h3 class="contact-details-section-heading"> Contact details </h3>
+        @if (TempData["IsEditable"] as bool? == true)
+        {
+            <a href="@RouteHelper.GetContactDetailsSubPath(ContactDetailsSubPaths.Edit)"
+               class="contact-details-edit-link govuk-link--no-visited-state">
+                Edit
+            </a>
+        }
+    </div>
+    <div class="contact-details-container">
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @Html.DisplayNameFor(x => x.JobTitle)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @Model.JobTitle
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @Html.DisplayNameFor(x => x.PhoneNumberPrimary)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @Model.PhoneNumberPrimary
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @Html.DisplayNameFor(x => x.PhoneNumberSecondary)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @Model.PhoneNumberSecondary
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @Html.DisplayNameFor(x => x.EmailPrimary)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @Model.EmailPrimary
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @Html.DisplayNameFor(x => x.EmailSecondary)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @Model.EmailSecondary
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              @Html.DisplayNameFor(x => x.EmailSecondary)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @Model.EmailSecondary
+            </dd>
+          </div>
+        </dl>
+    </div>
+    
+    <br/>
+    <div class="contact-details-edit-container">
+        <h3 class="contact-details-section-heading"> Assigned Services </h3>
+    </div>
+    <div class="contact-details-container">
+        <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
+                <nhs-table-head>
+                    <nhs-table-item>
+                        Region
+                    </nhs-table-item>
+                    <nhs-table-item>
+                        Service
+                    </nhs-table-item>
+                </nhs-table-head>
+                <nhs-table-body>
+                    @foreach (var result in Model.CaseManagerTbServices)
+                    {
+                        <nhs-table-body-row id="tb-service-@result.TbService.Code">
+                            <nhs-table-item>
+                                @result.TbService.PHEC.Name
+                            </nhs-table-item>
+                            <nhs-table-item>
+                                @result.TbService.Name
+                            </nhs-table-item>
+                        </nhs-table-body-row>
+                    }
+                </nhs-table-body>
+            </nhs-table>
+    </div>
+</nhs-width-container>
