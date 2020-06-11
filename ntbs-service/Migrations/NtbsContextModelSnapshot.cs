@@ -474,12 +474,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("AdGroups");
 
-                    b.Property<string>("AlternateContactDetails")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("AlternateName")
-                        .HasMaxLength(200);
-
                     b.Property<string>("DisplayName")
                         .HasMaxLength(64);
 
@@ -501,6 +495,9 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("JobTitle")
                         .HasMaxLength(50);
+                        
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500);
 
                     b.Property<string>("PhoneNumberPrimary")
                         .HasMaxLength(100);
