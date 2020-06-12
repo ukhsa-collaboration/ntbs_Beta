@@ -59,6 +59,12 @@ namespace ntbs_service.DataMigration
 
                     foreach (var notification in notifications)
                     {
+                        if (String.IsNullOrEmpty(notification.ETSID) && String.IsNullOrEmpty(notification.LTBRID))
+                        {
+                            throw new ApplicationException(
+                                "The imported notification does not have either LTBR or ETS id");
+                        }
+                            
                         // For many notifications it will be overkill to create an imported record against both
                         // its ETS id and its LTBR id, but since NTBS doesn't collect information about which of the
                         // ids the migration code treated as the primary one, this is the safest way to do it.
