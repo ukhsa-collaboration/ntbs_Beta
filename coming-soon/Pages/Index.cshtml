@@ -5,7 +5,7 @@
     <h1>Coming soon</h1>
     <p>Welcome to the National Tuberculosis Surveillance System. This application is currently under development
         and will be available soon!</p>
-    @if (Model.ReportsUrl != null) {
+    @if (!String.IsNullOrEmpty(Model.ReportsUrl)) {
         <p>In the meantime, you can access the new reporting functionality using the button below.</p>
         <a class="nhsuk-button ntbsuk-button--primary" href="@(Model.ReportsUrl)">Reports</a>
     }
