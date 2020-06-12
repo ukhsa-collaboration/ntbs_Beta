@@ -8,9 +8,12 @@ Dockerfile*
 **/bin/
 **/obj/
 **/out/
-ntbs-bulk-insert/
 
+# The deployment files don't affect the app source code, but often change when the rest of the app does not
 ntbs-service/deployments/*
 
+# Auxiliary apps - not needed for main deployment
+ntbs-bulk-insert/
+coming-soon/
 frontend-dotnetcore/**
 !frontend-dotnetcore/dist

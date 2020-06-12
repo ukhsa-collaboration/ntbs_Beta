@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NTBS - coming soon</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+</head>
+<body>
+    <div id="app">
+        <div>
+            <header role="banner" data-module="govuk-header">
+                <div class="header-title-and-logo-background">
+                    <div class="govuk-header__container govuk-width-container no-border">
+                        <div class="govuk-header__logo header-logo-container header-logo">
+                            <span class="govuk-header__logotype">
+                                <img src="~/Images/PHE_3268_DIGI_AW-100px.png" class="header-phe-logo" alt="Public Health England logo"/>
+                            </span>
+                        </div>
+                        <div class=" govuk-header__link--service-name header-title">
+                            National Tuberculosis Surveillance System
+                        </div>
+                    </div>
+                </div>
+                <div class="header-navigation-background">
+                    <div class="govuk-header__container govuk-width-container no-border">
+                        <nav>
+                        </nav>
+            
+                    </div>
+                </div>
+                <div class="breadcrumb-trail">  
+                </div>
+            </header>
+            
+            <main id="maincontent" class="nhsuk-main-wrapper main-wrapper">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <!-- govuk requires elements that depend on js-usage require this class to be set on the root of the document (e.g. conditionally revealling radios' sections) -->
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+</body>
+</html>
