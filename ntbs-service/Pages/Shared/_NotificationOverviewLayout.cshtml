@@ -31,7 +31,19 @@
             @if (!string.IsNullOrEmpty(Model.PermissionReason))
             {
                 <div class="notification-overview-details-container no-print" >
-                    <nhs-inset-text classes="nhs-inset-text--ntbs">@Model.PermissionReason</nhs-inset-text>
+                    <nhs-inset-text classes="nhs-inset-text--ntbs">
+                        <span>
+                            @Model.PermissionReason
+                            @if (Model.PermissionReason == Messages.ClosedNoEdit)
+                            {
+                                <span> 
+                                    See 
+                                    <a href="@RouteHelper.GetFaqPageWithSectionAnchor("no-permission-to-edit-a-record")">help</a> 
+                                    for more information.
+                                </span>
+                            }
+                        </span>
+                    </nhs-inset-text>
                 </div>
             }
             @RenderBody()

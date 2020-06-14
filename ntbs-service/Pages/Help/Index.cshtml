@@ -5,6 +5,7 @@
 @{
     Layout = "./_Layout";
     ViewData["Title"] = $"FAQ";
+    string anchorId = Request.Query["faqId"];
 }
 
 <nhs-width-container container-width="Standard">
@@ -12,8 +13,10 @@
     <nhs-expander-group>
         @foreach (var questionAndAnswer in Model.FAQs)
         {
-            <nhs-details display-text="@questionAndAnswer.Question" nhs-details-type="Expander">
-                @Html.Raw(Markdown.ToHtml(questionAndAnswer.Answer))
+            var isOpen = anchorId == questionAndAnswer.AnchorLink && anchorId != null;
+            <nhs-details id="@questionAndAnswer.AnchorLink" display-text="@questionAndAnswer.Question" 
+                nhs-details-type="Expander" is-open="@isOpen">
+                    @Html.Raw(Markdown.ToHtml(questionAndAnswer.Answer))
             </nhs-details>
         }
     </nhs-expander-group>

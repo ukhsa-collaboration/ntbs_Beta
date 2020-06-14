@@ -7,5 +7,6 @@
         public string Question { get; set; }
         public string Answer { get; set; }
         public int OrderIndex { get; set; }
+        public string AnchorLink { get; set; }
     }
 }
