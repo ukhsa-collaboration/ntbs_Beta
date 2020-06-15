@@ -1,13 +1,22 @@
 #!/bin/bash
 set -e
 
-env="$1"
+envFile="$1"
 build="$2"
 
-echo "Deploying to $env"
+echo "Deploying to $envFile"
 
-echo "Applying resource definion $env.yml"
-kubectl apply -f ./ntbs-service/deployments/$env.yml --record=true
+echo "Applying resource definition $envFile.yml"
+kubectl apply -f ./ntbs-service/deployments/$envFile.yml --record=true
+
+# Temporary logic - whilst we have 2 envs that we refer to as `uat`
+if [[ $envFile == "uat-phe" ]]
+  then
+    echo "Overriding env value to uat"
+    env="uat"
+  else
+    env=$envFile
+fi
 
 echo "Setting image to build $build"
 # This sets the image to current build. Should be the same as "latest", but triggers pull of the image.

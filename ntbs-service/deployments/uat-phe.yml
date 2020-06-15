@@ -1,21 +1,21 @@
-# To be deployed on PHE Kubernetes
+﻿# To be deployed on PHE Kubernetes
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: ntbs-live
+  name: ntbs-uat
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: ntbs-live
+        app: ntbs-uat
       annotations:
         image.openshift.io/triggers: >-
           [{"from":{"kind":"ImageStreamTag","name":"krb5-authenticator:latest","namespace":"krb5-authenticator"},"fieldPath":"spec.template.spec.containers[?(@.name==\"krb5-authenticator\")].image"}]
     spec:
       containers:
-        - name: ntbs-live
-          image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
+        - name: ntbs-uat
+          image: "ntbscontainerregistry.azurecr.io/ntbs-service:uat"
           imagePullPolicy: Always
           resources:
             requests:
@@ -27,49 +27,49 @@ spec:
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: db
             - name: ConnectionStrings__ntbsMigratorContext
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: db
             - name: ConnectionStrings__keysContext
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: db
             - name: ConnectionStrings__auditContext
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: audit-db
             - name: ConnectionStrings__migration
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: migration
             - name: ConnectionStrings__specimenMatching
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: specimen
             - name: ConnectionStrings__reporting
               valueFrom:
                 secretKeyRef:
-                  name: live-connection-strings
+                  name: uat-connection-strings
                   key: reporting
             - name: HttpBasicAuth__Enabled
               value: "true"
             - name: HttpBasicAuth__Username
               valueFrom:
                 secretKeyRef:
-                  name: live-http-basic-auth-credentials
+                  name: uat-http-basic-auth-credentials
                   key: username
             - name: HttpBasicAuth__Password
               valueFrom:
                 secretKeyRef:
-                  name: live-http-basic-auth-credentials
+                  name: uat-http-basic-auth-credentials
                   key: password
 #            - name: LdapConnectionSettings__Password
 #              valueFrom:
@@ -81,22 +81,23 @@ spec:
             - name: MigrationConfig__DateRangeJobIntervalInMonths
               value: "2"
             - name: MigrationConfig__TablePrefix
-              value: "migrationTrial3"
+              value: "UatPheMigration"
             - name: AppConfig__AuditingEnabled
-              value: "true"
+              value: "false"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
               value: "false"
             - name: Sentry__Environment
-              value: live
+              value: uat-phe
             - name: KRB5CCNAME
               value: /krb5cc/cc
           volumeMounts:
             - mountPath: /krb5cc
               name: krb5cc
         - name: krb5-authenticator
-          image: krb5-authenticator/krb5-authenticator:latest
+          image: >-
+            docker-registry.default.svc:5000/krb5-authenticator/krb5-authenticator@sha256:7aef62b71dcc06cc5a529958e6330f8394df65b67253524112a00e0f6df53b32
           imagePullPolicy: Always
           volumeMounts:
             - mountPath: /krb5cc
@@ -113,95 +114,30 @@ spec:
         - name: krb-tab
           secret:
             defaultMode: 420
-            secretName: ntbs-live-sql-svc
+            secretName: ntbs-uat-sql-svc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ntbs-live
+  name: ntbs-uat
 spec:
   type: LoadBalancer
   ports:
     - port: 80
       targetPort: 8080
   selector:
-    app: ntbs-live
+    app: ntbs-uat
 ---
-# Temporary ingress (route) which can be used to access the system whilst real url is not ready (or has the 
-# coming-soon page deployed on it).
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ntbs-live # I want to name this ntbs-live-temp, but Openshift is being stubborn about deleting old route
+  name: ntbs-uat	
 spec:
   rules:
-    - host: ntbs-live.ocpappcol01.unix.phe.gov.uk
+    - host: ntbs-uat.ocpappcol01.unix.phe.gov.uk
       http:
         paths:
           - backend:
-              serviceName: ntbs-live
+              serviceName: ntbs-uat
               servicePort: 80
             path: /
----
-# Real ingress (route) to be used by the live env 
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ntbs-live-real # I want to name this ntbs-live, but Openshift is being stubborn about deleting old route
-spec:
-  rules:
-#   Once we have the real urls, we'll want to use this
-    
-#    - host: ntbs.phe.nhs.uk
-#      http:
-#        paths:
-#          - backend:
-#              # Replace with the ntbs-live service once ready to go live
-#              serviceName: coming-soon
-#              servicePort: 80
-#            path: /
-    - host: coming-soon.ocpappcol01.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: coming-soon
-              servicePort: 80
-            path: /
----
-# Coming-soon page app
-apiVersion: apps/v1beta1
-kind: Deployment
-metadata:
-  name: coming-soon
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: coming-soon
-    spec:
-      containers:
-        - name: coming-soon-app
-          image: "ntbscontainerregistry.azurecr.io/coming-soon"
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
-          env:
-            - name: App__ReportsUrl
-              value:
-      imagePullSecrets:
-        - name: registery-password
-        - name: default-dockercfg-bs7wj
----
-# Service to front the coming-soon page app
-apiVersion: v1
-kind: Service
-metadata:
-  name: coming-soon
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8080
-  selector:
-    app: coming-soon
