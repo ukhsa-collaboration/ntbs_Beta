@@ -4,6 +4,7 @@
 @{
     var breadcrumbs = ViewData["Breadcrumbs"];
 }
+
 <header role="banner" data-module="govuk-header">
     <div class="govuk-phase-banner">
         <div class="govuk-width-container">
@@ -68,22 +69,30 @@
                             </a>
                         </li>
                     }
-                    <li class="govuk-header__navigation-item header-navigation-link dropdown-menu">
-                        <a class="govuk-header__link header-navigation-list-item" href="#">
-                            @User.Identity.Name
+                    
+                    <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-with-js">
+                        <a onclick="toggleMenu()" class="govuk-header__link header-navigation-list-item dropdown-header">
+                            @User.Identity.Name <i class="arrow down"></i>
                         </a>
-                        <ul id="user-submenu" class="dropdown-menu-content" >
-                            <li class="header-navigation-link">
+                        <ul id="case-manager-submenu" class="nav-menu-with-dropdown-list" >
+                            <li class="header-navigation-link nav-menu-with-dropdown-list-item">
                                 <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
                                     Edit personal details
                                 </a>
                             </li>
-                            <li class="header-navigation-link">
+                            <li class="header-navigation-link nav-menu-with-dropdown-list-item">
                                 <a class="govuk-header__link header-navigation-list-item" href="/Logout">
                                     Logout
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    
+                     <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-without-js">
+                        <a onclick="toggleMenu()" class="govuk-header__link header-navigation-list-item"
+                            href="/ContactDetails/Menu">
+                            @User.Identity.Name <i class="arrow down"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>

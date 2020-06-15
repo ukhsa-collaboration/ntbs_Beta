@@ -1,20 +1,24 @@
-﻿.contact-details-edit-container {
+﻿.case-manager-details-edit-container {
     display: flex;
     border-bottom: 1px solid #cccccc;
     padding-top: 10px;
     width: 70%;
 }
 
-.contact-details-container {
+.case-manager-details-container {
     padding-top: 10px;
     padding-bottom: 5px;
     width: 70%;
 }
 
-.contact-details-edit-link {
+.case-manager-details-edit-link {
   margin: auto 5px 14px auto;
 
   @media print {
     display: none;
   }
+}
+
+.case-manager-details-menu {
+  font-size: x-large;
 }

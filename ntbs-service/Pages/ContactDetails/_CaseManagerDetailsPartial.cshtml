@@ -3,74 +3,50 @@
 
 <nhs-width-container container-width="Standard">
     <h2 class="nhsuk-heading-l"> @Model.FullName </h2>
-    <div class="contact-details-edit-container">
+    <div class="case-manager-details-edit-container">
         <h3 class="nhsuk-heading-m"> Contact details </h3>
         @if (TempData["IsEditable"] as bool? == true)
         {
             <a href="@RouteHelper.GetContactDetailsSubPath(ContactDetailsSubPaths.Edit)"
-               class="contact-details-edit-link govuk-link--no-visited-state">
+               class="case-manager-details-edit-link govuk-link--no-visited-state">
                 Edit
             </a>
         }
     </div>
-    <div class="contact-details-container">
-        <dl class="govuk-summary-list govuk-summary-list--no-border">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              @Html.DisplayNameFor(x => x.JobTitle)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @Model.JobTitle
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              @Html.DisplayNameFor(x => x.PhoneNumberPrimary)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @Model.PhoneNumberPrimary
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              @Html.DisplayNameFor(x => x.PhoneNumberSecondary)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @Model.PhoneNumberSecondary
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              @Html.DisplayNameFor(x => x.EmailPrimary)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @Model.EmailPrimary
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              @Html.DisplayNameFor(x => x.EmailSecondary)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @Model.EmailSecondary
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              @Html.DisplayNameFor(x => x.Notes)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @Model.Notes
-            </dd>
-          </div>
-        </dl>
+    <div class="case-manager-details-container">
+        <nhs-summary-list is-without-border="true">
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.JobTitle)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.JobTitle</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.PhoneNumberPrimary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.PhoneNumberPrimary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.PhoneNumberSecondary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.PhoneNumberSecondary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.EmailPrimary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.EmailPrimary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.EmailSecondary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.EmailSecondary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.Notes)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.Notes</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+        </nhs-summary-list>
     </div>
     
     <br/>
-    <div class="contact-details-edit-container">
+    <div class="case-manager-details-edit-container">
         <h3 class="nhsuk-heading-m"> Assigned Services </h3>
     </div>
-    <div class="contact-details-container">
+    <div class="case-manager-details-container">
         <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
                 <nhs-table-head>
                     <nhs-table-item>

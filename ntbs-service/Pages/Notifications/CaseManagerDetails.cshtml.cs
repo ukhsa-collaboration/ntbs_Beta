@@ -9,12 +9,12 @@ using ntbs_service.Services;
 
 namespace ntbs_service.Pages.Notifications
 {
-    public class ContactDetailsModel : NotificationModelBase
+    public class CaseManagerDetailsModel : NotificationModelBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
         public User CaseManagerDetails { get; set; }
 
-        public ContactDetailsModel(
+        public CaseManagerDetailsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
             IUserService userService,
