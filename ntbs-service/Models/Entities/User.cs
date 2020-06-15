@@ -7,11 +7,6 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    [AtLeastOneProperty(
-        nameof(JobTitle),
-        nameof(PhoneNumberPrimary),
-        nameof(EmailPrimary),
-        ErrorMessage = ValidationMessages.SupplyCaseManagerPrimaryParameter)]
     public class User
     {
         public string Username { get; set; }
@@ -61,5 +56,9 @@ namespace ntbs_service.Models.Entities
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
 
         public string FullName => GivenName + " " + FamilyName;
+
+        public bool ArePrimaryContactDetailsMissing => String.IsNullOrEmpty(JobTitle)
+                                                       && String.IsNullOrEmpty(PhoneNumberPrimary)
+                                                       && String.IsNullOrEmpty(EmailSecondary);
     }
 }

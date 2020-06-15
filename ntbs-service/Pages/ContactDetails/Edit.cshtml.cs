@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Validations;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.ContactDetails
@@ -52,6 +53,10 @@ namespace ntbs_service.Pages.ContactDetails
         private void ValidateModel()
         {
             TryValidateModel(this);
+            if (ContactDetails.ArePrimaryContactDetailsMissing)
+            {
+                ModelState.AddModelError("ContactDetails", ValidationMessages.SupplyCaseManagerPrimaryParameter);
+            }
             if (!ModelState.IsValid)
             {
                 ViewData["EditPageErrorDictionary"] = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
