@@ -7,6 +7,11 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [AtLeastOneProperty(
+        nameof(JobTitle),
+        nameof(PhoneNumberPrimary),
+        nameof(EmailPrimary),
+        ErrorMessage = ValidationMessages.SupplyCaseManagerPrimaryParameter)]
     public class User
     {
         public string Username { get; set; }

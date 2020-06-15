@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
 
@@ -26,6 +27,8 @@ namespace ntbs_service.Pages.ContactDetails
         public async Task<IActionResult> OnGetAsync()
         {
             ContactDetails = await _userService.GetUser(User);
+            ValidateModel();
+
             return Page();
         }
         
@@ -36,8 +39,7 @@ namespace ntbs_service.Pages.ContactDetails
 
         public async Task<IActionResult> OnPostAsync()
         {
-            TryValidateModel(this);
-            
+            ValidateModel();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -46,7 +48,16 @@ namespace ntbs_service.Pages.ContactDetails
             await _userRepository.SaveUserContactDetails(ContactDetails);
             return RedirectToPage("/ContactDetails/Index");
         }
-        
+
+        private void ValidateModel()
+        {
+            TryValidateModel(this);
+            if (!ModelState.IsValid)
+            {
+                ViewData["EditPageErrorDictionary"] = EditPageValidationErrorGenerator.MapToDictionary(ModelState);
+            }
+        }
+
         public ContentResult OnGetValidateCaseManagerProperty(string key, string value)
         {
             User user = new User();

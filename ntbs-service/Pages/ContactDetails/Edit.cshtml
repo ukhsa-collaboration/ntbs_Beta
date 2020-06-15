@@ -5,9 +5,15 @@
 
 @{
     Layout = "Shared/_Layout";
+    var pageErrors = (Dictionary<string, string>) ViewData["EditPageErrorDictionary"];
 }
 
 <nhs-width-container container-width="Standard">
+    <div class="contact-details-container">
+    
+    <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial"/>
+</div>
+
     <h2 class="contact-details-fullname"> @Model.ContactDetails.FullName </h2>
     <div class="contact-details-edit-container">
         <h3 class="contact-details-section-heading"> Contact details </h3>
@@ -15,13 +21,16 @@
     <div class="contact-details-container">
         <form method="post" autocomplete="off">
             <input type="hidden" asp-for="ContactDetails.Username" />
+            <input type="hidden" asp-for="ContactDetails.GivenName" />
+            <input type="hidden" asp-for="ContactDetails.FamilyName" />
             
             @{
                 var jobTitleError = !Model.IsValid("ContactDetails.JobTitle");
                 var jobTitleState = jobTitleError ? Error : Standard;
             }
             <validate-input model="CaseManager" property="JobTitle" inline-template>
-                <nhs-form-group nhs-form-group-type="@jobTitleState">
+                <nhs-form-group nhs-form-group-type="@jobTitleState" 
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.JobTitle)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.JobTitle">
                         @Html.DisplayNameFor(x => x.ContactDetails.JobTitle)
                     </label>
@@ -37,7 +46,8 @@
                 var phonePrimaryState = phonePrimaryError ? Error : Standard;
             }
             <validate-input model="CaseManager" property="PhoneNumberPrimary" inline-template>            
-                <nhs-form-group nhs-form-group-type="@phonePrimaryState">
+                <nhs-form-group nhs-form-group-type="@phonePrimaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.PhoneNumberPrimary)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.PhoneNumberPrimary">
                         @Html.DisplayNameFor(x => x.ContactDetails.PhoneNumberPrimary)
                     </label>
@@ -53,7 +63,8 @@
                 var phoneSecondaryState = phoneSecondaryError ? Error : Standard;
             }
             <validate-input model="CaseManager" property="PhoneNumberSecondary" inline-template>  
-                <nhs-form-group nhs-form-group-type="@phoneSecondaryState">
+                <nhs-form-group nhs-form-group-type="@phoneSecondaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.PhoneNumberSecondary)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.PhoneNumberSecondary">
                         @Html.DisplayNameFor(x => x.ContactDetails.PhoneNumberSecondary)
                     </label>
@@ -70,7 +81,8 @@
                 var emailPrimaryState = emailPrimaryError ? Error : Standard;
             }
             <validate-input model="CaseManager" property="EmailPrimary" inline-template>
-                <nhs-form-group nhs-form-group-type="@emailPrimaryState">
+                <nhs-form-group nhs-form-group-type="@emailPrimaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.EmailPrimary)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.EmailPrimary">
                         @Html.DisplayNameFor(x => x.ContactDetails.EmailPrimary)
                     </label>
@@ -86,7 +98,8 @@
                 var emailSecondaryState = emailSecondaryError ? Error : Standard;
             }
             <validate-input model="CaseManager" property="EmailSecondary" inline-template>
-                <nhs-form-group nhs-form-group-type="@emailSecondaryState">
+                <nhs-form-group nhs-form-group-type="@emailSecondaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.EmailSecondary)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.EmailSecondary">
                         @Html.DisplayNameFor(x => x.ContactDetails.EmailSecondary)
                     </label>
@@ -102,7 +115,8 @@
                 var notesState = notesError ? Error : Standard;
             }
             <validate-input model="CaseManager" property="Notes" inline-template>  
-                <nhs-form-group nhs-form-group-type="@notesState">
+                <nhs-form-group nhs-form-group-type="@notesState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.Notes)}")">
                     <label nhs-label-type="Standard" asp-for="ContactDetails.Notes">
                         @Html.DisplayNameFor(x => x.ContactDetails.Notes)
                     </label>
