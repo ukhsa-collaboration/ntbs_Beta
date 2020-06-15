@@ -22,7 +22,7 @@ namespace ntbs_service.Models.Entities
             HospitalDetails = new HospitalDetails();
             SocialRiskFactors = new SocialRiskFactors();
             ClinicalDetails = new ClinicalDetails();
-            PatientTBHistory = new PatientTBHistory();
+            PreviousTbHistory = new PreviousTbHistory();
             ContactTracing = new ContactTracing();
             ImmunosuppressionDetails = new ImmunosuppressionDetails();
             TravelDetails = new TravelDetails();
@@ -69,7 +69,7 @@ namespace ntbs_service.Models.Entities
         public virtual PatientDetails PatientDetails { get; set; }
         public virtual ClinicalDetails ClinicalDetails { get; set; }
         public virtual HospitalDetails HospitalDetails { get; set; }
-        public virtual PatientTBHistory PatientTBHistory { get; set; }
+        public virtual PreviousTbHistory PreviousTbHistory { get; set; }
         public virtual ContactTracing ContactTracing { get; set; }
         public virtual SocialRiskFactors SocialRiskFactors { get; set; }
         public virtual ImmunosuppressionDetails ImmunosuppressionDetails { get; set; }

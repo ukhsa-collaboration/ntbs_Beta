@@ -1,12 +1,12 @@
 @page "/Notifications/{NotificationId:int}/Edit/PreviousHistory/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.PreviousHistoryModel
-@using ntbs_service.Helpers
+@using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
     ViewData["Title"] = "Notification - Patient TB History";
-    var fullValidation = Model.PatientTbHistory.ShouldValidateFull ? "True" : "False";
+    var fullValidation = Model.PreviousTbHistory.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
@@ -16,51 +16,122 @@
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <nhs-form-group nhs-form-group-type="Standard" id="PatientTbHistory-PreviousTBDiagnosisYear">
+    <nhs-form-group nhs-form-group-type="Standard" id="PreviousTbHistory-PreviousTbDiagnosisYear">
         <nhs-fieldset>
-            <nhs-fieldset-legend nhs-legend-size="Standard"> 
-                 @Html.DisplayNameFor(m => m.PatientTbHistory.PreviouslyHadTB)
+            <nhs-fieldset-legend nhs-legend-size="Standard">
+                Has the patient had any previous occurrence of TB which has not been notified to PHE through NTBS (or the legacy systems ETS/LTBR)?
             </nhs-fieldset-legend>
             <nhs-hint nhs-hint-type="Standard" id="id-types-hint">
-                For example: because the case was notified outside England, Wales or Northern Ireland, 
+                For example: because the case was notified outside England, Wales or Northern Ireland,
                 or before the year 2000.
             </nhs-hint>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="PatientTbHistory.PreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="true" id="previous-tb-yes" 
+                    <input asp-for="PreviousTbHistory.PreviouslyHadTb" class="nhsuk-radios__input" type="radio" value="@Status.Yes" id="previous-tb-yes"
                            data-aria-controls="conditional-previously-had-tb-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="previous-tb-yes">
-                        Yes
+                        @Status.Yes
                     </label>
                 </div>
 
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-previously-had-tb-conditional">
-                    <validate-input model="PreviousHistory" property="PreviousTBDiagnosisYear" shouldvalidatefull="@fullValidation" inline-template>
+                    <validate-input property="PreviousTbDiagnosisYear" shouldvalidatefull="@fullValidation" inline-template>
                         @{
-                            var hasPreviousTbDiagnosisError = !Model.IsValid("PatientTBHistory.PreviousTBDiagnosisYear");
+                            var hasPreviousTbDiagnosisError = !Model.IsValid("PreviousTbHistory.PreviousTbDiagnosisYear");
                             var previousTbDiagnosisGroupState = hasPreviousTbDiagnosisError ? Error : Standard;
                         }
                         <nhs-form-group nhs-form-group-type="@previousTbDiagnosisGroupState">
-                            <label nhs-label-type="Standard" asp-for="PatientTbHistory.PreviousTBDiagnosisYear"> Year of diagnosis </label>
+                            <label nhs-label-type="Standard" asp-for="PreviousTbHistory.PreviousTbDiagnosisYear"> 
+                                @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviousTbDiagnosisYear)
+                            </label>
                             <span nhs-span-type="ErrorMessage" id="previous-tb-diagnosis-year-error" ref="errorField"
-                                  asp-validation-for="PatientTbHistory.PreviousTBDiagnosisYear" has-error="@hasPreviousTbDiagnosisError"></span>
+                                  asp-validation-for="PreviousTbHistory.PreviousTbDiagnosisYear" has-error="@hasPreviousTbDiagnosisError">
+                            </span>
                             <input ref="inputField" v-on:blur="validate" is-error-input="@hasPreviousTbDiagnosisError"
-                                   nhs-input-type="Number" fixed-width="Four" asp-for="PatientTbHistory.PreviousTBDiagnosisYear">
+                                   nhs-input-type="Number" fixed-width="Four" asp-for="PreviousTbHistory.PreviousTbDiagnosisYear">
                         </nhs-form-group>
                     </validate-input>
+                    <nhs-fieldset>
+                        <nhs-fieldset-legend nhs-legend-size="Standard">
+                                @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviouslyTreated)?
+                        </nhs-fieldset-legend>
+                        <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="PreviousTbHistory.PreviouslyTreated"
+                                       class="nhsuk-radios__input"
+                                       type="radio"
+                                       value="@Status.Yes"
+                                       id="previous-treatment-yes"
+                                       data-aria-controls="conditional-previously-treated-tb-conditional">
+                                <label class="nhsuk-label nhsuk-radios__label" for="previous-treatment-yes">
+                                    @Status.Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-previously-treated-tb-conditional">
+
+                                @{
+                                    var hasCountryError = !Model.IsValid("PreviousTbHistory.PreviousTreatmentCountryId");
+                                    var countryGroupState = hasCountryError ? Error : Standard;
+                                }
+                                <validate-input property="PreviousTreatmentCountryId"
+                                                shouldvalidatefull="@fullValidation"
+                                                inline-template>
+                                    <nhs-form-group nhs-form-group-type="@countryGroupState" id="PreviousTbHistory-PreviousTreatmentCountryId">
+                                        <label nhs-label-type="Standard"
+                                               asp-for="PreviousTbHistory.PreviousTreatmentCountryId">
+                                            @Html.DisplayNameFor(m => m.PreviousTbHistory.PreviousTreatmentCountryId)
+                                        </label>
+                                        <span nhs-span-type="ErrorMessage" id="birth-country-error"
+                                              ref="errorField" asp-validation-for="PreviousTbHistory.PreviousTreatmentCountryId" has-error="@hasCountryError">
+                                        </span>
+                                        <autocomplete-select v-on:validate-input="validate" placeholder="Select country of treatment" validate="true" inline-template>
+                                            <select asp-for="PreviousTbHistory.PreviousTreatmentCountryId"
+                                                    asp-items="Model.Countries" 
+                                                    ref="selectElement">
+                                                <option value=""></option>
+                                            </select>
+                                        </autocomplete-select>
+                                    </nhs-form-group>
+                                </validate-input>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="PreviousTbHistory.PreviouslyTreated"
+                                       class="nhsuk-radios__input"
+                                       type="radio"
+                                       value="@Status.No"
+                                       id="previous-treatment-no">
+                                <label class="nhsuk-label nhsuk-radios__label" for="previous-treatment-no">
+                                    @Status.No
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input asp-for="PreviousTbHistory.PreviouslyTreated"
+                                       class="nhsuk-radios__input"
+                                       type="radio"
+                                       value="@Status.Unknown"
+                                       id="previous-treatment-unknown">
+                                <label class="nhsuk-label nhsuk-radios__label" for="previous-treatment-unknown">
+                                    @Status.Unknown
+                                </label>
+                            </div>
+                        </div>
+                    </nhs-fieldset>
                 </div>
 
                 <div class="nhsuk-radios__item">
-                    <input asp-for="PatientTbHistory.PreviouslyHadTB" class="nhsuk-radios__input" type="radio" value="false" id="previous-tb-no">
+                    <input asp-for="PreviousTbHistory.PreviouslyHadTb" class="nhsuk-radios__input" type="radio" value="@Status.No" id="previous-tb-no">
                     <label class="nhsuk-label nhsuk-radios__label" for="previous-tb-no">
-                        No
+                        @Status.No
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="PreviousTbHistory.PreviouslyHadTb" class="nhsuk-radios__input" type="radio" value="@Status.Unknown" id="previous-tb-unknown">
+                    <label class="nhsuk-label nhsuk-radios__label" for="previous-tb-unknown">
+                        @Status.Unknown
                     </label>
                 </div>
             </div>
         </nhs-fieldset>
     </nhs-form-group>
-
-    <br />
-    
 
 </div>

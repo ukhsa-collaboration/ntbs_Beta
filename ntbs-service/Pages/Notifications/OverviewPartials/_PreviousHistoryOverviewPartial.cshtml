@@ -19,12 +19,30 @@
 <div class="notification-overview-details-container">
     <nhs-grid-row>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Previous notification of TB </div>
-            <div class="cell-min-height"> @Model.Notification.PatientTBHistory.PreviouslyHadTBYesNo </div>
+            <div class="notification-details-label">
+                @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviouslyHadTb)
+            </div>
+            <div class="cell-min-height"> @Model.Notification.PreviousTbHistory.PreviouslyHadTb </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
-            <div class="notification-details-label"> Year of previous diagnosis </div>
-            <div class="cell-min-height"> @Model.Notification.PatientTBHistory.PreviousTBDiagnosisYear </div>
+            <div class="notification-details-label">
+                @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviousTbDiagnosisYear)
+            </div>
+            <div class="cell-min-height"> @Model.Notification.PreviousTbHistory.PreviousTbDiagnosisYear </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label"> 
+                @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviouslyTreated)
+            </div>
+            <div class="cell-min-height">
+                 @Model.Notification.PreviousTbHistory.PreviouslyTreated
+            </div>
+        </nhs-grid-column>
+        <nhs-grid-column grid-column-width="OneQuarter">
+            <div class="notification-details-label">
+                @Html.DisplayNameFor(m => m.Notification.PreviousTbHistory.PreviousTreatmentCountryId)
+            </div>
+            <div class="cell-min-height"> @Model.Notification.PreviousTbHistory.PreviousTreatmentCountryName </div>
         </nhs-grid-column>
     </nhs-grid-row>
 </div>
