@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using Dapper;
@@ -51,7 +52,16 @@ namespace ntbs_service.DataMigration
             
             // The BulkInsertImportedNotificationsQueryTemplate query needs the name of the app
             // database - see its doc for more info
-            _ntbsDb = ntbsContext.Database.GetDbConnection().Database;
+            try
+            {
+                _ntbsDb = ntbsContext.Database.GetDbConnection().Database;
+            }
+            catch (InvalidOperationException e)
+            {
+                // In test, we mock out the db, so it's possible to get the db name from the context - nor would calling
+                // the methods that rely on it make sense.
+                _ntbsDb = "";
+            }
         }
 
         public async Task CreateTableIfNotExists()
