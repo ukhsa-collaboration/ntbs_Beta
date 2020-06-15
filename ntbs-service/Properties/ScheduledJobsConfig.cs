@@ -19,5 +19,8 @@
         
         public bool NotificationClusterUpdateEnabled { get; set; }
         public string NotificationClusterUpdateCron { get; set; }
+        
+        public bool MarkImportedNotificationsAsImportedEnabled { get; set; }
+        public string MarkImportedNotificationsAsImportedCron { get; set; }
     }
 }

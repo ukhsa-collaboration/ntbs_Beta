@@ -24,17 +24,15 @@ namespace ntbs_service.Services
 
     public class LegacySearchService : ILegacySearchService
     {
-        private const string SelectQueryStartTemplate = @"SELECT * " + FromString;
-        private const string CountQueryTemplate = @"SELECT COUNT(*) " + FromString;
-        const string FromString = @"
+        private string SelectQueryStart => @"SELECT * " + FromString;
+        private string CountQuery => @"SELECT COUNT(*) " + FromString;
+
+        private string FromString => $@"
             FROM MergedNotifications n 
             LEFT JOIN Addresses addrs ON addrs.OldNotificationId = n.PrimaryNotificationId
             LEFT JOIN Demographics dmg ON dmg.OldNotificationId = n.PrimaryNotificationId
-            WHERE NOT EXISTS ({0})
+            WHERE NOT EXISTS ({_notificationImportHelper.SelectImportedNotificationWhereIdEquals("n.PrimaryNotificationId")})
             ";
-        private string SelectQueryStart => string.Format(SelectQueryStartTemplate, _notificationImportHelper.SelectImportedNotificationByIdQuery);
-
-        private string CountQuery => string.Format(CountQueryTemplate, _notificationImportHelper.SelectImportedNotificationByIdQuery);
 
         const string SelectQueryEnd = @"
             ORDER BY CASE
@@ -139,7 +137,7 @@ namespace ntbs_service.Services
                 NotificationStatusString = "Legacy",
                 NotificationDate = (result.NotificationDate as DateTime?).ConvertToString(),
                 Source = result.Source,
-                Sex = Sexes.Where(s => s.SexId == result.NtbsSexId)?.Single().Label,
+                Sex = Sexes.Single(s => s.SexId == result.NtbsSexId).Label,
                 SortByDate = result.NotificationDate,
                 Name = result.FamilyName.ToUpper() + ", " + result.GivenName,
                 CountryOfBirth = result.BirthCountryName,
