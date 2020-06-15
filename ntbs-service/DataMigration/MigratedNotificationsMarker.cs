@@ -72,7 +72,7 @@ namespace ntbs_service.DataMigration
                         {
                             await connection.ExecuteAsync(
                                 _importHelper.InsertImportedNotificationQuery,
-                                new {notification.ETSID, ImportedAt = importedAt}
+                                new {LegacyId = notification.ETSID, ImportedAt = importedAt}
                             );
                         }
 
@@ -80,7 +80,7 @@ namespace ntbs_service.DataMigration
                         {
                             await connection.ExecuteAsync(
                                 _importHelper.InsertImportedNotificationQuery,
-                                new {notification.LTBRID, ImportedAt = importedAt}
+                                new {LegacyId = notification.LTBRID, ImportedAt = importedAt}
                             );
                         }
                     }
