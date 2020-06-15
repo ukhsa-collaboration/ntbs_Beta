@@ -2,9 +2,9 @@
 @model ntbs_service.Models.Entities.User
 
 <nhs-width-container container-width="Standard">
-    <h2 class="contact-details-fullname"> @Model.FullName </h2>
+    <h2 class="nhsuk-heading-l"> @Model.FullName </h2>
     <div class="contact-details-edit-container">
-        <h3 class="contact-details-section-heading"> Contact details </h3>
+        <h3 class="nhsuk-heading-m"> Contact details </h3>
         @if (TempData["IsEditable"] as bool? == true)
         {
             <a href="@RouteHelper.GetContactDetailsSubPath(ContactDetailsSubPaths.Edit)"
@@ -68,7 +68,7 @@
     
     <br/>
     <div class="contact-details-edit-container">
-        <h3 class="contact-details-section-heading"> Assigned Services </h3>
+        <h3 class="nhsuk-heading-m"> Assigned Services </h3>
     </div>
     <div class="contact-details-container">
         <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">

@@ -14,7 +14,7 @@ namespace ntbs_service.DataAccess
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByEmail(string email);
-        Task SaveUser(User user);
+        Task SaveUserContactDetails(User user);
     }
 
     public class UserRepository : IUserRepository
@@ -57,9 +57,15 @@ namespace ntbs_service.DataAccess
             return user;
         }
 
-        public async Task SaveUser(User user)
+        public async Task SaveUserContactDetails(User user)
         {
-            _context.Update(user);
+            _context.Attach(user);
+            _context.Entry(user).Property(x => x.JobTitle).IsModified = true;
+            _context.Entry(user).Property(x => x.PhoneNumberPrimary).IsModified = true;
+            _context.Entry(user).Property(x => x.PhoneNumberSecondary).IsModified = true;
+            _context.Entry(user).Property(x => x.EmailPrimary).IsModified = true;
+            _context.Entry(user).Property(x => x.EmailSecondary).IsModified = true;
+            _context.Entry(user).Property(x => x.Notes).IsModified = true;
             await _context.SaveChangesAsync();
         }
 

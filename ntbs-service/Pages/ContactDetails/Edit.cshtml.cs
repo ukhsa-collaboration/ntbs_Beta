@@ -43,7 +43,7 @@ namespace ntbs_service.Pages.ContactDetails
                 return Page();
             }
             
-            await _userRepository.SaveUser(ContactDetails);
+            await _userRepository.SaveUserContactDetails(ContactDetails);
             return RedirectToPage("/ContactDetails/Index");
         }
         

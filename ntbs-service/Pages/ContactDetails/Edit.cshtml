@@ -14,14 +14,7 @@
     </div>
     <div class="contact-details-container">
         <form method="post" autocomplete="off">
-        
             <input type="hidden" asp-for="ContactDetails.Username" />
-            <input type="hidden" asp-for="ContactDetails.GivenName" />
-            <input type="hidden" asp-for="ContactDetails.FamilyName" />
-            <input type="hidden" asp-for="ContactDetails.DisplayName" />
-            <input type="hidden" asp-for="ContactDetails.AdGroups" />
-            <input type="hidden" asp-for="ContactDetails.IsActive" />
-            <input type="hidden" asp-for="ContactDetails.IsCaseManager" />
             
             @{
                 var jobTitleError = !Model.IsValid("ContactDetails.JobTitle");

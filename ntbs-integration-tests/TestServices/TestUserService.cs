@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
 using ntbs_service.Models;
+using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
@@ -71,6 +72,11 @@ namespace ntbs_integration_tests.TestServices
         {
             return Task.CompletedTask;
         }
+
+        public Task<User> GetUser(ClaimsPrincipal user)
+        {
+            return Task.FromResult(new User());
+        }
     }
     
     public class NhsUserWithNoTbServices : IUserService
@@ -107,6 +113,11 @@ namespace ntbs_integration_tests.TestServices
         public Task RecordUserLoginAsync(string username)
         {
             return Task.CompletedTask;
+        }
+
+        public Task<User> GetUser(ClaimsPrincipal user)
+        {
+            return Task.FromResult(new User());
         }
     }
 
@@ -145,6 +156,11 @@ namespace ntbs_integration_tests.TestServices
         {
             return Task.CompletedTask;
         }
+
+        public Task<User> GetUser(ClaimsPrincipal user)
+        {
+            return Task.FromResult(new User());
+        }
     }
     
     public class NationalTeamUser : IUserService
@@ -177,6 +193,11 @@ namespace ntbs_integration_tests.TestServices
         public Task RecordUserLoginAsync(string username)
         {
             return Task.CompletedTask;
+        }
+
+        public Task<User> GetUser(ClaimsPrincipal user)
+        {
+            return Task.FromResult(new User());
         }
     }
 }
