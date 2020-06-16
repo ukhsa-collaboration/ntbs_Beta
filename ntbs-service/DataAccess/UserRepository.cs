@@ -53,7 +53,7 @@ namespace ntbs_service.DataAccess
                 .Include(u => u.CaseManagerTbServices)
                 .ThenInclude(c => c.TbService)
                 .ThenInclude(tb => tb.PHEC)
-                .FirstOrDefaultAsync(u => String.Equals(u.Username, username, StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
             return user;
         }
 
