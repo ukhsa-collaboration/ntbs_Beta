@@ -18,7 +18,14 @@ namespace ntbs_service.Migrations
                 keyColumn: "Question",
                 keyValue: "Why do I not have permission to edit a record?",
                 column: "AnchorLink",
-                value: "no-permission-to-edit-a-record");
+                value: "no-permission-to-edit-a-record");            
+            
+            migrationBuilder.UpdateData(
+                table: "FrequentlyAskedQuestion",
+                keyColumn: "Question",
+                keyValue: "Why can’t I view the full details of a record?",
+                column: "AnchorLink",
+                value: "no-permission-to-view-a-record");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

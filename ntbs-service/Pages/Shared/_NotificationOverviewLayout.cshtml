@@ -1,6 +1,7 @@
 @model ntbs_service.Pages.Notifications.NotificationModelBase
 @using ntbs_service.Helpers
 @using ntbs_service.Models
+@using ntbs_service.Models.Enums
 
 @{
     Layout = "./_NotificationLayout.cshtml";
@@ -34,11 +35,18 @@
                     <nhs-inset-text classes="nhs-inset-text--ntbs">
                         <span>
                             @Model.PermissionReason
-                            @if (Model.PermissionReason == Messages.ClosedNoEdit)
+                            @if (Model.PermissionLevel == PermissionLevel.ReadOnly)
                             {
                                 <span> 
                                     See 
                                     <a href="@RouteHelper.GetFaqPageWithSectionAnchor("no-permission-to-edit-a-record")">help</a> 
+                                    for more information.
+                                </span>
+                            } else if (Model.PermissionLevel == PermissionLevel.None)
+                            {
+                                <span> 
+                                    See 
+                                    <a href="@RouteHelper.GetFaqPageWithSectionAnchor("no-permission-to-view-a-record")">help</a> 
                                     for more information.
                                 </span>
                             }
