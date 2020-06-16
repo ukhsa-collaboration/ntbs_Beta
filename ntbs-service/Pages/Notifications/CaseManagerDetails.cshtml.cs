@@ -32,6 +32,7 @@ namespace ntbs_service.Pages.Notifications
                 return NotFound();
             }
             
+            await TryGetLinkedNotificationsAsync();
             await AuthorizeAndSetBannerAsync();
             CaseManagerDetails = await _userService.GetUser(User);
 
