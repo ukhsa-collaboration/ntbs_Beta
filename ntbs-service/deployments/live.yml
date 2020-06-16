@@ -86,13 +86,7 @@ spec:
               value: "true"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
-            - name: ScheduledJobsConfig__DrugResistanceProfileUpdateEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__UnmatchedLabResultAlertsEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__DataQualityAlertsEnabled
-              value: "false"
-            - name: ScheduledJobsConfig__NotificationClusterUpdateEnabled
+            - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
               value: "false"
             - name: Sentry__Environment
               value: live
@@ -133,10 +127,12 @@ spec:
   selector:
     app: ntbs-live
 ---
+# Temporary ingress (route) which can be used to access the system whilst real url is not ready (or has the 
+# coming-soon page deployed on it).
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ntbs-live	
+  name: ntbs-live # I want to name this ntbs-live-temp, but Openshift is being stubborn about deleting old route
 spec:
   rules:
     - host: ntbs-live.ocpappcol01.unix.phe.gov.uk
@@ -146,3 +142,66 @@ spec:
               serviceName: ntbs-live
               servicePort: 80
             path: /
+---
+# Real ingress (route) to be used by the live env 
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ntbs-live-real # I want to name this ntbs-live, but Openshift is being stubborn about deleting old route
+spec:
+  rules:
+#   Once we have the real urls, we'll want to use this
+    
+#    - host: ntbs.phe.nhs.uk
+#      http:
+#        paths:
+#          - backend:
+#              # Replace with the ntbs-live service once ready to go live
+#              serviceName: coming-soon
+#              servicePort: 80
+#            path: /
+    - host: coming-soon.ocpappcol01.unix.phe.gov.uk
+      http:
+        paths:
+          - backend:
+              serviceName: coming-soon
+              servicePort: 80
+            path: /
+---
+# Coming-soon page app
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: coming-soon
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: coming-soon
+    spec:
+      containers:
+        - name: coming-soon-app
+          image: "ntbscontainerregistry.azurecr.io/coming-soon"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: App__ReportsUrl
+              value:
+      imagePullSecrets:
+        - name: registery-password
+        - name: default-dockercfg-bs7wj
+---
+# Service to front the coming-soon page app
+apiVersion: v1
+kind: Service
+metadata:
+  name: coming-soon
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: coming-soon

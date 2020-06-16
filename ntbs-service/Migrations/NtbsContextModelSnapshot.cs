@@ -24352,22 +24352,34 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("SexId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.PatientTBHistory", "PatientTBHistory", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.PreviousTbHistory", "PreviousTbHistory", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<int?>("PreviousTBDiagnosisYear");
+                            b1.Property<int?>("PreviousTbDiagnosisYear");
 
-                            b1.Property<bool?>("PreviouslyHadTB");
+                            b1.Property<int?>("PreviousTreatmentCountryId");
+
+                            b1.Property<string>("PreviouslyHadTb")
+                                .HasMaxLength(30);
+
+                            b1.Property<string>("PreviouslyTreated")
+                                .HasMaxLength(30);
 
                             b1.HasKey("NotificationId");
 
-                            b1.ToTable("PatientTBHistories");
+                            b1.HasIndex("PreviousTreatmentCountryId");
+
+                            b1.ToTable("PreviousTbHistory");
 
                             b1.HasOne("ntbs_service.Models.Entities.Notification")
-                                .WithOne("PatientTBHistory")
-                                .HasForeignKey("ntbs_service.Models.Entities.PatientTBHistory", "NotificationId")
+                                .WithOne("PreviousTbHistory")
+                                .HasForeignKey("ntbs_service.Models.Entities.PreviousTbHistory", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
+
+                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "PreviousTreatmentCountry")
+                                .WithMany()
+                                .HasForeignKey("PreviousTreatmentCountryId");
                         });
 
                     b.OwnsMany("ntbs_service.Models.Entities.PreviousTbService", "PreviousTbServices", b1 =>

@@ -34,6 +34,7 @@ namespace ntbs_service.DataMigration
         private readonly IPostcodeService _postcodeService;
         private readonly IImportLogger _logger;
         private readonly IMigrationRepository _migrationRepository;
+        private readonly IMigratedNotificationsMarker _migratedNotificationsMarker;
         private readonly ISpecimenService _specimenService;
         private readonly IReferenceDataRepository _referenceDataRepository;
 
@@ -44,6 +45,7 @@ namespace ntbs_service.DataMigration
                              IImportLogger logger,
                              IHub sentryHub,
                              IMigrationRepository migrationRepository,
+                             IMigratedNotificationsMarker migratedNotificationsMarker,
                              ISpecimenService specimenService,
                              IReferenceDataRepository referenceDataRepository)
         {
@@ -58,6 +60,7 @@ namespace ntbs_service.DataMigration
             _postcodeService = postcodeService;
             _logger = logger;
             _migrationRepository = migrationRepository;
+            _migratedNotificationsMarker = migratedNotificationsMarker;
             _specimenService = specimenService;
             _referenceDataRepository = referenceDataRepository;
         }
@@ -173,7 +176,7 @@ namespace ntbs_service.DataMigration
             try
             {
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
-                await _migrationRepository.MarkNotificationsAsImportedAsync(savedNotifications);
+                await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
                 await ImportReferenceLabResultsAsync(savedNotifications, importResult);
 
@@ -318,7 +321,7 @@ namespace ntbs_service.DataMigration
                 notification.SocialRiskFactors,
                 notification.HospitalDetails,
                 notification.ContactTracing,
-                notification.PatientTBHistory,
+                notification.PreviousTbHistory,
                 notification.TestData,
                 notification.MBovisDetails
             };

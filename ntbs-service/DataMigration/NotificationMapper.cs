@@ -205,7 +205,7 @@ namespace ntbs_service.DataMigration
             notification.SocialRiskFactors = ExtractSocialRiskFactors(rawNotification);
             notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
-            notification.PatientTBHistory = ExtractPatientTBHistory(rawNotification);
+            notification.PreviousTbHistory = ExtractPreviousTbHistory(rawNotification);
             notification.TreatmentEvents = await ExtractTreatmentEventsAsync(rawNotification);
             notification.MDRDetails = ExtractMdrDetailsAsync(rawNotification);
 
@@ -369,11 +369,11 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private PatientTBHistory ExtractPatientTBHistory(dynamic rawNotification)
+        private PreviousTbHistory ExtractPreviousTbHistory(dynamic rawNotification)
         {
-            var details = new PatientTBHistory();
-            details.PreviouslyHadTB = Converter.GetNullableBoolValue(rawNotification.PreviouslyHadTB);
-            details.PreviousTBDiagnosisYear = rawNotification.PreviousTBDiagnosisYear;
+            var details = new PreviousTbHistory();
+            details.PreviouslyHadTb = Converter.GetNullableBoolValue(rawNotification.PreviouslyHadTB);
+            details.PreviousTbDiagnosisYear = rawNotification.PreviousTBDiagnosisYear;
             return details;
         }
 

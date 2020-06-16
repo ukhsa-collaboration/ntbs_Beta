@@ -46,6 +46,11 @@ namespace ntbs_service.Helpers
         {
             return $"/ContactDetails/{subPath}";
         }
+      
+        public static string GetFaqPageWithSectionAnchor(string anchorId)
+        {
+            return $"/Help?faqId={anchorId}#{anchorId}";
+        }
     }
 
     public static class NotificationSubPaths

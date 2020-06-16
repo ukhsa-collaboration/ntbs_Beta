@@ -137,7 +137,7 @@ namespace ntbs_service.Services
         private void AppendCondition(string condition) 
         {
             sqlQuery += $@"
-                AND {condition}";
+                AND ({condition})";
         }
     }
 }

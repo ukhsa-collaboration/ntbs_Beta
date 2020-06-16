@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using ntbs_service.Services;
 using Hangfire.Server;
 using Sentry;
-using Serilog;
 
 namespace ntbs_migration_tests
 {
@@ -21,6 +20,7 @@ namespace ntbs_migration_tests
         private readonly NotificationMapper _notificationMapper;
         private readonly Mock<INotificationRepository> _mockNotificationRepository;
         private readonly Mock<IMigrationRepository> _mockMigrationRepository;
+        private readonly Mock<IMigratedNotificationsMarker> _mockMigratedNotificationsMarker;
         private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository;
         private readonly Mock<ISpecimenService> _mockSpecimenService;
         private readonly Mock<INotificationImportRepository> _mockNotificationImportRepository;
@@ -48,6 +48,7 @@ namespace ntbs_migration_tests
             _notificationMapper = new NotificationMapper(_mockMigrationRepository.Object, _mockReferenceDataRepository.Object, _mockImportLogger.Object);
 
             _mockNotificationRepository = new Mock<INotificationRepository>();
+            _mockMigratedNotificationsMarker = new Mock<IMigratedNotificationsMarker>();
             _mockNotificationImportRepository = new Mock<INotificationImportRepository>();
             _mockLogger = new Mock<IImportLogger>();
             _mockPostcodeService = new Mock<IPostcodeService>();
@@ -60,6 +61,7 @@ namespace ntbs_migration_tests
                                                                     _mockLogger.Object,
                                                                     _mockSentryHub.Object,
                                                                     _mockMigrationRepository.Object,
+                                                                    _mockMigratedNotificationsMarker.Object,
                                                                     _mockSpecimenService.Object,
                                                                     _mockReferenceDataRepository.Object
                                                                     );

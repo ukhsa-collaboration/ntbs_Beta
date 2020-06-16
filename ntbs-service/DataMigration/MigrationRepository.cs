@@ -5,15 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using ntbs_service.DataMigration.Exceptions;
-using ntbs_service.Models.Entities;
 
 namespace ntbs_service.DataMigration
 {
     public interface IMigrationRepository
     {
-        Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications);
-
         /// <returns>Groups of notifications, indexed by group id, or notification id for singletons</returns>
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds);
 
@@ -39,15 +35,17 @@ namespace ntbs_service.DataMigration
 
     public class MigrationRepository : IMigrationRepository
     {
-        const string NotificationIdsWithGroupIdsByIdQuery =
-            @"SELECT n.OldNotificationId, n.GroupId 
+        private string NotificationIdsWithGroupIdsByIdQuery =>
+            $@"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
-            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids";
+            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")}";
 
-        const string NotificationsIdsWithGroupIdsByDateQuery =
-            @"SELECT n.OldNotificationId, n.GroupId 
+        private string NotificationsIdsWithGroupIdsByDateQuery =>
+            $@"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
-            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate";
+            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
 
         const string NotificationsByIdQuery = @"
             SELECT *
@@ -128,31 +126,6 @@ namespace ntbs_service.DataMigration
         {
             connectionString = _configuration.GetConnectionString("migration");
             _importHelper = importHelper;
-        }
-
-        public async Task MarkNotificationsAsImportedAsync(ICollection<Notification> notifications)
-        {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-
-                    var importedAt = DateTime.Now.ToString("s");
-
-                    foreach (var notification in notifications)
-                    {
-                        await connection.ExecuteAsync(
-                            _importHelper.InsertImportedNotificationQuery,
-                            new {notification.LegacyId, ImportedAt = importedAt}
-                        );
-                    }
-                }
-                catch (Exception exception)
-                {
-                    throw new MarkingNotificationsAsImportedFailedException(notifications, exception);
-                }
-            }
         }
 
         public async Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(

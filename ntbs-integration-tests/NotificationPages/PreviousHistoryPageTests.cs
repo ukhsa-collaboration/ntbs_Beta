@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_service;
@@ -37,11 +36,8 @@ namespace ntbs_integration_tests.NotificationPages
             result.AssertRedirectTo($"/Notifications/{id}#{sectionAnchorId}");
         }
         
-        [Theory]
-        [InlineData(1899, "Please enter a valid year")]
-        [InlineData(2040, "Previous year of diagnosis must be the current year or earlier")]
-        [InlineData(1950, "Previous year of diagnosis must be later than date of birth year")]
-        public async Task Post_ReturnsPageWithModelErrors_IfYearOfDiagnosisInvalid(int tbDiagnosisYear, string errorMessage)
+        [Fact]
+        public async Task PageWithModelErrors_CorrectlyWiresUpErrorSummaryToFields()
         {
             // Arrange
             const int id = Utilities.NOTIFIED_ID;
@@ -51,8 +47,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["PatientTbHistory.PreviouslyHadTB"] = "true",
-                ["PatientTbHistory.PreviousTBDiagnosisYear"] = tbDiagnosisYear.ToString()
+                ["PreviousTbHistory.PreviouslyHadTb"] = "Yes",
+                ["PreviousTbHistory.PreviousTbDiagnosisYear"] = "1899"
             };
 
             // Act
@@ -60,8 +56,10 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             // Assert
-            resultDocument.AssertErrorSummaryMessage("PatientTbHistory-PreviousTBDiagnosisYear",
-                "previous-tb-diagnosis-year", errorMessage);
+            resultDocument.AssertErrorSummaryMessage(
+                "PreviousTbHistory-PreviousTbDiagnosisYear",
+                "previous-tb-diagnosis-year",
+                "Please enter a valid year");
         }
         
         [Fact]

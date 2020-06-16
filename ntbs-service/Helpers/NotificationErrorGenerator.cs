@@ -50,7 +50,7 @@ namespace ntbs_service.Helpers
                         subPath = NotificationSubPaths.EditHospitalDetails;
                         displayName = "Hospital Details";
                         break;
-                    case "PatientTBHistory":
+                    case "PreviousTbHistory":
                         subPath = NotificationSubPaths.EditPreviousHistory;
                         displayName = "Previous History";
                         break;

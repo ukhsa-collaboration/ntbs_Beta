@@ -36,7 +36,7 @@ namespace ntbs_service.Services
             _context.Entry(notification.MDRDetails).State = EntityState.Detached;
             _context.Entry(notification.MBovisDetails).State = EntityState.Detached;
             _context.Entry(notification.PatientDetails).State = EntityState.Detached;
-            _context.Entry(notification.PatientTBHistory).State = EntityState.Detached;
+            _context.Entry(notification.PreviousTbHistory).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorDrugs).State = EntityState.Detached;
             _context.Entry(notification.SocialRiskFactors.RiskFactorHomelessness).State = EntityState.Detached;

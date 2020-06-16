@@ -28,7 +28,7 @@ namespace ntbs_service.Services
         Task UpdateContactTracingAsync(Notification notification, ContactTracing contactTracing);
         Task UpdateTravelAndVisitorAsync(Notification notification, TravelDetails travelDetails, VisitorDetails visitorDetails);
         void ClearTravelOrVisitorFields(ITravelOrVisitorDetails travelOrVisitorDetails);
-        Task UpdatePatientTbHistoryAsync(Notification notification, PatientTBHistory history);
+        Task UpdatePreviousTbHistoryAsync(Notification notification, PreviousTbHistory history);
         Task UpdateSocialRiskFactorsAsync(Notification notification, SocialRiskFactors riskFactors);
         Task UpdateImmunosuppresionDetailsAsync(Notification notification, ImmunosuppressionDetails immunosuppressionDetails);
         Task UpdateMDRDetailsAsync(Notification notification, MDRDetails details);
@@ -228,9 +228,9 @@ namespace ntbs_service.Services
             travelOrVisitorDetails.StayLengthInMonths3 = null;
         }
 
-        public async Task UpdatePatientTbHistoryAsync(Notification notification, PatientTBHistory tBHistory)
+        public async Task UpdatePreviousTbHistoryAsync(Notification notification, PreviousTbHistory tBHistory)
         {
-            _context.SetValues(notification.PatientTBHistory, tBHistory);
+            _context.SetValues(notification.PreviousTbHistory, tBHistory);
 
             await _notificationRepository.SaveChangesAsync();
         }
