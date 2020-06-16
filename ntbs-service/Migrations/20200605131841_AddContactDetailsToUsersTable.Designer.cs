@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Enums;
@@ -10,9 +11,10 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Migrations
 {
     [DbContext(typeof(NtbsContext))]
-    partial class NtbsContextModelSnapshot : ModelSnapshot
+    [Migration("20200605131841_AddContactDetailsToUsersTable")]
+    partial class AddContactDetailsToUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -474,6 +476,9 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("AdGroups");
 
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500);
+
                     b.Property<string>("DisplayName")
                         .HasMaxLength(64);
 
@@ -495,9 +500,6 @@ namespace ntbs_service.Migrations
 
                     b.Property<string>("JobTitle")
                         .HasMaxLength(50);
-                        
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500);
 
                     b.Property<string>("PhoneNumberPrimary")
                         .HasMaxLength(100);
@@ -24352,34 +24354,22 @@ namespace ntbs_service.Migrations
                                 .HasForeignKey("SexId");
                         });
 
-                    b.OwnsOne("ntbs_service.Models.Entities.PreviousTbHistory", "PreviousTbHistory", b1 =>
+                    b.OwnsOne("ntbs_service.Models.Entities.PatientTBHistory", "PatientTBHistory", b1 =>
                         {
                             b1.Property<int>("NotificationId");
 
-                            b1.Property<int?>("PreviousTbDiagnosisYear");
+                            b1.Property<int?>("PreviousTBDiagnosisYear");
 
-                            b1.Property<int?>("PreviousTreatmentCountryId");
-
-                            b1.Property<string>("PreviouslyHadTb")
-                                .HasMaxLength(30);
-
-                            b1.Property<string>("PreviouslyTreated")
-                                .HasMaxLength(30);
+                            b1.Property<bool?>("PreviouslyHadTB");
 
                             b1.HasKey("NotificationId");
 
-                            b1.HasIndex("PreviousTreatmentCountryId");
-
-                            b1.ToTable("PreviousTbHistory");
+                            b1.ToTable("PatientTBHistories");
 
                             b1.HasOne("ntbs_service.Models.Entities.Notification")
-                                .WithOne("PreviousTbHistory")
-                                .HasForeignKey("ntbs_service.Models.Entities.PreviousTbHistory", "NotificationId")
+                                .WithOne("PatientTBHistory")
+                                .HasForeignKey("ntbs_service.Models.Entities.PatientTBHistory", "NotificationId")
                                 .OnDelete(DeleteBehavior.Cascade);
-
-                            b1.HasOne("ntbs_service.Models.ReferenceEntities.Country", "PreviousTreatmentCountry")
-                                .WithMany()
-                                .HasForeignKey("PreviousTreatmentCountryId");
                         });
 
                     b.OwnsMany("ntbs_service.Models.Entities.PreviousTbService", "PreviousTbServices", b1 =>

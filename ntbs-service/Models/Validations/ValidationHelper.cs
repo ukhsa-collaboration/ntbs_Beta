@@ -26,6 +26,7 @@
         public const string YearRequired = "A year must be provided";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string SupplyAModelParameter = "Please supply at least one of {0} fields";
+        public const string SupplyCaseManagerPrimaryParameter = "Please supply at least one of Job Title, Phone number #1, Email #1 fields";
         public const string Mandatory = "{0} is a mandatory field";
         public const string RequiredEnter = "Please enter {0}";
         public const string RequiredSelect = "Please select {0}";
@@ -168,8 +169,8 @@
         public const string CharacterValidation = @"[a-zA-Z \-,.']+";
         public const string CharacterValidationWithNumbers = @"[0-9a-zA-z \-,.']+";
         public const string CharacterValidationWithNumbersForwardSlashAndNewLine = @"[0-9a-zA-Z \/\-,.'\n\r]+";
-        public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()\\\[\]=\*\?]+";
-        public const string CharacterValidationWithNumbersForwardSlashExtendedWithNewLine = @"[0-9a-zA-Z \/\-,.'`#&+;:$_()<>\\\[\]=\*\?\n\r]+";
+        public const string CharacterValidationWithNumbersForwardSlashExtended = @"[0-9a-zA-Z \/\-,.'`@#&+;:$_()\\\[\]=\*\?]+";
+        public const string CharacterValidationWithNumbersForwardSlashExtendedWithNewLine = @"[0-9a-zA-Z \/\-,.'`@#&+;:$_()<>\\\[\]=\*\?\n\r]+";
         public const string NumbersValidation = @"[0-9]+";
         public const string NumbersHyphenAndSpaceValidation = @"[0-9\- ]+";
         // Taken from https://stackoverflow.com/a/164994/2363767

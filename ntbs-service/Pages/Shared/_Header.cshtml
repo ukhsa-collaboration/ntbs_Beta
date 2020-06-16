@@ -4,6 +4,7 @@
 @{
     var breadcrumbs = ViewData["Breadcrumbs"];
 }
+
 <header role="banner" data-module="govuk-header">
     <div class="govuk-phase-banner">
         <div class="govuk-width-container">
@@ -35,42 +36,64 @@
         <div class="govuk-header__container govuk-width-container no-border">
             <nav>
                 <ul id="navigation" class="govuk-header__navigation header-navigation-list" aria-label="Top Level Navigation">
-                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                    <li class="govuk-header__navigation-item header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/">
                             Dashboard
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                    <li class="govuk-header__navigation-item header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/Search">
                             Search
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                    <li class="govuk-header__navigation-item header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/LabResults">
                             Lab results
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                    <li class="govuk-header__navigation-item header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/Reports">
                             Reports
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item" class="header-navigation-link">
+                    <li class="govuk-header__navigation-item header-navigation-link">
                         <a class="govuk-header__link header-navigation-list-item" href="/Help">
                             Help
                         </a>
                     </li>
                     @if ((await AuthorizationService.AuthorizeAsync(User, "AdminOnly")).Succeeded)
                     {
-                        <li class="govuk-header__navigation-item" class="header-navigation-link">
+                        <li class="govuk-header__navigation-item header-navigation-link">
                             <a class="govuk-header__link header-navigation-list-item" href="/Admin">
                                 Admin
                             </a>
                         </li>
                     }
-                    <li class="govuk-header__navigation-item" class="header-navigation-link">
-                        <a class="govuk-header__link header-navigation-list-item" href="/Logout">
-                            @(User.Identity.Name) (Logout)
+                    
+                    <case-manager-menu-dropdown inline-template>
+                        <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-with-js">
+                            <a v-on:click="toggleMenu" class="govuk-header__link header-navigation-list-item dropdown-header">
+                                @User.Identity.Name <i class="arrow down"></i>
+                            </a>
+                            <ul ref="case-manager-submenu" class="nav-menu-with-dropdown-list" >
+                                <li class="header-navigation-link nav-menu-with-dropdown-list-item">
+                                    <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
+                                        Edit personal details
+                                    </a>
+                                </li>
+                                <li class="header-navigation-link nav-menu-with-dropdown-list-item">
+                                    <a class="govuk-header__link header-navigation-list-item" href="/Logout">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </case-manager-menu-dropdown>
+                    
+                     <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-without-js">
+                        <a class="govuk-header__link header-navigation-list-item"
+                            href="/ContactDetails/Menu">
+                            @User.Identity.Name <i class="arrow down"></i>
                         </a>
                     </li>
                 </ul>

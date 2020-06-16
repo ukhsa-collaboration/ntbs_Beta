@@ -1,0 +1,11 @@
+﻿@page
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.ContactDetails.IndexModel
+
+@{
+    Layout = "./_Layout";
+    ViewData["Title"] = $"Case Manager details";
+    TempData["IsEditable"] = true;
+}
+
+<partial name="_CaseManagerDetailsPartial" model="@Model.ContactDetails"/>

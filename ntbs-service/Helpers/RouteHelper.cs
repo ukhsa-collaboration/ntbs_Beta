@@ -41,7 +41,12 @@ namespace ntbs_service.Helpers
         {
             return $"/LabResults/#specimen-{specimenId}";
         }
-        
+
+        public static string GetContactDetailsSubPath(string subPath)
+        {
+            return $"/ContactDetails/{subPath}";
+        }
+      
         public static string GetFaqPageWithSectionAnchor(string anchorId)
         {
             return $"/Help?faqId={anchorId}#{anchorId}";
@@ -69,6 +74,7 @@ namespace ntbs_service.Helpers
         public static string EditMBovisAnimalExposures => "Edit/MBovis/AnimalExposures";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
+        public static string ContactDetails => "ContactDetails";
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
         public static string TransferRequest => "Transfer";
@@ -139,5 +145,10 @@ namespace ntbs_service.Helpers
     public static class AlertSubPaths
     {
         public static string Dismiss => "Dismiss";
+    }
+
+    public static class ContactDetailsSubPaths
+    {
+        public static string Edit => "Edit";
     }
 }

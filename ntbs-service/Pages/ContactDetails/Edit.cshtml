@@ -1,0 +1,140 @@
+﻿@page "{handler?}"
+@using ntbs_service.Models
+@model ntbs_service.Pages.ContactDetails.EditModel
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = $"Case Manager contact details";
+}
+
+<nhs-width-container container-width="Standard">
+    <div class="case-manager-details-container">
+        <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial"/>
+    </div>
+
+    <h2 class="nhsuk-heading-l"> @Model.ContactDetails.FullName </h2>
+    <div class="case-manager-details-edit-container">
+        <h3 class="nhsuk-heading-m"> Contact details </h3>
+    </div>
+    <div class="case-manager-details-container">
+        <form method="post" autocomplete="off">
+            <input type="hidden" asp-for="ContactDetails.Username" />
+            <input type="hidden" asp-for="ContactDetails.GivenName" />
+            <input type="hidden" asp-for="ContactDetails.FamilyName" />
+            
+            @{
+                var jobTitleError = !Model.IsValid("ContactDetails.JobTitle");
+                var jobTitleState = jobTitleError ? Error : Standard;
+            }
+            <validate-input model="CaseManager" property="JobTitle" inline-template>
+                <nhs-form-group nhs-form-group-type="@jobTitleState" 
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.JobTitle)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.JobTitle">
+                        @Html.DisplayNameFor(x => x.ContactDetails.JobTitle)
+                    </label>
+                    <span ref="errorField" id="job-title-error" nhs-span-type="ErrorMessage" 
+                        asp-validation-for="ContactDetails.JobTitle" has-error="@jobTitleError"></span>
+                    <input ref="inputField" v-on:blur="validate" is-error-input="@jobTitleError" fixed-width="Twenty"
+                        nhs-input-type="Standard" asp-for="ContactDetails.JobTitle"/>
+                </nhs-form-group>
+            </validate-input>
+            
+            @{
+                var phonePrimaryError = !Model.IsValid("ContactDetails.PhoneNumberPrimary");
+                var phonePrimaryState = phonePrimaryError ? Error : Standard;
+            }
+            <validate-input model="CaseManager" property="PhoneNumberPrimary" inline-template>            
+                <nhs-form-group nhs-form-group-type="@phonePrimaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.PhoneNumberPrimary)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.PhoneNumberPrimary">
+                        @Html.DisplayNameFor(x => x.ContactDetails.PhoneNumberPrimary)
+                    </label>
+                    <span ref="errorField" id="phone-primary-error" nhs-span-type="ErrorMessage" 
+                        asp-validation-for="ContactDetails.PhoneNumberPrimary" has-error="@phonePrimaryError"></span>
+                    <input ref="inputField" v-on:blur="validate" is-error-input="@phonePrimaryError" nhs-input-type="Standard"
+                        fixed-width="Twenty" asp-for="ContactDetails.PhoneNumberPrimary"/>
+                </nhs-form-group>
+            </validate-input>
+            
+            @{
+                var phoneSecondaryError = !Model.IsValid("ContactDetails.PhoneNumberSecondary");
+                var phoneSecondaryState = phoneSecondaryError ? Error : Standard;
+            }
+            <validate-input model="CaseManager" property="PhoneNumberSecondary" inline-template>  
+                <nhs-form-group nhs-form-group-type="@phoneSecondaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.PhoneNumberSecondary)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.PhoneNumberSecondary">
+                        @Html.DisplayNameFor(x => x.ContactDetails.PhoneNumberSecondary)
+                    </label>
+                    <span ref="errorField" id="phone-secondary-error" nhs-span-type="ErrorMessage" 
+                        asp-validation-for="ContactDetails.PhoneNumberSecondary" has-error="@phoneSecondaryError">
+                    </span>
+                    <input ref="inputField" v-on:blur="validate" is-error-input="@phoneSecondaryError"
+                        nhs-input-type="Standard" fixed-width="Twenty" asp-for="ContactDetails.PhoneNumberSecondary"/>
+                </nhs-form-group>
+            </validate-input>
+            
+            @{
+                var emailPrimaryError = !Model.IsValid("ContactDetails.EmailPrimary");
+                var emailPrimaryState = emailPrimaryError ? Error : Standard;
+            }
+            <validate-input model="CaseManager" property="EmailPrimary" inline-template>
+                <nhs-form-group nhs-form-group-type="@emailPrimaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.EmailPrimary)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.EmailPrimary">
+                        @Html.DisplayNameFor(x => x.ContactDetails.EmailPrimary)
+                    </label>
+                    <span ref="errorField" id="email-primary-error" nhs-span-type="ErrorMessage" 
+                        asp-validation-for="ContactDetails.EmailPrimary" has-error="@emailPrimaryError"></span>
+                    <input ref="inputField" v-on:blur="validate" is-error-input="@emailPrimaryError" nhs-input-type="Standard"
+                        fixed-width="Twenty" asp-for="ContactDetails.EmailPrimary"/>
+                </nhs-form-group>
+            </validate-input>
+            
+            @{
+                var emailSecondaryError = !Model.IsValid("ContactDetails.EmailSecondary");
+                var emailSecondaryState = emailSecondaryError ? Error : Standard;
+            }
+            <validate-input model="CaseManager" property="EmailSecondary" inline-template>
+                <nhs-form-group nhs-form-group-type="@emailSecondaryState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.EmailSecondary)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.EmailSecondary">
+                        @Html.DisplayNameFor(x => x.ContactDetails.EmailSecondary)
+                    </label>
+                    <span ref="errorField" id="email-secondary-error" nhs-span-type="ErrorMessage" 
+                        asp-validation-for="ContactDetails.EmailSecondary" has-error="@emailSecondaryError"></span>
+                    <input ref="inputField" v-on:blur="validate" is-error-input="@emailSecondaryError" 
+                        nhs-input-type="Standard" fixed-width="Twenty" asp-for="ContactDetails.EmailSecondary"/>
+                </nhs-form-group>
+            </validate-input>
+            
+            @{
+                var notesError = !Model.IsValid("ContactDetails.Notes");
+                var notesState = notesError ? Error : Standard;
+            }
+            <validate-input model="CaseManager" property="Notes" inline-template>  
+                <nhs-form-group nhs-form-group-type="@notesState"
+                    id="@($"{nameof(Model.ContactDetails)}-{nameof(Model.ContactDetails.Notes)}")">
+                    <label nhs-label-type="Standard" asp-for="ContactDetails.Notes">
+                        @Html.DisplayNameFor(x => x.ContactDetails.Notes)
+                    </label>
+                    <span ref="errorField" id="notes-error" nhs-span-type="ErrorMessage" 
+                        asp-validation-for="ContactDetails.Notes" has-error="@notesError"></span>
+                    <textarea ref="textField" v-on:blur="validate" is-error-input="@notesError" 
+                        nhs-textarea-type="Standard" classes="nhsuk-input--width-20" rows="5" asp-for="ContactDetails.Notes">
+                    </textarea>
+                </nhs-form-group>
+            </validate-input>
+            
+            <button
+                nhs-button-type="Standard"
+                classes="ntbsuk-button--primary"
+                name="actionName"
+                value="@ActionNameString.Save"
+                id="save-button">
+                    Save
+            </button>
+        </form>
+    </div>
+</nhs-width-container>

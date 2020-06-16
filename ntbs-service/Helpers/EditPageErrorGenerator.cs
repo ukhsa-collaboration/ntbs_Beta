@@ -19,10 +19,10 @@ namespace ntbs_service.Helpers
             foreach (var key in modelState.Keys)
             {
                 var errorMessageList = modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList();
-                    foreach(var errorMessage in errorMessageList)
-                    {
-                        AddErrorMessageIntoDictionary(key, errorMessage);
-                    }
+                foreach(var errorMessage in errorMessageList)
+                {
+                    AddErrorMessageIntoDictionary(key, errorMessage);
+                }
             }
 
             return NotifyErrorDictionary;
@@ -39,10 +39,6 @@ namespace ntbs_service.Helpers
             if (!NotifyErrorDictionary.ContainsKey(hyphenatedProperty))
             {
                 NotifyErrorDictionary.Add(hyphenatedProperty, errorMessage);
-            }
-            else
-            {
-                return;
             }
         }
     }

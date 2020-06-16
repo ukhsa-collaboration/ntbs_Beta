@@ -1,0 +1,74 @@
+﻿@using ntbs_service.Helpers
+@model ntbs_service.Models.Entities.User
+
+<nhs-width-container container-width="Standard">
+    <h2 class="nhsuk-heading-l"> @Model.FullName </h2>
+    <div class="case-manager-details-edit-container">
+        <h3 class="nhsuk-heading-m"> Contact details </h3>
+        @if (TempData["IsEditable"] as bool? == true)
+        {
+            <a href="@RouteHelper.GetContactDetailsSubPath(ContactDetailsSubPaths.Edit)"
+               class="case-manager-details-edit-link govuk-link--no-visited-state">
+                Edit
+            </a>
+        }
+    </div>
+    <div class="case-manager-details-container">
+        <nhs-summary-list is-without-border="true">
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.JobTitle)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.JobTitle</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.PhoneNumberPrimary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.PhoneNumberPrimary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.PhoneNumberSecondary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.PhoneNumberSecondary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.EmailPrimary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.EmailPrimary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.EmailSecondary)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.EmailSecondary</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+          <nhs-summary-list-row>
+            <nhs-summary-list-row-key>@Html.DisplayNameFor(x => x.Notes)</nhs-summary-list-row-key>
+            <nhs-summary-list-row-value>@Model.Notes</nhs-summary-list-row-value>
+          </nhs-summary-list-row>
+        </nhs-summary-list>
+    </div>
+    
+    <br/>
+    <div class="case-manager-details-edit-container">
+        <h3 class="nhsuk-heading-m"> Assigned Services </h3>
+    </div>
+    <div class="case-manager-details-container">
+        <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
+                <nhs-table-head>
+                    <nhs-table-item>
+                        Region
+                    </nhs-table-item>
+                    <nhs-table-item>
+                        Service
+                    </nhs-table-item>
+                </nhs-table-head>
+                <nhs-table-body>
+                    @foreach (var result in Model.CaseManagerTbServices)
+                    {
+                        <nhs-table-body-row id="tb-service-@result.TbService.Code">
+                            <nhs-table-item>
+                                @result.TbService.PHEC.Name
+                            </nhs-table-item>
+                            <nhs-table-item>
+                                @result.TbService.Name
+                            </nhs-table-item>
+                        </nhs-table-body-row>
+                    }
+                </nhs-table-body>
+            </nhs-table>
+    </div>
+</nhs-width-container>

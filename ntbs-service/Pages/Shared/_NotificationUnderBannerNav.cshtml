@@ -37,3 +37,18 @@
         </a>
     </div>
 }
+
+
+@if (requiresSeparator)
+{
+    <div class="notification-banner-link-separator"> </div>
+}
+
+@{
+    var contactDetailsLinkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.ContactDetails ? " notification-banner-link--current" : "");
+}
+<div class="@contactDetailsLinkClass">
+    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.ContactDetails)">
+        Case Manager details
+    </a>
+</div>

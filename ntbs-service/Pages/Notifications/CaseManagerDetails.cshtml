@@ -1,0 +1,12 @@
+﻿@page "/Notifications/{NotificationId:int}/ContactDetails/{handler?}"
+@using ntbs_service.Helpers
+@model ntbs_service.Pages.Notifications.CaseManagerDetailsModel
+
+@{
+    Layout = "../Shared/_NotificationOverviewLayout.cshtml";
+    ViewData["Title"] = "Contact Details";
+    ViewData["NotificationId"] = @Model.NotificationId;
+    ViewData["CurrentPage"] = NotificationSubPaths.ContactDetails;
+}
+
+<partial name="ContactDetails/_CaseManagerDetailsPartial" model="@Model.CaseManagerDetails" />

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace ntbs_service.DataAccess
     {
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
+        Task<User> GetUserByEmail(string email);
+        Task SaveUserContactDetails(User user);
     }
 
     public class UserRepository : IUserRepository
@@ -41,6 +44,28 @@ namespace ntbs_service.DataAccess
         public async Task AddUserLoginEvent(UserLoginEvent userLoginEvent)
         {
             _context.UserLoginEvent.Add(userLoginEvent);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _context.User
+                .Include(u => u.CaseManagerTbServices)
+                .ThenInclude(c => c.TbService)
+                .ThenInclude(tb => tb.PHEC)
+                .FirstOrDefaultAsync(u => String.Equals(u.Username, email, StringComparison.CurrentCultureIgnoreCase));
+            return user;
+        }
+
+        public async Task SaveUserContactDetails(User user)
+        {
+            _context.Attach(user);
+            _context.Entry(user).Property(x => x.JobTitle).IsModified = true;
+            _context.Entry(user).Property(x => x.PhoneNumberPrimary).IsModified = true;
+            _context.Entry(user).Property(x => x.PhoneNumberSecondary).IsModified = true;
+            _context.Entry(user).Property(x => x.EmailPrimary).IsModified = true;
+            _context.Entry(user).Property(x => x.EmailSecondary).IsModified = true;
+            _context.Entry(user).Property(x => x.Notes).IsModified = true;
             await _context.SaveChangesAsync();
         }
 
