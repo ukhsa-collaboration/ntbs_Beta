@@ -102,10 +102,12 @@
                 <span>
                     @if (!String.IsNullOrEmpty(@Model.Notification.LTBRID))
                     {
-                        <span>LTBS: @Model.Notification.LTBRID,</span> 
+                        <span>LTBR: @Model.Notification.LTBRID</span> 
                     } 
                     @if (!String.IsNullOrEmpty(@Model.Notification.ETSID))
                     {
+                        var deliminator = !String.IsNullOrEmpty(@Model.Notification.LTBRID) ? ", " : "";
+                        @deliminator
                         <span>ETS: @Model.Notification.ETSID</span>
                     }
                 </span>

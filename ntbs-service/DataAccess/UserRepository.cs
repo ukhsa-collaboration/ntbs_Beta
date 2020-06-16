@@ -13,7 +13,7 @@ namespace ntbs_service.DataAccess
     {
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
-        Task<User> GetUserByEmail(string email);
+        Task<User> GetUserByUsername(string username);
         Task SaveUserContactDetails(User user);
     }
 
@@ -47,13 +47,13 @@ namespace ntbs_service.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUserByUsername(string username)
         {
             var user = await _context.User
                 .Include(u => u.CaseManagerTbServices)
                 .ThenInclude(c => c.TbService)
                 .ThenInclude(tb => tb.PHEC)
-                .FirstOrDefaultAsync(u => String.Equals(u.Username, email, StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefaultAsync(u => String.Equals(u.Username, username, StringComparison.CurrentCultureIgnoreCase));
             return user;
         }
 

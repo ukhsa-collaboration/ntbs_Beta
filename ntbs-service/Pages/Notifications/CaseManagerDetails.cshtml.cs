@@ -11,17 +11,17 @@ namespace ntbs_service.Pages.Notifications
 {
     public class CaseManagerDetailsModel : NotificationModelBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
         public User CaseManagerDetails { get; set; }
 
         public CaseManagerDetailsModel(
             INotificationService service,
             IAuthorizationService authorizationService,
-            IUserService userService,
+            IUserRepository userRepository,
             INotificationRepository notificationRepository) 
             : base(service, authorizationService, notificationRepository)
         {
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -34,7 +34,12 @@ namespace ntbs_service.Pages.Notifications
             
             await TryGetLinkedNotificationsAsync();
             await AuthorizeAndSetBannerAsync();
-            CaseManagerDetails = await _userService.GetUser(User);
+            CaseManagerDetails = await _userRepository.GetUserByUsername(Notification.HospitalDetails.CaseManagerUsername);
+
+            if (CaseManagerDetails == null)
+            {
+                return NotFound();
+            }
 
             return Page();
         }
