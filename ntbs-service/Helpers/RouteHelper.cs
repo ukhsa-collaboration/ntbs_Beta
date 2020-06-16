@@ -41,6 +41,11 @@ namespace ntbs_service.Helpers
         {
             return $"/LabResults/#specimen-{specimenId}";
         }
+        
+        public static string GetFaqPageWithSectionAnchor(string anchorId)
+        {
+            return $"/Help?faqId={anchorId}#{anchorId}";
+        }
     }
 
     public static class NotificationSubPaths
