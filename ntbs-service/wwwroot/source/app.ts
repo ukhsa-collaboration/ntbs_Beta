@@ -43,7 +43,7 @@ import InactivityChecker from "./Components/InactivityChecker";
 import InactivityLeaveComponent from "./Components/InactivityLeaveComponent";
 import DateInput from "./Components/DateInput";
 import NotificationWarning from "./Components/NotificationWarning";
-
+import CaseManagerMenuDropdown from "./Components/CaseManagerMenuDropdown";
 // For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
 require("./Polyfills/ArrayFromPolyfill");
@@ -85,6 +85,7 @@ Vue.component("form-leave-checker", FormLeaveChecker);
 Vue.component("confirm-component", ConfirmComponent);
 Vue.component("inactivity-checker", InactivityChecker);
 Vue.component("inactivity-component", InactivityLeaveComponent);
+Vue.component("case-manager-menu-dropdown", CaseManagerMenuDropdown);
 
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!

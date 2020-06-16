@@ -70,26 +70,28 @@
                         </li>
                     }
                     
-                    <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-with-js">
-                        <a onclick="toggleMenu()" class="govuk-header__link header-navigation-list-item dropdown-header">
-                            @User.Identity.Name <i class="arrow down"></i>
-                        </a>
-                        <ul id="case-manager-submenu" class="nav-menu-with-dropdown-list" >
-                            <li class="header-navigation-link nav-menu-with-dropdown-list-item">
-                                <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
-                                    Edit personal details
-                                </a>
-                            </li>
-                            <li class="header-navigation-link nav-menu-with-dropdown-list-item">
-                                <a class="govuk-header__link header-navigation-list-item" href="/Logout">
-                                    Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    <case-manager-menu-dropdown inline-template>
+                        <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-with-js">
+                            <a v-on:click="toggleMenu" class="govuk-header__link header-navigation-list-item dropdown-header">
+                                @User.Identity.Name <i class="arrow down"></i>
+                            </a>
+                            <ul ref="case-manager-submenu" class="nav-menu-with-dropdown-list" >
+                                <li class="header-navigation-link nav-menu-with-dropdown-list-item">
+                                    <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
+                                        Edit personal details
+                                    </a>
+                                </li>
+                                <li class="header-navigation-link nav-menu-with-dropdown-list-item">
+                                    <a class="govuk-header__link header-navigation-list-item" href="/Logout">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </case-manager-menu-dropdown>
                     
                      <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-without-js">
-                        <a onclick="toggleMenu()" class="govuk-header__link header-navigation-list-item"
+                        <a class="govuk-header__link header-navigation-list-item"
                             href="/ContactDetails/Menu">
                             @User.Identity.Name <i class="arrow down"></i>
                         </a>
