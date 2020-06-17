@@ -372,8 +372,17 @@ namespace ntbs_service.DataMigration
         private PreviousTbHistory ExtractPreviousTbHistory(dynamic rawNotification)
         {
             var details = new PreviousTbHistory();
-            details.PreviouslyHadTb = Converter.GetNullableBoolValue(rawNotification.PreviouslyHadTB);
             details.PreviousTbDiagnosisYear = rawNotification.PreviousTBDiagnosisYear;
+            // TODO NTBS-1506 Add new fields that need mapping, and fix this one
+            switch (rawNotification.PreviouslyHadTB)
+            {
+                case 0:
+                    details.PreviouslyHadTb = Status.No;
+                    break;
+                case 1:
+                    details.PreviouslyHadTb = Status.Yes;
+                    break;
+            }
             return details;
         }
 
