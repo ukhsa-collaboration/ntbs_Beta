@@ -39,7 +39,7 @@ namespace ntbs_service.DataMigration
             $@"SELECT n.OldNotificationId, n.GroupId 
             FROM MigrationNotificationsView n
             WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids
-            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")}";
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
 
         private string NotificationsIdsWithGroupIdsByDateQuery =>
             $@"SELECT n.OldNotificationId, n.GroupId 
