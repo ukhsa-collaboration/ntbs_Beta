@@ -1,0 +1,60 @@
+﻿@page "/ServiceDirectory/Region/{PhecCode}"
+@model ntbs_service.Pages.ServiceDirectory.RegionModel
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<nhs-width-container container-width="Standard">
+    <h2 class="nhsuk-heading-l">@Model.Phec?.Name</h2>
+    <h5 class="nhsuk-heading-xs">Service directory</h5>
+
+    <div class="govuk-accordion tb-services-and-case-managers" data-module="govuk-accordion" id="accordion-default">
+        @foreach (var tbService in Model.TbServices)
+        {
+            <div class="govuk-accordion__section ">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-default-heading-{@tbService.Code}">
+                            @tbService.Name
+                        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-{@tbService.Code}" class="govuk-accordion__section-content" 
+                    aria-labelledby="accordion-default-heading-{@tbService.Code}">
+                    @if (tbService.CaseManagerTbServices.Any())
+                    {
+                        <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
+                            <nhs-table-head>
+                                <nhs-table-item>
+                                    Full Name
+                                </nhs-table-item>
+                                <nhs-table-item>
+                                    Job Title
+                                </nhs-table-item>
+                                <nhs-table-item>
+                                </nhs-table-item>
+                            </nhs-table-head>
+                            <nhs-table-body>
+                                @foreach (var caseManagerTbService in tbService.CaseManagerTbServices)
+                                {
+                                    <nhs-table-body-row id="case-manager-">
+                                        <nhs-table-item>
+                                            @caseManagerTbService.CaseManager.FullName
+                                        </nhs-table-item>
+                                        <nhs-table-item>
+                                            @caseManagerTbService.CaseManager.JobTitle
+                                        </nhs-table-item>
+                                        <nhs-table-item>
+                                            <a href=@($"/ContactDetails/CaseManager/{caseManagerTbService.CaseManager.Username}")>View</a>
+                                        </nhs-table-item>
+                                    </nhs-table-body-row>
+                                }
+                            </nhs-table-body>
+                        </nhs-table>
+                    }
+                </div>
+            </div>
+        }
+    </div>                                                              
+</nhs-width-container>

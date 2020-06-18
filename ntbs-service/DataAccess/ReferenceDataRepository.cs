@@ -21,10 +21,12 @@ namespace ntbs_service.DataAccess
         Task<TBService> GetTbServiceByCodeAsync(string code);
         Task<TBService> GetTbServiceFromHospitalIdAsync(Guid hospitalId);
         Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode);
+        Task<IList<TBService>> GetTbServicesWithCaseManagersFromPhecCodeAsync(string phecCode);
         IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles);
         IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles);
         IQueryable<TBService> GetTbServicesQueryable();
         Task<IList<PHEC>> GetAllPhecs();
+        Task<PHEC> GetPhecByCode(string phecCode);
         Task<IList<User>> GetAllCaseManagers();
         Task<User> GetCaseManagerByUsernameAsync(string username);
         Task<User> GetUserByUsernameAsync(string username);
@@ -114,6 +116,15 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
+        public async Task<IList<TBService>> GetTbServicesWithCaseManagersFromPhecCodeAsync(string phecCode)
+        {
+            return await GetTbServicesQueryable()
+                .Where(t => phecCode.Contains(t.PHECCode))
+                .Include(tb => tb.CaseManagerTbServices)
+                .ThenInclude(c => c.CaseManager)
+                .ToListAsync();
+        }
+
         public IQueryable<TBService> GetDefaultTbServicesForPheUserQueryable(IEnumerable<string> roles)
         {
             return GetTbServicesQueryable()
@@ -136,9 +147,17 @@ namespace ntbs_service.DataAccess
 
         public async Task<IList<PHEC>> GetAllPhecs()
         {
-            return await _context.PHEC.ToListAsync();
+            return await _context.PHEC
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
-        
+
+        public async Task<PHEC> GetPhecByCode(string phecCode)
+        {
+            return await _context.PHEC
+                .FirstOrDefaultAsync(p => p.Code == phecCode);
+        }
+
         public async Task<IList<User>> GetAllCaseManagers()
         {
             return await _context.User
@@ -151,6 +170,7 @@ namespace ntbs_service.DataAccess
             return await _context.User
                 .Include(c => c.CaseManagerTbServices)
                 .ThenInclude(ct => ct.TbService)
+                .ThenInclude(ct => ct.PHEC)
                 .Where(u => u.IsCaseManager)
                 .SingleOrDefaultAsync(c => c.Username == username);
         }
