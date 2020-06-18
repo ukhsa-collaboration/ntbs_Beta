@@ -21,7 +21,7 @@
     "babel-loader": "8.1.0",
     "css-vars-ponyfill": "2.3.1",
     "es6-promise": "4.2.8",
-    "formdata-polyfill": "3.0.19",
+    "formdata-polyfill": "3.0.20",
     "govuk-frontend": "3.6.0",
     "nhsuk-frontend": "3.1.0",
     "qs": "6.9.4",
