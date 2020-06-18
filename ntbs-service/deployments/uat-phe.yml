@@ -1,10 +1,13 @@
 ﻿# To be deployed on PHE Kubernetes
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ntbs-uat
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: ntbs-uat
   template:
     metadata:
       labels:
@@ -90,27 +93,15 @@ spec:
               value: "false"
             - name: Sentry__Environment
               value: uat-phe
-            - name: KRB5CCNAME
-              value: /krb5cc/cc
+            - name: KRB5_CLIENT_KTNAME
+              value: /krbtab/keytab
           volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-        - name: krb5-authenticator
-          image: >-
-            docker-registry.default.svc:5000/krb5-authenticator/krb5-authenticator@sha256:7aef62b71dcc06cc5a529958e6330f8394df65b67253524112a00e0f6df53b32
-          imagePullPolicy: Always
-          volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-            - mountPath: /run/secrets/keytab
+            - mountPath: /krbtab
               name: krb-tab
-              readOnly: true
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj
       volumes:
-        - name: krb5cc
-          emptyDir: {}
         - name: krb-tab
           secret:
             defaultMode: 420
@@ -135,11 +126,11 @@ metadata:
   name: ntbs-uat	
 spec:
   rules:
-    - host: ntbs-uat.ocpappcol01.unix.phe.gov.uk
+    - host: ntbs-uat.apps.ocp-por.unix.phe.gov.uk
       http:
         paths:
           - backend:
-              serviceName: coming-sson
+              serviceName: coming-soon
               servicePort: 80
             path: /
 ---
@@ -150,7 +141,7 @@ metadata:
   name: ntbs-uat-hidden
 spec:
   rules:
-    - host: ntbs-uat-hidden.ocpappcol01.unix.phe.gov.uk
+    - host: ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk
       http:
         paths:
           - backend:

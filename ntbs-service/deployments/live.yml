@@ -1,10 +1,13 @@
 # To be deployed on PHE Kubernetes
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ntbs-live
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: ntbs-live
   template:
     metadata:
       labels:
@@ -90,26 +93,15 @@ spec:
               value: "false"
             - name: Sentry__Environment
               value: live
-            - name: KRB5CCNAME
-              value: /krb5cc/cc
+            - name: KRB5_CLIENT_KTNAME
+              value: /krbtab/keytab
           volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-        - name: krb5-authenticator
-          image: krb5-authenticator/krb5-authenticator:latest
-          imagePullPolicy: Always
-          volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-            - mountPath: /run/secrets/keytab
+            - mountPath: /krbtab
               name: krb-tab
-              readOnly: true
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj
       volumes:
-        - name: krb5cc
-          emptyDir: {}
         - name: krb-tab
           secret:
             defaultMode: 420
@@ -134,7 +126,7 @@ metadata:
   name: ntbs-live
 spec:
   rules:
-    - host: ntbs-live.ocpappcol01.unix.phe.gov.uk
+    - host: ntbs-live.apps.ocp-por.unix.phe.gov.uk
       http:
         paths:
           - backend:
@@ -149,7 +141,7 @@ metadata:
   name: ntbs-live-hidden 
 spec:
   rules:
-    - host: ntbs-live-hidden.ocpappcol01.unix.phe.gov.uk
+    - host: ntbs-live-hidden.apps.ocp-por.unix.phe.gov.uk
       http:
         paths:
           - backend:
@@ -158,12 +150,15 @@ spec:
             path: /
 ---
 # Coming-soon page app
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: coming-soon
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: coming-soon
   template:
     metadata:
       labels:
