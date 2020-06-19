@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: ntbs-uat
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: ntbs-uat
@@ -16,6 +16,20 @@ spec:
         image.openshift.io/triggers: >-
           [{"from":{"kind":"ImageStreamTag","name":"krb5-authenticator:latest","namespace":"krb5-authenticator"},"fieldPath":"spec.template.spec.containers[?(@.name==\"krb5-authenticator\")].image"}]
     spec:
+      # Attempts to schedule the second replica's pod on a different node than the first
+      # as a way to guard against unexpected node failures
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - ntbs-uat
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: ntbs-uat
           image: "ntbscontainerregistry.azurecr.io/ntbs-service:uat"
@@ -148,3 +162,15 @@ spec:
               serviceName: ntbs-uat
               servicePort: 80
             path: /
+---
+# Disruption budget makes sure that manual node drains done by k8s admin
+# wait for the app to have a pod running on another node before killing it
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: ntbs-uat-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: ntbs-uat
