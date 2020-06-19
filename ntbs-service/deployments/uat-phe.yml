@@ -134,34 +134,31 @@ spec:
     app: ntbs-uat
 ---
 # Real UAT route, connected to ntbs-uat.phe.nhs.uk
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
-  name: ntbs-uat	
+  name: ntbs-uat
 spec:
-  rules:
-    - host: ntbs-uat.apps.ocp-por.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: coming-soon
-              servicePort: 80
-            path: /
+  host: ntbs-uat.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: coming-soon
 ---
 # Temporary route, allowing us access to UAT whilst it's not amiable on final url
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
   name: ntbs-uat-hidden
 spec:
-  rules:
-    - host: ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: ntbs-uat
-              servicePort: 80
-            path: /
+  host: ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  to:
+    kind: Service
+    name: ntbs-uat
 ---
 # Disruption budget makes sure that manual node drains done by k8s admin
 # wait for the app to have a pod running on another node before killing it
