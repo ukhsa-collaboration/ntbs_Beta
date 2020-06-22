@@ -17,17 +17,11 @@ namespace ntbs_service.Pages.ServiceDirectory
             _referenceDataRepository = referenceDataRepository;
         }
         
-        public List<List<PHEC>> AllRegionsGrouped;
+        public IList<PHEC> AllRegions { get; set; }
         
         public async Task<IActionResult> OnGetAsync()
         {
-            var allRegions = await _referenceDataRepository.GetAllPhecs();
-            
-            const int chunkSize = 4;
-            AllRegionsGrouped = allRegions.Select((x, i) => new { Index = i, Value = x })
-                .GroupBy(x => x.Index / chunkSize)
-                .Select(x => x.Select(v => v.Value).ToList())
-                .ToList();
+            AllRegions = await _referenceDataRepository.GetAllPhecs();
 
             return Page();
         }

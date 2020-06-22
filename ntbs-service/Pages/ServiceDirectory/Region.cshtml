@@ -6,23 +6,25 @@
 }
 
 <nhs-width-container container-width="Standard">
-    <h2 class="nhsuk-heading-l">@Model.Phec?.Name</h2>
-    <h5 class="nhsuk-heading-xs">Service directory</h5>
+    <h1 class="nhsuk-heading-xl">@Model.Phec.Name</h1>
+    <h2 class="nhsuk-heading-l">Service directory</h2>
 
     <div class="govuk-accordion tb-services-and-case-managers" data-module="govuk-accordion" id="accordion-default">
-        @foreach (var tbService in Model.TbServices)
+        @foreach (var tbServiceWithCaseManagers in Model.TbServicesWithCaseManagers)
         {
+            var tbService = tbServiceWithCaseManagers.Key;
+            var caseManagers = tbServiceWithCaseManagers.Value;
             <div class="govuk-accordion__section ">
                 <div class="govuk-accordion__section-header">
-                    <h2 class="govuk-accordion__section-heading">
+                    <div class="govuk-accordion__section-heading">
                         <span class="govuk-accordion__section-button" id="accordion-default-heading-{@tbService.Code}">
                             @tbService.Name
                         </span>
-                    </h2>
+                    </div>
                 </div>
                 <div id="accordion-default-content-{@tbService.Code}" class="govuk-accordion__section-content" 
                     aria-labelledby="accordion-default-heading-{@tbService.Code}">
-                    @if (tbService.CaseManagerTbServices.Any())
+                    @if (caseManagers.Any())
                     {
                         <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
                             <nhs-table-head>
@@ -36,17 +38,17 @@
                                 </nhs-table-item>
                             </nhs-table-head>
                             <nhs-table-body>
-                                @foreach (var caseManagerTbService in tbService.CaseManagerTbServices)
+                                @foreach (var caseManager in caseManagers)
                                 {
                                     <nhs-table-body-row id="case-manager-">
                                         <nhs-table-item>
-                                            @caseManagerTbService.CaseManager.FullName
+                                            @caseManager.FullName
                                         </nhs-table-item>
                                         <nhs-table-item>
-                                            @caseManagerTbService.CaseManager.JobTitle
+                                            @caseManager.JobTitle
                                         </nhs-table-item>
                                         <nhs-table-item>
-                                            <a href=@($"/ContactDetails/CaseManager/{caseManagerTbService.CaseManager.Username}")>View</a>
+                                            <a href=@($"/ContactDetails/{caseManager.Username}")>View</a>
                                         </nhs-table-item>
                                     </nhs-table-body-row>
                                 }

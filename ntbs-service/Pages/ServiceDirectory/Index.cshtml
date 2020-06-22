@@ -3,23 +3,19 @@
 
 @{
     Layout = "Shared/_Layout";
+    ViewData["Title"] = "Service Directory";
 }
 
 <nhs-width-container container-width="Standard">
-    <h2 class="nhsuk-heading-l">Service directory</h2>
-    <h3 class="nhsuk-heading-m"> Regions </h3>
+    <h1 class="nhsuk-heading-xl">Service directory</h1>
+    <h2 class="nhsuk-heading-l">Regions</h2>
     
     <div>
-        @foreach (var regionGroupOfFour in Model.AllRegionsGrouped)
+        @foreach (var region in Model.AllRegions)
         {
-            <nhs-grid-row>
-                @foreach (var region in regionGroupOfFour)
-                {
-                    <nhs-grid-column grid-column-width="OneQuarter">
-                        <a class="nhsuk-heading-m" href=@($"/ServiceDirectory/Region/{region.Code}")>@region.Name</a>
-                    </nhs-grid-column>
-                }
-            </nhs-grid-row>
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <a class="nhsuk-heading-m" href=@($"/ServiceDirectory/Region/{region.Code}")>@region.Name</a>
+            </nhs-grid-column>
         }
     </div>
 </nhs-width-container>

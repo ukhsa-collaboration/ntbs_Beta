@@ -57,12 +57,12 @@
                         </a>
                     </li>
                     
-                    <navigation-with-submenu inline-template>
-                        <li class="govuk-header__navigation-item header-navigation-link nav-with-submenu-with-js">
-                            <a v-on:click="toggleMenu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
+                    <navigation-with-submenu :key="help" inline-template>
+                        <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
+                            <a v-on:click="toggleMenu" href="/Help/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 Help <i class="arrow down"></i>
                             </a>
-                            <ul ref="navigation-submenu" class="nav-submenu-list" >
+                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/Help">
                                         FAQ
@@ -77,12 +77,6 @@
                         </li>
                     </navigation-with-submenu>
                     
-                     <li class="govuk-header__navigation-item header-navigation-link nav-with-submenu-without-js">
-                        <a class="govuk-header__link header-navigation-list-item" href="/Help/Menu">
-                            Help <i class="arrow down"></i>
-                        </a>
-                     </li>
-                    
                     @if ((await AuthorizationService.AuthorizeAsync(User, "AdminOnly")).Succeeded)
                     {
                         <li class="govuk-header__navigation-item header-navigation-link">
@@ -92,12 +86,12 @@
                         </li>
                     }
                     
-                    <navigation-with-submenu inline-template>
-                        <li class="govuk-header__navigation-item header-navigation-link nav-with-submenu-with-js">
-                            <a v-on:click="toggleMenu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
+                    <navigation-with-submenu :key="user" inline-template>
+                        <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
+                            <a v-on:click="toggleMenu" href="/ContactDetails/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 @User.Identity.Name <i class="arrow down"></i>
                             </a>
-                            <ul ref="navigation-submenu" class="nav-submenu-list" >
+                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
                                 <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
                                         Edit personal details
@@ -112,12 +106,6 @@
                         </li>
                     </navigation-with-submenu>
                     
-                     <li class="govuk-header__navigation-item header-navigation-link nav-with-submenu-without-js">
-                        <a class="govuk-header__link header-navigation-list-item"
-                            href="/ContactDetails/Menu">
-                            @User.Identity.Name <i class="arrow down"></i>
-                        </a>
-                     </li>
                 </ul>
             </nav>
 

@@ -23,15 +23,20 @@ namespace ntbs_service.Pages.ServiceDirectory
         [BindProperty(SupportsGet = true)]
         public string PhecCode { get; set; }
 
-        public IList<TBService> TbServices;
+        public Dictionary<TBService, List<User>> TbServicesWithCaseManagers;
         public PHEC Phec;
 
         public async Task<IActionResult> OnGetAsync()
         {
-            TbServices = await _referenceDataRepository.GetTbServicesWithCaseManagersFromPhecCodeAsync(PhecCode);
-            TbServices.ForEach(x => x.CaseManagerTbServices = x.CaseManagerTbServices
-                .Where(c => c.CaseManager.IsCaseManager)
-                .ToList());
+            TbServicesWithCaseManagers = 
+                (await _referenceDataRepository.GetTbServicesWithCaseManagersFromPhecCodeAsync(PhecCode))
+                .ToDictionary(
+                    service => service, 
+                    service => service.CaseManagerTbServices
+                        .Select(c => c.CaseManager)
+                        .Where(cm => cm.IsCaseManager)
+                        .ToList()
+                    );
 
             Phec = await _referenceDataRepository.GetPhecByCode(PhecCode);
             
