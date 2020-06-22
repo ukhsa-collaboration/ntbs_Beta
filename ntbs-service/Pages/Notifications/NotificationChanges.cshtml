@@ -1,0 +1,13 @@
+@page "/Notifications/{NotificationId:int}/NotificationChanges"
+@using ntbs_service.Helpers
+@model NotificationChangesModel
+
+@{
+    Layout = "../Shared/_NotificationOverviewLayout.cshtml";
+    ViewData["Title"] = "Notification Changes";
+    ViewData["CurrentPage"] = NotificationSubPaths.NotificationChanges;
+}
+
+<h2 id="top">NotificationChanges</h2>
+
+<a href="#top" class="govuk-link--no-visited-state"> Back to top </a>

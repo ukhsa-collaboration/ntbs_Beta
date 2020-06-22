@@ -1,4 +1,4 @@
-@page "/Notifications/{NotificationId:int}/{handler?}"
+@page "/Notifications/{NotificationId:int}/{handler:regex(^(CreateLink)$)?}"
 @using ntbs_service.Helpers
 @model OverviewModel
 

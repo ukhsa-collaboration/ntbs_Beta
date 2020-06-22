@@ -5,9 +5,7 @@
 @{
     Layout = "../Shared/_NotificationOverviewLayout.cshtml";
     ViewData["Title"] = "Contact Details";
-    ViewData["NotificationId"] = @Model.NotificationId;
     ViewData["CurrentPage"] = NotificationSubPaths.ContactDetails;
-    ViewData["OnCaseManagerDetailsPage"] = true;
 }
 
 <partial name="ContactDetails/_CaseManagerDetailsPartial" model="@Model.CaseManagerDetails" />

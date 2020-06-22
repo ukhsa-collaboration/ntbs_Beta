@@ -74,6 +74,7 @@ namespace ntbs_service.Helpers
         public static string EditMBovisAnimalExposures => "Edit/MBovis/AnimalExposures";
         public static string Overview => string.Empty;
         public static string LinkedNotifications => "LinkedNotifications";
+        public static string NotificationChanges => "NotificationChanges";
         public static string ContactDetails => "ContactDetails";
         public static string Denotify => "Denotify";
         public static string Delete => "Delete";
