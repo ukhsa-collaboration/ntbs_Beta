@@ -59,6 +59,6 @@ namespace ntbs_service.Models.Entities
 
         public bool ArePrimaryContactDetailsMissing => String.IsNullOrEmpty(JobTitle)
                                                        && String.IsNullOrEmpty(PhoneNumberPrimary)
-                                                       && String.IsNullOrEmpty(EmailSecondary);
+                                                       && String.IsNullOrEmpty(EmailPrimary);
     }
 }

@@ -28,8 +28,6 @@ namespace ntbs_service.Pages.ContactDetails
         public async Task<IActionResult> OnGetAsync()
         {
             ContactDetails = await _userService.GetUser(User);
-            ValidateModel();
-
             return Page();
         }
         
