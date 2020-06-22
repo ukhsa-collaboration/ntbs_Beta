@@ -7,7 +7,7 @@
 
     var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
     var requiresSeparator = false;
-    var isOnSubpage = currentPage == NotificationSubPaths.LinkedNotifications 
+    var isOnSubpage = currentPage == NotificationSubPaths.LinkedNotifications
                       || currentPage == NotificationSubPaths.ContactDetails
                       || currentPage == NotificationSubPaths.NotificationChanges;
 }
@@ -21,7 +21,7 @@
             @notificationEditLinkText
         </a>
     </div>
-    
+
     requiresSeparator = true;
 }
 
@@ -35,13 +35,12 @@
     var linkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.LinkedNotifications ? " notification-banner-link--current" : "");
     <div class="@linkClass">
         <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.LinkedNotifications)">
-            Linked Notifications (@Model.NumberOfLinkedNotifications)
+            Linked notifications (@Model.NumberOfLinkedNotifications)
         </a>
     </div>
-    
+
     requiresSeparator = true;
 }
-
 
 @if (Model.Notification.HospitalDetails.CaseManager != null)
 {
@@ -52,8 +51,16 @@
 
     var contactDetailsLinkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.ContactDetails ? " notification-banner-link--current" : "");
     <div class="@contactDetailsLinkClass">
-    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.ContactDetails)">
-            Case Manager details
+        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.ContactDetails)">
+            Case manager details
         </a>
-    </div> 
+    </div>
 }
+
+<div class="notification-banner-link-separator"> </div>
+@{ var notificationChangesLinkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.NotificationChanges ? " notification-banner-link--current" : ""); }
+<div class="@notificationChangesLinkClass">
+    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.NotificationChanges)">
+        Notifications changes
+    </a>
+</div>
