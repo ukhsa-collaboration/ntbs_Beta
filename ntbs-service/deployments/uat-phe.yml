@@ -128,6 +128,7 @@ spec:
   selector:
     app: ntbs-uat
 ---
+# Real UAT route, connected to ntbs-uat.phe.nhs.uk
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -135,6 +136,21 @@ metadata:
 spec:
   rules:
     - host: ntbs-uat.ocpappcol01.unix.phe.gov.uk
+      http:
+        paths:
+          - backend:
+              serviceName: coming-sson
+              servicePort: 80
+            path: /
+---
+# Temporary route, allowing us access to UAT whilst it's not amiable on final url
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ntbs-uat-hidden
+spec:
+  rules:
+    - host: ntbs-uat-hidden.ocpappcol01.unix.phe.gov.uk
       http:
         paths:
           - backend:

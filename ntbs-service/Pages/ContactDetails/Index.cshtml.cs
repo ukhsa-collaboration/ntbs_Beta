@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
+using ntbs_service.DataAccess;
 using Microsoft.Extensions.Primitives;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
@@ -37,12 +40,15 @@ namespace ntbs_service.Pages.ContactDetails
                 ContactDetails = await _userRepository.GetCaseManagerByUsernameAsync(Username);
             }
             
-
             if (ContactDetails == null)
             {
                 return NotFound();
             }
-
+            
+            ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
+                .OrderBy(x => x.TbService.Name)
+                .ThenBy(x => x.TbService.PHEC.Name)
+                .ToList();
 
             ViewData["Referer"] = StringValues.IsNullOrEmpty(Request.Headers["Referer"])
                 ? "/"

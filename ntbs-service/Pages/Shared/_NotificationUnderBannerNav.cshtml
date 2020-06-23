@@ -8,14 +8,15 @@
     var isDraft = Model.Notification.NotificationStatus == NotificationStatus.Draft;
     var requiresSeparator = false;
     var isOnLinkedNotificationsPage = (bool?) ViewData["OnLinkedNotificationsPage"] ?? false;
+    var isOnCaseManagerDetailsPage = (bool?) ViewData["OnCaseManagerDetailsPage"] ?? false;
 }
 
-@if (!isDraft ||  isOnLinkedNotificationsPage)
+@if (!isDraft ||  isOnLinkedNotificationsPage || isOnCaseManagerDetailsPage)
 {
     var linkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.Overview ? " notification-banner-link--current" : "");
     <div class="@linkClass">
         <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.Overview)">
-            @{ var notificationEditLinkText = isOnLinkedNotificationsPage && isDraft ? "Edit draft" : "Notification details"; }
+            @{ var notificationEditLinkText = (isOnLinkedNotificationsPage || isOnCaseManagerDetailsPage) && isDraft ? "Edit draft" : "Notification details"; }
             @notificationEditLinkText
         </a>
     </div>
@@ -36,6 +37,8 @@
             Linked Notifications (@Model.NumberOfLinkedNotifications)
         </a>
     </div>
+    
+    requiresSeparator = true;
 }
 
 
