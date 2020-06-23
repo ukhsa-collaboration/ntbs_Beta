@@ -1,0 +1,21 @@
+﻿@page
+@model ntbs_service.Pages.ServiceDirectory.IndexModel
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Service Directory";
+}
+
+<nhs-width-container container-width="Standard">
+    <h1 class="nhsuk-heading-xl">Service directory</h1>
+    <h2 class="nhsuk-heading-l">Regions</h2>
+    
+    <div>
+        @foreach (var region in Model.AllRegions)
+        {
+            <nhs-grid-column grid-column-width="OneQuarter">
+                <a class="nhsuk-heading-m" href=@($"/ServiceDirectory/Region/{region.Code}")>@region.Name</a>
+            </nhs-grid-column>
+        }
+    </div>
+</nhs-width-container>
