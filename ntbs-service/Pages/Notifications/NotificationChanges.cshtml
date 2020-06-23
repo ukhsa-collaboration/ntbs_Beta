@@ -7,23 +7,14 @@
     Layout = "../Shared/_NotificationOverviewLayout.cshtml";
     ViewData["Title"] = "Notification Changes";
     ViewData["CurrentPage"] = NotificationSubPaths.NotificationChanges;
-    var item = new NotificationHistoryListItemModel
-    {
-        Date = DateTime.Now,
-        Username = "Lottie Dennis",
-        UserId = "Lottie.Dennis@softwire.com",
-        Action = "updated",
-        Subject = "personal details"
-    };
 }
 
 <h2 class="govuk-visually-hidden">Notification changes history</h2>
 <ul class="notification-history">
-    <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
-    <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
-    <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
-    <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
-    <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
+    @foreach(var item in Model.Changes)
+    {
+        <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
+    }
 </ul>
 
 <a href="#top" class="govuk-link--no-visited-state"> Back to top </a>

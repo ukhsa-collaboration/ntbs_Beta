@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using EFAuditer;
+using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
@@ -9,6 +12,7 @@ namespace ntbs_service.Services
         Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails, string userName);
         Task AuditUnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
         Task AuditMatchSpecimen(int notificationId, string labReferenceNumber, string userName);
+        Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId);
     }
 
     public class AuditService : IAuditService
@@ -61,6 +65,15 @@ namespace ntbs_service.Services
                 userName,
                 RootEntities.Notification,
                 notificationId.ToString());
+        }
+
+        public async Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId)
+        {
+            return await _auditContext.AuditLogs
+                .Where(log => log.EventType != READ_EVENT)
+                .Where(log => log.RootEntity == RootEntities.Notification)
+                .Where(log => log.RootId == notificationId.ToString())
+                .ToListAsync();
         }
     }
 }

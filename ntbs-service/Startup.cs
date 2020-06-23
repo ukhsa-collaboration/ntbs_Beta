@@ -28,6 +28,7 @@ using ntbs_service.Jobs;
 using ntbs_service.Middleware;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Pages.Notifications;
 using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
@@ -160,6 +161,7 @@ namespace ntbs_service
             services.AddScoped<INotificationImportService, NotificationImportService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<INotificationChangesService, NotificationChangesService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostcodeService, PostcodeService>();
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();

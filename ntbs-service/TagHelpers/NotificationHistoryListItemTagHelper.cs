@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace ntbs_service.TagHelpers
 {
     // ReSharper disable once ClassNeverInstantiated.Global
+    // ReSharper disable once UnusedType.Global
     [HtmlTargetElement("li", Attributes = "notification-history-item")]
-    public class NotificationHistoryListItem : TagHelper
+    public class NotificationHistoryListItemTagHelper : TagHelper
     {
         public NotificationHistoryListItemModel NotificationHistoryItem { get; set; }
 
