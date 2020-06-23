@@ -5,7 +5,7 @@
 @{
     Layout = "./_Layout";
     ViewData["Title"] = $"{@Model.ContactDetails.FullName} contact details";
-    var backLink = ViewData["Referer"] == null ? "/" : ViewData["Referer"].ToString();
+    var backLink = ViewData["Referer"];
 }
 
 <nhs-width-container container-width="Standard">

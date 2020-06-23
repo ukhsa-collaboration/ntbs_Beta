@@ -43,10 +43,10 @@ namespace ntbs_service.Pages.ContactDetails
                 return NotFound();
             }
 
-            if (!StringValues.IsNullOrEmpty(Request.Headers["Referer"]))
-            {
-                ViewData["Referer"] = Request.Headers["Referer"].ToString();
-            }
+
+            ViewData["Referer"] = StringValues.IsNullOrEmpty(Request.Headers["Referer"])
+                ? "/"
+                : Request.Headers["Referer"].ToString(); 
 
             return Page();
         }
