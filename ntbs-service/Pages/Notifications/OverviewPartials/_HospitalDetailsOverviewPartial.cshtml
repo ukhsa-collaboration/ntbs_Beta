@@ -30,7 +30,18 @@
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Case Manager </div>
-            <div class="cell-min-height"> @Model.Notification.HospitalDetails.CaseManagerName </div>
+            <div class="cell-min-height">
+                @if (@Model.Notification.HospitalDetails.CaseManager == null)
+                {
+                    @Model.Notification.HospitalDetails.CaseManagerName
+                }
+                else
+                {
+                    <a href=@($"/ContactDetails/{@Model.Notification.HospitalDetails.CaseManagerUsername}")>
+                        @Model.Notification.HospitalDetails.CaseManagerName
+                    </a>
+                }
+            </div>
         </nhs-grid-column>
         <nhs-grid-column grid-column-width="OneQuarter">
             <div class="notification-details-label"> Consultant </div>
