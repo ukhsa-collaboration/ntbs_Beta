@@ -57,7 +57,7 @@
                         </a>
                     </li>
                     
-                    <navigation-with-submenu :key="help" inline-template>
+                    <navigation-with-submenu inline-template>
                         <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
                             <a v-on:click="toggleMenu" href="/Help/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 Help <i class="arrow down"></i>
@@ -86,7 +86,7 @@
                         </li>
                     }
                     
-                    <navigation-with-submenu :key="user" inline-template>
+                    <navigation-with-submenu inline-template>
                         <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
                             <a v-on:click="toggleMenu" href="/ContactDetails/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 @User.Identity.Name <i class="arrow down"></i>
