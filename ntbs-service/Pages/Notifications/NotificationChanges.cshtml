@@ -1,11 +1,10 @@
 @page "/Notifications/{NotificationId:int}/NotificationChanges"
 @using ntbs_service.Helpers
-@using ntbs_service.TagHelpers
 @model NotificationChangesModel
 
 @{
     Layout = "../Shared/_NotificationOverviewLayout.cshtml";
-    ViewData["Title"] = "Notification Changes";
+    ViewData["Title"] = $"Notification #{Model.NotificationId} Changes";
     ViewData["CurrentPage"] = NotificationSubPaths.NotificationChanges;
 }
 

@@ -9,6 +9,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "MDR Details")]
     public partial class MDRDetails : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Has the patient been exposed to a known RR/MDR/XDR case?")]

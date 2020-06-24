@@ -12,6 +12,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [Display(Name = "Treatment event")]
     public class TreatmentEvent : ModelBase, IHasRootEntityForAuditing
     {
         public int TreatmentEventId { get; set; }

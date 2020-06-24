@@ -6,6 +6,7 @@ using ntbs_service.Models.Enums;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Co-morbidities")]
     public class ComorbidityDetails : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Does the patient have Diabetes?")]

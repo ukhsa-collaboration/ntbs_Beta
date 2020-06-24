@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Entities
         nameof(CountryId),
         nameof(OtherDetails),
         ErrorMessage = ValidationMessages.SupplyAModelParameter)]
-    [Display(Name = "animal exposure")]
+    [Display(Name = "M. bovis - animal exposure")]
     public class MBovisAnimalExposure : ModelBase, IHasRootEntityForAuditing
     {
         public int MBovisAnimalExposureId { get; set; }

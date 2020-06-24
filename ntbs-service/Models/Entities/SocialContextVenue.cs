@@ -4,6 +4,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [Display(Name = "Social Context Venue")]
     public class SocialContextVenue : SocialContextBase
     {
         public int SocialContextVenueId { get; set; }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Validations;
@@ -40,7 +40,7 @@ namespace ntbs_service.Services
             }
             catch (Exception)
             {
-                var propertyDisplayName = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = model.GetMemberDisplayName(key);
                 ModelState.AddModelError(key, ValidationMessages.ValueInvalid(propertyDisplayName));
             }
             
@@ -68,7 +68,7 @@ namespace ntbs_service.Services
                 }
                 catch (Exception)
                 {
-                    var propertyDisplayName = model.GetType().GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name ?? key;
+                    var propertyDisplayName = model.GetMemberDisplayName(key) ?? key;
                     ModelState.AddModelError(key, ValidationMessages.ValueInvalid(propertyDisplayName));
                 }
             }
@@ -119,7 +119,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name ?? key;
+                var propertyDisplayName = modelType.GetMemberDisplayName(key) ?? key;
                 return _pageModel.Content(ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -189,7 +189,7 @@ namespace ntbs_service.Services
             }
             else
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetMemberDisplayName(key);
                 ModelState.AddModelError($"{modelKey}.{key}", ValidationMessages.InvalidDate(propertyDisplayName));
             }
         }
@@ -256,14 +256,14 @@ namespace ntbs_service.Services
 
             if (!IsValidYear(yearToValidate))
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetMemberDisplayName(key);
                 ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.InvalidYear(propertyDisplayName));
                 return;
             }
 
             if (yearToCompare != null && yearToValidate < (int)yearToCompare)
             {
-                var propertyDisplayName = modelType.GetProperty(key).GetCustomAttribute<DisplayAttribute>()?.Name;
+                var propertyDisplayName = modelType.GetMemberDisplayName(key);
                 ModelState.AddModelError($"{modelTypeName}.{key}", ValidationMessages.ValidYearLaterThanBirthYear(propertyDisplayName, (int)yearToCompare));
             }
         }

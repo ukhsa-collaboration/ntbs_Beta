@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EFAuditer;
 using ntbs_service.DataAccess;
@@ -170,8 +169,12 @@ namespace ntbs_service.Services
         {
             if (log.AuditDetails == NotificationAuditType.Added.ToString())
                 return "Draft";
-            // TODO NTBS-1470 proper mapping that matches the pages' names
-            return Regex.Replace(log.EntityType, "(\\B[A-Z])", " $1");
+
+            var displayName = Type.GetType($"ntbs_service.Models.Entities.{log.EntityType}", true).GetDisplayName();
+            if (string.IsNullOrWhiteSpace(displayName))
+                throw new ApplicationException($"No display name found for model {log.EntityType}");
+
+            return displayName;
         }
 
         private string MapUsername(AuditLog log)

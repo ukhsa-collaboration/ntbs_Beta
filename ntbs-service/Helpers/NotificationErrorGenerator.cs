@@ -2,88 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MoreLinq;
+using ntbs_service.Models.Entities;
+using ntbs_service.Pages.Notifications;
 
 namespace ntbs_service.Helpers
 {
-    public class NotifyError
-    {
-        public string Url { get; set; }
-        public List<string> ErrorMessages { get; set; }
-    }
-
     public static class NotificationValidationErrorGenerator
     {
-        private static Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+        private static Dictionary<NotificationSection, List<string>> NotifyErrorDictionary { get; set; }
 
         // This method converts Model State Errors to Dictionary of Errors to be used in view
-        public static Dictionary<string, NotifyError> MapToDictionary(ModelStateDictionary modelState, int notificationId)
+        public static Dictionary<NotificationSection, List<string>> MapToDictionary(ModelStateDictionary modelState)
         {
-            NotifyErrorDictionary = new Dictionary<string, NotifyError>();
+            NotifyErrorDictionary = new Dictionary<NotificationSection, List<string>>();
 
-            foreach (var key in modelState.Keys)
-            {
-                // Splitting on '[' as well due to List properties having index, ex. NotificationSites[0]
-                var propertyKey = key.Split(new Char[] { '.', '[' })[0];
-
-                string displayName;
-                string subPath;
-
-                switch (propertyKey)
+            modelState.Keys
+                .Where(key => modelState[key].ValidationState == ModelValidationState.Invalid)
+                .ForEach(key =>
                 {
-                    case "PatientDetails":
-                        subPath = NotificationSubPaths.EditPatientDetails;
-                        displayName = "Patient Details";
-                        break;
-                    // NotificationSites is part of Clinical Details page despite being property of Notification
-                    // Fall-through is intentional
-                    case "NotificationSites":
-                    case "ClinicalDetails":
-                        subPath = NotificationSubPaths.EditClinicalDetails;
-                        displayName = "Clinical Details";
-                        break;
-                    case "TestData":
-                        subPath = NotificationSubPaths.EditTestResults;
-                        displayName = "Test Results";
-                        break;
-                    case "NotificationDate":
-                    case "HospitalDetails":
-                        subPath = NotificationSubPaths.EditHospitalDetails;
-                        displayName = "Hospital Details";
-                        break;
-                    case "PreviousTbHistory":
-                        subPath = NotificationSubPaths.EditPreviousHistory;
-                        displayName = "Previous History";
-                        break;
-                    case "ImmunosuppressionDetails":
-                        subPath = NotificationSubPaths.EditComorbidities;
-                        displayName = "Co-morbidities and immunosuppression";
-                        break;
-                    // Travel Details and Visitor Details are editable on the Travel/visitor history screen
-                    // Fall-through is intentional
-                    case "TravelDetails":
-                    case "VisitorDetails":
-                        subPath = NotificationSubPaths.EditTravel;
-                        displayName = "Travel and visitor history";
-                        break;
-                    default:
-                        if (propertyKey == "HasDeathEventForPostMortemCase")
-                        {
-                            subPath = NotificationSubPaths.EditTreatmentEvents;
-                            displayName = "Treatment Events";
+                    // Splitting on '[' as well due to List properties having index, ex. NotificationSites[0]
+                    var modelName = key.Split('.', '[')[0];
+
+                    Type model;
+                    switch (modelName)
+                    {
+                        // First accommodate for some edge-cases based on properties and not models...
+                        case "NotificationSites":
+                            model = typeof(ClinicalDetails);
                             break;
-                        }
-                        continue;
-                }
-                
-                var url = RouteHelper.GetSubmittingNotificationPath(notificationId, subPath);
-                AddErrorMessagesIntoDictionary(displayName, url,
-                    modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList());
-            }
+                        case "NotificationDate":
+                            model = typeof(HospitalDetails);
+                            break;
+                        case "ImmunosuppressionDetails":
+                            model = typeof(ComorbidityDetails);
+                            break;
+                        case "HasDeathEventForPostMortemCase":
+                            model = typeof(TreatmentEvent);
+                            break;
+                        default:
+                            // ... and figure out the rest based on reflection
+                            model = Type.GetType($"ntbs_service.Models.Entities.{modelName}", true);
+                            break;
+                    }
+
+                    AddErrorMessagesIntoDictionary(
+                        NotificationSectionFactory.FromModel(model),
+                        modelState[key]?.Errors?.Select(e => e.ErrorMessage).ToList());
+                });
 
             return NotifyErrorDictionary;
         }
 
-        private static void AddErrorMessagesIntoDictionary(string displayName, string url, List<string> errorMessages)
+        private static void AddErrorMessagesIntoDictionary(NotificationSection displayName, List<string> errorMessages)
         {
             if (errorMessages == null || errorMessages.Count == 0)
             {
@@ -92,15 +63,11 @@ namespace ntbs_service.Helpers
 
             if (!NotifyErrorDictionary.ContainsKey(displayName))
             {
-                NotifyErrorDictionary.Add(displayName, new NotifyError
-                {
-                    Url = url,
-                    ErrorMessages = errorMessages
-                });
+                NotifyErrorDictionary.Add(displayName, errorMessages);
             }
             else
             {
-                NotifyErrorDictionary[displayName].ErrorMessages.AddRange(errorMessages);
+                NotifyErrorDictionary[displayName].AddRange(errorMessages);
             }
         }
     }

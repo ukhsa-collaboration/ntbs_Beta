@@ -4,11 +4,13 @@
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Travel and visitor history";
+    var title = NotificationSection.TravelVisitorHistory.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
 }
 
 <partial name="_SinglePageErrorSummaryPartial" />
 
+@* not going to use @title here, as that uses the shorthand value "Travel/visitor history"  *@
 <h2>Travel and visitor history</h2>
 
 

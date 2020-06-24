@@ -4,12 +4,13 @@
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Social Context Venues";
+    var title = NotificationSection.SocialContextVenues.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     ViewData["ShowSocialContextVenueEditLinks"] = true;
     ViewData["IsEditPage"] = false;
 }
 
-<h2>Social Context - Venues</h2>
+<h2> @title </h2>
 
 <partial name="_ClusterInformation" for="Notification" />
 
