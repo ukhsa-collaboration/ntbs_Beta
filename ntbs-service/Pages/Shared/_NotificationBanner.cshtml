@@ -50,7 +50,18 @@
             </nhs-grid-column>
             <nhs-grid-column grid-column-width="OneQuarter">
                 <dt class="bold-label"> Case manager </dt>
-                <dd class="cell-min-height" id="banner-case-manager"> @Model.CaseManager </dd>
+                <dd class="cell-min-height" id="banner-case-manager">
+                     @if (@Model.CaseManagerUsername == null)
+                     {
+                         @Model.CaseManager
+                     }
+                     else
+                     {
+                         <a class="case-manager-link" href=@($"/ContactDetails/{@Model.CaseManagerUsername}")>
+                             @Model.CaseManager
+                         </a>
+                     }
+                </dd>
             </nhs-grid-column>
         </nhs-grid-row>
     </div>
