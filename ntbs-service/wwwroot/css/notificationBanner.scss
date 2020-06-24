@@ -72,6 +72,10 @@
             color: black;
         }
 
+        .case-manager-link {
+            color: black;
+        }
+      
         svg {
             fill: black;
         }
@@ -88,6 +92,10 @@
     .notification-banner-head {
         background: $banner-header--notified;
       
+        .case-manager-link {
+            color: white;
+        }
+      
         @media print {
           border-bottom: 2px solid $banner-border--notified;
           background: none;
@@ -101,10 +109,14 @@
 
 .notification-banner--denotified {
     border: 2px solid $banner-border--denotified;
-
+    
     .notification-banner-head {
         background: $banner-header--denotified;
-
+      
+        .case-manager-link {
+           color: white;
+        }
+      
         @media print {
           border-bottom: 2px solid $banner-border--denotified;
           background: none;
@@ -122,7 +134,11 @@
     .notification-banner-head {
         background: $banner-header--legacy;
         color: black;
-
+      
+        .case-manager-link {
+          color: black;
+        }
+      
         @media print {
           border-bottom: 2px solid $banner-border--legacy;
           background: none;

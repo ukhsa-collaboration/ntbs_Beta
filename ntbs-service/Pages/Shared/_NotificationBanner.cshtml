@@ -57,7 +57,9 @@
                      }
                      else
                      {
-                         <a href=@($"/ContactDetails/{@Model.CaseManagerUsername}")>@Model.CaseManager</a>
+                         <a class="case-manager-link" href=@($"/ContactDetails/{@Model.CaseManagerUsername}")>
+                             @Model.CaseManager
+                         </a>
                      }
                 </dd>
             </nhs-grid-column>
