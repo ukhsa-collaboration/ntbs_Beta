@@ -46,8 +46,8 @@ namespace ntbs_service.Pages.ContactDetails
             }
             
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
-                .OrderBy(x => x.TbService.Name)
-                .ThenBy(x => x.TbService.PHEC.Name)
+                .OrderBy(x => x.TbService.PHEC.Name)
+                .ThenBy(x => x.TbService.Name)
                 .ToList();
 
             ViewData["Referer"] = StringValues.IsNullOrEmpty(Request.Headers["Referer"])
