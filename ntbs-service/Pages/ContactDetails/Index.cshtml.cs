@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,20 +31,16 @@ namespace ntbs_service.Pages.ContactDetails
         
         public async Task<IActionResult> OnGetAsync()
         {
-            if (Username == null)
-            {
-                ContactDetails = await _userService.GetUser(User);
-                ViewData["IsEditable"] = true;
-            }
-            else
-            {
-                ContactDetails = await _userRepository.GetCaseManagerByUsernameAsync(Username);
-            }
+            ContactDetails = (Username == null)
+                ? await _userService.GetUser(User)
+                : await _userRepository.GetCaseManagerByUsernameAsync(Username);
             
             if (ContactDetails == null)
             {
                 return NotFound();
             }
+            
+            ViewData["IsEditable"] = Username == null || Username == User.FindFirstValue(ClaimTypes.Upn);
             
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)
