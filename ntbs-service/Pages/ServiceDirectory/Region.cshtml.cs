@@ -35,6 +35,7 @@ namespace ntbs_service.Pages.ServiceDirectory
                     service => service.CaseManagerTbServices
                         .Select(c => c.CaseManager)
                         .Where(cm => cm.IsCaseManager)
+                        .OrderBy(c => c.FamilyName)
                         .ToList()
                     );
 

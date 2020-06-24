@@ -4,6 +4,9 @@
 @{
     Layout = "Shared/_Layout";
 }
+<nhs-width-container container-width="Standard">
+    <nhs-back-link href="/ServiceDirectory">Back</nhs-back-link>
+</nhs-width-container>
 
 <nhs-width-container container-width="Standard">
     <h1 class="nhsuk-heading-xl">@Model.Phec.Name</h1>
@@ -26,7 +29,7 @@
                     aria-labelledby="accordion-default-heading-{@tbService.Code}">
                     @if (caseManagers.Any())
                     {
-                        <nhs-table id="regions-and-services" caption="Assigned Services" classes="nhsuk-table--reduced-font">
+                        <nhs-table id="regions-and-services" caption="Assigned Services">
                             <nhs-table-head>
                                 <nhs-table-item>
                                     Full Name
