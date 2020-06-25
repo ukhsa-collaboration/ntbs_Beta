@@ -56,7 +56,8 @@ namespace ntbs_service.DataAccess
             string auditUserOverride = null)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
-            _context.AddAuditCustomField(CustomFields.AppUser, auditUserOverride);
+            if (auditUserOverride != null)
+                _context.AddAuditCustomField(CustomFields.AppUser, auditUserOverride);
 
             await _context.SaveChangesAsync();
         }

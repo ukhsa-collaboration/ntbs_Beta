@@ -6,6 +6,7 @@ using EFAuditer;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
 using ntbs_service.TagHelpers;
 using Serilog;
@@ -48,15 +49,15 @@ namespace ntbs_service.Services
             });
         }
 
-        private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)
-        {
-            var createAuditLog = auditLogs.Take(1);
-            var auditLogsFromSubmissionOnwards = auditLogs
-                .SkipWhile(log => log.AuditDetails != NotificationAuditType.Notified.ToString());
-
-            return createAuditLog.Concat(auditLogsFromSubmissionOnwards);
-        }
-
+        /// <summary>
+        /// This method is designed to extract a single record out of potentially multiple records that are the result
+        /// of a single action.
+        /// This happens e.g. when a single page save actually modifies multiple models.
+        ///
+        /// In its current form, the "canonical" events produced by this method are enough to identify the type of the
+        /// event. As we implement more detailed options for the events, it will need to do more to combine the data
+        /// from the multiple events, rather than just picking a "recognizable" one to act as the summary for the group. 
+        /// </summary>
         private static IEnumerable<AuditLog> GetCanonicalLogs(List<AuditLog> group)
         {
             // The initial creation (as well as import) has a record for each sub-model
@@ -108,10 +109,46 @@ namespace ntbs_service.Services
                 yield break;
             }
 
+            // Transferring creates a flurry of related events.
+            // For each of these events we just want to have a single item in the history view 
+            var transferAlertLog = group.Find(log => log.EntityType == nameof(TransferAlert));
+            if (transferAlertLog != null)
+            {
+                // - Request creates just the one:
+                //   - TransferAlert - Insert
+                if (transferAlertLog.EventType == "Insert")
+                {
+                    yield return transferAlertLog;
+                }
+                // - Acceptance creates:
+                //   - TreatmentEvent - Insert
+                //   - TreatmentEvent - Insert
+                //   - PreviousTbService - Insert
+                //   - HospitalDetails - Update
+                //   - TransferAlert - Update
+                else if (group.Any(log => log.EntityType == nameof(TreatmentEvent)))
+                {
+                    yield return transferAlertLog;
+                }
+                // - Rejection creates:
+                //   - TransferAlert - Update
+                //   - TransferRejectedAlert - Insert
+                else yield return group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
+
+                yield break;
+            }
+
+            // Denotification edits the DenotificationDetails, as well as the status on Notification itself.
+            if (group.Any(log => log.AuditDetails == NotificationAuditType.Denotified.ToString()))
+            {
+                yield return group.Find(log => log.EntityType == nameof(Notification));
+                yield break;
+            }
+
             // Notification submission, as well as changes to notification date
-            // also create a treatment start change - no need it though, as it only duplicates the info and is not
+            // also create a treatment start change - no need for it though, as it only duplicates the info and is not
             // directly edited by the user
-            if (group.Any(log => log.EntityType == nameof(Notification)))
+            if (group.Any(log => log.AuditDetails == NotificationAuditType.Notified.ToString()))
             {
                 // There could be hospital details update records here, too, so we yield all but the treatment event
                 // update
@@ -139,8 +176,22 @@ namespace ntbs_service.Services
             }
         }
 
+        private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)
+        {
+            var createAuditLog = auditLogs.Take(1);
+            var auditLogsFromSubmissionOnwards = auditLogs
+                .SkipWhile(log => log.AuditDetails != NotificationAuditType.Notified.ToString());
+
+            return createAuditLog.Concat(auditLogsFromSubmissionOnwards);
+        }
+
         private static string MapAction(AuditLog log)
         {
+            if (log.EntityType == nameof(TransferAlert))
+                return log.EventType == "Insert" ? "requested" : "accepted";
+            if (log.EntityType == nameof(TransferRejectedAlert))
+                return "rejected";
+
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (GetNotificationAuditType(log))
             {
@@ -171,18 +222,10 @@ namespace ntbs_service.Services
             }
         }
 
-        private static NotificationAuditType GetNotificationAuditType(AuditLog log)
-        {
-            // Some non-manual data updates didn't specify the audit details (cluster updates/specimen matches)
-            // This aims to be a catch for those (even if we fix that going forwards)
-            var auditType = log.AuditDetails == null
-                ? NotificationAuditType.SystemEdited
-                : Enum.Parse<NotificationAuditType>(log.AuditDetails);
-            return auditType;
-        }
-
         private static string MapSubject(AuditLog log)
         {
+            if (log.EntityType == nameof(TransferAlert) || log.EntityType == nameof(TransferRejectedAlert))
+                return "Transfer";
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (GetNotificationAuditType(log))
             {
@@ -190,7 +233,7 @@ namespace ntbs_service.Services
                     return "Draft";
                 case NotificationAuditType.SystemEdited when log.EntityType == "Specimen":
                     return "Specimen";
-                case NotificationAuditType.SystemEdited 
+                case NotificationAuditType.SystemEdited
                     when log.AuditData != null && log.AuditData.Contains("\"ColumnName\":\"ClusterId\""):
                     return "Cluster membership";
                 default:
@@ -212,6 +255,16 @@ namespace ntbs_service.Services
             return log.AuditUser == AuditService.AuditUserSystem
                 ? "NTBS"
                 : UsernameDictionary.GetValueOrDefault(log.AuditUser, log.AuditUser);
+        }
+
+        private static NotificationAuditType GetNotificationAuditType(AuditLog log)
+        {
+            // Some non-manual data updates didn't specify the audit details (cluster updates/specimen matches)
+            // This aims to be a catch for those (even if we fix that going forwards)
+            var auditType = log.AuditDetails == null
+                ? NotificationAuditType.SystemEdited
+                : Enum.Parse<NotificationAuditType>(log.AuditDetails);
+            return auditType;
         }
     }
 }
