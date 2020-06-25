@@ -12,7 +12,9 @@ namespace ntbs_service.DataAccess
 {
     public interface INotificationRepository
     {
-        Task SaveChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited);
+        Task SaveChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited,
+            string auditUserOverride = null);
+
         Task AddNotificationAsync(Notification notification);
         IQueryable<Notification> GetBaseNotificationsIQueryable();
         IQueryable<Notification> GetQueryableNotificationByStatus(IList<NotificationStatus> statuses);
@@ -50,16 +52,18 @@ namespace ntbs_service.DataAccess
             _context = context;
         }
 
-        public async Task SaveChangesAsync(NotificationAuditType auditType)
+        public async Task SaveChangesAsync(NotificationAuditType auditType = NotificationAuditType.Edited,
+            string auditUserOverride = null)
         {
             _context.AddAuditCustomField(CustomFields.AuditDetails, auditType);
+            _context.AddAuditCustomField(CustomFields.AppUser, auditUserOverride);
 
             await _context.SaveChangesAsync();
         }
         
         public async Task AddNotificationAsync(Notification notification)
         {
-            _context.Notification.Add(notification);
+            await _context.Notification.AddAsync(notification);
             await SaveChangesAsync(NotificationAuditType.Added);
         }
 

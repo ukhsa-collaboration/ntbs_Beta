@@ -44,7 +44,7 @@ namespace ntbs_service.Services
                 Date = log.AuditDateTime,
                 Subject = MapSubject(log),
                 Username = MapUsername(log),
-                UserId = log.AuditUser
+                UserId = log.AuditUser == AuditService.AuditUserSystem ? null : log.AuditUser
             });
         }
 
@@ -53,16 +53,18 @@ namespace ntbs_service.Services
             var createAuditLog = auditLogs.Take(1);
             var auditLogsFromSubmissionOnwards = auditLogs
                 .SkipWhile(log => log.AuditDetails != NotificationAuditType.Notified.ToString());
-            
+
             return createAuditLog.Concat(auditLogsFromSubmissionOnwards);
         }
 
         private static IEnumerable<AuditLog> GetCanonicalLogs(List<AuditLog> group)
         {
-            // The initial creation has a record for each sub-model - we only want to mark creation with a single log
-            if (group.Any(log => log.AuditDetails == NotificationAuditType.Added.ToString()))
+            // The initial creation (as well as import) has a record for each sub-model
+            // - we only want to mark creation with a single log
+            if (group.Any(log => log.AuditDetails == NotificationAuditType.Added.ToString()
+                                 || log.AuditDetails == NotificationAuditType.Imported.ToString()))
             {
-                yield return group.First();
+                yield return group.Find(log => log.EntityType == nameof(Notification));
                 yield break;
             }
 
@@ -140,7 +142,7 @@ namespace ntbs_service.Services
         private static string MapAction(AuditLog log)
         {
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (Enum.Parse<NotificationAuditType>(log.AuditDetails))
+            switch (GetNotificationAuditType(log))
             {
                 case NotificationAuditType.Notified:
                     return "submitted";
@@ -159,27 +161,57 @@ namespace ntbs_service.Services
                             return "added";
                         case "Delete":
                             return "deleted";
+                        case "Match":
+                            return "matched";
+                        case "Unmatch":
+                            return "unmatched";
                         default:
                             return log.EntityType;
                     }
             }
         }
 
+        private static NotificationAuditType GetNotificationAuditType(AuditLog log)
+        {
+            // Some non-manual data updates didn't specify the audit details (cluster updates/specimen matches)
+            // This aims to be a catch for those (even if we fix that going forwards)
+            var auditType = log.AuditDetails == null
+                ? NotificationAuditType.SystemEdited
+                : Enum.Parse<NotificationAuditType>(log.AuditDetails);
+            return auditType;
+        }
+
         private static string MapSubject(AuditLog log)
         {
-            if (log.AuditDetails == NotificationAuditType.Added.ToString())
-                return "Draft";
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (GetNotificationAuditType(log))
+            {
+                case NotificationAuditType.Added:
+                    return "Draft";
+                case NotificationAuditType.SystemEdited when log.EntityType == "Specimen":
+                    return "Specimen";
+                case NotificationAuditType.SystemEdited 
+                    when log.AuditData != null && log.AuditData.Contains("\"ColumnName\":\"ClusterId\""):
+                    return "Cluster membership";
+                default:
+                    return MapSubjectBasedOnModel(log.EntityType);
+            }
+        }
 
-            var displayName = Type.GetType($"ntbs_service.Models.Entities.{log.EntityType}", true).GetDisplayName();
+        private static string MapSubjectBasedOnModel(string logEntityType)
+        {
+            var displayName = Type.GetType($"ntbs_service.Models.Entities.{logEntityType}", true).GetDisplayName();
             if (string.IsNullOrWhiteSpace(displayName))
-                throw new ApplicationException($"No display name found for model {log.EntityType}");
+                throw new ApplicationException($"No display name found for model {logEntityType}");
 
             return displayName;
         }
 
         private string MapUsername(AuditLog log)
         {
-            return UsernameDictionary.GetValueOrDefault(log.AuditUser, log.AuditUser);
+            return log.AuditUser == AuditService.AuditUserSystem
+                ? "NTBS"
+                : UsernameDictionary.GetValueOrDefault(log.AuditUser, log.AuditUser);
         }
     }
 }

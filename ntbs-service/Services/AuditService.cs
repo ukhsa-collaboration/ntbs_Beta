@@ -10,13 +10,20 @@ namespace ntbs_service.Services
     public interface IAuditService
     {
         Task AuditNotificationReadAsync(int notificationId, NotificationAuditType auditDetails, string userName);
-        Task AuditUnmatchSpecimen(int notificationId, string labReferenceNumber, string userName);
-        Task AuditMatchSpecimen(int notificationId, string labReferenceNumber, string userName);
+        Task AuditUnmatchSpecimen(int notificationId,
+            string labReferenceNumber,
+            string userName,
+            NotificationAuditType auditType);
+        Task AuditMatchSpecimen(int notificationId,
+            string labReferenceNumber,
+            string userName,
+            NotificationAuditType auditType);
         Task<IList<AuditLog>> GetWriteAuditsForNotification(int notificationId);
     }
 
     public class AuditService : IAuditService
     {
+        public const string AuditUserSystem = "SYSTEM"; 
         private readonly AuditDatabaseContext _auditContext;
 
         private const string READ_EVENT = "Read";
@@ -43,24 +50,30 @@ namespace ntbs_service.Services
                 notificationIdString);
         }
 
-        public async Task AuditUnmatchSpecimen(int notificationId, string labReferenceNumber, string userName)
+        public async Task AuditUnmatchSpecimen(int notificationId,
+            string labReferenceNumber,
+            string userName,
+            NotificationAuditType auditType)
         {
             await _auditContext.AuditOperationAsync(
                 labReferenceNumber,
                 SPECIMEN_ENTITY_TYPE,
-                null,
+                auditType.ToString(),
                 UNMATCH_EVENT,
                 userName,
                 RootEntities.Notification,
                 notificationId.ToString());
         }
 
-        public async Task AuditMatchSpecimen(int notificationId, string labReferenceNumber, string userName)
+        public async Task AuditMatchSpecimen(int notificationId,
+            string labReferenceNumber,
+            string userName,
+            NotificationAuditType auditType)
         {
             await _auditContext.AuditOperationAsync(
                 labReferenceNumber,
                 SPECIMEN_ENTITY_TYPE,
-                null,
+                auditType.ToString(),
                 MATCH_EVENT,
                 userName,
                 RootEntities.Notification,

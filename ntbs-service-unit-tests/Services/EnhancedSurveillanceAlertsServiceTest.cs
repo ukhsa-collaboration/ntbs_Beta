@@ -51,7 +51,7 @@ namespace ntbs_service_unit_tests.Services
 
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(
-                x => x.DismissMatchingAlertAsync<MdrAlert>(notification.NotificationId, "System"),
+                x => x.DismissMatchingAlertAsync<MdrAlert>(notification.NotificationId, AuditService.AuditUserSystem),
                 numberOfCallsToDismiss);
         }
         
@@ -81,7 +81,8 @@ namespace ntbs_service_unit_tests.Services
             
             var numberOfCallsToDismiss = shouldDismissAlert ? Times.Once() : Times.Never();
             mockAlertService.Verify(
-                x => x.DismissMatchingAlertAsync<MBovisAlert>(notification.NotificationId, "System"),
+                x => x.DismissMatchingAlertAsync<MBovisAlert>(notification.NotificationId,
+                    AuditService.AuditUserSystem),
                 numberOfCallsToDismiss);
         }
     }

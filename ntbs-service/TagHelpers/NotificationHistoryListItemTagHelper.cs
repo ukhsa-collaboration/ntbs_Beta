@@ -19,11 +19,14 @@ namespace ntbs_service.TagHelpers
             object value = $"{classAttributeValue?.Value} history-list-item";
             output.Attributes.SetAttribute("class", value);
 
+            var userHtml = NotificationHistoryItem.UserId == null
+                ? $@"<span class=""history-list-item__user"">{NotificationHistoryItem.Username}</span>"
+                : $@"<a class=""history-list-item__user"" href=""/ContactDetails/{NotificationHistoryItem.UserId}"">
+                    {NotificationHistoryItem.Username}
+                </a>";
             output.Content.SetHtmlContent($@"
                 <span class=""history-list-item__date"">{NotificationHistoryItem.Date:dd MMM yyyy, hh:mm}</span>
-                <a class=""history-list-item__user"" href=""/ContactDetails/{NotificationHistoryItem.UserId}"">
-                    {NotificationHistoryItem.Username}
-                </a>
+                {userHtml}
                 <span class=""history-list-item__action"">{NotificationHistoryItem.Action}</span>
                 <span class=""history-list-item__subject"">{NotificationHistoryItem.Subject}</span>
             ");
