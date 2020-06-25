@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
@@ -40,7 +41,8 @@ namespace ntbs_service.Pages.Notifications
                 return RedirectToPage("/Notifications/Overview", new {NotificationId});
             }
 
-            Changes = await _notificationChangesService.GetChangesList(NotificationId);
+            Changes = (await _notificationChangesService.GetChangesList(NotificationId))
+                .OrderByDescending(change => change.Date);
 
             return Page();
         }

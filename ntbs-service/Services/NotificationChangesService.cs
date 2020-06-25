@@ -18,20 +18,24 @@ namespace ntbs_service.Services
         Task<IEnumerable<NotificationHistoryListItemModel>> GetChangesList(int notificationId);
     }
 
-    class NotificationChangesService : INotificationChangesService
+    public class NotificationChangesService : INotificationChangesService
     {
         private readonly IAuditService _auditService;
-        private Dictionary<string, string> UsernameDictionary { get; }
+        private readonly IUserRepository _userRepository;
+        private Dictionary<string, string> UsernameDictionary { get; set; }
 
         public NotificationChangesService(IAuditService auditService, IUserRepository userRepository)
         {
             _auditService = auditService;
-            UsernameDictionary = userRepository.GetUsernameDictionary();
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<NotificationHistoryListItemModel>> GetChangesList(int notificationId)
         {
+            UsernameDictionary = await _userRepository.GetUsernameDictionary();
+
             var auditLogs = (await _auditService.GetWriteAuditsForNotification(notificationId))
+                .OrderBy(log => log.AuditDateTime)
                 .GroupByConsecutive((prev, next) => (next.AuditDateTime - prev.AuditDateTime).TotalSeconds <= 2)
                 .SelectMany(GetCanonicalLogs)
                 .ToList();
@@ -111,7 +115,8 @@ namespace ntbs_service.Services
 
             // Transferring creates a flurry of related events.
             // For each of these events we just want to have a single item in the history view 
-            var transferAlertLog = group.Find(log => log.EntityType == nameof(TransferAlert));
+            var transferAlertLog = group.Find(log => log.EntityType == nameof(TransferAlert)
+                                                     || log.EntityType == nameof(TransferRejectedAlert));
             if (transferAlertLog != null)
             {
                 // - Request creates just the one:
@@ -133,7 +138,13 @@ namespace ntbs_service.Services
                 // - Rejection creates:
                 //   - TransferAlert - Update
                 //   - TransferRejectedAlert - Insert
-                else yield return group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
+                else
+                {
+                    var rejectionAlertLog = group.Find(log => log.EntityType == nameof(TransferRejectedAlert));
+                    // but we need to filter out the subsequent closure of the rejection alert!
+                    if (rejectionAlertLog.EventType == "Insert")
+                        yield return rejectionAlertLog;
+                }
 
                 yield break;
             }
@@ -148,7 +159,9 @@ namespace ntbs_service.Services
             // Notification submission, as well as changes to notification date
             // also create a treatment start change - no need for it though, as it only duplicates the info and is not
             // directly edited by the user
-            if (group.Any(log => log.AuditDetails == NotificationAuditType.Notified.ToString()))
+            if (group.Any(log => log.AuditDetails == NotificationAuditType.Notified.ToString())
+                || group.Any(log => log.AuditDetails == NotificationAuditType.Edited.ToString()
+                                    && (log.AuditData?.Contains(@"""ColumnName"":""NotificationDate""") ?? false)))
             {
                 // There could be hospital details update records here, too, so we yield all but the treatment event
                 // update

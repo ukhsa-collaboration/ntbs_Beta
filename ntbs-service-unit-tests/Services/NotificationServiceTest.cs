@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using ntbs_service.DataAccess;
@@ -412,7 +411,8 @@ namespace ntbs_service_unit_tests.Services
 
         private void VerifyUpdateDatabaseCalled()
         {
-            _mockNotificationRepository.Verify(mock => mock.SaveChangesAsync(It.IsAny<NotificationAuditType>()));
+            _mockNotificationRepository.Verify(mock =>
+                mock.SaveChangesAsync(It.IsAny<NotificationAuditType>(), It.IsAny<String>()));
         }
         
         [Fact]

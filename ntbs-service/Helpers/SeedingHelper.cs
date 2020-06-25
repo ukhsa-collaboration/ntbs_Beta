@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using CsvHelper;
 using ntbs_service.Models.ReferenceEntities;
 
@@ -9,33 +7,9 @@ namespace ntbs_service.Helpers
 {
     public static class SeedingHelper
     {
-
-        private static string GetFullFilePath(string relativePathToFile) 
-            => Path.Combine(Environment.CurrentDirectory, relativePathToFile);
-
-        // Data seeding does not work with Entities that have Navigation (foreign key)
-        // Therefore manual mapping is required
-        public static List<object> GetRecordsFromCSV(string relativePathToFile, Func<CsvReader,object> getRecord) {
-            var filePath = GetFullFilePath(relativePathToFile);
-
-            var records = new List<object>();
-
-            using (StreamReader reader = new StreamReader(filePath)) 
-            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture)) {
-                csvReader.Read();
-                csvReader.ReadHeader();
-                while (csvReader.Read())
-                {
-                    records.Add(getRecord(csvReader));
-                }
-            }        
-            
-            return records;
-        }
-
-        public static List<object> GetHospitalsList(string relativePathToFile)
+        public static List<Hospital> GetHospitalsList(string relativePathToFile)
         {
-            return GetRecordsFromCSV(relativePathToFile, 
+            return CsvHelper.GetRecordsFromCsv(relativePathToFile, 
                 (CsvReader csvReader) => new Hospital {
                     HospitalId = Guid.Parse(csvReader.GetField("HospitalId")),
                     Name = csvReader.GetField("Name"),
@@ -46,9 +20,9 @@ namespace ntbs_service.Helpers
             );
         }
 
-        public static List<object> GetTBServices(string relativePathToFile)
+        public static List<TBService> GetTBServices(string relativePathToFile)
         {
-            return GetRecordsFromCSV(relativePathToFile, csvReader => new TBService
+            return CsvHelper.GetRecordsFromCsv(relativePathToFile, csvReader => new TBService
                 {
                     Code = csvReader.GetField("Code"),
                     Name = csvReader.GetField("Name"),
@@ -63,9 +37,9 @@ namespace ntbs_service.Helpers
             );
         }
 
-        public static List<object> GetLAtoPHEC(string relativePathToFile)
+        public static List<LocalAuthorityToPHEC> GetLAtoPHEC(string relativePathToFile)
         {
-            return GetRecordsFromCSV(relativePathToFile,
+            return CsvHelper.GetRecordsFromCsv(relativePathToFile,
                 (CsvReader csvReader) => new LocalAuthorityToPHEC {
                     PHECCode = csvReader.GetField("PHEC_Code"),
                     LocalAuthorityCode = csvReader.GetField("LA_Code")
@@ -73,9 +47,9 @@ namespace ntbs_service.Helpers
             );
         }
 
-        public static List<object> GetLocalAuthorities(string relativePathToFile)
+        public static List<LocalAuthority> GetLocalAuthorities(string relativePathToFile)
         {
-            return GetRecordsFromCSV(relativePathToFile, 
+            return CsvHelper.GetRecordsFromCsv(relativePathToFile, 
                 (CsvReader csvReader) => new LocalAuthority {
                     Name = csvReader.GetField("LA_Name"),
                     Code = csvReader.GetField("LA_Code")
@@ -83,10 +57,10 @@ namespace ntbs_service.Helpers
             );
         }
 
-        public static List<object> GetPHECList(string relativePathToFile)
+        public static List<PHEC> GetPHECList(string relativePathToFile)
         {
 
-            return GetRecordsFromCSV(relativePathToFile, 
+            return CsvHelper.GetRecordsFromCsv(relativePathToFile, 
                 (CsvReader csvReader) => new PHEC {
                     Name = csvReader.GetField("PHEC_Name"),
                     Code = csvReader.GetField("PHEC_Code"),

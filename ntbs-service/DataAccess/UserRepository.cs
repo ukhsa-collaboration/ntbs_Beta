@@ -15,7 +15,7 @@ namespace ntbs_service.DataAccess
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByUsername(string username);
         Task SaveUserContactDetails(User user);
-        Dictionary<string, string> GetUsernameDictionary();
+        Task<Dictionary<string, string>> GetUsernameDictionary();
     }
 
     public class UserRepository : IUserRepository
@@ -70,9 +70,9 @@ namespace ntbs_service.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public Dictionary<string, string> GetUsernameDictionary()
+        public Task<Dictionary<string, string>> GetUsernameDictionary()
         {
-            return _context.User.ToDictionary(
+            return _context.User.ToDictionaryAsync(
                 user => user.Username,
                 user => user.FullName
             );
