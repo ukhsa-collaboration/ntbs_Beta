@@ -57,10 +57,14 @@
     </div>
 }
 
-<div class="notification-banner-link-separator"> </div>
-@{ var notificationChangesLinkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.NotificationChanges ? " notification-banner-link--current" : ""); }
-<div class="@notificationChangesLinkClass">
-    <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.NotificationChanges)">
-        Notifications changes
-    </a>
-</div>
+@if (!isDraft)
+{
+    var notificationChangesLinkClass = "notification-banner-link" + (currentPage == NotificationSubPaths.NotificationChanges ? " notification-banner-link--current" : "");
+    
+    <div class="notification-banner-link-separator"> </div>
+    <div class="@notificationChangesLinkClass">
+        <a class="app-subnav__link govuk-link govuk-link--no-visited-state" href="@RouteHelper.GetNotificationPath(Model.NotificationId, NotificationSubPaths.NotificationChanges)">
+            Notifications changes
+        </a>
+    </div>
+}
