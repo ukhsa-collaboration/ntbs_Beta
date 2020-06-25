@@ -180,6 +180,7 @@ namespace ntbs_service.DataAccess
             return await _context.User
                 .Include(c => c.CaseManagerTbServices)
                 .ThenInclude(ct => ct.TbService)
+                .ThenInclude(ct => ct.PHEC)
                 .SingleOrDefaultAsync(c => c.Username == username);
         }
 
