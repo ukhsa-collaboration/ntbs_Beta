@@ -6,7 +6,7 @@ using CsvHelper;
 
 namespace ntbs_service.Helpers
 {
-    public static class CsvHelper
+    public static class CsvParser
     {
         public static List<T> GetRecordsFromCsv<T>(string relativePathToFile, Func<CsvReader, T> getRecord)
         {

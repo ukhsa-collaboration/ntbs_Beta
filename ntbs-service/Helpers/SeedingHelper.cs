@@ -9,7 +9,7 @@ namespace ntbs_service.Helpers
     {
         public static List<Hospital> GetHospitalsList(string relativePathToFile)
         {
-            return CsvHelper.GetRecordsFromCsv(relativePathToFile, 
+            return CsvParser.GetRecordsFromCsv(relativePathToFile, 
                 (CsvReader csvReader) => new Hospital {
                     HospitalId = Guid.Parse(csvReader.GetField("HospitalId")),
                     Name = csvReader.GetField("Name"),
@@ -22,7 +22,7 @@ namespace ntbs_service.Helpers
 
         public static List<TBService> GetTBServices(string relativePathToFile)
         {
-            return CsvHelper.GetRecordsFromCsv(relativePathToFile, csvReader => new TBService
+            return CsvParser.GetRecordsFromCsv(relativePathToFile, csvReader => new TBService
                 {
                     Code = csvReader.GetField("Code"),
                     Name = csvReader.GetField("Name"),
@@ -39,7 +39,7 @@ namespace ntbs_service.Helpers
 
         public static List<LocalAuthorityToPHEC> GetLAtoPHEC(string relativePathToFile)
         {
-            return CsvHelper.GetRecordsFromCsv(relativePathToFile,
+            return CsvParser.GetRecordsFromCsv(relativePathToFile,
                 (CsvReader csvReader) => new LocalAuthorityToPHEC {
                     PHECCode = csvReader.GetField("PHEC_Code"),
                     LocalAuthorityCode = csvReader.GetField("LA_Code")
@@ -49,7 +49,7 @@ namespace ntbs_service.Helpers
 
         public static List<LocalAuthority> GetLocalAuthorities(string relativePathToFile)
         {
-            return CsvHelper.GetRecordsFromCsv(relativePathToFile, 
+            return CsvParser.GetRecordsFromCsv(relativePathToFile, 
                 (CsvReader csvReader) => new LocalAuthority {
                     Name = csvReader.GetField("LA_Name"),
                     Code = csvReader.GetField("LA_Code")
@@ -60,7 +60,7 @@ namespace ntbs_service.Helpers
         public static List<PHEC> GetPHECList(string relativePathToFile)
         {
 
-            return CsvHelper.GetRecordsFromCsv(relativePathToFile, 
+            return CsvParser.GetRecordsFromCsv(relativePathToFile, 
                 (CsvReader csvReader) => new PHEC {
                     Name = csvReader.GetField("PHEC_Name"),
                     Code = csvReader.GetField("PHEC_Code"),

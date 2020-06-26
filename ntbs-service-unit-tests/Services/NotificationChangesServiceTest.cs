@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CsvHelper;
 using EFAuditer;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Services;
 using Xunit;
+using static ntbs_service.Helpers.CsvParser;
 
 namespace ntbs_service_unit_tests.Services
 {
+
+    // This test was created by using the application to generate the appropriate audit records in the audit DB,
+    // then copying the values out of the table.
+    // Similarly, the expected strings were taken from the finished page after checking they were what we wanted
+    // from the audit page.
     public class NotificationChangesServiceTest
     {
         readonly NotificationChangesService _changesService;
@@ -21,30 +28,11 @@ namespace ntbs_service_unit_tests.Services
             _changesService = new NotificationChangesService(_auditServiceMock.Object, _userRepositoryMock.Object);
         }
 
-        // This test was created by using the application to generate the appropriate audit records in the audit DB,
-        // then copying the values out of the table.
-        // Similarly, the expected strings were taken from the finished page after checking they were what we wanted
-        // from the audit page.
         [Fact]
         public async Task FullHistoryOfLogs_GetsTranslatedToChangesCorrectly()
         {
             // Arrange
-            var auditLogs = ntbs_service.Helpers.CsvHelper.GetRecordsFromCsv("../../../TestData/historyOfLogs.csv",
-                    csvReader => new AuditLog
-                    {
-                        Id = csvReader.GetField<int>(nameof(AuditLog.Id)),
-                        OriginalId = csvReader.GetField(nameof(AuditLog.OriginalId)),
-                        EntityType = csvReader.GetField(nameof(AuditLog.EntityType)),
-                        EventType = csvReader.GetField(nameof(AuditLog.EventType)),
-                        AuditDetails = csvReader.GetField(nameof(AuditLog.AuditDetails)),
-                        AuditData = csvReader.GetField(nameof(AuditLog.AuditData)),
-                        AuditDateTime = csvReader.GetField<DateTime>(nameof(AuditLog.AuditDateTime)),
-                        AuditUser = csvReader.GetField(nameof(AuditLog.AuditUser)),
-                        RootEntity = csvReader.GetField(nameof(AuditLog.RootEntity)),
-                        RootId = csvReader.GetField(nameof(AuditLog.RootId)),
-                    })
-                .OrderBy(log => log.AuditDateTime)
-                .ToList();
+            var auditLogs = GetAuditLogs("auditLogsForNotification1");
             _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(1))
                 .ReturnsAsync(auditLogs);
             _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
@@ -95,5 +83,49 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Equal("23 Jun 2020, 09:41 John Johnson created Draft", c)
             );
         }
+
+        [Fact]
+        public async Task ImportLogs_GetTranslatedToSingle()
+        {
+            // Arrange
+            var auditLogs = GetAuditLogs("auditLogsForNotification2");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(2))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+
+            // Act
+            var changes = (await _changesService.GetChangesList(2)).ToList();
+            var changeStrings = changes
+                .OrderByDescending(c => c.Date)
+                .Select(c => $"{c.Date:dd MMM yyyy, hh:mm} {c.Username} {c.Action} {c.Subject}");
+
+            // Assert
+            Assert.Collection(changeStrings,
+                c => Assert.Equal("25 Jun 2020, 09:15 John Johnson imported Notification", c)
+            );
+        }
+
+        private static List<AuditLog> GetAuditLogs(string filename)
+        {
+            return GetRecordsFromCsv($"../../../TestData/{filename}.csv", ParseAuditLog)
+                .OrderBy(log => log.AuditDateTime)
+                .ToList();
+        }
+
+        private static AuditLog ParseAuditLog(CsvReader csvReader) =>
+            new AuditLog
+            {
+                Id = csvReader.GetField<int>(nameof(AuditLog.Id)),
+                OriginalId = csvReader.GetField(nameof(AuditLog.OriginalId)),
+                EntityType = csvReader.GetField(nameof(AuditLog.EntityType)),
+                EventType = csvReader.GetField(nameof(AuditLog.EventType)),
+                AuditDetails = csvReader.GetField(nameof(AuditLog.AuditDetails)),
+                AuditData = csvReader.GetField(nameof(AuditLog.AuditData)),
+                AuditDateTime = csvReader.GetField<DateTime>(nameof(AuditLog.AuditDateTime)),
+                AuditUser = csvReader.GetField(nameof(AuditLog.AuditUser)),
+                RootEntity = csvReader.GetField(nameof(AuditLog.RootEntity)),
+                RootId = csvReader.GetField(nameof(AuditLog.RootId)),
+            };
     }
 }
