@@ -1,6 +1,7 @@
 ﻿@model TravelModel
 @using NHSUK.FrontEndLibrary.TagHelpers
 @using ntbs_service.Models.Entities
+@using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -15,10 +16,10 @@
             </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="VisitorDetails.HasVisitor" nhs-input-type="Radios" type="radio" value="true"
+                    <input asp-for="VisitorDetails.HasVisitor" nhs-input-type="Radios" type="radio" value="@Status.Yes"
                            id="visitorDetails-hasVisitorYes" ref="hasDataYes" data-aria-controls="conditional-has-visitor" />
                     <label for="visitorDetails-hasVisitorYes" nhs-label-type="Radios">
-                        Yes
+                        @Status.Yes
                     </label>
                 </div>
 
@@ -145,10 +146,18 @@
                 </div>
 
                 <div class="nhsuk-radios__item">
-                    <input asp-for="VisitorDetails.HasVisitor" nhs-input-type="Radios" type="radio" value="false"
+                    <input asp-for="VisitorDetails.HasVisitor" nhs-input-type="Radios" type="radio" value="@Status.No"
                            id="visitorDetails-hasVisitorNo" ref="hasDataNo" />
                     <label for="visitorDetails-hasVisitorNo" nhs-label-type="Radios">
-                        No
+                        @Status.No
+                    </label>
+                </div>
+                
+                <div class="nhsuk-radios__item">
+                    <input asp-for="VisitorDetails.HasVisitor" nhs-input-type="Radios" type="radio" value="@Status.Unknown"
+                           id="visitorDetails-hasVisitorUnknown" ref="hasDataUnknown" />
+                    <label for="visitorDetails-hasVisitorUnknown" nhs-label-type="Radios">
+                        @Status.Unknown
                     </label>
                 </div>
             </div>

@@ -198,7 +198,7 @@ namespace ntbs_service.Services
 
         private void UpdateTravelDetails(Notification notification, TravelDetails travelDetails)
         {
-            if (travelDetails.HasTravel != true)
+            if (travelDetails.HasTravel != Status.Yes)
             {
                 ClearTravelOrVisitorFields(travelDetails);
             }
@@ -207,7 +207,7 @@ namespace ntbs_service.Services
 
         private void UpdateVisitorDetails(Notification notification, VisitorDetails visitorDetails)
         {
-            if (visitorDetails.HasVisitor != true)
+            if (visitorDetails.HasVisitor != Status.Yes)
             {
                 ClearTravelOrVisitorFields(visitorDetails);
             }

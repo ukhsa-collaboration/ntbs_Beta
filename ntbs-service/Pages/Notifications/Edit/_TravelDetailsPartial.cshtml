@@ -1,5 +1,6 @@
 ﻿@model TravelModel
 @using ntbs_service.Models.Entities
+@using ntbs_service.Models.Enums
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
@@ -14,10 +15,10 @@
             </nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios" v-on:focusout="validate">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="true" 
+                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="@Status.Yes" 
                            id="travelDetails-hasTravelYes" ref="hasDataYes" data-aria-controls="conditional-has-travel" />
                     <label for="travelDetails-hasTravelYes" nhs-label-type="Radios">
-                        Yes
+                        @Status.Yes
                     </label>
                 </div>
 
@@ -143,10 +144,18 @@
                 </div>
 
                 <div class="nhsuk-radios__item">
-                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="false"
-                            id="travelDetails-hasTravelNo" ref="hasDataNo" />
+                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="@Status.No"
+                           id="travelDetails-hasTravelNo" ref="hasDataNo" />
                     <label for="travelDetails-hasTravelNo" nhs-label-type="Radios">
-                        No
+                        @Status.No
+                    </label>
+                </div>
+                
+                <div class="nhsuk-radios__item">
+                    <input asp-for="TravelDetails.HasTravel" nhs-input-type="Radios" type="radio" value="@Status.Unknown"
+                            id="travelDetails-hasTravelUnknown" ref="hasDataUnknown" />
+                    <label for="travelDetails-hasTravelUnknown" nhs-label-type="Radios">
+                        @Status.Unknown
                     </label>
                 </div>
             </div>

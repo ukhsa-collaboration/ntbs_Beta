@@ -3,18 +3,19 @@ using System.ComponentModel.DataAnnotations;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
-    public partial class TravelDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntityForAuditing
+    public class TravelDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntityForAuditing
     {
         private const int MaxTotalLengthOfStay = 24;
         
         [Display(Name = "Has the patient travelled to one or more high TB incidence countries within last 24 months?")]
-        public bool? HasTravel { get; set; }
+        public Status? HasTravel { get; set; }
 
         [Range(1, 50)]
         [RequiredIf(nameof(AnyCountrySupplied),
