@@ -275,7 +275,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 ClinicalDetails.HealthcareDescription = null;
             }
 
-            if (ClinicalDetails.IsDotOffered == false)
+            if (ClinicalDetails.IsDotOffered != Status.Yes)
             {
                 ClinicalDetails.DotStatus = null;
             }

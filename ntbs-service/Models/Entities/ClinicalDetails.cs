@@ -77,7 +77,7 @@ namespace ntbs_service.Models.Entities
         public string Notes { get; set; }
 
         [Display(Name = "DOT offered")] 
-        public bool? IsDotOffered { get; set; }
+        public Status? IsDotOffered { get; set; }
         
         public DotStatus? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }

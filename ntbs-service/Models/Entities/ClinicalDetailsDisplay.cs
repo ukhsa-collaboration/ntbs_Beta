@@ -61,10 +61,9 @@ namespace ntbs_service.Models.Entities
                 return null;
             }
 
-            var prefix = (bool)IsDotOffered ? "Yes" : "No";
-            return DotStatus != null
-                ? $"{prefix} - {DotStatus.GetDisplayName()}"
-                : prefix;
+            return DotStatus == null
+                ? IsDotOffered.GetDisplayName()
+                : $"{IsDotOffered.GetDisplayName()} - {DotStatus.GetDisplayName()}";
         }
         
         private string GetFormattedHomeVisitState()

@@ -341,12 +341,13 @@ namespace ntbs_service.DataMigration
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
-            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string) notification.HivTestStatus);
-            details.DotStatus = Converter.GetEnumValue<DotStatus>((string) notification.DotStatus);
+            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string)notification.HivTestStatus);
+            details.IsDotOffered = Converter.GetStatusFromString((string)notification.IsDotOffered);
+            details.DotStatus = Converter.GetEnumValue<DotStatus>((string)notification.DotStatus);
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
             details.BCGVaccinationState = Converter.GetStatusFromString(notification.BCGVaccinationState);
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
-            details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string) notification.TreatmentRegimen);
+            details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string)notification.TreatmentRegimen);
             details.Notes = notification.Notes;
             return details;
         }
