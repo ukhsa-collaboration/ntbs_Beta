@@ -31,10 +31,9 @@ namespace ntbs_service.Migrations
                 name: "IsDotOffered",
                 table: "ClinicalDetails",
                 newName: "IsDotOfferedString");
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.AddColumn<bool>(
                 name: "IsDotOffered",
                 table: "ClinicalDetails",
-                maxLength: 30,
                 nullable: true);
             migrationBuilder.Sql(
                 @"UPDATE [ClinicalDetails]
