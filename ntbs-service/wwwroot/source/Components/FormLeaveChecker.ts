@@ -13,7 +13,12 @@ const FormLeaveChecker = Vue.extend({
     methods: {
         checkLeave: function (event : MouseEvent) {
             const eventTarget = (event.target as HTMLLinkElement);
-            if (eventTarget.tagName.toLowerCase() === "a" && eventTarget.parentElement.dataset.ignoreFormLeaveChecker !== "true") {
+            
+            // Warn the changes are not saved if the link is clicked which is not menu with submenu
+            if (eventTarget.tagName.toLowerCase() === "a" 
+                && eventTarget.parentElement.dataset.ignoreFormLeaveChecker !== "true"
+                && !eventTarget.classList.contains('nav-with-submenu-header-link')) 
+            {
                 if (this.serialiseForm() !== this.initialFormData) {
                     event.preventDefault();
                     

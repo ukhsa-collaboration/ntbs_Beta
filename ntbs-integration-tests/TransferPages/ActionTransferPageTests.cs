@@ -97,7 +97,6 @@ namespace ntbs_integration_tests.TransferPage
             var initialDocument = await GetDocumentForUrlAsync(url);
 
             Assert.Equal("  ", initialDocument.QuerySelector("#banner-tb-service").TextContent);
-            Assert.Equal("  ", initialDocument.QuerySelector("#banner-case-manager").TextContent);
 
             var formData = new Dictionary<string, string>
             {

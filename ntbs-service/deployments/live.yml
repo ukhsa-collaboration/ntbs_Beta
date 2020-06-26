@@ -1,10 +1,13 @@
 # To be deployed on PHE Kubernetes
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ntbs-live
 spec:
-  replicas: 1
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ntbs-live
   template:
     metadata:
       labels:
@@ -13,6 +16,20 @@ spec:
         image.openshift.io/triggers: >-
           [{"from":{"kind":"ImageStreamTag","name":"krb5-authenticator:latest","namespace":"krb5-authenticator"},"fieldPath":"spec.template.spec.containers[?(@.name==\"krb5-authenticator\")].image"}]
     spec:
+      # Attempts to schedule the second replica's pod on a different node than the first
+      # as a way to guard against unexpected node failures
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - ntbs-live
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: ntbs-live
           image: "ntbscontainerregistry.azurecr.io/ntbs-service:live"
@@ -90,26 +107,15 @@ spec:
               value: "false"
             - name: Sentry__Environment
               value: live
-            - name: KRB5CCNAME
-              value: /krb5cc/cc
+            - name: KRB5_CLIENT_KTNAME
+              value: /krbtab/keytab
           volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-        - name: krb5-authenticator
-          image: krb5-authenticator/krb5-authenticator:latest
-          imagePullPolicy: Always
-          volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-            - mountPath: /run/secrets/keytab
+            - mountPath: /krbtab
               name: krb-tab
-              readOnly: true
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj
       volumes:
-        - name: krb5cc
-          emptyDir: {}
         - name: krb-tab
           secret:
             defaultMode: 420
@@ -128,69 +134,40 @@ spec:
     app: ntbs-live
 ---
 # Real live route, connected to ntbs.phe.nhs.uk
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
   name: ntbs-live
 spec:
-  rules:
-    - host: ntbs-live.ocpappcol01.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: coming-soon
-              servicePort: 80
-            path: /
+  host: ntbs-live.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: coming-soon
 ---
 # Temp route that allows us to access the app whilst it's not yet available on the real routes
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
-  name: ntbs-live-hidden 
+  name: ntbs-live-hidden
 spec:
-  rules:
-    - host: ntbs-live-hidden.ocpappcol01.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: ntbs-live
-              servicePort: 80
-            path: /
+  host: ntbs-live-hidden.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  to:
+    kind: Service
+    name: ntbs-live
 ---
-# Coming-soon page app
-apiVersion: apps/v1beta1
-kind: Deployment
+# Disruption budget makes sure that manual node drains done by k8s admin
+# wait for the app to have a pod running on another node before killing it
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
 metadata:
-  name: coming-soon
+  name: ntbs-live-pdb
 spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: coming-soon
-    spec:
-      containers:
-        - name: coming-soon-app
-          image: "ntbscontainerregistry.azurecr.io/coming-soon"
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
-          env:
-            - name: App__ReportsUrl
-              value:
-      imagePullSecrets:
-        - name: registery-password
-        - name: default-dockercfg-bs7wj
----
-# Service to front the coming-soon page app
-apiVersion: v1
-kind: Service
-metadata:
-  name: coming-soon
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8080
+  minAvailable: 1
   selector:
-    app: coming-soon
+    matchLabels:
+      app: ntbs-live

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
@@ -28,8 +29,11 @@ namespace ntbs_service.Pages.ContactDetails
         public async Task<IActionResult> OnGetAsync()
         {
             ContactDetails = await _userService.GetUser(User);
-            ValidateModel();
-
+            ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
+                .OrderBy(x => x.TbService.Name)
+                .ThenBy(x => x.TbService.PHEC.Name)
+                .ToList();
+            
             return Page();
         }
         

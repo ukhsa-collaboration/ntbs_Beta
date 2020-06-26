@@ -11,7 +11,6 @@
     var classSuffix = CssClassHelpers.GetClassSuffixForNotificationStatus(Model.Notification.NotificationStatus);
     var linksClass = $"notification-banner-links notification-banner-links{classSuffix}";
     var endClass = $"notification-page-end notification-page-end{classSuffix}";
-    var breadcrumbs = ViewData["Breadcrumbs"];
 }
 
 <nhs-width-container container-width="Standard">
@@ -29,7 +28,7 @@
         </nhs-grid-column>
 
         <nhs-grid-column grid-column-width="Full">
-            @if (!string.IsNullOrEmpty(Model.PermissionReason))
+            @if (!string.IsNullOrEmpty(Model.PermissionReason) && isOverviewPage)
             {
                 <div class="notification-overview-details-container no-print" >
                     <nhs-inset-text classes="nhs-inset-text--ntbs">

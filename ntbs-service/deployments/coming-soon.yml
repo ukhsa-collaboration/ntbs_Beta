@@ -1,0 +1,40 @@
+﻿# Coming-soon page app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coming-soon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coming-soon
+  template:
+    metadata:
+      labels:
+        app: coming-soon
+    spec:
+      containers:
+        - name: coming-soon-app
+          image: "ntbscontainerregistry.azurecr.io/coming-soon"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: App__ReportsUrl
+              value:
+      imagePullSecrets:
+        - name: registery-password
+        - name: default-dockercfg-bs7wj
+---
+# Service to front the coming-soon page app
+apiVersion: v1
+kind: Service
+metadata:
+  name: coming-soon
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: coming-soon

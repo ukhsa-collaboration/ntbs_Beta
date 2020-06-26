@@ -31,6 +31,7 @@ namespace ntbs_service.Models
         public bool ShowLink;
         public bool ShowPadlock;
         public string RedirectPath;
+        public string CaseManagerUsername;
 
         // Access level is treated as a bool for either able to edit or not. This differs from the standard PermissionLevel
         // implemented across the codebase due to there being no visual difference between no permission level and readonly
@@ -44,6 +45,7 @@ namespace ntbs_service.Models
             TbServicePHECCode = notification.HospitalDetails.TBService?.PHECCode;
             LocationPHECCode = notification.PatientDetails.PostcodeLookup?.LocalAuthority?.LocalAuthorityToPHEC?.PHECCode;
             CaseManager = notification.HospitalDetails.CaseManagerName;
+            CaseManagerUsername = notification.HospitalDetails.CaseManagerUsername;
             NhsNumber = notification.PatientDetails.FormattedNhsNumber;
             DateOfBirth = notification.PatientDetails.FormattedDob;
             CountryOfBirth = notification.PatientDetails.CountryName;

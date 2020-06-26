@@ -1,10 +1,13 @@
 ﻿# To be deployed on PHE Kubernetes
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ntbs-uat
 spec:
-  replicas: 1
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ntbs-uat
   template:
     metadata:
       labels:
@@ -13,6 +16,20 @@ spec:
         image.openshift.io/triggers: >-
           [{"from":{"kind":"ImageStreamTag","name":"krb5-authenticator:latest","namespace":"krb5-authenticator"},"fieldPath":"spec.template.spec.containers[?(@.name==\"krb5-authenticator\")].image"}]
     spec:
+      # Attempts to schedule the second replica's pod on a different node than the first
+      # as a way to guard against unexpected node failures
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - ntbs-uat
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: ntbs-uat
           image: "ntbscontainerregistry.azurecr.io/ntbs-service:uat"
@@ -90,27 +107,15 @@ spec:
               value: "false"
             - name: Sentry__Environment
               value: uat-phe
-            - name: KRB5CCNAME
-              value: /krb5cc/cc
+            - name: KRB5_CLIENT_KTNAME
+              value: /krbtab/keytab
           volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-        - name: krb5-authenticator
-          image: >-
-            docker-registry.default.svc:5000/krb5-authenticator/krb5-authenticator@sha256:7aef62b71dcc06cc5a529958e6330f8394df65b67253524112a00e0f6df53b32
-          imagePullPolicy: Always
-          volumeMounts:
-            - mountPath: /krb5cc
-              name: krb5cc
-            - mountPath: /run/secrets/keytab
+            - mountPath: /krbtab
               name: krb-tab
-              readOnly: true
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj
       volumes:
-        - name: krb5cc
-          emptyDir: {}
         - name: krb-tab
           secret:
             defaultMode: 420
@@ -129,31 +134,40 @@ spec:
     app: ntbs-uat
 ---
 # Real UAT route, connected to ntbs-uat.phe.nhs.uk
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
-  name: ntbs-uat	
+  name: ntbs-uat
 spec:
-  rules:
-    - host: ntbs-uat.ocpappcol01.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: coming-sson
-              servicePort: 80
-            path: /
+  host: ntbs-uat.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: coming-soon
 ---
 # Temporary route, allowing us access to UAT whilst it's not amiable on final url
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
   name: ntbs-uat-hidden
 spec:
-  rules:
-    - host: ntbs-uat-hidden.ocpappcol01.unix.phe.gov.uk
-      http:
-        paths:
-          - backend:
-              serviceName: ntbs-uat
-              servicePort: 80
-            path: /
+  host: ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk
+  path: /
+  to:
+    kind: Service
+    name: ntbs-uat
+---
+# Disruption budget makes sure that manual node drains done by k8s admin
+# wait for the app to have a pod running on another node before killing it
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: ntbs-uat-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: ntbs-uat

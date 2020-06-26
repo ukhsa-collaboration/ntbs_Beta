@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    <div class="header-navigation-background">
+    <div id="header-nav" class="header-navigation-background">
         <div class="govuk-header__container govuk-width-container no-border">
             <nav>
                 <ul id="navigation" class="govuk-header__navigation header-navigation-list" aria-label="Top Level Navigation">
@@ -56,11 +56,27 @@
                             Reports
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item header-navigation-link">
-                        <a class="govuk-header__link header-navigation-list-item" href="/Help">
-                            Help
-                        </a>
-                    </li>
+                    
+                    <navigation-with-submenu inline-template>
+                        <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
+                            <a v-on:click="toggleMenu" href="/Help/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
+                                Help <i class="arrow down"></i>
+                            </a>
+                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
+                                <li class="header-navigation-link nav-submenu-list-item">
+                                    <a class="govuk-header__link header-navigation-list-item" href="/Help">
+                                        FAQ
+                                    </a>
+                                </li>
+                                <li class="header-navigation-link nav-submenu-list-item">
+                                    <a class="govuk-header__link header-navigation-list-item" href="/ServiceDirectory">
+                                        Service directory
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </navigation-with-submenu>
+                    
                     @if ((await AuthorizationService.AuthorizeAsync(User, "AdminOnly")).Succeeded)
                     {
                         <li class="govuk-header__navigation-item header-navigation-link">
@@ -70,32 +86,26 @@
                         </li>
                     }
                     
-                    <case-manager-menu-dropdown inline-template>
-                        <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-with-js">
-                            <a v-on:click="toggleMenu" class="govuk-header__link header-navigation-list-item dropdown-header">
+                    <navigation-with-submenu inline-template>
+                        <li class="nav-with-submenu-header govuk-header__navigation-item header-navigation-link">
+                            <a v-on:click="toggleMenu" href="/ContactDetails/Menu" class="govuk-header__link header-navigation-list-item nav-with-submenu-header-link">
                                 @User.Identity.Name <i class="arrow down"></i>
                             </a>
-                            <ul ref="case-manager-submenu" class="nav-menu-with-dropdown-list" >
-                                <li class="header-navigation-link nav-menu-with-dropdown-list-item">
+                            <ul ref="navigation-submenu" v-if="showMenu" class="nav-submenu-list" >
+                                <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/ContactDetails">
                                         Edit personal details
                                     </a>
                                 </li>
-                                <li class="header-navigation-link nav-menu-with-dropdown-list-item">
+                                <li class="header-navigation-link nav-submenu-list-item">
                                     <a class="govuk-header__link header-navigation-list-item" href="/Logout">
                                         Logout
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                    </case-manager-menu-dropdown>
+                    </navigation-with-submenu>
                     
-                     <li class="govuk-header__navigation-item header-navigation-link nav-menu-with-dropdown-without-js">
-                        <a class="govuk-header__link header-navigation-list-item"
-                            href="/ContactDetails/Menu">
-                            @User.Identity.Name <i class="arrow down"></i>
-                        </a>
-                    </li>
                 </ul>
             </nav>
 

@@ -1,11 +1,23 @@
-﻿@page
+﻿@page "/ContactDetails/{Username?}"
 @using ntbs_service.Helpers
 @model ntbs_service.Pages.ContactDetails.IndexModel
 
 @{
     Layout = "./_Layout";
-    ViewData["Title"] = $"Case Manager details";
-    TempData["IsEditable"] = true;
+    ViewData["Title"] = $"{@Model.ContactDetails.FullName} contact details";
+    var backLink = ViewData["Referer"];
+    var isServiceDirectoryInRoute = backLink.ToString().Contains("ServiceDirectory");
 }
+
+@if (isServiceDirectoryInRoute)
+{
+    <nhs-width-container container-width="Standard">
+        <nhs-back-link href="/ServiceDirectory">Back to Service Directory</nhs-back-link>
+    </nhs-width-container>
+}
+
+<nhs-width-container container-width="Standard">
+    <nhs-back-link href="@backLink">Back</nhs-back-link>
+</nhs-width-container>
 
 <partial name="_CaseManagerDetailsPartial" model="@Model.ContactDetails"/>

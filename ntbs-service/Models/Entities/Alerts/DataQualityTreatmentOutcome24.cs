@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public static readonly Func<Notification, bool> NotificationQualifies = n =>
             NotificationInQualifyingDateRangeExpression.Compile()(n) && NotificationInRangeQualifies(n);
 
-        public override string Action => "Please provide with appropriate date";
+        public override string Action => "Please provide an outcome with appropriate date";
 
         public override string ActionLink =>
             RouteHelper.GetNotificationOverviewPathWithSectionAnchor(
