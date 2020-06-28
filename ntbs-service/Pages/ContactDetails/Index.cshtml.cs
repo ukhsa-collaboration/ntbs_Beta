@@ -60,18 +60,21 @@ namespace ntbs_service.Pages.ContactDetails
 
         private void PrepareBreadcrumbs()
         {
-            var regionCode = ContactDetails.CaseManagerTbServices.FirstOrDefault()?.TbService.PHECCode;
+            var region = ContactDetails.CaseManagerTbServices.FirstOrDefault()?.TbService.PHEC;
             var breadcrumbs = new List<Breadcrumb>
             {
                 new Breadcrumb {Label = "Service Directory", Url = "/ServiceDirectory"}
             };
 
 
-            if (regionCode != null)
+            if (region != null)
             {
-                breadcrumbs.Add(new Breadcrumb {Label = "Region", Url = $"/ServiceDirectory/Region/{regionCode}"});
+                breadcrumbs.Add(new Breadcrumb {
+                    Label = region.Name, 
+                    Url = $"/ServiceDirectory/Region/{region.Code}"
+                });
             }
-            breadcrumbs.Add((new Breadcrumb {Label = "Contact details", Url = $"/ContactDetails/{ContactDetails.Username}"}));
+            breadcrumbs.Add((new Breadcrumb {Label = ContactDetails.FullName, Url = $"/ContactDetails/{ContactDetails.Username}"}));
 
             ViewData["Breadcrumbs"] = breadcrumbs;
         }
