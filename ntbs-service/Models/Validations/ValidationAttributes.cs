@@ -7,10 +7,10 @@ namespace ntbs_service.Models.Validations
 {
     public class ValidDateRangeAttribute : ValidationAttribute
     {
-        private readonly DateTime StartDate;
+        private readonly DateTime _startDate;
         public ValidDateRangeAttribute(string startDate)
         {
-            StartDate = DateTime.Parse(startDate);
+            _startDate = DateTime.Parse(startDate);
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -18,7 +18,7 @@ namespace ntbs_service.Models.Validations
             if (value != null)
             {
                 var date = (DateTime)value;
-                if (date < StartDate)
+                if (date < _startDate)
                 {
                     return new ValidationResult(ErrorMessage);
                 }
@@ -32,7 +32,7 @@ namespace ntbs_service.Models.Validations
 
         public override string FormatErrorMessage(string name)
         {
-            return ValidationMessages.DateValidityRangeStart(name, StartDate.ToShortDateString());
+            return ValidationMessages.DateValidityRangeStart(name, _startDate.ToShortDateString());
         }
     }
     
@@ -43,7 +43,7 @@ namespace ntbs_service.Models.Validations
     /// </summary>
     public class ValidClinicalDateAttribute : ValidationAttribute
     {
-        private readonly DateTime StartDate = DateTime.Parse(ValidDates.EarliestClinicalDate);
+        private readonly DateTime _startDate = DateTime.Parse(ValidDates.EarliestClinicalDate);
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value == null)
@@ -53,7 +53,7 @@ namespace ntbs_service.Models.Validations
             
             var date = (DateTime)value;
             var isLegacy = ((ModelBase)validationContext.ObjectInstance).IsLegacy;
-            if (date < StartDate && isLegacy == false)
+            if (date < _startDate && isLegacy == false)
             {
                 return new ValidationResult(ErrorMessage);
             }
@@ -66,7 +66,7 @@ namespace ntbs_service.Models.Validations
 
         public override string FormatErrorMessage(string name)
         {
-            return ValidationMessages.DateValidityRangeStart(name, StartDate.ToShortDateString());
+            return ValidationMessages.DateValidityRangeStart(name, _startDate.ToShortDateString());
         }
     }
 
@@ -104,7 +104,7 @@ namespace ntbs_service.Models.Validations
             {
                 if (string.IsNullOrEmpty(partialDate.Month) || string.IsNullOrEmpty(partialDate.Year))
                 {
-                    return new ValidationResult(ValidationMessages.YearIfMonthRequired);
+                    return new ValidationResult(ValidationMessages.YearAndMonthRequired);
                 }
             }
             if (!string.IsNullOrEmpty(partialDate.Month))
@@ -113,6 +113,11 @@ namespace ntbs_service.Models.Validations
                 {
                     return new ValidationResult(ValidationMessages.YearRequired);
                 }
+            }
+
+            if (Int32.Parse(partialDate.Year) < 1900)
+            {
+                return new ValidationResult(ValidationMessages.YearAfter1900);
             }
 
             bool canConvert = partialDate.TryConvertToDateTimeRange(out _, out _);

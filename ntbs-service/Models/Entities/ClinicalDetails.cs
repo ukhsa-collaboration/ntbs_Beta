@@ -82,6 +82,9 @@ namespace ntbs_service.Models.Entities
         public DotStatus? DotStatus { get; set; }
         public Status? EnhancedCaseManagementStatus { get; set; }
         
+        [Display(Name = "Enhanced Case Management Level")]
+        public byte EnhancedCaseManagementLevel { get; set; }
+        
         [Display(Name = "Home visit carried out?")]
         public Status? HomeVisitCarriedOut { get; set; }
         
@@ -97,9 +100,6 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Other description")]
         [RegularExpression(ValidationRegexes.CharacterValidation, ErrorMessage = ValidationMessages.StandardStringFormat)]
         public string HealthcareDescription { get; set; }
-        
-        [Display(Name = "Enhanced Case Management Level")]
-        public byte EnhancedCaseManagementLevel { get; set; }
         
         #endregion
         
