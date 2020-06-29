@@ -1,13 +1,15 @@
 @page "/Notifications/{NotificationId:int}/Edit/Comorbidities/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ComorbiditiesModel
-@using ntbs_service.Helpers
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Comorbidities";
+    var title = NotificationSection.Comorbidities.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
 }
 
 <partial name="_SinglePageErrorSummaryPartial" />
+
+<h2> @title </h2>
 
 <partial name="_ComorbidityStatuses" />
 

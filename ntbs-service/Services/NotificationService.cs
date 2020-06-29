@@ -403,7 +403,9 @@ namespace ntbs_service.Services
                 notification.ClusterId = clusterValue.ClusterId;
             }
 
-            await _context.SaveChangesAsync();
+            await _notificationRepository.SaveChangesAsync(
+                NotificationAuditType.SystemEdited,
+                AuditService.AuditUserSystem);
         }
 
         public async Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile)

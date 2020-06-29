@@ -1,12 +1,13 @@
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using ntbs_service.Helpers;
 
 namespace ntbs_service.Models.Entities.Alerts
 
 {
-    public class TransferRejectedAlert : Alert
+    public class TransferRejectedAlert : Alert, IHasRootEntityForAuditing
     {
         public TransferRejectedAlert()
         {
@@ -24,5 +25,8 @@ namespace ntbs_service.Models.Entities.Alerts
         public override string Action => "Transfer request rejected";
         public override string ActionLink => RouteHelper.GetNotificationPath(NotificationId.Value, NotificationSubPaths.TransferDeclined);
         public override bool NotDismissable => true;
+        
+        public string RootEntityType => RootEntities.Notification;
+        public string RootId => NotificationId.ToString();
     }
 }

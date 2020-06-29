@@ -8,6 +8,7 @@ namespace ntbs_service.Models.Enums
         Deleted,
         Imported,
         Full,
-        Closed
+        Closed,
+        SystemEdited
     }
 }

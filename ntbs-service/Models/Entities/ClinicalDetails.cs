@@ -6,10 +6,12 @@ using ExpressiveAnnotations.Attributes;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
+using ntbs_service.Pages.Notifications;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Clinical Details")]
     public partial class ClinicalDetails : ModelBase, IOwnedEntityForAuditing
     {
         #region DB Mapped Fields

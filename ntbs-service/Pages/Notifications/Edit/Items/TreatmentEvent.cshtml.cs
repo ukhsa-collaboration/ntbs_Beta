@@ -164,7 +164,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                     nameof(SelectedTreatmentOutcomeType),
                     string.Format(
                         ValidationMessages.RequiredSelect,
-                        this.GetMemberDisplayNameValue(nameof(SelectedTreatmentOutcomeType))));
+                        this.GetMemberDisplayName(nameof(SelectedTreatmentOutcomeType))));
                 return;
             }
 
@@ -216,7 +216,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             if (value == null)
             {
                 var errorMessage = string.Format(ValidationMessages.RequiredSelect,
-                    this.GetMemberDisplayNameValue(nameof(SelectedTreatmentOutcomeType)));
+                    this.GetMemberDisplayName(nameof(SelectedTreatmentOutcomeType)));
                 return Content(errorMessage);
             }
 

@@ -11,11 +11,12 @@ namespace ntbs_service.Models.Entities
     // Unlike most of these classes, TestData is not owned - this is purely due to ef limitations around
     // owned entities being principal sides of non-ownership relationships
     // We use the latter to simplify modeling the validation for ''ManualTestResults' presence
+    [Display(Name = "Test Results")]
     public class TestData : ModelBase, IOwnedEntityForAuditing
     {
         public int NotificationId { get; set; }
 
-        [Display(Name = "Has a TB test been carried out?")]
+        [Display(Name = "Has a TB test been carried out")]
         [RequiredIf(nameof(ShouldValidateFull), ErrorMessage = ValidationMessages.Mandatory)]
         [AssertThat(nameof(ResultAddedIfTestCarriedOut), ErrorMessage = ValidationMessages.NoTestResult)]
         public bool? HasTestCarriedOut { get; set; }

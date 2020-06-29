@@ -14,5 +14,10 @@ namespace EFAuditer
         public string AuditUser { get; set; }
         public string RootEntity { get; set; }
         public string RootId { get; set; }
+
+        public AuditLog Clone()
+        {
+            return this.MemberwiseClone() as AuditLog;
+        }
     }
 }

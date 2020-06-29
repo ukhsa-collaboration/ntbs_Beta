@@ -14,14 +14,25 @@ namespace ntbs_service.Helpers
                             .GetMember(enumValue.ToString())
                             .First()
                             .GetCustomAttribute<DisplayAttribute>()
-                            ?.Name ?? string.Empty;
+                            ?.GetName() ?? string.Empty;
+        }
+        
+        public static string GetDisplayName(this Type model)
+        {
+            return model.GetCustomAttribute<DisplayAttribute>()
+                ?.GetName() ?? String.Empty;
         }
 
-        public static string GetMemberDisplayNameValue<T>(this T _, string propertyName)
+        public static string GetMemberDisplayName(this Type baseType, string propertyName)
         {
-            return typeof(T).GetMember(propertyName).FirstOrDefault()
+            return baseType.GetMember(propertyName).FirstOrDefault()
                        ?.GetCustomAttribute<DisplayAttribute>()
-                       ?.Name ?? string.Empty;
+                       ?.GetName() ?? string.Empty;
+        }
+
+        public static string GetMemberDisplayName<T>(this T _, string propertyName)
+        {
+            return typeof(T).GetMemberDisplayName(propertyName);
         }
     }
 }

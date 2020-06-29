@@ -6,13 +6,14 @@
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - M. bovis - Animal exposure";
+    var title = NotificationSection.MBovisAnimalExposure.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     var fullValidation = Model.MBovisDetails.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2> M. bovis - Animal exposure </h2>
+<h2> @title </h2>
 
 <div>
 

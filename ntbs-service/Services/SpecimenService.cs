@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 
 namespace ntbs_service.Services
 {
@@ -173,7 +174,10 @@ namespace ntbs_service.Services
 
                 if (success)
                 {
-                    await _auditService.AuditUnmatchSpecimen(notificationId, labReferenceNumber, userName);
+                    await _auditService.AuditUnmatchSpecimen(notificationId,
+                        labReferenceNumber,
+                        userName,
+                        NotificationAuditType.Edited);
                 }
 
                 return success;
@@ -195,7 +199,8 @@ namespace ntbs_service.Services
 
                 if (success)
                 {
-                    await _auditService.AuditMatchSpecimen(notificationId, labReferenceNumber, userName);
+                    var auditType = isMigrating ? NotificationAuditType.Imported : NotificationAuditType.Edited;
+                    await _auditService.AuditMatchSpecimen(notificationId, labReferenceNumber, userName, auditType);
                     await _alertRepository.CloseUnmatchedLabResultAlertsForSpecimenIdAsync(labReferenceNumber);
                 }
                 

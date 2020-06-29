@@ -11,6 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Hospital details")]
     public partial class HospitalDetails : ModelBase, IOwnedEntityForAuditing
     {
         [MaxLength(200)]
