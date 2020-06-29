@@ -20,6 +20,10 @@ namespace ntbs_service.Services
 
     public class NotificationChangesService : INotificationChangesService
     {
+        // This number has been somewhat arbitrarily picked to be
+        // - large enough that the audits created as part of a single user-generated request are grouped together, but
+        // - small enough that user quickly editing different pages isn't likely to complete two saves within it 
+        private const double MaxTimeBetweenEventsInTheSameGroupInSecond = 0.5;
         private readonly IAuditService _auditService;
         private readonly IUserRepository _userRepository;
         private Dictionary<string, string> UsernameDictionary { get; set; }
@@ -36,7 +40,7 @@ namespace ntbs_service.Services
 
             var auditLogs = (await _auditService.GetWriteAuditsForNotification(notificationId))
                 .OrderBy(log => log.AuditDateTime)
-                .GroupByConsecutive((prev, next) => (next.AuditDateTime - prev.AuditDateTime).TotalSeconds <= 2)
+                .GroupByConsecutive((prev, next) => (next.AuditDateTime - prev.AuditDateTime).TotalSeconds <= MaxTimeBetweenEventsInTheSameGroupInSecond)
                 .SelectMany(GetCanonicalLogs)
                 .ToList();
 
