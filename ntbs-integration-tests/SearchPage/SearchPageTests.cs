@@ -30,7 +30,7 @@ namespace ntbs_integration_tests.SearchPage
                 ["SearchParameters.PartialDob.Year"] = "1899",
                 ["SearchParameters.PartialNotificationDate.Day"] = "31",
                 ["SearchParameters.PartialNotificationDate.Month"] = "13",
-                ["SearchParameters.PartialNotificationDate.Year"] = "1899",
+                ["SearchParameters.PartialNotificationDate.Year"] = "1999",
                 ["SearchParameters.Postcode"] = "$$$"
             };
 
