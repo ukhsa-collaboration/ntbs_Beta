@@ -28,6 +28,7 @@ namespace ntbs_service.DataAccess
         Task<IList<PHEC>> GetAllPhecs();
         Task<PHEC> GetPhecByCode(string phecCode);
         Task<IList<User>> GetAllCaseManagers();
+        IQueryable<User> GetAllCaseManagersQueryable();
         Task<User> GetCaseManagerByUsernameAsync(string username);
         Task<User> GetUserByUsernameAsync(string username);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
@@ -163,6 +164,17 @@ namespace ntbs_service.DataAccess
             return await _context.User
                 .Where(u => u.IsCaseManager)
                 .ToListAsync();
+        }
+
+        public IQueryable<User> GetAllCaseManagersQueryable()
+        {
+            return _context.User
+                .Include(u => u.CaseManagerTbServices)
+                .ThenInclude(c => c.TbService)
+                .ThenInclude(s => s.PHEC)
+                .Where(u => u.IsCaseManager)
+                .OrderBy(u => u.FamilyName)
+                .ThenBy(u => u.GivenName);
         }
 
         public async Task<User> GetCaseManagerByUsernameAsync(string username)

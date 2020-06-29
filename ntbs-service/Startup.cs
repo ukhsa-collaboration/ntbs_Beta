@@ -168,6 +168,7 @@ namespace ntbs_service
             services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
+            services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);

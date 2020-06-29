@@ -10,7 +10,7 @@ namespace ntbs_service.Pages.Search
         public int TotalPages { get; private set; }
         public int NumberOfResults { get; private set; }
 
-        public PaginatedList(IEnumerable<T> items, int count, PaginationParameters paginationParameters)
+        public PaginatedList(IEnumerable<T> items, int count, PaginationParametersBase paginationParameters)
         {
             PageIndex = paginationParameters.PageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)paginationParameters.PageSize);

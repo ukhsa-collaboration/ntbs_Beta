@@ -1,6 +1,6 @@
-﻿@page
+﻿@page "{handler?}"
 @model ntbs_service.Pages.ServiceDirectory.IndexModel
-
+@using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 @{
     Layout = "Shared/_Layout";
     ViewData["Title"] = "Service Directory";
@@ -8,6 +8,22 @@
 
 <nhs-width-container container-width="Standard">
     <h1 class="nhsuk-heading-xl">Service directory</h1>
+    <p>Search for a service or case manager</p>
+    
+    <form class="case-manager-search-keyword" method="get" autocomplete="off">
+        @{
+            var hasSearchKeywordError = !Model.IsValid("SearchKeyword");
+            var searchKeywordGroupState = hasSearchKeywordError ? Error : Standard;
+        }
+        <nhs-form-group nhs-form-group-type=@searchKeywordGroupState id="search-keyword">
+            <span ref="errorField" nhs-span-type="ErrorMessage" id="search-keyword-error"
+                  asp-validation-for="SearchKeyword" has-error="@hasSearchKeywordError">
+            </span>
+            <input is-error-input=@hasSearchKeywordError
+                   nhs-input-type="Standard" asp-for="SearchKeyword" fixed-width="Twenty">
+        </nhs-form-group>
+    </form>
+    
     <h2 class="nhsuk-heading-l">Regions</h2>
     
     <div>
