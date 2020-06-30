@@ -54,7 +54,8 @@
                                             @caseManager.JobTitle
                                         </nhs-table-item>
                                         <nhs-table-item>
-                                            <a href=@($"/ContactDetails/{caseManager.Username}")>View</a>
+                                            <a class="link-without-visited-state" 
+                                               href=@($"/ContactDetails/{caseManager.Username}")>View</a>
                                         </nhs-table-item>
                                     </nhs-table-body-row>
                                 }
