@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Services;
 
@@ -72,7 +73,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void CleanModel()
         {
-            if (TravelDetails.HasTravel != true)
+            if (TravelDetails.HasTravel != Status.Yes)
             {
                 ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.TotalDurationOfTravel)}");
                 ModelState.ClearValidationState($"{nameof(TravelDetails)}.{nameof(TravelDetails.Country1Id)}");
@@ -84,7 +85,7 @@ namespace ntbs_service.Pages.Notifications.Edit
                 Service.ClearTravelOrVisitorFields(TravelDetails);
             }
 
-            if (VisitorDetails.HasVisitor != true)
+            if (VisitorDetails.HasVisitor != Status.Yes)
             {
                 ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.TotalDurationOfVisit)}");
                 ModelState.ClearValidationState($"{nameof(VisitorDetails)}.{nameof(VisitorDetails.Country1Id)}");

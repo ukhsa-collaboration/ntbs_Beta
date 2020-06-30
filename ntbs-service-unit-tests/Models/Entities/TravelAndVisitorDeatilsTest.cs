@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 using Xunit;
 
@@ -11,16 +12,16 @@ namespace ntbs_service_unit_tests.Models.Entities
     {
         public static IEnumerable<object[]> BaseDetails()
         {
-            yield return new object[] {new TravelDetails {ShouldValidateFull = false, HasTravel = true}};
-            yield return new object[] {new TravelDetails {ShouldValidateFull = true, HasTravel = true}};
-            yield return new object[] {new VisitorDetails {ShouldValidateFull = false, HasVisitor = true}};
-            yield return new object[] {new VisitorDetails {ShouldValidateFull = true, HasVisitor = true}};
+            yield return new object[] {new TravelDetails {ShouldValidateFull = false, HasTravel = Status.Yes}};
+            yield return new object[] {new TravelDetails {ShouldValidateFull = true, HasTravel = Status.Yes}};
+            yield return new object[] {new VisitorDetails {ShouldValidateFull = false, HasVisitor = Status.Yes}};
+            yield return new object[] {new VisitorDetails {ShouldValidateFull = true, HasVisitor = Status.Yes}};
         }
         
         public static IEnumerable<object[]> NotifiedBaseDetails()
         {
-            yield return new object[] {new TravelDetails {ShouldValidateFull = true, HasTravel = true}};
-            yield return new object[] {new VisitorDetails {ShouldValidateFull = true, HasVisitor = true}};
+            yield return new object[] {new TravelDetails {ShouldValidateFull = true, HasTravel = Status.Yes}};
+            yield return new object[] {new VisitorDetails {ShouldValidateFull = true, HasVisitor = Status.Yes}};
         }
 
         [Theory, MemberData(nameof(BaseDetails))]

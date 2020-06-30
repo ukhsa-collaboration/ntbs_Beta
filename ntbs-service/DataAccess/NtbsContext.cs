@@ -395,8 +395,22 @@ namespace ntbs_service.DataAccess
                         i.ToTable("ImmunosuppressionDetails");
                     });
 
-                entity.OwnsOne(e => e.TravelDetails).ToTable("TravelDetails");
-                entity.OwnsOne(e => e.VisitorDetails).ToTable("VisitorDetails");
+                entity.OwnsOne(e => e.TravelDetails,
+                    x =>
+                    {
+                        x.Property(td => td.HasTravel)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
+                        x.ToTable("TravelDetails");
+                    });
+                entity.OwnsOne(e => e.VisitorDetails,
+                    x =>
+                    {
+                        x.Property(vd => vd.HasVisitor)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
+                        x.ToTable("VisitorDetails");
+                    });
                 entity.OwnsOne(e => e.ComorbidityDetails,
                     cd =>
                     {

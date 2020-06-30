@@ -381,14 +381,14 @@ namespace ntbs_service.DataMigration
 
         private static TravelDetails ExtractTravelDetails(dynamic notification)
         {
-            bool? hasTravel = notification.HasTravel;
+            var hasTravel = Converter.GetStatusFromString(notification.HasTravel);
             int? numberOfCountries = Converter.ToNullableInt(notification.travel_TotalNumberOfCountries);
             var countriesRecorded = new List<int?>
                 {
                     notification.travel_Country1, notification.travel_Country2, notification.travel_Country3
                 }.Distinct()
                 .Count(c => c != null);
-            int? totalNumberOfCountries = (hasTravel ?? false) && numberOfCountries != null
+            int? totalNumberOfCountries = hasTravel == Status.Yes && numberOfCountries != null
                 ? Math.Max(numberOfCountries.Value, countriesRecorded) 
                 : (int?) null;
             
@@ -407,14 +407,14 @@ namespace ntbs_service.DataMigration
 
         private static VisitorDetails ExtractVisitorDetails(dynamic notification)
         {
-            bool? hasVisitor = notification.HasVisitor;
+            var hasVisitor = Converter.GetStatusFromString(notification.HasVisitor);
             int? numberOfCountries = Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries);
             var countriesRecorded = new List<int?>
                     {
                         notification.visitor_Country1, notification.visitor_Country2, notification.visitor_Country3
                     }.Distinct()
                     .Count(c => c != null);
-            int? totalNumberOfCountries = (hasVisitor ?? false) && numberOfCountries != null 
+            int? totalNumberOfCountries = hasVisitor == Status.Yes && numberOfCountries != null 
                 ? Math.Max(numberOfCountries.Value, countriesRecorded) 
                 : (int?) null;
 

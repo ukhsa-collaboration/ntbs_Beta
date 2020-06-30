@@ -119,9 +119,11 @@ const ValidateTravelOrVisit = Vue.extend({
 
         getHasDataValue: function () {
             if (this.$refs["hasDataYes"].checked) {
-                return true;
+                return "Yes";
             } else if (this.$refs["hasDataNo"].checked) {
-                return false;
+                return "No";
+            } else if (this.$refs["hasDataUnknown"].checked) {
+                return "Unknown";
             }
             return null;
         },
