@@ -195,6 +195,10 @@ namespace ntbs_service.Services
 
         private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)
         {
+            // Imported notifications don't have the draft stage, so don't skip anything
+            if (auditLogs.Any(log => log.AuditDetails == NotificationAuditType.Imported.ToString()))
+                return auditLogs;
+            
             var createAuditLog = auditLogs.Take(1);
             var auditLogsFromSubmissionOnwards = auditLogs
                 .SkipWhile(log => log.AuditDetails != NotificationAuditType.Notified.ToString());

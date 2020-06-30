@@ -102,6 +102,7 @@ namespace ntbs_service_unit_tests.Services
 
             // Assert
             Assert.Collection(changeStrings,
+                c => Assert.Equal("30 Jun 2020, 04:47 John Johnson updated Previous History", c),
                 c => Assert.Equal("25 Jun 2020, 09:15 John Johnson imported Notification", c)
             );
         }
