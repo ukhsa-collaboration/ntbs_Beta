@@ -10,6 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Personal details")]
     public partial class PatientDetails : ModelBase, IHasPostcode, IOwnedEntityForAuditing
     {
         [RequiredIf(@"ShouldValidateFull", ErrorMessage = ValidationMessages.FieldRequired)]

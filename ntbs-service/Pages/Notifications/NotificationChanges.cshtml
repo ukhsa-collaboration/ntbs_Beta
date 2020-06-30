@@ -1,0 +1,19 @@
+@page "/Notifications/{NotificationId:int}/NotificationChanges"
+@using ntbs_service.Helpers
+@model NotificationChangesModel
+
+@{
+    Layout = "../Shared/_NotificationOverviewLayout.cshtml";
+    ViewData["Title"] = $"Notification #{Model.NotificationId} Changes";
+    ViewData["CurrentPage"] = NotificationSubPaths.NotificationChanges;
+}
+
+<h2 class="govuk-visually-hidden">Notification changes history</h2>
+<ul class="notification-history">
+    @foreach(var item in Model.Changes)
+    {
+        <li notification-history-item="@item" class="nhsuk-u-font-size-19"></li>
+    }
+</ul>
+
+<a href="#top" class="govuk-link--no-visited-state"> Back to top </a>

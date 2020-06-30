@@ -5,13 +5,14 @@
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Test Results";
+    var title = NotificationSection.TestResults.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     var fullValidation = Model.TestData.ShouldValidateFull ? "True" : "False";
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2>Test Results</h2>
+<h2> @title </h2>
 
 <partial name="_LabResults" for="@Model.CultureAndResistance" />
 <partial name="_SpecimenDetails" for="@Model.Specimens" />

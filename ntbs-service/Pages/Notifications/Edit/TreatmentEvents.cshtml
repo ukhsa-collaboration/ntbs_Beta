@@ -4,14 +4,15 @@
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Treatment events";
+    var title = NotificationSection.TreatmentEvents.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     ViewData["ShowTreatmentEventEditLinks"] = true;
     ViewData["IsEditPage"] = false;
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2>Treatment Events</h2>
+<h2> @title </h2>
 
 <div>
     <partial name="_TreatmentEventTable" for="Notification.TreatmentEvents" />

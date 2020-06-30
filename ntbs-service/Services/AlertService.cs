@@ -19,7 +19,7 @@ namespace ntbs_service.Services
         Task<bool> AddUniqueOpenAlertAsync<T>(T alert) where T : Alert;
         Task DismissAlertAsync(int alertId, string userId);
         Task AutoDismissAlertAsync<T>(Notification notification) where T : Alert;
-        Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = "System") where T : Alert;
+        Task DismissMatchingAlertAsync<T>(int notificationId, string auditUsername = AuditService.AuditUserSystem) where T : Alert;
         Task<IList<Alert>> GetAlertsForNotificationAsync(int notificationId, ClaimsPrincipal user);
         Task CreateAlertsForUnmatchedLabResults(IEnumerable<SpecimenMatchPairing> specimenMatchPairings);
     }

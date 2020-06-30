@@ -1,16 +1,16 @@
 @page "/Notifications/{NotificationId:int}/Edit/ContactTracing/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ContactTracingModel
-@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Contact Tracing";
+    var title = NotificationSection.ContactTracing.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
 }
 
 <partial name="_SinglePageErrorSummaryPartial"/>
 
-<h2>Contact Tracing</h2>
+<h2> @title </h2>
 
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

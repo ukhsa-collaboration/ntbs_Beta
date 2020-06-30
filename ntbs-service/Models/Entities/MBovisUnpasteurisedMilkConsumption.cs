@@ -16,7 +16,7 @@ namespace ntbs_service.Models.Entities
         nameof(CountryId),
         nameof(OtherDetails),
         ErrorMessage = ValidationMessages.SupplyAModelParameter)]
-    [Display(Name = "unpasteurised milk consumption")]
+    [Display(Name = "M. bovis - unpasteurised milk consumption")]
     public class MBovisUnpasteurisedMilkConsumption : ModelBase, IHasRootEntityForAuditing
     {
         public int MBovisUnpasteurisedMilkConsumptionId { get; set; }

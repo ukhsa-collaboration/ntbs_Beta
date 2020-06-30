@@ -1,19 +1,25 @@
-@model NotificationModelBase
+@model NotificationEditModelBase
 @using ntbs_service.Helpers
 
 @{
+    ViewData["Title"] = $"Error - Draft #{Model.NotificationId} submission";
     Layout = "../Shared/_NotificationLayoutWithSideMenu.cshtml";
-    Dictionary<string, NotifyError> NotifyErrorDictionary = (Dictionary<string, NotifyError>) ViewData["NotifyErrorDictionary"];
 }
 
 <nhs-error-summary title-text="You cannot proceed until the following issues are resolved" title-id="error-summary-title"
 role="alert" tabindex="-1" data-module="error-summary">
-    @foreach (var notifyError in NotifyErrorDictionary) 
+    @foreach (var (section, errors) in Model.NotifyErrorDictionary
+        // Order these by the NotificationSection enum, which holds the canonical pages order
+        .OrderBy(entry => entry.Key)) 
     {
+        var url = RouteHelper.GetSubmittingNotificationPath(Model.NotificationId, section.ToSubPath());
+
         <li>
-            <a href=@notifyError.Value.Url>@notifyError.Key</a>
+            <a href="@url">
+                @(section.ToDisplayString())
+            </a>
         </li>
-        @foreach(var item in notifyError.Value.ErrorMessages) 
+        @foreach(var item in errors) 
         {
             <li>@item</li>
         }

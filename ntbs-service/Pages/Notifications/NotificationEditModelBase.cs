@@ -30,8 +30,7 @@ namespace ntbs_service.Pages.Notifications
             _alertRepository = alertRepository;
         }
 
-        [ViewData]
-        public Dictionary<string, NotifyError> NotifyErrorDictionary { get; set; }
+        public Dictionary<NotificationSection, List<string>> NotifyErrorDictionary { get; private set; }
 
         [ViewData]
         public Dictionary<string, string> EditPageErrorDictionary { get; set; }
@@ -124,7 +123,7 @@ namespace ntbs_service.Pages.Notifications
 
             if (!TryValidateModel(Notification))
             {
-                NotifyErrorDictionary = NotificationValidationErrorGenerator.MapToDictionary(ModelState, NotificationId);
+                NotifyErrorDictionary = NotificationValidationErrorGenerator.MapToDictionary(ModelState);
                 return Partial("./NotificationErrorSummary", this);
             }
 

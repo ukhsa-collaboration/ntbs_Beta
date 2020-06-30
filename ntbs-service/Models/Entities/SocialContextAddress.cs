@@ -1,5 +1,8 @@
-﻿namespace ntbs_service.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ntbs_service.Models.Entities
 {
+    [Display(Name = "Social Context Address")]
     public class SocialContextAddress : SocialContextBase
     {
         public int SocialContextAddressId { get; set; }

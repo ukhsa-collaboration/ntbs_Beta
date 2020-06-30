@@ -42,17 +42,33 @@ namespace ntbs_service.Models.Entities
             }
         }
 
-        public string FormattedCaseManagementStatus => EnhancedCaseManagementStatus != Status.Yes
-            ? EnhancedCaseManagementStatus.ToString()
-            : $"{EnhancedCaseManagementStatus} - Level {EnhancedCaseManagementLevel}"; 
+        public string FormattedCaseManagementStatus
+        {
+            get
+            {
+                switch (EnhancedCaseManagementStatus)
+                {
+                    case Status.Yes:
+                        return EnhancedCaseManagementLevel == 0 ? "Yes"
+                            : $"Yes - Level {EnhancedCaseManagementLevel}";
+                    case Status.No:
+                        return "No - Level 0";
+                    case Status.Unknown:
+                        return "Unknown";
+                    case null:
+                        return "";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         public string FormattedSymptomStartDate => SymptomStartDate.ConvertToString();
         public string FormattedPresentationToAnyHealthServiceDate => FirstPresentationDate.ConvertToString();
-        public string FormattedPresentationToTBServiceDate => TBServicePresentationDate.ConvertToString();
+        public string FormattedPresentationToTbServiceDate => TBServicePresentationDate.ConvertToString();
         public string FormattedDiagnosisDate => DiagnosisDate.ConvertToString();
-        public string FormattedHomeVisitDate => FirstHomeVisitDate.ConvertToString();
         public string FormattedTreatmentStartDate => TreatmentStartDate.ConvertToString();
         public string GetHIVTestState => HIVTestState?.GetDisplayName() ?? string.Empty;
-
 
         private string GetFormattedDotOfferedState()
         {
@@ -76,7 +92,7 @@ namespace ntbs_service.Models.Entities
 
             var prefix = HomeVisitCarriedOut.GetDisplayName();
             return FirstHomeVisitDate != null
-                ? $"{prefix} - {FormattedHomeVisitDate}"
+                ? $"{prefix} - {FirstHomeVisitDate.ConvertToString()}"
                 : prefix;
         }
 

@@ -1,0 +1,33 @@
+﻿@import "./_colors.scss";
+
+.notification-history {
+  list-style-type: none;
+  padding: 0 16px;
+}
+
+.history-list-item {
+  margin: 0;
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  & + .history-list-item {
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: $grey;
+  }
+
+  .history-list-item__date {
+  }
+
+  .history-list-item__user {
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .history-list-item__action {
+  }
+
+  .history-list-item__subject {
+    font-weight: bold;
+  }
+}
