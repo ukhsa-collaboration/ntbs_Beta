@@ -34,7 +34,7 @@
     }
   
     .case-manager-search-result-name {
-        font-size: 24px;
+        font-size: 19px;
     }
 }
 
@@ -47,9 +47,20 @@
 .case-manager-search-result-item-summary {
     margin-bottom: 18px;
 
-    .nhsuk-summary-list__row .nhsuk-summary-list__key {
-        width: 10%;
-        min-width: 100px;
+    .nhsuk-summary-list__row {
+        font-size: 16px;
+      
+        .nhsuk-summary-list__key {
+            width: 10%;
+            min-width: 100px;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+
+        .nhsuk-summary-list__value {
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
     }
 }
 
