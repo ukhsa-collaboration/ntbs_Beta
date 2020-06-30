@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Pages.ServiceDirectory
 {
-    public class IndexModel : PageModel
+    public class IndexModel : ServiceDirectorySearchBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
 
@@ -18,11 +16,15 @@ namespace ntbs_service.Pages.ServiceDirectory
         }
         
         public IList<PHEC> AllRegions { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync()
         {
+            if (SearchKeyword != null && ModelState.IsValid)
+            {
+                return RedirectToPage("/ServiceDirectory/SearchResults", new {SearchKeyword});
+            }
+            
             AllRegions = await _referenceDataRepository.GetAllPhecs();
-
             return Page();
         }
     }

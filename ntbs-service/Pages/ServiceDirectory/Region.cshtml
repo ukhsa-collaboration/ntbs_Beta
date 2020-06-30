@@ -1,4 +1,4 @@
-﻿@page "/ServiceDirectory/Region/{PhecCode}"
+﻿@page "/ServiceDirectory/Region/{PhecCode}/{handler?}"
 @model ntbs_service.Pages.ServiceDirectory.RegionModel
 
 @{
@@ -6,7 +6,9 @@
     ViewData["Title"] = Model.Phec.Name;
 }
 <nhs-width-container container-width="Standard">
-    <nhs-back-link href="/ServiceDirectory">Back to service directory</nhs-back-link>
+    <back-link-retaining-history inline-template>
+        <nhs-back-link v-on:click="navigateBack" href="/ServiceDirectory">Back</nhs-back-link>
+    </back-link-retaining-history>
 </nhs-width-container>
 
 <nhs-width-container container-width="Standard">
