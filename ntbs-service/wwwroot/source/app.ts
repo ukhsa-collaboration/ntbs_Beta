@@ -44,6 +44,7 @@ import InactivityLeaveComponent from "./Components/InactivityLeaveComponent";
 import DateInput from "./Components/DateInput";
 import NotificationWarning from "./Components/NotificationWarning";
 import NavigationWithSubmenu from "./Components/NavigationWithSubmenu";
+import BackLinkRetainingHistory from "./Components/BackLinkRetainingHistory";
 // For compatibility with IE11. ArrayFromPolyfill required by vue-accessible-modal.
 require("es6-promise").polyfill();
 require("./Polyfills/ArrayFromPolyfill");
@@ -86,6 +87,7 @@ Vue.component("confirm-component", ConfirmComponent);
 Vue.component("inactivity-checker", InactivityChecker);
 Vue.component("inactivity-component", InactivityLeaveComponent);
 Vue.component("navigation-with-submenu", NavigationWithSubmenu);
+Vue.component("back-link-retaining-history", BackLinkRetainingHistory);
 
 // Vue needs to be the first thing to load!
 // Otherwise, it replaces the templates of its components with fresh content, potentially overwriting changes from other scripts!

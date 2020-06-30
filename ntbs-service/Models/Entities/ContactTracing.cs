@@ -6,6 +6,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Contact Tracing")]
     public partial class ContactTracing : ModelBase, IOwnedEntityForAuditing
     {
         [Range(0, int.MaxValue, ErrorMessage = ValidationMessages.PositiveNumbersOnly)]

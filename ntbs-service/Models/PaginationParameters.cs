@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ntbs_service.Models
 {
     [NotMapped]
-    public class PaginationParameters
+    public class PaginationParameters : PaginationParametersBase
     {
-        public int PageSize;
-        public int PageIndex;
         public int? NtbsOffset;
         public int? LegacyOffset;
         public int? PreviousNtbsOffset;

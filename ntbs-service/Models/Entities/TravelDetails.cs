@@ -10,6 +10,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Travel details")]
     public class TravelDetails : ModelBase, ITravelOrVisitorDetails, IOwnedEntityForAuditing
     {
         private const int MaxTotalLengthOfStay = 24;

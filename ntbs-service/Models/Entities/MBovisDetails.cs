@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Castle.Core.Internal;
 using EFAuditer;
@@ -12,6 +11,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "M. bovis details")]
     public class MBovisDetails : ModelBase, IOwnedEntityForAuditing
     {
         public int NotificationId { get; set; }

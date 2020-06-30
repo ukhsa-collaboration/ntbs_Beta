@@ -270,7 +270,10 @@ namespace ntbs_service.DataMigration
             foreach (var (legacyId, referenceLaboratoryNumber) in matches)
             {
                 var notificationId = notifications.Single(n => n.ETSID == legacyId).NotificationId;
-                var success = await _specimenService.MatchSpecimenAsync(notificationId, referenceLaboratoryNumber, "SYSTEM", isMigrating: true);
+                var success = await _specimenService.MatchSpecimenAsync(notificationId,
+                    referenceLaboratoryNumber,
+                    AuditService.AuditUserSystem,
+                    isMigrating: true);
                 if (!success)
                 {
                     var error = $"Failed to set the specimen match for Notification: {notificationId}, reference lab number: {referenceLaboratoryNumber}";

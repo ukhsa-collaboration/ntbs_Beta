@@ -8,6 +8,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [Display(Name = "M. bovis - exposure to another case")]
     public class MBovisExposureToKnownCase : ModelBase, IHasRootEntityForAuditing
     {
         public int MBovisExposureToKnownCaseId { get; set; }

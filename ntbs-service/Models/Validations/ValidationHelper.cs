@@ -22,8 +22,9 @@
         public const string NumberFormat = "{0} can only contain digits 0-9";
         public const string NumberHyphenAndSpaceFormat = "{0} can only contain digits 0-9, the symbol - and spaces";
         public const string PositiveNumbersOnly = "Please enter a positive value";
-        public const string YearIfMonthRequired = "Year and month must be provided if a day has been provided";
+        public const string YearAndMonthRequired = "Year and month must be provided if a day has been provided";
         public const string YearRequired = "A year must be provided";
+        public const string YearAfter1900 = "Year field must be at last 1900";
         public const string SupplyAParameter = "Please supply at least one of these fields";
         public const string SupplyAModelParameter = "Please supply at least one of {0} fields";
         public const string SupplyCaseManagerPrimaryParameter = "Please supply at least one of Job Title, Phone number #1, Email #1 fields";

@@ -10,6 +10,7 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [Display(Name = "Test result")]
     public class ManualTestResult : ModelBase, IHasRootEntityForAuditing
     {
         // Even for values which are non-nullable in db, we make them a nullable runtime type so 

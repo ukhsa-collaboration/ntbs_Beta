@@ -770,27 +770,27 @@ namespace ntbs_service.DataAccess
             });
         }
 
-        private static List<object> GetTBServicesList()
+        private static List<TBService> GetTBServicesList()
         {
             return SeedingHelper.GetTBServices("Models/SeedData/tbservices.csv");
         }
 
-        private static List<object> GetPHECtoLA()
+        private static List<LocalAuthorityToPHEC> GetPHECtoLA()
         {
             return SeedingHelper.GetLAtoPHEC("Models/SeedData/LA_to_PHEC.csv");
         }
 
-        private static List<object> GetHospitalsList()
+        private static List<Hospital> GetHospitalsList()
         {
             return SeedingHelper.GetHospitalsList("Models/SeedData/hospitals.csv");
         }
 
-        private static List<object> GetPHECList()
+        private static List<PHEC> GetPHECList()
         {
             return SeedingHelper.GetPHECList("Models/SeedData/phec.csv");
         }
 
-        private static List<object> GetLocalAuthoritiesList()
+        private static List<LocalAuthority> GetLocalAuthoritiesList()
         {
             return SeedingHelper.GetLocalAuthorities("Models/SeedData/LocalAuthorities.csv");
         }

@@ -1,14 +1,11 @@
 @page "/Notifications/{NotificationId:int}/Edit/ClinicalDetails/{handler?}"
 @model ntbs_service.Pages.Notifications.Edit.ClinicalDetailsModel
-@using ntbs_service.Helpers
 @using static NHSUK.FrontEndLibrary.TagHelpers.FormGroupType
-@using ntbs_service.Models.Entities
-@using ntbs_service.Models.Enums
-@using ntbs_service.Models.ReferenceEntities
 
 @{
     Layout = "../../Shared/_NotificationEditLayout.cshtml";
-    ViewData["Title"] = "Notification - Clinical Details";
+    var title = NotificationSection.ClinicalDetails.ToDisplayString();
+    ViewData["Title"] = $"Notification #{Model.NotificationId} - {title}";
     var fullValidation = Model.ClinicalDetails.ShouldValidateFull ? "True" : "False";
     ViewData["FullValidation"] = fullValidation;
 }

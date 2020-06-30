@@ -22,3 +22,59 @@
 .submenu-list-item-non-js {
   font-size: x-large;
 }
+
+.case-manager-search-result-container {
+    width: 70%;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #cccccc;
+  
+    a {
+        text-decoration: none;
+        color: #005eb8;
+    }
+  
+    .case-manager-search-result-name {
+        font-size: 19px;
+    }
+}
+
+.case-manager-results-summary {
+    width: 70%;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.case-manager-search-result-item-summary {
+    margin-bottom: 18px;
+
+    .nhsuk-summary-list__row {
+        font-size: 16px;
+      
+        .nhsuk-summary-list__key {
+            width: 10%;
+            min-width: 100px;
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+
+        .nhsuk-summary-list__value {
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+    }
+}
+
+.case-manager-search-form {
+    margin-bottom: 50px;
+}
+
+.case-manager-search-keyword {
+    display: flex;
+}
+
+.case-manager-search-button {
+  padding-top: 4px;
+  border-bottom: 2px solid #4c6272;
+  border-top: 2px solid #4c6272;
+  border-right: 2px solid #4c6272;
+}

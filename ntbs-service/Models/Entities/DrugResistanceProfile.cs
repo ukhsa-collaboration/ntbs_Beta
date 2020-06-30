@@ -1,9 +1,11 @@
-﻿using EFAuditer;
+﻿using System.ComponentModel.DataAnnotations;
+using EFAuditer;
 using Microsoft.EntityFrameworkCore;
 
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Drug resistance profile")]
     public class DrugResistanceProfile : ModelBase, IOwnedEntityForAuditing
     {
         public string Species { get; set; }

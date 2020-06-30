@@ -8,6 +8,7 @@ namespace ntbs_service.Models.Entities
 {
     [Owned]
     [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+    [Display(Name = "Social Risk Factors")]
     public partial class SocialRiskFactors : ModelBase, IOwnedEntityForAuditing
     {
         public SocialRiskFactors()
