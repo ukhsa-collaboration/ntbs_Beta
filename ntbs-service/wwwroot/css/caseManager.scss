@@ -56,3 +56,13 @@
 .case-manager-search-form {
     margin-bottom: 50px;
 }
+
+.case-manager-search-keyword {
+    display: flex;
+}
+
+.case-manager-search-button {
+  border-bottom: 2px solid #4c6272;
+  border-top: 2px solid #4c6272;
+  border-right: 2px solid #4c6272;
+}
