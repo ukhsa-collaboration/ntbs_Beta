@@ -23,7 +23,7 @@ namespace ntbs_service.Services
         // This number has been somewhat arbitrarily picked to be
         // - large enough that the audits created as part of a single user-generated request are grouped together, but
         // - small enough that user quickly editing different pages isn't likely to complete two saves within it 
-        private const double MaxTimeBetweenEventsInTheSameGroupInSecond = 0.5;
+        private const double MaxTimeBetweenEventsInTheSameGroupInSecond = 1.5;
         private readonly IAuditService _auditService;
         private readonly IUserRepository _userRepository;
         private Dictionary<string, string> UsernameDictionary { get; set; }
