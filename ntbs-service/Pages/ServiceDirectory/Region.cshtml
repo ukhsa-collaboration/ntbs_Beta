@@ -28,8 +28,8 @@
                         </span>
                     </h3>
                 </div>
-                <div id="accordion-content-{@tbService.Code}" class="govuk-accordion__section-content" 
-                    aria-labelledby="accordion-heading-{@tbService.Code}">
+                <div id="accordion-content-@tbService.Code" class="govuk-accordion__section-content" 
+                    aria-labelledby="accordion-heading-@tbService.Code">
                     @if (caseManagers.Any())
                     {
                         <nhs-table id="regions-and-services-@tbService.Code" caption="Assigned Services">
