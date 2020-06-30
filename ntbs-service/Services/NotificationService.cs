@@ -411,7 +411,9 @@ namespace ntbs_service.Services
         public async Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile)
         {
             _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
-            await _notificationRepository.SaveChangesAsync();
+            await _notificationRepository.SaveChangesAsync(
+                NotificationAuditType.SystemEdited,
+                AuditService.AuditUserSystem);
         }
 
         public async Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails)
