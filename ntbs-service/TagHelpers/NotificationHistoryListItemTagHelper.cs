@@ -21,7 +21,8 @@ namespace ntbs_service.TagHelpers
 
             var userHtml = NotificationHistoryItem.UserId == null
                 ? $@"<span class=""history-list-item__user"">{NotificationHistoryItem.Username}</span>"
-                : $@"<a class=""history-list-item__user"" href=""/ContactDetails/{NotificationHistoryItem.UserId}"">
+                : $@"<a class=""history-list-item__user govuk-link--no-visited-state"" 
+                        href=""/ContactDetails/{NotificationHistoryItem.UserId}"">
                     {NotificationHistoryItem.Username}
                 </a>";
             output.Content.SetHtmlContent($@"
