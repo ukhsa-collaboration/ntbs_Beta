@@ -29,13 +29,13 @@ namespace ntbs_service.Services
             string searchKeyword,
             PaginationParametersBase paginationParameters)
         {
-            var searchKeywords = searchKeyword.Split(" ").Where(x => !x.IsNullOrEmpty()).ToList();
+            var searchKeywords = searchKeyword.Split(" ").Where(x => !x.IsNullOrEmpty()).Select(s => s.ToLower()).ToList();
             var caseManagersQueryable = _referenceDataRepository
                 .GetAllCaseManagersQueryable()
                 .Where(c => c.CaseManagerTbServices.Any(x => 
-                                searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s.ToLower()))) 
-                            || searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s.ToLower())) 
-                            || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s.ToLower())));
+                                searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s))) 
+                            || searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s)) 
+                            || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s)));
 
             var caseManagers = await GetPaginatedItemsAsync(caseManagersQueryable, paginationParameters);
             var count = await caseManagersQueryable.CountAsync();
