@@ -59,8 +59,8 @@ spec:
                 secretKeyRef:
                   name: dev-connection-strings
                   key: reporting
-            - name: Hangfire__WorkersCount
-              value: 3
+            - name: Hangfire__WorkerCount
+              value: "3"
             - name: HttpBasicAuth__Enabled
               value: "true"
             - name: HttpBasicAuth__Username
@@ -89,7 +89,7 @@ spec:
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
-              value: "false"
+              value: "true"
             - name: Sentry__Environment
               value: phe-dev
       imagePullSecrets:

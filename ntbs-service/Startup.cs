@@ -458,7 +458,7 @@ namespace ntbs_service
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
-                WorkerCount = Configuration.GetValue<int>(Constants.HangfireWorkersCount)
+                WorkerCount = Configuration.GetValue<int>(Constants.HangfireWorkerCount)
             });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
 
