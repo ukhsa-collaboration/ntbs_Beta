@@ -8,7 +8,7 @@ namespace ntbs_service
         public const string ClusterMatchingConfigMockOut = "MockOutClusterMatching";
         public const string DbConnectionStringReporting = "reporting";
         public const string HangfireEnabled = "Hangfire:Enabled";
-        public const string HangfireWorkersCount = "Hangfire:WorkersCount";
+        public const string HangfireWorkersCount = "Hangfire:WorkerCount";
         public const string LegacySearchEnabledConfigValue = "AppConfig:LegacySearchEnabled";
         public const string ReferenceLabResultsConfig = "ReferenceLabResultsConfig";
         public const string ReferenceLabResultsConfigMockOut = "MockOutSpecimenMatching";
