@@ -8,19 +8,19 @@ namespace ntbs_service.Pages
     {
         public Health(IConfiguration configuration)
         {
-            Release = configuration.GetValue<string>(Constants.RELEASE);
+            Release = configuration.GetValue<string>(Constants.Release);
             
-            AuditEnabled = configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE);
-            
-            // Note the value negation, since we're turning mocked => enabled
-            ClusterMatchingEnabled = !configuration.GetSection(Constants.CLUSTER_MATCHING_CONFIG)
-                .GetValue<bool>(Constants.CLUSTER_MATCHING_CONFIG__MOCKOUT);
+            AuditEnabled = configuration.GetValue<bool>(Constants.AuditEnabledConfigValue);
             
             // Note the value negation, since we're turning mocked => enabled
-            ReferenceLabResultsEnabled = !configuration.GetSection(Constants.REFERENCE_LAB_RESULTS_CONFIG)
-                .GetValue<bool>(Constants.REFERENCE_LAB_RESULTS_CONFIG__MOCKOUT);
+            ClusterMatchingEnabled = !configuration.GetSection(Constants.ClusterMatchingConfig)
+                .GetValue<bool>(Constants.ClusterMatchingConfigMockOut);
             
-            var reportingDbString = configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING);
+            // Note the value negation, since we're turning mocked => enabled
+            ReferenceLabResultsEnabled = !configuration.GetSection(Constants.ReferenceLabResultsConfig)
+                .GetValue<bool>(Constants.ReferenceLabResultsConfigMockOut);
+            
+            var reportingDbString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
             // Note the value negation, since we're turning lack of connection string  => enabled
             ReportingServicesEnabled = !string.IsNullOrEmpty(reportingDbString);
             

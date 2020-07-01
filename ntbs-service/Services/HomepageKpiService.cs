@@ -21,7 +21,7 @@ namespace ntbs_service.Services
 
         public HomepageKpiService(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING);
+            _connectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
         }
 
         public async Task<IEnumerable<HomepageKpi>> GetKpiForPhec(IEnumerable<string> phecCodes)

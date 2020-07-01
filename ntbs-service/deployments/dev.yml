@@ -59,6 +59,8 @@ spec:
                 secretKeyRef:
                   name: dev-connection-strings
                   key: reporting
+            - name: Hangfire__WorkersCount
+              value: 3
             - name: HttpBasicAuth__Enabled
               value: "true"
             - name: HttpBasicAuth__Username

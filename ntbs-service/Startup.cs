@@ -28,7 +28,6 @@ using ntbs_service.Jobs;
 using ntbs_service.Middleware;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
-using ntbs_service.Pages.Notifications;
 using ntbs_service.Properties;
 using ntbs_service.Services;
 using Serilog;
@@ -179,7 +178,7 @@ namespace ntbs_service
 
         private void SetupHangfire(IServiceCollection services)
         {
-            if (!Env.IsEnvironment("CI"))
+            if (Configuration.GetValue<bool>(Constants.HangfireEnabled))
             {
                 services.AddHangfire(config =>
                 {
@@ -309,7 +308,7 @@ namespace ntbs_service
 
         private void AddAuditService(IServiceCollection services, string auditDbConnectionString)
         {
-            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
             {
                 services.AddEFAuditer(auditDbConnectionString);
             }
@@ -321,8 +320,8 @@ namespace ntbs_service
 
         private void AddClusterService(IServiceCollection services)
         {
-            var clusterMatchingConfig = Configuration.GetSection(Constants.CLUSTER_MATCHING_CONFIG);
-            if (clusterMatchingConfig.GetValue<bool>(Constants.CLUSTER_MATCHING_CONFIG__MOCKOUT))
+            var clusterMatchingConfig = Configuration.GetSection(Constants.ClusterMatchingConfig);
+            if (clusterMatchingConfig.GetValue<bool>(Constants.ClusterMatchingConfigMockOut))
             {
                 var notificationClusterValues = new List<NotificationClusterValue>();
                 clusterMatchingConfig.Bind("MockedNotificationClusterValues", notificationClusterValues);
@@ -338,8 +337,8 @@ namespace ntbs_service
 
         private void AddReferenceLabResultServices(IServiceCollection services)
         {
-            var referenceLabResultsConfig = Configuration.GetSection(Constants.REFERENCE_LAB_RESULTS_CONFIG);
-            if (referenceLabResultsConfig.GetValue<bool>(Constants.REFERENCE_LAB_RESULTS_CONFIG__MOCKOUT))
+            var referenceLabResultsConfig = Configuration.GetSection(Constants.ReferenceLabResultsConfig);
+            if (referenceLabResultsConfig.GetValue<bool>(Constants.ReferenceLabResultsConfigMockOut))
             {
                 var notificationId = referenceLabResultsConfig.GetValue<int>("MockedNotificationId");
                 var tbServiceCode = referenceLabResultsConfig.GetValue<string>("MockedTbServiceCode");
@@ -358,7 +357,7 @@ namespace ntbs_service
 
         private void AddReportingServices(IServiceCollection services)
         {
-            if (string.IsNullOrEmpty(Configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING)))
+            if (string.IsNullOrEmpty(Configuration.GetConnectionString(Constants.DbConnectionStringReporting)))
             {
                 services.AddScoped<IHomepageKpiService, MockHomepageKpiService>();
                 services.AddScoped<IDrugResistanceProfilesService, MockDrugResistanceProfilesService>();
@@ -427,7 +426,7 @@ namespace ntbs_service
                 app.UseMiddleware<ActivityDetectionMiddleware>();
             }
             
-            if (Configuration.GetValue<bool>(Constants.AUDIT_ENABLED_CONFIG_VALUE))
+            if (Configuration.GetValue<bool>(Constants.AuditEnabledConfigValue))
             {
                 app.UseMiddleware<AuditGetRequestMiddleWare>();
             }
@@ -443,7 +442,7 @@ namespace ntbs_service
 
         private void ConfigureHangfire(IApplicationBuilder app)
         {
-            if (Env.IsEnvironment("CI"))
+            if (!Configuration.GetValue<bool>(Constants.HangfireEnabled))
             {
                 return;
             }
@@ -457,11 +456,14 @@ namespace ntbs_service
                 IgnoreAntiforgeryToken = true
             };
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
-            app.UseHangfireServer(new BackgroundJobServerOptions {WorkerCount = 1});
+            app.UseHangfireServer(new BackgroundJobServerOptions
+            {
+                WorkerCount = Configuration.GetValue<int>(Constants.HangfireWorkersCount)
+            });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 0});
 
             var scheduledJobConfig = new ScheduledJobsConfig();
-            Configuration.GetSection(Constants.SCHEDULED_JOBS_CONFIG).Bind(scheduledJobConfig);
+            Configuration.GetSection(Constants.ScheduledJobsConfig).Bind(scheduledJobConfig);
             HangfireJobScheduler.ScheduleRecurringJobs(scheduledJobConfig);
         }
 

@@ -59,7 +59,7 @@ namespace ntbs_service.Services
             IAuditService auditService, 
             IAlertRepository alertRepository)
         {
-            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DB_CONNECTIONSTRING_REPORTING);
+            _reportingDbConnectionString = configuration.GetConnectionString(Constants.DbConnectionStringReporting);
             _specimenMatchingDbConnectionString = configuration.GetConnectionString("specimenMatching");
             _auditService = auditService;
             _alertRepository = alertRepository;

@@ -58,7 +58,7 @@ namespace ntbs_service.Services
                                     INotificationImportHelper notificationImportHelper,
                                     IUserService userService)
         {
-            LegacySearchEnabled = configuration.GetValue<bool>(Constants.LEGACY_SEARCH_ENABLED_CONFIG_VALUE);
+            LegacySearchEnabled = configuration.GetValue<bool>(Constants.LegacySearchEnabledConfigValue);
             connectionString = configuration.GetConnectionString("migration");
             _referenceDataRepository = referenceDataRepository;
             _notificationImportHelper = notificationImportHelper;

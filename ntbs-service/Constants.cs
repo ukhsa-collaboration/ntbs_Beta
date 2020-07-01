@@ -2,14 +2,16 @@ namespace ntbs_service
 {
     public static class Constants
     {
-        public const string RELEASE = "RELEASE";
-        public const string AUDIT_ENABLED_CONFIG_VALUE = "AppConfig:AuditingEnabled";
-        public const string CLUSTER_MATCHING_CONFIG = "ClusterMatchingConfig";
-        public const string CLUSTER_MATCHING_CONFIG__MOCKOUT = "MockOutClusterMatching";
-        public const string DB_CONNECTIONSTRING_REPORTING = "reporting";
-        public const string LEGACY_SEARCH_ENABLED_CONFIG_VALUE = "AppConfig:LegacySearchEnabled";
-        public const string REFERENCE_LAB_RESULTS_CONFIG = "ReferenceLabResultsConfig";
-        public const string REFERENCE_LAB_RESULTS_CONFIG__MOCKOUT = "MockOutSpecimenMatching";
-        public const string SCHEDULED_JOBS_CONFIG = "ScheduledJobsConfig";
+        public const string Release = "RELEASE";
+        public const string AuditEnabledConfigValue = "AppConfig:AuditingEnabled";
+        public const string ClusterMatchingConfig = "ClusterMatchingConfig";
+        public const string ClusterMatchingConfigMockOut = "MockOutClusterMatching";
+        public const string DbConnectionStringReporting = "reporting";
+        public const string HangfireEnabled = "Hangfire:Enabled";
+        public const string HangfireWorkersCount = "Hangfire:WorkersCount";
+        public const string LegacySearchEnabledConfigValue = "AppConfig:LegacySearchEnabled";
+        public const string ReferenceLabResultsConfig = "ReferenceLabResultsConfig";
+        public const string ReferenceLabResultsConfigMockOut = "MockOutSpecimenMatching";
+        public const string ScheduledJobsConfig = "ScheduledJobsConfig";
     }
 }
