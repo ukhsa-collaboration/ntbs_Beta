@@ -10,7 +10,7 @@ namespace ntbs_service.Helpers
     {
         public static string GetDisplayName(this Enum enumValue)
         {
-            return enumValue.GetType()
+            return enumValue?.GetType()
                             .GetMember(enumValue.ToString())
                             .First()
                             .GetCustomAttribute<DisplayAttribute>()

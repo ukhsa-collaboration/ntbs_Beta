@@ -25,8 +25,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["TravelDetails.HasTravel"] = "false",
-                ["VisitorDetails.HasVisitor"] = "false"
+                ["TravelDetails.HasTravel"] = "No",
+                ["VisitorDetails.HasVisitor"] = "No"
             };
 
             // Act
@@ -48,8 +48,8 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["TravelDetails.HasTravel"] = "false",
-                ["VisitorDetails.HasVisitor"] = "false"
+                ["TravelDetails.HasTravel"] = "No",
+                ["VisitorDetails.HasVisitor"] = "No"
             };
 
             // Act
@@ -75,7 +75,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.NOTIFIED_ID.ToString(),
                 
-                ["TravelDetails.HasTravel"] = "true",
+                ["TravelDetails.HasTravel"] = "Yes",
                 ["TravelDetails.TotalNumberOfCountries"] = "3",
                 ["TravelDetails.Country1Id"] = "1",
                 ["TravelDetails.StayLengthInMonths1"] = "10",
@@ -84,7 +84,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TravelDetails.Country3Id"] = "3",
                 ["TravelDetails.StayLengthInMonths3"] = "10",
 
-                ["VisitorDetails.HasVisitor"] = "true",
+                ["VisitorDetails.HasVisitor"] = "Yes",
                 ["VisitorDetails.TotalNumberOfCountries"] = "3",
                 ["VisitorDetails.Country1Id"] = "1",
                 ["VisitorDetails.StayLengthInMonths1"] = "10",
@@ -124,8 +124,8 @@ namespace ntbs_integration_tests.NotificationPages
                 ["TravelDetails.StayLengthInMonths1"] = "30", 
                 ["VisitorDetails.StayLengthInMonths1"] = "30", 
                 // ... but the user says they are not providing these details
-                ["TravelDetails.HasTravel"] = "false", 
-                ["VisitorDetails.HasVisitor"] = "false"
+                ["TravelDetails.HasTravel"] = "No", 
+                ["VisitorDetails.HasVisitor"] = "No"
             };
 
             // Act
@@ -145,7 +145,7 @@ namespace ntbs_integration_tests.NotificationPages
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                [$"TravelDetails.{travelOrVisitorKey}"] = "true",
+                [$"TravelDetails.{travelOrVisitorKey}"] = "Yes",
                 ["TravelDetails.ShouldValidateFull"] = "false"
             };
 

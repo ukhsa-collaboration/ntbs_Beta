@@ -99,20 +99,14 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
-            const string denotifyDateDay = "1";
-            const string denotifyDateMonth = "1";
-            const string denotifyDateYear = "2010";
-            const string reason = "DuplicateEntry";
-            const string description = "Test Description";
-
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["FormattedDenotificationDate.Day"] = denotifyDateDay,
-                ["FormattedDenotificationDate.Month"] = denotifyDateMonth,
-                ["FormattedDenotificationDate.Year"] = denotifyDateYear,
-                ["DenotificationDetails.Reason"] = reason,
-                ["DenotificationDetails.OtherDescription"] = description
+                ["FormattedDenotificationDate.Day"] = "1",
+                ["FormattedDenotificationDate.Month"] = "1",
+                ["FormattedDenotificationDate.Year"] = "2010",
+                ["DenotificationDetails.Reason"] = "DuplicateEntry",
+                ["DenotificationDetails.OtherDescription"] = "Test Description"
             };
 
             // Act
@@ -136,18 +130,13 @@ namespace ntbs_integration_tests.NotificationPages
             var url = GetCurrentPathForId(id);
             var initialDocument = await GetDocumentForUrlAsync(url);
 
-            const string denotifyDateDay = "0";
-            const string denotifyDateMonth = "1";
-            const string denotifyDateYear = "2000";
-            const string reason = "DuplicateEntry";
-
             var formData = new Dictionary<string, string>
             {
                 ["NotificationId"] = id.ToString(),
-                ["FormattedDenotificationDate.Day"] = denotifyDateDay,
-                ["FormattedDenotificationDate.Month"] = denotifyDateMonth,
-                ["FormattedDenotificationDate.Year"] = denotifyDateYear,
-                ["DenotificationDetails.Reason"] = reason
+                ["FormattedDenotificationDate.Day"] = "0",
+                ["FormattedDenotificationDate.Month"] = "1",
+                ["FormattedDenotificationDate.Year"] = "2000",
+                ["DenotificationDetails.Reason"] = "DuplicateEntry"
             };
 
             // Act
