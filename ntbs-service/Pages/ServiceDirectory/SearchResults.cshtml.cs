@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -27,36 +28,41 @@ namespace ntbs_service.Pages.ServiceDirectory
         
         public async Task<IActionResult> OnGetAsync(int? pageIndex = null, int? offset = null)
         {
+            if (!ModelState.IsValid || SearchKeyword.IsNullOrEmpty())
+            {
+                return Page();
+            }
+
             PaginationParameters = new PaginationParametersBase()
             {
-                PageSize = 20, 
-                PageIndex = pageIndex ?? 1, 
-                Offset = offset ?? 0
+                PageSize = 20, PageIndex = pageIndex ?? 1, Offset = offset ?? 0
             };
 
             var (caseManagersToDisplay, count) =
                 await _caseManagerSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, PaginationParameters);
-            
+
             CaseManagersSearchResults = new PaginatedList<User>(caseManagersToDisplay, count, PaginationParameters);
 
             if (CaseManagersSearchResults.HasNextPage)
             {
-                NextPageUrl = QueryHelpers.AddQueryString($"/ServiceDirectory/SearchResults", new Dictionary<string, string>
-                {
-                    {"SearchKeyword", SearchKeyword},
-                    {"pageIndex", (PaginationParameters.PageIndex + 1).ToString()},
-                    {"offset", (PaginationParameters.Offset + caseManagersToDisplay.Count()).ToString()}
-                });
+                NextPageUrl = QueryHelpers.AddQueryString($"/ServiceDirectory/SearchResults",
+                    new Dictionary<string, string>
+                    {
+                        {"SearchKeyword", SearchKeyword},
+                        {"pageIndex", (PaginationParameters.PageIndex + 1).ToString()},
+                        {"offset", (PaginationParameters.Offset + caseManagersToDisplay.Count()).ToString()}
+                    });
             }
-            
+
             if (CaseManagersSearchResults.HasPreviousPage)
             {
-                PreviousPageUrl = QueryHelpers.AddQueryString($"/ServiceDirectory/SearchResults", new Dictionary<string, string>
-                {
-                    {"SearchKeyword", SearchKeyword},
-                    {"pageIndex", (PaginationParameters.PageIndex - 1).ToString()},
-                    {"offset", (PaginationParameters.Offset - PaginationParameters.PageSize).ToString()}
-                });
+                PreviousPageUrl = QueryHelpers.AddQueryString($"/ServiceDirectory/SearchResults",
+                    new Dictionary<string, string>
+                    {
+                        {"SearchKeyword", SearchKeyword},
+                        {"pageIndex", (PaginationParameters.PageIndex - 1).ToString()},
+                        {"offset", (PaginationParameters.Offset - PaginationParameters.PageSize).ToString()}
+                    });
             }
 
             return Page();

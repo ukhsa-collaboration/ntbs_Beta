@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using ntbs_service.DataAccess;
 using ntbs_service.Models;
@@ -28,12 +29,14 @@ namespace ntbs_service.Services
             string searchKeyword,
             PaginationParametersBase paginationParameters)
         {
+            var searchKeywords = searchKeyword.Split(" ").Where(x => !x.IsNullOrEmpty()).Select(s => s.ToLower()).ToList();
             var caseManagersQueryable = _referenceDataRepository
                 .GetAllCaseManagersQueryable()
-                .Where(c => c.CaseManagerTbServices.Any(x => x.TbService.Name.Contains(searchKeyword)) 
-                            || c.FamilyName.ToLower().Contains(searchKeyword.ToLower()) 
-                            || c.GivenName.ToLower().Contains(searchKeyword.ToLower()));
-            
+                .Where(c => c.CaseManagerTbServices.Any(x => 
+                                searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s))) 
+                            || searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s)) 
+                            || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s)));
+
             var caseManagers = await GetPaginatedItemsAsync(caseManagersQueryable, paginationParameters);
             var count = await caseManagersQueryable.CountAsync();
             return (caseManagers, count);

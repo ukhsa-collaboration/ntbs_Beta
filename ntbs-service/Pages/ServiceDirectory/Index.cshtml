@@ -37,7 +37,9 @@
         @foreach (var region in Model.AllRegions)
         {
             <nhs-grid-column grid-column-width="OneQuarter">
-                <a class="nhsuk-heading-m" href=@($"/ServiceDirectory/Region/{region.Code}")>@region.Name</a>
+                <a class="nhsuk-heading-m link-without-visited-state" href=@($"/ServiceDirectory/Region/{region.Code}")>
+                    @region.Name
+                </a>
             </nhs-grid-column>
         }
     </div>

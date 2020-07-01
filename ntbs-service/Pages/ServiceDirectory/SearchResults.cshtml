@@ -4,6 +4,7 @@
 
 @{
     Layout = "Shared/_Layout";
+    ViewData["Title"] = "Service directory search";
 }
 
 <nhs-width-container container-width="Standard">
@@ -63,11 +64,13 @@
                                     <nhs-summary-list-row-key>Service:</nhs-summary-list-row-key>
                                     <nhs-summary-list-row-value>
                                         <span>
-                                            <a href=@($"/ServiceDirectory/Region/{tbService.PHECCode}")>
-                                               @tbService.PHEC?.Name
+                                            <a class="link-without-visited-state"
+                                               href=@($"/ServiceDirectory/Region/{tbService.PHECCode}")>
+                                                @tbService.PHEC?.Name
                                             </a>
                                             <span> > </span>
-                                            <a href=@($"/ServiceDirectory/Region/{tbService.PHECCode}#accordion-heading-{tbService.Code}")>
+                                            <a class="link-without-visited-state"
+                                               href=@($"/ServiceDirectory/Region/{tbService.PHECCode}#accordion-heading-{tbService.Code}")>
                                                 @tbService.Name
                                             </a>
                                         </span>
@@ -84,15 +87,15 @@
                 </li>
             }
         </ol>
-    }
     
-    <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
-        <ul class="nhsuk-list nhsuk-pagination__list">
-            <nhs-pagination next-link-text="@Model.CaseManagersSearchResults.NextPageText" 
-                            next-url="@Model.NextPageUrl"
-                            previous-link-text="@Model.CaseManagersSearchResults.PreviousPageText" 
-                            previous-url="@Model.PreviousPageUrl">
-            </nhs-pagination>
-        </ul>
-    </nav>
+        <nav class="nhsuk-pagination" role="navigation" aria-label="Pagination">
+            <ul class="nhsuk-list nhsuk-pagination__list">
+                <nhs-pagination next-link-text="@Model.CaseManagersSearchResults.NextPageText" 
+                                next-url="@Model.NextPageUrl"
+                                previous-link-text="@Model.CaseManagersSearchResults.PreviousPageText" 
+                                previous-url="@Model.PreviousPageUrl">
+                </nhs-pagination>
+            </ul>
+        </nav>    
+    }
 </nhs-width-container>
