@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Models;
 using ntbs_service.Models.ReferenceEntities;
 
 namespace ntbs_service.Pages.ServiceDirectory
@@ -25,7 +26,21 @@ namespace ntbs_service.Pages.ServiceDirectory
             }
             
             AllRegions = await _referenceDataRepository.GetAllPhecs();
+            
+            PrepareBreadcrumbs();
+            
             return Page();
+        }
+        
+        
+        private void PrepareBreadcrumbs()
+        {
+            var breadcrumbs = new List<Breadcrumb>
+            {
+                new Breadcrumb {Label = "Service Directory", Url = "/ServiceDirectory"},
+            };
+
+            ViewData["Breadcrumbs"] = breadcrumbs;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -65,7 +66,20 @@ namespace ntbs_service.Pages.ServiceDirectory
                     });
             }
 
+            PrepareBreadcrumbs();
+
             return Page();
+        }
+        
+        private void PrepareBreadcrumbs()
+        {
+            var breadcrumbs = new List<Breadcrumb>
+            {
+                new Breadcrumb {Label = "Service Directory", Url = "/ServiceDirectory"},
+                new Breadcrumb {Label = "Search results", Url = Request.GetDisplayUrl()}
+            };
+
+            ViewData["Breadcrumbs"] = breadcrumbs;
         }
     }
 }

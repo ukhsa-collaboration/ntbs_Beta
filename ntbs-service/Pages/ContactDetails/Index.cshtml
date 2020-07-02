@@ -1,10 +1,9 @@
 ﻿@page "/ContactDetails/{Username?}"
-@using ntbs_service.Helpers
 @model ntbs_service.Pages.ContactDetails.IndexModel
 
 @{
     Layout = "./_Layout";
-    ViewData["Title"] = $"{@Model.ContactDetails.FullName} contact details";
+    ViewData["Title"] = $"{Model.ContactDetails.FullName} contact details";
     var backLink = ViewData["Referer"];
 }
 

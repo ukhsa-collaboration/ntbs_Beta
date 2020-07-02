@@ -56,7 +56,7 @@ namespace ntbs_service.DataMigration
             {
                 _ntbsDb = ntbsContext.Database.GetDbConnection().Database;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 // In test, we mock out the db, so it's possible to get the db name from the context - nor would calling
                 // the methods that rely on it make sense.
