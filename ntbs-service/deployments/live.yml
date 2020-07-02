@@ -12,9 +12,6 @@ spec:
     metadata:
       labels:
         app: ntbs-live
-      annotations:
-        image.openshift.io/triggers: >-
-          [{"from":{"kind":"ImageStreamTag","name":"krb5-authenticator:latest","namespace":"krb5-authenticator"},"fieldPath":"spec.template.spec.containers[?(@.name==\"krb5-authenticator\")].image"}]
     spec:
       # Attempts to schedule the second replica's pod on a different node than the first
       # as a way to guard against unexpected node failures
@@ -137,16 +134,18 @@ spec:
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: ntbs-live
+  name: ntbs-live-tls-n3
 spec:
-  host: ntbs-live.apps.ocp-por.unix.phe.gov.uk
+  host: ntbs.phe.nhs.uk
   path: /
   tls:
-    insecureEdgeTerminationPolicy: Redirect
     termination: edge
   to:
     kind: Service
     name: coming-soon
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
 ---
 # Temp route that allows us to access the app whilst it's not yet available on the real routes
 apiVersion: route.openshift.io/v1
