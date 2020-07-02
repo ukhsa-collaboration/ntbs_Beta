@@ -14,8 +14,8 @@ namespace ntbs_service.Pages.ServiceDirectory
     // ReSharper disable once ClassNeverInstantiated.Global
     public class SearchResults : ServiceDirectorySearchBase
     {
-        private ICaseManagerSearchService _caseManagerSearchService;
-        private PaginationParametersBase PaginationParameters;
+        private readonly ICaseManagerSearchService _caseManagerSearchService;
+        private PaginationParametersBase _paginationParameters;
         public PaginatedList<User> CaseManagersSearchResults;
         public string NextPageUrl;
         public string PreviousPageUrl;
@@ -32,35 +32,35 @@ namespace ntbs_service.Pages.ServiceDirectory
                 return Page();
             }
 
-            PaginationParameters = new PaginationParametersBase()
+            _paginationParameters = new PaginationParametersBase
             {
                 PageSize = 20, PageIndex = pageIndex ?? 1, Offset = offset ?? 0
             };
 
             var (caseManagersToDisplay, count) =
-                await _caseManagerSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, PaginationParameters);
+                await _caseManagerSearchService.OrderAndPaginateQueryableAsync(SearchKeyword, _paginationParameters);
 
-            CaseManagersSearchResults = new PaginatedList<User>(caseManagersToDisplay, count, PaginationParameters);
+            CaseManagersSearchResults = new PaginatedList<User>(caseManagersToDisplay, count, _paginationParameters);
 
             if (CaseManagersSearchResults.HasNextPage)
             {
-                NextPageUrl = QueryHelpers.AddQueryString($"/ServiceDirectory/SearchResults",
+                NextPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
                     {
                         {"SearchKeyword", SearchKeyword},
-                        {"pageIndex", (PaginationParameters.PageIndex + 1).ToString()},
-                        {"offset", (PaginationParameters.Offset + caseManagersToDisplay.Count).ToString()}
+                        {"pageIndex", (_paginationParameters.PageIndex + 1).ToString()},
+                        {"offset", (_paginationParameters.Offset + caseManagersToDisplay.Count).ToString()}
                     });
             }
 
             if (CaseManagersSearchResults.HasPreviousPage)
             {
-                PreviousPageUrl = QueryHelpers.AddQueryString($"/ServiceDirectory/SearchResults",
+                PreviousPageUrl = QueryHelpers.AddQueryString("/ServiceDirectory/SearchResults",
                     new Dictionary<string, string>
                     {
                         {"SearchKeyword", SearchKeyword},
-                        {"pageIndex", (PaginationParameters.PageIndex - 1).ToString()},
-                        {"offset", (PaginationParameters.Offset - PaginationParameters.PageSize).ToString()}
+                        {"pageIndex", (_paginationParameters.PageIndex - 1).ToString()},
+                        {"offset", (_paginationParameters.Offset - _paginationParameters.PageSize).ToString()}
                     });
             }
 

@@ -26,7 +26,7 @@ namespace ntbs_service.TagHelpers
                     {NotificationHistoryItem.Username}
                 </a>";
             output.Content.SetHtmlContent($@"
-                <span class=""history-list-item__date"">{NotificationHistoryItem.Date:dd MMM yyyy, hh:mm}</span>
+                <span class=""history-list-item__date"">{NotificationHistoryItem.Date:dd MMM yyyy, HH:mm}</span>
                 {userHtml}
                 <span class=""history-list-item__action"">{NotificationHistoryItem.Action}</span>
                 <span class=""history-list-item__subject"">{NotificationHistoryItem.Subject}</span>
