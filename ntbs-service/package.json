@@ -16,7 +16,7 @@
     "@babel/preset-env": "7.9.6",
     "@sentry/browser": "5.18.1",
     "@sentry/integrations": "5.18.1",
-    "accessible-autocomplete": "2.0.2",
+    "accessible-autocomplete": "2.0.3",
     "axios": "0.19.2",
     "babel-loader": "8.1.0",
     "css-vars-ponyfill": "2.3.1",
