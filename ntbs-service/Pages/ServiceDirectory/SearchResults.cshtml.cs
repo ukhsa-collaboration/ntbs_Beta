@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
-using ntbs_service.Models.Enums;
 using ntbs_service.Pages.Search;
 using ntbs_service.Services;
 
 namespace ntbs_service.Pages.ServiceDirectory
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class SearchResults : ServiceDirectorySearchBase
     {
-        public ICaseManagerSearchService _caseManagerSearchService;
-        public PaginationParametersBase PaginationParameters;
+        private ICaseManagerSearchService _caseManagerSearchService;
+        private PaginationParametersBase PaginationParameters;
         public PaginatedList<User> CaseManagersSearchResults;
         public string NextPageUrl;
         public string PreviousPageUrl;
@@ -51,7 +49,7 @@ namespace ntbs_service.Pages.ServiceDirectory
                     {
                         {"SearchKeyword", SearchKeyword},
                         {"pageIndex", (PaginationParameters.PageIndex + 1).ToString()},
-                        {"offset", (PaginationParameters.Offset + caseManagersToDisplay.Count()).ToString()}
+                        {"offset", (PaginationParameters.Offset + caseManagersToDisplay.Count).ToString()}
                     });
             }
 

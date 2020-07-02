@@ -29,26 +29,31 @@ namespace ntbs_service.Services
             string searchKeyword,
             PaginationParametersBase paginationParameters)
         {
-            var searchKeywords = searchKeyword.Split(" ").Where(x => !x.IsNullOrEmpty()).Select(s => s.ToLower()).ToList();
-            var caseManagersQueryable = _referenceDataRepository
-                .GetAllCaseManagersQueryable()
-                .Where(c => c.CaseManagerTbServices.Any(x => 
-                                searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s))) 
-                            || searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s)) 
-                            || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s)));
+            var searchKeywords = searchKeyword.Split(" ")
+                .Where(x => !x.IsNullOrEmpty())
+                .Select(s => s.ToLower()).ToList();
+            var caseManagers = await _referenceDataRepository.GetAllCaseManagersQueryable()
+                .ToListAsync();
 
-            var caseManagers = await GetPaginatedItemsAsync(caseManagersQueryable, paginationParameters);
-            var count = await caseManagersQueryable.CountAsync();
-            return (caseManagers, count);
+            // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
+            // The size of the directory should make this ok.
+            var filtered = caseManagers.Where(c =>
+                    searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s))
+                    || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s))
+                    || c.CaseManagerTbServices.Any(x =>
+                        searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s))))
+                .ToList();
+
+            return (GetPaginatedItems(filtered, paginationParameters), filtered.Count);
         }
         
-        private async Task<IList<T>> GetPaginatedItemsAsync<T>(IQueryable<T> items, 
+        private IList<T> GetPaginatedItems<T>(IEnumerable<T> items, 
             PaginationParametersBase paginationParameters)
         {
-            return await items
+            return items
                 .Skip(paginationParameters.Offset ?? 0)
                 .Take(paginationParameters.PageSize)
-                .ToListAsync();
+                .ToList();
         }
     }
 }
