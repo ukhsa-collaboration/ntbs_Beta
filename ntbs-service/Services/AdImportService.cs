@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
+using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -30,6 +31,7 @@ namespace ntbs_service.Services
             {
                 foreach (var (user, tbServicesMatchingGroups) in adDirectoryService.LookupUsers(tbServices))
                 {
+                    Log.Information($"Updating user {user.Username}");
                     await _userRepository.AddOrUpdateUser(user, tbServicesMatchingGroups);
                 }
             }

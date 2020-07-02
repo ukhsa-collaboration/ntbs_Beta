@@ -50,7 +50,7 @@ namespace ntbs_service.Pages.ContactDetails
                 return Page();
             }
             
-            await _userRepository.SaveUserContactDetails(ContactDetails);
+            await _userRepository.UpdateUserContactDetails(ContactDetails);
             return RedirectToPage("/ContactDetails/Index");
         }
 

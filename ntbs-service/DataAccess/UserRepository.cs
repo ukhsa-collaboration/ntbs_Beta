@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +12,7 @@ namespace ntbs_service.DataAccess
         Task AddOrUpdateUser(User user, IEnumerable<TBService> tbServices);
         Task AddUserLoginEvent(UserLoginEvent userLoginEvent);
         Task<User> GetUserByUsername(string username);
-        Task SaveUserContactDetails(User user);
+        Task UpdateUserContactDetails(User user);
         Task<Dictionary<string, string>> GetUsernameDictionary();
     }
 
@@ -34,7 +32,7 @@ namespace ntbs_service.DataAccess
 
             if (existingUser != null)
             {
-                await UpdateUser(existingUser, user, tbServices);
+                await UpdateUserAdDetails(existingUser, user, tbServices);
             }
             else
             {
@@ -44,7 +42,7 @@ namespace ntbs_service.DataAccess
 
         public async Task AddUserLoginEvent(UserLoginEvent userLoginEvent)
         {
-            _context.UserLoginEvent.Add(userLoginEvent);
+            await _context.UserLoginEvent.AddAsync(userLoginEvent);
             await _context.SaveChangesAsync();
         }
 
@@ -58,7 +56,14 @@ namespace ntbs_service.DataAccess
             return user;
         }
 
-        public async Task SaveUserContactDetails(User user)
+        /// <summary>
+        /// Our user models consist of values that come from the AD (automatically synced) and others that are supplied
+        /// by the user. This method is used for updating the latter, in a way that does not wipe data from the
+        /// user-sync fields.
+        ///
+        /// See also UpdateUserAdDetails method in this class
+        /// </summary>
+        public async Task UpdateUserContactDetails(User user)
         {
             _context.Attach(user);
             _context.Entry(user).Property(x => x.JobTitle).IsModified = true;
@@ -80,17 +85,26 @@ namespace ntbs_service.DataAccess
 
         private async Task AddUser(User user, IEnumerable<TBService> tbServices)
         {
-            _context.User.Add(user);
+            await _context.User.AddAsync(user);
             SyncCaseManagerTbServices(user, tbServices);
             await _context.SaveChangesAsync();
         }
 
-        private async Task UpdateUser(User existingUser, User newUser, IEnumerable<TBService> tbServices)
+        /// <summary>
+        /// Our user models consist of values that come from the AD (automatically synced) and others that are supplied
+        /// by the user. This method is used for updating the former, in a way that does not wipe data from the
+        /// user-supplied fields.
+        ///
+        /// See also UpdateUserContactDetails method in this class
+        /// </summary>
+        private async Task UpdateUserAdDetails(User existingUser, User newUser, IEnumerable<TBService> tbServices)
         {
-            // This seemingly un-needed line is actually a hack around the fact that sql server performs
-            // case insensitive string comparison.
-            newUser.Username = existingUser.Username;
-            _context.Entry(existingUser).CurrentValues.SetValues(newUser);
+            existingUser.GivenName = newUser.GivenName;
+            existingUser.FamilyName = newUser.FamilyName;
+            existingUser.DisplayName = newUser.DisplayName;
+            existingUser.AdGroups = newUser.AdGroups;
+            existingUser.IsActive = newUser.IsActive;
+            existingUser.IsCaseManager = newUser.IsCaseManager;
             SyncCaseManagerTbServices(existingUser, tbServices);
             await _context.SaveChangesAsync();
         }
