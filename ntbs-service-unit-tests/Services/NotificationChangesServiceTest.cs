@@ -107,6 +107,74 @@ namespace ntbs_service_unit_tests.Services
             );
         }
 
+        [Fact]
+        public async Task ClosedNotificationLogs_GetTranslatedCorrectly()
+        {
+            // Arrange
+            var auditLogs = GetAuditLogs("auditLogsForNotification3");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(3))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+
+            // Act
+            var changes = (await _changesService.GetChangesList(3)).ToList();
+            var changeStrings = changes
+                .OrderByDescending(c => c.Date)
+                .Select(c => $"{c.Date:dd MMM yyyy, hh:mm} {c.Username} {c.Action} {c.Subject}");
+
+            // Assert
+            Assert.Collection(changeStrings,
+            c => Assert.Equal("06 Mar 2020, 08:36 NTBS closed Notification", c),
+            c => Assert.Equal("05 Mar 2020, 07:15 John Johnson added Treatment event", c),
+            c => Assert.Equal("05 Mar 2020, 11:08 John Johnson updated Clinical Details", c),
+            c => Assert.Equal("05 Mar 2020, 11:07 John Johnson updated Clinical Details", c),
+            c => Assert.Equal("05 Mar 2020, 11:03 John Johnson updated Personal details", c),
+            c => Assert.Equal("05 Mar 2020, 11:02 John Johnson updated Treatment event", c),
+            c => Assert.Equal("05 Mar 2020, 11:01 John Johnson added Treatment event", c),
+            c => Assert.Equal("05 Mar 2020, 11:01 John Johnson updated Treatment event", c),
+            c => Assert.Equal("05 Mar 2020, 11:00 John Johnson updated Personal details", c),
+            c => Assert.Equal("05 Mar 2020, 11:00 John Johnson added Treatment event", c),
+            c => Assert.Equal("05 Mar 2020, 10:59 John Johnson added Social Context Address", c),
+            c => Assert.Equal("05 Mar 2020, 10:57 John Johnson updated Notification", c),
+            c => Assert.Equal("05 Mar 2020, 10:55 John Johnson updated Clinical Details", c),
+            c => Assert.Equal("03 Mar 2020, 04:35 John Johnson submitted Notification", c),
+            c => Assert.Equal("13 Feb 2020, 03:35 John Johnson created Draft", c)
+            );
+        }
+
+        [Fact]
+        // This came from a "real" notification on test that didn't pass QA, so works well as a regression test
+        public async Task Notification1463OnTest_GetTranslatedCorrectly()
+        {
+            // Arrange
+            var auditLogs = GetAuditLogs("auditLogsForNotification4");
+            _auditServiceMock.Setup(service => service.GetWriteAuditsForNotification(4))
+                .ReturnsAsync(auditLogs);
+            _userRepositoryMock.Setup(repo => repo.GetUsernameDictionary())
+                .ReturnsAsync(new Dictionary<string, string> {{"Developer@ntbs.phe.com", "John Johnson"}});
+
+            // Act
+            var changes = (await _changesService.GetChangesList(4)).ToList();
+            var changeStrings = changes
+                .OrderByDescending(c => c.Date)
+                .Select(c => $"{c.Date:dd MMM yyyy, hh:mm} {c.Username} {c.Action} {c.Subject}");
+
+            // Assert
+            Assert.Collection(changeStrings,
+            c => Assert.Equal("02 Jul 2020, 08:58 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 07:37 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 07:37 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 07:37 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 07:36 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 07:36 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 07:36 John Johnson updated Travel details", c),
+            c => Assert.Equal("01 Jul 2020, 11:49 John Johnson matched Specimen", c),
+            c => Assert.Equal("01 Jul 2020, 11:45 John Johnson submitted Notification", c),
+            c => Assert.Equal("01 Jul 2020, 11:40 John Johnson created Draft", c)
+            );
+        }
+
         private static List<AuditLog> GetAuditLogs(string filename)
         {
             return GetRecordsFromCsv($"../../../TestData/{filename}.csv", ParseAuditLog)

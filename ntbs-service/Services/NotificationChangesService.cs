@@ -70,8 +70,8 @@ namespace ntbs_service.Services
         {
             // The initial creation (as well as import) has a record for each sub-model
             // - we only want to mark creation with a single log
-            if (group.Any(log => log.AuditDetails == NotificationAuditType.Added.ToString()
-                                 || log.AuditDetails == NotificationAuditType.Imported.ToString()))
+            if (group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Added
+                                 || GetNotificationAuditType(log) == NotificationAuditType.Imported))
             {
                 yield return group.Find(log => log.EntityType == nameof(Notification));
                 yield break;
@@ -154,7 +154,7 @@ namespace ntbs_service.Services
             }
 
             // Denotification edits the DenotificationDetails, as well as the status on Notification itself.
-            if (group.Any(log => log.AuditDetails == NotificationAuditType.Denotified.ToString()))
+            if (group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Denotified))
             {
                 yield return group.Find(log => log.EntityType == nameof(Notification));
                 yield break;
@@ -163,8 +163,8 @@ namespace ntbs_service.Services
             // Notification submission, as well as changes to notification date
             // also create a treatment start change - no need for it though, as it only duplicates the info and is not
             // directly edited by the user
-            if (group.Any(log => log.AuditDetails == NotificationAuditType.Notified.ToString())
-                || group.Any(log => log.AuditDetails == NotificationAuditType.Edited.ToString()
+            if (group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Notified)
+                || group.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Edited
                                     && (log.AuditData?.Contains(@"""ColumnName"":""NotificationDate""") ?? false)))
             {
                 // There could be hospital details update records here, too, so we yield all but the treatment event
@@ -196,12 +196,12 @@ namespace ntbs_service.Services
         private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)
         {
             // Imported notifications don't have the draft stage, so don't skip anything
-            if (auditLogs.Any(log => log.AuditDetails == NotificationAuditType.Imported.ToString()))
+            if (auditLogs.Any(log => GetNotificationAuditType(log) == NotificationAuditType.Imported))
                 return auditLogs;
             
             var createAuditLog = auditLogs.Take(1);
             var auditLogsFromSubmissionOnwards = auditLogs
-                .SkipWhile(log => log.AuditDetails != NotificationAuditType.Notified.ToString());
+                .SkipWhile(log => GetNotificationAuditType(log) != NotificationAuditType.Notified);
 
             return createAuditLog.Concat(auditLogsFromSubmissionOnwards);
         }
@@ -224,6 +224,8 @@ namespace ntbs_service.Services
                     return "imported";
                 case NotificationAuditType.Denotified:
                     return "denotified";
+                case NotificationAuditType.Closed:
+                    return "closed";
                 default:
                     switch (log.EventType)
                     {
@@ -245,20 +247,24 @@ namespace ntbs_service.Services
 
         private static string MapSubject(AuditLog log)
         {
-            if (log.EntityType == nameof(TransferAlert) || log.EntityType == nameof(TransferRejectedAlert))
-                return "Transfer";
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (GetNotificationAuditType(log))
+            switch (log.EntityType)
             {
-                case NotificationAuditType.Added:
-                    return "Draft";
-                case NotificationAuditType.SystemEdited when log.EntityType == "Specimen":
+                case nameof(TransferAlert):
+                case nameof(TransferRejectedAlert):
+                    return "Transfer";
+                case "Specimen":
                     return "Specimen";
-                case NotificationAuditType.SystemEdited
-                    when log.AuditData != null && log.AuditData.Contains("\"ColumnName\":\"ClusterId\""):
-                    return "Cluster membership";
                 default:
-                    return MapSubjectBasedOnModel(log.EntityType);
+                    switch (GetNotificationAuditType(log))
+                    {
+                        case NotificationAuditType.Added:
+                            return "Draft";
+                        case NotificationAuditType.SystemEdited
+                            when log.AuditData != null && log.AuditData.Contains(@"""ColumnName"":""ClusterId"""):
+                            return "Cluster membership";
+                        default:
+                            return MapSubjectBasedOnModel(log.EntityType);
+                    }
             }
         }
 
@@ -273,7 +279,7 @@ namespace ntbs_service.Services
 
         private string MapUsername(AuditLog log)
         {
-            return log.AuditUser == AuditService.AuditUserSystem
+            return log.AuditUser == null || log.AuditUser == AuditService.AuditUserSystem
                 ? "NTBS"
                 : UsernameDictionary.GetValueOrDefault(log.AuditUser, log.AuditUser);
         }
@@ -282,10 +288,9 @@ namespace ntbs_service.Services
         {
             // Some non-manual data updates didn't specify the audit details (cluster updates/specimen matches)
             // This aims to be a catch for those (even if we fix that going forwards)
-            var auditType = log.AuditDetails == null
+            return log.AuditDetails == null
                 ? NotificationAuditType.SystemEdited
                 : Enum.Parse<NotificationAuditType>(log.AuditDetails);
-            return auditType;
         }
     }
 }

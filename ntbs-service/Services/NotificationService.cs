@@ -500,7 +500,7 @@ namespace ntbs_service.Services
             {
                 notification.NotificationStatus = NotificationStatus.Closed;
             }
-            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed);
+            await _notificationRepository.SaveChangesAsync(NotificationAuditType.Closed, AuditService.AuditUserSystem);
         }
     }
 }

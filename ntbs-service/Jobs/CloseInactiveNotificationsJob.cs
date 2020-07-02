@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Hangfire;
-using ntbs_service.DataAccess;
-using ntbs_service.Models.Enums;
 using ntbs_service.Services;
 using Serilog;
 
 namespace ntbs_service.Jobs
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class CloseInactiveNotificationsJob
     {
         private readonly INotificationService _notificationService;
