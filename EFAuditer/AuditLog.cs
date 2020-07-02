@@ -19,5 +19,11 @@ namespace EFAuditer
         {
             return this.MemberwiseClone() as AuditLog;
         }
+
+        public override string ToString()
+        {
+            return
+                $@"Log({Id}, {OriginalId}, {EntityType}, {EventType}, {AuditDetails}, {AuditData}, {AuditDateTime}, {AuditUser}, {RootEntity}, {RootId})";
+        }
     }
 }

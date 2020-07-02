@@ -96,6 +96,18 @@ namespace ntbs_service.Services
                 yield break;
             }
 
+            // Comorbidities page contains an Immunosuppression model, which creates its own audit entry
+            // These are nicely separate concepts, so we can actually have them be detailed out on their own.
+            if (group.Any(log => log.EntityType == nameof(ImmunosuppressionDetails)))
+            {
+                foreach (var item in group)
+                {
+                    yield return item;
+                }
+
+                yield break;
+            }
+
             // Social risks page contains sub-models, which create their own audit entries
             var socialRisksUpdate = group.Find(log => log.EntityType == nameof(SocialRiskFactors));
             if (socialRisksUpdate != null)
@@ -123,13 +135,13 @@ namespace ntbs_service.Services
                                                      || log.EntityType == nameof(TransferRejectedAlert));
             if (transferAlertLog != null)
             {
-                // - Request creates just the one:
+                // Request creates just the one:
                 //   - TransferAlert - Insert
                 if (transferAlertLog.EventType == "Insert")
                 {
                     yield return transferAlertLog;
                 }
-                // - Acceptance creates:
+                // Acceptance creates:
                 //   - TreatmentEvent - Insert
                 //   - TreatmentEvent - Insert
                 //   - PreviousTbService - Insert
@@ -139,7 +151,7 @@ namespace ntbs_service.Services
                 {
                     yield return transferAlertLog;
                 }
-                // - Rejection creates:
+                // Rejection creates:
                 //   - TransferAlert - Update
                 //   - TransferRejectedAlert - Insert
                 else
@@ -186,11 +198,12 @@ namespace ntbs_service.Services
                 yield break;
             }
 
-            Log.Warning("Could not figure out canonical history item for group of logs on notification");
             foreach (var log in group)
             {
+                Log.Debug($"Log in group: {log}");
                 yield return log;
             }
+            Log.Warning("Could not figure out canonical history item for group of logs.");
         }
 
         private static IEnumerable<AuditLog> SkipDraftEdits(IReadOnlyCollection<AuditLog> auditLogs)

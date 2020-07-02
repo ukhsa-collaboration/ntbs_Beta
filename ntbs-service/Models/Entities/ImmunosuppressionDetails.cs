@@ -8,6 +8,7 @@ using ntbs_service.Models.Validations;
 namespace ntbs_service.Models.Entities
 {
     [Owned]
+    [Display(Name = "Immunosuppression")]
     public partial class ImmunosuppressionDetails : ModelBase, IOwnedEntityForAuditing
     {
         [Display(Name = "Is the patient Immunosuppressed?")]

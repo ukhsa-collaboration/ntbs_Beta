@@ -67,6 +67,7 @@ namespace ntbs_service_unit_tests.Services
                 c => Assert.Equal("23 Jun 2020, 10:44 John Johnson added Social Context Venue", c),
                 c => Assert.Equal("23 Jun 2020, 10:44 John Johnson added Social Context Venue", c),
                 c => Assert.Equal("23 Jun 2020, 10:42 John Johnson added Social Context Address", c),
+                c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Immunosuppression", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Co-morbidities", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Visitor details", c),
                 c => Assert.Equal("23 Jun 2020, 10:41 John Johnson updated Travel details", c),
