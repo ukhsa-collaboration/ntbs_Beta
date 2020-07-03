@@ -36,16 +36,22 @@ namespace ntbs_service.DataMigration
     public class MigrationRepository : IMigrationRepository
     {
         private string NotificationIdsWithGroupIdsByIdQuery =>
-            $@"SELECT n.OldNotificationId, n.GroupId 
-            FROM MigrationNotificationsView n
-            WHERE n.OldNotificationId IN @Ids OR n.GroupId IN @Ids
-            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
+            $@"SELECT DISTINCT notificationInGroup.OldNotificationId, notificationInGroup.GroupId
+			FROM MigrationNotificationsView notificationInGroup
+			JOIN MigrationNotificationsView targetNotification 
+				ON targetNotification.GroupId = notificationInGroup.GroupId 
+				OR targetNotification.OldNotificationId = notificationInGroup.OldNotificationId
+			WHERE targetNotification.OldNotificationId IN @Ids OR targetNotification.GroupId IN @Ids
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("notificationInGroup.OldNotificationId")})";
 
         private string NotificationsIdsWithGroupIdsByDateQuery =>
-            $@"SELECT n.OldNotificationId, n.GroupId 
-            FROM MigrationNotificationsView n
-            WHERE n.NotificationDate >= @StartDate AND n.NotificationDate < @EndDate
-            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("n.OldNotificationId")})";
+            $@"SELECT DISTINCT notificationInGroup.OldNotificationId, notificationInGroup.GroupId
+			FROM MigrationNotificationsView notificationInGroup
+			JOIN MigrationNotificationsView notificationInRange
+				ON notificationInRange.GroupId = notificationInGroup.GroupId 
+				OR notificationInRange.OldNotificationId = notificationInGroup.OldNotificationId
+            WHERE notificationInRange.NotificationDate >= @StartDate AND notificationInRange.NotificationDate < @EndDate
+            AND NOT EXISTS ({_importHelper.SelectImportedNotificationWhereIdEquals("notificationInGroup.OldNotificationId")})";
 
         const string NotificationsByIdQuery = @"
             SELECT *
