@@ -96,8 +96,6 @@ spec:
               value: "2"
             - name: MigrationConfig__TablePrefix
               value: "UatPheMigration"
-            - name: AppConfig__AuditingEnabled
-              value: "false"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
