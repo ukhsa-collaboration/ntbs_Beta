@@ -56,65 +56,76 @@ namespace ntbs_service.DataMigration
         const string NotificationsByIdQuery = @"
             SELECT *
             FROM MigrationNotificationsView n
+            WITH (NOLOCK)
             WHERE n.OldNotificationId IN @Ids";
 
         const string NotificationSitesQuery = @"
             SELECT *
             FROM NotificationSite
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string ManualTestResultsQuery = @"
             SELECT *
             FROM ManualTestResults
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string SocialContextVenuesQuery = @"
             SELECT *
             FROM MigrationSocialContextVenueView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string SocialContextAddressesQuery = @"
             SELECT *
             FROM MigrationSocialContextAddressView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string TransferEventsQuery = @"
             SELECT *
             FROM MigrationTransferEventsView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string OutcomeEventsQuery = @"
             SELECT *
             FROM MigrationTreatmentOutcomeEventsView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string MigrationMBovisAnimalExposureQuery = @"
             SELECT *
             FROM MigrationMBovisAnimalExposureView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string MigrationMBovisExposureToKnownCaseQuery = @"
             SELECT *
             FROM MigrationMBovisExposureToKnownCaseView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string MigrationMBovisOccupationExposuresQuery = @"
             SELECT *
             FROM MigrationMBovisOccupationExposuresView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
         const string MigrationMBovisUnpasteurisedMilkConsumptionQuery = @"
             SELECT *
             FROM MigrationMBovisUnpasteurisedMilkConsumptionView
+            WITH (NOLOCK)
             WHERE OldNotificationId IN @Ids
         ";
 
@@ -122,6 +133,7 @@ namespace ntbs_service.DataMigration
         const string ReferenceLaboratoryMatchesQuery = @"
             SELECT LegacyId, ReferenceLaboratoryNumber
             FROM EtsLaboratoryResultsView
+            WITH (NOLOCK)
             WHERE LegacyId IN @Ids
         ";
 
@@ -143,7 +155,11 @@ namespace ntbs_service.DataMigration
                 return (await connection.QueryAsync<(string notificationId, string groupId)>(
                         NotificationIdsWithGroupIdsByIdQuery,
                         new {Ids = legacyIds}))
-                    .GroupBy(t => t.groupId ?? t.notificationId, t => t.notificationId);
+                    .GroupBy(
+                        // Prefix "ETS" guarantees that we don't accidentally combine an ets notification 123 with the
+                        // ltbr notifications 123-1 and 123-2 into a single group
+                        t => t.groupId ?? $"ETS-{t.notificationId}", 
+                        t => t.notificationId);
             }
         }
 
