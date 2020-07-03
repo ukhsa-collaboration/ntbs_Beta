@@ -26,15 +26,18 @@ spec:
         - name: registery-password
         - name: default-dockercfg-bs7wj
 ---
-# Service to front the coming-soon page app
 apiVersion: v1
 kind: Service
 metadata:
   name: coming-soon
+  labels:
+    app: coming-soon
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
-    - port: 80
+    - name: '8080'
+      protocol: TCP
+      port: 8080
       targetPort: 8080
   selector:
     app: coming-soon
