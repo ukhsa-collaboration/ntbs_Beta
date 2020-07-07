@@ -298,7 +298,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Month"] = "4",
                 ["FormattedDiagnosisDate.Year"] = "2014",
                 ["ClinicalDetails.IsPostMortem"] = "false",
-                ["ClinicalDetails.IsDotOffered"] = "true",
+                ["ClinicalDetails.IsDotOffered"] = "Yes",
                 ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No",
                 ["ClinicalDetails.TreatmentRegimen"] = TreatmentRegimen.StandardTherapy.ToString()
             };
@@ -542,7 +542,7 @@ namespace ntbs_integration_tests.NotificationPages
                 ["FormattedDiagnosisDate.Month"] = "4",
                 ["FormattedDiagnosisDate.Year"] = "2014",
                 ["ClinicalDetails.IsPostMortem"] = "false",
-                ["ClinicalDetails.IsDotOffered"] = "true",
+                ["ClinicalDetails.IsDotOffered"] = "Yes",
                 ["ClinicalDetails.EnhancedCaseManagementStatus"] = "No"
             };
 
