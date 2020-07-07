@@ -7,7 +7,14 @@
 - [ ] Automated tests are passing locally.
 - [ ] Sanity checked new EF-generated queries for performance.
 - [ ] If changing content for notification overview, confirmed renders okay for print in Chrome and IE
+### Schema changes
+If the NTBS schema changes, that might affect the related components!
+- [ ] EF migrations created and committed. Snapshot committed
+- [ ] On-demand migration impact considered
+- [ ] Reporting database DACPAC updated
+- [ ] Reporting database ingestion considered (uspGenerateReusableNotification)
 ### Accessibility testing
+Features with UI components should consider items on this list
 - [ ] Test functionality without javascript
 - [ ] Test in small window (imitating small screen)
 - [ ] Check the feature looks and works correctly in IE11
