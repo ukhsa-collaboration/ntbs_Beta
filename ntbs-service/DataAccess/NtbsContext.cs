@@ -285,6 +285,9 @@ namespace ntbs_service.DataAccess
                         e.Property(c => c.HIVTestState)
                             .HasConversion(hivStatusEnumConverter)
                             .HasMaxLength(EnumMaxLength);
+                        e.Property(c => c.IsDotOffered)
+                            .HasConversion(statusEnumConverter)
+                            .HasMaxLength(EnumMaxLength);
                         e.Property(c => c.Notes)
                             .HasMaxLength(1000);
                         e.Property(c => c.TreatmentRegimen)

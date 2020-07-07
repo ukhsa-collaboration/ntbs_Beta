@@ -15,10 +15,10 @@
             <nhs-fieldset-legend nhs-legend-size="Standard">DOT offered?</nhs-fieldset-legend>
             <div class="nhsuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="true" 
+                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-yes" class="nhsuk-radios__input" type="radio" value="@Status.Yes" 
                         data-aria-controls="conditional-dot-offered-conditional">
                     <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-yes">
-                        Yes
+                        @(Status.Yes)
                     </label>
                 </div>
                 <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-dot-offered-conditional">
@@ -38,9 +38,15 @@
                     </nhs-form-group>
                 </div>
                 <div class="nhsuk-radios__item">
-                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-no" class="nhsuk-radios__input" type="radio" value="false">
+                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-no" class="nhsuk-radios__input" type="radio" value="@Status.No">
                     <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-no">
-                        No
+                        @(Status.No)
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input asp-for="ClinicalDetails.IsDotOffered" id="dot-offered-unknown" class="nhsuk-radios__input" type="radio" value="@Status.Unknown">
+                    <label class="nhsuk-label nhsuk-radios__label" for="dot-offered-unknown">
+                        @(Status.Unknown)
                     </label>
                 </div>
             </div>
