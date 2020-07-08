@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
@@ -6,9 +7,6 @@ namespace ntbs_service.Models.Entities
     public class SocialContextAddress : SocialContextBase
     {
         public int SocialContextAddressId { get; set; }
-
-        public override bool PostcodeIsRequired => true;
-        public override bool DateToIsRequired => true;
 
         public override int Id
         {
