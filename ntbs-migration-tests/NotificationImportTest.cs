@@ -153,8 +153,8 @@ namespace ntbs_migration_tests
             //Then
             _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, $"2 notifications found to import for {patientName}"));
             _mockLogger.Verify(x => x.LogWarning(_performContext, RequestId, "2 validation errors found for notification with Id=41-1:"));
-            _mockLogger.Verify(x => x.LogFailure(_performContext, RequestId, "Notification date must not be before 01/01/2010", null));
-            _mockLogger.Verify(x => x.LogFailure(_performContext, RequestId, "Diagnosis date must not be before 01/01/2010", null));
+            _mockLogger.Verify(x => x.LogImportFailure(_performContext, RequestId, "Notification date must not be before 01/01/2010", null));
+            _mockLogger.Verify(x => x.LogImportFailure(_performContext, RequestId, "Diagnosis date must not be before 01/01/2010", null));
             _mockLogger.Verify(x => x.LogInformation(_performContext, RequestId, $"Terminating importing notifications for {patientName} due to validation errors"));
             _mockNotificationImportRepository.Verify(x => x.AddLinkedNotificationsAsync(It.IsAny<List<Notification>>()), Times.Never);
             Assert.Equal(0, importedNotifications.Count);

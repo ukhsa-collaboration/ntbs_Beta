@@ -112,7 +112,7 @@ namespace ntbs_service.DataMigration
                 }
                 else if (legacyIdsToImport.Count != 0)
                 {
-                    _logger.LogFailure(context, requestId, "Invalid state. Some notifications already exist in NTBS database. Manual intervention needed");
+                    _logger.LogError(context, requestId, "Invalid state. Some notifications already exist in NTBS database. Manual intervention needed");
                 }
                 // The last option is that ALL notifications in the group were filtered out - that's OK! It means we
                 // have already imported this group - this will show up in the import errors.
@@ -146,7 +146,7 @@ namespace ntbs_service.DataMigration
             {
                 var errorMessage = $"Duplicate records found ({String.Join(',', ids)}) - aborting import for {patientName}";
                 importResult.AddGroupError(errorMessage);
-                _logger.LogFailure(context, requestId, errorMessage);
+                _logger.LogImportFailure(context, requestId, errorMessage);
                 return importResult;
             }
 
@@ -178,7 +178,7 @@ namespace ntbs_service.DataMigration
 
             if (isAnyNotificationInvalid)
             {
-                _logger.LogFailure(context, requestId, $"Terminating importing notifications for {patientName} due to validation errors");
+                _logger.LogImportFailure(context, requestId, $"Terminating importing notifications for {patientName} due to validation errors");
                 return importResult;
             }
 
@@ -204,7 +204,7 @@ namespace ntbs_service.DataMigration
             catch (Exception e)
             {
                 Log.Error(e, e.Message);
-                _logger.LogFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
+                _logger.LogImportFailure(context, requestId, message: $"Failed to save notification for {patientName} or mark it as imported ", e);
                 importResult.AddGroupError($"{e.Message}: {e.StackTrace}");
             }
             return importResult;

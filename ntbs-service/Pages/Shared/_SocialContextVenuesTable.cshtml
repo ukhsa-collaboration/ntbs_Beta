@@ -11,7 +11,7 @@
     @foreach (var result in orderedResults)
     {
         <div class="notification-overview-type-and-edit-container" id="venue-heading-@result.SocialContextVenueId">
-            <h5 class="notification-details-type"> @(result.Name) - @(result.FormattedDateFrom) to @(result.FormattedDateTo) </h5>
+            <h4 class="notification-details-type"> @result.Title </h4>
             @if (showEditLinks) 
             {
                 var subPath = NotificationSubPaths.EditSocialContextVenue(result.SocialContextVenueId);
@@ -23,7 +23,7 @@
             <nhs-grid-row>
                 <nhs-grid-column grid-column-width="OneHalf">
                     <dt class="notification-details-label"> Venue Type </dt>
-                    <dd class="cell-min-height"> @result.VenueType.FormatCategoryAndName() </dd>
+                    <dd class="cell-min-height"> @result.VenueType?.FormatCategoryAndName() </dd>
                 </nhs-grid-column>
                 <nhs-grid-column grid-column-width="OneHalf">
                     <dt class="notification-details-label"> @Html.DisplayNameFor(_ => header.Frequency) </dt>

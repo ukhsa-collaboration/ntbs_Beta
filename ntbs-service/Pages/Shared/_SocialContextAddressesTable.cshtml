@@ -11,7 +11,7 @@
     @foreach (var result in orderedResults)
     {
         <div class="notification-overview-type-and-edit-container" id="address-heading-@result.SocialContextAddressId">
-            <h5 class="notification-details-type"> @(result.FormattedDateFrom) to @(result.FormattedDateTo) </h5>
+            <h4 class="notification-details-type"> @(result.DateRange) </h4>
             @if (showEditLinks) 
             {
                 var subPath = NotificationSubPaths.EditSocialContextAddress(result.SocialContextAddressId);

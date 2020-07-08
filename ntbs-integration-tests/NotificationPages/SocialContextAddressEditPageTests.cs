@@ -154,10 +154,9 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorMessage("postcode", string.Format(ValidationMessages.RequiredEnter, "Postcode"));
-            resultDocument.AssertErrorMessage("address", string.Format(ValidationMessages.RequiredEnter, "Address"));
-            resultDocument.AssertErrorMessage("date-from", string.Format(ValidationMessages.RequiredEnter, "From"));
-            resultDocument.AssertErrorMessage("date-to", string.Format(ValidationMessages.RequiredEnter, "To"));
+            resultDocument.AssertErrorSummaryMessage("Address",
+                null,
+                "Please supply at least one of address, postcode or comments");
         }
 
         [Fact]

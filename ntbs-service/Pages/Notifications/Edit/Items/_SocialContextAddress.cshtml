@@ -5,8 +5,12 @@
 
 <div id="social-context-address-form" class="table-row-form">
     <nhs-width-container container-width="Standard">
-        <h3> @(Model.RowId == null ? "Add new " : "Edit ") social context address</h3>
-        <form method="post" autocomplete="off">
+    
+        <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial"/>
+    
+        <h2> @(Model.RowId == null ? "Add new " : "Edit ") social context address</h2>
+        
+        <form method="post" autocomplete="off" id="Address">
             <nhs-grid-row>
                 <nhs-grid-column grid-column-width="OneHalf">
                     @{
@@ -15,13 +19,20 @@
                         var addressTextAreaType = hasAddressError ? TextAreaType.Error : TextAreaType.Standard;
                     }
                     <validate-input model="SocialContext" property="Address" inline-template>
-                        <nhs-form-group nhs-form-group-type="@addressFormState">
+                        <nhs-form-group nhs-form-group-type="@addressFormState" id="Address-Address">
                             <label asp-for="Address.Address" nhs-label-type="Standard">
                                 @Html.DisplayNameFor(m => m.Address.Address)
                             </label>
                             <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField" asp-validation-for="Address.Address" has-error="@hasAddressError"></span>
-                            <textarea asp-for="Address.Address" nhs-textarea-type="@addressTextAreaType" rows="2" aria-describedby="address-error"
-                                    autocomplete="Address.Address" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                            <textarea
+                                    asp-for="Address.Address" 
+                                    nhs-textarea-type="@addressTextAreaType" 
+                                    rows="2" aria-describedby="address-error"
+                                    autocomplete="Address.Address"
+                                    v-on:change="validate"
+                                    ref="textareaField"
+                                    classes="nhsuk-input--width-20">
+                            </textarea>
                         </nhs-form-group>
                     </validate-input>
                 </nhs-grid-column>
@@ -31,14 +42,19 @@
                         var postcodeGroupState = hasPostcodeError ? Error : Standard;
                     }
                     <validate-input model="SocialContext" property="Postcode" inline-template>
-                        <nhs-form-group ref="formGroup" nhs-form-group-type="@postcodeGroupState" aria-describedby="postcode-error">
+                        <nhs-form-group ref="formGroup" nhs-form-group-type="@postcodeGroupState" aria-describedby="postcode-error" id="Address-Postcode">
                             <label nhs-label-type="Standard" asp-for="Address.Postcode">
                                 @Html.DisplayNameFor(m => m.Address.Postcode)
                             </label>
                             <span nhs-span-type="ErrorMessage" id="postcode-error" ref="errorField"
                                 asp-validation-for="Address.Postcode" has-error="@hasPostcodeError"></span>
-                            <input ref="inputField" v-on:blur="validate" is-error-input=@hasPostcodeError nhs-input-type="Standard"
-                                fixed-width="Ten" asp-for="Address.Postcode">
+                            <input
+                                ref="inputField"
+                                v-on:blur="validate"
+                                is-error-input=@hasPostcodeError
+                                nhs-input-type="Standard"
+                                fixed-width="Ten" 
+                                asp-for="Address.Postcode">
                         </nhs-form-group>
                     </validate-input>
                 </nhs-grid-column>
@@ -52,7 +68,7 @@
                                     var hasDateFromError = !Model.IsValid("Address.DateFrom") || !Model.IsValid("FormattedDateFrom");
                                     var dateFromGroupState = hasDateFromError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type="@dateFromGroupState">
+                                <nhs-form-group nhs-form-group-type="@dateFromGroupState" id="Address-DateFrom">
                                     <nhs-fieldset role="group" aria-describedby="date-from-error">
                                         <nhs-fieldset-legend nhs-legend-size="Standard">
                                             @Html.DisplayNameFor(m => m.Address.DateFrom)
@@ -107,7 +123,7 @@
                                     var hasDateToError = !Model.IsValid("Address.DateTo") || !Model.IsValid("FormattedDateTo");
                                     var dateToGroupState = hasDateToError ? Error : Standard;
                                 }
-                                <nhs-form-group nhs-form-group-type="@dateToGroupState">
+                                <nhs-form-group nhs-form-group-type="@dateToGroupState" id="Address-DateTo">
                                     <nhs-fieldset role="group" aria-describedby="date-to-error">
                                         <nhs-fieldset-legend nhs-legend-size="Standard">
                                             @Html.DisplayNameFor(m => m.Address.DateTo)
@@ -167,13 +183,21 @@
                         var detailsTextAreaType = hasDetailsError ? TextAreaType.Error : TextAreaType.Standard;
                     }
                     <validate-input model="SocialContext" property="Details" inline-template>
-                        <nhs-form-group nhs-form-group-type="@detailsFormState">
+                        <nhs-form-group nhs-form-group-type="@detailsFormState" id="Address-Details">
                             <label asp-for="Address.Details" nhs-label-type="Standard">
                                 @Html.DisplayNameFor(m => m.Address.Details)
                             </label>
                             <span nhs-span-type="ErrorMessage" id="details-error" ref="errorField" asp-validation-for="Address.Details" has-error="@hasDetailsError"></span>
-                            <textarea asp-for="Address.Details" nhs-textarea-type="@detailsTextAreaType" rows="2" aria-describedby="details-error"
-                                    autocomplete="on" v-on:change="validate" ref="textareaField" classes="nhsuk-input--width-20"></textarea>
+                            <textarea
+                                asp-for="Address.Details"
+                                nhs-textarea-type="@detailsTextAreaType"
+                                rows="2"
+                                aria-describedby="details-error"
+                                autocomplete="on"
+                                v-on:change="validate" 
+                                ref="textareaField" 
+                                classes="nhsuk-input--width-20">
+                            </textarea>
                         </nhs-form-group>
                     </validate-input>
                 </nhs-grid-column>

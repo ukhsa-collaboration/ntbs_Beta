@@ -1,14 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [AtLeastOneProperty(
+        nameof(Address),
+        nameof(Postcode),
+        nameof(Details),
+        ErrorMessage = ValidationMessages.SupplyOneOfTheAddressFields)]
     [Display(Name = "Social Context Address")]
     public class SocialContextAddress : SocialContextBase
     {
         public int SocialContextAddressId { get; set; }
-
-        public override bool PostcodeIsRequired => true;
-        public override bool DateToIsRequired => true;
 
         public override int Id
         {
