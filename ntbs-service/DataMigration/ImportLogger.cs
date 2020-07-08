@@ -10,7 +10,8 @@ namespace ntbs_service.DataMigration
         void LogInformation(PerformContext context, string requestId, string message);
         void LogWarning(PerformContext context, string requestId, string message);
         void LogSuccess(PerformContext context, string requestId, string message);
-        void LogFailure(PerformContext context, string requestId, string message, Exception exception = null);
+        void LogImportFailure(PerformContext context, string requestId, string message, Exception exception = null);
+        void LogError(PerformContext context, string requestId, string message, Exception exception = null);
     }
 
     public class ImportLogger : IImportLogger
@@ -30,9 +31,13 @@ namespace ntbs_service.DataMigration
             context.ResetTextColor();
         }
 
-        public void LogFailure(PerformContext context, string requestId, string message, Exception exception = null)
+        public void LogImportFailure(PerformContext context, string requestId, string message, Exception exception = null)
         {
-            Log.Error(exception, $"NOTIFICATION IMPORT - {requestId} - {message}");
+            // Import failure is not an error-level event - since failures
+            // can be result of typical issues too (e.g. validation)
+            
+            // The reason for failure itself can report issues at higher log levels if needed.
+            Log.Information(exception, $"NOTIFICATION IMPORT - {requestId} - {message}");
 
             context.SetTextColor(ConsoleTextColor.Red);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
@@ -48,6 +53,15 @@ namespace ntbs_service.DataMigration
             Log.Warning($"NOTIFICATION IMPORT - {requestId} - {message}");
             
             context.SetTextColor(ConsoleTextColor.Yellow);
+            context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
+            context.ResetTextColor();
+        }
+
+        public void LogError(PerformContext context, string requestId, string message, Exception exception = null)
+        {
+            Log.Error($"NOTIFICATION IMPORT - {requestId} - {message}");
+            
+            context.SetTextColor(ConsoleTextColor.DarkRed);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");
             context.ResetTextColor();
         }
