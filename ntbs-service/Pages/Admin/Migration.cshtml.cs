@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using ntbs_service.DataMigration;
 using ntbs_service.Models;
-using ntbs_service.Models.Entities;
 using ntbs_service.Properties;
 using ntbs_service.Services;
 
@@ -44,8 +43,11 @@ namespace ntbs_service.Pages.Admin
         [Display(Name = "End Notification Date")]
         public PartialDate NotificationDateRangeEnd { get; set; }
 
-        public IList<Notification> Results { get; set; } = new List<Notification>();
+        public bool Triggered { get; private set; }
         public ValidationService ValidationService { get; }
+
+        private string RequestId =>  HttpContext.TraceIdentifier;
+
 
         public IActionResult OnGetAsync()
         {
@@ -59,51 +61,70 @@ namespace ntbs_service.Pages.Admin
                 return Page();
             }
 
-            var requestId = HttpContext.TraceIdentifier;
-
             if (NotificationIds != null)
             {
-                var legacyIds = NotificationIds.Split(',').Select(id => id.Trim()).ToList();
-                BackgroundJob.Enqueue<INotificationImportService>(x => 
-                    x.ImportByLegacyIdsAsync(null, requestId, legacyIds));
+                TriggerImportFromIdsField();
             }
             else if (UploadedFile != null)
             {
-                var notificationIds = await GetIdListFromFile(UploadedFile);
-                var IdBatches = splitList(notificationIds);
-
-                foreach (var IdBatch in IdBatches)
-                {
-                    BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByLegacyIdsAsync(null, requestId, IdBatch));
-                }
+                await TriggerImportFromIdsFile();
             }
             else if (NotificationDateRangeStart != null)
             {
-                NotificationDateRangeStart.TryConvertToDateTimeRange(out DateTime? notificationDateRangeStart, out _);
-                NotificationDateRangeEnd.TryConvertToDateTimeRange(out DateTime? notificationDateRangeEnd, out _);
-
-                var rangeEnd = notificationDateRangeEnd ?? DateTime.Now;
-
-                for (var dateRangeStart = (DateTime)notificationDateRangeStart;
-                    dateRangeStart <= rangeEnd;
-                    dateRangeStart = dateRangeStart.AddMonths(_config.DateRangeJobIntervalInMonths))
-                {
-                    var start = dateRangeStart;
-                    var end = dateRangeStart.AddMonths(_config.DateRangeJobIntervalInMonths);
-                    if (end > rangeEnd)
-                    {
-                        end = rangeEnd;
-                    }
-
-                    BackgroundJob.Enqueue<INotificationImportService>(x =>
-                        x.ImportByDateAsync(null, requestId, start, end.AddDays(1)));
-                }
+                TriggerImportFromDateRange();
             }
+
+            Triggered = true;
 
             return Page();
         }
 
-        private async Task<List<string>> GetIdListFromFile(IFormFile file)
+        private void TriggerImportFromIdsField()
+        {
+            var legacyIds = NotificationIds.Split(',').Select(id => id.Trim()).ToList();
+            BackgroundJob.Enqueue<INotificationImportService>(x =>
+                x.ImportByLegacyIdsAsync(null, RequestId, legacyIds));
+        }
+
+        private async Task TriggerImportFromIdsFile()
+        {
+            var notificationIds = await GetIdListFromFile(UploadedFile);
+            var idBatches = SplitList(notificationIds);
+
+            foreach (var idBatch in idBatches)
+            {
+                BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+            }
+        }
+
+        private void TriggerImportFromDateRange()
+        {
+            NotificationDateRangeStart.TryConvertToDateTimeRange(out DateTime? notificationDateRangeStart, out _);
+            NotificationDateRangeEnd.TryConvertToDateTimeRange(out DateTime? notificationDateRangeEnd, out _);
+            if (notificationDateRangeStart == null)
+            {
+                throw new ArgumentException("Could not parse the start date");
+            }
+
+            var rangeEnd = notificationDateRangeEnd ?? DateTime.Now.AddDays(1);
+
+            for (var batchStart = (DateTime) notificationDateRangeStart;
+                batchStart < rangeEnd;
+                batchStart = batchStart.AddDays(_config.DateRangeJobIntervalInDays))
+            {
+                var start = batchStart; // We need to capture the variable locally!
+                var end = batchStart.AddDays(_config.DateRangeJobIntervalInDays);
+                if (end > rangeEnd)
+                {
+                    end = rangeEnd;
+                }
+
+                BackgroundJob.Enqueue<INotificationImportService>(x =>
+                    x.ImportByDateAsync(null, RequestId, start, end));
+            }
+        }
+
+        private static async Task<List<string>> GetIdListFromFile(IFormFile file)
         {
             var legacyIds = new List<string>();
             using (var reader = new StreamReader(file.OpenReadStream()))
@@ -114,7 +135,7 @@ namespace ntbs_service.Pages.Admin
             return legacyIds;
         }
 
-        public static IEnumerable<List<T>> splitList<T>(List<T> legacyIds, int nSize = 1000)
+        private static IEnumerable<List<T>> SplitList<T>(List<T> legacyIds, int nSize = 1000)
         {
             for (int index = 0; index < legacyIds.Count; index += nSize)
             {

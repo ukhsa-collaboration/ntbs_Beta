@@ -466,8 +466,8 @@ namespace ntbs_service.DataAccess
                 entity.HasIndex(e => e.NotificationStatus);
 
                 entity.HasIndex(e => new { e.NotificationStatus, e.SubmissionDate });
-                entity.HasIndex(e => e.LTBRID);
-                entity.HasIndex(e => e.ETSID);
+                entity.HasIndex(e => e.LTBRID).IsUnique();
+                entity.HasIndex(e => e.ETSID).IsUnique();
                 entity.HasIndex(e => e.LTBRPatientId);
                 entity.HasIndex(e => e.ClusterId);
             });

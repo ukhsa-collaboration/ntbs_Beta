@@ -41,6 +41,9 @@ namespace ntbs_service.Models.Entities
         public int NotificationId { get; set; }
         [MaxLength(50)]
         public string ETSID { get; set; }
+        // For LTBR records, this contains the first segment of their legacy id, which corresponds to the "patient" entity in LTBR.
+        // E.g. records with LTBRIDs 123-1 and 123-2 belong to the same patient, with LTBRPatientId 123.
+        // These are all legacy values and are not actively used by the NTBS system.
         [MaxLength(50)]
         public string LTBRPatientId { get; set; }
         [MaxLength(50)]

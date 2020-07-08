@@ -108,7 +108,7 @@ namespace ntbs_service.DataAccess
         public async Task<bool> NotificationWithLegacyIdExistsAsync(string id)
         {
             return await _context.Notification
-                .AnyAsync(e => e.LTBRID == id || e.ETSID == id);
+                .AnyAsync(n => n.LTBRID == id || n.ETSID == id);
         }
 
         public async Task<int> GetNotificationIdByLegacyIdAsync(string legacyId)
