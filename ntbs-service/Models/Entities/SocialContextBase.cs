@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFAuditer;
 using ExpressiveAnnotations.Attributes;
-using ntbs_service.Helpers;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
-    public abstract class SocialContextBase : ModelBase, IHasRootEntityForAuditing
+    public abstract partial class SocialContextBase : ModelBase, IHasRootEntityForAuditing
     {
         public int NotificationId { get; set; }
         // We are not including a navigation property to Notification, otherwise it gets validated
@@ -51,9 +50,6 @@ namespace ntbs_service.Models.Entities
 
         public bool DateFromAfterDob => Dob == null || DateFrom >= Dob;
         public bool DateToAfterDob => Dob == null || DateTo >= Dob;
-
-        public string FormattedDateFrom => DateFrom.ConvertToString();
-        public string FormattedDateTo => DateTo.HasValue ? DateTo.ConvertToString() : "Present";
 
         public abstract int Id { set; }
 

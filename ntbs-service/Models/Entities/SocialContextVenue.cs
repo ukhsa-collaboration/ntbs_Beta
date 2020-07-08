@@ -12,7 +12,7 @@ namespace ntbs_service.Models.Entities
         nameof(Details),
         ErrorMessage = ValidationMessages.SupplyOneOfTheVenueFields)]
     [Display(Name = "Social Context Venue")]
-    public class SocialContextVenue : SocialContextBase
+    public partial class SocialContextVenue : SocialContextBase
     {
         public int SocialContextVenueId { get; set; }
 
