@@ -92,8 +92,6 @@ spec:
 #                  key: password
             - name: ExternalLinks__ReportingUri
               value: ""
-            - name: MigrationConfig__DateRangeJobIntervalInMonths
-              value: "2"
             - name: MigrationConfig__TablePrefix
               value: "migrationTrial3"
             - name: AppConfig__AuditingEnabled

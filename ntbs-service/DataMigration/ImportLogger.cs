@@ -32,7 +32,7 @@ namespace ntbs_service.DataMigration
 
         public void LogFailure(PerformContext context, string requestId, string message, Exception exception = null)
         {
-            Log.Information(exception, $"NOTIFICATION IMPORT - {requestId} - {message}");
+            Log.Error(exception, $"NOTIFICATION IMPORT - {requestId} - {message}");
 
             context.SetTextColor(ConsoleTextColor.Red);
             context.WriteLine($"NOTIFICATION IMPORT - {requestId} - {message}");

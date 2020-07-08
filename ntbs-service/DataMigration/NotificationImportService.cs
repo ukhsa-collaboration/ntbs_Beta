@@ -21,6 +21,14 @@ namespace ntbs_service.DataMigration
     {
         [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByLegacyIdsAsync(PerformContext context, string requestId, List<string> legacyIds);
+        /// <summary>
+        /// Import notifications (and their linked ones) with notification dates in range [rangeStartDate, rangeEndDate)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="requestId"></param>
+        /// <param name="rangeStartDate"></param>
+        /// <param name="rangeEndDate"></param>
+        /// <returns></returns>
         [ExpirationTimeTwoWeeks]
         Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate);
     }
@@ -106,6 +114,8 @@ namespace ntbs_service.DataMigration
                 {
                     _logger.LogFailure(context, requestId, "Invalid state. Some notifications already exist in NTBS database. Manual intervention needed");
                 }
+                // The last option is that ALL notifications in the group were filtered out - that's OK! It means we
+                // have already imported this group - this will show up in the import errors.
             }
 
             var importResults = new List<ImportResult>();
