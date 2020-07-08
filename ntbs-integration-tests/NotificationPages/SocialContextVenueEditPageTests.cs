@@ -153,22 +153,10 @@ namespace ntbs_integration_tests.NotificationPages
             // Assert
             result.AssertValidationErrorResponse();
 
-            resultDocument.AssertErrorSummaryMessage(
-                "Venue-VenueTypeId",
-                "venue-type",
-                string.Format(ValidationMessages.RequiredSelect, "Venue type"));
-            resultDocument.AssertErrorSummaryMessage(
-                "Venue-Name",
-                "venue-name",
-                string.Format(ValidationMessages.RequiredEnter, "Venue name"));
-            resultDocument.AssertErrorSummaryMessage(
-                "Venue-Address",
-                "address",
-                string.Format(ValidationMessages.RequiredEnter, "Address"));
-            resultDocument.AssertErrorSummaryMessage(
-                "Venue-DateFrom",
-                "date-from",
-                string.Format(ValidationMessages.RequiredEnter, "From"));
+            resultDocument.AssertErrorSummaryMessage("Venue",
+                null,
+                "Please supply at least one of venue type, name, address, postcode or comments");
+
         }
 
         [Fact]

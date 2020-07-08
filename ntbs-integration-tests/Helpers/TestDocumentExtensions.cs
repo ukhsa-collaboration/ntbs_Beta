@@ -22,7 +22,10 @@ namespace ntbs_integration_tests.Helpers
             Assert.Equal(expected, actual);
         }
 
-        public static void AssertErrorSummaryMessage(this IHtmlDocument document, string summaryInputName, string spanInputName, string expectedMessage)
+        public static void AssertErrorSummaryMessage(this IHtmlDocument document,
+            string summaryInputName,
+            string spanInputName,
+            string expectedMessage)
         {
             // assert the error appears in the error summary
             var errorLink = (IHtmlAnchorElement) document?.QuerySelector(EscapeQuerySelector($"a#error-summary-{summaryInputName}"));
@@ -34,8 +37,12 @@ namespace ntbs_integration_tests.Helpers
             var errorParent = document.QuerySelector(EscapeQuerySelector($"#{errorParentId}"));
             Assert.NotNull(errorParent);
 
-            // assert the error is found where linked to by the error message and the correct error message is present
-            errorParent.AssertErrorMessage(spanInputName, expectedMessage);
+            // In some places we don't link to a particular field, e.g. if the error relates to multiple fields together
+            if (spanInputName != null)
+            {
+                // assert the error is found where linked to by the error message and the correct error message is present
+                errorParent.AssertErrorMessage(spanInputName, expectedMessage);
+            }
         }
 
         private static string EscapeQuerySelector(string query)
