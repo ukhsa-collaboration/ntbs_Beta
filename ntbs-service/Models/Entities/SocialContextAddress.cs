@@ -3,6 +3,11 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [AtLeastOneProperty(
+        nameof(Address),
+        nameof(Postcode),
+        nameof(Details),
+        ErrorMessage = ValidationMessages.SupplyOneOfTheAddressFields)]
     [Display(Name = "Social Context Address")]
     public class SocialContextAddress : SocialContextBase
     {

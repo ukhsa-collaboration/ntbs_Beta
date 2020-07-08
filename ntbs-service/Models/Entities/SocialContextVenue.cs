@@ -4,6 +4,13 @@ using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
+    [AtLeastOneProperty(
+        nameof(VenueTypeId),
+        nameof(Name),
+        nameof(Address),
+        nameof(Postcode),
+        nameof(Details),
+        ErrorMessage = ValidationMessages.SupplyOneOfTheVenueFields)]
     [Display(Name = "Social Context Venue")]
     public class SocialContextVenue : SocialContextBase
     {

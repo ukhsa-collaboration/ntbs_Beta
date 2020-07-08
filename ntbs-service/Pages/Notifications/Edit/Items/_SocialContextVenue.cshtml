@@ -9,9 +9,9 @@
 
         <partial name="Notifications/Edit/_SinglePageErrorSummaryPartial" />
 
-        <h3> @(Model.RowId == null ? "Add new " : "Edit ") social context venue</h3>
+        <h2> @(Model.RowId == null ? "Add new " : "Edit ") social context venue</h2>
 
-        <form method="post" autocomplete="off">
+        <form method="post" autocomplete="off" id="Venue">
             <nhs-grid-row>
                 <nhs-grid-column grid-column-width="OneHalf">
                     @{
