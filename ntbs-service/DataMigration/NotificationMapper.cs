@@ -271,11 +271,11 @@ namespace ntbs_service.DataMigration
             {
                 return null;
             }
-            return new NotificationSite
-            {
-                SiteId = result.SiteId,
-                SiteDescription = result.SiteDescription
-            };
+
+            var site = new NotificationSite();
+            site.SiteId = result.SiteId;
+            site.SiteDescription = result.SiteDescription;
+            return site;
         }
 
         private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
@@ -357,7 +357,7 @@ namespace ntbs_service.DataMigration
             var details = new ContactTracing();
             details.AdultsIdentified = rawNotification.AdultsIdentified;
             details.ChildrenIdentified = rawNotification.ChildrenIdentified;
-            details.AdultsScreened = rawNotification.AdultsSjcreened;
+            details.AdultsScreened = rawNotification.AdultsScreened;
             details.ChildrenScreened = rawNotification.ChildrenScreened;
             details.AdultsActiveTB = rawNotification.AdultsActiveTB;
             details.ChildrenActiveTB = rawNotification.ChildrenActiveTB;
@@ -374,7 +374,7 @@ namespace ntbs_service.DataMigration
         {
             var details = new PreviousTbHistory();
             details.PreviouslyHadTb = Converter.GetStatusFromString(rawNotification.PreviouslyHadTb);
-            details.PreviousTbDiagnosisYear = rawNotification.PreviousTBbiagnosisYear;
+            details.PreviousTbDiagnosisYear = rawNotification.PreviousTbDiagnosisYear;
             details.PreviouslyTreated = Converter.GetStatusFromString(rawNotification.PreviouslyTreated);
             details.PreviousTreatmentCountryId = rawNotification.PreviousTreatmentCountryId;
             return details;
@@ -507,7 +507,7 @@ namespace ntbs_service.DataMigration
             details.EthnicityId = notification.NtbsEthnicGroupId ?? Ethnicities.NotStatedId;
             details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
-            details.OccupationOther = notification.NtbsOccupationFreeText;
+            details.OccupationOther = notification.OccupationFreetext;
 
             ForceValidNhsNumber(details);
             
@@ -676,7 +676,7 @@ namespace ntbs_service.DataMigration
             mdr.RelationshipToCase = rawNotification.mdr_RelationshipToCase;
             // Notification.mdr_CaseInUKStatus is not used, as in NTBS it's calculated on the fly
             mdr.CountryId = rawNotification.mdr_CountryId;
-            if (rawNotification.mdr_RelatedNotificationId != null)
+            if (!string.IsNullOrEmpty(rawNotification.mdr_RelatedNotificationId))
             {
                 mdr.NotifiedToPheStatus = Status.Yes;
                 mdr.RelatedNotificationId = int.Parse(rawNotification.mdr_RelatedNotificationId);
@@ -720,7 +720,7 @@ namespace ntbs_service.DataMigration
             ev.Note = rawEvent.Note;
 
             // ReSharper disable once InvertIf
-            if (rawEvent.HospitalId is Guid guid)
+            if (rawEvent.NtbsHospitalId is Guid guid)
             {
                 var tbService = (await _referenceDataRepository.GetTbServiceFromHospitalIdAsync(guid));
                 if (tbService == null)
