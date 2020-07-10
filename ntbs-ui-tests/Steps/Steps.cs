@@ -138,6 +138,16 @@ namespace ntbs_ui_tests.StepDefinitions
             stepsData.NotificationId = int.Parse(idString);
         }
 
+        [Then(@"I can see the starting event '(.*)` dated `(.*)'")]
+        public void ThenIShouldSeeTheNotification(string eventType, string dateString)
+        {
+            var episodesOverview = Browser
+                .FindElement(By.Id("overview-episodes"))
+                .FindElement(By.XPath(".."));
+            Assert.Contains(eventType, episodesOverview.Text);
+            Assert.Contains(dateString, episodesOverview.Text);
+        }
+
         [Then(@"I should be on the Homepage")]
         public void ThenIShouldBeOnTheHomepage()
         {
