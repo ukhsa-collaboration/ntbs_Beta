@@ -16,12 +16,20 @@ namespace ntbs_service_unit_tests.Services
     public class NotificationServiceTest
     {
         private readonly INotificationService _notificationService;
-        private readonly Mock<INotificationRepository> _mockNotificationRepository = new Mock<INotificationRepository>();
-        private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository = new Mock<IReferenceDataRepository>();
+
+        private readonly Mock<INotificationRepository>
+            _mockNotificationRepository = new Mock<INotificationRepository>();
+
+        private readonly Mock<IReferenceDataRepository> _mockReferenceDataRepository =
+            new Mock<IReferenceDataRepository>();
+
         private readonly Mock<IUserService> _mockUserService = new Mock<IUserService>();
         private readonly Mock<ISpecimenService> _mockSpecimenService = new Mock<ISpecimenService>();
         private readonly Mock<NtbsContext> _mockContext = new Mock<NtbsContext>();
-        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository = new Mock<IItemRepository<TreatmentEvent>>();
+
+        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository =
+            new Mock<IItemRepository<TreatmentEvent>>();
+
         private readonly Mock<IAlertService> _mockAlertService = new Mock<IAlertService>();
 
         public NotificationServiceTest()
@@ -34,7 +42,7 @@ namespace ntbs_service_unit_tests.Services
                 _mockUserService.Object,
                 _mockTreatmentEventRepository.Object,
                 _mockContext.Object,
-                _mockSpecimenService.Object, 
+                _mockSpecimenService.Object,
                 _mockAlertService.Object);
         }
 
@@ -50,27 +58,18 @@ namespace ntbs_service_unit_tests.Services
                 RiskFactorDrugs =
                     new RiskFactorDetails(RiskFactorType.Drugs)
                     {
-                        IsCurrent = true,
-                        MoreThanFiveYearsAgo = true,
-                        InPastFiveYears = true,
-                        Status = parsedStatus
+                        IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
                     },
                 RiskFactorHomelessness =
                     new RiskFactorDetails(RiskFactorType.Homelessness)
                     {
-                        IsCurrent = true,
-                        MoreThanFiveYearsAgo = true,
-                        InPastFiveYears = true,
-                        Status = parsedStatus
+                        IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
                     },
-                RiskFactorImprisonment = 
+                RiskFactorImprisonment =
                     new RiskFactorDetails(RiskFactorType.Imprisonment)
-                {
-                    IsCurrent = true, 
-                    MoreThanFiveYearsAgo = true, 
-                    InPastFiveYears = true, 
-                    Status = parsedStatus
-                },
+                    {
+                        IsCurrent = true, MoreThanFiveYearsAgo = true, InPastFiveYears = true, Status = parsedStatus
+                    },
             };
             var notification = new Notification {SocialRiskFactors = socialRiskFactors};
 
@@ -100,7 +99,7 @@ namespace ntbs_service_unit_tests.Services
 
             VerifyUpdateDatabaseCalled();
         }
-        
+
         [Fact]
         public async Task SocialRiskFactorChecklist_AreSetToFalseIfNullAndStatusYes()
         {
@@ -111,27 +110,18 @@ namespace ntbs_service_unit_tests.Services
                 RiskFactorDrugs =
                     new RiskFactorDetails(RiskFactorType.Drugs)
                     {
-                        IsCurrent = null,
-                        MoreThanFiveYearsAgo = null,
-                        InPastFiveYears = null,
-                        Status = yes
+                        IsCurrent = null, MoreThanFiveYearsAgo = null, InPastFiveYears = null, Status = yes
                     },
                 RiskFactorHomelessness =
                     new RiskFactorDetails(RiskFactorType.Homelessness)
                     {
-                        IsCurrent = null,
-                        MoreThanFiveYearsAgo = null,
-                        InPastFiveYears = null,
-                        Status = yes
+                        IsCurrent = null, MoreThanFiveYearsAgo = null, InPastFiveYears = null, Status = yes
                     },
-                RiskFactorImprisonment = 
+                RiskFactorImprisonment =
                     new RiskFactorDetails(RiskFactorType.Imprisonment)
-                {
-                    IsCurrent = null, 
-                    MoreThanFiveYearsAgo = null, 
-                    InPastFiveYears = null, 
-                    Status = yes
-                },
+                    {
+                        IsCurrent = null, MoreThanFiveYearsAgo = null, InPastFiveYears = null, Status = yes
+                    },
             };
             var notification = new Notification {SocialRiskFactors = socialRiskFactors};
 
@@ -414,7 +404,7 @@ namespace ntbs_service_unit_tests.Services
             _mockNotificationRepository.Verify(mock =>
                 mock.SaveChangesAsync(It.IsAny<NotificationAuditType>(), It.IsAny<String>()));
         }
-        
+
         [Fact]
         public async Task UpdateNotificationClustersAsync_DoesNotThrowIfNotificationExists()
         {
@@ -422,7 +412,7 @@ namespace ntbs_service_unit_tests.Services
             _mockNotificationRepository
                 .Setup(r => r.GetNotificationAsync(existingNotification))
                 .Returns(Task.FromResult(new Notification()));
-            
+
             // If action throws, then the test fails - used frameworks do not explicitly expose a DoesNotThrow
             await _notificationService.UpdateNotificationClustersAsync(
                 new List<NotificationClusterValue>
@@ -438,7 +428,7 @@ namespace ntbs_service_unit_tests.Services
             _mockNotificationRepository
                 .Setup(r => r.GetNotificationAsync(notExistingNotification))
                 .Returns(Task.FromResult<Notification>(null));
-            
+
             await Assert.ThrowsAnyAsync<DataException>(() =>
                 _notificationService.UpdateNotificationClustersAsync(
                     new List<NotificationClusterValue>
@@ -457,40 +447,41 @@ namespace ntbs_service_unit_tests.Services
             var notification = new Notification
             {
                 NotificationId = notificationId,
-                ClinicalDetails = new ClinicalDetails
-                {
-                    TreatmentStartDate = treatmentDate
-                }
+                ClinicalDetails = new ClinicalDetails {TreatmentStartDate = treatmentDate}
             };
 
             // Act
             await _notificationService.SubmitNotificationAsync(notification);
 
             // Assert
-            _mockTreatmentEventRepository.Verify(x => 
-                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == treatmentDate)), Times.Once);
+            _mockTreatmentEventRepository.Verify(x =>
+                    x.AddAsync(It.Is<TreatmentEvent>(e =>
+                        e.EventDate == treatmentDate
+                        && e.TreatmentEventType == TreatmentEventType.TreatmentStart)),
+                Times.Once);
         }
-        
+
         [Fact]
-        public async Task AddNotificationStartEventType_WithNotificationDate_WhenNotificationSubmittedWithoutTreatmentDate()
+        public async Task AddDiagnosisMadeEventType_WithDiagnosisDate_WhenNotificationSubmittedWithoutTreatmentDate()
         {
             // Arrange
-            var notificationDate = new DateTime(2015, 1, 1);
+            var diagnosisDate = new DateTime(2015, 1, 1);
             const int notificationId = 1;
             var notification = new Notification
             {
                 NotificationId = notificationId,
-                NotificationDate = notificationDate
+                ClinicalDetails = new ClinicalDetails {DiagnosisDate = diagnosisDate}
             };
 
             // Act
             await _notificationService.SubmitNotificationAsync(notification);
 
             // Assert
-            _mockTreatmentEventRepository.Verify(x => 
-                x.AddAsync(It.Is<TreatmentEvent>(e => e.EventDate == notificationDate && 
-                                                      e.TreatmentEventType == TreatmentEventType.TreatmentStart))
-                , Times.Once);
+            _mockTreatmentEventRepository.Verify(x =>
+                    x.AddAsync(It.Is<TreatmentEvent>(e =>
+                        e.EventDate == diagnosisDate
+                        && e.TreatmentEventType == TreatmentEventType.DiagnosisMade)),
+                Times.Once);
         }
     }
 }
