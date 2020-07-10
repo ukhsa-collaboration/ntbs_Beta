@@ -1,0 +1,4 @@
+OldNotificationId,Source,ManualTestTypeId,SampleTypeId,Result,TestDate
+130331,ETS,2,15,Awaiting,2015-03-12 00:00:00.000
+130331,ETS,2,18,Negative,2015-02-17 00:00:00.000
+130331,ETS,3,15,Positive,2015-03-12 00:00:00.000

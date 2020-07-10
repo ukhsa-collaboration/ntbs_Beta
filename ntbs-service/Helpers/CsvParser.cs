@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using CsvHelper;
 
 namespace ntbs_service.Helpers
@@ -26,6 +27,17 @@ namespace ntbs_service.Helpers
             }
 
             return records;
+        }
+        
+        public static IEnumerable<T> GetRecordsFromCsv<T>(string relativePathToFile)
+        {
+            var filePath = GetFullFilePath(relativePathToFile);
+
+            using (StreamReader reader = new StreamReader(filePath))
+            using (CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                return csvReader.GetRecords<T>().ToList();
+            }
         }
 
         private static string GetFullFilePath(string relativePathToFile)
