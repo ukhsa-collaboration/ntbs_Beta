@@ -14,5 +14,7 @@ namespace ntbs_service.Models.Enums
         TransferOut,
         [Display(Name = "Treatment start")]
         TreatmentStart,
+        [Display(Name = "Diagnosis made")]
+        DiagnosisMade,
     }
 }

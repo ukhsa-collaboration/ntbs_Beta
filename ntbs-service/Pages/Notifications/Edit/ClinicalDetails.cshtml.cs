@@ -183,9 +183,6 @@ namespace ntbs_service.Pages.Notifications.Edit
                 TryValidateModel(OtherSite, nameof(OtherSite));
             }
 
-            var hasTreatmentStartDateChanged =
-                ClinicalDetails.TreatmentStartDate != Notification.ClinicalDetails.TreatmentStartDate &&
-                ClinicalDetails.TreatmentStartDate != null;
             var mdrChanged = Notification.ClinicalDetails.TreatmentRegimen != ClinicalDetails.TreatmentRegimen;
             var nonMdrNotAllowed = !ClinicalDetails.IsMDRTreatment && Notification.MDRDetails.MDRDetailsEntered;
 
@@ -193,16 +190,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 ModelState.AddModelError("ClinicalDetails.IsMDRTreatment", ValidationMessages.MDRCantChange);
             }
-            
             if (ModelState.IsValid)
             {
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
-                
-                if (hasTreatmentStartDateChanged)
-                {
-                    UpdateTreatmentStartEvent();    
-                }
+                UpdateTreatmentStartEvent();    
 
                 if (mdrChanged)
                 {
@@ -213,11 +205,15 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         private void UpdateTreatmentStartEvent()
         {
-            var treatmentStartEvent = Notification.TreatmentEvents.SingleOrDefault(t => t.TreatmentEventType == TreatmentEventType.TreatmentStart);
-            if (treatmentStartEvent != null)
+            var startingEvent = Notification.TreatmentEvents
+                .SingleOrDefault(t => t.IsStartingEvent);
+            var startingEventAffected =
+                ClinicalDetails.TreatmentStartDate != Notification.ClinicalDetails.TreatmentStartDate
+                || ClinicalDetails.DiagnosisDate != Notification.ClinicalDetails.DiagnosisDate;
+            if (startingEvent != null && startingEventAffected)
             {
-                treatmentStartEvent.EventDate = ClinicalDetails.TreatmentStartDate;
-                _treatmentEventRepository.UpdateAsync(Notification, treatmentStartEvent);
+                NotificationHelper.SetStartingEventDate(startingEvent, ClinicalDetails);
+                _treatmentEventRepository.UpdateAsync(Notification, startingEvent);
             }
         }
 

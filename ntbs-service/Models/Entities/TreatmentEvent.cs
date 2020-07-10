@@ -91,6 +91,17 @@ namespace ntbs_service.Models.Entities
             Enums.TreatmentEventType.TreatmentOutcome,
             Enums.TreatmentEventType.TreatmentRestart
         };
-        public bool IsEditable => TreatmentEventType != null && EditableTreatmentEventTypes.Contains(TreatmentEventType.Value);
+
+        private static IList<TreatmentEventType> StartingTreatmentEventTypes => new List<TreatmentEventType>
+        {
+            Enums.TreatmentEventType.TreatmentStart, 
+            Enums.TreatmentEventType.DiagnosisMade
+        };
+
+        public bool IsEditable => TreatmentEventType != null 
+                                  && EditableTreatmentEventTypes.Contains(TreatmentEventType.Value);
+
+        public bool IsStartingEvent => TreatmentEventType != null
+                                       && StartingTreatmentEventTypes.Contains(TreatmentEventType.Value);
     }
 }
