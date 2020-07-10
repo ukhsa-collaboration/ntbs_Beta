@@ -97,16 +97,18 @@ namespace ntbs_service.Services
                 // to be interpreted deterministically and with "natural" results.
                 switch (treatmentEvent.TreatmentEventType)
                 {
-                    case TreatmentEventType.TreatmentStart:
+                    case TreatmentEventType.DiagnosisMade:
                         return 1;
-                    case TreatmentEventType.TransferOut:
+                    case TreatmentEventType.TreatmentStart:
                         return 2;
-                    case TreatmentEventType.TransferIn:
+                    case TreatmentEventType.TransferOut:
                         return 3;
-                    case TreatmentEventType.TreatmentRestart:
+                    case TreatmentEventType.TransferIn:
                         return 4;
-                    case TreatmentEventType.TreatmentOutcome:
+                    case TreatmentEventType.TreatmentRestart:
                         return 5;
+                    case TreatmentEventType.TreatmentOutcome:
+                        return 6;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

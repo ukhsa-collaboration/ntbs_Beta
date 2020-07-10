@@ -92,7 +92,10 @@ Feature: Notification creation
         # Treatment Events page again + submission
         Then I should be on the TreatmentEvents page
         When I click on the 'submit-button' button
+      
+        # Notification overview + checks that submission went correctly
         Then I should see the Notification
+        And I can see the starting event 'Diagnosis made` dated `01 Jan 2018'
 
     Scenario: Create and submit notification without content
         When I click on the 'submit-button' button
