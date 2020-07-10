@@ -6,6 +6,8 @@
     <RootNamespace>ntbs_integration_tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
