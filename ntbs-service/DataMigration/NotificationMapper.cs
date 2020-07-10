@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Hangfire.Server;
 using MoreLinq;
 using ntbs_service.DataAccess;
+using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
@@ -98,17 +99,17 @@ namespace ntbs_service.DataMigration
         }
 
         private async Task<IList<Notification>> CombineDataForGroup(IEnumerable<string> legacyIds,
-            IList<dynamic> notifications,
-            IList<dynamic> sitesOfDisease,
-            IList<dynamic> manualTestResults,
-            IList<dynamic> socialContextVenues,
-            IList<dynamic> socialContextAddresses,
-            IList<dynamic> transferEvents,
-            IList<dynamic> outcomeEvents,
-            IList<dynamic> mbovisAnimalExposures,
-            IList<dynamic> mbovisExposureToKnownCase,
-            IList<dynamic> mbovisOccupationExposures,
-            IList<dynamic> mbovisUnpasteurisedMilkConsumption)
+            List<MigrationDbNotification> notifications,
+            List<MigrationDbSite> sitesOfDisease,
+            List<MigrationDbManualTest> manualTestResults,
+            List<MigrationDbSocialContextVenue> socialContextVenues,
+            List<MigrationDbSocialContextAddress> socialContextAddresses,
+            List<MigrationDbTransferEvent> transferEvents,
+            List<MigrationDbOutcomeEvent> outcomeEvents,
+            List<MigrationDbMBovisAnimal> mbovisAnimalExposures,
+            List<MigrationDbMBovisKnownCase> mbovisExposureToKnownCase,
+            List<MigrationDbMBovisOccupation> mbovisOccupationExposures,
+            List<MigrationDbMBovisMilkConsumption> mbovisUnpasteurisedMilkConsumption)
         {
             return await Task.WhenAll(legacyIds.Select(async id =>
             {
@@ -184,7 +185,7 @@ namespace ntbs_service.DataMigration
             }));
         }
 
-        private async Task<Notification> AsNotificationAsync(dynamic rawNotification)
+        private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification)
         {
             var notification = new Notification();
             notification.ETSID = rawNotification.EtsId;
@@ -212,7 +213,7 @@ namespace ntbs_service.DataMigration
             return notification;
         }
 
-        private async Task<HospitalDetails> ExtractHospitalDetailsAsync(dynamic rawNotification)
+        private async Task<HospitalDetails> ExtractHospitalDetailsAsync(MigrationDbNotification rawNotification)
         {
             var details = new HospitalDetails();
             details.HospitalId = rawNotification.NtbsHospitalId;
@@ -243,7 +244,7 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private static List<NotificationSite> AsSites(IEnumerable<dynamic> rawResultRawSites)
+        private static List<NotificationSite> AsSites(IEnumerable<MigrationDbSite> rawResultRawSites)
         {
             return rawResultRawSites
                 .Select(AsNotificationSite)
@@ -265,7 +266,7 @@ namespace ntbs_service.DataMigration
                 .ToList();
         }
 
-        private static NotificationSite AsNotificationSite(dynamic result)
+        private static NotificationSite AsNotificationSite(MigrationDbSite result)
         {
             if (result.SiteId == null)
             {
@@ -273,12 +274,12 @@ namespace ntbs_service.DataMigration
             }
 
             var site = new NotificationSite();
-            site.SiteId = result.SiteId;
+            site.SiteId = (int) result.SiteId;
             site.SiteDescription = result.SiteDescription;
             return site;
         }
 
-        private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(dynamic notification)
+        private static ImmunosuppressionDetails ExtractImmunosuppressionDetails(MigrationDbNotification notification)
         {
             var details = new ImmunosuppressionDetails();
             details.Status = Converter.GetStatusFromString(notification.ImmunosuppressionStatus);
@@ -287,9 +288,9 @@ namespace ntbs_service.DataMigration
                 return details;
             }
 
-            details.HasBioTherapy = Converter.GetNullableBoolValue((int?) notification.HasBioTherapy);
-            details.HasTransplantation = Converter.GetNullableBoolValue((int?) notification.HasTransplantation);
-            details.HasOther = Converter.GetNullableBoolValue((int?) notification.HasOther);
+            details.HasBioTherapy = Converter.GetNullableBoolValue(notification.HasBioTherapy);
+            details.HasTransplantation = Converter.GetNullableBoolValue(notification.HasTransplantation);
+            details.HasOther = Converter.GetNullableBoolValue(notification.HasOther);
 
             if (details.HasBioTherapy != true && details.HasTransplantation != true && details.HasOther != true)
             {
@@ -318,7 +319,7 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private static ComorbidityDetails ExtractComorbidityDetails(dynamic notification)
+        private static ComorbidityDetails ExtractComorbidityDetails(MigrationDbNotification notification)
         {
             var details = new ComorbidityDetails();
             details.DiabetesStatus = Converter.GetStatusFromString(notification.DiabetesStatus);
@@ -329,7 +330,7 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private static ClinicalDetails ExtractClinicalDetails(dynamic notification)
+        private static ClinicalDetails ExtractClinicalDetails(MigrationDbNotification notification)
         {
             var details = new ClinicalDetails();
             details.SymptomStartDate = notification.SymptomOnsetDate;
@@ -341,18 +342,18 @@ namespace ntbs_service.DataMigration
             details.MDRTreatmentStartDate = notification.MDRTreatmentStartDate;
             details.IsSymptomatic = Converter.GetNullableBoolValue(notification.IsSymptomatic);
             details.IsPostMortem = Converter.GetNullableBoolValue(notification.IsPostMortem);
-            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>((string)notification.HivTestStatus);
-            details.IsDotOffered = Converter.GetStatusFromString((string)notification.IsDotOffered);
-            details.DotStatus = Converter.GetEnumValue<DotStatus>((string)notification.DotStatus);
+            details.HIVTestState = Converter.GetEnumValue<HIVTestStatus>(notification.HivTestStatus);
+            details.IsDotOffered = Converter.GetStatusFromString(notification.IsDotOffered);
+            details.DotStatus = Converter.GetEnumValue<DotStatus>(notification.DotStatus);
             details.EnhancedCaseManagementStatus = Converter.GetStatusFromString(notification.EnhancedCaseManagementStatus);
             details.BCGVaccinationState = Converter.GetStatusFromString(notification.BCGVaccinationState);
             details.BCGVaccinationYear = notification.BCGVaccinationYear;
-            details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>((string)notification.TreatmentRegimen);
+            details.TreatmentRegimen = Converter.GetEnumValue<TreatmentRegimen>(notification.TreatmentRegimen);
             details.Notes = notification.Notes;
             return details;
         }
 
-        private ContactTracing ExtractContactTracingDetails(dynamic rawNotification)
+        private ContactTracing ExtractContactTracingDetails(MigrationDbNotification rawNotification)
         {
             var details = new ContactTracing();
             details.AdultsIdentified = rawNotification.AdultsIdentified;
@@ -370,7 +371,7 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private PreviousTbHistory ExtractPreviousTbHistory(dynamic rawNotification)
+        private PreviousTbHistory ExtractPreviousTbHistory(MigrationDbNotification rawNotification)
         {
             var details = new PreviousTbHistory();
             details.PreviouslyHadTb = Converter.GetStatusFromString(rawNotification.PreviouslyHadTb);
@@ -380,7 +381,7 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private static TravelDetails ExtractTravelDetails(dynamic notification)
+        private static TravelDetails ExtractTravelDetails(MigrationDbNotification notification)
         {
             var hasTravel = Converter.GetStatusFromString(notification.HasTravel);
             int? numberOfCountries = Converter.ToNullableInt(notification.travel_TotalNumberOfCountries);
@@ -406,7 +407,7 @@ namespace ntbs_service.DataMigration
             return details;
         }
 
-        private static VisitorDetails ExtractVisitorDetails(dynamic notification)
+        private static VisitorDetails ExtractVisitorDetails(MigrationDbNotification notification)
         {
             var hasVisitor = Converter.GetStatusFromString(notification.HasVisitor);
             int? numberOfCountries = Converter.ToNullableInt(notification.visitor_TotalNumberOfCountries);
@@ -471,17 +472,14 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private static PatientDetails ExtractPatientDetails(dynamic notification)
+        private static PatientDetails ExtractPatientDetails(MigrationDbNotification notification)
         {
             var addressRaw = string.Join(" \n",
-                new string[]
-                {
-                    notification.Line1, 
-                    notification.Line2,
-                    notification.City,
-                    notification.County,
-                    notification.Postcode
-                });
+                notification.Line1,
+                notification.Line2,
+                notification.City,
+                notification.County,
+                notification.Postcode);
             var address = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
                 addressRaw);
@@ -538,7 +536,7 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private static SocialRiskFactors ExtractSocialRiskFactors(dynamic notification)
+        private static SocialRiskFactors ExtractSocialRiskFactors(MigrationDbNotification notification)
         {
             var factors = new SocialRiskFactors();
             factors.AlcoholMisuseStatus = Converter.GetStatusFromString(notification.AlcoholMisuseStatus);
@@ -549,23 +547,23 @@ namespace ntbs_service.DataMigration
             factors.RiskFactorSmoking.Status = Converter.GetStatusFromString(notification.SmokingStatus);
             
             factors.RiskFactorDrugs.Status = Converter.GetStatusFromString(notification.riskFactorDrugs_Status);
-            factors.RiskFactorDrugs.IsCurrent = Converter.GetNullableBoolValue((int?) notification.riskFactorDrugs_IsCurrent);
-            factors.RiskFactorDrugs.InPastFiveYears = Converter.GetNullableBoolValue((int?) notification.riskFactorDrugs_InPastFiveYears);
-            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue((int?) notification.riskFactorDrugs_MoreThanFiveYearsAgo);
+            factors.RiskFactorDrugs.IsCurrent = Converter.GetNullableBoolValue(notification.riskFactorDrugs_IsCurrent);
+            factors.RiskFactorDrugs.InPastFiveYears = Converter.GetNullableBoolValue(notification.riskFactorDrugs_InPastFiveYears);
+            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(notification.riskFactorDrugs_MoreThanFiveYearsAgo);
             
             factors.RiskFactorHomelessness.Status = Converter.GetStatusFromString(notification.riskFactorHomelessness_Status);
-            factors.RiskFactorHomelessness.IsCurrent = Converter.GetNullableBoolValue((int?) notification.riskFactorHomelessness_IsCurrent);
-            factors.RiskFactorHomelessness.InPastFiveYears = Converter.GetNullableBoolValue((int?) notification.riskFactorHomelessness_InPastFiveYears);
-            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue((int?) notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
+            factors.RiskFactorHomelessness.IsCurrent = Converter.GetNullableBoolValue(notification.riskFactorHomelessness_IsCurrent);
+            factors.RiskFactorHomelessness.InPastFiveYears = Converter.GetNullableBoolValue(notification.riskFactorHomelessness_InPastFiveYears);
+            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
             
             factors.RiskFactorImprisonment.Status = Converter.GetStatusFromString(notification.riskFactorImprisonment_Status);
-            factors.RiskFactorImprisonment.IsCurrent = Converter.GetNullableBoolValue((int?) notification.riskFactorImprisonment_IsCurrent);
-            factors.RiskFactorImprisonment.InPastFiveYears = Converter.GetNullableBoolValue((int?) notification.riskFactorImprisonment_InPastFiveYears);
-            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue((int?) notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
+            factors.RiskFactorImprisonment.IsCurrent = Converter.GetNullableBoolValue(notification.riskFactorImprisonment_IsCurrent);
+            factors.RiskFactorImprisonment.InPastFiveYears = Converter.GetNullableBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
+            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
             return factors;
         }
 
-        private static ManualTestResult AsManualTestResult(dynamic rawResult)
+        private static ManualTestResult AsManualTestResult(MigrationDbManualTest rawResult)
         {
             var manualTest = new ManualTestResult();
             manualTest.ManualTestTypeId = rawResult.ManualTestTypeId;
@@ -575,7 +573,7 @@ namespace ntbs_service.DataMigration
             return manualTest;
         }
 
-        private static SocialContextVenue AsSocialContextVenue(dynamic rawVenue)
+        private static SocialContextVenue AsSocialContextVenue(MigrationDbSocialContextVenue rawVenue)
         {
             var venue = new SocialContextVenue();
             venue.VenueTypeId = rawVenue.VenueTypeId;
@@ -590,7 +588,7 @@ namespace ntbs_service.DataMigration
             return venue;
         }
 
-        private static SocialContextAddress AsSocialContextAddress(dynamic rawAddress)
+        private static SocialContextAddress AsSocialContextAddress(MigrationDbSocialContextAddress rawAddress)
         {
             var address = new SocialContextAddress();
              address.Address = rawAddress.Address;
@@ -602,7 +600,7 @@ namespace ntbs_service.DataMigration
             return address;
         }
 
-        private static MBovisAnimalExposure AsMBovisAnimalExposure(dynamic rawData)
+        private static MBovisAnimalExposure AsMBovisAnimalExposure(MigrationDbMBovisAnimal rawData)
         {
             var animalExposure = new MBovisAnimalExposure();
             animalExposure.YearOfExposure = rawData.YearOfExposure;
@@ -615,18 +613,18 @@ namespace ntbs_service.DataMigration
             return animalExposure;
         }
 
-        private static MBovisExposureToKnownCase AsMBovisExposureToKnownCase(dynamic rawData)
+        private static MBovisExposureToKnownCase AsMBovisExposureToKnownCase(MigrationDbMBovisKnownCase rawData)
         {
             var caseExposure = new MBovisExposureToKnownCase();
             caseExposure.YearOfExposure = rawData.YearOfExposure;
             caseExposure.ExposureSetting = Converter.GetEnumValue<ExposureSetting>(rawData.ExposureSetting);
             caseExposure.ExposureNotificationId = rawData.ExposureNotificationId;
-            caseExposure.NotifiedToPheStatus = Converter.GetStatusFromString(rawData.NotifiedToPheStatus);
+            caseExposure.NotifiedToPheStatus = Converter.GetStatusFromString(rawData.NotifiedToPheStatus) ?? Status.Unknown;
             caseExposure.OtherDetails = rawData.OtherDetails;
             return caseExposure;
         }
 
-        private static MBovisOccupationExposure AsMBovisOccupationExposure(dynamic rawData)
+        private static MBovisOccupationExposure AsMBovisOccupationExposure(MigrationDbMBovisOccupation rawData)
         {
             var occupationExposure = new MBovisOccupationExposure();
             occupationExposure.YearOfExposure = rawData.YearOfExposure;
@@ -637,7 +635,7 @@ namespace ntbs_service.DataMigration
             return occupationExposure;
         }
 
-        private static MBovisUnpasteurisedMilkConsumption AsMBovisUnpasteurisedMilkConsumption(dynamic rawData)
+        private static MBovisUnpasteurisedMilkConsumption AsMBovisUnpasteurisedMilkConsumption(MigrationDbMBovisMilkConsumption rawData)
         {
             var milkConsumption = new MBovisUnpasteurisedMilkConsumption();
             milkConsumption.YearOfConsumption = rawData.YearOfConsumption;
@@ -649,7 +647,7 @@ namespace ntbs_service.DataMigration
             return milkConsumption;
         }
 
-        private async Task<List<TreatmentEvent>> ExtractTreatmentEventsAsync(dynamic notification)
+        private async Task<List<TreatmentEvent>> ExtractTreatmentEventsAsync(MigrationDbNotification notification)
         {
             var treatmentEvents = new List<TreatmentEvent>();
             if (notification.IsPostMortem == 1)
@@ -669,7 +667,7 @@ namespace ntbs_service.DataMigration
             return treatmentEvents;
         }
 
-        private MDRDetails ExtractMdrDetailsAsync(dynamic rawNotification)
+        private MDRDetails ExtractMdrDetailsAsync(MigrationDbNotification rawNotification)
         {
             var mdr = new MDRDetails();
             mdr.ExposureToKnownCaseStatus = Converter.GetStatusFromString(rawNotification.mdr_ExposureToKnownTbCase);
@@ -685,7 +683,7 @@ namespace ntbs_service.DataMigration
             return mdr;
         }
 
-        private async Task<TreatmentEvent> AsTransferEvent(dynamic rawEvent)
+        private async Task<TreatmentEvent> AsTransferEvent(MigrationDbTransferEvent rawEvent)
         {
             var ev = new TreatmentEvent();
             ev.EventDate = rawEvent.EventDate;
@@ -710,7 +708,7 @@ namespace ntbs_service.DataMigration
             return ev;
         }
 
-        private async Task<TreatmentEvent> AsOutcomeEvent(dynamic rawEvent)
+        private async Task<TreatmentEvent> AsOutcomeEvent(MigrationDbOutcomeEvent rawEvent)
         {
             var ev = new TreatmentEvent();
             ev.EventDate = rawEvent.EventDate;

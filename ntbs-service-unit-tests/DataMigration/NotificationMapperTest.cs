@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
+using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;

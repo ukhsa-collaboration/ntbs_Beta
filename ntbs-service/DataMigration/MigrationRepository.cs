@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using ntbs_service.DataMigration.RawModels;
 
 namespace ntbs_service.DataMigration
 {
@@ -17,17 +18,17 @@ namespace ntbs_service.DataMigration
         Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsByDate(DateTime rangeStartDate,
             DateTime endStartDate);
 
-        Task<IEnumerable<dynamic>> GetNotificationsById(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetManualTestResults(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetSocialContextVenues(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetOutcomeEvents(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetMigrationMBovisAnimalExposure(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetMigrationMBovisOccupationExposures(List<string> legacyIds);
-        Task<IEnumerable<dynamic>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbNotification>> GetNotificationsById(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbSite>> GetNotificationSites(IEnumerable<string> legacyIds);
+        Task<IEnumerable<MigrationDbManualTest>> GetManualTestResults(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbSocialContextVenue>> GetSocialContextVenues(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbSocialContextAddress>> GetSocialContextAddresses(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbTransferEvent>> GetTransferEvents(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbOutcomeEvent>> GetOutcomeEvents(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbMBovisAnimal>> GetMigrationMBovisAnimalExposure(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbMBovisKnownCase>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbMBovisOccupation>> GetMigrationMBovisOccupationExposures(List<string> legacyIds);
+        Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds);
 
         Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(
             IEnumerable<string> legacyIds);
@@ -177,59 +178,59 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        public async Task<IEnumerable<dynamic>> GetNotificationsById(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbNotification>> GetNotificationsById(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(NotificationsByIdQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbNotification>(NotificationsByIdQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetNotificationSites(IEnumerable<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbSite>> GetNotificationSites(IEnumerable<string> legacyIds)
         {
-            return await ExecuteByIdQuery(NotificationSitesQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbSite>(NotificationSitesQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetManualTestResults(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbManualTest>> GetManualTestResults(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(ManualTestResultsQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbManualTest>(ManualTestResultsQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetSocialContextVenues(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbSocialContextVenue>> GetSocialContextVenues(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(SocialContextVenuesQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbSocialContextVenue>(SocialContextVenuesQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetSocialContextAddresses(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbSocialContextAddress>> GetSocialContextAddresses(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(SocialContextAddressesQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbSocialContextAddress>(SocialContextAddressesQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetTransferEvents(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbTransferEvent>> GetTransferEvents(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(TransferEventsQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbTransferEvent>(TransferEventsQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetOutcomeEvents(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbOutcomeEvent>> GetOutcomeEvents(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(OutcomeEventsQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbOutcomeEvent>(OutcomeEventsQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetMigrationMBovisAnimalExposure(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbMBovisAnimal>> GetMigrationMBovisAnimalExposure(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(MigrationMBovisAnimalExposureQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbMBovisAnimal>(MigrationMBovisAnimalExposureQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbMBovisKnownCase>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(MigrationMBovisExposureToKnownCaseQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbMBovisKnownCase>(MigrationMBovisExposureToKnownCaseQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetMigrationMBovisOccupationExposures(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbMBovisOccupation>> GetMigrationMBovisOccupationExposures(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(MigrationMBovisOccupationExposuresQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbMBovisOccupation>(MigrationMBovisOccupationExposuresQuery, legacyIds);
         }
 
-        public async Task<IEnumerable<dynamic>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds)
+        public async Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds)
         {
-            return await ExecuteByIdQuery(MigrationMBovisUnpasteurisedMilkConsumptionQuery, legacyIds);
+            return await ExecuteByIdQuery<MigrationDbMBovisMilkConsumption>(MigrationMBovisUnpasteurisedMilkConsumptionQuery, legacyIds);
         }
 
         public async Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>>
@@ -255,12 +256,12 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private async Task<IEnumerable<dynamic>> ExecuteByIdQuery(string query, IEnumerable<string> legacyIds)
+        private async Task<IEnumerable<T>> ExecuteByIdQuery<T>(string query, IEnumerable<string> legacyIds)
         {
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return await connection.QueryAsync(query, new {Ids = legacyIds});
+                return await connection.QueryAsync<T>(query, new {Ids = legacyIds});
             }
         }
     }
