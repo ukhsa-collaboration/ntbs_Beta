@@ -27,7 +27,7 @@ namespace ntbs_service_unit_tests.DataMigration
     public class NotificationMapperTest
     {
         private readonly NotificationMapper _notificationMapper;
-        private readonly Mock<IMigrationRepository> _migrationRepositoryMock = new Mock<IMigrationRepository>();
+        private readonly MigrationRepositoryStub _migrationRepository = new MigrationRepositoryStub();
 
         private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
             new Mock<IReferenceDataRepository>();
@@ -37,7 +37,7 @@ namespace ntbs_service_unit_tests.DataMigration
         public NotificationMapperTest()
         {
             _notificationMapper = new NotificationMapper(
-                _migrationRepositoryMock.Object,
+                _migrationRepository,
                 _referenceDataRepositoryMock.Object,
                 new ImportLogger());
 
@@ -55,9 +55,7 @@ namespace ntbs_service_unit_tests.DataMigration
         {
             // Arrange
             var legacyIds = new List<string> {"130331"};
-            SetupSingleNotificationInGroup(legacyIds, ("130331", "1"));
-            SetupMigrationRepoMockWithCsvSourcedData(legacyIds);
-
+            SetupNotificationsInGroups(("130331", "1"));
             const string royalBerkshireCode = "TBS001";
             const string bristolRoyalCode = "TBS002";
             const string westonGeneralCode = "TBS003";
@@ -99,56 +97,179 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
         }
 
-        private void SetupSingleNotificationInGroup(List<string> legacyIds, (string, string) legacyIdAndLegacyGroup)
+        // Data for this has been based on real regression examples, but with care taken to anonymize it
+        // This is based on NTBS-1594
+        [Fact]
+        public async Task correctlyMaps_ContactTracingNumbers()
         {
-            _migrationRepositoryMock.Setup(repo => repo.GetGroupedNotificationIdsById(legacyIds))
-                .ReturnsAsync(GroupedNotificationIds(legacyIdAndLegacyGroup));
+            // Arrange
+            var legacyIds = new List<string> {"235676", "237137", "241256", "242084"};
+            SetupNotificationsInGroups(("235676", "2"),
+                ("237137", "3"),
+                ("241256", "4"),
+                ("242084", "5")
+            );
+
+            const string salfordRoyalCode = "TBS0193";
+            const string leedsGeneralCode = "TBS0106";
+            const string frimleyParkCode = "TBS0075";
+            const string colchesterGeneralCode = "TBS0049";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("3ECAC202-C204-4384-B3F9-0D3FF412DC36"), new TBService {Code = salfordRoyalCode}},
+                {new Guid("7E9C715D-0248-4D97-8F67-1134FC133588"), new TBService {Code = leedsGeneralCode}},
+                {new Guid("44C3608F-231E-4DD7-963C-4492D804E894"), new TBService {Code = frimleyParkCode}},
+                {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
+            };
+            
+            // Act
+            var notifications = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    "test-request-1",
+                    legacyIds))
+                .SelectMany(group => group)
+                .ToList();
+
+            // Assert
+            Assert.Equal(4, notifications.Count);
+            
+            var notification242084 = notifications.Find(n => n.ETSID == "242084").ContactTracing;
+            Assert.Equal(2, notification242084.AdultsIdentified);
+            Assert.Equal(2, notification242084.AdultsScreened);
+            Assert.Equal(0, notification242084.AdultsActiveTB);
+            Assert.Equal(0, notification242084.AdultsLatentTB);
+            Assert.Equal(null, notification242084.ChildrenIdentified);
+            Assert.Equal(null, notification242084.ChildrenScreened);
+            Assert.Equal(null, notification242084.ChildrenActiveTB);
+            Assert.Equal(null, notification242084.ChildrenLatentTB);
+                
+            var notification237137 = notifications.Find(n => n.ETSID == "237137").ContactTracing;
+            Assert.Equal(3, notification237137.AdultsIdentified);
+            Assert.Equal(3, notification237137.AdultsScreened);
+            Assert.Equal(4, notification237137.ChildrenIdentified);
+            Assert.Equal(4, notification237137.ChildrenScreened);
+            
+            var notification235676 = notifications.Find(n => n.ETSID == "235676").ContactTracing;
+            Assert.Equal(1, notification235676.AdultsIdentified);
+            Assert.Equal(1, notification235676.AdultsScreened);
+            Assert.Equal(0, notification235676.AdultsActiveTB);
+            Assert.Equal(0, notification235676.AdultsLatentTB);
+            Assert.Equal(0, notification235676.AdultsStartedTreatment);
+            Assert.Equal(0, notification235676.AdultsFinishedTreatment);
+            Assert.Equal(0, notification235676.ChildrenIdentified);
+            Assert.Equal(0, notification235676.ChildrenScreened);
+            Assert.Equal(0, notification235676.ChildrenActiveTB);
+            Assert.Equal(0, notification235676.ChildrenLatentTB);
+            Assert.Equal(0, notification235676.ChildrenStartedTreatment);
+            Assert.Equal(0, notification235676.ChildrenFinishedTreatment);
+            
+            var notification241256 = notifications.Find(n => n.ETSID == "241256").ContactTracing;
+            Assert.Equal(0, notification241256.AdultsIdentified);
+            Assert.Equal(0, notification241256.AdultsScreened);
+            Assert.Equal(0, notification241256.AdultsActiveTB);
+            Assert.Equal(0, notification241256.AdultsLatentTB);
+            Assert.Equal(0, notification241256.AdultsStartedTreatment);
+            Assert.Equal(0, notification241256.AdultsFinishedTreatment);
+            Assert.Equal(0, notification241256.ChildrenIdentified);
+            Assert.Equal(0, notification241256.ChildrenScreened);
+            Assert.Equal(0, notification241256.ChildrenActiveTB);
+            Assert.Equal(0, notification241256.ChildrenLatentTB);
+            Assert.Equal(0, notification241256.ChildrenStartedTreatment);
+            Assert.Equal(0, notification241256.ChildrenFinishedTreatment);
         }
 
-        private static IEnumerable<IGrouping<string, string>> GroupedNotificationIds((string, string) idGroupIdPair)
+        private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
         {
-            List<IGrouping<string, string>> notificationIdGroup =
-                new List<(string notificationId, string groupId)> {idGroupIdPair}
-                    .GroupBy(
-                        t => t.groupId,
-                        t => t.notificationId
-                    )
-                    .ToList();
-            return notificationIdGroup;
+            var grouped = new List<(string notificationId, string groupId)>(legacyIdAndLegacyGroup)
+                .GroupBy(
+                    t => t.groupId,
+                    t => t.notificationId
+                )
+                .ToList();
+            _migrationRepository.GroupedNotificationsStub = grouped;
         }
-
-        private void SetupMigrationRepoMockWithCsvSourcedData(List<string> legacyIds)
+        
+        private class MigrationRepositoryStub : IMigrationRepository
         {
-            _migrationRepositoryMock.Setup(repo => repo.GetNotificationsById(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbNotification>("notifications", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetNotificationSites(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbSite>("sites", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetManualTestResults(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbManualTest>("manualTestResults", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetSocialContextVenues(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbSocialContextVenue>("socialContextVenues", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetSocialContextAddresses(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbSocialContextAddress>("socialContextAddresses", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetTransferEvents(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbTransferEvent>("transferEvents", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetOutcomeEvents(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbOutcomeEvent>("outcomeEvents", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetMigrationMBovisAnimalExposure(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbMBovisAnimal>("mBovisAnimalExposure", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetMigrationMBovisExposureToKnownCase(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbMBovisKnownCase>("mBovisKnownCase", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetMigrationMBovisOccupationExposures(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbMBovisOccupation>("mBovisOccupationExposure", legacyIds));
-            _migrationRepositoryMock.Setup(repo => repo.GetMigrationMBovisUnpasteurisedMilkConsumption(legacyIds))
-                .ReturnsAsync(CvsRecords<MigrationDbMBovisMilkConsumption>("mBovisMilkConsumption", legacyIds));
-        }
+            public Task<IEnumerable<MigrationDbNotification>> GetNotificationsById(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbNotification>("notifications", legacyIds));
 
-        private static IEnumerable<T> CvsRecords<T>(string file, ICollection<string> legacyIds)
-            where T : MigrationDbRecord
-        {
-            return CsvParser
-                .GetRecordsFromCsv<T>($"../../../TestData/MigrationDatabaseMock/{file}.csv")
-                .Where(record => legacyIds.Contains(record.OldNotificationId));
+            }
+
+            public Task<IEnumerable<MigrationDbSite>> GetNotificationSites(IEnumerable<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbSite>("sites", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbManualTest>> GetManualTestResults(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbManualTest>("manualTestResults", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbSocialContextVenue>> GetSocialContextVenues(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbSocialContextVenue>("socialContextVenues", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbSocialContextAddress>> GetSocialContextAddresses(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbSocialContextAddress>("socialContextAddresses", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbTransferEvent>> GetTransferEvents(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbTransferEvent>("transferEvents", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbOutcomeEvent>> GetOutcomeEvents(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbOutcomeEvent>("outcomeEvents", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbMBovisAnimal>> GetMigrationMBovisAnimalExposure(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbMBovisAnimal>("mBovisAnimalExposure", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbMBovisKnownCase>> GetMigrationMBovisExposureToKnownCase(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbMBovisKnownCase>("mBovisKnownCase", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbMBovisOccupation>> GetMigrationMBovisOccupationExposures(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbMBovisOccupation>("mBovisOccupationExposure", legacyIds));
+            }
+
+            public Task<IEnumerable<MigrationDbMBovisMilkConsumption>> GetMigrationMBovisUnpasteurisedMilkConsumption(List<string> legacyIds)
+            {
+                return Task.FromResult(CvsRecords<MigrationDbMBovisMilkConsumption>("mBovisMilkConsumption", legacyIds));
+            }
+
+            public Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsById(IEnumerable<string> legacyIds)
+            {
+                return Task.FromResult(GroupedNotificationsStub);
+            }
+
+            public Task<IEnumerable<IGrouping<string, string>>> GetGroupedNotificationIdsByDate(DateTime rangeStartDate, DateTime endStartDate)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<IEnumerable<(string LegacyId, string ReferenceLaboratoryNumber)>> GetReferenceLaboratoryMatches(IEnumerable<string> legacyIds)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<IGrouping<string, string>> GroupedNotificationsStub { get; set; }
+
+            private static IEnumerable<T> CvsRecords<T>(string file, IEnumerable<string> legacyIds)
+                where T : MigrationDbRecord
+            {
+                return CsvParser
+                    .GetRecordsFromCsv<T>($"../../../TestData/MigrationDatabaseMock/{file}.csv")
+                    .Where(record => legacyIds.Contains(record.OldNotificationId));
+            }
         }
     }
 }
