@@ -19,7 +19,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
     public class TreatmentEventModel : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        private readonly ITreatmentEventRepository _treatmentEventRepository;
         private readonly IAlertService _alertService;
 
         [BindProperty(SupportsGet = true)]
@@ -42,7 +42,7 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<TreatmentEvent> treatmentEventRepository,
+            ITreatmentEventRepository treatmentEventRepository,
             IAlertRepository alertRepository,
             IAlertService alertService)
             : base(service, authorizationService, notificationRepository, alertRepository)

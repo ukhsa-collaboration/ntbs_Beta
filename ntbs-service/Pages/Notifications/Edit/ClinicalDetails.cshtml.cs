@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
 using ntbs_service.Helpers;
@@ -19,9 +18,7 @@ namespace ntbs_service.Pages.Notifications.Edit
     public class ClinicalDetailsModel : NotificationEditModelBase
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly IAlertService _alertService;
         private readonly IEnhancedSurveillanceAlertsService _enhancedSurveillanceAlertsService;
-        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
 
         public ClinicalDetails ClinicalDetails { get; set; }
 
@@ -47,14 +44,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             INotificationRepository notificationRepository,
             IAlertRepository alertRepository,
             IReferenceDataRepository referenceDataRepository,
-            IAlertService alertService,
-            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService,
-            IItemRepository<TreatmentEvent> treatmentEventRepository) : base(service, authorizationService, notificationRepository, alertRepository)
+            IEnhancedSurveillanceAlertsService enhancedSurveillanceAlertsService)
+            : base(service, authorizationService, notificationRepository, alertRepository)
         {
             _referenceDataRepository = referenceDataRepository;
-            _alertService = alertService;
             _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
-            _treatmentEventRepository = treatmentEventRepository;
 
             CurrentPage = NotificationSubPaths.EditClinicalDetails;
         }
@@ -194,26 +188,11 @@ namespace ntbs_service.Pages.Notifications.Edit
             {
                 await Service.UpdateClinicalDetailsAsync(Notification, ClinicalDetails);
                 await Service.UpdateSitesAsync(Notification.NotificationId, notificationSites);
-                UpdateTreatmentStartEvent();    
 
                 if (mdrChanged)
                 {
                     await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(Notification);
                 }
-            }
-        }
-
-        private void UpdateTreatmentStartEvent()
-        {
-            var startingEvent = Notification.TreatmentEvents
-                .SingleOrDefault(t => t.IsStartingEvent);
-            var startingEventAffected =
-                ClinicalDetails.TreatmentStartDate != Notification.ClinicalDetails.TreatmentStartDate
-                || ClinicalDetails.DiagnosisDate != Notification.ClinicalDetails.DiagnosisDate;
-            if (startingEvent != null && startingEventAffected)
-            {
-                NotificationHelper.SetStartingEventDate(startingEvent, ClinicalDetails);
-                _treatmentEventRepository.UpdateAsync(Notification, startingEvent);
             }
         }
 

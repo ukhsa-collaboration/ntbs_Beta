@@ -27,8 +27,8 @@ namespace ntbs_service_unit_tests.Services
         private readonly Mock<ISpecimenService> _mockSpecimenService = new Mock<ISpecimenService>();
         private readonly Mock<NtbsContext> _mockContext = new Mock<NtbsContext>();
 
-        private readonly Mock<IItemRepository<TreatmentEvent>> _mockTreatmentEventRepository =
-            new Mock<IItemRepository<TreatmentEvent>>();
+        private readonly Mock<ITreatmentEventRepository> _mockTreatmentEventRepository =
+            new Mock<ITreatmentEventRepository>();
 
         private readonly Mock<IAlertService> _mockAlertService = new Mock<IAlertService>();
 

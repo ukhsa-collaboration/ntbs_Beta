@@ -22,7 +22,7 @@ namespace ntbs_service.Pages.Alerts
         private readonly IAlertRepository _alertRepository;
         private readonly IAlertService _alertService;
         private readonly IReferenceDataRepository _referenceDataRepository;
-        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        private readonly ITreatmentEventRepository _treatmentEventRepository;
         
         public ValidationService ValidationService;
         
@@ -54,7 +54,7 @@ namespace ntbs_service.Pages.Alerts
             IAuthorizationService authorizationService,
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
-            IItemRepository<TreatmentEvent> treatmentEventRepository) : base(notificationService, authorizationService, notificationRepository)
+            ITreatmentEventRepository treatmentEventRepository) : base(notificationService, authorizationService, notificationRepository)
         {
             _treatmentEventRepository = treatmentEventRepository;
             _alertService = alertService;

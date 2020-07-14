@@ -53,7 +53,7 @@ namespace ntbs_service.Services
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IUserService _userService;
         private readonly NtbsContext _context;
-        private readonly IItemRepository<TreatmentEvent> _treatmentEventRepository;
+        private readonly ITreatmentEventRepository _treatmentEventRepository;
         private readonly ISpecimenService _specimenService;
         private readonly IAlertService _alertService;
 
@@ -62,7 +62,7 @@ namespace ntbs_service.Services
             INotificationRepository notificationRepository,
             IReferenceDataRepository referenceDataRepository,
             IUserService userService,
-            IItemRepository<TreatmentEvent> treatmentEventRepository,
+            ITreatmentEventRepository treatmentEventRepository,
             NtbsContext context, 
             ISpecimenService specimenService, 
             IAlertService alertService)
@@ -159,9 +159,16 @@ namespace ntbs_service.Services
 
         public async Task UpdateClinicalDetailsAsync(Notification notification, ClinicalDetails clinicalDetails)
         {
+            // This check needs to happen BEFORE we change these values below
+            var startingEventAffected =
+                clinicalDetails.TreatmentStartDate != notification.ClinicalDetails.TreatmentStartDate
+                || clinicalDetails.DiagnosisDate != notification.ClinicalDetails.DiagnosisDate;
+            
             _context.SetValues(notification.ClinicalDetails, clinicalDetails);
 
             await _notificationRepository.SaveChangesAsync();
+            if (startingEventAffected)
+                await _treatmentEventRepository.UpdateStartingEvent(notification, clinicalDetails);
             await _alertService.AutoDismissAlertAsync<DataQualityClinicalDatesAlert>(notification);
             await _alertService.AutoDismissAlertAsync<DataQualityDotVotAlert>(notification);
         }
