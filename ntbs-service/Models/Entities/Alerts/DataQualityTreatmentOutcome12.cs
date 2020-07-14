@@ -10,7 +10,8 @@ namespace ntbs_service.Models.Entities.Alerts
     public class DataQualityTreatmentOutcome12 : Alert
     {
         public static readonly Expression<Func<Notification, bool>> NotificationInQualifyingDateRangeExpression =
-            n => n.ClinicalDetails.StartingDate < DateTime.Today.AddYears(-1);
+            // This corresponds to n.ClinicalDetails.StartingDate but we can't use it directly as LINQ->SQL gives up
+            n => (n.ClinicalDetails.TreatmentStartDate ?? n.ClinicalDetails.DiagnosisDate) < DateTime.Today.AddYears(-1);
 
         public static readonly Func<Notification, bool> NotificationInRangeQualifies =
             n => TreatmentOutcomesHelper.IsTreatmentOutcomeMissingAtXYears(n, 1);
