@@ -478,8 +478,7 @@ namespace ntbs_service.DataMigration
                 notification.Line1,
                 notification.Line2,
                 notification.City,
-                notification.County,
-                notification.Postcode);
+                notification.County);
             var address = RemoveCharactersNotIn(
                 ValidationRegexes.CharacterValidationWithNumbersForwardSlashAndNewLine,
                 addressRaw);
