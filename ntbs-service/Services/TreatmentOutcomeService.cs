@@ -68,7 +68,8 @@ namespace ntbs_service.Services
 
         public static bool IsTreatmentOutcomeExpectedAtXYears(Notification notification, int yearsAfterTreatmentStartDate)
         {
-            if (notification.NotificationDate == null || DateTime.Now < (notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate).Value.AddYears(yearsAfterTreatmentStartDate))
+            var startingDate = notification.ClinicalDetails.StartingDate;
+            if (startingDate == null || DateTime.Now < startingDate.Value.AddYears(yearsAfterTreatmentStartDate))
             {
                 return false;
             }
@@ -87,8 +88,9 @@ namespace ntbs_service.Services
     {
         return notification.TreatmentEvents?.Where(t =>
             {
-                var startDate = notification.ClinicalDetails.TreatmentStartDate ?? notification.NotificationDate;
-                return startDate?.AddYears(numberOfYears - 1) <= t.EventDate && t.EventDate < startDate?.AddYears(numberOfYears);
+                var startDate = notification.ClinicalDetails.StartingDate;
+                return startDate?.AddYears(numberOfYears - 1) <= t.EventDate 
+                       && t.EventDate < startDate?.AddYears(numberOfYears);
             })
             .OrderBy(t => t.EventDate)
             .ThenBy(treatmentEvent =>

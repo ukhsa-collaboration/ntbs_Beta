@@ -43,6 +43,14 @@ namespace ntbs_service.Models.Entities
         [ValidClinicalDate]
         [AssertThat(@"AfterDob(TreatmentStartDate)", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TreatmentStartDate { get; set; }
+
+        /// <summary>
+        /// "Starting" date is a bit of an informal name for the concept for a date which is important from analytical
+        /// perspective for the notification. This is the date that corresponds to the "starting event" created for the
+        /// notification, and is the date based on which further history of the notification is assessed, e.g.
+        /// the "outcome at 12 months" means 12 months after the starting date. 
+        /// </summary>
+        public DateTime? StartingDate => TreatmentStartDate ?? DiagnosisDate;
         
         [Display(Name = "Has the patient started treatment?")]
         public bool? DidNotStartTreatment { get; set; }

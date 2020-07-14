@@ -38,7 +38,7 @@ namespace ntbs_service.Helpers
         // We don't want both events in, since we want the outcome dates to be based off of treatment start
         public static void SetStartingEventDate(TreatmentEvent treatmentStartEvent, ClinicalDetails clinicalDetails)
         {
-            treatmentStartEvent.EventDate = clinicalDetails.TreatmentStartDate ?? clinicalDetails.DiagnosisDate;
+            treatmentStartEvent.EventDate = clinicalDetails.StartingDate;
             treatmentStartEvent.TreatmentEventType = clinicalDetails.TreatmentStartDate != null
                 ? TreatmentEventType.TreatmentStart
                 : TreatmentEventType.DiagnosisMade;
