@@ -9,6 +9,7 @@ using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.SeedData;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -188,6 +189,35 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(0, notification241256.ChildrenLatentTB);
             Assert.Equal(0, notification241256.ChildrenStartedTreatment);
             Assert.Equal(0, notification241256.ChildrenFinishedTreatment);
+        }
+        
+        // This is based on NTBS-1650
+        [Fact]
+        public async Task correctlyCreates_PostMortemNotification()
+        {
+            // Arrange
+            var legacyIds = new List<string> {"132465"};
+            SetupNotificationsInGroups(("132465", "6"));
+
+            const string colchesterGeneralCode = "TBS0049";
+            _hospitalToTbServiceCodeDict = new Dictionary<Guid, TBService>
+            {
+                {new Guid("0EEE2EC2-1F3E-4175-BE90-85AA33F0686C"), new TBService {Code = colchesterGeneralCode}}
+            };
+            
+            // Act
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+                    "test-request-3",
+                    legacyIds))
+                .SelectMany(group => group)
+                .Single();
+
+            // Assert
+            Assert.Equal(1, notification.TreatmentEvents.Count);
+            Assert.Equal(true, notification.ClinicalDetails.IsPostMortem);
+            // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
+            Assert.Collection(notification.TreatmentEvents,
+                te => Assert.Equal(te.TreatmentOutcomeId, TreatmentOutcomes.DiedAndUnknownOutcomeId));
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)

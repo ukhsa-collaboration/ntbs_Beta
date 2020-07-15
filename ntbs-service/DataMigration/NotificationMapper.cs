@@ -13,6 +13,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
 using Serilog;
 using Countries = ntbs_service.Models.Countries;
@@ -164,13 +165,10 @@ namespace ntbs_service.DataMigration
                 };
                 notification.SocialContextAddresses = notificationSocialContextAddresses;
                 notification.SocialContextVenues = notificationSocialContextVenues;
-                if (notification.NotificationStatus != NotificationStatus.Draft)
-                {
-                    notification.TreatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(notification));
-                }
-                notificationTransferEvents.ForEach(notification.TreatmentEvents.Add);
-                notificationOutcomeEvents.ForEach(notification.TreatmentEvents.Add);
-
+                notification.TreatmentEvents = CombineTreatmentEvents(notification,
+                    rawNotification,
+                    notificationTransferEvents,
+                    notificationOutcomeEvents);
                 notification.MBovisDetails.HasAnimalExposure = notificationMBovisAnimalExposures.Any();
                 notification.MBovisDetails.MBovisAnimalExposures = notificationMBovisAnimalExposures;
                 notification.MBovisDetails.HasExposureToKnownCases = notificationMBovisExposureToKnownCase.Any();
@@ -185,6 +183,38 @@ namespace ntbs_service.DataMigration
             }));
         }
 
+        private static List<TreatmentEvent> CombineTreatmentEvents(Notification notification,
+            MigrationDbNotification rawNotification,
+            IEnumerable<TreatmentEvent> notificationTransferEvents,
+            IEnumerable<TreatmentEvent> notificationOutcomeEvents)
+        {
+
+            // For post mortem cases the death event is the ONLY event we want to import so the final outcome is 
+            // correctly reported.
+            if (notification.ClinicalDetails.IsPostMortem == true)
+            {
+                return new List<TreatmentEvent>
+                {
+                    new TreatmentEvent
+                    {
+                        EventDate = rawNotification.DeathDate,
+                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = TreatmentOutcomes.DiedAndUnknownOutcomeId
+                    }
+                };
+            }
+
+            var treatmentEvents = new List<TreatmentEvent>();
+            if (notification.NotificationStatus != NotificationStatus.Draft)
+            {
+                treatmentEvents.Add(NotificationHelper.CreateTreatmentStartEvent(notification));
+            }
+
+            treatmentEvents.AddRange(notificationTransferEvents);
+            treatmentEvents.AddRange(notificationOutcomeEvents);
+            return treatmentEvents;
+        }
+
         private async Task<Notification> AsNotificationAsync(MigrationDbNotification rawNotification)
         {
             var notification = new Notification();
@@ -193,9 +223,21 @@ namespace ntbs_service.DataMigration
             notification.LTBRPatientId = rawNotification.Source == "LTBR" ? rawNotification.GroupId : null;
             notification.NotificationDate = rawNotification.NotificationDate;
             notification.CreationDate = DateTime.Now;
-            notification.NotificationStatus = rawNotification.DenotificationDate == null
-                ? NotificationStatus.Notified
-                : NotificationStatus.Denotified;
+            if (Converter.GetNullableBoolValue(rawNotification.IsDenotified) == true)
+            {
+                notification.NotificationStatus = NotificationStatus.Denotified;
+                notification.DenotificationDetails = new DenotificationDetails
+                {
+                    DateOfDenotification = rawNotification.DenotificationDate ?? DateTime.Now,
+                    Reason = DenotificationReason.Other,
+                    OtherDescription = "Denotified in legacy system, with denotification date " +
+                                       (rawNotification.DenotificationDate?.ToString() ?? "missing")
+                };
+            }
+            else
+            {
+                notification.NotificationStatus = NotificationStatus.Notified;
+            }
             
             notification.PatientDetails = ExtractPatientDetails(rawNotification);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
@@ -207,7 +249,6 @@ namespace ntbs_service.DataMigration
             notification.HospitalDetails = await ExtractHospitalDetailsAsync(rawNotification);
             notification.ContactTracing = ExtractContactTracingDetails(rawNotification);
             notification.PreviousTbHistory = ExtractPreviousTbHistory(rawNotification);
-            notification.TreatmentEvents = await ExtractTreatmentEventsAsync(rawNotification);
             notification.MDRDetails = ExtractMdrDetailsAsync(rawNotification);
 
             return notification;
@@ -663,26 +704,6 @@ namespace ntbs_service.DataMigration
             milkConsumption.CountryId = rawData.CountryId;
             milkConsumption.OtherDetails = rawData.OtherDetails;
             return milkConsumption;
-        }
-
-        private async Task<List<TreatmentEvent>> ExtractTreatmentEventsAsync(MigrationDbNotification notification)
-        {
-            var treatmentEvents = new List<TreatmentEvent>();
-            if (notification.IsPostMortem == 1)
-            {
-                var deathEventTreatmentOutcome = await _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
-                    TreatmentOutcomeType.Died,
-                    TreatmentOutcomeSubType.Unknown);
-                treatmentEvents.Add(
-                    new TreatmentEvent
-                    {
-                        EventDate = notification.DeathDate,
-                        TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                        TreatmentOutcomeId = deathEventTreatmentOutcome.TreatmentOutcomeId,
-                        TreatmentOutcome = deathEventTreatmentOutcome
-                    });
-            }
-            return treatmentEvents;
         }
 
         private MDRDetails ExtractMdrDetailsAsync(MigrationDbNotification rawNotification)
