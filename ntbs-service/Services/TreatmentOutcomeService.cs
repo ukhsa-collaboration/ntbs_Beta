@@ -89,6 +89,12 @@ namespace ntbs_service.Services
         return notification.TreatmentEvents?.Where(t =>
             {
                 var startDate = notification.ClinicalDetails.StartingDate;
+                if (numberOfYears == 1)
+                {
+                    // For outcome at 12 months we don't want to set a lower boundary, so that pre-notification date
+                    // events can be taken into account (i.e. death events for post mortem cases)
+                    return t.EventDate < startDate?.AddYears(numberOfYears);    
+                }
                 return startDate?.AddYears(numberOfYears - 1) <= t.EventDate 
                        && t.EventDate < startDate?.AddYears(numberOfYears);
             })

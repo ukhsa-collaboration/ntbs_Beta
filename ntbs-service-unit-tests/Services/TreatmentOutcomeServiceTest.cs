@@ -476,6 +476,32 @@ namespace ntbs_service_unit_tests.Services
                 null,
                 null
             };
+            yield return new object[]
+            {
+                "Example 15 (NTBS-1650)",
+                new Notification
+                {
+                    NotificationId = 15,
+                    ClinicalDetails =
+                        new ClinicalDetails {DiagnosisDate = new DateTime(2010, 1, 1), IsPostMortem = true},
+                    TreatmentEvents = new List<TreatmentEvent>
+                    {
+                        new TreatmentEvent
+                        {
+                            EventDate = new DateTime(2009, 1, 1),
+                            TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                            TreatmentOutcome = new TreatmentOutcome
+                            {
+                                TreatmentOutcomeType = TreatmentOutcomeType.Died,
+                                TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                            }
+                        }
+                    }
+                },
+                TreatmentOutcomeType.Died,
+                null,
+                null
+            };
         }
 
         // MemberData contains the expected outcomes at 1, 2 and 3 years, for each test the unnecessary outcomes are
