@@ -542,24 +542,43 @@ namespace ntbs_service.DataMigration
             factors.MentalHealthStatus = Converter.GetStatusFromString(notification.MentalHealthStatus);
             factors.AsylumSeekerStatus = Converter.GetStatusFromString(notification.AsylumSeekerStatus);
             factors.ImmigrationDetaineeStatus = Converter.GetStatusFromString(notification.ImmigrationDetaineeStatus);
-            
+
             factors.RiskFactorSmoking.Status = Converter.GetStatusFromString(notification.SmokingStatus);
-            
-            factors.RiskFactorDrugs.Status = Converter.GetStatusFromString(notification.riskFactorDrugs_Status);
-            factors.RiskFactorDrugs.IsCurrent = Converter.GetNullableBoolValue(notification.riskFactorDrugs_IsCurrent);
-            factors.RiskFactorDrugs.InPastFiveYears = Converter.GetNullableBoolValue(notification.riskFactorDrugs_InPastFiveYears);
-            factors.RiskFactorDrugs.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(notification.riskFactorDrugs_MoreThanFiveYearsAgo);
-            
-            factors.RiskFactorHomelessness.Status = Converter.GetStatusFromString(notification.riskFactorHomelessness_Status);
-            factors.RiskFactorHomelessness.IsCurrent = Converter.GetNullableBoolValue(notification.riskFactorHomelessness_IsCurrent);
-            factors.RiskFactorHomelessness.InPastFiveYears = Converter.GetNullableBoolValue(notification.riskFactorHomelessness_InPastFiveYears);
-            factors.RiskFactorHomelessness.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
-            
-            factors.RiskFactorImprisonment.Status = Converter.GetStatusFromString(notification.riskFactorImprisonment_Status);
-            factors.RiskFactorImprisonment.IsCurrent = Converter.GetNullableBoolValue(notification.riskFactorImprisonment_IsCurrent);
-            factors.RiskFactorImprisonment.InPastFiveYears = Converter.GetNullableBoolValue(notification.riskFactorImprisonment_InPastFiveYears);
-            factors.RiskFactorImprisonment.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
+
+            ExtractRiskFactor(factors.RiskFactorDrugs,
+                notification.riskFactorDrugs_Status,
+                notification.riskFactorDrugs_IsCurrent,
+                notification.riskFactorDrugs_InPastFiveYears,
+                notification.riskFactorDrugs_MoreThanFiveYearsAgo);
+
+            ExtractRiskFactor(factors.RiskFactorHomelessness,
+                notification.riskFactorHomelessness_Status,
+                notification.riskFactorHomelessness_IsCurrent,
+                notification.riskFactorHomelessness_InPastFiveYears,
+                notification.riskFactorHomelessness_MoreThanFiveYearsAgo);
+
+            ExtractRiskFactor(factors.RiskFactorImprisonment,
+                notification.riskFactorImprisonment_Status,
+                notification.riskFactorImprisonment_IsCurrent,
+                notification.riskFactorImprisonment_InPastFiveYears,
+                notification.riskFactorImprisonment_MoreThanFiveYearsAgo);
+
             return factors;
+        }
+
+        private static void ExtractRiskFactor(RiskFactorDetails riskFactor,
+            string status,
+            int? isCurrent,
+            int? inPastFiveYears,
+            int? moreThanFiveYearsAgo)
+        {
+            riskFactor.Status = Converter.GetStatusFromString(status);
+            if (riskFactor.Status != Status.Yes)
+                return;
+
+            riskFactor.IsCurrent = Converter.GetNullableBoolValue(isCurrent);
+            riskFactor.InPastFiveYears = Converter.GetNullableBoolValue(inPastFiveYears);
+            riskFactor.MoreThanFiveYearsAgo = Converter.GetNullableBoolValue(moreThanFiveYearsAgo);
         }
 
         private static ManualTestResult AsManualTestResult(MigrationDbManualTest rawResult)

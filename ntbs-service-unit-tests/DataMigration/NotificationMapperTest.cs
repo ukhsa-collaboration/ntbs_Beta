@@ -95,6 +95,19 @@ namespace ntbs_service_unit_tests.DataMigration
 
             Assert.Equal(HIVTestStatus.HIVStatusKnown, notification.ClinicalDetails.HIVTestState);
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
+            
+            Assert.Equal(Status.No, notification.SocialRiskFactors.RiskFactorDrugs.Status);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorDrugs.IsCurrent);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.Status);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.Equal(Status.Yes, notification.SocialRiskFactors.RiskFactorImprisonment.Status);
+            Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
+            Assert.Equal(true, notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
+            Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
         }
 
         // Data for this has been based on real regression examples, but with care taken to anonymize it
