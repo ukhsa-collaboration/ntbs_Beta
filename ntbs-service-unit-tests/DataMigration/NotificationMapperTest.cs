@@ -36,14 +36,23 @@ namespace ntbs_service_unit_tests.DataMigration
 
         public NotificationMapperTest()
         {
+            _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
+                .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
+            _referenceDataRepositoryMock.Setup(repo =>
+                    repo.GetTreatmentOutcomeForTypeAndSubType(
+                        TreatmentOutcomeType.Died,
+                        TreatmentOutcomeSubType.Unknown))
+                .ReturnsAsync(new TreatmentOutcome
+                {
+                    TreatmentOutcomeType = TreatmentOutcomeType.Died,
+                    TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
+                });
+            
+            // Needs to happen after the mocking, as the constructor uses a method from reference data repo
             _notificationMapper = new NotificationMapper(
                 _migrationRepository,
                 _referenceDataRepositoryMock.Object,
                 new ImportLogger());
-
-
-            _referenceDataRepositoryMock.Setup(repo => repo.GetTbServiceFromHospitalIdAsync(It.IsAny<Guid>()))
-                .Returns((Guid guid) => Task.FromResult(_hospitalToTbServiceCodeDict[guid]));
         }
 
         // The data for this test is mainly sourced from the test data created for NTBS during the alpha phase
@@ -216,7 +225,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(true, notification.ClinicalDetails.IsPostMortem);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,
-                te => Assert.Equal(te.TreatmentOutcome.TreatmentOutcomeType, TreatmentOutcomeType.Died));
+                te => Assert.Equal(TreatmentOutcomeType.Died, te.TreatmentOutcome.TreatmentOutcomeType));
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)
