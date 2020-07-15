@@ -9,7 +9,6 @@ using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
-using ntbs_service.Models.SeedData;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -217,7 +216,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(true, notification.ClinicalDetails.IsPostMortem);
             // For post mortem cases we *only* want to import the single death event so outcomes reporting is correct
             Assert.Collection(notification.TreatmentEvents,
-                te => Assert.Equal(te.TreatmentOutcomeId, TreatmentOutcomes.DiedAndUnknownOutcomeId));
+                te => Assert.Equal(te.TreatmentOutcome.TreatmentOutcomeType, TreatmentOutcomeType.Died));
         }
 
         private void SetupNotificationsInGroups(params (string, string)[] legacyIdAndLegacyGroup)

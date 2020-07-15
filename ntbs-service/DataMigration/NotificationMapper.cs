@@ -13,7 +13,6 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
-using ntbs_service.Models.SeedData;
 using ntbs_service.Models.Validations;
 using Serilog;
 using Countries = ntbs_service.Models.Countries;
@@ -37,12 +36,18 @@ namespace ntbs_service.DataMigration
         private readonly IMigrationRepository _migrationRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
+        private readonly TreatmentOutcome _postMortemOutcomeType;
 
         public NotificationMapper(IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository, IImportLogger logger)
         {
             _migrationRepository = migrationRepository;
             _referenceDataRepository = referenceDataRepository;
             _logger = logger;
+
+            // This is a database-based value, but static from the runtime point of view, so we fetch it once here.
+            _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
+                TreatmentOutcomeType.Died,
+                TreatmentOutcomeSubType.Unknown).Result;
         }
 
         public async Task<IEnumerable<IList<Notification>>> GetNotificationsGroupedByPatient(PerformContext context,
@@ -183,7 +188,7 @@ namespace ntbs_service.DataMigration
             }));
         }
 
-        private static List<TreatmentEvent> CombineTreatmentEvents(Notification notification,
+        private List<TreatmentEvent> CombineTreatmentEvents(Notification notification,
             MigrationDbNotification rawNotification,
             IEnumerable<TreatmentEvent> notificationTransferEvents,
             IEnumerable<TreatmentEvent> notificationOutcomeEvents)
@@ -199,7 +204,7 @@ namespace ntbs_service.DataMigration
                     {
                         EventDate = rawNotification.DeathDate,
                         TreatmentEventType = TreatmentEventType.TreatmentOutcome,
-                        TreatmentOutcomeId = TreatmentOutcomes.DiedAndUnknownOutcomeId
+                        TreatmentOutcome = _postMortemOutcomeType
                     }
                 };
             }
