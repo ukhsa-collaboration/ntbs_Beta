@@ -204,6 +204,7 @@ namespace ntbs_service.DataMigration
                     {
                         EventDate = rawNotification.DeathDate,
                         TreatmentEventType = TreatmentEventType.TreatmentOutcome,
+                        TreatmentOutcomeId = _postMortemOutcomeType.TreatmentOutcomeId,
                         TreatmentOutcome = _postMortemOutcomeType
                     }
                 };
