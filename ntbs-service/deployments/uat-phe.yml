@@ -102,6 +102,10 @@ spec:
               value: uat-phe
             - name: KRB5_CLIENT_KTNAME
               value: /krbtab/keytab
+            - name: Hangfire__Enabled
+              value: "true"
+            - name: Hangfire__WorkerCount
+              value: "3"
           volumeMounts:
             - mountPath: /krbtab
               name: krb-tab

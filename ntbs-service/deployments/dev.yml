@@ -90,6 +90,10 @@ spec:
               value: "true"
             - name: Sentry__Environment
               value: phe-dev
+            - name: Hangfire__Enabled
+              value: "true"
+            - name: Hangfire__WorkerCount
+              value: "3"
       imagePullSecrets:
         - name: registery-password
         - name: default-dockercfg-bs7wj
