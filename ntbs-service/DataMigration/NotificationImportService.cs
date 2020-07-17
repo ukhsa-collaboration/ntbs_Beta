@@ -188,7 +188,7 @@ namespace ntbs_service.DataMigration
                 var savedNotifications = await _notificationImportRepository.AddLinkedNotificationsAsync(notifications);
                 await _migratedNotificationsMarker.MarkNotificationsAsImportedAsync(savedNotifications);
                 importResult.NtbsIds = savedNotifications.ToDictionary(x => x.LegacyId, x => x.NotificationId);
-                await ImportReferenceLabResultsAsync(savedNotifications, importResult);
+                await ImportReferenceLabResultsAsync(context, requestId, savedNotifications, importResult);
 
                 var newIdsString = string.Join(" ,", savedNotifications.Select(x => x.NotificationId));
                 _logger.LogSuccess(context, requestId, $"Imported notifications have following Ids: {newIdsString}");
@@ -273,7 +273,10 @@ namespace ntbs_service.DataMigration
         /// We have to run the reference lab result matches after the notifications have been imported into the main db,
         /// since the matches are stored externally - we need to know what the generated NTBS ids are beforehand.
         /// </summary>
-        private async Task ImportReferenceLabResultsAsync(IList<Notification> notifications, ImportResult importResult)
+        private async Task ImportReferenceLabResultsAsync(PerformContext context,
+            string requestId,
+            IList<Notification> notifications,
+            ImportResult importResult)
         {
             var legacyIds = notifications.Select(n => n.ETSID);
             var matches = await _migrationRepository.GetReferenceLaboratoryMatches(legacyIds);
@@ -286,7 +289,9 @@ namespace ntbs_service.DataMigration
                     isMigrating: true);
                 if (!success)
                 {
-                    var error = $"Failed to set the specimen match for Notification: {notificationId}, reference lab number: {referenceLaboratoryNumber}";
+                    var error = $"Failed to set the specimen match for Notification: {notificationId}, reference lab number: {referenceLaboratoryNumber}. " +
+                                $"The notification is already imported, manual intervention needed!";
+                    _logger.LogError(context, requestId, error);
                     importResult.AddNotificationError(legacyId, error);
                 }
             }
