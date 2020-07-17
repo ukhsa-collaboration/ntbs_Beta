@@ -35,9 +35,9 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "To")]
         public DateTime? DateTo { get ; set; }
 
-        [MaxLength(100)]
+        [MaxLength(250)]
         [RegularExpression(
-            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+            ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtendedWithNewLine,
             ErrorMessage = ValidationMessages.InvalidCharacter)]
         [Display(Name = "Comments")]
         public string Details { get; set; }
