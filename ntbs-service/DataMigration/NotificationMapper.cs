@@ -559,7 +559,9 @@ namespace ntbs_service.DataMigration
             details.EthnicityId = notification.NtbsEthnicGroupId ?? Ethnicities.NotStatedId;
             details.SexId = notification.NtbsSexId ?? Sexes.UnknownId;
             details.OccupationId = notification.NtbsOccupationId;
-            details.OccupationOther = notification.OccupationFreetext;
+            details.OccupationOther = RemoveCharactersNotIn(
+                ValidationRegexes.CharacterValidationWithNumbersForwardSlashExtended,
+                notification.OccupationFreetext);
 
             ForceValidNhsNumber(details);
             
