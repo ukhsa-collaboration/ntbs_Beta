@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.Server;
-using MoreLinq;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration.Exceptions;
-using ntbs_service.Helpers;
 using ntbs_service.Jobs;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
@@ -39,23 +36,21 @@ namespace ntbs_service.DataMigration
         private readonly INotificationMapper _notificationMapper;
         private readonly INotificationRepository _notificationRepository;
         private readonly INotificationImportRepository _notificationImportRepository;
-        private readonly IPostcodeService _postcodeService;
         private readonly IImportLogger _logger;
         private readonly IMigrationRepository _migrationRepository;
         private readonly IMigratedNotificationsMarker _migratedNotificationsMarker;
         private readonly ISpecimenService _specimenService;
-        private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IImportValidator _importValidator;
 
         public NotificationImportService(INotificationMapper notificationMapper,
                              INotificationRepository notificationRepository,
                              INotificationImportRepository notificationImportRepository,
-                             IPostcodeService postcodeService,
                              IImportLogger logger,
                              IHub sentryHub,
                              IMigrationRepository migrationRepository,
                              IMigratedNotificationsMarker migratedNotificationsMarker,
                              ISpecimenService specimenService,
-                             IReferenceDataRepository referenceDataRepository)
+                             IImportValidator importValidator)
         {
             sentryHub.ConfigureScope(s =>
             {
@@ -65,12 +60,11 @@ namespace ntbs_service.DataMigration
             _notificationMapper = notificationMapper;
             _notificationRepository = notificationRepository;
             _notificationImportRepository = notificationImportRepository;
-            _postcodeService = postcodeService;
             _logger = logger;
             _migrationRepository = migrationRepository;
             _migratedNotificationsMarker = migratedNotificationsMarker;
             _specimenService = specimenService;
-            _referenceDataRepository = referenceDataRepository;
+            _importValidator = importValidator;
         }
 
         public async Task<IList<ImportResult>> ImportByDateAsync(PerformContext context, string requestId, DateTime rangeStartDate, DateTime rangeEndDate)
@@ -136,8 +130,6 @@ namespace ntbs_service.DataMigration
             var patientName = notifications.First().PatientDetails.FullName;
             var importResult = new ImportResult(patientName);
 
-            LookupAndAssignPostcode(notifications);
-
             _logger.LogInformation(context, requestId, $"{notifications.Count} notifications found to import for {patientName}");
             
             // Verify that no repeated NotificationIds have returned
@@ -156,9 +148,9 @@ namespace ntbs_service.DataMigration
                 var linkedNotificationId = notification.LegacyId;
                 _logger.LogInformation(context, requestId, $"Validating notification with Id={linkedNotificationId}");
 
-                CleanData(notification, linkedNotificationId, context, requestId);
-
-                var validationErrors = (await GetValidationErrors(notification)).ToList();
+                var validationErrors = await _importValidator.CleanAndValidateNotification(context,
+                    requestId,
+                    notification);
                 if (!validationErrors.Any())
                 {
                     _logger.LogInformation(context, requestId, "No validation errors found");
@@ -211,65 +203,6 @@ namespace ntbs_service.DataMigration
         }
 
         /// <summary>
-        /// There are instances of validation issues in the legacy data where we've resolved to remove the offending
-        /// data points.
-        /// As this is a data-lossy action, we want to perform it here (rather than at sql script level), to ensure that
-        /// it is recorded in the migration log
-        /// </summary>
-        private void CleanData(Notification notification,
-            string notificationId,
-            PerformContext context,
-            string requestId)
-        {
-            var missingDateResults = notification.TestData.ManualTestResults
-                .Where(result => !result.TestDate.HasValue)
-                .ToList();
-            missingDateResults.ForEach(result =>
-            {
-                var missingDateMessage =
-                    $"Notification {notificationId} had test results without a date set. The notification will be imported without this test record.";
-                _logger.LogWarning(context, requestId, missingDateMessage);
-                notification.TestData.ManualTestResults.Remove(result);
-            });
-
-            var dateInFutureResults = notification.TestData.ManualTestResults
-                .Where(result => result.TestDate > DateTime.Today)
-                .ToList();
-            dateInFutureResults.ForEach(result =>
-            {
-                var dateInFutureMessage =
-                    $"Notification {notificationId} had test results with date set in future. The notification will be imported without this test record.";
-                _logger.LogWarning(context, requestId, dateInFutureMessage);
-                notification.TestData.ManualTestResults.Remove(result);
-            });
-
-            var missingResults = notification.TestData.ManualTestResults
-                .Where(result => result.Result == null)
-                .ToList();
-            missingResults.ForEach(result =>
-            {
-                var missingResultMessage =
-                    $"Notification {notificationId} had test results without a result recorded. The notification will be imported without this test record.";
-                _logger.LogWarning(context, requestId, missingResultMessage);
-                notification.TestData.ManualTestResults.Remove(result);
-            });
-
-            // After filtering out invalid tests, we might have none left
-            if (!notification.TestData.ManualTestResults.Any())
-            {
-                notification.TestData.HasTestCarriedOut = false;
-            }
-
-            if (ValidateObject(notification.ContactTracing).Any())
-            {
-                var message =
-                    $"Notification {notificationId} invalid contact tracing figures. The notification will be imported without contact tracing data.";
-                _logger.LogWarning(context, requestId, message);
-                notification.ContactTracing = new ContactTracing();
-            }
-        }
-
-        /// <summary>
         /// We have to run the reference lab result matches after the notifications have been imported into the main db,
         /// since the matches are stored externally - we need to know what the generated NTBS ids are beforehand.
         /// </summary>
@@ -312,99 +245,6 @@ namespace ntbs_service.DataMigration
                 }
             }
             return legacyIdsToImport;
-        }
-
-        private void LookupAndAssignPostcode(List<Notification> notifications)
-        {
-            var postcodes = _postcodeService.FindPostcodes(notifications.Select(x => x.PatientDetails.Postcode).ToList());
-            notifications.ForEach(n =>
-            {
-                var normalisedPostcode = n.PatientDetails.Postcode?.Replace(" ", "").ToUpper();
-                var lookedUpPostcode = postcodes.FirstOrDefault(p => p.Postcode == normalisedPostcode);
-                n.PatientDetails.PostcodeToLookup = lookedUpPostcode?.Postcode;
-                n.PatientDetails.PostcodeLookup = lookedUpPostcode;
-            });
-        }
-
-        private async Task<IEnumerable<ValidationResult>> GetValidationErrors(Notification notification)
-        {
-            var singletonModels = new List<ModelBase>
-            {
-                notification.PatientDetails,
-                notification.ClinicalDetails,
-                notification.TravelDetails,
-                notification.VisitorDetails,
-                notification.ComorbidityDetails,
-                notification.ImmunosuppressionDetails,
-                notification.SocialRiskFactors,
-                notification.HospitalDetails,
-                notification.ContactTracing,
-                notification.PreviousTbHistory,
-                notification.TestData,
-                notification.MBovisDetails
-            };
-            var modelCollections = new List<IEnumerable<ModelBase>>
-            {
-                notification.TestData.ManualTestResults,
-                notification.SocialContextAddresses,
-                notification.SocialContextVenues,
-                notification.TreatmentEvents,
-                notification.MBovisDetails.MBovisAnimalExposures,
-                notification.MBovisDetails.MBovisExposureToKnownCases,
-                notification.MBovisDetails.MBovisOccupationExposures,
-                notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions,
-            }.Where(collection => collection != null).ToList();
-            
-            // Set correct validation context everywhere
-            NotificationHelper.SetShouldValidateFull(notification);
-            void SetValidationContext(ModelBase model) => model.SetValidationContext(notification);
-            singletonModels.ForEach(SetValidationContext);
-            // patient details has special treatment due to the await-ed results below 
-            notification.PatientDetails.SetValidationContext(notification); 
-            modelCollections.ForEach(collection => collection.ForEach(SetValidationContext));
-
-            // Validate all models
-            var validationsResults = new List<ValidationResult>();
-            validationsResults.AddRange(ValidateObject(notification));
-            singletonModels.Select(ValidateObject)
-                .ForEach(results => validationsResults.AddRange(results));
-            validationsResults.AddRange(await ValidateAndSetCaseManager(notification.HospitalDetails));
-            validationsResults.AddRange(
-                modelCollections.SelectMany(collection => collection.SelectMany(ValidateObject)));
-
-            return validationsResults;
-        }
-
-        private IEnumerable<ValidationResult> ValidateObject<T>(T objectToValidate) where T : ModelBase
-        {
-            var validationContext = new ValidationContext(objectToValidate);
-            var validationsResults = new List<ValidationResult>();
-
-            Validator.TryValidateObject(objectToValidate, validationContext, validationsResults, true);
-
-            return validationsResults;
-        }
-
-        private async Task<IEnumerable<ValidationResult>> ValidateAndSetCaseManager(HospitalDetails details)
-        {
-            var validationsResults = new List<ValidationResult>();
-
-            if (string.IsNullOrEmpty(details.CaseManagerUsername))
-            {
-                return validationsResults;
-            }
-
-            var caseManager =
-                await _referenceDataRepository.GetCaseManagerByUsernameAsync(details.CaseManagerUsername);
-            if (caseManager != null)
-            {
-                return validationsResults;
-            }
-
-            var message = $"Case manager {details.CaseManagerUsername} is not present in NTBS database";
-            validationsResults.Add(new ValidationResult(message, new[] {nameof(details.CaseManagerUsername)}));
-
-            return validationsResults;
         }
     }
 }

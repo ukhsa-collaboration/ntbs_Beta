@@ -9,6 +9,7 @@ using ntbs_service.DataMigration.RawModels;
 using ntbs_service.Helpers;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Services;
 using Xunit;
 
 namespace ntbs_service_unit_tests.DataMigration
@@ -26,11 +27,17 @@ namespace ntbs_service_unit_tests.DataMigration
     // single edge case, it aims to provide an example of how to add more regression cases as bugs are dealt with. 
     public class NotificationMapperTest
     {
+        // SUTs - we're breaking the convention a little here by testing two classes in one suit, but
+        // they are realistically never used separately and this way we have can simulate the import logic a little
+        // closer
         private readonly NotificationMapper _notificationMapper;
+        private readonly IImportValidator _importValidator;
+        
         private readonly MigrationRepositoryStub _migrationRepository = new MigrationRepositoryStub();
 
         private readonly Mock<IReferenceDataRepository> _referenceDataRepositoryMock =
             new Mock<IReferenceDataRepository>();
+        private readonly Mock<IPostcodeService> _postcodeService = new Mock<IPostcodeService>();
 
         private Dictionary<Guid, TBService> _hospitalToTbServiceCodeDict;
 
@@ -47,12 +54,17 @@ namespace ntbs_service_unit_tests.DataMigration
                     TreatmentOutcomeType = TreatmentOutcomeType.Died,
                     TreatmentOutcomeSubType = TreatmentOutcomeSubType.Unknown
                 });
+            _postcodeService.Setup(service => service.FindPostcodeAsync(It.IsAny<string>()))
+                .ReturnsAsync((string postcode) => new PostcodeLookup {Postcode = postcode.Replace(" ", "").ToUpper()});
             
             // Needs to happen after the mocking, as the constructor uses a method from reference data repo
+            var importLogger = new ImportLogger();
             _notificationMapper = new NotificationMapper(
                 _migrationRepository,
                 _referenceDataRepositoryMock.Object,
-                new ImportLogger());
+                importLogger,
+                _postcodeService.Object);
+            _importValidator = new ImportValidator(importLogger, _referenceDataRepositoryMock.Object);
         }
 
         // The data for this test is mainly sourced from the test data created for NTBS during the alpha phase
@@ -76,15 +88,15 @@ namespace ntbs_service_unit_tests.DataMigration
             };
 
             // Act
-            var notificationGroup = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
+            var notification = (await _notificationMapper.GetNotificationsGroupedByPatient(null,
                     "test-request-1",
                     legacyIds))
-                .ToList();
+                .SelectMany(group => group)
+                .Single();
+            var validationErrors =
+                await _importValidator.CleanAndValidateNotification(null, "test-request-1", notification);
 
             // Assert
-            var patientNotifications = notificationGroup.Single();
-            var notification = patientNotifications.Single();
-
             Assert.Equal("130331", notification.ETSID);
             Assert.Equal("130331", notification.LegacyId);
             Assert.Equal(new DateTime(2015, 3, 31), notification.NotificationDate?.Date);
@@ -117,6 +129,8 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
             Assert.Equal(true, notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
             Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.MoreThanFiveYearsAgo);
+            
+            Assert.Empty(validationErrors);
         }
 
         // Data for this has been based on real regression examples, but with care taken to anonymize it

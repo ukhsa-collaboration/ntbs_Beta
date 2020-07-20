@@ -158,6 +158,7 @@ namespace ntbs_service
             services.AddScoped<INotificationMapper, NotificationMapper>();
             services.AddScoped<IImportLogger, ImportLogger>();
             services.AddScoped<INotificationImportService, NotificationImportService>();
+            services.AddScoped<IImportValidator, ImportValidator>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<INotificationChangesService, NotificationChangesService>();

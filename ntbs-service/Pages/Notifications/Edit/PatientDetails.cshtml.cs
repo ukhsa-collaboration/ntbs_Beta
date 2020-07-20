@@ -153,7 +153,7 @@ namespace ntbs_service.Pages.Notifications.Edit
         public async Task<ContentResult> OnGetValidatePostcode(string postcode, bool shouldValidateFull)
         {
             var notification = await NotificationRepository.GetNotificationAsync(NotificationId);
-            var foundPostcode = await _postcodeService.FindPostcode(postcode);
+            var foundPostcode = await _postcodeService.FindPostcodeAsync(postcode);
             var propertyValueTuples = new List<(string, object)>
             {
                 ("PostcodeToLookup", foundPostcode?.Postcode),

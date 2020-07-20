@@ -180,7 +180,7 @@ namespace ntbs_service.Pages.Notifications
 
         protected async Task FindAndSetPostcodeAsync<T>(IPostcodeService postcodeService, T model) where T : IHasPostcode
         {
-            var foundPostcode = await postcodeService.FindPostcode(model.Postcode);
+            var foundPostcode = await postcodeService.FindPostcodeAsync(model.Postcode);
             model.PostcodeToLookup = foundPostcode?.Postcode;
         }
 

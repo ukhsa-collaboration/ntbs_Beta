@@ -14,6 +14,7 @@ using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Models.Validations;
+using ntbs_service.Services;
 using Serilog;
 using Countries = ntbs_service.Models.Countries;
 
@@ -37,12 +38,17 @@ namespace ntbs_service.DataMigration
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IImportLogger _logger;
         private readonly TreatmentOutcome _postMortemOutcomeType;
+        private readonly IPostcodeService _postcodeService;
 
-        public NotificationMapper(IMigrationRepository migrationRepository, IReferenceDataRepository referenceDataRepository, IImportLogger logger)
+        public NotificationMapper(IMigrationRepository migrationRepository,
+            IReferenceDataRepository referenceDataRepository,
+            IImportLogger logger,
+            IPostcodeService postcodeService)
         {
             _migrationRepository = migrationRepository;
             _referenceDataRepository = referenceDataRepository;
             _logger = logger;
+            _postcodeService = postcodeService;
 
             // This is a database-based value, but static from the runtime point of view, so we fetch it once here.
             _postMortemOutcomeType = _referenceDataRepository.GetTreatmentOutcomeForTypeAndSubType(
@@ -245,7 +251,7 @@ namespace ntbs_service.DataMigration
                 notification.NotificationStatus = NotificationStatus.Notified;
             }
             
-            notification.PatientDetails = ExtractPatientDetails(rawNotification);
+            notification.PatientDetails = await ExtractPatientDetails(rawNotification);
             notification.ClinicalDetails = ExtractClinicalDetails(rawNotification);
             notification.TravelDetails = ExtractTravelDetails(rawNotification);
             notification.VisitorDetails = ExtractVisitorDetails(rawNotification);
@@ -519,7 +525,7 @@ namespace ntbs_service.DataMigration
             }
         }
 
-        private static PatientDetails ExtractPatientDetails(MigrationDbNotification notification)
+        private async Task<PatientDetails> ExtractPatientDetails(MigrationDbNotification notification)
         {
             var addressRaw = string.Join(" \n",
                 notification.Line1,
@@ -546,6 +552,8 @@ namespace ntbs_service.DataMigration
             details.CountryId = notification.BirthCountryId ?? Countries.UnknownId;
             details.LocalPatientId = localPatientId;
             details.Postcode = notification.Postcode;
+            details.PostcodeLookup = await _postcodeService.FindPostcodeAsync(notification.Postcode);
+            details.PostcodeToLookup = details.PostcodeLookup?.Postcode;
             details.NoFixedAbode = notification.NoFixedAbode == 1;
             details.Address = address;
             details.EthnicityId = notification.NtbsEthnicGroupId ?? Ethnicities.NotStatedId;
