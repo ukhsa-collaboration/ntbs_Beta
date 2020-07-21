@@ -1,0 +1,17 @@
+﻿@page
+@model ntbs_service.Pages.WhoAmI
+
+@{  
+    ViewData["Title"] = "Who am I";
+    Layout = "./Shared/_Layout.cshtml";
+}
+
+<nhs-width-container container-width="Standard">
+    @{
+        foreach (var (key, value) in User.Claims.Select(claim => (claim.Type, claim.Value)))
+        {
+            <span>@key</span>
+            <span>@value</span>
+        }
+    }
+</nhs-width-container>
