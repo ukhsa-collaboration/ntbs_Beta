@@ -40,8 +40,20 @@ namespace ntbs_service.Services
             _settings = settings;
             _adOptions = adOptions;
             _connection = new LdapConnection();
+            Log.Information($"Connecting to AD: {settings.AdAddressName}:{settings.Port}");
             _connection.Connect(settings.AdAddressName, settings.Port);
+            Log.Information($"Binding: {settings.AdAddressName}:{settings.Port}");
             _connection.Bind(GetDistinguishedName(settings.UserIdentifier), settings.Password);
+            if (_connection.Bound)
+            {
+                Log.Information("Bind completed");
+            }
+            else
+            {
+                var bindingException = new ApplicationException("Binding to LDAP failed");
+                Log.Error(bindingException, "Aborting LDAP connection");
+                throw bindingException;
+            }
         }
 
         public void Dispose()
