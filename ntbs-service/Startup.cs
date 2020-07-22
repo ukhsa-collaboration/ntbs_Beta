@@ -60,7 +60,7 @@ namespace ntbs_service
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.Configure<AdfsOptions>(adfsConfig);
-            services.Configure<LdapConnectionSettings>(Configuration.GetSection("LdapConnectionSettings"));
+            services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
             // Plugin services

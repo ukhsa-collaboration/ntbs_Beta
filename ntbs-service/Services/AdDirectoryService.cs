@@ -8,6 +8,7 @@ using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
+using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -26,6 +27,7 @@ namespace ntbs_service.Services
 
     public class AdDirectoryService : IAdDirectoryService
     {
+        private readonly LdapSettings _settings;
         private readonly AdfsOptions _adOptions;
 
         // ReSharper disable once UnusedMember.Global - constructor needed for mocking in tests
@@ -33,8 +35,9 @@ namespace ntbs_service.Services
 
         private readonly LdapConnection _connection;
 
-        public AdDirectoryService(LdapConnectionSettings settings, AdfsOptions adOptions)
+        public AdDirectoryService(LdapSettings settings, AdfsOptions adOptions)
         {
+            _settings = settings;
             _adOptions = adOptions;
             _connection = new LdapConnection();
             _connection.Connect(settings.AdAddressName, settings.Port);
@@ -57,13 +60,11 @@ namespace ntbs_service.Services
         public virtual IEnumerable<LdapEntry> GetAllDirectoryEntries()
         {
             var distinguishedName = GetDistinguishedName(_adOptions.BaseUserGroup);
-            // The sequence of numbers sets the filter to search group hierarchy, not just direct membership:
-            // https://stackoverflow.com/a/6202683/2363767
-            var filter = $"(&(objectClass=user)(memberof:1.2.840.113556.1.4.1941:={distinguishedName}))";
-            var searchResults = _connection.Search(
-                _adOptions.BaseDomain,
+            var searchResults = Search(_settings.BaseDomain,
                 LdapConnection.SCOPE_SUB,
-                filter,
+                // The sequence of numbers sets the filter to search group hierarchy, not just direct membership:
+                // https://stackoverflow.com/a/6202683/2363767
+                $"(&(objectClass=user)(memberof:1.2.840.113556.1.4.1941:={distinguishedName}))",
                 null,
                 false,
                 new LdapSearchConstraints {ReferralFollowing = true});
@@ -79,9 +80,35 @@ namespace ntbs_service.Services
             }
         }
 
+        private LdapSearchResults Search(string @base,
+            int scope,
+            string filter,
+            string[] attrs,
+            bool typesOnly,
+            LdapSearchConstraints cons)
+        {
+            Log.Information("Getting all directory entries with the following config:\n" +
+                            $"base: {@base}\n" +
+                            $"scope: {scope}\n" +
+                            $"filter: {filter}\n" +
+                            $"attrs: {attrs}\n" +
+                            $"typesOnly: {typesOnly}\n" +
+                            $"cons: {cons}\n"
+            );
+            return _connection.Search(
+                @base,
+                scope,
+                filter,
+                attrs,
+                typesOnly,
+                cons);
+        }
+
         private string GetDistinguishedName(string baseUserGroup)
         {
-            return $"CN={baseUserGroup},CN=Users,{_adOptions.BaseDomain}";
+            return string.IsNullOrWhiteSpace(baseUserGroup)
+                ? null
+                : $"CN={baseUserGroup},CN=Users,{_settings.BaseDomain}";
         }
 
         private static (User user, List<TBService> tbServicesMatchingGroups) BuildUser(

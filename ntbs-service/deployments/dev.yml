@@ -73,11 +73,6 @@ spec:
                 secretKeyRef:
                   name: dev-http-basic-auth-credentials
                   key: password
-#            - name: LdapConnectionSettings__Password
-#              valueFrom:
-#                secretKeyRef:
-#                  name: development-ad-sync-credentials
-#                  key: password
             - name: ExternalLinks__ReportingUri
               value: ""
             - name: MigrationConfig__TablePrefix

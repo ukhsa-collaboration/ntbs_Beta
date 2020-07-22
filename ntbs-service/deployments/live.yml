@@ -42,6 +42,8 @@ spec:
               value: "https://fs.phe.gov.uk"
             - name: AdfsOptions__Wtrealm
               value: "https://ntbs.phe.gov.uk/"
+            - name: AppConfig__AuditingEnabled
+              value: "true"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
@@ -77,6 +79,8 @@ spec:
                 secretKeyRef:
                   name: live-connection-strings
                   key: reporting
+            - name: ExternalLinks__ReportingUri
+              value: ""
             - name: HttpBasicAuth__Enabled
               value: "false"
             - name: HttpBasicAuth__Username
@@ -89,17 +93,18 @@ spec:
                 secretKeyRef:
                   name: live-http-basic-auth-credentials
                   key: password
-#            - name: LdapConnectionSettings__Password
-#              valueFrom:
-#                secretKeyRef:
-#                  name: development-ad-sync-credentials
-#                  key: password
-            - name: ExternalLinks__ReportingUri
+            - name: LdapSettings__AdAddressName
               value: ""
+            - name: LdapSettings__Port
+              value: "389"
+            - name: LdapSettings__UserIdentifier
+              value: "" # intentionally empty so the app's service account gets used for authentication
+            - name: LdapSettings__Password
+              value: "" # intentionally empty so the app's service account gets used for authentication
+            - name: LdapSettings__BaseDomain
+              value: "DC=phe,DC=gov,DC=uk"
             - name: MigrationConfig__TablePrefix
               value: "migrationTrial3"
-            - name: AppConfig__AuditingEnabled
-              value: "true"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled

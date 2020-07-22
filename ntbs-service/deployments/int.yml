@@ -53,7 +53,7 @@ spec:
                 key: connectionString
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-int.da0c702c3b574e3185f6.uksouth.aksapp.io/"
-          - name: LdapConnectionSettings__Password
+          - name: LdapSettings__Password
             valueFrom:
               secretKeyRef:
                 name: development-ad-sync-credentials
