@@ -104,7 +104,7 @@ spec:
             - name: LdapSettings__BaseDomain
               value: "DC=phe,DC=gov,DC=uk"
             - name: MigrationConfig__TablePrefix
-              value: "migrationTrial3"
+              value: "MigrationTrial4"
             - name: ScheduledJobsConfig__UserSyncEnabled
               value: "false"
             - name: ScheduledJobsConfig__MarkImportedNotificationsAsImportedEnabled
