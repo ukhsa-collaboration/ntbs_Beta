@@ -38,6 +38,10 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: AdfsUrl
+              value: "https://fs.phe.gov.uk"
+            - name: AdfsOptions__Wtrealm
+              value: "https://ntbs-uat.phe.gov.uk/"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
@@ -74,7 +78,7 @@ spec:
                   name: uat-connection-strings
                   key: reporting
             - name: HttpBasicAuth__Enabled
-              value: "true"
+              value: "false"
             - name: HttpBasicAuth__Username
               valueFrom:
                 secretKeyRef:
@@ -144,6 +148,7 @@ spec:
   path: /
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
     name: coming-soon
@@ -159,6 +164,9 @@ metadata:
 spec:
   host: ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk
   path: /
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
     name: ntbs-uat
