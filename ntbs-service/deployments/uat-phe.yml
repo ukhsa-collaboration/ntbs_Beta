@@ -80,7 +80,7 @@ spec:
             - name: ExternalLinks__ReportingUri
               value: ""
             - name: HttpBasicAuth__Enabled
-              value: "false"
+              value: "true"
             - name: HttpBasicAuth__Username
               valueFrom:
                 secretKeyRef:
