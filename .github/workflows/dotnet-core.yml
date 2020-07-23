@@ -38,7 +38,7 @@ jobs:
         registry: ntbscontainerregistry.azurecr.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        build_extra_args: --build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${sentry_auth_token}
+#         build_extra_args: --build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${sentry_auth_token}
         image_tag: ${NTBS_BUILD}
 
     - name: Save kubeconfig
