@@ -37,6 +37,10 @@ namespace ntbs_service.Services
 
         public AdDirectoryService(LdapSettings settings, AdfsOptions adOptions)
         {
+            // TODO NTBS-1672 run a DNS query that does the foollwing:
+            // dig +short -t srv _ldap._tcp.SP4-0JG._sites.dc._msdcs.phe.gov.uk
+            // dig +short -t srv _ldap._tcp.dc._msdcs.caduceus.local
+            // and pick a dc to request
             _settings = settings;
             _adOptions = adOptions;
             _connection = new LdapConnection();
@@ -77,8 +81,8 @@ namespace ntbs_service.Services
                 LdapConnection.SCOPE_SUB,
                 // The sequence of numbers sets the filter to search group hierarchy, not just direct membership:
                 // https://stackoverflow.com/a/6202683/2363767
-                $"(&(objectClass=user)(memberof:1.2.840.113556.1.4.1941:={distinguishedName}))",
-                null,
+                $"(&(objectCategory=person)(objectClass=user)(memberof:1.2.840.113556.1.4.1941:={distinguishedName}))",
+                null, // TODO Specify which attributes we want - speed things up
                 false,
                 new LdapSearchConstraints {ReferralFollowing = true});
             
@@ -127,6 +131,7 @@ namespace ntbs_service.Services
         private static (User user, List<TBService> tbServicesMatchingGroups) BuildUser(
             LdapEntry searchResult, IList<TBService> tbServices)
         {
+            // TODO NTBS-1672 consider storing user guid as the key
             var attributes = searchResult.getAttributeSet();
             var userAccountControl = Convert.ToInt32(
                 attributes.getAttribute("userAccountControl").StringValue);
