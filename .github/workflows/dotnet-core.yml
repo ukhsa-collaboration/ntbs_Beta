@@ -14,9 +14,9 @@ jobs:
         submodules: true
     - name: Set build number
       env:
-        GITHUB_RUN_NUMBER: ${{ github.run_number }}
-        GITHUB_SHA: ${{ github.sha }}
-      run: echo '::set-env name=NTBS_BUILD::build-$(GITHUB_RUN_NUMBER)-$(GITHUB_SHA:0:6)'
+        run_number: ${{ github.run_number }}
+        sha: ${{ github.sha }}
+      run: echo '::set-env name=NTBS_BUILD::build-$run_number-${sha:0:6}'
     - run: echo ${{ env.NTBS_BUILD }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
