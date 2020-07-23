@@ -101,7 +101,7 @@ Ensure you have `azure-cli` installed
 - `az login` to log into the azure subscription
 - use `az account set -s <Name or Id>` to set a default subscription if there are multiple
 - `az aks install-cli` to install `kubectl`
-- `az aks get-credentials -g phe-ntbs -n ntbs-envs` to add appropriate credentials to your `~/.kube/config` file
+- `az aks get-credentials -g NTBS_Development -n ntbs-envs` to add appropriate credentials to your `~/.kube/config` file
 
 ## Images registry
 We're using ACR to store docker images. When logged in to Azure, run this command to see the username-password for registry user.

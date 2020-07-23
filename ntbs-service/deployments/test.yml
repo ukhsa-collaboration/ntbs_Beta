@@ -1,8 +1,11 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ntbs-test
 spec:
+  selector:
+    matchLabels:
+      app: ntbs-test
   replicas: 1
   template:
     metadata:
@@ -52,7 +55,7 @@ spec:
                 name: migration-connection-string
                 key: connectionString
           - name: AdfsOptions__Wtrealm
-            value: "https://ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io/"
+            value: "https://ntbs-test.61b431d7ea3041e89733.uksouth.aksapp.io/"
           - name: LdapSettings__Password
             valueFrom:
               secretKeyRef:
@@ -88,10 +91,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io
+      - ntbs-test.61b431d7ea3041e89733.uksouth.aksapp.io
       secretName: phe-ntbs-test-tls
   rules:
-  - host: ntbs-test.da0c702c3b574e3185f6.uksouth.aksapp.io
+  - host: ntbs-test.61b431d7ea3041e89733.uksouth.aksapp.io
     http:
       paths:
       - backend:
