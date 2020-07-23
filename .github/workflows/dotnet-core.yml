@@ -13,11 +13,11 @@ jobs:
       with:
         submodules: true
     - name: Set build number
+      id: ntbs_build_step
       env:
         run_number: ${{ github.run_number }}
         sha: ${{ github.sha }}
-      run: echo '::set-env name=NTBS_BUILD::build-$("$run_number-${sha:0:6}")'
-    - run: echo ${{ env.NTBS_BUILD }}
+      run: echo '::set-output name=NTBS_BUILD::build-$run_number-${sha:0:6}'
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -33,11 +33,11 @@ jobs:
 #       run: dotnet test
     # TODO ? run ui tests
     
-    
+    - run: echo ${{ steps.outputs.ntbs_build_step.NTBS_BUILD }}
     - name: Set docker build args
       env:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        NTBS_BUILD: ${{ env.NTBS_BUILD }}
+        NTBS_BUILD: ${{ steps.outputs.ntbs_build_step.NTBS_BUILD }}
       run: echo '::set-env name=BUILD_ARGS::--build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}'
     - run: echo ${{ env.BUILD_ARGS }}
     - name: Build and publish new release
