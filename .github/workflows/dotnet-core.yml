@@ -1,4 +1,4 @@
-name: .NET Core
+name: master test and publish to int
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -20,9 +19,20 @@ jobs:
     - name: Run unit tests
       working-directory: ntbs-service-unit-tests
       run: dotnet test
-#     - name: Install dependencies
-#       run: dotnet restore
-#     - name: Build
-#       run: dotnet build --configuration Release --no-restore
-#     - name: Test
-#       run: dotnet test --no-restore --verbosity normal
+    - name: Run unit tests (EF)
+      working-directory: EFAuditer-tests
+      run: dotnet test
+    - name: Run integration tets
+      working-directory: ntbs-integration-tests
+      run: dotnet test
+    # TODO ? run ui tests
+    - name: Push to Docker Hub
+      uses: docker/build-push-action@v1
+      with:
+        registry: https://ntbscontainerregistry.azurecr.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: ntbs-service
+        build_args: RELEASE=TODO, SENTRY_AUTH_TOKEN=TODO
+        tag_with_sha: true
+      
