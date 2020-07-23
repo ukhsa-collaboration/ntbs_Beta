@@ -42,7 +42,8 @@ namespace ntbs_service.Services
             _connection = new LdapConnection();
             Log.Information($"Connecting to AD: {settings.AdAddressName}:{settings.Port}");
             _connection.Connect(settings.AdAddressName, settings.Port);
-            Log.Information($"Binding: {settings.AdAddressName}:{settings.Port}");
+            var withOrWithout = string.IsNullOrEmpty(settings.Password) ? "without" : "with";
+            Log.Information($"Binding: {settings.UserIdentifier} {withOrWithout} a password");
             _connection.Bind(GetDistinguishedName(settings.UserIdentifier), settings.Password);
             if (_connection.Bound)
             {

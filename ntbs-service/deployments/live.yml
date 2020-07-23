@@ -38,7 +38,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: AdfsUrl
+            - name: AdfsOptions__AdfsUrl
               value: "https://fs.phe.gov.uk"
             - name: AdfsOptions__Wtrealm
               value: "https://ntbs.phe.gov.uk/"
