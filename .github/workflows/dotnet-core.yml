@@ -16,7 +16,7 @@ jobs:
       env:
         GITHUB_RUN_NUMBER: ${{ github.run_number }}
         GITHUB_SHA: ${{ github.sha }}
-      run: echo '::set-env name=NTBS_BUILD::build-${GITHUB_RUN_NUMBER}-${GITHUB_SHA:0:6}'
+      run: echo '::set-env name=NTBS_BUILD::build-$(GITHUB_RUN_NUMBER)-$(GITHUB_SHA:0:6)'
     - run: echo ${{ env.NTBS_BUILD }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
