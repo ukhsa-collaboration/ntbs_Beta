@@ -37,7 +37,7 @@ jobs:
         registry: ntbscontainerregistry.azurecr.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        build_extra_args: RELEASE=${NTBS_BUILD}, SENTRY_AUTH_TOKEN=${secret.SENTRY_AUTH_TOKEN}
+        build_extra_args: --build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${secret.SENTRY_AUTH_TOKEN}
         image_tag: ${NTBS_BUILD}
 
 
