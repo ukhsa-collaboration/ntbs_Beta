@@ -28,13 +28,17 @@ jobs:
 #       working-directory: ntbs-integration-tests
 #       run: dotnet test
     # TODO ? run ui tests
-    - name: Push to Docker Hub
-      uses: docker/build-push-action@v1
+    
+    
+    - name: Build docker images using cache
+      uses: whoan/docker-build-with-cache-action@v5
       with:
+        image_name: ntbs_app
         registry: ntbscontainerregistry.azurecr.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: ntbs-service
         build_args: RELEASE=${NTBS_BUILD}, SENTRY_AUTH_TOKEN=${secret.SENTRY_AUTH_TOKEN}
-        label: ${NTBS_BUILD}
+        image_tag: ${NTBS_BUILD}
+      
       
