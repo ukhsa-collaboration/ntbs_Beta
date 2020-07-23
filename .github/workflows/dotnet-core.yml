@@ -15,9 +15,8 @@ jobs:
     - name: Set build number
       id: ntbs_build_step
       env:
-        run_number: ${{ github.run_number }}
-        sha: ${{ github.sha }}
-      run: echo '::set-output name=NTBS_BUILD::build-$run_number-${sha:0:6}'
+        ntbs_build: format('build-{0}-{1}',  ${{ github.run_number }}, ${{ github.sha }})
+      run: echo '::set-output name=NTBS_BUILD::$(ntbs_build)'
       
     - run: echo ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
       
