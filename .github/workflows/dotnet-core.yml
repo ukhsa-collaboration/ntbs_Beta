@@ -35,6 +35,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: ntbs-service
-        build_args: RELEASE=TODO, SENTRY_AUTH_TOKEN=${{ secret.SENTRY_AUTH_TOKEN }}
-        tag_with_sha: true
+        build_args: RELEASE=${{ NTBS_BUILD }}, SENTRY_AUTH_TOKEN=${{ secret.SENTRY_AUTH_TOKEN }}
+        label: ${{ NTBS_BUILD }}
       
