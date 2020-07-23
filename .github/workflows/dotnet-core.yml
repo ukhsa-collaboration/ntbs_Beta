@@ -29,19 +29,17 @@ jobs:
 #       run: dotnet test
     # TODO ? run ui tests
     
-    
-    - name: Build docker images using cache
+    - name: Build and publish new release
       uses: whoan/docker-build-with-cache-action@v5
       with:
         image_name: ntbs-service
         registry: ntbscontainerregistry.azurecr.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        build_extra_args: --build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${secret.SENTRY_AUTH_TOKEN}
+        build_extra_args: --build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${{ secret.SENTRY_AUTH_TOKEN }}
         image_tag: ${NTBS_BUILD}
 
-
-    - name: Save Kubeconfig
+    - name: Save kubeconfig
       env:
         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
