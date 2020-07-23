@@ -33,7 +33,7 @@ jobs:
 #       run: dotnet test
     # TODO ? run ui tests
     
-    - run: echo ${{ format('--build-arg RELEASE=${0} --build-arg SENTRY_AUTH_TOKEN=${1}', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN }} # TODO remove
+    - run: echo ${{ format('--build-arg RELEASE=${0} --build-arg SENTRY_AUTH_TOKEN=${1}', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN) }} # TODO remove
     - name: Build and publish new release
       uses: whoan/docker-build-with-cache-action@v5
       with:
