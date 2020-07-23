@@ -17,6 +17,7 @@ jobs:
         GITHUB_RUN_NUMBER: ${{ github.run_number }}
         GITHUB_SHA: ${{ github.sha }}
       run: echo '::set-env name=NTBS_BUILD::build-${GITHUB_RUN_NUMBER}-${GITHUB_SHA:0:6}'
+    - run: echo ${{ env.NTBS_BUILD }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -38,6 +39,7 @@ jobs:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         NTBS_BUILD: ${{ env.NTBS_BUILD }}
       run: echo '::set-env name=BUILD_ARGS::--build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}'
+    - run: echo ${{ env.BUILD_ARGS }}
     - name: Build and publish new release
       uses: whoan/docker-build-with-cache-action@v5
       with:
