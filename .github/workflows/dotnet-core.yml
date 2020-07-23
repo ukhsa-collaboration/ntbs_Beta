@@ -14,7 +14,7 @@ jobs:
         submodules: true
     - name: Set build number
       id: ntbs_build_step
-      run: echo '::set-output name=NTBS_BUILD::${{ format('build-{0}-{1}',  ${{ github.run_number }}, ${{ github.sha }}) }}'
+      run: echo '::set-output name=NTBS_BUILD::${{ format('build-{0}-{1}', github.run_number, github.sha) }}'
       
     - run: echo ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
       
