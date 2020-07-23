@@ -21,7 +21,7 @@ We use Let's Encrpyt for free certificates for the test environments
     1. `certbot certonly --nginx`, supplying the environment's domain and team email address as prompted
 1. Copy the generated certs back out to your local machine. Note, the certbot output will tell you where they are, but it will refer to symlinks - you want to get the actual files, found in the archive folder:
     1. Go into a temporary folder on local machine
-    1. `kubectl cp ${podName}:etc/letsencrypt/archive/$domain .`
+    1. `kubectl cp ${podName}:etc/letsencrypt/archive/$domain $domain`
 1. Create/update the kubernetes secret from the certificate files, where secret name matches the name defined in the deployment's ingress yaml
 (This part of the process is taken from https://docs.microsoft.com/en-us/azure/aks/ingress-own-tls):
     1. `kubectl delete secret $secretName`
