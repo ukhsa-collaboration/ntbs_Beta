@@ -29,17 +29,21 @@ jobs:
 #       run: dotnet test
     # TODO ? run ui tests
     
-    - name: Build and publish new release
-      uses: whoan/docker-build-with-cache-action@v5
+    
+    - name: Set docker build args
       env:
         sentry_auth_token: ${{ secrets.SuperSecret }}
+        NTBS_BUILD: ${{ env.NTBS_BUILD }}
+      run: echo '::set-env name=BUILD_ARGS::"--build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${sentry_auth_token}"'
+    - name: Build and publish new release
+      uses: whoan/docker-build-with-cache-action@v5
       with:
         image_name: ntbs-service
         registry: ntbscontainerregistry.azurecr.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-#         build_extra_args: --build-arg RELEASE=${NTBS_BUILD} --build-arg SENTRY_AUTH_TOKEN=${sentry_auth_token}
-        image_tag: ${NTBS_BUILD}
+        build_extra_args: ${{ env.BUILD_ARGS }}
+        image_tag: ${{ env.NTBS_BUILD }}
 
     - name: Save kubeconfig
       env:
