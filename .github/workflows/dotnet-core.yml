@@ -11,9 +11,9 @@ jobs:
     steps:
     - run: |
         echo SENTRY_FRONTEND_AUTH_TOKEN 
-        echo ${{ secrets.SENTRY_FRONTEND_AUTH_TOKEN }}
+        echo ${{ format('{0}', secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
         echo echo SENTRY_AUTH_TOKEN 
-        echo ${{ secrets.SENTRY_AUTH_TOKEN }}
+        echo ${{ format('{0}', secrets.SENTRY_AUTH_TOKEN) }}
     - uses: actions/checkout@v2
       with:
         submodules: true
