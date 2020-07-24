@@ -33,6 +33,7 @@ jobs:
 #       run: dotnet test
     # TODO ? run ui tests
   
+    - run: echo ${{ format('--build-arg RELEASE=${0} --build-arg SENTRY_AUTH_TOKEN=${1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
     - name: Build and publish new release
       uses: whoan/docker-build-with-cache-action@v5
       with:
@@ -40,7 +41,7 @@ jobs:
         registry: ntbscontainerregistry.azurecr.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        build_extra_args: ${{ format('--build-arg RELEASE=${0} --build-arg SENTRY_AUTH_TOKEN=${1}', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
+        build_extra_args: ${{ format('--build-arg RELEASE=${0} --build-arg SENTRY_AUTH_TOKEN=${1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
         image_tag: ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
 
     - name: Save kubeconfig
