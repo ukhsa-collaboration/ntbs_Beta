@@ -12,7 +12,57 @@ jobs:
       - name: Set build number
         id: ntbs_build_step
         run: echo '::set-output name=NTBS_BUILD::${{ format('build-{0}-{1}', github.run_number, github.sha) }}'
-    
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.2
+      
+      # Run all the tests
+      - name: Run unit tests
+        working-directory: ntbs-service-unit-tests
+        run: dotnet test
+      - name: Run unit tests (EF auditer)
+        working-directory: EFAuditer-tests
+        run: dotnet test
+      - name: Run integration tets
+        working-directory: ntbs-integration-tests
+        run: dotnet test
+      # TODO run ui tests
+
+      # Build and release
+      - run: echo ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
+      - name: Build and publish new release
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          image_name: ntbs-service
+          registry: ntbscontainerregistry.azurecr.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          # TODO figure out why passing sentry auth token isn't working
+          build_extra_args: ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
+          # build_extra_args: ${{ format('--build-arg RELEASE={0}', steps.ntbs_build_step.outputs.NTBS_BUILD) }}
+          image_tag: ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+
+      # Deploy to int
+      - name: Save kubeconfig
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
+      - name: Deploy to int
+        uses: stefanprodan/kube-tools@v1
+        env:
+          KUBECONFIG: ${{ github.workspace }}/.kubeconfig
+        with:
+          kubectl: 1.18.2
+          command: |
+            chmod +x ./scripts/release.sh
+            ./scripts/release.sh int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+
+      # Notify slack
       - name: The job has succeeded
         if: ${{ success() }}
         uses: rtCamp/action-slack-notify@v2.1.0
@@ -24,9 +74,10 @@ jobs:
           SLACK_MESSAGE: New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
           SLACK_TITLE: ':green_heart: :computer: Build succeeded'
           SLACK_ICON_EMOJI: ':octopus:'
+          SLACK_FOOTER: ''
       
       - name: The job has failed
-        if: ${{ success() }} # TODO change to fail
+        if: ${{ failure() }}
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -36,52 +87,5 @@ jobs:
           SLACK_MESSAGE: '@here Build failed'
           SLACK_TITLE: ':red_circle: :computer: Build succeeded'
           SLACK_ICON_EMOJI: ':octopus:'
-          
-          
-
-#     - uses: actions/checkout@v2
-#       with:
-#         submodules: true
-#     - name: Setup .NET Core
-#       uses: actions/setup-dotnet@v1
-#       with:
-#         dotnet-version: 2.2
-#     - name: Run unit tests
-#       working-directory: ntbs-service-unit-tests
-#       run: dotnet test
-#     - name: Run unit tests (EF)
-#       working-directory: EFAuditer-tests
-#       run: dotnet test
-#     - name: Run integration tets
-#       working-directory: ntbs-integration-tests
-#       run: dotnet test
-    
-#     # TODO run ui tests
-  
-#     - run: echo ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
-#     - name: Build and publish new release
-#       uses: whoan/docker-build-with-cache-action@v5
-#       with:
-#         image_name: ntbs-service
-#         registry: ntbscontainerregistry.azurecr.io
-#         username: ${{ secrets.DOCKER_USERNAME }}
-#         password: ${{ secrets.DOCKER_PASSWORD }}
-#         # TODO figure out why passing sentry auth token isn't working
-#         # build_extra_args: ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
-#         build_extra_args: ${{ format('--build-arg RELEASE={0}', steps.ntbs_build_step.outputs.NTBS_BUILD) }}
-#         image_tag: ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
-
-#     - name: Save kubeconfig
-#       env:
-#         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-#       run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
-#     - name: Deploy to int
-#       uses: stefanprodan/kube-tools@v1
-#       env:
-#         KUBECONFIG: ${{ github.workspace }}/.kubeconfig
-#       with:
-#         kubectl: 1.18.2
-#         command: |
-#           chmod +x ./scripts/release.sh
-#           ./scripts/release.sh int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+          SLACK_FOOTER: ''
       
