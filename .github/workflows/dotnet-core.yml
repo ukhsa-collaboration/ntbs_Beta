@@ -35,7 +35,7 @@ jobs:
 
       # Build and release
       # TODO Remove this echo
-      - run: echo ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
+      - run: echo ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN) }}
       - name: Build and publish new release
         uses: whoan/docker-build-with-cache-action@v5
         with:
