@@ -20,11 +20,22 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: '#dev-ci'
           SLACK_USERNAME: github actions
-          SLACK_COLOR: green
-          SLACK_MESSAGE: "*:green_heart: :computer: Build succeeded. New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}*"
-          SLACK_TITLE: Deployment success
-
-# (<${{ format('https://github.com/{0}/{1}/actions/runs/{2}', github.repository_owner, github.repository, github.run_id) }}|Open>)"
+          SLACK_COLOR: '#23b828' #green
+          SLACK_MESSAGE: New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
+          SLACK_TITLE: ':green_heart: :computer: Build succeeded'
+          SLACK_ICON_EMOJI: ':octopus:'
+      
+      - name: The job has failed
+        if: ${{ success() }} # TODO change to fail
+        uses: rtCamp/action-slack-notify@v2.1.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#dev-ci'
+          SLACK_USERNAME: github actions
+          SLACK_COLOR: '#d12121' #red
+          SLACK_MESSAGE: '@here Build failed'
+          SLACK_TITLE: ':red_circle: :computer: Build succeeded'
+          SLACK_ICON_EMOJI: ':octopus:'
           
           
 
