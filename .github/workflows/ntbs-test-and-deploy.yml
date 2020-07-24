@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           # auth token based on https://sentry.io/settings/phe-ntbs/developer-settings/jenkins-build-40d229/
-          build_extra_args: ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN) }}
+          build_extra_args: ${{ format('--build-arg RELEASE={0} --build-arg SENTRY_AUTH_TOKEN={1}', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_AUTH_TOKEN) }}
           image_tag: ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
 
       # Deploy to int
