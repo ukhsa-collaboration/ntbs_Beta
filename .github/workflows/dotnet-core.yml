@@ -21,15 +21,12 @@ jobs:
           SLACK_CHANNEL: \#dev-ci
           SLACK_USERNAME: github actions
           SLACK_COLOR: green
-          SLACK_MESSAGE: "*:green_heart: :computer: Build succeeded. New deployment on int ${{ NTBS_BUILD }} (<${{ format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}|Open>)"
+          SLACK_MESSAGE: "*:green_heart: :computer: Build succeeded. New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }} (<${{ format('https://github.com/{0}/{1}/actions/runs/{2}', github.repository_owner, github.repository, github.run_id) }}|Open>)"
           
 
 #     - uses: actions/checkout@v2
 #       with:
 #         submodules: true
-      
-#     - run: echo ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }} # TODO remove this step
-      
 #     - name: Setup .NET Core
 #       uses: actions/setup-dotnet@v1
 #       with:
