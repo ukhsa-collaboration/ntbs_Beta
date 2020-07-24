@@ -27,16 +27,17 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2
-#     - name: Run unit tests
-#       working-directory: ntbs-service-unit-tests
-#       run: dotnet test
-#     - name: Run unit tests (EF)
-#       working-directory: EFAuditer-tests
-#       run: dotnet test
-#     - name: Run integration tets
-#       working-directory: ntbs-integration-tests
-#       run: dotnet test
-    # TODO ? run ui tests
+    - name: Run unit tests
+      working-directory: ntbs-service-unit-tests
+      run: dotnet test
+    - name: Run unit tests (EF)
+      working-directory: EFAuditer-tests
+      run: dotnet test
+    - name: Run integration tets
+      working-directory: ntbs-integration-tests
+      run: dotnet test
+    
+    # TODO run ui tests
   
     - run: echo ${{ format('--build-arg RELEASE=${0} --build-arg SENTRY_AUTH_TOKEN=${1} --build-arg SENTRY_LOG_LEVEL=debug', steps.ntbs_build_step.outputs.NTBS_BUILD, secrets.SENTRY_FRONTEND_AUTH_TOKEN) }}
     - name: Build and publish new release
@@ -60,9 +61,6 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/.kubeconfig
       with:
         kubectl: 1.18.2
-#         kustomize: 3.5.5
-#         helm: 2.16.7
-#         helmv3: 3.2.1
         command: |
           chmod +x ./scripts/release.sh
           ./scripts/release.sh int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}
