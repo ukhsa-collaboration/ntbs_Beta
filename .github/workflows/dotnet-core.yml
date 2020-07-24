@@ -1,11 +1,11 @@
-name: master
+name: test and publish to int
 
 on:
   push:
     branches: [ github-actions ]
 
 jobs:
-  test and publish to int:
+  test-and-publish-job:
     runs-on: ubuntu-latest
 
     steps:
