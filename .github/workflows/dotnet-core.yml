@@ -18,10 +18,14 @@ jobs:
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: \#dev-ci
+          SLACK_CHANNEL: '#dev-ci'
           SLACK_USERNAME: github actions
           SLACK_COLOR: green
-          SLACK_MESSAGE: "*:green_heart: :computer: Build succeeded. New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }} (<${{ format('https://github.com/{0}/{1}/actions/runs/{2}', github.repository_owner, github.repository, github.run_id) }}|Open>)"
+          SLACK_MESSAGE: "*:green_heart: :computer: Build succeeded. New deployment on int ${{ steps.ntbs_build_step.outputs.NTBS_BUILD }}*"
+          SLACK_TITLE: Deployment success
+
+# (<${{ format('https://github.com/{0}/{1}/actions/runs/{2}', github.repository_owner, github.repository, github.run_id) }}|Open>)"
+          
           
 
 #     - uses: actions/checkout@v2
