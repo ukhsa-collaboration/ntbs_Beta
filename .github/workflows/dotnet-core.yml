@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - run: |
+        echo SENTRY_FRONTEND_AUTH_TOKEN 
+        echo ${{ secrets.SENTRY_FRONTEND_AUTH_TOKEN }}
+        echo echo SENTRY_AUTH_TOKEN 
+        echo ${{ secrets.SENTRY_AUTH_TOKEN }}
     - uses: actions/checkout@v2
       with:
         submodules: true
