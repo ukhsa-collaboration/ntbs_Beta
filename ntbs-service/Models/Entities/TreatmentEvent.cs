@@ -28,8 +28,8 @@ namespace ntbs_service.Models.Entities
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
         public TreatmentEventType? TreatmentEventType { get; set; }
 
-        [RequiredIf("TreatmentEventTypeIsOutcome", ErrorMessage = ValidationMessages.TreatmentOutcomeRequiredForOutcome)]
-        [AssertThat("TreatmentEventTypeIsNotRestart", ErrorMessage = ValidationMessages.TreatmentOutcomeInvalidForRestart)]
+        [RequiredIf(nameof(TreatmentEventTypeIsOutcome), ErrorMessage = ValidationMessages.TreatmentOutcomeRequiredForOutcome)]
+        [AssertThat(nameof(TreatmentEventTypeIsNotRestart), ErrorMessage = ValidationMessages.TreatmentOutcomeInvalidForRestart)]
         public int? TreatmentOutcomeId { get; set; }
         public virtual TreatmentOutcome TreatmentOutcome { get; set; }
 
@@ -57,10 +57,10 @@ namespace ntbs_service.Models.Entities
         
         public bool TreatmentEventTypeIsOutcome => TreatmentEventType == Enums.TreatmentEventType.TreatmentOutcome;
         public bool TreatmentEventTypeIsNotRestart => TreatmentEventType != Enums.TreatmentEventType.TreatmentRestart;
-        public bool TreatmentEventIsDeathEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died;
+        private bool TreatmentEventIsDeathEvent => TreatmentOutcome?.TreatmentOutcomeType == TreatmentOutcomeType.Died;
         public bool AfterNotificationDateUnlessPostMortem => EventDateAfterNotificationDate || (IsNotificationPostMortem && TreatmentEventIsDeathEvent);
         public bool EventDateAfterDob => Dob == null || EventDate >= Dob;
-        public bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
+        private bool EventDateAfterNotificationDate => DateOfNotification == null || EventDate >= DateOfNotification;
         public string FormattedEventDate => EventDate.ConvertToString();
 
         public string FormattedEventTypeAndOutcome => GetFormattedEventTypeAndOutcome();

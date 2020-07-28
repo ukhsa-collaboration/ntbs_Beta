@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.ReferenceEntities;
@@ -97,30 +98,7 @@ namespace ntbs_service.Services
                 }
                 return startDate?.AddYears(numberOfYears - 1) <= t.EventDate 
                        && t.EventDate < startDate?.AddYears(numberOfYears);
-            })
-            .OrderBy(t => t.EventDate)
-            .ThenBy(treatmentEvent =>
-            {
-                // We want the order of treatment events that happened on the same day
-                // to be interpreted deterministically and with "natural" results.
-                switch (treatmentEvent.TreatmentEventType)
-                {
-                    case TreatmentEventType.DiagnosisMade:
-                        return 1;
-                    case TreatmentEventType.TreatmentStart:
-                        return 2;
-                    case TreatmentEventType.TransferOut:
-                        return 3;
-                    case TreatmentEventType.TransferIn:
-                        return 4;
-                    case TreatmentEventType.TreatmentRestart:
-                        return 5;
-                    case TreatmentEventType.TreatmentOutcome:
-                        return 6;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            });
+            }).OrderForEpisodes();
         }
     }
 }
