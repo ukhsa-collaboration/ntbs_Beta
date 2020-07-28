@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ntbs_integration_tests.Helpers;
 using ntbs_integration_tests.TestServices;
 using ntbs_service;
-using ntbs_service.Models.Validations;
 using Xunit;
 
 namespace ntbs_integration_tests.HomePage
@@ -18,19 +16,25 @@ namespace ntbs_integration_tests.HomePage
         [Fact]
         public async Task DismissAlert_CorrectlyDismissesAlertAndReturnsHomePage()
         {
-            // Arrange
-            var initialPage = await Client.GetAsync(PageRoute);
-            var pageContent = await GetDocumentAsync(initialPage);
-            Assert.NotNull(pageContent.QuerySelector("#alert-20001"));
+            using (var client = Factory.WithUser<NhsUserForAbingdonAndPermitted>()
+                .WithNotificationAndTbServiceConnected(Utilities.DRAFT_ID, Utilities.PERMITTED_SERVICE_CODE)
+                .CreateClientWithoutRedirects())
+            {
+                
+                // Arrange
+                var initialPage = await client.GetAsync(PageRoute);
+                var pageContent = await GetDocumentAsync(initialPage);
+                Assert.NotNull(pageContent.QuerySelector("#alert-20001"));
 
-            // Act
-            var result = await Client.SendPostFormWithData(pageContent, null, DismissPageRoute);
+                // Act
+                var result = await client.SendPostFormWithData(pageContent, null, DismissPageRoute);
 
-            // Assert
-            var reloadedPage = await Client.GetAsync(PageRoute);
-            var reloadedPageContent = await GetDocumentAsync(reloadedPage);
+                // Assert
+                var reloadedPage = await client.GetAsync(PageRoute);
+                var reloadedPageContent = await GetDocumentAsync(reloadedPage);
 
-            Assert.Null(reloadedPageContent.QuerySelector("#alert-20001"));
+                Assert.Null(reloadedPageContent.QuerySelector("#alert-20001"));
+            }
         }
 
         [Fact]
