@@ -17,7 +17,7 @@
 
 <div>
 
-    <hide-section-if-false inline-template>
+    <hide-section-if-not-true inline-template>
         <div>
             <validate-input
                 model="@nameof(MBovisDetails)"
@@ -47,11 +47,11 @@
                         <span nhs-span-type="ErrorMessage" ref="errorField" asp-validation-for="MBovisDetails.HasOccupationExposure" has-error="@hasOccupationExposureError" id="has-occupation-exposure-error"></span>
                         <nhs-radios nhs-radios-type="Standard" v-on:change="validate">
                             <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasOccupationExposure" id="has-exposure-yes" type="radio" value="true" disabled="@hasOccupationExposuresValues"/>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasOccupationExposure" id="has-exposure-yes" ref="conditional-true" type="radio" value="true" disabled="@hasOccupationExposuresValues"/>
                                 <label nhs-label-type="Radios" for="has-exposure-yes">Yes</label>
                             </nhs-radios-item>
                             <nhs-radios-item>
-                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasOccupationExposure" id="has-exposure-no" ref="conditional-false" type="radio" value="false" disabled="@hasOccupationExposuresValues"/>
+                                <input nhs-input-type="Radios" asp-for="MBovisDetails.HasOccupationExposure" id="has-exposure-no" type="radio" value="false" disabled="@hasOccupationExposuresValues"/>
                                 <label nhs-label-type="Radios" for="has-exposure-no">No</label>
                             </nhs-radios-item>
                         </nhs-radios>
@@ -74,5 +74,5 @@
                 </button>
             </div>
         </div>
-    </hide-section-if-false>
+    </hide-section-if-not-true>
 </div>

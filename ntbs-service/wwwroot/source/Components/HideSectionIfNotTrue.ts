@@ -1,18 +1,19 @@
 import Vue from "vue";
 
-const HideSectionIfFalse = Vue.extend({
+const HideSectionIfNotTrue = Vue.extend({
     methods: {
         hideOrShowSection: function (value: any) {
-            if (this.isFalse()) {
+            if (this.shouldHide()) {
                 this.$refs["conditional-section"].classList.add("hidden");
             } else {
                 this.$refs["conditional-section"].classList.remove("hidden");
             }
         },
-        isFalse: function () {
-            return this.$refs["inner-validate"].$refs["conditional-false"].checked;
+        shouldHide: function () {
+            let trueInput = this.$refs["inner-validate"].$refs["conditional-true"];
+            return !trueInput.checked;
         }
     }
 });
 
-export default HideSectionIfFalse;
+export default HideSectionIfNotTrue;
