@@ -54,6 +54,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task ValidateAndSave()
         {
+            if (ActionName == ActionNameString.Create)
+            {
+                MBovisDetails.HasAnimalExposure = true;
+            }
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisAnimalExposures = Notification.MBovisDetails.MBovisAnimalExposures;
             MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;

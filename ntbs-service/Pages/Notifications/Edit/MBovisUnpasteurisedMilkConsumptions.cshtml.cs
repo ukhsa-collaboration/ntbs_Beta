@@ -54,6 +54,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task ValidateAndSave()
         {
+            if (ActionName == ActionNameString.Create)
+            {
+                MBovisDetails.HasUnpasteurisedMilkConsumption = true;
+            }
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisUnpasteurisedMilkConsumptions = Notification.MBovisDetails.MBovisUnpasteurisedMilkConsumptions;
             MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;

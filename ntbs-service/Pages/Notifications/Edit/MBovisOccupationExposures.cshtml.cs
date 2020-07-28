@@ -54,6 +54,10 @@ namespace ntbs_service.Pages.Notifications.Edit
         
         protected override async Task ValidateAndSave()
         {
+            if (ActionName == ActionNameString.Create)
+            {
+                MBovisDetails.HasOccupationExposure = true;
+            }
             // Set the collection so it can be included in the validation
             MBovisDetails.MBovisOccupationExposures = Notification.MBovisDetails.MBovisOccupationExposures;
             MBovisDetails.ProceedingToAdd = ActionName == ActionNameString.Create;

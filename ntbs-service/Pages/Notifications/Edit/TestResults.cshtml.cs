@@ -62,6 +62,10 @@ namespace ntbs_service.Pages.Notifications.Edit
 
         protected override async Task ValidateAndSave()
         {
+            if (ActionName == ActionNameString.Create)
+            {
+                TestData.HasTestCarriedOut = true;
+            }
             // Set the collection so it can be included in the validation
             TestData.ManualTestResults = Notification.TestData.ManualTestResults;
             TestData.ProceedingToAdd = ActionName == ActionNameString.Create;
