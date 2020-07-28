@@ -82,18 +82,21 @@ namespace ntbs_service.Pages.Admin
         private void TriggerImportFromIdsField()
         {
             var legacyIds = NotificationIds.Split(',').Select(id => id.Trim()).ToList();
-            BackgroundJob.Enqueue<INotificationImportService>(x =>
-                x.ImportByLegacyIdsAsync(null, RequestId, legacyIds));
+            foreach (var idBatch in SplitList(legacyIds))
+            {
+                BackgroundJob.Enqueue<INotificationImportService>(x =>
+                    x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+            }
         }
 
         private async Task TriggerImportFromIdsFile()
         {
             var notificationIds = await GetIdListFromFile(UploadedFile);
-            var idBatches = SplitList(notificationIds);
 
-            foreach (var idBatch in idBatches)
+            foreach (var idBatch in SplitList(notificationIds))
             {
-                BackgroundJob.Enqueue<INotificationImportService>(x => x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
+                BackgroundJob.Enqueue<INotificationImportService>(x =>
+                    x.ImportByLegacyIdsAsync(null, RequestId, idBatch));
             }
         }
 
@@ -130,16 +133,17 @@ namespace ntbs_service.Pages.Admin
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
                 while (reader.Peek() >= 0)
-                    legacyIds.Add(await reader.ReadLineAsync());
+                    legacyIds.Add((await reader.ReadLineAsync()).Trim());
             }
             return legacyIds;
         }
 
-        private static IEnumerable<List<T>> SplitList<T>(List<T> legacyIds, int nSize = 1000)
+        private IEnumerable<List<T>> SplitList<T>(List<T> legacyIds)
         {
-            for (int index = 0; index < legacyIds.Count; index += nSize)
+            var size = _config.ByIdsJobBatchSize;
+            for (int index = 0; index < legacyIds.Count; index += size)
             {
-                yield return legacyIds.GetRange(index, Math.Min(nSize, legacyIds.Count - index));
+                yield return legacyIds.GetRange(index, Math.Min(size, legacyIds.Count - index));
             }
         }
     }
