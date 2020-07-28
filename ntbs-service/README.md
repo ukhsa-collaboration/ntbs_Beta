@@ -11,7 +11,7 @@ Make sure you have the following tools installed locally:
   - Once installed, use your preferred connection method to create a `ntbsDev` database in the default instance.
 - [.NET cli tools](https://dotnet.microsoft.com/download) - the codebase should be compatible with the newest SDK tools
   - once `dotnet` is installed, run `dotnet tool install --global dotnet-ef` to install the `dotnet ef` tools package
-- IDE of choice (eg [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
+- IDE of choice (eg. [Rider](https://www.jetbrains.com/rider/) or [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
 
 In this directory, run:
@@ -20,6 +20,8 @@ In this directory, run:
 - `dotnet restore` and `npm install` to pull in dependencies
 - `dotnet run` to launch the webserver locally
 - `dotnet watch run` to launch the webserver locally with hot-reloading enabled
+
+Make sure to get the dev secrets from Azure (see [dev mode secrets](#dev-mode-secrets)) to connect to Azure dbs.
 
 The frontend assets are compiled through Webpack, with hot-reload enabled automatically in development mode.
 
@@ -33,13 +35,16 @@ We are following the [NHS Digital Service Manual](https://beta.nhs.uk/service-ma
 
 ### Dev-mode secrets
 
-Use [dotnet secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=windowsgit) for configuring environment variables that should be kept secret (and therefore not checked into the repo) or specific to your machine:
+Use [dotnet secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=windowsgit) 
+for configuring environment variables that should be kept secret (and therefore not checked into the repo) or specific to your machine:
 `dotnet user-secrets set "<envVariable>" "<value>"`
 
 For example, to override the main connection database string:
 `dotnet user-secrets set "ConnectionStrings:ntbsContext" "my-alternative-connection-string"`
 
-A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI:
+A master copy of local secrets is stored in Azure Key Vault. These can be set up in bulk using the Azure CLI.
+
+*Running this will be necessary to connect the local app to the azure data migration db.*
 
 ```PowerShell
 # Use `az login` to authenticate first if necessary
