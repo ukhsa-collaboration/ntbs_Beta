@@ -78,6 +78,8 @@ namespace ntbs_service.Pages
 
         private async Task SetUserAlertsAndTbServicesAsync()
         {
+            if (_userService.GetUserType(User) == UserType.NationalTeam)
+                return;
             var services = (await _userService.GetTbServicesAsync(User)).ToList();
             var tbServiceCodes = services.Select(s => s.Code);
             TbServices = new SelectList(services, nameof(TBService.Code), nameof(TBService.Name));
