@@ -1,4 +1,4 @@
-name: test and publish to int
+name: manual deploy to Azure env
 
 on:
   workflow_dispatch:
