@@ -9,6 +9,8 @@
     ViewData["CurrentPage"] = NotificationSubPaths.Overview;
 }
 
+ @* TODO NTBS-908 Refactor this to page to remove duplication and decrease nested access *@
+
 <partial name="./OverviewPartials/_ClusterInformationOverviewPartial" for="Notification"/>
 
 <partial name="./OverviewPartials/_PatientOverviewPartial"/>
