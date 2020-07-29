@@ -16,14 +16,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: checkout
+        uses: actions/checkout@v2
       - name: Save kubeconfig
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          submodules: true        
       - name: Deploy to ${{ github.event.inputs.env }}
         uses: stefanprodan/kube-tools@v1
         env:
