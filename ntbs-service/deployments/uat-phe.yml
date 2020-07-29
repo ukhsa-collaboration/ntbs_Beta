@@ -41,7 +41,7 @@ spec:
             - name: AdfsOptions__AdfsUrl
               value: "https://fs.caduceus.phe.nhs.uk"
             - name: AdfsOptions__Wtrealm
-              value: "https://ntbs-uat.phe.nsh.uk/"
+              value: "https://ntbs-uat.phe.nhs.uk/"
             - name: ConnectionStrings__ntbsContext
               valueFrom:
                 secretKeyRef:
