@@ -39,7 +39,7 @@ spec:
             - containerPort: 8080
           env:
             - name: AdfsOptions__AdfsUrl
-              value: "https://fs.phe.nhs.uk"
+              value: "https://fs.caduceus.phe.nhs.uk"
             - name: AdfsOptions__Wtrealm
               value: "https://ntbs.phe.nhs.uk/"
             - name: AppConfig__AuditingEnabled
