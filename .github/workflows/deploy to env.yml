@@ -1,0 +1,31 @@
+name: test and publish to int
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'One of `int` `test` or `uat`'
+        required: true
+        default: 'test'
+      build_id:
+        description: 'Image tag, take it from the slack notification, something like build-9-3f3d3f25d57430b7d900735e0a90a6aaf1535314'
+        required: true
+
+jobs:
+  test-and-publish-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Save kubeconfig
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
+      - name: Deploy to ${{ github.event.inputs.env }}
+        uses: stefanprodan/kube-tools@v1
+        env:
+          KUBECONFIG: ${{ github.workspace }}/.kubeconfig
+        with:
+          kubectl: 1.18.2
+          command: |
+            chmod +x ./scripts/release.sh
+            ./scripts/release.sh ${{ github.event.inputs.env }} ${{ github.event.inputs.build_id }}
