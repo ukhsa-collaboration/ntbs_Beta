@@ -282,7 +282,7 @@
     <validate-input model="PatientDetails" property="Address" shouldvalidatefull="@fullValidation" inline-template>
         <nhs-form-group nhs-form-group-type="@addressFormState" id="PatientDetails-Address">
             <label asp-for="PatientDetails.Address" nhs-label-type="Standard">
-                Address
+                Address (usual place of residence)
             </label>
             <span nhs-span-type="ErrorMessage" id="address-error" ref="errorField" asp-validation-for="PatientDetails.Address" has-error="@hasAddressError"></span>
             <textarea asp-for="PatientDetails.Address" nhs-textarea-type="@addressTextAreaType" rows="2" aria-describedby="address-error"

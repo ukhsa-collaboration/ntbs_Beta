@@ -14,7 +14,7 @@ namespace ntbs_service.Models.Entities
     [Display(Name = "Previous History")]
     public partial class PreviousTbHistory : ModelBase, IOwnedEntityForAuditing
     {
-        [Display(Name = "Previous TB occurence")]
+        [Display(Name = "Previous TB occurrence")]
         public Status? PreviouslyHadTb { get; set; }
         
         [AssertThat(@"DobYear == null || PreviousTbDiagnosisYear >= DobYear", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDobYear)]
