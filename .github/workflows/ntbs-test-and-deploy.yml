@@ -2,7 +2,7 @@ name: test and publish to int
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, NTBS-1701-TriggerDbJobsThroughHangfire ]
 
 jobs:
   test-and-publish-job:
