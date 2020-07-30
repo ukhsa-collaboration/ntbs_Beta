@@ -1,7 +1,9 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace ntbs_service.Services
 {
@@ -21,11 +23,14 @@ namespace ntbs_service.Services
 
         public async Task RunJobX()
         {
+            Log.Information("Kicking off dbo.uspGenerate");
             using (var connection = new SqlConnection(_reportingDbConnectionString))
             {
                 connection.Open();
-                await connection.ExecuteAsync("EXEC dbo.uspGenerate");
+                Log.Information("connection should be open now");
+                await connection.ExecuteAsync("uspGenerate", commandType: CommandType.StoredProcedure);
             }
+            Log.Information("dbo.uspGenerate should have finished now");
         }
     }
 }
