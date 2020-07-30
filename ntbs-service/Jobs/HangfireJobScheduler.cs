@@ -13,6 +13,7 @@ namespace ntbs_service.Jobs
         private const string DataQualityAlertsJobId = "data-quality-alerts";
         private const string NotificationClusterUpdateJobId = "notification-cluster-update";
         private const string MarkImportedNotificationsAsImportedJobId = "mark-notifications-as-imported";
+        private const string DbScheduledJobId = "db-scheduled-job-imported";
         
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
@@ -105,6 +106,19 @@ namespace ntbs_service.Jobs
             else
             {
                 RecurringJob.RemoveIfExists(MarkImportedNotificationsAsImportedJobId);
+            }
+            
+            if (scheduledJobsConfig.DbScheduledJobEnabled)
+            {
+                RecurringJob.AddOrUpdate<DbScheduledJob>(
+                    DbScheduledJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.DbScheduledJobCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(DbScheduledJobId);
             }
         }
     }

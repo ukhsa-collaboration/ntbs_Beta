@@ -22,5 +22,8 @@
         
         public bool MarkImportedNotificationsAsImportedEnabled { get; set; }
         public string MarkImportedNotificationsAsImportedCron { get; set; }
+        
+        public bool DbScheduledJobEnabled { get; set; }
+        public string DbScheduledJobCron { get; set; }
     }
 }

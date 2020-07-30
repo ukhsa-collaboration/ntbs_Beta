@@ -175,6 +175,7 @@ namespace ntbs_service
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
             services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
+            services.AddScoped<IReportingJobsService, ReportingJobsService>();
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);
