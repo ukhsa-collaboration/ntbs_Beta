@@ -1,3 +1,3 @@
 [submodule "frontend-dotnetcore"]
 	path = frontend-dotnetcore
-	url = git@github.com:Softwire/frontend-dotnetcore.git
+	url = https://github.com/Softwire/frontend-dotnetcore.git
