@@ -75,11 +75,11 @@
                 <nhs-checkboxes>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]"/>
-                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]">@Model.Sites.Find(s => s.SiteId == (int) SiteId.LYMPH_INTRA).Description</label>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_INTRA]">Intra-thoracic</label>
                     </nhs-checkboxes-item>
                     <nhs-checkboxes-item>
                         <input nhs-input-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]"/>
-                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]">@Model.Sites.Find(s => s.SiteId == (int) SiteId.LYMPH_EXTRA).Description</label>
+                        <label nhs-label-type="Checkboxes" asp-for="@Model.NotificationSiteMap[SiteId.LYMPH_EXTRA]">Extra-thoracic</label>
                     </nhs-checkboxes-item>
                 </nhs-checkboxes>
 
