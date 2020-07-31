@@ -45,7 +45,7 @@
                         @result?.SampleType?.Description
                     </nhs-table-item>
                     <nhs-table-item>
-                        @result.Result
+                        @result.Result.GetDisplayName()
                     </nhs-table-item>
                     @if (showEditLinks)
                     {

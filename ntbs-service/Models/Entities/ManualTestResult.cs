@@ -24,10 +24,11 @@ namespace ntbs_service.Models.Entities
         [Display(Name = "Test date")]
         [Required(ErrorMessage = ValidationMessages.RequiredEnter)]
         [ValidClinicalDate]
-        [AssertThat(@"TestDateAfterDob", ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
+        [AssertThat(nameof(TestDateAfterDob), ErrorMessage = ValidationMessages.DateShouldBeLaterThanDob)]
         public DateTime? TestDate { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.RequiredSelect)]
+        [AssertThat(nameof(ResultMatchesTestType), ErrorMessage = "Select a result that matches test type")]
         [Display(Name = "Result")]
         public Result? Result { get; set; }
 
@@ -36,9 +37,9 @@ namespace ntbs_service.Models.Entities
         public int? ManualTestTypeId { get; set; }
         public virtual ManualTestType ManualTestType { get; set; }
 
-        [RequiredIf("TestHasSampleTypes", ErrorMessage = ValidationMessages.RequiredSelect)]
+        [RequiredIf(nameof(TestHasSampleTypes), ErrorMessage = ValidationMessages.RequiredSelect)]
         [Display(Name = "Sample type")]
-        [AssertThat("TestAndSampleTypesMatch", ErrorMessage = ValidationMessages.InvalidTestAndSampleTypeCombination)]
+        [AssertThat(nameof(TestAndSampleTypesMatch), ErrorMessage = ValidationMessages.InvalidTestAndSampleTypeCombination)]
         public int? SampleTypeId { get; set; }
         public virtual SampleType SampleType { get; set; }
 
@@ -46,11 +47,13 @@ namespace ntbs_service.Models.Entities
         /// Used for validation purposes only, requires consumer to populate it.
         /// </summary>
         [NotMapped]
-        public DateTime? Dob { get; set; } = null;
+        public DateTime? Dob { get; set; }
 
         [NotMapped]
         public bool TestDateAfterDob => Dob == null || TestDate >= Dob;
 
+        [NotMapped]
+        public bool? ResultMatchesTestType => this.Result?.IsValidForTestType(ManualTestTypeId.GetValueOrDefault());
 
         [NotMapped]
         public bool TestAndSampleTypesMatch =>
