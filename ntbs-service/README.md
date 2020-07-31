@@ -10,6 +10,7 @@ Make sure you have the following tools installed locally:
   - During installation make sure you install DB Engine.
   - Once installed, use your preferred connection method to create a `ntbsDev` database in the default instance.
 - [.NET cli tools](https://dotnet.microsoft.com/download) - the codebase should be compatible with the newest SDK tools
+- [.NET SDK 2.2](https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.300-SDK/2.2.300-SDK-download.md)
   - once `dotnet` is installed, run `dotnet tool install --global dotnet-ef` to install the `dotnet ef` tools package
 - IDE of choice (eg. [Rider](https://www.jetbrains.com/rider/) or [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)

@@ -13,7 +13,7 @@
 
         <form method="post" autocomplete="off">
             <filtered-dropdown filter-handler-path="FilteredSampleTypesForManualTestType"
-                               :filtering-refs="['sampleTypes']"
+                               :filtering-refs="['sampleTypes', 'results']"
                                :wait-for-child-mount="false"
                                hide-on-empty="true"
                                inline-template>
@@ -120,7 +120,7 @@
                             </select>
                         </nhs-form-group>
                     </nhs-grid-column>
-                    <nhs-grid-column grid-column-width="Full">
+                    <nhs-grid-column grid-column-width="Full" ref="results">
                         @{
                             var hasResultError = !Model.IsValid("TestResultForEdit.Result");
                             var resultGroupState = hasResultError ? Error : Standard;

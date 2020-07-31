@@ -52,8 +52,9 @@ namespace ntbs_service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityModelEventSource.ShowPII = true; // TODO REMOVE THIS ASAP
-            
+            // This was helpful for identifying issues with ADFS login - but shouldn't be on usually 
+            // IdentityModelEventSource.ShowPII = true; 
+
             // Configuration
             var adfsConfig = Configuration.GetSection("AdfsOptions");
             services.Configure<CookiePolicyOptions>(options =>

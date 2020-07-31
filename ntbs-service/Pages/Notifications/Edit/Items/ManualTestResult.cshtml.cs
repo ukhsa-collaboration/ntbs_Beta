@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -172,7 +173,10 @@ namespace ntbs_service.Pages.Notifications.Edit.Items
                         Value = n.SampleTypeId.ToString(),
                         Text = n.Description,
                         Group = n.Category
-                    })
+                    }),
+                    Results = ((Result[])Enum.GetValues(typeof(Result)))
+                        .Where(result => result.IsValidForTestType(value))
+                        .Select(result => new OptionValue {Value = result.ToString(), Text = result.GetDisplayName()})
                 });
         }
     }
