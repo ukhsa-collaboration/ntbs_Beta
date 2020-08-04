@@ -93,3 +93,9 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 # End of https://www.gitignore.io/api/rider
+/ntbs-migration-tests/obj/Debug/netcoreapp2.2
+/ntbs-migration-tests/obj/project.nuget.cache
+/ntbs-migration-tests/obj/project.assets.json
+/ntbs-migration-tests/obj/ntbs-migration-tests.csproj.nuget.g.targets
+/ntbs-migration-tests/obj/ntbs-migration-tests.csproj.nuget.g.props
+/ntbs-migration-tests/obj/ntbs-migration-tests.csproj.nuget.dgspec.json
