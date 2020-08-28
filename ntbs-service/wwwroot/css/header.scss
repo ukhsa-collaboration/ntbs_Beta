@@ -135,15 +135,15 @@ body:not(.js-enabled) {
     .breadcrumb-trail {
         display: block;
         height: 45px;
-        background-color: #DAD7CB;
+        background-color: #DFE2E5;
         margin-top: 10px;
-      
+
         @media print {
-          display: none;
+            display: none;
         }
     }
 }
 
 .breadcrumb-trail-background {
-    background-color: #DAD7CB;
+    background-color: #DFE2E5;
 }
