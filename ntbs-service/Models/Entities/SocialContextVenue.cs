@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using ntbs_service.Models.Enums;
 using ntbs_service.Models.Validations;
 
@@ -20,7 +20,7 @@ namespace ntbs_service.Models.Entities
         public int? VenueTypeId { get; set; }
         public virtual VenueType VenueType { get; set; }
 
-        [MaxLength(40)]
+        [MaxLength(50)]
         [Display(Name = "Venue name")]
         public string Name { get; set; }
 
