@@ -28,9 +28,7 @@ namespace ntbs_service.Models.Entities
 
         public bool IsMBovis =>
             // If the lab results point to M. bovis species ...
-            string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase)
-            // ... or if there is any data in the M. bovis pages - otherwise we could be hiding record data
-            || MBovisDetails.DataEntered;
+            string.Equals("M. bovis", DrugResistanceProfile.Species, StringComparison.InvariantCultureIgnoreCase);
         
         public override bool? IsLegacy => LTBRID != null || ETSID != null;
 
