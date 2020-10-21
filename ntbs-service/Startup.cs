@@ -218,11 +218,11 @@ namespace ntbs_service
                 })
                 .AddWsFederation(options =>
                 {
-                    options.CallbackPath = "/Index";
                     options.SkipUnrecognizedRequests = true;
                     options.MetadataAddress =
                         adfsConfig["AdfsUrl"] + "/FederationMetadata/2007-06/FederationMetadata.xml";
                     options.Wtrealm = adfsConfig["Wtrealm"];
+                    options.Wreply = "https://ntbs-uat-hidden.apps.ocp-por.unix.phe.gov.uk/Index";
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     /*
