@@ -446,7 +446,7 @@ namespace ntbs_integration_tests.NotificationPages
         }
 
         [Theory]
-        [InlineData("false", "123", "Site name can only contain letters and the symbols ' - . ,")]
+        [InlineData("false", "<123>", "Site name can only contain letters and the symbols ' - . ,")]
         [InlineData("true", "", "Site name is a mandatory field")]
         [InlineData("false", "", "")]
         public async Task ValidateNotificationSiteProperty_ReturnsExpectedResult(string shouldValidateFull, string value, string validationResult)
