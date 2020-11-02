@@ -85,7 +85,7 @@ namespace ntbs_integration_tests.NotificationPages
             var resultDocument = await GetDocumentAsync(result);
 
             result.EnsureSuccessStatusCode();
-            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Site name can only contain letters and the symbols ' - . ,");
+            resultDocument.AssertErrorSummaryMessage("OtherSite-SiteDescription", "other-site", "Invalid character found in Site name");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-BCGVaccinationYear", "bcg-vaccination", "BCG vaccination year has an invalid year");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-SymptomStartDate", "symptom", "Symptom onset date does not have a valid date selection");
             resultDocument.AssertErrorSummaryMessage("ClinicalDetails-FirstPresentationDate", "first-presentation", "Presentation to any health service must be today or earlier");
