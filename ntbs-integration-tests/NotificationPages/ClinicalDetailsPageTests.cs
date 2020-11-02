@@ -60,7 +60,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.DRAFT_ID.ToString(),
                 ["NotificationSiteMap[OTHER]"] = "true",
-                ["OtherSite.SiteDescription"] = "123",
+                ["OtherSite.SiteDescription"] = "<123>",
                 ["ClinicalDetails.BCGVaccinationState"] = "Yes",
                 ["ClinicalDetails.BCGVaccinationYear"] = "1",
                 ["ClinicalDetails.IsSymptomatic"] = "true",
@@ -132,7 +132,7 @@ namespace ntbs_integration_tests.NotificationPages
             {
                 ["NotificationId"] = Utilities.LATE_DOB_ID.ToString(),
                 ["NotificationSiteMap[OTHER]"] = "true",
-                ["OtherSite.SiteDescription"] = "123",
+                ["OtherSite.SiteDescription"] = "<123>",
                 ["FormattedFirstPresentationDate.Day"] = "1",
                 ["FormattedFirstPresentationDate.Month"] = "1",
                 ["FormattedFirstPresentationDate.Year"] = "2011",
