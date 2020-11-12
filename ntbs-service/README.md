@@ -49,6 +49,7 @@ A master copy of local secrets is stored in Azure Key Vault. These can be set up
 
 ```PowerShell
 # Use `az login` to authenticate first if necessary
+# Use `az account set -s 6850ca99-e7c3-4686-9208-25575cef522a` to change to phe-ntbs azure subscription
 
 az keyvault secret show `
  --vault-name "dev-phe-ntbs-secrets" `

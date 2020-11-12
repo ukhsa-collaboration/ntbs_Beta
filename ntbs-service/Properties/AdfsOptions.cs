@@ -15,7 +15,6 @@
 
         /** Only used in development mode, allows developers to set their group membership via properties */
         public string DevGroup { get; set; }
-
     
         /** Base url for the AD FS instace */
         public string AdfsUrl { get; set; }

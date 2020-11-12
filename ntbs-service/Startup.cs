@@ -9,6 +9,8 @@ using Hangfire.Console;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -63,7 +65,11 @@ namespace ntbs_service
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            var azureAdConfig = Configuration.GetSection("AzureAdOptions");
+
             services.Configure<AdfsOptions>(adfsConfig);
+            services.Configure<AzureAdOptions>(azureAdConfig);
             services.Configure<LdapSettings>(Configuration.GetSection("LdapSettings"));
             services.Configure<MigrationConfig>(Configuration.GetSection("MigrationConfig"));
 
@@ -87,11 +93,21 @@ namespace ntbs_service
                 options.Cookie.IsEssential = true;
             });
 
+            // select authentication method
             var httpBasicAuthConfig = Configuration.GetSection("HttpBasicAuth");
-            if (httpBasicAuthConfig.GetValue("Enabled", false))
-                SetupHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
-            else 
-                SetupAuthentication(services, adfsConfig);
+            var basicAuthEnabled = httpBasicAuthConfig.GetValue("Enabled", false);
+            var azureAdAuthEnabled = azureAdConfig.GetValue("Enabled", false);
+
+            Log.Information($"Basic Auth Enabled: {basicAuthEnabled}");
+            Log.Information($"Azure Ad Auth Enabled: {azureAdAuthEnabled}");
+            
+            if (basicAuthEnabled)
+                UseHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
+            else if(azureAdAuthEnabled)
+                UseAzureAdAuthentication(services, azureAdConfig);
+            else
+                UseAdfsAuthentication(services, adfsConfig);
+                
 
             services.AddMvc(options =>
                 {
@@ -206,7 +222,7 @@ namespace ntbs_service
             }
         }
 
-        private static void SetupAuthentication(IServiceCollection services, IConfigurationSection adfsConfig)
+        private static void UseAdfsAuthentication(IServiceCollection services, IConfigurationSection adfsConfig)
         {
             var setupDummyAuth = adfsConfig.GetValue("UseDummyAuth", false);
             var authSetup = services
@@ -252,6 +268,7 @@ namespace ntbs_service
                     };
                 })
                 .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; });
+                
 
             if (setupDummyAuth)
             {
@@ -259,7 +276,75 @@ namespace ntbs_service
             }
         }
 
-        private static void SetupHttpBasicAuth(IServiceCollection services,
+        private static void UseAzureAdAuthentication(IServiceCollection services, IConfigurationSection azureAdConfig)
+        {
+            var setupDummyAuth = azureAdConfig.GetValue("UseDummyAuth", false);
+            var authSetup = services
+                .AddAuthentication(sharedOptions =>
+                {
+                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie(options => { options.ForwardAuthenticate = setupDummyAuth ? DummyAuthHandler.Name : null; })
+                .AddOpenIdConnect(options => {
+                    options.ClientId = azureAdConfig["ClientId"];
+                    options.ClientSecret =  azureAdConfig["ClientSecret"];
+                    options.Authority = azureAdConfig["Authority"];
+                    options.CallbackPath =  azureAdConfig["CallbackPath"];
+                    options.CorrelationCookie.SameSite = SameSiteMode.None;
+                    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+                    
+                    options.Events = new OpenIdConnectEvents();
+                    options.Events.OnTokenValidated += async context => 
+                    {
+                        var username = context.Principal.FindFirstValue(ClaimTypes.Upn);
+                        if(username == null) {
+                            username = context.Principal.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
+                            if(username != null) {
+                                var claims = new List<Claim>();
+                                var groupIdClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS");
+                                claims.Add(groupIdClaim);
+
+                                var upnClaim = new Claim(ClaimTypes.Upn, username);
+                                claims.Add(upnClaim);
+
+                                var applicationClaimsIdentity = new ClaimsIdentity(claims);
+                                context.Principal.AddIdentity(applicationClaimsIdentity);
+                            }
+                        }
+                        if (username != null)
+                        {
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                            await userService.RecordUserLoginAsync(username);
+                        }
+                    };
+
+                    /*
+                     * Below event handler is to prevent stale logins from showing a 500 error screen, instead to force
+                     * back to the landing page - and cause a re-challenge or continue if already authenticated.
+                     * https://community.auth0.com/t/asp-net-core-2-intermittent-correlation-failed-errors/11918/14
+                     */
+                    options.Events.OnRemoteFailure += context =>
+                    {
+                        if (context.Failure.Message == "Correlation failed.")
+                        {
+                            context.HandleResponse();
+                            context.Response.Redirect("/");
+                        }
+
+                        return Task.CompletedTask;
+                    };
+
+                });
+
+            if (setupDummyAuth)
+            {
+                authSetup.AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>(DummyAuthHandler.Name, o => { });
+            }
+        }
+
+        private static void UseHttpBasicAuth(IServiceCollection services,
             IConfigurationSection httpBasicAuthConfig,
             IConfigurationSection adfsConfig)
         {
