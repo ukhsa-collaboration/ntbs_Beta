@@ -13,6 +13,6 @@
         public string CallbackPath { get; set; }
          
         /** This will override the use of Adfs with Azure Active Directory **/
-        public string UseAzureAdAuth {get; set;}
+        public string Enabled {get; set;}
     }
 }
