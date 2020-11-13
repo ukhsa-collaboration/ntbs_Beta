@@ -29,6 +29,7 @@ jobs:
         working-directory: EFAuditer-tests
         run: dotnet test
       - name: Run integration tests
+        if: "!contains(github.event.head_commit.message, 'skip int tests')"
         working-directory: ntbs-integration-tests
         run: dotnet test
       # TODO run ui tests
