@@ -310,6 +310,7 @@ namespace ntbs_service
                             username = context.Principal.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
                         }
 
+                        // add group claims.
                         if (username != null) {
                             var claims = new List<Claim>();
                             var groupIdClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS");
