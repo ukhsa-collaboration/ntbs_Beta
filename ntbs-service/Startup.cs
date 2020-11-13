@@ -306,20 +306,25 @@ namespace ntbs_service
                     options.Events.OnTokenValidated += async context => 
                     {
                         var username = context.Principal.FindFirstValue(ClaimTypes.Upn);
-                        if(username == null) {
+                        if (username == null) {
                             username = context.Principal.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
-                            if(username != null) {
-                                var claims = new List<Claim>();
-                                var groupIdClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS");
-                                claims.Add(groupIdClaim);
-
-                                var upnClaim = new Claim(ClaimTypes.Upn, username);
-                                claims.Add(upnClaim);
-
-                                var applicationClaimsIdentity = new ClaimsIdentity(claims);
-                                context.Principal.AddIdentity(applicationClaimsIdentity);
-                            }
                         }
+
+                        if (username != null) {
+                            var claims = new List<Claim>();
+                            var groupIdClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS");
+                            claims.Add(groupIdClaim);
+
+                            var groupIdDataClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS.NTS");
+                            claims.Add(groupIdDataClaim);
+
+                            var upnClaim = new Claim(ClaimTypes.Upn, username);
+                            claims.Add(upnClaim);
+
+                            var applicationClaimsIdentity = new ClaimsIdentity(claims);
+                            context.Principal.AddIdentity(applicationClaimsIdentity);
+                        }
+
                         if (username != null)
                         {
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
