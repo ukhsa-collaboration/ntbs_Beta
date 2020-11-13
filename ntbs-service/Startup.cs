@@ -472,6 +472,7 @@ namespace ntbs_service
         {
             if (env.IsDevelopment())
             {
+                app.UseForwardedHeaders();
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
@@ -482,14 +483,14 @@ namespace ntbs_service
                 // (see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#server-side-https-enforcement-through-redirect)
                 // (also see  HSTS setting below)
                 app.UseHttpsRedirection();
-                app.UseForwardedHeaders();
+                
             }
             else
             {
+                app.UseForwardedHeaders();
                 app.UseStatusCodePagesWithReExecute("/errors/{0}");
                 app.UseExceptionHandler("/errors/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseForwardedHeaders();
                 app.UseHsts();
             }
 
