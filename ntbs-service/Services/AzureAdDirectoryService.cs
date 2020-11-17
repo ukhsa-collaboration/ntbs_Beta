@@ -41,7 +41,7 @@ namespace ntbs_service.Services
                 }
 
 
-            } catch (Exception ex) {
+            } catch (Exception) {
                 // ignore exception
             }
             
