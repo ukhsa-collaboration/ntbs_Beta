@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
@@ -203,6 +204,9 @@ namespace ntbs_service
             AddReferenceLabResultServices(services);
             AddClusterService(services);
             AddReportingServices(services);
+            AddMicrosoftGraphServices(services);
+
+
         }
 
         private void SetupHangfire(IServiceCollection services)
@@ -283,7 +287,7 @@ namespace ntbs_service
             }
         }
 
-        private static void UseAzureAdAuthentication(IServiceCollection services, IConfigurationSection azureAdConfig)
+        private void UseAzureAdAuthentication(IServiceCollection services, IConfigurationSection azureAdConfig)
         {
             var setupDummyAuth = azureAdConfig.GetValue("UseDummyAuth", false);
             var authSetup = services
@@ -312,12 +316,20 @@ namespace ntbs_service
 
                         // add group claims.
                         if (username != null) {
-                            var claims = new List<Claim>();
-                            var groupIdClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS");
-                            claims.Add(groupIdClaim);
 
-                            var groupIdDataClaim = new Claim(ClaimTypes.Role, "Global.NIS.NTBS.NTS");
-                            claims.Add(groupIdDataClaim);
+                            var claims = new List<Claim>();
+                            var azureAdFactory = context.HttpContext.RequestServices.GetRequiredService<IAzureAdDirectoryServiceFactory>();
+                            var azureAdDirectoryService = azureAdFactory.Create();
+                            var roleClaims = context.Principal.FindAll(ClaimTypes.Role);
+                            foreach(var claim in roleClaims)
+                            {
+                                var groupName = await azureAdDirectoryService.ResolveUserMemberGroupNameFromId(claim.Value);
+                                if (!String.IsNullOrEmpty(groupName))
+                                {
+                                    var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
+                                    claims.Add(groupNameClaim);
+                                }
+                            }
 
                             var upnClaim = new Claim(ClaimTypes.Upn, username);
                             claims.Add(upnClaim);
@@ -470,6 +482,15 @@ namespace ntbs_service
             {
                 services.AddScoped<IHomepageKpiService, HomepageKpiService>();
                 services.AddScoped<IDrugResistanceProfilesService, DrugResistanceProfileService>();
+            }
+        }
+
+        private void AddMicrosoftGraphServices(IServiceCollection services)
+        {
+            if (Configuration.GetValue(Constants.AzureActiveDirectoryAuthEnabled, false))
+            {
+                services.AddScoped<IAzureAdDirectoryServiceFactory, AzureAdDirectoryServiceFactory>();
+                services.AddScoped<IAzureAdDirectoryService, AzureAdDirectoryService>();
             }
         }
 

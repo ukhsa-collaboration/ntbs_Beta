@@ -1,4 +1,4 @@
-namespace ntbs_service
+﻿namespace ntbs_service
 {
     public static class Constants
     {
@@ -13,5 +13,6 @@ namespace ntbs_service
         public const string ReferenceLabResultsConfig = "ReferenceLabResultsConfig";
         public const string ReferenceLabResultsConfigMockOut = "MockOutSpecimenMatching";
         public const string ScheduledJobsConfig = "ScheduledJobsConfig";
+        public const string AzureActiveDirectoryAuthEnabled = "AzureAdOptions:Enabled";
     }
 }

@@ -143,6 +143,16 @@ docker tag ntbs ntbscontainerregistry.azurecr.io/ntbs-service
 docker push ntbscontainerregistry.azurecr.io/ntbs-service
 ```
 
+## Azure Active Directory Setup
+The system can be switched to use Microsoft Azure Active Directory for authentication and authorisation.
+To switch on set the AzureADOptions.Enabled app setting.
+
+The Azure AD Application client id and client secret need to be setup.
+The Azure AD Application requires the following permissions:
+- Groups.Read.All (Application Permission)
+- profile (Delegated Permission)
+- User.Read (Delegated Permission)
+
 ## Maintenance
 - See current deployments, including build versions:
   - `kubectl get deployment -o wide` - all envs
