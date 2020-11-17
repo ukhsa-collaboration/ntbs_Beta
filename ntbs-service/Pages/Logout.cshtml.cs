@@ -12,11 +12,21 @@ namespace ntbs_service.Pages
     private readonly string ReturnUrl;
     private readonly string BaseUrl;
 
-    public LogoutModel(IOptionsMonitor<AdfsOptions> options)
+    private readonly string RedirectUrl;
+
+    public LogoutModel(IOptionsMonitor<AdfsOptions> options, IOptionsMonitor<AzureAdOptions> azureAdOptions)
     {
         // We just want to return to the homepage (which will trigger going to login again)
-        ReturnUrl = $"{options.CurrentValue.Wtrealm}Index";
-        BaseUrl = options.CurrentValue.AdfsUrl;
+        // Check to see if Azure Ad Auth is enabled.
+        if(azureAdOptions.CurrentValue.Enabled.ToLower() == "true") {
+            BaseUrl = azureAdOptions.CurrentValue.Authority;
+            RedirectUrl = $"{BaseUrl}/oauth2/logout?client_id={azureAdOptions.CurrentValue.ClientId}&post_logout_redirect_uri={options.CurrentValue.Wtrealm}";
+        } else {
+            ReturnUrl = $"{options.CurrentValue.Wtrealm}Index";
+            BaseUrl = options.CurrentValue.AdfsUrl;
+            RedirectUrl = $"{BaseUrl}/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}";
+        }
+        
     }
 
     public async Task<RedirectResult> OnGetAsync()
@@ -25,7 +35,7 @@ namespace ntbs_service.Pages
             await HttpContext.SignOutAsync();
 
             // ... and sign out of adfs
-            return Redirect($"{BaseUrl}/adfs/ls/?wa=wsignout1.0&wreply={ReturnUrl}");
+            return Redirect(RedirectUrl);
         }
     }
 }
