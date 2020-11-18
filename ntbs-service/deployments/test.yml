@@ -56,6 +56,23 @@ spec:
                 key: connectionString
           - name: AdfsOptions__Wtrealm
             value: "https://ntbs-test.61b431d7ea3041e89733.uksouth.aksapp.io/"
+          - name: AzureAdOptions__ClientId
+            valueFrom:
+              secretKeyRef:
+                name: test-azuread-options
+                key: clientId
+          - name: AzureAdOptions__ClientSecret
+            valueFrom:
+              secretKeyRef:
+                name: test-azuread-options
+                key: clientSecret
+          - name: AzureAdOptions__Authority
+            valueFrom:
+              secretKeyRef:
+                name: test-azuread-options
+                key: authority
+          - name: AzureAdOptions__Enabled
+            value: "false"
           - name: LdapSettings__Password
             valueFrom:
               secretKeyRef:
@@ -88,6 +105,7 @@ metadata:
   name: ntbs-test
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
 spec:
   tls:
     - hosts:
