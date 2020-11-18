@@ -145,9 +145,44 @@ docker push ntbscontainerregistry.azurecr.io/ntbs-service
 
 ## Azure Active Directory Setup
 The system can be switched to use Microsoft Azure Active Directory for authentication and authorisation.
-To switch on set the AzureADOptions.Enabled app setting.
+To switch on set the AzureADOptions.Enabled app setting to "true".
 
-The Azure AD Application client id and client secret need to be setup.
+### Azure AD Application Configuration
+NTBS will require an Azure AD Application to be configured for Azure AD Auth.
+The configuration of the Azure AD Application should be as follows:
+
+Environment Name: 
+This will be used in the name of the application and the application id uri.
+For non-prod environments it should be used so dev,int,test etc.
+Live it should be left out.
+
+- Name: 
+  - NTBS Login ([Environment Name]) 
+  - e.g. Environment Name = Dev/Int/Test if Live then leave blank.
+- Application ID Uri: 
+  - https://[domain.com]/ntbs-[environmentname] 
+  - e.g. https://aptemus.com/ntbs-int or https://phe.gov.uk/ntbs (for live)
+
+Authentication:
+- Redirect URIs: https://[homepage]/Index e.g. https://dev.azure.com/ltht-ehr/PPM/_wiki/wikis/PPM.wiki/1/Home
+- Implicit Grant: Enable ID token
+- Supported account type: Accounts in this organisation directory only (Single Tenant)
+- Allow Public Flows: false
+
+Certificates and Secrets
+- Create a Client Secret for two years
+
+Token Configuration
+- Add Groups Claim
+- Choose Security and Groups assigned to application
+- Tokens, ID and Access Token choose to use the Group Id, Emit Group as Role Claims
+
+Api Permissions
+- Microsoft Graph 
+- Application permission - Group.Read.All (Enable Admin consent)
+- Delegate permission - profile and User.Read
+
+### Permissions
 The Azure AD Application requires the following permissions:
 - Groups.Read.All (Application Permission)
 - profile (Delegated Permission)
