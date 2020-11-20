@@ -164,7 +164,7 @@ Live it should be left out.
   - e.g. https://aptemus.com/ntbs-int or https://phe.gov.uk/ntbs (for live)
 
 Authentication:
-- Redirect URIs: https://[homepage]/Index e.g. https://https://ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io//Index
+- Redirect URIs: https://[homepage]/Index e.g. https://ntbs-int.61b431d7ea3041e89733.uksouth.aksapp.io//Index
 - Implicit Grant: Enable ID token
 - Supported account type: Accounts in this organisation directory only (Single Tenant)
 - Allow Public Flows: false
