@@ -32,7 +32,7 @@
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="Novell.Directory.Ldap.NETStandard2_0" Version="3.1.0" />
-    <PackageReference Include="Sentry.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Sentry.AspNetCore" Version="2.1.8" />
     <PackageReference Include="Sentry.Serilog" Version="2.1.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="ZNetCS.AspNetCore.Authentication.Basic" Version="4.0.0" />
