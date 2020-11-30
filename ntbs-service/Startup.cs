@@ -196,16 +196,16 @@ namespace ntbs_service
             services.AddScoped<Services.IAuthorizationService, AuthorizationService>();
             services.AddScoped<ILegacySearchService, LegacySearchService>();
             services.AddScoped<IAdDirectoryServiceFactory, AdDirectoryServiceServiceFactory>();
-            services.AddScoped<IAdImportService, AdImportService>();
             services.AddScoped<IEnhancedSurveillanceAlertsService, EnhancedSurveillanceAlertsService>();
             services.AddScoped<INotificationCloningService, NotificationCloningService>();
             services.AddScoped<ICaseManagerSearchService, CaseManagerSearchService>();
+
             AddAuditService(services, auditDbConnectionString);
             AddReferenceLabResultServices(services);
             AddClusterService(services);
             AddReportingServices(services);
             AddMicrosoftGraphServices(services);
-
+            AddAdImportService(services);
 
         }
 
@@ -323,7 +323,7 @@ namespace ntbs_service
                             var roleClaims = context.Principal.FindAll(ClaimTypes.Role);
                             foreach(var claim in roleClaims)
                             {
-                                var groupName = await azureAdDirectoryService.ResolveUserMemberGroupNameFromId(claim.Value);
+                                var groupName = await azureAdDirectoryService.ResolveGroupNameFromId(claim.Value);
                                 if (!String.IsNullOrEmpty(groupName))
                                 {
                                     var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
@@ -432,6 +432,19 @@ namespace ntbs_service
             {
                 Audit.Core.Configuration.AuditDisabled = true;
             }
+        }
+
+        private void AddAdImportService(IServiceCollection services)
+        {
+            if (Configuration.GetValue(Constants.AzureActiveDirectoryAuthEnabled, false))
+            {
+                services.AddScoped<IAdImportService, AzureAdImportService>();
+            }
+            else 
+            {
+                services.AddScoped<IAdImportService, AdImportService>();
+            }
+            
         }
 
         private void AddClusterService(IServiceCollection services)
