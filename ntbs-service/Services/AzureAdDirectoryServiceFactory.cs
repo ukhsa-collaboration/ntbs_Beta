@@ -37,7 +37,7 @@ namespace ntbs_service.Services
 
 
             this._graphServiceClient = new GraphServiceClient(authProvider);
-            return new AzureAdDirectoryService(this._graphServiceClient);
+            return new AzureAdDirectoryService(this._graphServiceClient, this._azureAdSettings);
         }
     }
 }

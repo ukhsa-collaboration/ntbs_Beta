@@ -179,8 +179,10 @@ Token Configuration
 
 Api Permissions
 - Microsoft Graph 
-- Application permission - Group.Read.All (Enable Admin consent)
+- Application permission - Group.Read.All and User.Read.All and GroupMember.Read.All (Enable Admin consent)
 - Delegate permission - profile and User.Read
+
+The User.Read.All and GroupMember.Read.All are require by the user sync job for Azure AD.
 
 ### Permissions
 The Azure AD Application requires the following permissions:

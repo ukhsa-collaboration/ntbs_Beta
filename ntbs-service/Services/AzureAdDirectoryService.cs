@@ -1,27 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Graph;
+using ntbs_service.Models.Entities;
+using ntbs_service.Models.ReferenceEntities;
+using ntbs_service.Properties;
 
 namespace ntbs_service.Services
 {
-    public interface IAzureAdDirectoryService 
+    public interface IAzureAdDirectoryService : IDisposable
     {
-        Task<string> ResolveUserMemberGroupNameFromId(string id);
+        Task<string> ResolveGroupNameFromId(string id);
+        /// <summary>
+        /// Returns NTBS users found in Azure Active Directory directory
+        /// </summary>
+        /// <param name="tbServices"> TB Services to match user memberships against </param>
+        /// <returns> (user, tbServicesMatchingGroups) tuple, where
+        ///     - user is an NTBS user object populated with data found in Azure Active Directory
+        ///     - tbServicesMatchingGroups are TbService objects that correspond to user's memberships as case manager
+        /// </returns>
+        Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(IList<TBService> tbServices);
     }
 
     public class AzureAdDirectoryService : IAzureAdDirectoryService
     {
         private readonly IGraphServiceClient _graphServiceClient;
+        private readonly AzureAdOptions _adOptions;
 
         public AzureAdDirectoryService() {}
 
-        public AzureAdDirectoryService(IGraphServiceClient graphServiceClient)
+        public AzureAdDirectoryService(IGraphServiceClient graphServiceClient, AzureAdOptions adOptions)
         {
             this._graphServiceClient = graphServiceClient;
+            this._adOptions = adOptions;
         }
 
-        public async Task<string> ResolveUserMemberGroupNameFromId(string id) {
+        public void Dispose()
+        {
+            
+        }
+
+        public async Task<string> ResolveGroupNameFromId(string id) {
 
             if (string.IsNullOrEmpty(id))
             {
@@ -46,6 +66,105 @@ namespace ntbs_service.Services
             }
             
             return groupName;
+        }
+
+        public async Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(
+            IList<TBService> tbServices)
+        {
+            IList<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)> userWithTbServiceGroups = new List<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>();
+            IEnumerable<Microsoft.Graph.User> graphUsers = await GetAllDirectoryEntries();
+
+            foreach (var user in graphUsers){
+                var groupNames = await BuildGroups(user);
+                var buildUserResult = BuildUser(user, tbServices, groupNames);
+                userWithTbServiceGroups.Add(buildUserResult);
+            }
+
+            return userWithTbServiceGroups;
+        }
+
+        public async virtual Task<IEnumerable<Microsoft.Graph.User>> GetAllDirectoryEntries()
+        {
+            var listOfDirectoryEntries = new List<Microsoft.Graph.User>();
+            
+            var groups = await this._graphServiceClient
+            .Groups
+            .Request()
+            .Filter($"startswith(displayName, '{this._adOptions.BaseUserGroup}')")
+            .Select("id, displayName, description")
+            .Expand("members")
+            .GetAsync();
+            
+            if(groups.Count > 0){
+                var group = groups[0];
+                if(group.Members != null) {
+                    foreach(var groupMember in group.Members) {
+                        try {
+                            if(groupMember.ODataType.IndexOf("microsoft.graph.user") > 0) {
+                                var graphUser = await this._graphServiceClient.Users[groupMember.Id]
+                                .Request()
+                                .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
+                                .Expand("memberof")
+                                .GetAsync();
+                                listOfDirectoryEntries.Add(graphUser);
+                            }
+                            
+                        }
+                        catch(Exception) {
+                            // ignore
+                        }
+                        
+                    }
+                }
+            }
+
+            return listOfDirectoryEntries.ToArray();
+        }
+
+        public bool IsUserExternal(Microsoft.Graph.User user){
+            bool isExternal = user.UserPrincipalName.Contains("#EXT#");
+            return isExternal;
+        }
+
+        private async Task<IEnumerable<string>> BuildGroups(Microsoft.Graph.User graphUser){
+            var groupNames = new List<string>();
+            var groupIds = graphUser.MemberOf.Select(g=>g.Id); 
+            foreach(var groupId in groupIds) {
+                var groupName = await this.ResolveGroupNameFromId(groupId);
+                // ensure we do not add any duplicate groups or blank groups
+                if(!String.IsNullOrEmpty(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase))) {
+                    groupNames.Add(groupName);
+                }
+            }
+
+            return groupNames;
+        }
+
+        private (Models.Entities.User user, List<TBService> tbServicesMatchingGroups) BuildUser(
+            Microsoft.Graph.User graphUser, IList<TBService> tbServices, IEnumerable<string> groupNames)
+        {
+
+            var tbServicesMatchingGroups = tbServices
+                .Where(tb => groupNames.Contains(tb.ServiceAdGroup))
+                .ToList();
+
+            var userName = graphUser.UserPrincipalName;
+            if(IsUserExternal(graphUser)){
+                userName = !String.IsNullOrEmpty(graphUser.Mail) ? graphUser.Mail : graphUser.UserPrincipalName;
+            }
+            
+            var user = new Models.Entities.User
+            {
+                Username = userName,
+                GivenName = graphUser.GivenName,
+                FamilyName = graphUser.Surname,
+                DisplayName = graphUser.DisplayName,
+                IsActive = graphUser.AccountEnabled.HasValue && graphUser.AccountEnabled.Value,
+                AdGroups = string.Join(",", groupNames),
+                IsCaseManager = tbServicesMatchingGroups.Any()
+            };
+
+            return (user, tbServicesMatchingGroups);
         }
     }
 }
