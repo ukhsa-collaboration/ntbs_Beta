@@ -324,7 +324,7 @@ namespace ntbs_service
                             foreach(var claim in roleClaims)
                             {
                                 var groupName = await azureAdDirectoryService.ResolveGroupNameFromId(claim.Value);
-                                if (!String.IsNullOrEmpty(groupName))
+                                if (!String.IsNullOrEmpty(groupName) && azureAdDirectoryService.IsGroupAnNtbsGroup(groupName))
                                 {
                                     var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
                                     claims.Add(groupNameClaim);

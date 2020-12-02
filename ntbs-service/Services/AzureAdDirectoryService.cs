@@ -21,6 +21,9 @@ namespace ntbs_service.Services
         ///     - tbServicesMatchingGroups are TbService objects that correspond to user's memberships as case manager
         /// </returns>
         Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(IList<TBService> tbServices);
+
+        bool IsGroupAnNtbsGroup(string groupName);
+
     }
 
     public class AzureAdDirectoryService : IAzureAdDirectoryService
@@ -68,8 +71,7 @@ namespace ntbs_service.Services
             return groupName;
         }
 
-        public async Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(
-            IList<TBService> tbServices)
+        public async Task<IEnumerable<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>> LookupUsers(IList<TBService> tbServices)
         {
             IList<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)> userWithTbServiceGroups = new List<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>();
             IEnumerable<Microsoft.Graph.User> graphUsers = await GetAllDirectoryEntries();
@@ -157,8 +159,6 @@ namespace ntbs_service.Services
 
                                 break;
                             }
-                            
-                            
                         }
                         catch(Exception) {
                             // ignore
@@ -178,13 +178,18 @@ namespace ntbs_service.Services
             return isExternal;
         }
 
+        public bool IsGroupAnNtbsGroup(string groupName){
+            bool IsGroupANtbsGroup = groupName.StartsWith(this._adOptions.BaseUserGroup);
+            return IsGroupANtbsGroup;
+        }
+
         private async Task<IEnumerable<string>> BuildGroups(Microsoft.Graph.User graphUser){
             var groupNames = new List<string>();
             var groupIds = graphUser.MemberOf.Select(g=>g.Id); 
             foreach(var groupId in groupIds) {
                 var groupName = await this.ResolveGroupNameFromId(groupId);
                 // ensure we do not add any duplicate groups or blank groups
-                if(!String.IsNullOrEmpty(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase))) {
+                if(!String.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase))) {
                     groupNames.Add(groupName);
                 }
             }
