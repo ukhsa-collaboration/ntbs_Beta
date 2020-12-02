@@ -163,11 +163,8 @@ namespace ntbs_service.Services
                         catch(Exception) {
                             // ignore
                         }
-                        
                     }
                 }
-                
-
             } 
             catch(Exception) {
                 // ignore
