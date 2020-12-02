@@ -74,6 +74,9 @@ namespace ntbs_service.Services
             IList<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)> userWithTbServiceGroups = new List<(Models.Entities.User user, List<TBService> tbServicesMatchingGroups)>();
             IEnumerable<Microsoft.Graph.User> graphUsers = await GetAllDirectoryEntries();
 
+            // ensure that users are unique
+            graphUsers = graphUsers.GroupBy(u => u.UserPrincipalName).Select(u => u.FirstOrDefault());
+
             foreach (var user in graphUsers){
                 var groupNames = await BuildGroups(user);
                 var buildUserResult = BuildUser(user, tbServices, groupNames);
@@ -98,16 +101,63 @@ namespace ntbs_service.Services
             if(groups.Count > 0){
                 var group = groups[0];
                 if(group.Members != null) {
+                    // get users from root group
+                    var usersInRootGroup = await GetUsersInGroup(group.Id);
+                    listOfDirectoryEntries.AddRange(usersInRootGroup);
+
                     foreach(var groupMember in group.Members) {
                         try {
-                            if(groupMember.ODataType.IndexOf("microsoft.graph.user") > 0) {
-                                var graphUser = await this._graphServiceClient.Users[groupMember.Id]
-                                .Request()
-                                .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
-                                .Expand("memberof")
-                                .GetAsync();
-                                listOfDirectoryEntries.Add(graphUser);
+                            switch(groupMember.ODataType){
+                                case "#microsoft.graph.group":
+                                    var usersInGroup = await GetUsersInGroup(groupMember.Id);
+                                     listOfDirectoryEntries.AddRange(usersInGroup);
+                                break;
+                                default:
+                                    break;
                             }
+                        }
+                        catch(Exception) {
+                            // ignore
+                        }
+                    }
+                }
+            }
+
+            return listOfDirectoryEntries.ToArray();
+        }
+
+        public async virtual Task<IEnumerable<Microsoft.Graph.User>> GetUsersInGroup(string groupId)
+        {
+            var listOfUsers = new List<Microsoft.Graph.User>();
+
+            try{
+                var group = await this._graphServiceClient
+                .Groups[groupId]
+                .Request()
+                .Select("id, displayName, description")
+                .Expand("members")
+                .GetAsync();
+                
+                if(group != null && group.Members != null) 
+                {
+                    foreach(var groupMember in group.Members) 
+                    {
+                        try {
+                            switch(groupMember.ODataType){
+                                case "#microsoft.graph.user":
+                                    var graphUser = await this._graphServiceClient.Users[groupMember.Id]
+                                    .Request()
+                                    .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
+                                    .Expand("memberof")
+                                    .GetAsync();
+
+                                    listOfUsers.Add(graphUser);
+                                break;
+                                default:
+
+                                break;
+                            }
+                            
                             
                         }
                         catch(Exception) {
@@ -116,10 +166,15 @@ namespace ntbs_service.Services
                         
                     }
                 }
+                
+
+            } 
+            catch(Exception) {
+                // ignore
             }
 
-            return listOfDirectoryEntries.ToArray();
-        }
+            return listOfUsers.ToArray();
+        } 
 
         public bool IsUserExternal(Microsoft.Graph.User user){
             bool isExternal = user.UserPrincipalName.Contains("#EXT#");
