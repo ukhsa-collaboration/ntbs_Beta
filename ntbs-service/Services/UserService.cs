@@ -23,6 +23,8 @@ namespace ntbs_service.Services
         Task<IEnumerable<string>> GetPhecCodesAsync(ClaimsPrincipal user);
         Task RecordUserLoginAsync(string username);
         Task<User> GetUser(ClaimsPrincipal user);
+
+        Task<string> GetUserDisplayName(ClaimsPrincipal user);
     }
 
     public class UserService : IUserService
@@ -111,6 +113,20 @@ namespace ntbs_service.Services
                 Username = username,
                 LoginDate = DateTime.Now
             });
+        }
+
+        public async Task<string> GetUserDisplayName(ClaimsPrincipal user)
+        {
+            string displayName = user.Identity.Name;
+
+            if(displayName.Contains("@")){
+                var nameClaim = user.Claims.FirstOrDefault(c => c.Type == "name");
+                if(nameClaim != null) {
+                    displayName = nameClaim.Value;
+                }
+            }
+
+            return displayName;
         }
 
         private IQueryable<TBService> GetTbServicesQuery(ClaimsPrincipal user)
