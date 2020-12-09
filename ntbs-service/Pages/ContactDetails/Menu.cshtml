@@ -1,12 +1,14 @@
 ﻿@page
 @model ntbs_service.Pages.ContactDetails.MenuModel
+@using ntbs = ntbs_service.Services
+@inject ntbs.IUserService UserService
 
 @{
     Layout = "Shared/_Layout";
 }
 
 <nhs-width-container container-width="Standard">
-    <h2 class="nhsuk-heading-l"> @User.Identity.Name </h2>
+    <h2 class="nhsuk-heading-l"> @(await UserService.GetUserDisplayName(@User)) </h2>
    
     <div>
         <a class="submenu-list-item-non-js" href="/ContactDetails">
