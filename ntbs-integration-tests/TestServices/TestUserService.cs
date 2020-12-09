@@ -77,6 +77,11 @@ namespace ntbs_integration_tests.TestServices
         {
             return Task.FromResult(new User());
         }
+
+        public Task<string> GetUserDisplayName(ClaimsPrincipal user)
+        {
+            return Task.FromResult("Forename Surname");
+        }
     }
     
     public class NhsUserWithNoTbServices : IUserService
@@ -118,6 +123,11 @@ namespace ntbs_integration_tests.TestServices
         public Task<User> GetUser(ClaimsPrincipal user)
         {
             return Task.FromResult(new User());
+        }
+
+        public Task<string> GetUserDisplayName(ClaimsPrincipal user)
+        {
+            return Task.FromResult("Forename Surname");
         }
     }
 
@@ -161,6 +171,11 @@ namespace ntbs_integration_tests.TestServices
         {
             return Task.FromResult(new User());
         }
+
+        public Task<string> GetUserDisplayName(ClaimsPrincipal user)
+        {
+            return Task.FromResult("Forename Surname");
+        }
     }
     
     public class NationalTeamUser : IUserService
@@ -198,6 +213,11 @@ namespace ntbs_integration_tests.TestServices
         public Task<User> GetUser(ClaimsPrincipal user)
         {
             return Task.FromResult(new User());
+        }
+
+        public Task<string> GetUserDisplayName(ClaimsPrincipal user)
+        {
+            return Task.FromResult("Forename Surname");
         }
     }
 }
