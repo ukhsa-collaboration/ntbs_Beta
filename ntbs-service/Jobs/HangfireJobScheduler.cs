@@ -114,9 +114,10 @@ namespace ntbs_service.Jobs
 
             if (scheduledJobsConfig.GenerateReportingDataJobEnabled)
             {
+                /// PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<GenerateReportingDataJob>(
                     GenerateReportingDataJobId,
-                    job => job.Run(JobCancellationToken.Null),
+                    job => job.Run(null, JobCancellationToken.Null),
                     scheduledJobsConfig.GenerateReportingDataJobCron,
                     TimeZoneInfo.Local);
             }
@@ -127,9 +128,10 @@ namespace ntbs_service.Jobs
 
             if (scheduledJobsConfig.GenericStoredProcedureJobEnabled)
             {
+                /// PerformContext context is passed in via Hangfire Server
                 RecurringJob.AddOrUpdate<GenericStoredProcedureJob>(
                     GenericStoredProcedureJobId,
-                    job => job.Run(JobCancellationToken.Null),
+                    job => job.Run(null, JobCancellationToken.Null),
                     scheduledJobsConfig.GenericStoredProcedureJobCron,
                     TimeZoneInfo.Local);
             }

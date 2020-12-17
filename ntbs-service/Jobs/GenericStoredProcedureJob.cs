@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Hangfire.Console;
+using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -23,11 +25,14 @@ namespace ntbs_service.Jobs
             this._parameters = null;
         }
 
-        public override async Task Run(IJobCancellationToken token)
+        /// PerformContext context is passed in via Hangfire Server
+        public override async Task Run(PerformContext context, IJobCancellationToken token)
         {
+            this._context = context;
             Log.Information($"Starting generic stored procedure job: {this._sqlString}");
+            _context.WriteLine($"Starting generic stored procedure job: {this._sqlString}");
             
-            await base.Run(token);
+            await base.Run(context, token);
 
             Log.Information($"Finishing generic stored procedure job.");
         }

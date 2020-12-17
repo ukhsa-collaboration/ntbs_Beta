@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Hangfire;
+using Hangfire.Console;
+using Hangfire.Server;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ntbs_service.DataAccess;
@@ -18,6 +20,7 @@ namespace ntbs_service.Jobs
         protected readonly string _connectionString;
         protected string _sqlString = "";
         protected object[] _parameters;
+        protected PerformContext _context;
 
         public StoredProcedureJobBase(IConfiguration configuration, string sqlString, object[] sqlParameters = null)
         {
@@ -33,9 +36,13 @@ namespace ntbs_service.Jobs
             _connectionString = _configuration.GetConnectionString(Constants.DbConnectionStringReporting);
         }
 
-        public virtual async Task Run(IJobCancellationToken token)
+        /// PerformContext context is passed in via Hangfire Server
+        public virtual async Task Run(PerformContext context, IJobCancellationToken token)
         {
+            _context = context;
+
             Log.Information($"Starting stored procedure job");
+            _context.WriteLine($"Starting stored procedure job");
 
             if (String.IsNullOrEmpty(_sqlString)) 
             {
@@ -52,6 +59,7 @@ namespace ntbs_service.Jobs
             }
             finally {
                 Log.Information($"Finishing stored procedure job with {resultChanges} changes made, successful? {successfulExecution}.");
+                _context.WriteLine($"Finishing stored procedure job with {resultChanges} changes made, successful? {successfulExecution}.");
             }
         }
 
@@ -73,6 +81,7 @@ namespace ntbs_service.Jobs
 
             string serialisedResult = JsonConvert.SerializeObject(resultToTest);
             Log.Information(serialisedResult);
+            _context.WriteLine($"Result: {serialisedResult}");
             
             // always successful as we cannot know what the expected output should be.
             success = true;
