@@ -62,7 +62,7 @@ namespace ntbs_service.Jobs
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                result = await connection.QueryAsync(_sqlString, _parameters, null, null, System.Data.CommandType.StoredProcedure);
+                result = await connection.QueryAsync(_sqlString, _parameters, null, 600, System.Data.CommandType.StoredProcedure);
             }
 
             return result;

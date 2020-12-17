@@ -25,11 +25,11 @@ namespace ntbs_service.Jobs
 
         public override async Task Run(IJobCancellationToken token)
         {
-            Log.Information($"Starting example stored procedure job");
+            Log.Information($"Starting generic stored procedure job: {this._sqlString}");
             
             await base.Run(token);
 
-            Log.Information($"Finishing example stored procedure job.");
+            Log.Information($"Finishing generic stored procedure job.");
         }
     }
 }
