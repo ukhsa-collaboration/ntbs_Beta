@@ -14,9 +14,10 @@ namespace ntbs_service.Jobs
         private const string NotificationClusterUpdateJobId = "notification-cluster-update";
         private const string MarkImportedNotificationsAsImportedJobId = "mark-notifications-as-imported";
 
-        private const string ExampleStoredProcedureJobId = "example-stored-procedure-execution";
+        private const string GenericStoredProcedureJobId = "generic-stored-procedure-execution";
 
         private const string GenerateReportingDataJobId = "generate-report-data";
+
         
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
         {
@@ -122,6 +123,19 @@ namespace ntbs_service.Jobs
             else
             {
                 RecurringJob.RemoveIfExists(GenerateReportingDataJobId);
+            }
+
+            if (scheduledJobsConfig.GenericStoredProcedureJobEnabled)
+            {
+                RecurringJob.AddOrUpdate<GenericStoredProcedureJob>(
+                    GenericStoredProcedureJobId,
+                    job => job.Run(JobCancellationToken.Null),
+                    scheduledJobsConfig.GenericStoredProcedureJobCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(GenericStoredProcedureJobId);
             }
         }
     }

@@ -7,9 +7,9 @@ using Serilog;
 
 namespace ntbs_service.Jobs
 {
-    public class ExampleStoredProcedureJob : StoredProcedureJobBase
+    public class GenericStoredProcedureJob : StoredProcedureJobBase
     {
-        public ExampleStoredProcedureJob(IConfiguration configuration)
+        public GenericStoredProcedureJob(IConfiguration configuration)
         : base(configuration)
         {
             this._sqlString = "[dbo].[uspCallDivZero]";
