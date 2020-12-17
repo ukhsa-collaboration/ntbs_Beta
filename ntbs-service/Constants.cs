@@ -14,5 +14,6 @@
         public const string ReferenceLabResultsConfigMockOut = "MockOutSpecimenMatching";
         public const string ScheduledJobsConfig = "ScheduledJobsConfig";
         public const string AzureActiveDirectoryAuthEnabled = "AzureAdOptions:Enabled";
+        public const int SqlServerDefaultCommandTimeOut = 600;
     }
 }
