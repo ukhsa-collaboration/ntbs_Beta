@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Hangfire;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ntbs_service.DataAccess;
 using Serilog;
 
@@ -40,11 +41,18 @@ namespace ntbs_service.Jobs
             {
                 throw new ArgumentNullException(nameof(_sqlString));
             }
-
-            var result = await ExecuteStoredProcedure(token);
-            int resultChanges = result.Count();
             
-            Log.Information($"Finishing stored procedure job with {resultChanges} changes made.");
+            var successfulExecution = false;
+            int resultChanges = 0;
+
+            try {
+                var result = await ExecuteStoredProcedure(token);
+                resultChanges = result.Count();
+                successfulExecution = DidExecuteSuccessfully(result);
+            }
+            finally {
+                Log.Information($"Finishing stored procedure job with {resultChanges} changes made, successful? {successfulExecution}.");
+            }
         }
 
         protected virtual async Task<IEnumerable<dynamic>> ExecuteStoredProcedure(IJobCancellationToken token)
@@ -58,6 +66,18 @@ namespace ntbs_service.Jobs
             }
 
             return result;
+        }
+
+        protected virtual bool DidExecuteSuccessfully(IEnumerable<dynamic> resultToTest) {
+            bool success = false;
+
+            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            Log.Information(serialisedResult);
+            
+            // always successful as we cannot know what the expected output should be.
+            success = true;
+
+            return success;
         }
     }
 }

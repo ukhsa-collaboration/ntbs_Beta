@@ -1,8 +1,12 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ntbs_service.DataAccess;
+using ntbs_service.Properties;
 using Serilog;
 
 namespace ntbs_service.Jobs
@@ -12,7 +16,10 @@ namespace ntbs_service.Jobs
         public GenericStoredProcedureJob(IConfiguration configuration)
         : base(configuration)
         {
-            this._sqlString = "[dbo].[uspCallDivZero]";
+            var scheduledJobConfig = new ScheduledJobsConfig();
+            configuration.GetSection(Constants.ScheduledJobsConfig).Bind(scheduledJobConfig);
+            
+            this._sqlString = scheduledJobConfig.GenericStoredProcedureNameToRun;
             this._parameters = null;
         }
 

@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace ntbs_service.Jobs
@@ -21,6 +24,22 @@ namespace ntbs_service.Jobs
             await base.Run(token);
 
             Log.Information($"Finishing generate reporting data job.");
+        }
+
+        protected override bool DidExecuteSuccessfully(System.Collections.Generic.IEnumerable<dynamic> resultToTest)
+        {
+            bool success = false;
+
+            string serialisedResult = JsonConvert.SerializeObject(resultToTest);
+            Log.Information(serialisedResult);
+
+            if(resultToTest.Count() == 0){
+                success = true;
+            } else {
+                throw new ApplicationException("Stored procedure did not execute successfully as result has messages, check the logs.");
+            }
+
+            return success;
         }
     }
 }
