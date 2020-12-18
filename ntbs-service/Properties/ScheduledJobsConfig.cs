@@ -26,10 +26,14 @@
         public bool GenerateReportingDataJobEnabled { get; set; }
         public string GenerateReportingDataJobCron { get; set; }
 
+        public bool ReportingDataRefreshJobEnabled { get; set; }
+        public string ReportingDataRefreshJobCron { get; set; }
+
+        public bool ReportingDataProcessingJobEnabled { get; set; }
+        public string ReportingDataProcessingJobCron { get; set; }
+
         public bool GenericStoredProcedureJobEnabled {get;set;}
-
         public string GenericStoredProcedureJobCron { get; set; }
-
         public string GenericStoredProcedureNameToRun { get; set; }
     }
 }

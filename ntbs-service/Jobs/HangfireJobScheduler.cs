@@ -13,10 +13,13 @@ namespace ntbs_service.Jobs
         private const string DataQualityAlertsJobId = "data-quality-alerts";
         private const string NotificationClusterUpdateJobId = "notification-cluster-update";
         private const string MarkImportedNotificationsAsImportedJobId = "mark-notifications-as-imported";
-
         private const string GenericStoredProcedureJobId = "generic-stored-procedure-execution";
-
         private const string GenerateReportingDataJobId = "generate-report-data";
+        private const string ReportingDataRefreshJobId = "reporting-data-refresh";
+
+        private const string ReportingDataProcessingJobId = "reporting-data-processing";
+
+
 
         
         public static void ScheduleRecurringJobs(ScheduledJobsConfig scheduledJobsConfig)
@@ -138,6 +141,34 @@ namespace ntbs_service.Jobs
             else
             {
                 RecurringJob.RemoveIfExists(GenericStoredProcedureJobId);
+            }
+
+            if (scheduledJobsConfig.ReportingDataRefreshJobEnabled)
+            {
+                /// PerformContext context is passed in via Hangfire Server
+                RecurringJob.AddOrUpdate<ReportingDataRefreshJob>(
+                    ReportingDataRefreshJobId,
+                    job => job.Run(null, JobCancellationToken.Null),
+                    scheduledJobsConfig.ReportingDataRefreshJobCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(ReportingDataRefreshJobId);
+            }
+
+            if (scheduledJobsConfig.ReportingDataProcessingJobEnabled)
+            {
+                /// PerformContext context is passed in via Hangfire Server
+                RecurringJob.AddOrUpdate<ReportingDataProcessingJob>(
+                    ReportingDataProcessingJobId,
+                    job => job.Run(null, JobCancellationToken.Null),
+                    scheduledJobsConfig.ReportingDataProcessingJobCron,
+                    TimeZoneInfo.Local);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists(ReportingDataProcessingJobId);
             }
         }
     }
