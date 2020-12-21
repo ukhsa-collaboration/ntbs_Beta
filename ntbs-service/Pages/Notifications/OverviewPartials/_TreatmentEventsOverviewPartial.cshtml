@@ -7,7 +7,7 @@
 }
 
 <div class="notification-overview-type-and-edit-container" id="@OverviewSubPathToAnchorMap.GetOverviewAnchorId(sectionSubPath)">
-    <h3 class="notification-details-type"> Episodes </h3>
+    <h3 class="notification-details-type"> Treatment Events </h3>
     @if (Model.PermissionLevel == PermissionLevel.Edit)
     {
         <a href="@RouteHelper.GetNotificationPath(Model.NotificationId, sectionSubPath)"
@@ -48,7 +48,7 @@
             var treatmentEvents = Model.GroupedTreatmentEvents[episodeNumber];
             
             <div>
-                <h4 class="episode-grouping-overview-heading">Episode @episodeNumber</h4>
+                <h4 class="episode-grouping-overview-heading">Treatment period @episodeNumber</h4>
                 @if (treatmentEvents.Last().IsEpisodeEndingTreatmentEvent())
                 {
                     <span>@treatmentEvents.First().FormattedEventDate to @treatmentEvents.Last().FormattedEventDate</span>
