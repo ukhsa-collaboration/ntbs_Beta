@@ -94,6 +94,10 @@
       
         .case-manager-link {
             color: white;
+            @media print {
+                color: black;
+                text-decoration: none;
+            }
         }
       
         @media print {
