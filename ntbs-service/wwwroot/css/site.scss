@@ -248,3 +248,20 @@ body {
 .reduced-margin-warning-text {
   margin-bottom: 12px;
 }
+
+/* Overrides the coming soon a tag so that link is not displayed. */ 
+@media print {
+  a:after {
+      content: none;
+  } 
+  
+  /* If link should be displayed use display-link to explicitly declare behaviour. */
+  a.display-link:after {
+    color: #212b32;
+    content: " (Link: " attr(href) ")";
+    /* [1] */
+    font-size: 14pt;
+    /* [2] */ 
+  }
+}
+
