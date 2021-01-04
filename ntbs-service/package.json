@@ -17,7 +17,7 @@
     "@sentry/browser": "5.18.1",
     "@sentry/integrations": "5.18.1",
     "accessible-autocomplete": "2.0.2",
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "babel-loader": "8.1.0",
     "css-vars-ponyfill": "2.3.1",
     "es6-promise": "4.2.8",
