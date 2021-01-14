@@ -10,8 +10,8 @@ namespace ntbs_service.Models.Entities.Alerts
     {
         public static readonly Expression<Func<Notification, bool>> NotificationQualifiesExpression =
             n => n.ClusterId != null
-                 && (n.SocialContextAddresses == null || !n.SocialContextAddresses.Any())
-                 && (n.SocialContextVenues == null || !n.SocialContextVenues.Any());
+                 && !n.SocialContextAddresses.Any()
+                 && !n.SocialContextVenues.Any();
 
         public static readonly Func<Notification, bool> NotificationQualifies =
             NotificationQualifiesExpression.Compile();
