@@ -286,10 +286,7 @@ namespace ntbs_service.DataAccess
                     (
                         (
                             t.notification.PatientDetails.NhsNumber == t.duplicate.PatientDetails.NhsNumber &&
-                            t.notification.PatientDetails.NhsNumber != null &&
-                            // The notification's date of births match
-                            t.notification.PatientDetails.Dob == t.duplicate.PatientDetails.Dob
-
+                            t.notification.PatientDetails.NhsNumber != null 
                         ) // check that the notifications have happened long enough in the past
                         &&
                         (
