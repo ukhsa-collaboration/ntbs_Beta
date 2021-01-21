@@ -63,7 +63,7 @@ namespace ntbs_service.DataAccess
         #region Draft Alerts
 
         public Task<IList<Notification>> GetNotificationsEligibleForDqDraftAlertsAsync(int count, int offset) =>
-            GetMultipleNotificationsEligibleForAlertsWithOffset<DataQualityDraftAlert>(
+            GetMultipleDraftNotificationsEligibleForAlertsWithOffset<DataQualityDraftAlert>(
                 DataQualityDraftAlert.NotificationQualifiesExpression,
                 count,
                 offset);
@@ -182,6 +182,19 @@ namespace ntbs_service.DataAccess
             int offset) where T : Alert
         {
             return await GetNotificationQueryableForNotifiedDataQualityAlerts<T>()
+                .Where(expression)
+                .OrderBy(n => n.NotificationId)
+                .Skip(offset)
+                .Take(count)
+                .ToListAsync();
+        }
+
+        private async Task<IList<Notification>> GetMultipleDraftNotificationsEligibleForAlertsWithOffset<T>(
+            Expression<Func<Notification, bool>> expression,
+            int count,
+            int offset) where T : Alert
+        {
+            return await GetDraftNotificationQueryableForDataQualityAlerts<T>()
                 .Where(expression)
                 .OrderBy(n => n.NotificationId)
                 .Skip(offset)
@@ -321,6 +334,13 @@ namespace ntbs_service.DataAccess
         {
             return GetBaseNotificationQueryableWithoutAlertWithType<T>()
                 .Where(n => n.NotificationStatus == NotificationStatus.Notified)
+                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MinNumberDaysNotifiedForAlert));
+        }
+
+        private IQueryable<Notification> GetDraftNotificationQueryableForDataQualityAlerts<T>() where T : Alert
+        {
+            return GetBaseNotificationQueryableWithoutAlertWithType<T>()
+                .Where(n => n.NotificationStatus == NotificationStatus.Draft)
                 .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MinNumberDaysNotifiedForAlert));
         }
 
