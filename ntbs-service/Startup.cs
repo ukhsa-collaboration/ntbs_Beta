@@ -109,19 +109,25 @@ namespace ntbs_service
             Log.Information($"Basic Auth Enabled: {basicAuthEnabled}");
             Log.Information($"Azure Ad Auth Enabled: {azureAdAuthEnabled}");
             
+            var baseUserGroupRole = adfsConfig["BaseUserGroup"];
+
+
             if (basicAuthEnabled)
                 UseHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
-            else if(azureAdAuthEnabled)
+            else if(azureAdAuthEnabled) {
                 UseAzureAdAuthentication(services, azureAdConfig);
+                baseUserGroupRole = azureAdConfig["BaseUserGroup"];
+            }
             else
                 UseAdfsAuthentication(services, adfsConfig);
                 
+            
 
             services.AddMvc(options =>
                 {
                     var policy = new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
-                        .RequireRole(adfsConfig["BaseUserGroup"])
+                        .RequireRole(baseUserGroupRole)
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 }).AddRazorPagesOptions(options =>
