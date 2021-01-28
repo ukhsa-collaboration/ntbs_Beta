@@ -340,8 +340,7 @@ namespace ntbs_service.DataAccess
         private IQueryable<Notification> GetDraftNotificationQueryableForDataQualityAlerts<T>() where T : Alert
         {
             return GetBaseNotificationQueryableWithoutAlertWithType<T>()
-                .Where(n => n.NotificationStatus == NotificationStatus.Draft)
-                .Where(n => n.NotificationDate < DateTime.Now.AddDays(-MinNumberDaysNotifiedForAlert));
+                .Where(DataQualityDraftAlert.NotificationQualifiesExpression);
         }
 
         private IQueryable<Notification> GetNotificationQueryableForNotifiedTreatmentOutcomeDataQualityAlerts<T>()
