@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using ntbs_service.Models.Entities;
@@ -24,6 +25,7 @@ namespace ntbs_service.Services
 
         bool IsGroupAnNtbsGroup(string groupName);
 
+        Task<IList<Claim>> BuildRoleClaimsForUser(string userPrincipalName);
     }
 
     public class AzureAdDirectoryService : IAzureAdDirectoryService
@@ -187,6 +189,42 @@ namespace ntbs_service.Services
         public bool IsGroupAnNtbsGroup(string groupName){
             bool IsGroupANtbsGroup = groupName.StartsWith(this._adOptions.BaseUserGroup);
             return IsGroupANtbsGroup;
+        }
+
+        public async Task<IList<Claim>> BuildRoleClaimsForUser(string userPrincipalName){
+            var roleClaims = new List<Claim>();
+
+            try {
+                var foundUsers = await this._graphServiceClient.Users
+                .Request()
+                .Filter($"UserPrincipalName eq '{userPrincipalName}' or Mail eq '{userPrincipalName}'")
+                .GetAsync();
+
+                var foundUser = foundUsers.FirstOrDefault();
+                if (foundUser != null) {
+                    // get groups for user.
+                    var memberOfGroups = await this._graphServiceClient
+                    .Users[foundUser.Id]
+                    .TransitiveMemberOf
+                    .Request()
+                    .Top(999)
+                    .GetAsync();
+
+                    foreach(var groupInfo in memberOfGroups) {
+                        var groupName = await this.ResolveGroupNameFromId(groupInfo.Id);
+                        // ensure we do not add any duplicate groups or blank groups
+                        if(!String.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !roleClaims.Any(group => group.Value.Equals(groupName, StringComparison.CurrentCultureIgnoreCase))) {
+                            var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
+                            roleClaims.Add(groupNameClaim);
+                        }
+                    }
+                }
+            } 
+            catch(Exception ex) {
+
+            }
+
+            return roleClaims;
         }
 
         private async Task<IEnumerable<string>> BuildGroups(Microsoft.Graph.User graphUser){
