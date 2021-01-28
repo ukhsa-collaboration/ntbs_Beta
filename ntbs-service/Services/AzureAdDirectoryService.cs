@@ -231,7 +231,7 @@ namespace ntbs_service.Services
             var groupNames = new List<string>();
 
             var groupIds = await this._graphServiceClient.Users[graphUser.Id]
-                .TransitiveMemberOf
+                .MemberOf
                 .Request()
                 .Select("id, displayName")
                 .Top(999)
