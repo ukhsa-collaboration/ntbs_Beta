@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using ntbs_service.Models.Entities;
@@ -187,6 +188,19 @@ namespace ntbs_service.Services
         public bool IsGroupAnNtbsGroup(string groupName){
             bool IsGroupANtbsGroup = groupName.StartsWith(this._adOptions.BaseUserGroup);
             return IsGroupANtbsGroup;
+        }
+
+        public async Task<IList<Claim>> BuildRoleClaimsForUser(string username) {
+            List<Claim> groupClaims = new List<Claim>();
+
+            try {
+                var groupMembership = BuildGroups()
+            } 
+            catch (Exception ex) {
+
+            }
+
+            return groupClaims;
         }
 
         private async Task<IEnumerable<string>> BuildGroups(Microsoft.Graph.User graphUser){

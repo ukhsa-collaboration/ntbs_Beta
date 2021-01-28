@@ -326,7 +326,12 @@ namespace ntbs_service
                             var claims = new List<Claim>();
                             var azureAdFactory = context.HttpContext.RequestServices.GetRequiredService<IAzureAdDirectoryServiceFactory>();
                             var azureAdDirectoryService = azureAdFactory.Create();
+
                             var roleClaims = context.Principal.FindAll(ClaimTypes.Role);
+                            
+                            var groupClaims = await azureAdDirectoryService.BuildRoleClaimsForUser(username);
+                            // claims.AddRange(roleClaims);
+                            
                             foreach(var claim in roleClaims)
                             {
                                 var groupName = await azureAdDirectoryService.ResolveGroupNameFromId(claim.Value);
