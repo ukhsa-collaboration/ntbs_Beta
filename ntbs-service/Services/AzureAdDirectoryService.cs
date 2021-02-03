@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using ntbs_service.Models.Entities;
@@ -24,6 +25,7 @@ namespace ntbs_service.Services
 
         bool IsGroupAnNtbsGroup(string groupName);
 
+        Task<IList<Claim>> BuildRoleClaimsForUser(string userPrincipalName);
     }
 
     public class AzureAdDirectoryService : IAzureAdDirectoryService
@@ -92,22 +94,29 @@ namespace ntbs_service.Services
         {
             var listOfDirectoryEntries = new List<Microsoft.Graph.User>();
             
-            var groups = await this._graphServiceClient
+            var baseGroups = await this._graphServiceClient
             .Groups
             .Request()
             .Filter($"startswith(displayName, '{this._adOptions.BaseUserGroup}')")
             .Select("id, displayName, description")
-            .Expand("members")
+            .Top(999)
             .GetAsync();
+
+            var baseGroup = baseGroups.FirstOrDefault(g => g.DisplayName == this._adOptions.BaseUserGroup);
             
-            if(groups.Count > 0){
-                var group = groups[0];
-                if(group.Members != null) {
+            if(baseGroup != null){
+
+                var groupMembers = await this._graphServiceClient.Groups[baseGroup.Id]
+                    .Members
+                    .Request()
+                    .GetAsync();
+
+                if(groupMembers != null) {
                     // get users from root group
-                    var usersInRootGroup = await GetUsersInGroup(group.Id);
+                    var usersInRootGroup = await GetUsersInGroup(baseGroup.Id);
                     listOfDirectoryEntries.AddRange(usersInRootGroup);
 
-                    foreach(var groupMember in group.Members) {
+                    foreach(var groupMember in groupMembers) {
                         try {
                             switch(groupMember.ODataType){
                                 case "#microsoft.graph.group":
@@ -133,16 +142,17 @@ namespace ntbs_service.Services
             var listOfUsers = new List<Microsoft.Graph.User>();
 
             try{
-                var group = await this._graphServiceClient
+                var groupMembers = await this._graphServiceClient
                 .Groups[groupId]
+                .Members
                 .Request()
-                .Select("id, displayName, description")
-                .Expand("members")
+                .Select("id, displayName")
+                .Top(999)
                 .GetAsync();
                 
-                if(group != null && group.Members != null) 
+                if(groupMembers != null) 
                 {
-                    foreach(var groupMember in group.Members) 
+                    foreach(var groupMember in groupMembers) 
                     {
                         try {
                             switch(groupMember.ODataType){
@@ -150,9 +160,7 @@ namespace ntbs_service.Services
                                     var graphUser = await this._graphServiceClient.Users[groupMember.Id]
                                     .Request()
                                     .Select("accountenabled, id, displayName, givenName, surname, userPrincipalName, mail")
-                                    .Expand("memberof")
                                     .GetAsync();
-
                                     listOfUsers.Add(graphUser);
                                 break;
                                 default:
@@ -183,11 +191,54 @@ namespace ntbs_service.Services
             return IsGroupANtbsGroup;
         }
 
+        public async Task<IList<Claim>> BuildRoleClaimsForUser(string userPrincipalName){
+            var roleClaims = new List<Claim>();
+
+            try {
+                var foundUsers = await this._graphServiceClient.Users
+                .Request()
+                .Filter($"UserPrincipalName eq '{userPrincipalName}' or Mail eq '{userPrincipalName}'")
+                .GetAsync();
+
+                var foundUser = foundUsers.FirstOrDefault();
+                if (foundUser != null) {
+                    // get groups for user.
+                    var memberOfGroups = await this._graphServiceClient
+                    .Users[foundUser.Id]
+                    .TransitiveMemberOf
+                    .Request()
+                    .Top(999)
+                    .GetAsync();
+
+                    foreach(var groupInfo in memberOfGroups) {
+                        var groupName = await this.ResolveGroupNameFromId(groupInfo.Id);
+                        // ensure we do not add any duplicate groups or blank groups
+                        if(!String.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !roleClaims.Any(group => group.Value.Equals(groupName, StringComparison.CurrentCultureIgnoreCase))) {
+                            var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
+                            roleClaims.Add(groupNameClaim);
+                        }
+                    }
+                }
+            } 
+            catch(Exception ex) {
+
+            }
+
+            return roleClaims;
+        }
+
         private async Task<IEnumerable<string>> BuildGroups(Microsoft.Graph.User graphUser){
             var groupNames = new List<string>();
-            var groupIds = graphUser.MemberOf.Select(g=>g.Id); 
-            foreach(var groupId in groupIds) {
-                var groupName = await this.ResolveGroupNameFromId(groupId);
+
+            var groupIds = await this._graphServiceClient.Users[graphUser.Id]
+                .MemberOf
+                .Request()
+                .Select("id, displayName")
+                .Top(999)
+                .GetAsync();
+
+            foreach(var groupInfo in groupIds) {
+                var groupName = await this.ResolveGroupNameFromId(groupInfo.Id);
                 // ensure we do not add any duplicate groups or blank groups
                 if(!String.IsNullOrEmpty(groupName) && IsGroupAnNtbsGroup(groupName) && !groupNames.Any(group => group.Equals(groupName, StringComparison.CurrentCultureIgnoreCase))) {
                     groupNames.Add(groupName);

@@ -109,19 +109,25 @@ namespace ntbs_service
             Log.Information($"Basic Auth Enabled: {basicAuthEnabled}");
             Log.Information($"Azure Ad Auth Enabled: {azureAdAuthEnabled}");
             
+            var baseUserGroupRole = adfsConfig["BaseUserGroup"];
+
+
             if (basicAuthEnabled)
                 UseHttpBasicAuth(services, httpBasicAuthConfig, adfsConfig);
-            else if(azureAdAuthEnabled)
+            else if(azureAdAuthEnabled) {
                 UseAzureAdAuthentication(services, azureAdConfig);
+                baseUserGroupRole = azureAdConfig["BaseUserGroup"];
+            }
             else
                 UseAdfsAuthentication(services, adfsConfig);
                 
+            
 
             services.AddMvc(options =>
                 {
                     var policy = new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
-                        .RequireRole(adfsConfig["BaseUserGroup"])
+                        .RequireRole(baseUserGroupRole)
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 }).AddRazorPagesOptions(options =>
@@ -320,16 +326,9 @@ namespace ntbs_service
                             var claims = new List<Claim>();
                             var azureAdFactory = context.HttpContext.RequestServices.GetRequiredService<IAzureAdDirectoryServiceFactory>();
                             var azureAdDirectoryService = azureAdFactory.Create();
-                            var roleClaims = context.Principal.FindAll(ClaimTypes.Role);
-                            foreach(var claim in roleClaims)
-                            {
-                                var groupName = await azureAdDirectoryService.ResolveGroupNameFromId(claim.Value);
-                                if (!String.IsNullOrEmpty(groupName) && azureAdDirectoryService.IsGroupAnNtbsGroup(groupName))
-                                {
-                                    var groupNameClaim = new Claim(ClaimTypes.Role, groupName);
-                                    claims.Add(groupNameClaim);
-                                }
-                            }
+
+                            var groupClaims = await azureAdDirectoryService.BuildRoleClaimsForUser(username);
+                            claims.AddRange(groupClaims);
 
                             var upnClaim = new Claim(ClaimTypes.Upn, username);
                             claims.Add(upnClaim);
