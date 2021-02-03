@@ -534,7 +534,7 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.Username).HasMaxLength(64);
                 entity.Property(e => e.FamilyName).HasMaxLength(64);
                 entity.Property(e => e.GivenName).HasMaxLength(64);
-                entity.Property(e => e.DisplayName).HasMaxLength(64);
+                entity.Property(e => e.DisplayName).HasMaxLength(256);
                 entity.Property(e => e.JobTitle).HasMaxLength(50);
                 entity.Property(e => e.PhoneNumberPrimary).HasMaxLength(100);
                 entity.Property(e => e.PhoneNumberSecondary).HasMaxLength(100);
