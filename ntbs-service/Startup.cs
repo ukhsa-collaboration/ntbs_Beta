@@ -9,7 +9,6 @@ using Hangfire.Console;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Authorization;
@@ -20,11 +19,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Logging;
 using ntbs_service.Authentication;
 using ntbs_service.DataAccess;
 using ntbs_service.DataMigration;
@@ -137,7 +135,7 @@ namespace ntbs_service
                     options.Conventions.AllowAnonymousToPage("/Health");
                     options.Conventions.AllowAnonymousToPage("/WhoAmI");
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddAuthorization(options =>
             {
@@ -515,6 +513,12 @@ namespace ntbs_service
             {
                 app.UseForwardedHeaders();
                 app.UseDeveloperExceptionPage();
+                
+                // TODO Find an alternative for using webpack middleware in dotnet 5.0
+                // app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                // {
+                //     HotModuleReplacement = true, ConfigFile = "webpack.dev.js"
+                // });
                 // We only need to turn this on in development, as in production this
                 // This behaviour is by default provided by the nginx ingress
                 // (see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#server-side-https-enforcement-through-redirect)
