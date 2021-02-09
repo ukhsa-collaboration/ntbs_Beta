@@ -128,6 +128,7 @@ namespace ntbs_service
                         .RequireRole(baseUserGroupRole)
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
+                    options.EnableEndpointRouting = false;
                 }).AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");

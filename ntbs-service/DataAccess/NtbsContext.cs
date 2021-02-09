@@ -64,7 +64,6 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisUnpasteurisedMilkConsumption> MBovisUnpasteurisedMilkConsumption { get; set; }
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
-        public virtual DbSet<PreviousTbService> PreviousTbService { get; set; }
 
         public DbQuery<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
 
@@ -462,8 +461,58 @@ namespace ntbs_service.DataAccess
                 entity.OwnsOne(e => e.DrugResistanceProfile)
                     .ToTable("DrugResistanceProfile");
 
-                entity.OwnsMany(e => e.PreviousTbServices)
+                entity.OwnsMany(e => e.PreviousTbServices,
+                        i =>
+                        {
+                            i.HasKey(e => e.PreviousTbServiceId);
+                        })
                     .ToTable("PreviousTbService");
+
+                entity.OwnsOne(e => e.MBovisDetails,
+                        i =>
+                        {
+                            i.HasKey(f => f.NotificationId);
+                            i.OwnsMany(e => e.MBovisExposureToKnownCases,
+                                j =>
+                                {
+                                    j.Property(e => e.ExposureSetting)
+                                        .HasConversion(exposureSettingEnumConverter)
+                                        .HasMaxLength(EnumMaxLength);
+                                    j.Property(e => e.NotifiedToPheStatus)
+                                        .HasConversion(statusEnumConverter)
+                                        .HasMaxLength(EnumMaxLength);
+                                });
+                            i.OwnsMany(m => m.MBovisAnimalExposures,
+                                k =>
+                                {
+                                    k.Property(e => e.AnimalType)
+                                        .HasConversion(animalTypeEnumConverter)
+                                        .HasMaxLength(EnumMaxLength);
+                
+                                    k.Property(e => e.AnimalTbStatus)
+                                        .HasConversion(animalTbStatusEnumConverter)
+                                        .HasMaxLength(EnumMaxLength);
+                                });
+                            i.OwnsMany(n => n.MBovisOccupationExposures,
+                                o =>
+                                {
+                                    o.Property(e => e.OccupationSetting)
+                                            .HasConversion(occupationSettingEnumConverter)
+                                            .HasMaxLength(EnumMaxLength);
+                                });
+                            i.OwnsMany(n => n.MBovisUnpasteurisedMilkConsumptions,
+                                l =>
+                                {
+                                    l.Property(e => e.ConsumptionFrequency)
+                                        .HasConversion(consumptionFrequencyEnumConverter)
+                                        .HasMaxLength(EnumMaxLength);
+
+                                    l.Property(e => e.MilkProductType)
+                                        .HasConversion(milkProductEnumConverter)
+                                        .HasMaxLength(EnumMaxLength);
+                                });
+                        })
+                    .ToTable("MBovisDetails");
 
 
                 entity.HasIndex(e => e.NotificationStatus);
@@ -621,51 +670,6 @@ namespace ntbs_service.DataAccess
                     .HasForeignKey(e => e.SampleTypeId);
             });
 
-            modelBuilder.Entity<MBovisDetails>(entity =>
-            {
-                entity.HasKey(e => e.NotificationId);
-                entity.HasMany(e => e.MBovisExposureToKnownCases);
-            });
-
-            modelBuilder.Entity<MBovisExposureToKnownCase>(entity =>
-            {
-                entity.Property(e => e.ExposureSetting)
-                    .HasConversion(exposureSettingEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-                entity.Property(e => e.NotifiedToPheStatus)
-                    .HasConversion(statusEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-            });
-
-            modelBuilder.Entity<MBovisUnpasteurisedMilkConsumption>(entity =>
-            {
-                entity.Property(e => e.ConsumptionFrequency)
-                    .HasConversion(consumptionFrequencyEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-
-                entity.Property(e => e.MilkProductType)
-                    .HasConversion(milkProductEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-            });
-            
-            modelBuilder.Entity<MBovisOccupationExposure>(entity =>
-            {
-                entity.Property(e => e.OccupationSetting)
-                    .HasConversion(occupationSettingEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-            });
-
-            modelBuilder.Entity<MBovisAnimalExposure>(entity =>
-            {
-                entity.Property(e => e.AnimalType)
-                    .HasConversion(animalTypeEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-                
-                entity.Property(e => e.AnimalTbStatus)
-                    .HasConversion(animalTbStatusEnumConverter)
-                    .HasMaxLength(EnumMaxLength);
-            });
-
             modelBuilder.Entity<Alert>(entity =>
             {
                 entity.Property(e => e.AlertStatus)
@@ -768,11 +772,6 @@ namespace ntbs_service.DataAccess
                 entity.Property(e => e.SystemName)
                     .IsRequired()
                     .HasMaxLength(64);
-            });
-
-            modelBuilder.Entity<PreviousTbService>(entity =>
-            {
-                entity.HasKey(e => e.PreviousTbServiceId);
             });
         }
 
