@@ -103,7 +103,7 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(NotificationStatus.Notified, notification.NotificationStatus);
 
             Assert.Equal("RG145UT", notification.PatientDetails.Postcode);
-            Assert.Equal(false, notification.PatientDetails.NoFixedAbode);
+            Assert.False(notification.PatientDetails.NoFixedAbode);
             Assert.Equal("Winford", notification.PatientDetails.GivenName);
             Assert.Equal("Wongus", notification.PatientDetails.FamilyName);
             Assert.Equal("9815779000", notification.PatientDetails.NhsNumber);
@@ -118,13 +118,13 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal("Patient did not begin course of treatment under DOT", notification.ClinicalDetails.Notes);
             
             Assert.Equal(Status.No, notification.SocialRiskFactors.RiskFactorDrugs.Status);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorDrugs.IsCurrent);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorDrugs.InPastFiveYears);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.Status);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.IsCurrent);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
-            Assert.Equal(null, notification.SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorDrugs.IsCurrent);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorDrugs.InPastFiveYears);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorDrugs.MoreThanFiveYearsAgo);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.Status);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.IsCurrent);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.InPastFiveYears);
+            Assert.Null(notification.SocialRiskFactors.RiskFactorHomelessness.MoreThanFiveYearsAgo);
             Assert.Equal(Status.Yes, notification.SocialRiskFactors.RiskFactorImprisonment.Status);
             Assert.Equal(false, notification.SocialRiskFactors.RiskFactorImprisonment.IsCurrent);
             Assert.Equal(true, notification.SocialRiskFactors.RiskFactorImprisonment.InPastFiveYears);
@@ -173,10 +173,10 @@ namespace ntbs_service_unit_tests.DataMigration
             Assert.Equal(2, notification242084.AdultsScreened);
             Assert.Equal(0, notification242084.AdultsActiveTB);
             Assert.Equal(0, notification242084.AdultsLatentTB);
-            Assert.Equal(null, notification242084.ChildrenIdentified);
-            Assert.Equal(null, notification242084.ChildrenScreened);
-            Assert.Equal(null, notification242084.ChildrenActiveTB);
-            Assert.Equal(null, notification242084.ChildrenLatentTB);
+            Assert.Null(notification242084.ChildrenIdentified);
+            Assert.Null(notification242084.ChildrenScreened);
+            Assert.Null(notification242084.ChildrenActiveTB);
+            Assert.Null(notification242084.ChildrenLatentTB);
                 
             var notification237137 = notifications.Find(n => n.ETSID == "237137").ContactTracing;
             Assert.Equal(3, notification237137.AdultsIdentified);
