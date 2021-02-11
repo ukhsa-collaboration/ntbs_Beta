@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Graph;
+using ntbs_service.Helpers;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.ReferenceEntities;
 using ntbs_service.Properties;
@@ -260,13 +261,17 @@ namespace ntbs_service.Services
             if(IsUserExternal(graphUser)){
                 userName = !String.IsNullOrEmpty(graphUser.Mail) ? graphUser.Mail : graphUser.UserPrincipalName;
             }
-            
+
+            var displayName = !String.IsNullOrEmpty(graphUser.DisplayName)
+                ? NameFormattingHelper.FormatDisplayName(graphUser.DisplayName)
+                : $"{graphUser.GivenName} {graphUser.Surname}";
+
             var user = new Models.Entities.User
             {
                 Username = userName,
                 GivenName = graphUser.GivenName,
                 FamilyName = graphUser.Surname,
-                DisplayName = graphUser.DisplayName,
+                DisplayName = displayName,
                 IsActive = graphUser.AccountEnabled.HasValue && graphUser.AccountEnabled.Value,
                 AdGroups = string.Join(",", groupNames),
                 IsCaseManager = tbServicesMatchingGroups.Any()
