@@ -38,7 +38,7 @@ namespace ntbs_service.Services
         Task DeleteNotificationAsync(int notificationId, string deletionReason);
         Task<Notification> CreateNewNotificationForUserAsync(ClaimsPrincipal user);
         Task UpdateNotificationClustersAsync(IEnumerable<NotificationClusterValue> clusterValues);
-        Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile);
+        Task UpdateDrugResistanceProfileAsync(DrugResistanceProfile currentProfile, DrugResistanceProfile newProfile);
         Task UpdateMBovisDetailsExposureToKnownCasesAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsUnpasteurisedMilkConsumptionAsync(Notification notification, MBovisDetails mBovisDetails);
         Task UpdateMBovisDetailsOccupationExposureAsync(Notification notification, MBovisDetails mBovisDetails);
@@ -415,9 +415,9 @@ namespace ntbs_service.Services
                 AuditService.AuditUserSystem);
         }
 
-        public async Task UpdateDrugResistanceProfileAsync(Notification notification, DrugResistanceProfile drugResistanceProfile)
+        public async Task UpdateDrugResistanceProfileAsync(DrugResistanceProfile currentProfile, DrugResistanceProfile newProfile)
         {
-            _context.SetValues(notification.DrugResistanceProfile, drugResistanceProfile);
+            _context.SetValues(currentProfile, newProfile);
             await _notificationRepository.SaveChangesAsync(
                 NotificationAuditType.SystemEdited,
                 AuditService.AuditUserSystem);

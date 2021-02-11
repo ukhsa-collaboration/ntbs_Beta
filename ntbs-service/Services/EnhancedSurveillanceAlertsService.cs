@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
-using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
+using ntbs_service.Models.Projections;
 
 namespace ntbs_service.Services
 {
     public interface IEnhancedSurveillanceAlertsService
     {
-        Task CreateOrDismissMdrAlert(Notification notification);
-        Task CreateOrDismissMBovisAlert(Notification notification);
+        Task CreateOrDismissMdrAlert(INotificationForDrugResistanceImport notification);
+        Task CreateOrDismissMBovisAlert(INotificationForDrugResistanceImport notification);
     }
     
     public class EnhancedSurveillanceAlertsService : IEnhancedSurveillanceAlertsService
@@ -19,7 +19,7 @@ namespace ntbs_service.Services
             _alertService = alertService;
         }
 
-        public async Task CreateOrDismissMdrAlert(Notification notification)
+        public async Task CreateOrDismissMdrAlert(INotificationForDrugResistanceImport notification)
         {
             if (notification.IsMdr)
             {
@@ -31,7 +31,7 @@ namespace ntbs_service.Services
             }
         }
         
-        public async Task CreateOrDismissMBovisAlert(Notification notification)
+        public async Task CreateOrDismissMBovisAlert(INotificationForDrugResistanceImport notification)
         {
             if (notification.IsMBovis)
             {
@@ -43,13 +43,13 @@ namespace ntbs_service.Services
             }
         }
         
-        private async Task CreateMdrAlert(Notification notification)
+        private async Task CreateMdrAlert(INotificationForDrugResistanceImport notification)
         {
             var mdrAlert = new MdrAlert {NotificationId = notification.NotificationId};
             await _alertService.AddUniqueAlertAsync(mdrAlert);
         }
 
-        private async Task CreateMBovisAlert(Notification notification)
+        private async Task CreateMBovisAlert(INotificationForDrugResistanceImport notification)
         {
             var mBovisAlert = new MBovisAlert { NotificationId = notification.NotificationId};
             await _alertService.AddUniqueAlertAsync(mBovisAlert);

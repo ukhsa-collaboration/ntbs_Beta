@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Moq;
 using ntbs_service.DataAccess;
 using ntbs_service.Models.Entities;
+using ntbs_service.Models.Projections;
 using ntbs_service.Services;
 using Xunit;
 
@@ -38,17 +40,17 @@ namespace ntbs_service_unit_tests.Services
             Species = "No M. bovis", DrugResistanceProfileString = "No Mdr"
         };
         
-        private readonly Notification mockNotificationWithMdr =
-            new Notification {NotificationId = 1, DrugResistanceProfile = drpWithMdr };
+        private readonly NotificationForDrugResistanceImport mockNotificationWithMdr =
+            new NotificationForDrugResistanceImport { NotificationId = 1, DrugResistanceProfile = drpWithMdr };
         
-        private readonly Notification mockNotificationWithoutMdr =
-            new Notification {NotificationId = 2, DrugResistanceProfile = drpWithoutMdr};
+        private readonly NotificationForDrugResistanceImport mockNotificationWithoutMdr =
+            new NotificationForDrugResistanceImport { NotificationId = 2, DrugResistanceProfile = drpWithoutMdr};
         
-        private readonly Notification mockNotificationWithMbovis =
-            new Notification {NotificationId = 3, DrugResistanceProfile = drpWithMbovis};
+        private readonly NotificationForDrugResistanceImport mockNotificationWithMbovis =
+            new NotificationForDrugResistanceImport { NotificationId = 3, DrugResistanceProfile = drpWithMbovis};
         
-        private readonly Notification mockNotificationWithoutMbovis =
-            new Notification {NotificationId = 4, DrugResistanceProfile = drpWithoutMbovis};
+        private readonly NotificationForDrugResistanceImport mockNotificationWithoutMbovis =
+            new NotificationForDrugResistanceImport { NotificationId = 4, DrugResistanceProfile = drpWithoutMbovis};
 
         public DrugResistanceProfileServiceTest()
         {
@@ -65,7 +67,7 @@ namespace ntbs_service_unit_tests.Services
         }
 
         [Fact]
-        public void UpdateDrugResistanceProfile_DoesNotUpdateRecordIfNotMatching()
+        public async Task UpdateDrugResistanceProfile_DoesNotUpdateRecordIfNotMatching()
         {
             // Arrange
             mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
@@ -75,20 +77,21 @@ namespace ntbs_service_unit_tests.Services
                 }));
 
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(3))
-                .Returns(Task.FromResult<Notification>(null));
-            
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(3))
+                .Returns(Task.FromResult<NotificationForDrugResistanceImport>(null));
+
             // Act
-            drpService.UpdateDrugResistanceProfiles();
-            
+            Func<Task> act = () => drpService.UpdateDrugResistanceProfiles();
+
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
-            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Never);
-            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Never);
+            await Assert.ThrowsAsync<DataException>(act);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<DrugResistanceProfile>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
+            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Never);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Never);
         }
         
         [Fact]
-        public void UpdateDrugResistanceProfile_DoesUpdateRecordIfMatching()
+        public async Task UpdateDrugResistanceProfile_DoesUpdateRecordIfMatching()
         {
             // Arrange
             mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
@@ -99,20 +102,20 @@ namespace ntbs_service_unit_tests.Services
                 }));
 
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(It.IsAny<int>()))
-                .Returns<int>(GetNotificationWithEmptyDrugResistanceProfile);    
-            
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(It.IsAny<int>()))
+                .Returns<int>(GetNotificationWithEmptyDrugResistanceProfile);
+
             // Act
-            drpService.UpdateDrugResistanceProfiles();
+            await drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Exactly(2));
-            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Exactly(2));
-            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Exactly(2));
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<DrugResistanceProfile>(), It.IsAny<DrugResistanceProfile>()), Times.Exactly(2));
+            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Exactly(2));
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Exactly(2));
         }
 
         [Fact]
-        public void UpdateDrugResistanceProfile_WhenNoUpdatedDrp_NoAlertCreated()
+        public async Task UpdateDrugResistanceProfile_WhenNoUpdatedDrp_NoAlertCreated()
         {
             // Arrange
             mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
@@ -123,23 +126,23 @@ namespace ntbs_service_unit_tests.Services
                 }));
             
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithMdr.NotificationId))
-                .Returns(Task.FromResult(mockNotificationWithMdr));           
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(mockNotificationWithMdr.NotificationId))
+                .Returns(Task.FromResult(mockNotificationWithMdr));
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithoutMdr.NotificationId))
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(mockNotificationWithoutMdr.NotificationId))
                 .Returns(Task.FromResult(mockNotificationWithoutMdr));
-            
+
             // Act
-            drpService.UpdateDrugResistanceProfiles();
+            await drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
-            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Never);
-            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Never);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<DrugResistanceProfile>(), It.IsAny<DrugResistanceProfile>()), Times.Never);
+            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Never);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Never);
         }       
         
         [Fact]
-        public void UpdateDrugResistanceProfile_UpdatedOnlyChangedDrpString()
+        public async Task UpdateDrugResistanceProfile_UpdatedOnlyChangedDrpString()
         {
             // Arrange
             mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
@@ -150,23 +153,23 @@ namespace ntbs_service_unit_tests.Services
                 }));
             
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithMdr.NotificationId))
-                .Returns(Task.FromResult(mockNotificationWithMdr));           
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(mockNotificationWithMdr.NotificationId))
+                .Returns(Task.FromResult(mockNotificationWithMdr));
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithoutMdr.NotificationId))
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(mockNotificationWithoutMdr.NotificationId))
                 .Returns(Task.FromResult(mockNotificationWithoutMdr));
-            
+
             // Act
-            drpService.UpdateDrugResistanceProfiles();
+            await drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
-            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Once);
-            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Once);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<DrugResistanceProfile>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
+            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Once);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Once);
         }
         
         [Fact]
-        public void UpdateDrugResistanceProfile_UpdatedOnlyChangedDrpSpecies()
+        public async Task UpdateDrugResistanceProfile_UpdatedOnlyChangedDrpSpecies()
         {
             // Arrange
             mockDrugResistanceProfileService.Setup(x => x.GetDrugResistanceProfilesAsync())
@@ -177,24 +180,24 @@ namespace ntbs_service_unit_tests.Services
                 }));
             
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithMbovis.NotificationId))
-                .Returns(Task.FromResult(mockNotificationWithMbovis));           
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(mockNotificationWithMbovis.NotificationId))
+                .Returns(Task.FromResult(mockNotificationWithMbovis));
             mockNotificationRepository
-                .Setup(x => x.GetNotificationAsync(mockNotificationWithoutMbovis.NotificationId))
+                .Setup(x => x.GetNotificationForDrugResistanceImportAsync(mockNotificationWithoutMbovis.NotificationId))
                 .Returns(Task.FromResult(mockNotificationWithoutMbovis));
             
             // Act
-            drpService.UpdateDrugResistanceProfiles();
+            await drpService.UpdateDrugResistanceProfiles();
             
             // Assert
-            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<Notification>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
-            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<Notification>()), Times.Once);
-            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<Notification>()), Times.Once);
+            mockNotificationService.Verify(x => x.UpdateDrugResistanceProfileAsync(It.IsAny<DrugResistanceProfile>(), It.IsAny<DrugResistanceProfile>()), Times.Once);
+            mockMdrService.Verify(x => x.CreateOrDismissMdrAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Once);
+            mockMdrService.Verify(x => x.CreateOrDismissMBovisAlert(It.IsAny<INotificationForDrugResistanceImport>()), Times.Once);
         }
         
-        private Task<Notification> GetNotificationWithEmptyDrugResistanceProfile(int notificationId)
+        private Task<NotificationForDrugResistanceImport> GetNotificationWithEmptyDrugResistanceProfile(int notificationId)
         {
-            return Task.FromResult(new Notification
+            return Task.FromResult(new NotificationForDrugResistanceImport
             {
                 NotificationId = notificationId, DrugResistanceProfile = new DrugResistanceProfile()
             });

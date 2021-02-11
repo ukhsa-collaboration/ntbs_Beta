@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Projections;
 
 namespace ntbs_service.DataAccess
 {
@@ -34,6 +35,7 @@ namespace ntbs_service.DataAccess
         Task<Notification> GetNotificationAsync(int notificationId);
         Task<Notification> GetNotifiedNotificationAsync(int notificationId);
         Task<Notification> GetNotificationForAlertCreationAsync(int notificationId);
+        Task<NotificationForDrugResistanceImport> GetNotificationForDrugResistanceImportAsync(int notificationId);
         Task<IEnumerable<NotificationBannerModel>> GetNotificationBannerModelsByIdsAsync(IList<int> ids);
         Task<IEnumerable<Notification>> GetInactiveNotificationsToCloseAsync();
         Task<IList<int>> GetNotificationIdsByNhsNumberAsync(string nhsNumber);
@@ -102,6 +104,20 @@ namespace ntbs_service.DataAccess
         {
             return await GetBaseNotificationsIQueryable()
                 .Include(n => n.HospitalDetails)
+                .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
+        }
+
+        public async Task<NotificationForDrugResistanceImport> GetNotificationForDrugResistanceImportAsync(int notificationId)
+        {
+            return await _context.Notification
+                .Select(
+                    n => new NotificationForDrugResistanceImport
+                        {
+                            NotificationId = n.NotificationId,
+                            DrugResistanceProfile = n.DrugResistanceProfile,
+                            TreatmentRegimen = n.ClinicalDetails.TreatmentRegimen,
+                            ExposureToKnownCaseStatus = n.MDRDetails.ExposureToKnownCaseStatus
+                        })
                 .SingleOrDefaultAsync(n => n.NotificationId == notificationId);
         }
 
