@@ -465,55 +465,75 @@ namespace ntbs_service.DataAccess
                         i =>
                         {
                             i.HasKey(e => e.PreviousTbServiceId);
-                        })
-                    .ToTable("PreviousTbService");
+                            i.ToTable("PreviousTbService");
+                        });
 
                 entity.OwnsOne(e => e.MBovisDetails,
-                        i =>
-                        {
-                            i.HasKey(f => f.NotificationId);
-                            i.OwnsMany(e => e.MBovisExposureToKnownCases,
-                                j =>
-                                {
-                                    j.Property(e => e.ExposureSetting)
-                                        .HasConversion(exposureSettingEnumConverter)
-                                        .HasMaxLength(EnumMaxLength);
-                                    j.Property(e => e.NotifiedToPheStatus)
-                                        .HasConversion(statusEnumConverter)
-                                        .HasMaxLength(EnumMaxLength);
-                                });
-                            i.OwnsMany(m => m.MBovisAnimalExposures,
-                                k =>
-                                {
-                                    k.Property(e => e.AnimalType)
-                                        .HasConversion(animalTypeEnumConverter)
-                                        .HasMaxLength(EnumMaxLength);
-                
-                                    k.Property(e => e.AnimalTbStatus)
-                                        .HasConversion(animalTbStatusEnumConverter)
-                                        .HasMaxLength(EnumMaxLength);
-                                });
-                            i.OwnsMany(n => n.MBovisOccupationExposures,
-                                o =>
-                                {
-                                    o.Property(e => e.OccupationSetting)
-                                            .HasConversion(occupationSettingEnumConverter)
-                                            .HasMaxLength(EnumMaxLength);
-                                });
-                            i.OwnsMany(n => n.MBovisUnpasteurisedMilkConsumptions,
-                                l =>
-                                {
-                                    l.Property(e => e.ConsumptionFrequency)
-                                        .HasConversion(consumptionFrequencyEnumConverter)
-                                        .HasMaxLength(EnumMaxLength);
+                    details =>
+                    {
+                        details.HasKey(d => d.NotificationId);
+                        details.OwnsMany(d => d.MBovisExposureToKnownCases,
+                            ex =>
+                            {
+                                ex.HasKey(e => e.MBovisExposureToKnownCaseId);
+                                ex.Property(e => e.ExposureSetting)
+                                    .HasConversion(exposureSettingEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
+                                ex.Property(e => e.NotifiedToPheStatus)
+                                    .HasConversion(statusEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
+                                ex.ToTable("MBovisExposureToKnownCase");
+                                ex.WithOwner().HasForeignKey(e => e.NotificationId);
+                            });
+                        details.Property(d => d.HasExposureToKnownCases)
+                            .HasColumnName("HasExposureToKnownCases");
+                        details.OwnsMany(d => d.MBovisAnimalExposures,
+                            an =>
+                            {
+                                an.HasKey(e => e.MBovisAnimalExposureId);
+                                an.Property(e => e.AnimalType)
+                                    .HasConversion(animalTypeEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
 
-                                    l.Property(e => e.MilkProductType)
-                                        .HasConversion(milkProductEnumConverter)
-                                        .HasMaxLength(EnumMaxLength);
-                                });
-                        })
-                    .ToTable("MBovisDetails");
+                                an.Property(e => e.AnimalTbStatus)
+                                    .HasConversion(animalTbStatusEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
+                                an.ToTable("MBovisAnimalExposure");
+                                an.WithOwner().HasForeignKey(e => e.NotificationId);
+                            });
+                        details.Property(d => d.HasAnimalExposure)
+                            .HasColumnName("HasAnimalExposure");
+                        details.OwnsMany(d => d.MBovisOccupationExposures,
+                            oc =>
+                            {
+                                oc.HasKey(e => e.MBovisOccupationExposureId);
+                                oc.Property(e => e.OccupationSetting)
+                                    .HasConversion(occupationSettingEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
+                                oc.ToTable("MBovisOccupationExposures");
+                                oc.WithOwner().HasForeignKey(e => e.NotificationId);
+                            });
+                        details.Property(d => d.HasOccupationExposure)
+                            .HasColumnName("HasOccupationExposure");
+                        details.OwnsMany(d => d.MBovisUnpasteurisedMilkConsumptions,
+                            unp =>
+                            {
+                                unp.HasKey(e => e.MBovisUnpasteurisedMilkConsumptionId);
+                                unp.Property(e => e.ConsumptionFrequency)
+                                    .HasConversion(consumptionFrequencyEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
 
+                                unp.Property(e => e.MilkProductType)
+                                    .HasConversion(milkProductEnumConverter)
+                                    .HasMaxLength(EnumMaxLength);
+                                unp.ToTable("MBovisUnpasteurisedMilkConsumption");
+                                unp.WithOwner().HasForeignKey(e => e.NotificationId);
+                            });
+                        details.Property(d => d.HasUnpasteurisedMilkConsumption)
+                            .HasColumnName("HasUnpasteurisedMilkConsumption");
+                        details.ToTable("MBovisDetails");
+                    });
+                entity.ToTable("Notification");
 
                 entity.HasIndex(e => e.NotificationStatus);
 
@@ -652,7 +672,9 @@ namespace ntbs_service.DataAccess
             modelBuilder.Entity<TestData>(entity =>
             {
                 entity.HasKey(e => e.NotificationId);
-                entity.HasMany(e => e.ManualTestResults);
+                entity.HasMany(e => e.ManualTestResults)
+                    .WithOne()
+                    .HasForeignKey(e => e.NotificationId);
             });
             
             modelBuilder.Entity<ManualTestResult>(entity =>

@@ -10,7 +10,7 @@ Make sure you have the following tools installed locally:
   - During installation make sure you install DB Engine.
   - Once installed, use your preferred connection method to create a `ntbsDev` database in the default instance.
 - [.NET cli tools](https://dotnet.microsoft.com/download) - the codebase should be compatible with the newest SDK tools
-- [.NET SDK 2.2](https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.300-SDK/2.2.300-SDK-download.md)
+- [.NET SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
   - once `dotnet` is installed, run `dotnet tool install --global dotnet-ef` to install the `dotnet ef` tools package
 - IDE of choice (eg. [Rider](https://www.jetbrains.com/rider/) or [Visual Studio Code](https://code.visualstudio.com/download) with [C# plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp))
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
@@ -81,7 +81,7 @@ You can also make the tests log to a file by un-commenting the appropriate lines
 
 To minimize friction in development and deployments, the app uses Entity Framework migrations.
 The simplest way to make a schema change is to make the appropriate changes in the model (e.g. [Notification](Models/Entities/Notification.cs) and the [database context](DataAccess/NtbsContext.cs) and run
-`dotnet ef migrations add <NameOfMigration>`
+`dotnet ef migrations add <NameOfMigration> --context=NtbsContext`
 This will create a migration file, that can be edited further to match needs. It will be run at application startup,
 or can be evoked by hand using
 `dotnet ef database update`
