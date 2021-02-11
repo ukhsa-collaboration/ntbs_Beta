@@ -34,7 +34,7 @@ namespace ntbs_service.Services
             
             foreach (var (notificationId, drugResistanceProfile) in drugResistanceProfiles)
             {
-                var notification = await _notificationRepository.GetNotificationAsync(notificationId);
+                var notification = await _notificationRepository.GetNotificationForDrugResistanceImportAsync(notificationId);
                 if (notification == null)
                 {
                     throw new DataException(
@@ -47,7 +47,7 @@ namespace ntbs_service.Services
                     continue;
                 }
                 
-                await _notificationService.UpdateDrugResistanceProfileAsync(notification, drugResistanceProfile);
+                await _notificationService.UpdateDrugResistanceProfileAsync(notification.DrugResistanceProfile, drugResistanceProfile);
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
             }

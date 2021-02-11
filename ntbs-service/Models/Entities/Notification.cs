@@ -7,13 +7,14 @@ using EFAuditer;
 using ExpressiveAnnotations.Attributes;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.Projections;
 using ntbs_service.Models.Validations;
 
 namespace ntbs_service.Models.Entities
 {
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     [Display(Name = "Notification")]
-    public partial class Notification : ModelBase, IOwnedEntityForAuditing
+    public partial class Notification : ModelBase, IOwnedEntityForAuditing, INotificationForDrugResistanceImport
     {
         [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
         public Notification()
