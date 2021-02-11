@@ -120,24 +120,20 @@ namespace ntbs_service
             else
                 UseAdfsAuthentication(services, adfsConfig);
 
-
-
-            services.AddMvc(options =>
-                {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .RequireRole(baseUserGroupRole)
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                    options.EnableEndpointRouting = false;
-                }).AddRazorPagesOptions(options =>
-                {
-                    options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
-                    options.Conventions.AllowAnonymousToPage("/Logout");
-                    options.Conventions.AllowAnonymousToPage("/Health");
-                    options.Conventions.AllowAnonymousToPage("/WhoAmI");
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllersWithViews(options => {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireRole(baseUserGroupRole)
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+            services.AddRazorPages(options =>
+            {
+                options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
+                options.Conventions.AllowAnonymousToPage("/Logout");
+                options.Conventions.AllowAnonymousToPage("/Health");
+                options.Conventions.AllowAnonymousToPage("/WhoAmI");
+            });
 
             services.AddAuthorization(options =>
             {
@@ -559,10 +555,18 @@ namespace ntbs_service
                         : LogEventLevel.Information;
                 });
             }
+            
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseCookiePolicy();
             app.UseSession();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
 
             if (!Env.IsEnvironment("CI"))
             {
@@ -573,8 +577,6 @@ namespace ntbs_service
             {
                 app.UseMiddleware<AuditGetRequestMiddleWare>();
             }
-
-            app.UseMvc();
 
             ConfigureHangfire(app);
 
