@@ -1,12 +1,15 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using ntbs_service.DataAccess;
+using ntbs_service.Models.Entities;
 
 namespace ntbs_service.Services
 {
     public interface IDrugResistanceProfilesService
     {
-        Task UpdateDrugResistanceProfiles();
+        Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates);
     }
 
     public class DrugResistanceProfileService : IDrugResistanceProfilesService
@@ -28,10 +31,24 @@ namespace ntbs_service.Services
             _enhancedSurveillanceAlertsService = enhancedSurveillanceAlertsService;
         }
 
-        public async Task UpdateDrugResistanceProfiles()
+        public async Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates)
         {
             var drugResistanceProfiles = await _drugResistanceProfileRepository.GetDrugResistanceProfilesAsync();
-            
+
+            var totalNumberOfProfilesInNeedOfUpdate = drugResistanceProfiles.Count;
+            var profilesToUpdateOnThisRun = drugResistanceProfiles.AsEnumerable()
+                .Take(maxNumberOfUpdates)
+                .ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
+
+            await UpdateDrugResistanceProfiles(profilesToUpdateOnThisRun);
+
+            return totalNumberOfProfilesInNeedOfUpdate > maxNumberOfUpdates
+                ? totalNumberOfProfilesInNeedOfUpdate - maxNumberOfUpdates
+                : 0;
+        }
+
+        private async Task UpdateDrugResistanceProfiles(Dictionary<int, DrugResistanceProfile> drugResistanceProfiles)
+        {
             foreach (var (notificationId, drugResistanceProfile) in drugResistanceProfiles)
             {
                 var notification = await _notificationRepository.GetNotificationForDrugResistanceImportAsync(notificationId);
@@ -40,14 +57,16 @@ namespace ntbs_service.Services
                     throw new DataException(
                         $"Reporting database sourced NotificationId {notificationId} was not found in NTBS database.");
                 }
-                
+
                 if (notification.DrugResistanceProfile.Species == drugResistanceProfile.Species &&
-                    notification.DrugResistanceProfile.DrugResistanceProfileString == drugResistanceProfile.DrugResistanceProfileString)
+                    notification.DrugResistanceProfile.DrugResistanceProfileString ==
+                    drugResistanceProfile.DrugResistanceProfileString)
                 {
                     continue;
                 }
-                
-                await _notificationService.UpdateDrugResistanceProfileAsync(notification.DrugResistanceProfile, drugResistanceProfile);
+
+                await _notificationService.UpdateDrugResistanceProfileAsync(notification.DrugResistanceProfile,
+                    drugResistanceProfile);
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMdrAlert(notification);
                 await _enhancedSurveillanceAlertsService.CreateOrDismissMBovisAlert(notification);
             }
@@ -56,9 +75,9 @@ namespace ntbs_service.Services
     
     class MockDrugResistanceProfilesService : IDrugResistanceProfilesService
     {
-        public Task UpdateDrugResistanceProfiles()
+        public Task<int> UpdateDrugResistanceProfiles(int maxNumberOfUpdates)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(0);
         }
     }
 
