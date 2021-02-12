@@ -235,7 +235,7 @@ namespace ntbs_service.DataAccess
                 CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                 {
                     Value = n.Username,
-                    Text = n.FullName
+                    Text = n.DisplayName
                 })
             };
             return filteredHospitalDetailsPageSelectLists;

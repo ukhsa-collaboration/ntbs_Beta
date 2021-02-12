@@ -2,7 +2,7 @@
 @model ntbs_service.Models.Entities.User
 
 <nhs-width-container container-width="Standard">
-    <h2 class="nhsuk-heading-l"> @Model.FullName </h2>
+    <h2 class="nhsuk-heading-l"> @Model.DisplayName </h2>
     <div class="case-manager-details-edit-container">
         <h3 class="nhsuk-heading-m"> Contact details </h3>
         @if (ViewData["IsEditable"] as bool? == true)

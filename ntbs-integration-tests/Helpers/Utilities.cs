@@ -180,8 +180,7 @@ namespace ntbs_integration_tests.Helpers
                 new User
                 {
                     Username = CASEMANAGER_ABINGDON_EMAIL,
-                    GivenName = "TestCase",
-                    FamilyName = "TestManager",
+                    DisplayName = "TestCase TestManager",
                     AdGroups = "Global.NIS.NTBS.Service_Abingdon",
                     IsActive = true,
                     IsCaseManager = true
@@ -189,8 +188,7 @@ namespace ntbs_integration_tests.Helpers
                 new User
                 {
                     Username = CASEMANAGER_ABINGDON_EMAIL2,
-                    GivenName = "TestCase2",
-                    FamilyName = "TestManager",
+                    DisplayName = "TestCase2 TestManager",
                     AdGroups = "Global.NIS.NTBS.Service_Abingdon",
                     IsActive = true,
                     IsCaseManager = true
@@ -198,8 +196,7 @@ namespace ntbs_integration_tests.Helpers
                 new User
                 {
                     Username = "Developer@ntbs.phe.com",
-                    GivenName = "BaseTestCase",
-                    FamilyName = "BaseTestManager",
+                    DisplayName = "BaseTestCase BaseTestManager",
                     AdGroups = "Global.NIS.NTBS.NTS",
                     IsActive = true,
                     IsCaseManager = true

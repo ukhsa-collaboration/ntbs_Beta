@@ -71,7 +71,7 @@ namespace ntbs_service.Pages.ContactDetails
                     Url = $"/ServiceDirectory/Region/{region.Code}"
                 });
             }
-            breadcrumbs.Add((new Breadcrumb {Label = ContactDetails.FullName, Url = $"/ContactDetails/{ContactDetails.Username}"}));
+            breadcrumbs.Add((new Breadcrumb {Label = ContactDetails.DisplayName, Url = $"/ContactDetails/{ContactDetails.Username}"}));
 
             ViewData["Breadcrumbs"] = breadcrumbs;
         }

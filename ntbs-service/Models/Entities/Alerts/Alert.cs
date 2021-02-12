@@ -29,7 +29,7 @@ namespace ntbs_service.Models.Entities.Alerts
         public virtual string Action { get; }
         public virtual bool NotDismissable  { get; }
         [Display(Name = "Case manager")] 
-        public string CaseManagerFullName => CaseManager?.FullName ?? "";
+        public string CaseManagerFullName => CaseManager?.DisplayName ?? "";
         [Display(Name = "Alert date")]
         public string FormattedCreationDate => CreationDate.ConvertToString();
         [Display(Name = "TB Service")]

@@ -38,8 +38,9 @@ namespace ntbs_service.Services
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
             // The size of the directory should make this ok.
             var filtered = caseManagers.Where(c =>
-                    searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s))
-                    || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s))
+                    searchKeywords.Any(s => c.FamilyName != null && c.FamilyName.ToLower().Contains(s))
+                    || searchKeywords.Any(s => c.GivenName != null && c.GivenName.ToLower().Contains(s))
+                    || searchKeywords.Any(s => c.DisplayName.ToLower().Contains(s))
                     || c.CaseManagerTbServices.Any(x =>
                         searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s))))
                 .ToList();

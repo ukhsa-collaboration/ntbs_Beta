@@ -99,7 +99,7 @@ namespace ntbs_service.Pages.Notifications.Edit
             Hospitals = new SelectList(hospitals, nameof(Hospital.HospitalId), nameof(Hospital.Name));
 
             var caseManagers = await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(tbServiceCodes);
-            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.FullName));
+            CaseManagers = new SelectList(caseManagers, nameof(Models.Entities.User.Username), nameof(Models.Entities.User.DisplayName));
         }
 
         protected override IActionResult RedirectForDraft(bool isBeingSubmitted)

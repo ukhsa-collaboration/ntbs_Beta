@@ -49,7 +49,7 @@ namespace ntbs_service.Pages.Admin
             var caseManagers = referenceDataRepository.GetAllCaseManagers().Result;
             CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Username),
-                nameof(Models.Entities.User.FullName));
+                nameof(Models.Entities.User.DisplayName));
             
             Sexes = _referenceDataRepository.GetAllSexesAsync().Result.ToList();
         }

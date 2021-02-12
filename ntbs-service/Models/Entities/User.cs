@@ -55,8 +55,6 @@ namespace ntbs_service.Models.Entities
 
         public virtual ICollection<CaseManagerTbService> CaseManagerTbServices { get; set; }
 
-        public string FullName => GivenName + " " + FamilyName;
-
         public bool ArePrimaryContactDetailsMissing => String.IsNullOrEmpty(JobTitle)
                                                        && String.IsNullOrEmpty(PhoneNumberPrimary)
                                                        && String.IsNullOrEmpty(EmailPrimary);
