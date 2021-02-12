@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -117,12 +118,12 @@ namespace ntbs_service.Services
 
         public async Task<string> GetUserDisplayName(ClaimsPrincipal user)
         {
-            string displayName = user.Identity.Name;
+            string displayName = NameFormattingHelper.FormatDisplayName(user.Identity.Name);
 
             if(displayName.Contains("@")){
                 var nameClaim = user.Claims.FirstOrDefault(c => c.Type == "name");
                 if(nameClaim != null) {
-                    displayName = nameClaim.Value;
+                    displayName = NameFormattingHelper.FormatDisplayName(nameClaim.Value);
                 }
             }
 
