@@ -82,7 +82,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (ClinicalDetails.ShouldValidateFull)
             {
-                TryValidateModel(this);
+                TryValidateModel(ClinicalDetails, nameof(ClinicalDetails));
                 
                 // EditPageErrorDictionary is null only if coming from a GET call, we want to guard here
                 // only in a GET call

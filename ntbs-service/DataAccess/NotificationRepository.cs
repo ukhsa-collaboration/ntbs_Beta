@@ -310,9 +310,8 @@ namespace ntbs_service.DataAccess
 
         public async Task<NotificationGroup> GetNotificationGroupAsync(int notificationId)
         {
-            return await _context.Notification
-                .Where(n => n.NotificationId == notificationId)
-                .Select(n => n.Group)
+            return await _context.NotificationGroup
+                .Where(g => g.Notifications.Select(e => e.NotificationId).Contains(notificationId))
                 .Include(g => g.Notifications)
                     .ThenInclude(n => n.PatientDetails)
                         .ThenInclude(p => p.PostcodeLookup)

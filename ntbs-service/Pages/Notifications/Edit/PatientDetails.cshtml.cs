@@ -139,7 +139,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             ValidationService.TrySetFormattedDate(PatientDetails, "Patient", nameof(PatientDetails.Dob), FormattedDob);
 
-            if (TryValidateModel(PatientDetails, "PatientDetails"))
+            if (TryValidateModel(PatientDetails, nameof(PatientDetails)))
             {
                 await Service.UpdatePatientDetailsAsync(Notification, PatientDetails);
             }

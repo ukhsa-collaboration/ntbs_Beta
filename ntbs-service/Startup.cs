@@ -559,6 +559,7 @@ namespace ntbs_service
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCookiePolicy();
             app.UseSession();
 

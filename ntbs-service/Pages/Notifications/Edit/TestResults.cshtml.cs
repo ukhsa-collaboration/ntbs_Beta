@@ -44,7 +44,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (TestData.ShouldValidateFull)
             {
-                TryValidateModel(this);
+                TryValidateModel(TestData, nameof(TestData));
             }
 
             return Page();
