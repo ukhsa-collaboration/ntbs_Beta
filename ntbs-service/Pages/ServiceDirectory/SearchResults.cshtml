@@ -55,7 +55,7 @@
                     <!-- Each search hit is displayed using a notification banner -->
                     <div class="case-manager-search-result-container" id="search-result-item">
                         <a class="case-manager-search-result-name" href=@($"/ContactDetails/{caseManager.Username}")>
-                             @caseManager.FullName
+                             @caseManager.DisplayName
                         </a>
                         <nhs-summary-list classes="case-manager-search-result-item-summary" is-without-border="true">
                             @foreach (var tbService in caseManager.CaseManagerTbServices.Select(x => x.TbService))

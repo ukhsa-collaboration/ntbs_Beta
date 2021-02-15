@@ -124,7 +124,7 @@ namespace ntbs_service.Pages.Alerts
             var caseManagers = await _referenceDataRepository.GetAllCaseManagers();
             CaseManagers = new SelectList(caseManagers,
                 nameof(Models.Entities.User.Username),
-                nameof(Models.Entities.User.FullName));
+                nameof(Models.Entities.User.DisplayName));
             var phecs = await _referenceDataRepository.GetAllPhecs();
             Phecs = new SelectList(phecs, nameof(PHEC.Code), nameof(PHEC.Name));
         }
@@ -166,7 +166,7 @@ namespace ntbs_service.Pages.Alerts
                     CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                     {
                         Value = n.Username.ToString(),
-                        Text = n.FullName
+                        Text = n.DisplayName
                     })
                 });
         }

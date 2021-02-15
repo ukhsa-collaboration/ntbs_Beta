@@ -61,7 +61,7 @@ namespace ntbs_service.Models.Entities
 
         [NotMapped]
         [Display(Name = "Case Manager")]
-        public string CaseManagerName => CaseManager?.FullName;
+        public string CaseManagerName => CaseManager?.DisplayName;
 
         string IOwnedEntityForAuditing.RootEntityType => RootEntities.Notification;
     }

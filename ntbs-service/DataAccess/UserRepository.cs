@@ -79,7 +79,7 @@ namespace ntbs_service.DataAccess
         {
             return _context.User.ToDictionaryAsync(
                 user => user.Username,
-                user => user.FullName
+                user => user.DisplayName
             );
         }
 

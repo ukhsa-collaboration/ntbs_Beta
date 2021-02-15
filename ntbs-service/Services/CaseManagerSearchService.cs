@@ -15,7 +15,7 @@ namespace ntbs_service.Services
             string searchKeyword,
             PaginationParametersBase paginationParameters);
     }
-    
+
     public class CaseManagerSearchService : ICaseManagerSearchService
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
@@ -24,7 +24,7 @@ namespace ntbs_service.Services
         {
             _referenceDataRepository = referenceDataRepository;
         }
-        
+
         public async Task<(IList<User> caseManagers, int count)> OrderAndPaginateQueryableAsync(
             string searchKeyword,
             PaginationParametersBase paginationParameters)
@@ -32,22 +32,22 @@ namespace ntbs_service.Services
             var searchKeywords = searchKeyword.Split(" ")
                 .Where(x => !x.IsNullOrEmpty())
                 .Select(s => s.ToLower()).ToList();
-            var caseManagers = await _referenceDataRepository.GetAllCaseManagersQueryable()
-                .ToListAsync();
+            var caseManagers = await _referenceDataRepository.GetAllCaseManagersOrdered();
 
             // This query is too complex to translate to sql, so we explicitly work on an in-memory list.
             // The size of the directory should make this ok.
             var filtered = caseManagers.Where(c =>
-                    searchKeywords.Any(s => c.FamilyName.ToLower().Contains(s))
-                    || searchKeywords.Any(s => c.GivenName.ToLower().Contains(s))
+                    searchKeywords.Any(s => c.FamilyName != null && c.FamilyName.ToLower().Contains(s))
+                    || searchKeywords.Any(s => c.GivenName != null && c.GivenName.ToLower().Contains(s))
+                    || searchKeywords.Any(s => c.DisplayName != null && c.DisplayName.ToLower().Contains(s))
                     || c.CaseManagerTbServices.Any(x =>
                         searchKeywords.Any(s => x.TbService.Name.ToLower().Contains(s))))
                 .ToList();
 
             return (GetPaginatedItems(filtered, paginationParameters), filtered.Count);
         }
-        
-        private IList<T> GetPaginatedItems<T>(IEnumerable<T> items, 
+
+        private IList<T> GetPaginatedItems<T>(IEnumerable<T> items,
             PaginationParametersBase paginationParameters)
         {
             return items

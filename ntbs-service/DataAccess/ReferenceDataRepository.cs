@@ -28,7 +28,7 @@ namespace ntbs_service.DataAccess
         Task<IList<PHEC>> GetAllPhecs();
         Task<PHEC> GetPhecByCode(string phecCode);
         Task<IList<User>> GetAllCaseManagers();
-        IQueryable<User> GetAllCaseManagersQueryable();
+        Task<List<User>> GetAllCaseManagersOrdered();
         Task<User> GetCaseManagerByUsernameAsync(string username);
         Task<User> GetUserByUsernameAsync(string username);
         Task<IList<Hospital>> GetHospitalsByTbServiceCodesAsync(IEnumerable<string> tbServices);
@@ -109,7 +109,7 @@ namespace ntbs_service.DataAccess
                 .Select(h => h.TBService)
                 .SingleOrDefaultAsync();
         }
-        
+
         public async Task<IList<TBService>> GetTbServicesFromPhecCodeAsync(string phecCode)
         {
             return await GetTbServicesQueryable()
@@ -132,7 +132,7 @@ namespace ntbs_service.DataAccess
                 .Include(tb => tb.PHEC)
                 .Where(tb => roles.Contains(tb.PHEC.AdGroup));
         }
-        
+
         public IQueryable<TBService> GetDefaultTbServicesForNhsUserQueryable(IEnumerable<string> roles)
         {
             return GetTbServicesQueryable()
@@ -166,7 +166,7 @@ namespace ntbs_service.DataAccess
                 .ToListAsync();
         }
 
-        public IQueryable<User> GetAllCaseManagersQueryable()
+        public Task<List<User>> GetAllCaseManagersOrdered()
         {
             return _context.User
                 .Include(u => u.CaseManagerTbServices)
@@ -174,7 +174,8 @@ namespace ntbs_service.DataAccess
                 .ThenInclude(s => s.PHEC)
                 .Where(u => u.IsCaseManager)
                 .OrderBy(u => u.FamilyName)
-                .ThenBy(u => u.GivenName);
+                .ThenBy(u => u.GivenName)
+                .ToListAsync();
         }
 
         public async Task<User> GetCaseManagerByUsernameAsync(string username)
@@ -186,7 +187,7 @@ namespace ntbs_service.DataAccess
                 .Where(u => u.IsCaseManager)
                 .SingleOrDefaultAsync(c => c.Username == username);
         }
-        
+
         public async Task<User> GetUserByUsernameAsync(string username)
         {
             return await _context.User
@@ -235,7 +236,7 @@ namespace ntbs_service.DataAccess
                 CaseManagers = filteredCaseManagers.Select(n => new OptionValue
                 {
                     Value = n.Username,
-                    Text = n.FullName
+                    Text = n.DisplayName
                 })
             };
             return filteredHospitalDetailsPageSelectLists;
@@ -322,7 +323,7 @@ namespace ntbs_service.DataAccess
             TreatmentOutcomeType type,
             TreatmentOutcomeSubType? subType)
         {
-            return await _context.TreatmentOutcome.SingleOrDefaultAsync(t => 
+            return await _context.TreatmentOutcome.SingleOrDefaultAsync(t =>
                 t.TreatmentOutcomeType == type
                 && t.TreatmentOutcomeSubType == subType);
         }
