@@ -451,7 +451,7 @@ namespace ntbs_service.Services
         {
             var caseManagersForTbService =
                 await _referenceDataRepository.GetCaseManagersByTbServiceCodesAsync(new List<string> { tbServiceCode });
-            var username = user.FindFirstValue(ClaimTypes.Upn);
+            var username = user.Username();
             var upperUserEmail = username?.ToUpperInvariant();
 
             return caseManagersForTbService.Any(c => c.Username.ToUpperInvariant() == upperUserEmail) ? username : null;

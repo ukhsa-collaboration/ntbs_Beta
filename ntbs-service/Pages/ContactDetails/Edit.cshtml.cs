@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -44,6 +45,12 @@ namespace ntbs_service.Pages.ContactDetails
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var user = await _userService.GetUser(User);
+            if (ContactDetails.Username != user.Username)
+            {
+                return StatusCode((int)HttpStatusCode.Forbidden);
+            }
+
             ValidateModel();
             if (!ModelState.IsValid)
             {
@@ -57,10 +64,12 @@ namespace ntbs_service.Pages.ContactDetails
         private void ValidateModel()
         {
             TryValidateModel(this);
+
             if (ContactDetails.ArePrimaryContactDetailsMissing)
             {
                 ModelState.AddModelError("ContactDetails", ValidationMessages.SupplyCaseManagerPrimaryParameter);
             }
+
             if (!ModelState.IsValid)
             {
                 ViewData["EditPageErrorDictionary"] = EditPageValidationErrorGenerator.MapToDictionary(ModelState);

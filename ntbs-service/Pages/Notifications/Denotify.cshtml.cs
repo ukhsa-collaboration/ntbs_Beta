@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Enums;
@@ -85,7 +86,7 @@ namespace ntbs_service.Pages.Notifications
                 await Service.DenotifyNotificationAsync(
                     NotificationId, 
                     DenotificationDetails,
-                    User.FindFirstValue(ClaimTypes.Upn));
+                    User.Username());
             }
 
             return RedirectToPage("/Notifications/Overview", new { NotificationId });

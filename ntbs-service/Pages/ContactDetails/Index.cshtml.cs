@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Services;
@@ -39,7 +40,7 @@ namespace ntbs_service.Pages.ContactDetails
                 return NotFound();
             }
             
-            ViewData["IsEditable"] = Username == null || Username == User.FindFirstValue(ClaimTypes.Upn);
+            ViewData["IsEditable"] = Username == null || Username == User.Username();
             
             ContactDetails.CaseManagerTbServices = ContactDetails.CaseManagerTbServices
                 .OrderBy(x => x.TbService.PHEC.Name)

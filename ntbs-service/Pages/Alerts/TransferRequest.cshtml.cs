@@ -1,10 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ntbs_service.DataAccess;
+using ntbs_service.Helpers;
 using ntbs_service.Models;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
@@ -133,7 +134,7 @@ namespace ntbs_service.Pages.Alerts
         {
             Notification = await NotificationRepository.GetNotificationAsync(NotificationId);
             TransferAlert = await _alertRepository.GetOpenAlertByNotificationId<TransferAlert>(NotificationId);
-            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.FindFirstValue(ClaimTypes.Upn));
+            await _alertService.DismissAlertAsync(TransferAlert.AlertId, User.Username());
 
             NotificationBannerModel = new NotificationBannerModel(Notification);
             return Partial("_CancelTransferConfirmation", this);

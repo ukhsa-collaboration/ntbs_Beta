@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Claims;
@@ -85,7 +85,7 @@ namespace ntbs_service.Pages.LabResults
                     "number was either previously matched, or unavailable to the user.");
             }
 
-            var userName = User.FindFirstValue(ClaimTypes.Upn);
+            var userName = User.Username();
             await _specimenService.MatchSpecimenAsync(notificationId, laboratoryReferenceNumber, userName);
             AddTempDataForSuccessfulMessage(notificationId, laboratoryReferenceNumber);
 
