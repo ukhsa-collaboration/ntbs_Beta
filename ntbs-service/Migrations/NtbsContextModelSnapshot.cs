@@ -104,6 +104,182 @@ namespace ntbs_service.Migrations
                     b.ToTable("FrequentlyAskedQuestion");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAnimalExposure", b =>
+                {
+                    b.Property<int>("MBovisAnimalExposureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Animal")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("AnimalTbStatus")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("AnimalType")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExposureDuration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OtherDetails")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int?>("YearOfExposure")
+                        .HasColumnType("int");
+
+                    b.HasKey("MBovisAnimalExposureId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("MBovisAnimalExposure");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("HasAnimalExposure")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasExposureToKnownCases")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasOccupationExposure")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("HasUnpasteurisedMilkConsumption")
+                        .HasColumnType("bit");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("MBovisDetails");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisExposureToKnownCase", b =>
+                {
+                    b.Property<int>("MBovisExposureToKnownCaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExposureNotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ExposureSetting")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NotifiedToPheStatus")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("OtherDetails")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int?>("YearOfExposure")
+                        .HasColumnType("int");
+
+                    b.HasKey("MBovisExposureToKnownCaseId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("MBovisExposureToKnownCase");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisOccupationExposure", b =>
+                {
+                    b.Property<int>("MBovisOccupationExposureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OccupationDuration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OccupationSetting")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("OtherDetails")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("YearOfExposure")
+                        .HasColumnType("int");
+
+                    b.HasKey("MBovisOccupationExposureId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("MBovisOccupationExposures");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
+                {
+                    b.Property<int>("MBovisUnpasteurisedMilkConsumptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConsumptionFrequency")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MilkProductType")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OtherDetails")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int?>("YearOfConsumption")
+                        .HasColumnType("int");
+
+                    b.HasKey("MBovisUnpasteurisedMilkConsumptionId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.ToTable("MBovisUnpasteurisedMilkConsumption");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
                 {
                     b.Property<int>("ManualTestResultId")
@@ -23902,6 +24078,69 @@ namespace ntbs_service.Migrations
                     b.Navigation("TbService");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisAnimalExposure", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails", null)
+                        .WithMany("MBovisAnimalExposures")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Entities.Notification", null)
+                        .WithOne("MBovisDetails")
+                        .HasForeignKey("ntbs_service.Models.Entities.MBovisDetails", "NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisExposureToKnownCase", b =>
+                {
+                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails", null)
+                        .WithMany("MBovisExposureToKnownCases")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisOccupationExposure", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails", null)
+                        .WithMany("MBovisOccupationExposures")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", b =>
+                {
+                    b.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("ntbs_service.Models.Entities.MBovisDetails", null)
+                        .WithMany("MBovisUnpasteurisedMilkConsumptions")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.ManualTestResult", b =>
                 {
                     b.HasOne("ntbs_service.Models.ReferenceEntities.ManualTestType", "ManualTestType")
@@ -24231,227 +24470,6 @@ namespace ntbs_service.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("NotificationId");
-                        });
-
-                    b.OwnsOne("ntbs_service.Models.Entities.MBovisDetails", "MBovisDetails", b1 =>
-                        {
-                            b1.Property<int>("NotificationId")
-                                .HasColumnType("int");
-
-                            b1.Property<bool?>("HasAnimalExposure")
-                                .HasColumnType("bit")
-                                .HasColumnName("HasAnimalExposure");
-
-                            b1.Property<bool?>("HasExposureToKnownCases")
-                                .HasColumnType("bit")
-                                .HasColumnName("HasExposureToKnownCases");
-
-                            b1.Property<bool?>("HasOccupationExposure")
-                                .HasColumnType("bit")
-                                .HasColumnName("HasOccupationExposure");
-
-                            b1.Property<bool?>("HasUnpasteurisedMilkConsumption")
-                                .HasColumnType("bit")
-                                .HasColumnName("HasUnpasteurisedMilkConsumption");
-
-                            b1.HasKey("NotificationId");
-
-                            b1.ToTable("MBovisDetails");
-
-                            b1.WithOwner()
-                                .HasForeignKey("NotificationId");
-
-                            b1.OwnsMany("ntbs_service.Models.Entities.MBovisAnimalExposure", "MBovisAnimalExposures", b2 =>
-                                {
-                                    b2.Property<int>("MBovisAnimalExposureId")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("int")
-                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                                    b2.Property<string>("Animal")
-                                        .HasMaxLength(35)
-                                        .HasColumnType("nvarchar(35)");
-
-                                    b2.Property<string>("AnimalTbStatus")
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<string>("AnimalType")
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<int?>("CountryId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<int?>("ExposureDuration")
-                                        .HasColumnType("int");
-
-                                    b2.Property<int>("NotificationId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<string>("OtherDetails")
-                                        .HasMaxLength(150)
-                                        .HasColumnType("nvarchar(150)");
-
-                                    b2.Property<int?>("YearOfExposure")
-                                        .HasColumnType("int");
-
-                                    b2.HasKey("MBovisAnimalExposureId");
-
-                                    b2.HasIndex("CountryId");
-
-                                    b2.HasIndex("NotificationId");
-
-                                    b2.ToTable("MBovisAnimalExposure");
-
-                                    b2.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
-                                        .WithMany()
-                                        .HasForeignKey("CountryId");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("NotificationId");
-
-                                    b2.Navigation("Country");
-                                });
-
-                            b1.OwnsMany("ntbs_service.Models.Entities.MBovisExposureToKnownCase", "MBovisExposureToKnownCases", b2 =>
-                                {
-                                    b2.Property<int>("MBovisExposureToKnownCaseId")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("int")
-                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                                    b2.Property<int?>("ExposureNotificationId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<string>("ExposureSetting")
-                                        .IsRequired()
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<int>("NotificationId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<string>("NotifiedToPheStatus")
-                                        .IsRequired()
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<string>("OtherDetails")
-                                        .HasMaxLength(150)
-                                        .HasColumnType("nvarchar(150)");
-
-                                    b2.Property<int?>("YearOfExposure")
-                                        .HasColumnType("int");
-
-                                    b2.HasKey("MBovisExposureToKnownCaseId");
-
-                                    b2.HasIndex("NotificationId");
-
-                                    b2.ToTable("MBovisExposureToKnownCase");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("NotificationId");
-                                });
-
-                            b1.OwnsMany("ntbs_service.Models.Entities.MBovisOccupationExposure", "MBovisOccupationExposures", b2 =>
-                                {
-                                    b2.Property<int>("MBovisOccupationExposureId")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("int")
-                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                                    b2.Property<int?>("CountryId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<int>("NotificationId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<int?>("OccupationDuration")
-                                        .HasColumnType("int");
-
-                                    b2.Property<string>("OccupationSetting")
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<string>("OtherDetails")
-                                        .HasMaxLength(200)
-                                        .HasColumnType("nvarchar(200)");
-
-                                    b2.Property<int?>("YearOfExposure")
-                                        .HasColumnType("int");
-
-                                    b2.HasKey("MBovisOccupationExposureId");
-
-                                    b2.HasIndex("CountryId");
-
-                                    b2.HasIndex("NotificationId");
-
-                                    b2.ToTable("MBovisOccupationExposures");
-
-                                    b2.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
-                                        .WithMany()
-                                        .HasForeignKey("CountryId");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("NotificationId");
-
-                                    b2.Navigation("Country");
-                                });
-
-                            b1.OwnsMany("ntbs_service.Models.Entities.MBovisUnpasteurisedMilkConsumption", "MBovisUnpasteurisedMilkConsumptions", b2 =>
-                                {
-                                    b2.Property<int>("MBovisUnpasteurisedMilkConsumptionId")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("int")
-                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                                    b2.Property<string>("ConsumptionFrequency")
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<int?>("CountryId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<string>("MilkProductType")
-                                        .HasMaxLength(30)
-                                        .HasColumnType("nvarchar(30)");
-
-                                    b2.Property<int>("NotificationId")
-                                        .HasColumnType("int");
-
-                                    b2.Property<string>("OtherDetails")
-                                        .HasMaxLength(150)
-                                        .HasColumnType("nvarchar(150)");
-
-                                    b2.Property<int?>("YearOfConsumption")
-                                        .HasColumnType("int");
-
-                                    b2.HasKey("MBovisUnpasteurisedMilkConsumptionId");
-
-                                    b2.HasIndex("CountryId");
-
-                                    b2.HasIndex("NotificationId");
-
-                                    b2.ToTable("MBovisUnpasteurisedMilkConsumption");
-
-                                    b2.HasOne("ntbs_service.Models.ReferenceEntities.Country", "Country")
-                                        .WithMany()
-                                        .HasForeignKey("CountryId");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("NotificationId");
-
-                                    b2.Navigation("Country");
-                                });
-
-                            b1.Navigation("MBovisAnimalExposures");
-
-                            b1.Navigation("MBovisExposureToKnownCases");
-
-                            b1.Navigation("MBovisOccupationExposures");
-
-                            b1.Navigation("MBovisUnpasteurisedMilkConsumptions");
                         });
 
                     b.OwnsOne("ntbs_service.Models.Entities.MDRDetails", "MDRDetails", b1 =>
@@ -24977,8 +24995,6 @@ namespace ntbs_service.Migrations
 
                     b.Navigation("ImmunosuppressionDetails");
 
-                    b.Navigation("MBovisDetails");
-
                     b.Navigation("MDRDetails");
 
                     b.Navigation("PatientDetails");
@@ -25138,9 +25154,22 @@ namespace ntbs_service.Migrations
                     b.Navigation("PHEC");
                 });
 
+            modelBuilder.Entity("ntbs_service.Models.Entities.MBovisDetails", b =>
+                {
+                    b.Navigation("MBovisAnimalExposures");
+
+                    b.Navigation("MBovisExposureToKnownCases");
+
+                    b.Navigation("MBovisOccupationExposures");
+
+                    b.Navigation("MBovisUnpasteurisedMilkConsumptions");
+                });
+
             modelBuilder.Entity("ntbs_service.Models.Entities.Notification", b =>
                 {
                     b.Navigation("Alerts");
+
+                    b.Navigation("MBovisDetails");
 
                     b.Navigation("NotificationSites");
 
