@@ -305,6 +305,7 @@ namespace ntbs_service
                     options.ClientId = azureAdConfig["ClientId"];
                     options.ClientSecret =  azureAdConfig["ClientSecret"];
                     options.Authority = azureAdConfig["Authority"];
+                    options.CallbackPath =  azureAdConfig["CallbackPath"];
                     options.CorrelationCookie.SameSite = SameSiteMode.None;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
 
