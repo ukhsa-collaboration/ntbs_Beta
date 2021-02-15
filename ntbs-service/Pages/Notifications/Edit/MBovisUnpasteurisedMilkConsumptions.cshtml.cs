@@ -36,7 +36,7 @@ namespace ntbs_service.Pages.Notifications.Edit
 
             if (MBovisDetails.ShouldValidateFull)
             {
-                TryValidateModel(this);
+                TryValidateModel(MBovisDetails, nameof(MBovisDetails));
             }
 
             return Page();

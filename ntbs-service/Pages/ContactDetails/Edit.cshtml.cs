@@ -63,8 +63,7 @@ namespace ntbs_service.Pages.ContactDetails
 
         private void ValidateModel()
         {
-            TryValidateModel(this);
-
+            TryValidateModel(ContactDetails, nameof(ContactDetails));
             if (ContactDetails.ArePrimaryContactDetailsMissing)
             {
                 ModelState.AddModelError("ContactDetails", ValidationMessages.SupplyCaseManagerPrimaryParameter);
