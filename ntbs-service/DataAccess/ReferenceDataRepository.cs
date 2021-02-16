@@ -173,8 +173,7 @@ namespace ntbs_service.DataAccess
                 .ThenInclude(c => c.TbService)
                 .ThenInclude(s => s.PHEC)
                 .Where(u => u.IsCaseManager)
-                .OrderBy(u => u.FamilyName)
-                .ThenBy(u => u.GivenName)
+                .OrderBy(u => u.DisplayName)
                 .ToListAsync();
         }
 
@@ -204,7 +203,7 @@ namespace ntbs_service.DataAccess
                 .SelectMany(t => t.CaseManagerTbServices.Select(join => join.CaseManager))
                 .Where(user => user.IsCaseManager)
                 .Distinct()
-                .OrderBy(c => c.FamilyName)
+                .OrderBy(c => c.DisplayName)
                 .ToListAsync();
         }
 
