@@ -7,6 +7,7 @@ using ntbs_service.Models;
 using ntbs_service.Models.Entities;
 using ntbs_service.Models.Entities.Alerts;
 using ntbs_service.Models.Enums;
+using ntbs_service.Models.QueryEntities;
 using ntbs_service.Models.ReferenceEntities;
 
 // Note: we've adopted a convention where reference data lives in a separate schema to the main tables.
@@ -64,6 +65,8 @@ namespace ntbs_service.DataAccess
         public virtual DbSet<MBovisOccupationExposure> MBovisOccupationExposures { get; set; }
         public virtual DbSet<MBovisAnimalExposure> MBovisAnimalExposure { get; set; }
         public virtual DbSet<PreviousTbService> PreviousTbService { get; set; }
+
+        public DbQuery<NotificationAndDuplicateIds> NotificationAndDuplicateIds { get; set; }
 
         public virtual void SetValues<TEntityClass>(TEntityClass entity, TEntityClass values)
         {
